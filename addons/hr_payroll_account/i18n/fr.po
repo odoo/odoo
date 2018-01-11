@@ -1,0 +1,119 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_payroll_account
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:19+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: hr_payroll_account
+#: view:hr.contract:hr_payroll_account.hr_contract_form_inherit
+#: view:hr.salary.rule:hr_payroll_account.hr_salary_rule_form_inherit
+msgid "Accounting"
+msgstr "Comptabilité"
+
+#. module: hr_payroll_account
+#: field:hr.payslip,move_id:0
+msgid "Accounting Entry"
+msgstr "Entrée comptable"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:154
+#: code:addons/hr_payroll_account/hr_payroll_account.py:170
+#, python-format
+msgid "Adjustment Entry"
+msgstr "Entrée d'ajustement"
+
+#. module: hr_payroll_account
+#: field:hr.contract,analytic_account_id:0
+#: field:hr.salary.rule,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Compte analytique"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#, python-format
+msgid "Configuration Error!"
+msgstr "Erreur de paramétrage !"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_contract
+msgid "Contract"
+msgstr "Contrat"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_credit:0
+msgid "Credit Account"
+msgstr "Compte de crédit"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_debit:0
+msgid "Debit Account"
+msgstr "Compte de débit"
+
+#. module: hr_payroll_account
+#: field:hr.payslip,period_id:0
+msgid "Force Period"
+msgstr "Forcer la période"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
+msgid "Generate payslips for all selected employees"
+msgstr "Génère les bulletins de paie pour tous les employés sélectionnés"
+
+#. module: hr_payroll_account
+#: help:hr.payslip,period_id:0
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Laisser vide si vous voulez utiliser la période de la date de validation (de la feuille de paye)"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
+msgstr "Feuille de paie"
+
+#. module: hr_payroll_account
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip_run
+msgid "Payslip Batches"
+msgstr "Lots de bulletins de paie"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:97
+#, python-format
+msgid "Payslip of %s"
+msgstr "Bulletin de paie de %s"
+
+#. module: hr_payroll_account
+#: field:hr.contract,journal_id:0 field:hr.payslip,journal_id:0
+#: field:hr.payslip.run,journal_id:0
+msgid "Salary Journal"
+msgstr "Journal des salaires"
+
+#. module: hr_payroll_account
+#: field:hr.salary.rule,account_tax_id:0
+msgid "Tax Code"
+msgstr "Code de taxe"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:152
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Credit Account!"
+msgstr "Le journal des charges \"% s\" n'a pas correctement configuré le compte de crédit!"
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:168
+#, python-format
+msgid "The Expense Journal \"%s\" has not properly configured the Debit Account!"
+msgstr "Le journal des charges \"% s\" n'a pas correctement configuré le compte de débit!"

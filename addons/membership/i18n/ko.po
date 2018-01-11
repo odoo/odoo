@@ -1,0 +1,631 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * membership
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-08-20 08:55+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# 송장 발행"
+
+#. module: membership
+#: field:report.membership,num_paid:0
+msgid "# Paid"
+msgstr "# 지불"
+
+#. module: membership
+#: field:report.membership,num_waiting:0
+msgid "# Waiting"
+msgstr "# 대기"
+
+#. module: membership
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr "귀하의 멤버십에 연결하고자 하는 회원. 관련된 회원의 멤버십 상태를 고려해야 합니다."
+
+#. module: membership
+#: field:membership.membership_line,account_invoice_line:0
+msgid "Account Invoice line"
+msgstr "계정 송장 명세"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "Add a description..."
+msgstr "설명 추가..."
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "All Members"
+msgstr "모든 회원"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "All non Members"
+msgstr "모든 비 회원"
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
+msgstr "회원가"
+
+#. module: membership
+#: field:report.membership,associate_member_id:0
+#: view:res.partner:membership.view_res_partner_member_filter
+#: field:res.partner,associate_member:0
+msgid "Associate Member"
+msgstr "준회원"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Associated Partner"
+msgstr "관련 파트너"
+
+#. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "기본 회원권"
+
+#. module: membership
+#: view:res.partner:membership.view_partner_form
+msgid "Buy Membership"
+msgstr "회원권 구매"
+
+#. module: membership
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "Cancel"
+msgstr "취소"
+
+#. module: membership
+#: field:res.partner,membership_cancel:0
+msgid "Cancel Membership Date"
+msgstr "멤버십 취소 날짜"
+
+#. module: membership
+#: field:membership.membership_line,date_cancel:0
+msgid "Cancel date"
+msgstr "취소 날짜"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Cancelled Member"
+msgstr "취소 회원"
+
+#. module: membership
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Category"
+msgstr "분류"
+
+#. module: membership
+#: help:product.template,membership:0
+msgid "Check if the product is eligible for membership."
+msgstr "멤버십에 적격한 제품인지 아닌지 확인하십시오."
+
+#. module: membership
+#: field:membership.membership_line,company_id:0
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,company_id:0
+msgid "Company"
+msgstr "회사"
+
+#. module: membership
+#: view:res.partner:membership.view_partner_tree
+msgid "Contacts"
+msgstr "연락처"
+
+#. module: membership
+#: field:membership.invoice,create_uid:0
+#: field:membership.membership_line,create_uid:0
+msgid "Created by"
+msgstr "작성자"
+
+#. module: membership
+#: field:membership.invoice,create_date:0
+#: field:membership.membership_line,create_date:0
+msgid "Created on"
+msgstr "작성일"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,membership_state:0
+msgid "Current Membership State"
+msgstr "현재 멤버십 상태"
+
+#. module: membership
+#: field:res.partner,membership_state:0
+msgid "Current Membership Status"
+msgstr "현재 멤버십 상태"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Customer Partners"
+msgstr "고객 파트너"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Customers"
+msgstr "고객"
+
+#. module: membership
+#: help:product.template,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr "멤버십이 활성화 되는 날짜"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "회원이 멤버십에 가입한 날짜"
+
+#. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr "멤버십을 취소한 날짜"
+
+#. module: membership
+#: help:product.template,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
+msgstr "멤버십 만기까지의 날짜"
+
+#. module: membership
+#: field:report.membership,tot_earned:0
+msgid "Earned Amount"
+msgstr "적립 금액"
+
+#. module: membership
+#: field:report.membership,date_to:0
+msgid "End Date"
+msgstr "종료일"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "End Membership Date"
+msgstr "멤버십 종료일"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "End Month"
+msgstr "종료달"
+
+#. module: membership
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "멤버십 종료일"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Ending Month Of Membership"
+msgstr "멤버십 종료달"
+
+#. module: membership
+#: sql_constraint:product.template:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr "오류! 시작일 전에 마감일을 설정할 수 없습니다."
+
+#. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "오류! 재귀 연결된 회원을 생성할 수 없습니다."
+
+#. module: membership
+#: code:addons/membership/membership.py:402
+#: code:addons/membership/membership.py:405
+#, python-format
+msgid "Error!"
+msgstr "오류!"
+
+#. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr "오류! 이 멤버십 상품은 날짜가 지났습니다."
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Forecast"
+msgstr "예상"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0 selection:res.partner,membership_state:0
+msgid "Free Member"
+msgstr "무료 회원"
+
+#. module: membership
+#: field:membership.membership_line,date_from:0
+msgid "From"
+msgstr "보낸 사람"
+
+#. module: membership
+#: view:product.template:membership.membership_product_search_form_view
+msgid "From Month"
+msgstr "월"
+
+#. module: membership
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Gold Membership"
+msgstr "골드 멤버십"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: membership
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Group by..."
+msgstr "그룹화..."
+
+#. module: membership
+#: field:membership.invoice,id:0 field:membership.membership_line,id:0
+#: field:report.membership,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: membership
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Inactive"
+msgstr "비활성"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr "송장"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "송장 명세"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "Invoice Membership"
+msgstr "송장 멤버십"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr "송장 회원"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Invoiced/Paid/Free"
+msgstr "송장발행/유료/무료"
+
+#. module: membership
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"-Non Member: A partner who has not applied for any membership.\n"
+"-Cancelled Member: A member who has cancelled his membership.\n"
+"-Old Member: A member whose membership date has expired.\n"
+"-Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"-Invoiced Member: A member whose invoice has been created.\n"
+"-Paying member: A member who has paid the membership fee."
+msgstr "멤버십 상태를 나타냅니다.\n-비 회원 : 어떤 멤버십에도 해당되지 않는 파트너\n-취소 회원 : 멤버십을 취소한 회원\n-이전 회원 : 멤버십 날짜가 만기된 회원\n-대기 회원 : 송장을 작성하거나 멤버십이 적용된 회원\n-송장 회원 : 송장을 작성한 멤버\n-지불 회원 : 회비를 지불한 회원"
+
+#. module: membership
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership status.\n"
+"                        -Non Member: A member who has not applied for any membership.\n"
+"                        -Cancelled Member: A member who has cancelled his membership.\n"
+"                        -Old Member: A member whose membership date has expired.\n"
+"                        -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been created.\n"
+"                        -Paid Member: A member who has paid the membership amount."
+msgstr "멤버십 상태를 나타냅니다.\n                        -비 회원 : 어떤 멤버십에도 해당되지 않는 파트너\n                        -취소 회원 : 멤버십을 취소한 회원\n                        -이전 회원 : 멤버십 날짜가 만기된 회원\n                        -대기 회원 : 송장을 작성헸거나 멤버십이 적용된 회원\n                        -송장 회원 : 송장을 작성한 회원\n                        -지불 회원 : 회비를 지불한 회원"
+
+#. module: membership
+#: field:membership.membership_line,date:0
+msgid "Join Date"
+msgstr "가입 날짜"
+
+#. module: membership
+#: field:membership.invoice,write_uid:0
+#: field:membership.membership_line,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: membership
+#: field:membership.invoice,write_date:0
+#: field:membership.membership_line,write_date:0
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: membership
+#: field:report.membership,partner_id:0
+msgid "Member"
+msgstr "구성원"
+
+#. module: membership
+#: field:membership.invoice,member_price:0
+msgid "Member Price"
+msgstr "회원 가격"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Member line"
+msgstr "회원 명세"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
+#: view:res.partner:membership.membership_members_tree
+msgid "Members"
+msgstr "회원"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr "회원 분석"
+
+#. module: membership
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: field:product.template,membership:0
+#: view:report.membership:membership.view_report_membership_graph1
+#: view:report.membership:membership.view_report_membership_search
+#: view:res.partner:membership.view_partner_form
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "멤버십"
+
+#. module: membership
+#: field:res.partner,membership_amount:0
+msgid "Membership Amount"
+msgstr "멤버십 금액"
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_membership
+msgid "Membership Analysis"
+msgstr "멤버십 분석"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "Membership Duration"
+msgstr "멤버십 기간"
+
+#. module: membership
+#: field:product.template,membership_date_to:0
+#: field:res.partner,membership_stop:0
+msgid "Membership End Date"
+msgstr "멤버십 마감일"
+
+#. module: membership
+#: field:membership.membership_line,member_price:0
+#: view:product.template:membership.membership_products_form
+#: view:product.template:membership.membership_products_tree
+msgid "Membership Fee"
+msgstr "멤버십 회비"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_invoice
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "Membership Invoice"
+msgstr "멤버십 송장"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Membership Partners"
+msgstr "멤버십 파트너"
+
+#. module: membership
+#: view:product.template:membership.membership_product_search_form_view
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,membership_id:0
+msgid "Membership Product"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: view:product.template:membership.membership_product_search_form_view
+msgid "Membership Products"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: field:product.template,membership_date_from:0
+#: field:res.partner,membership_start:0
+msgid "Membership Start Date"
+msgstr "멤버십 시작일"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Membership State"
+msgstr "멤버십 상태"
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "Membership Status"
+msgstr "멤버십 상태"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+#: view:product.template:membership.membership_products_tree
+msgid "Membership products"
+msgstr "멤버십 상품"
+
+#. module: membership
+#: view:res.partner:membership.view_partner_form
+msgid "Memberships"
+msgstr "멤버십"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Month"
+msgstr "월"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Non Member"
+msgstr "비 멤버"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "None/Canceled/Old/Waiting"
+msgstr "없음/취소/이전/대기"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Old Member"
+msgstr "이전 회원"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Paid Member"
+msgstr "유료 회원"
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+#: field:membership.membership_line,partner:0
+msgid "Partner"
+msgstr "파트너"
+
+#. module: membership
+#: code:addons/membership/membership.py:406
+#, python-format
+msgid "Partner doesn't have an address to make the invoice."
+msgstr "파트너가 송장을 만들기 위한 주소를 가지고 있지 않습니다."
+
+#. module: membership
+#: code:addons/membership/membership.py:403
+#, python-format
+msgid "Partner is a free Member."
+msgstr "파트너는 무료 회원입니다."
+
+#. module: membership
+#: field:report.membership,tot_pending:0
+msgid "Pending Amount"
+msgstr "보류 금액"
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_template
+msgid "Product Template"
+msgstr "상품 서식"
+
+#. module: membership
+#: field:report.membership,quantity:0
+msgid "Quantity"
+msgstr "수량"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "Revenue Done"
+msgstr "완료 수익"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+#: field:report.membership,user_id:0
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Salesperson"
+msgstr "영업사원"
+
+#. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give free membership."
+msgstr "무료 멤버십을 얻고 싶은 경우 선택하십시오."
+
+#. module: membership
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "실버 멤버십"
+
+#. module: membership
+#: field:report.membership,start_date:0
+msgid "Start Date"
+msgstr "시작일"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Start Month"
+msgstr "시작 월"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Starting Month Of Membership"
+msgstr "멤버십 개시월"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Supplier Partners"
+msgstr "공급업체 파트너"
+
+#. module: membership
+#: view:res.partner:membership.view_res_partner_member_filter
+msgid "Suppliers"
+msgstr "공급업체"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "Taxes"
+msgstr "세금"
+
+#. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr "파트너 협상 가격"
+
+#. module: membership
+#: view:product.template:membership.membership_products_form
+msgid "This note will be displayed on quotations..."
+msgstr "이 노트는 견적에 표시됩니다 ..."
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "This will display paid, old and total earned columns"
+msgstr "지불, 이전 그리고 총 적립 열 표시"
+
+#. module: membership
+#: view:report.membership:membership.view_report_membership_search
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr "대기, 송장 발행, 그리고 총 보류 열을 표시"
+
+#. module: membership
+#: field:membership.membership_line,date_to:0
+msgid "To"
+msgstr "받는 사람"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Waiting Member"
+msgstr "대기 회원"
+
+#. module: membership
+#: view:membership.invoice:membership.view_membership_invoice_view
+msgid "or"
+msgstr "또는"

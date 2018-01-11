@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_crm_lead_form" model="ir.ui.view">
+            <field name="name">crm.lead.inherit.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='categorization']" position="attributes">
+                    <attribute name="string">Marketing</attribute>
+                    <attribute name="groups"></attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="campaign_id" />
+                    <field name="medium_id"/>
+                    <field name="source_id" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_crm_opportunity_form" model="ir.ui.view">
+            <field name="name">crm.lead.inherit.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='mailings']" position="before">
+                    <group string="Marketing">
+                        <field name="campaign_id" />
+                        <field name="medium_id" />
+                        <field name="source_id" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

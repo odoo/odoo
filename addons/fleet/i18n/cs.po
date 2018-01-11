@@ -1,0 +1,1928 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fleet
+# 
+# Translators:
+# Jaroslav Helemik Nemec <nemec@helemik.cz>, 2016
+# Ladislav Tomm <tomm@helemik.cz>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:09+0000\n"
+"PO-Revision-Date: 2016-11-28 18:50+0000\n"
+"Last-Translator: Jaroslav Helemik Nemec <nemec@helemik.cz>\n"
+"Language-Team: Czech (http://www.transifex.com/odoo/odoo-8/language/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:387
+#, python-format
+msgid "%s %s has been added to the fleet!"
+msgstr "Vozidlo %s %s bylo přidáno do flotily!"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:663
+#, python-format
+msgid "%s contract(s) need(s) to be renewed and/or closed!"
+msgstr "%s smluv potřebuje obnovit a/nebo uzavřít!"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new brand.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Klikněte pro přidání nové značky.\n              </p>\n            "
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new contract.\n"
+"              </p><p>\n"
+"                Manage all your contracts (leasing, insurances, etc.) with\n"
+"                their related services, costs. Odoo will automatically warn\n"
+"                you when some contracts have to be renewed.\n"
+"              </p><p>\n"
+"                Each contract (e.g.: leasing) may include several services\n"
+"                (reparation, insurances, periodic maintenance).\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknutím vytvoříte novou smlouvu.\n</p><p>\nSpravujte všechny své smlouvy (leasing, pojištění, apod.) a všechny přidružené služby a náklady. Odoo vás automaticky upozorní, když je potřeba nějakou smlouvu obnovit.\n</p><p>\nKaždá smlouva (např. leasing) může obsahovat několik služeb (odškodnění, pojištění, pravidelnou údržbu).\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new cost.\n"
+"              </p><p>\n"
+"                Odoo helps you managing the costs for your different\n"
+"                vehicles. Costs are created automatically from services,\n"
+"                contracts (fixed or recurring) and fuel logs.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte pro vytvoření nového nákladu.\n</p><p>\nOdoo vám pomůže spravovat náklady na různá vozidla. Náklady jsou vypočítávány automaticky ze služeb, smluv (jednorázových nebo periodických) a nákladů na pohonné hmoty.\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new fuel log.\n"
+"              </p><p>\n"
+"                Here you can add refuelling entries for all vehicles.  You can\n"
+"                also filter logs of a particular vehicle using the search\n"
+"                field.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte pro vytvoření nového záznamu tankování.\n</p><p>\nZde můžete přidat záznamy o nákupech pohonných hmot pro všechna vozidla. Taktéž můžete filtrovat záznamy pro určité vozidlo přes pole \"hledat\".\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new model.\n"
+"              </p><p>\n"
+"                You can define several models (e.g. A3, A4) for each brand (Audi).\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte pro přidání nového modelu auta.\n</p><p>\nPro každou značku můžete přidat několik modelů. (např. pro vozy Audi modely A3, A4... atd.)\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new odometer log.\n"
+"              </p>\n"
+"              <p>\n"
+"                Here you can add various odometer entries for all vehicles.\n"
+"                You can also show odometer value for a particular vehicle using\n"
+"                the search field.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte pro přidání nového záznamu stavu tachometru.\n</p>\n<p>\nZde můžete přidat záznamy o stavu tachometru pro všechna vozidla. Taktéž můžete filtrovat záznamy pro určité vozidlo přes pole \"hledat\".\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new service entry.\n"
+"              </p><p>\n"
+"                Odoo helps you keeping track of all the services done\n"
+"                on your vehicle. Services can be of many type: occasional\n"
+"                repair, fixed maintenance, etc.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte pro přidání dalšího záznamu o údržbě.\n</p><p>\nOdoo vám pomáhá udržet přehled o servisování vozidel.\nMůže se jednat o různé druhy servisu: neplánovaná oprava, údržba atd.\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new type of service.\n"
+"              </p><p>\n"
+"                Each service can used in contracts, as a standalone service or both.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikněte pro vytvoření nového typu služby.\n</p><p>\nKaždá služba může figurovat jako samostatná služba, nebo součást smlouvy, nebo obojí.\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new vehicle.\n"
+"              </p><p>\n"
+"                You will be able to manage your fleet by keeping track of the\n"
+"                contracts, services, fixed and recurring costs, odometers and\n"
+"                fuel logs associated to each vehicle.\n"
+"            </p><p>\n"
+"                Odoo will warn you when services or contract have to be\n"
+"                renewed.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknutím přidáte nové vozidlo.\n</p><p>\nMáte možnost spravovat svou flotilu a udržovat přehled o smlouvách, službách, jednorázových a periodických nákladech, počtu najetých kilometrů a nákladů na phm pro každé vozidlo.\n</p><p>\nOdoo vás upozorní, kdykoliv je nutné nějakou smlouvu či službu obnovit.\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a vehicule status.\n"
+"              </p><p>\n"
+"                You can customize available status to track the evolution of\n"
+"                each vehicule. Example: Active, Being Repaired, Sold.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKliknutím vytvoříte status pro vozidlo.\n</p><p>\nMůžete nastavit platný status pro vozidlo, dle aktuálního stavu.\nNapříklad: Aktivní, V opravě, Prodáno.\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
+#: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
+msgid ""
+"<p>\n"
+"          Odoo helps you managing the costs for your different vehicles\n"
+"          Costs are generally created from services and contract and appears here.\n"
+"        </p>\n"
+"        <p>\n"
+"          Thanks to the different filters, Odoo can only print the effective\n"
+"          costs, sort them by type and by vehicle.\n"
+"        </p>\n"
+"      "
+msgstr "<p>\nOdoo vám pomáhá spravovat náklady pro různá vozidla.\nNáklady jsou vytvářeny ze služeb a smluv a zobrazují se zde.\n</p>\n<p>\nDíky různým filtrům, může Odoo tisknout pouze aktuální náklady roztříděné dle typu nákladů a pro určité vozidlo.\n</p>"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_1
+msgid "A/C Compressor Replacement"
+msgstr "Výměna kompresoru klimatizace"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_2
+msgid "A/C Condenser Replacement"
+msgstr "Výměna chladiče klimatizace"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_3
+msgid "A/C Diagnosis"
+msgstr "Diagnostika klimatizace"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_4
+msgid "A/C Evaporator Replacement"
+msgstr "Výměna výparníku klimatizace"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_5
+msgid "A/C Recharge"
+msgstr "Doplnění klimatizace"
+
+#. module: fleet
+#: field:fleet.vehicle,acquisition_date:0
+msgid "Acquisition Date"
+msgstr "Datum nákupu vozu"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_tree
+msgid "Activation Cost"
+msgstr "Náklady aktivace"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Additional Details"
+msgstr "Doplňující detaily"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "Additional Properties"
+msgstr "Možnosti"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_6
+msgid "Air Filter Replacement"
+msgstr "Výměna vzduchového filtru"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+msgid "All vehicles"
+msgstr "Všechna vozidla"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_7
+msgid "Alternator Replacement"
+msgstr "Výměna alternátoru"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_amount:0
+#: field:fleet.vehicle.log.fuel,cost_amount:0
+#: field:fleet.vehicle.log.services,cost_amount:0
+msgid "Amount"
+msgstr "Částka"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_9
+msgid "Assistance"
+msgstr "Asistence"
+
+#. module: fleet
+#: selection:fleet.vehicle,transmission:0
+msgid "Automatic"
+msgstr "Automaticky"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,auto_generated:0
+msgid "Automatically Generated"
+msgstr "Automaticky vytvořeno"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_8
+msgid "Ball Joint Replacement"
+msgstr "Výměna kulových čepů"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_9
+msgid "Battery Inspection"
+msgstr "Kontrola baterie"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_10
+msgid "Battery Replacement"
+msgstr "Výměna baterie"
+
+#. module: fleet
+#: selection:fleet.service.type,category:0
+msgid "Both"
+msgstr "Zájemce/Příležitost"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_11
+msgid "Brake Caliper Replacement"
+msgstr "Výměna brzdových třmenů"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_12
+msgid "Brake Inspection"
+msgstr "Kontrola brzd"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_13
+msgid "Brake Pad(s) Replacement"
+msgstr "Výměna brzdových destiček"
+
+#. module: fleet
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
+msgid "Brand"
+msgstr "Značka"
+
+#. module: fleet
+#: field:fleet.vehicle.model.brand,name:0
+msgid "Brand Name"
+msgstr "Název značky"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
+msgid "Brand model of the vehicle"
+msgstr "Značka modelu vozu"
+
+#. module: fleet
+#: help:fleet.vehicle.model,brand_id:0
+msgid "Brand of the vehicle"
+msgstr "Značka vozu"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr "Přestávka"
+
+#. module: fleet
+#: field:fleet.vehicle,co2:0
+msgid "CO2 Emissions"
+msgstr "Emise CO2"
+
+#. module: fleet
+#: help:fleet.vehicle,co2:0
+msgid "CO2 emissions of the vehicle"
+msgstr "Emise CO2 vozidla"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_1
+msgid "Calculation Benefit In Kind"
+msgstr "Kalkulace plnění v naturáliích"
+
+#. module: fleet
+#: field:fleet.vehicle,car_value:0
+msgid "Car Value"
+msgstr "Hodnota vozu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_14
+msgid "Car Wash"
+msgstr "Mytí vozidla"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_15
+msgid "Catalytic Converter Replacement"
+msgstr "Výměna katalyzátoru"
+
+#. module: fleet
+#: field:fleet.service.type,category:0
+msgid "Category"
+msgstr "Kategorie"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,cost_type:0
+msgid "Category of the cost"
+msgstr "Kategorie nákladů"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_16
+msgid "Charging System Diagnosis"
+msgstr "Diagnostika nabíjení"
+
+#. module: fleet
+#: field:fleet.vehicle,vin_sn:0
+msgid "Chassis Number"
+msgstr "Číslo karoserie"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,state:0
+msgid "Choose wheter the contract is still valid or not"
+msgstr "Vyberte, zda je smlouva stále platná, či nikoli"
+
+#. module: fleet
+#: help:fleet.service.type,category:0
+msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgstr "Vyberte, zda služba odkazuje na smlouvy, servisy vozidel nebo obojí"
+
+#. module: fleet
+#: field:fleet.vehicle,color:0
+msgid "Color"
+msgstr "Barva"
+
+#. module: fleet
+#: help:fleet.vehicle,color:0
+msgid "Color of the vehicle"
+msgstr "Barva vozidla"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr "Kompakt"
+
+#. module: fleet
+#: field:fleet.vehicle,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: fleet
+#: model:ir.ui.menu,name:fleet.fleet_configuration
+msgid "Configuration"
+msgstr "Nastavení"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_contract_state
+msgid "Contains the different possible status of a leasing contract"
+msgstr "Obsahuje různé možné stavy leasingové smlouvy"
+
+#. module: fleet
+#: selection:fleet.service.type,category:0
+#: field:fleet.vehicle.cost,contract_id:0
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Contract"
+msgstr "Smlouva"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_graph
+msgid "Contract Costs Per Month"
+msgstr "Výdaje za smlouvu za měsíc"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,expiration_date:0
+msgid "Contract Expiration Date"
+msgstr "Datum vypršení smlouvy"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,ins_ref:0
+msgid "Contract Reference"
+msgstr "Odkaz smlouvy"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,start_date:0
+msgid "Contract Start Date"
+msgstr "Počáteční datum smlouvy"
+
+#. module: fleet
+#: field:fleet.contract.state,name:0
+msgid "Contract Status"
+msgstr "Stav smlouvy"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,contract_id:0
+msgid "Contract attached to this cost"
+msgstr "Smlouva udávající částku"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Contract details"
+msgstr "Detaily smlouvy"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
+msgid "Contract information on a vehicle"
+msgstr "Informace o smlouvě vozidla"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_tree
+msgid "Contract logs"
+msgstr "Historie smlouvy"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,purchaser_id:0
+msgid "Contractor"
+msgstr "Dodavatel"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,contract_count:0 field:fleet.vehicle,log_contracts:0
+msgid "Contracts"
+msgstr "Smlouvy"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr "Kabriolet"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_id:0
+#: field:fleet.vehicle.log.fuel,cost_id:0
+#: field:fleet.vehicle.log.services,cost_id:0
+msgid "Cost"
+msgstr "Cena"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_form
+msgid "Cost Details"
+msgstr "Podrobnosti ceny"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Cost Subtype"
+msgstr "Poddruh nákladu"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Cost Type"
+msgstr "Typ nákladu"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_cost
+msgid "Cost related to a vehicle"
+msgstr "Náklady spojené s vozidlem"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Cost that is paid only once at the creation of the contract"
+msgstr "Náklady které se platí pouze (jednou) při uzavření smlouvy"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,cost_subtype_id:0
+msgid "Cost type purchased with this cost"
+msgstr "Druh výdaje zaplacený touto částkou"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,cost_count:0
+msgid "Costs"
+msgstr "Náklady"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs
+#: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
+msgid "Costs Analysis"
+msgstr "Analýza nákladů"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_graph
+msgid "Costs Per Month"
+msgstr "Náklady za měsíc"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,cost_generated:0
+msgid ""
+"Costs paid at regular intervals, depending on the cost frequency. If the "
+"cost frequency is set to unique, the cost will be logged at the start date"
+msgstr "Náklady placeny v pravidelných intervalech, v závislosti na frekvenci nákladů. Je-li frekvence nákladů nastavena na \"jedinečné\", bude zaznamenána cena ke dni zahájení"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid ""
+"Create a new contract automatically with all the same informations except "
+"for the date that will start at the end of current contract"
+msgstr "Vytvořit novou smlouvu automaticky se všemi stejnými informacemi kromě data, které bude zahájeno na konci stávající smlouvy"
+
+#. module: fleet
+#: field:fleet.contract.state,create_uid:0
+#: field:fleet.service.type,create_uid:0 field:fleet.vehicle,create_uid:0
+#: field:fleet.vehicle.cost,create_uid:0
+#: field:fleet.vehicle.log.contract,create_uid:0
+#: field:fleet.vehicle.log.fuel,create_uid:0
+#: field:fleet.vehicle.log.services,create_uid:0
+#: field:fleet.vehicle.model,create_uid:0
+#: field:fleet.vehicle.model.brand,create_uid:0
+#: field:fleet.vehicle.odometer,create_uid:0
+#: field:fleet.vehicle.state,create_uid:0 field:fleet.vehicle.tag,create_uid:0
+msgid "Created by"
+msgstr "Vytvořil(a)"
+
+#. module: fleet
+#: field:fleet.contract.state,create_date:0
+#: field:fleet.service.type,create_date:0 field:fleet.vehicle,create_date:0
+#: field:fleet.vehicle.cost,create_date:0
+#: field:fleet.vehicle.log.contract,create_date:0
+#: field:fleet.vehicle.log.fuel,create_date:0
+#: field:fleet.vehicle.log.services,create_date:0
+#: field:fleet.vehicle.model,create_date:0
+#: field:fleet.vehicle.model.brand,create_date:0
+#: field:fleet.vehicle.odometer,create_date:0
+#: field:fleet.vehicle.state,create_date:0
+#: field:fleet.vehicle.tag,create_date:0
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: fleet
+#: help:fleet.vehicle,state_id:0
+msgid "Current state of the vehicle"
+msgstr "Aktuální stav vozidla"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Daily"
+msgstr "Denně"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,date:0 field:fleet.vehicle.odometer,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: fleet
+#: help:fleet.vehicle,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Datum posledního vzkazu u tohoto záznamu."
+
+#. module: fleet
+#: help:fleet.vehicle.cost,date:0
+msgid "Date when the cost has been executed"
+msgstr "Datum, kdy byly náklady realizovány"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,start_date:0
+msgid "Date when the coverage of the contract begins"
+msgstr "Datum, kdy plnění smlouvy začíná"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,expiration_date:0
+msgid ""
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
+msgstr "Datum, kdy plnění smlouvy zaniká (standardně jeden rok od počátku plnění)"
+
+#. module: fleet
+#: help:fleet.vehicle,acquisition_date:0
+msgid "Date when the vehicle has been bought"
+msgstr "Datum pořízení vozidla"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_2
+msgid "Depreciation and Interests"
+msgstr "Odpisy a úroky"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Diesel"
+msgstr "Nafta"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_17
+msgid "Door Window Motor/Regulator Replacement"
+msgstr "Výměna motoru ovládání oken"
+
+#. module: fleet
+#: field:fleet.vehicle,doors:0
+msgid "Doors Number"
+msgstr "Počet dveří"
+
+#. module: fleet
+#: field:fleet.vehicle,driver_id:0
+msgid "Driver"
+msgstr "Řidič"
+
+#. module: fleet
+#: help:fleet.vehicle,driver_id:0
+msgid "Driver of the vehicle"
+msgstr "Řidič vozu"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:404
+#, python-format
+msgid "Driver: from '%s' to '%s'"
+msgstr "Řidič: od '%s' do '%s'"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Effective Costs"
+msgstr "Efektivní náklady"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Electric"
+msgstr "Elektřina"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_17
+msgid "Emissions"
+msgstr "Emise"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr "Auto zaměstnance"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:47
+#, python-format
+msgid "Emptying the odometer value of a vehicle is not allowed."
+msgstr "Vynulování tachometru vozidla není povoleno."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_18
+msgid "Engine Belt Inspection"
+msgstr "Kontrola klínového řemene/rozvodového řetězu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_19
+msgid "Engine Coolant Replacement"
+msgstr "Výměna chladiče motoru"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "Engine Options"
+msgstr "Parametry motoru"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_20
+msgid "Engine/Drive Belt(s) Replacement"
+msgstr "Výměna klínového řemene/rozvodového řetězu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_13
+msgid "Entry into service tax"
+msgstr "Poplatek za uvedení do provozu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_21
+msgid "Exhaust Manifold Replacement"
+msgstr "Výměna výfukového potrubí"
+
+#. module: fleet
+#: model:ir.module.category,name:fleet.module_fleet_category
+#: model:ir.ui.menu,name:fleet.menu_fleet_reporting
+#: model:ir.ui.menu,name:fleet.menu_root
+msgid "Fleet"
+msgstr "Automobily"
+
+#. module: fleet
+#: field:fleet.vehicle,message_follower_ids:0
+msgid "Followers"
+msgstr "Sledující"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,cost_type:0
+msgid "For internal purpose only"
+msgstr "Pro interní účely"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Frequency of the recuring cost"
+msgstr "Frekvence pravidelného nákladu"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Fuel"
+msgstr "Palivo"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_graph
+msgid "Fuel Costs Per Month"
+msgstr "Výdaje za pohonné hmoty za měsíc"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_22
+msgid "Fuel Injector Replacement"
+msgstr "Výměna vstřiků paliva"
+
+#. module: fleet
+#: field:fleet.vehicle,fuel_logs_count:0 field:fleet.vehicle,log_fuel:0
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_tree
+msgid "Fuel Logs"
+msgstr "Historie tankování"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_23
+msgid "Fuel Pump Replacement"
+msgstr "Výměna palivového čerpadla"
+
+#. module: fleet
+#: field:fleet.vehicle,fuel_type:0
+msgid "Fuel Type"
+msgstr "Typ paliva"
+
+#. module: fleet
+#: help:fleet.vehicle,fuel_type:0
+msgid "Fuel Used by the vehicle"
+msgstr "Palivo použité v tomto voze"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
+msgid "Fuel log for vehicles"
+msgstr "Historie tankování proto toto vozidlo"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Gasoline"
+msgstr "Benzín"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "General Properties"
+msgstr "Hlavní vlastnosti"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,generated_cost_ids:0
+msgid "Generated Costs"
+msgstr "Vytvořené náklady"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Generated Recurring Costs"
+msgstr "Vytvořené opakující se výdaje"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
+msgid "Group By"
+msgstr "Seskupit podle"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+msgid "Has Alert(s)"
+msgstr "Má upozornění"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_overdue:0
+msgid "Has Contracts Overdued"
+msgstr "Má smlouvy po splatnosti"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_due_soon:0
+msgid "Has Contracts to renew"
+msgstr "Má smlouvy k obnovení"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_24
+msgid "Head Gasket(s) Replacement"
+msgstr "Výměna těsnění hlavy"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_25
+msgid "Heater Blower Motor Replacement"
+msgstr "Výměna ohřívače vzduchu motoru"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_26
+msgid "Heater Control Valve Replacement"
+msgstr "Výměna řídícího ventilu topení"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_27
+msgid "Heater Core Replacement"
+msgstr "Výměna ohřívače"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_28
+msgid "Heater Hose Replacement"
+msgstr "Výměna hadice ohřívače"
+
+#. module: fleet
+#: help:fleet.vehicle,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Udržuje záznamy o komunikaci (počet zpráv, …). Tento souhrn je přímo v HTML formátu aby mohl být vložen do zobrazení kanban."
+
+#. module: fleet
+#: field:fleet.vehicle,horsepower:0
+msgid "Horsepower"
+msgstr "Výkon v koních"
+
+#. module: fleet
+#: field:fleet.vehicle,horsepower_tax:0
+msgid "Horsepower Taxation"
+msgstr "Zdanění podle výkonu HP"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Hybrid"
+msgstr "Hybrid"
+
+#. module: fleet
+#: field:fleet.contract.state,id:0 field:fleet.service.type,id:0
+#: field:fleet.vehicle,id:0 field:fleet.vehicle.cost,id:0
+#: field:fleet.vehicle.log.contract,id:0 field:fleet.vehicle.log.fuel,id:0
+#: field:fleet.vehicle.log.services,id:0 field:fleet.vehicle.model,id:0
+#: field:fleet.vehicle.model.brand,id:0 field:fleet.vehicle.odometer,id:0
+#: field:fleet.vehicle.state,id:0 field:fleet.vehicle.tag,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: fleet
+#: help:fleet.vehicle,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Pokud je zaškrtnuto, nové zprávy vyžadují vaši pozornost."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_29
+msgid "Ignition Coil Replacement"
+msgstr "Výměna startovací cívky"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "In Progress"
+msgstr "Probíhá"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,cost_ids:0
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Included Services"
+msgstr "Zahrnuté služby"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Indicative Cost"
+msgstr "Orientační cena"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Indicative Costs"
+msgstr "Orientační náklady"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs_non_effective
+#: model:ir.ui.menu,name:fleet.menu_fleet_reporting_indicative_costs
+msgid "Indicative Costs Analysis"
+msgstr "Analýza orientačních nákladů"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: field:fleet.vehicle.log.contract,sum_cost:0
+msgid "Indicative Costs Total"
+msgstr "Orientační náklady celkem"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr "Informace o vozidle"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_30
+msgid "Intake Manifold Gasket Replacement"
+msgstr "Výměna těsnění sacího potrubí"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Invoice Date"
+msgstr "Datum vystavení faktury"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,inv_ref:0
+#: field:fleet.vehicle.log.services,inv_ref:0
+msgid "Invoice Reference"
+msgstr "Značka faktury"
+
+#. module: fleet
+#: field:fleet.vehicle,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Sleduje"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr "Junior"
+
+#. module: fleet
+#: selection:fleet.vehicle,odometer_unit:0
+msgid "Kilometers"
+msgstr "Kilometrů"
+
+#. module: fleet
+#: field:fleet.vehicle,message_last_post:0
+msgid "Last Message Date"
+msgstr "Datum posledního vzkazu"
+
+#. module: fleet
+#: field:fleet.vehicle,odometer:0
+msgid "Last Odometer"
+msgstr "Poslední stav tachometru"
+
+#. module: fleet
+#: field:fleet.contract.state,write_uid:0 field:fleet.service.type,write_uid:0
+#: field:fleet.vehicle,write_uid:0 field:fleet.vehicle.cost,write_uid:0
+#: field:fleet.vehicle.log.contract,write_uid:0
+#: field:fleet.vehicle.log.fuel,write_uid:0
+#: field:fleet.vehicle.log.services,write_uid:0
+#: field:fleet.vehicle.model,write_uid:0
+#: field:fleet.vehicle.model.brand,write_uid:0
+#: field:fleet.vehicle.odometer,write_uid:0
+#: field:fleet.vehicle.state,write_uid:0 field:fleet.vehicle.tag,write_uid:0
+msgid "Last Updated by"
+msgstr "Naposled upraveno"
+
+#. module: fleet
+#: field:fleet.contract.state,write_date:0
+#: field:fleet.service.type,write_date:0 field:fleet.vehicle,write_date:0
+#: field:fleet.vehicle.cost,write_date:0
+#: field:fleet.vehicle.log.contract,write_date:0
+#: field:fleet.vehicle.log.fuel,write_date:0
+#: field:fleet.vehicle.log.services,write_date:0
+#: field:fleet.vehicle.model,write_date:0
+#: field:fleet.vehicle.model.brand,write_date:0
+#: field:fleet.vehicle.odometer,write_date:0
+#: field:fleet.vehicle.state,write_date:0 field:fleet.vehicle.tag,write_date:0
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_leasing
+msgid "Leasing"
+msgstr "Umístění"
+
+#. module: fleet
+#: field:fleet.vehicle,license_plate:0
+msgid "License Plate"
+msgstr "Poznávací značka"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:411
+#, python-format
+msgid "License Plate: from '%s' to '%s'"
+msgstr "Poznávací značka: od '%s' do '%s'"
+
+#. module: fleet
+#: help:fleet.vehicle,license_plate:0
+msgid "License plate number of the vehicle (ie: plate number for a car)"
+msgstr "SPZ vozidla"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,liter:0
+msgid "Liter"
+msgstr "Litr"
+
+#. module: fleet
+#: field:fleet.vehicle,location:0
+msgid "Location"
+msgstr "Umístění"
+
+#. module: fleet
+#: help:fleet.vehicle,location:0
+msgid "Location of the vehicle (garage, ...)"
+msgstr "Umístění vozidla (garáž, atd...)"
+
+#. module: fleet
+#: field:fleet.vehicle,image:0 field:fleet.vehicle.model,image:0
+#: field:fleet.vehicle.model.brand,image:0
+msgid "Logo"
+msgstr "Logo"
+
+#. module: fleet
+#: field:fleet.vehicle,image_medium:0 field:fleet.vehicle.model,image_medium:0
+msgid "Logo (medium)"
+msgstr "Logo (střední)"
+
+#. module: fleet
+#: field:fleet.vehicle,image_small:0 field:fleet.vehicle.model,image_small:0
+msgid "Logo (small)"
+msgstr "Logo (malé)"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_11
+msgid "Management Fee"
+msgstr "Poplatek za správu"
+
+#. module: fleet
+#: model:res.groups,name:fleet.group_fleet_manager
+msgid "Manager"
+msgstr "vedoucí"
+
+#. module: fleet
+#: selection:fleet.vehicle,transmission:0
+msgid "Manual"
+msgstr "Ruční"
+
+#. module: fleet
+#: help:fleet.vehicle.model.brand,image_medium:0
+msgid ""
+"Medium-sized logo of the brand. It is automatically resized as a 128x128px "
+"image, with aspect ratio preserved. Use this field in form views or some "
+"kanban views."
+msgstr "Střední obrázek loga značky. Je automaticky přepočítán na 128x128 bodů se zachováním poměru stran. Použijte toto pole v zobrazeních 'formulář' nebo 'kanban'."
+
+#. module: fleet
+#: field:fleet.vehicle.model.brand,image_medium:0
+msgid "Medium-sized photo"
+msgstr "Střední obrázek"
+
+#. module: fleet
+#: field:fleet.vehicle,message_ids:0
+msgid "Messages"
+msgstr "Zprávy"
+
+#. module: fleet
+#: help:fleet.vehicle,message_ids:0
+msgid "Messages and communication history"
+msgstr "Zprávy a historie komunikace"
+
+#. module: fleet
+#: selection:fleet.vehicle,odometer_unit:0
+msgid "Miles"
+msgstr "Míle"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: field:fleet.vehicle,model_id:0
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
+msgid "Model"
+msgstr "Model"
+
+#. module: fleet
+#: field:fleet.vehicle.model,brand_id:0
+#: view:fleet.vehicle.model.brand:fleet.fleet_vehicle_model_brand_form
+#: view:fleet.vehicle.model.brand:fleet.fleet_vehicle_model_brand_tree
+msgid "Model Brand"
+msgstr "Model"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+msgid "Model brand of Vehicle"
+msgstr "Značka modelu vozu"
+
+#. module: fleet
+#: field:fleet.vehicle.model,modelname:0
+msgid "Model name"
+msgstr "Model"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_model
+msgid "Model of a vehicle"
+msgstr "Model vozidla"
+
+#. module: fleet
+#: help:fleet.vehicle,model_id:0
+msgid "Model of the vehicle"
+msgstr "Model vozidla"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:400
+#, python-format
+msgid "Model: from '%s' to '%s'"
+msgstr "Model: od '%s' do '%s'"
+
+#. module: fleet
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_tree
+msgid "Models"
+msgstr "Modely"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Month"
+msgstr "Měsíc"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Monthly"
+msgstr "Měsíčně"
+
+#. module: fleet
+#: field:fleet.service.type,name:0 field:fleet.vehicle,name:0
+#: field:fleet.vehicle.cost,name:0 field:fleet.vehicle.log.contract,name:0
+#: field:fleet.vehicle.model,name:0 field:fleet.vehicle.odometer,name:0
+#: field:fleet.vehicle.state,name:0 field:fleet.vehicle.tag,name:0
+msgid "Name"
+msgstr "Název"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_name:0
+msgid "Name of contract to renew soon"
+msgstr "Jméno smlouvy k brzkému obnovení"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "No"
+msgstr "Ne"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:399 code:addons/fleet/fleet.py:403
+#: code:addons/fleet/fleet.py:407 code:addons/fleet/fleet.py:410
+#, python-format
+msgid "None"
+msgstr "Žádné"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: field:fleet.vehicle.log.fuel,notes:0
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+#: field:fleet.vehicle.log.services,notes:0
+msgid "Notes"
+msgstr "Poznámky"
+
+#. module: fleet
+#: help:fleet.vehicle,doors:0
+msgid "Number of doors of the vehicle"
+msgstr "Počet dveří vozidla"
+
+#. module: fleet
+#: help:fleet.vehicle,seats:0
+msgid "Number of seats of the vehicle"
+msgstr "Počet sedadel ve vozidle"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,odometer_count:0 field:fleet.vehicle.cost,odometer_id:0
+msgid "Odometer"
+msgstr "Tachometr"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Odometer Details"
+msgstr "Detaily tachometru"
+
+#. module: fleet
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_form
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_tree
+msgid "Odometer Logs"
+msgstr "Historie tachometru"
+
+#. module: fleet
+#: field:fleet.vehicle,odometer_unit:0
+msgid "Odometer Unit"
+msgstr "Jednotky tachometru"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,odometer:0 field:fleet.vehicle.odometer,value:0
+msgid "Odometer Value"
+msgstr "Počet najetých Km na tachometru"
+
+#. module: fleet
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_graph
+msgid "Odometer Values Per Vehicle"
+msgstr "Hodnoty tachometru podle vozidel"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Odometer details"
+msgstr "Detaily tachometru"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr "Historie tachometru pro vozidlo"
+
+#. module: fleet
+#: help:fleet.vehicle,odometer:0 help:fleet.vehicle.cost,odometer:0
+#: help:fleet.vehicle.cost,odometer_id:0
+msgid "Odometer measure of the vehicle at the moment of this log"
+msgstr "Stav tachometru vozidla v okamžiku tohoto záznamu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_31
+msgid "Oil Change"
+msgstr "Výměna oleje"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_32
+msgid "Oil Pump Replacement"
+msgstr "Výměna olejového čerpadla"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_omnium
+msgid "Omnium"
+msgstr "Celková suma"
+
+#. module: fleet
+#: model:ir.actions.client,name:fleet.action_fleet_menu
+msgid "Open Fleet Menu"
+msgstr "Otevři menu Flotily"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:47
+#, python-format
+msgid "Operation not allowed!"
+msgstr "Operace není povolena!"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_16
+msgid "Options"
+msgstr "Možnosti"
+
+#. module: fleet
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Other"
+msgstr "Jiné"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_33
+msgid "Other Maintenance"
+msgstr "Jiná údržba"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_34
+msgid "Oxygen Sensor Replacement"
+msgstr "Výměna senzoru vzduchu"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: field:fleet.vehicle.cost,parent_id:0
+msgid "Parent"
+msgstr "Nadřazené"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,parent_id:0
+msgid "Parent cost to this current cost"
+msgstr "Výdaje nadřazené k těmto výdajům"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,purchaser_id:0
+msgid "Person to which the contract is signed for"
+msgstr "Osoba, na kterou je smlouva podepsána"
+
+#. module: fleet
+#: field:fleet.vehicle,power:0
+msgid "Power"
+msgstr "Síla"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_35
+msgid "Power Steering Hose Replacement"
+msgstr "Výměna hadice posilovače řízení"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_36
+msgid "Power Steering Pump Replacement"
+msgstr "Výměna pumpy posilovače řízení"
+
+#. module: fleet
+#: help:fleet.vehicle,power:0
+msgid "Power in kW of the vehicle"
+msgstr "Výkon vozidla v kW"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_tree
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Price"
+msgstr "Cena"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,price_per_liter:0
+msgid "Price Per Liter"
+msgstr "Cena za litr"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr "Zakoupeno"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,purchaser_id:0
+#: field:fleet.vehicle.log.services,purchaser_id:0
+msgid "Purchaser"
+msgstr "Nákupčí"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_37
+msgid "Radiator Repair"
+msgstr "Oprava chladiče"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_generated:0
+msgid "Recurring Cost Amount"
+msgstr "Pravidelné výdaje"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Recurring Cost Frequency"
+msgstr "Frekvence pravidelných výdajů"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_refueling
+msgid "Refueling"
+msgstr "Tankování"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+msgid "Refueling Details"
+msgstr "Detaily tankování"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:734
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: model:ir.actions.act_window,name:fleet.act_renew_contract
+#, python-format
+msgid "Renew Contract"
+msgstr "Obnovení smlouvy"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_12
+msgid "Rent (Excluding VAT)"
+msgstr "Půjčovné (mimo DPH)"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_8
+msgid "Repair and maintenance"
+msgstr "Oprava a údržba"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_repairing
+msgid "Repairing"
+msgstr "Opravy"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_10
+msgid "Replacement Vehicle"
+msgstr "Výměna vozu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_15
+msgid "Residual value (Excluding VAT)"
+msgstr "Zůstatková hodnota (mimo DPH)"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_19
+msgid "Residual value in %"
+msgstr "Zůstatková hodnota v %"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_38
+msgid "Resurface Rotors"
+msgstr "Přebroušení kotoučů"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_39
+msgid "Rotate Tires"
+msgstr "Prohození pneumatik"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_40
+msgid "Rotor Replacement"
+msgstr "Výměna kotoučů"
+
+#. module: fleet
+#: field:fleet.vehicle,seats:0
+msgid "Seats Number"
+msgstr "Míst k sezení"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr "Sedan"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr "Senior"
+
+#. module: fleet
+#: field:fleet.vehicle.state,sequence:0
+msgid "Sequence"
+msgstr "Číselná řada"
+
+#. module: fleet
+#: selection:fleet.service.type,category:0
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Service"
+msgstr "Služba"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Service Type"
+msgstr "Typ služby"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
+msgid "Service Types"
+msgstr "Typy služeb"
+
+#. module: fleet
+#: view:fleet.service.type:fleet.fleet_vehicle_service_types_tree
+msgid "Service types"
+msgstr "Typy služeb"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,service_count:0
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Services"
+msgstr "Služby"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_graph
+msgid "Services Costs Per Month"
+msgstr "Výdaje za servisy za měsíc"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Services Details"
+msgstr "Detaily servisů"
+
+#. module: fleet
+#: field:fleet.vehicle,log_services:0
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_search
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_tree
+msgid "Services Logs"
+msgstr "Historie servisů"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "Servisy pro vozidlo"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Set Contract In Progress"
+msgstr "Nastavit smlouvu na \"probíhá\""
+
+#. module: fleet
+#: field:fleet.vehicle.model.brand,image_small:0
+msgid "Smal-sized photo"
+msgstr "Malá fotografie"
+
+#. module: fleet
+#: help:fleet.vehicle.model.brand,image_small:0
+msgid ""
+"Small-sized photo of the brand. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr "Malý obrázek tohoto loga. Je automaticky zmenšen na rozměr 64x64 bodů se zachováním poměru stran. Použijte toto pole kdekoli je požadován malý obrázek."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_6
+msgid "Snow tires"
+msgstr "Zimní pneumatiky"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_41
+msgid "Spark Plug Replacement"
+msgstr "Výměna zapalovacích svíček"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_42
+msgid "Starter Replacement"
+msgstr "Výměna startéru"
+
+#. module: fleet
+#: field:fleet.vehicle,state_id:0
+#: view:fleet.vehicle.state:fleet.fleet_vehicle_state_tree
+msgid "State"
+msgstr "Stát"
+
+#. module: fleet
+#: sql_constraint:fleet.vehicle.state:0
+msgid "State name already exists"
+msgstr "Název stavu již existuje"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:408
+#, python-format
+msgid "State: from '%s' to '%s'"
+msgstr "Stav: od '%s' do '%s'"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: field:fleet.vehicle.log.contract,state:0
+msgid "Status"
+msgstr "Stav"
+
+#. module: fleet
+#: field:fleet.vehicle,message_summary:0
+msgid "Summary"
+msgstr "Shrnutí"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_5
+#: model:fleet.service.type,name:fleet.type_service_service_7
+msgid "Summer tires"
+msgstr "Letní pneumatiky"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,insurer_id:0
+#: field:fleet.vehicle.log.fuel,vendor_id:0
+#: field:fleet.vehicle.log.services,vendor_id:0
+msgid "Supplier"
+msgstr "Dodavatel"
+
+#. module: fleet
+#: field:fleet.vehicle,tag_ids:0
+msgid "Tags"
+msgstr "Značky"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_3
+msgid "Tax roll"
+msgstr "Silniční daň"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Terminate Contract"
+msgstr "Vypovědět smlouvu"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "Terminated"
+msgstr "Ukončeno"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: field:fleet.vehicle.log.contract,notes:0
+msgid "Terms and Conditions"
+msgstr "Podmínky"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_43
+msgid "Thermostat Replacement"
+msgstr "Výměna termostatu"
+
+#. module: fleet
+#: help:fleet.vehicle.model.brand,image:0
+msgid ""
+"This field holds the image used as logo for the brand, limited to "
+"1024x1024px."
+msgstr "Pole obsahuje obrázek používaný jako logo značky vozu, maximálně 1024x1024 bodů."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_44
+msgid "Tie Rod End Replacement"
+msgstr "Výměna hlavice spojovací tyče"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_45
+msgid "Tire Replacement"
+msgstr "Výměna pneumatik"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_46
+msgid "Tire Service"
+msgstr "Pneuservis"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "To Close"
+msgstr "K uzavření"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_tree
+msgid "Total"
+msgstr "Celkem"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,amount:0
+msgid "Total Price"
+msgstr "Celková cena"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_14
+msgid "Total expenses (Excluding VAT)"
+msgstr "Celkové výdaje (mimo DPH)"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_total:0
+msgid "Total of contracts due or overdue minus one"
+msgstr "Celkový počet smluv splatných nebo po splatnosti mínus jedna"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_18
+msgid "Touring Assistance"
+msgstr "Asistenční služba"
+
+#. module: fleet
+#: field:fleet.vehicle,transmission:0
+msgid "Transmission"
+msgstr "Převodovka"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_47
+msgid "Transmission Filter Replacement"
+msgstr "Výměna olejového filtru v převodovce"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_48
+msgid "Transmission Fluid Replacement"
+msgstr "Výměna oleje v převodovce"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_49
+msgid "Transmission Replacement"
+msgstr "Výměna převodovky"
+
+#. module: fleet
+#: help:fleet.vehicle,transmission:0
+msgid "Transmission Used by the vehicle"
+msgstr "Druh převodovky v tomto vozu"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,cost_subtype_id:0
+msgid "Type"
+msgstr "Druh"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_service_type
+msgid "Type of services available on a vehicle"
+msgstr "Typy služeb dostupných pro vozidlo"
+
+#. module: fleet
+#: help:fleet.vehicle,vin_sn:0
+msgid "Unique number written on the vehicle motor (VIN/SN number)"
+msgstr "Jedinečné číslo vyražené v prostoru motoru (tzv. VIN číslo)"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,odometer_unit:0
+#: field:fleet.vehicle.odometer,unit:0
+msgid "Unit"
+msgstr "Jednotka"
+
+#. module: fleet
+#: help:fleet.vehicle,odometer_unit:0
+msgid "Unit of the odometer "
+msgstr "Jednotky tachometru"
+
+#. module: fleet
+#: field:fleet.vehicle,message_unread:0
+msgid "Unread Messages"
+msgstr "Nepřečtené zprávy"
+
+#. module: fleet
+#: help:fleet.vehicle.state,sequence:0
+msgid "Used to order the note stages"
+msgstr "Používá se pro poznámku ke stavu objednávky"
+
+#. module: fleet
+#: model:res.groups,name:fleet.group_fleet_user
+msgid "User"
+msgstr "Uživatel"
+
+#. module: fleet
+#: help:fleet.vehicle,car_value:0
+msgid "Value of the bought vehicle"
+msgstr "Hodnota zakoupeného vozidla"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: view:fleet.vehicle:fleet.fleet_vehicle_tree
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: field:fleet.vehicle.cost,vehicle_id:0
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
+#: field:fleet.vehicle.odometer,vehicle_id:0
+msgid "Vehicle"
+msgstr "Vozidlo"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_cost_tree
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
+msgid "Vehicle Costs"
+msgstr "Výdaje vozidla"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Vehicle Costs by Month"
+msgstr "Výdaje vozidla za měsíc"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+msgid "Vehicle Details"
+msgstr "Detaily vozidla"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
+msgid "Vehicle Model"
+msgstr "Model vozidla"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
+msgid "Vehicle Status"
+msgstr "Stav vozidla"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,vehicle_id:0
+msgid "Vehicle concerned by this log"
+msgstr "Vozidlo dotčené tímto záznamem"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_form
+msgid "Vehicle costs"
+msgstr "Výdaje vozidla"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
+#: model:ir.ui.menu,name:fleet.fleet_vehicles
+msgid "Vehicles"
+msgstr "Vozidla"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+msgid "Vehicles Contracts"
+msgstr "Smlouvy na vozy"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
+msgid "Vehicles Fuel Logs"
+msgstr "Historie tankování"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
+msgid "Vehicles Odometer"
+msgstr "Stavy tachometrů"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
+msgid "Vehicles Services Logs"
+msgstr "Historie servisů"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_effective_costs_report
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_indicative_costs_report
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
+msgid "Vehicles costs"
+msgstr "Ceny vozů"
+
+#. module: fleet
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
+msgid "Vehicles odometers"
+msgstr "Stavy tachometrů"
+
+#. module: fleet
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
+#: field:fleet.vehicle.model,vendors:0
+msgid "Vendors"
+msgstr "Dodavatelé"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,days_left:0
+msgid "Warning Date"
+msgstr "Datum upozornění"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_50
+msgid "Water Pump Replacement"
+msgstr "Výměna vodní pumpy"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Weekly"
+msgstr "Týdně"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_51
+msgid "Wheel Alignment"
+msgstr "Seřízení kol"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_52
+msgid "Wheel Bearing Replacement"
+msgstr "Výměna ložiska v kole"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_53
+msgid "Windshield Wiper(s) Replacement"
+msgstr "Výměna stěračů"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Write here all other information relative to this contract"
+msgstr "Zde napište jakékoliv další informace vztahující se k této smlouvě"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,notes:0
+msgid "Write here all supplementary informations relative to this contract"
+msgstr "Zde napište všechny doplňkové informace vztahující se k této smlouvě"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+msgid "Write here any other information"
+msgstr "Zde napište jakékoliv další informace"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Write here any other information related to the service completed."
+msgstr "Zde napište jakékoliv další informace vztahující se k dokončenému servisu"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Year"
+msgstr "Rok"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Yearly"
+msgstr "Ročně"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "amount"
+msgstr "množství"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_kanban
+msgid "and"
+msgstr "a"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "g/km"
+msgstr "g/km"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_kanban
+msgid "other(s)"
+msgstr "ostatní"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show all the costs for this vehicle"
+msgstr "Zobrazit všechny výdaje na toto vozidlo"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the contract for this vehicle"
+msgstr "Zobrazit smlouvu pro toto vozidlo"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the fuel logs for this vehicle"
+msgstr "Zobrazit historii tankování pro toto vozidlo"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the odometer logs for this vehicle"
+msgstr "Zobrazit historii tachometru pro toto vozidlo"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the services logs for this vehicle"
+msgstr "Zobrazit historii servisů na tomto vozidle"

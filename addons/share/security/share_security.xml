@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record model="ir.module.category" id="module_category_share">
+            <field name="name">Sharing</field>
+            <field name="parent_id" ref="base.module_category_tools"/>
+            <field name="sequence">26</field>
+        </record>
+
+        <record id="group_share_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="comment">
+Members of this groups have access to the sharing wizard, which allows them to invite external users to view or edit some of their documents.</field>
+            <field name="category_id" ref="module_category_share"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="group_shared" model="res.groups">
+            <field name="name">Shared Group</field>
+            <field name="comment">
+This group is a template group for shared users, giving basic access needs, the menus for instance.</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="share">1</field>
+        </record>
+    </data>
+</openerp>

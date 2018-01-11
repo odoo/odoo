@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wkf" model="workflow">
+            <field name="name">hr.payslip.basic</field>
+            <field name="osv">hr.payslip</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">draft</field>
+            <field name="flow_start">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state': 'draft'})</field>
+            <field name="split_mode">OR</field>
+        </record>
+
+        <record id="act_verify" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">verify</field>
+            <field name="action">hr_verify_sheet()</field>
+            <field name="kind">function</field>
+        </record>
+
+        <record id="act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">cancel</field>
+            <field name="action">cancel_sheet()</field>
+            <field name="kind">function</field>
+        </record>
+
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf"/>
+            <field name="name">done</field>
+            <field name="action">process_sheet()</field>
+            <field name="kind">function</field>
+            <field name="flow_stop">True</field>
+        </record>
+
+        <record id="t1" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_verify"/>
+            <field name="signal">hr_verify_sheet</field>
+        </record>
+
+        <record id="t2" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel_sheet</field>
+        </record>
+        
+         <record id="t3" model="workflow.transition">
+            <field name="act_from" ref="act_cancel"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="signal">draft</field>
+        </record>
+        
+         <record id="t4" model="workflow.transition">
+            <field name="act_from" ref="act_verify"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel_sheet</field>
+        </record>
+        
+        <record id="t5" model="workflow.transition">
+            <field name="act_from" ref="act_verify"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="condition">check_done()</field>
+        </record>
+        
+    </data>
+</openerp>

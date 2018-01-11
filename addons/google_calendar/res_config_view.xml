@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+         <record id="view_calendar_config_settings" model="ir.ui.view">
+            <field name="name">Calendar_settings_grgrgrgt</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <div name="google_calendar" position="replace">
+                    <div> 
+                        <div>
+                            <label for="google_cal_sync"/>
+                            <field name="google_cal_sync" class="oe_inline"/>                            
+                            <div> 
+                                <div attrs="{'invisible':[('google_cal_sync','=',False)]}">
+                                    <br/><h2>To setup the signin process with Google, first you have to perform the following steps</h2>
+                                    <ul> 
+                                        <li> Connect on your google account and go to <a href='https://console.developers.google.com/' target='_blank'>https://console.developers.google.com/</a> </li>
+                                        <li> 
+                                            Click on <b>'Create Project'</b> and enter a project name and change your id if you want. Don't forget to accept the Terms of Services
+                                            <br/><br/><img src='/google_calendar/static/src/img/setup_01.png' class='calendar_img_tuto'/> 
+                                            <br/><img src='/google_calendar/static/src/img/setup_02.png' class='calendar_img_tuto'/>   
+                                        </li>
+                                        <li> In the menu on left side, select the sub menu APIs (from menu APIs and auth) and click on <b>'Calendar API'</b>.
+                                            <br/> Activate the Calendar API by clicking on the blue button <b>'Enable API'</b>.
+                                            <br/> When it's done, the Calendar API overview will be available
+                                            <br/><br/> <img src='/google_calendar/static/src/img/setup_03.png' class='calendar_img_tuto'/>
+                                            <br/> <img src='/google_calendar/static/src/img/setup_04.png' class='calendar_img_tuto'/>
+                                            <br/> <img src='/google_calendar/static/src/img/setup_05.png' class='calendar_img_tuto'/>
+                                        </li> 
+                                        <li> 
+                                            In the menu on left side, select the sub menu <b>'Credentials'</b> (from menu APIs and auth) and click on button <b>'Create new Client ID'</b>
+                                            <br/><br/> <img src='/google_calendar/static/src/img/setup_06.png' class='calendar_img_tuto'/>
+                                        </li>
+                                        <li> Check that the Application type is set on <b>'Web Application'</b>, then click on <b>'Configure consent screen'</b>.
+                                            <br/> Specify an email address and a product name, then save.
+                                            <br/><br/> <img src='/google_calendar/static/src/img/setup_07.png' class='calendar_img_tuto'/>
+                                            <br/><img src='/google_calendar/static/src/img/setup_09.png' class='calendar_img_tuto'/>
+                                            <br/> You should now configure the allowed pages on which you will be redirected. To do it, you need to complete the field <b>"Authorized redirect URI"</b>
+                                            and set as value  (your own domain followed by <i>'/google_account/authentication'</i>):
+                                            <br/>==> <b><field name="server_uri" readonly="1" style='display:inline'/></b>
+                                            <br/> You can now click on <b>'Create Client ID'</b>
+                                            <br/><br/> <img src='/google_calendar/static/src/img/setup_10.png' class='calendar_img_tuto'/>
+                                        </li>
+                                        <li>Once done, you will have the both informations (<b>Client ID</b> and <b>Client Secret</b>) that you need to insert in the 2 fields below!
+                                            <br/><br/> <img src='/google_calendar/static/src/img/setup_08.png' class='calendar_img_tuto'/>
+                                        </li>
+                                        <a href="#" class="oe_link">Return at Top</a> 
+                                                                                
+                                    </ul>                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <group>
+                            <div class="calendar_settings">
+                                <label for="cal_client_id" string="Google Client ID" />
+                                <field name="cal_client_id" class="oe_inline" />  
+                            </div>
+                        </group> 
+                        <group>
+                            <div>
+                                <label for="cal_client_secret" string="Google Client Secret"/>
+                                <field name="cal_client_secret" class="oe_inline" password="True"/>
+                            </div>
+                        </group>                            
+                    </div>                         
+                       
+                </div>
+            </field>
+        </record>
+        
+
+        <record id="action_config_settings_google_calendar" model="ir.actions.act_window">
+            <field name="name">API Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem id="menu_calendar_google_tech_config" name="API Credentials" parent="calendar.menu_calendar_configuration" groups="base.group_no_one" action="action_config_settings_google_calendar"/>
+
+    </data>
+</openerp>

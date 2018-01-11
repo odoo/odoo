@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="state">open</field>
+        </record>
+    </data>
+    <data>
+        <record id="view_hr_apll_config_settings" model="ir.ui.view">
+            <field name="name">hr settings for recruitment</field>
+            <field name="model">hr.config.settings</field>
+            <field name="inherit_id" ref="hr.view_human_resources_configuration"/>
+            <field name="arch" type="xml">
+                <div name="recruitment" position="inside">
+                    <div>
+                        <field name="module_document" class="oe_inline"/>
+                        <label for="module_document"/>
+                    </div>
+                </div>
+                <xpath expr="//div[@name='hr_recruitment']" position="after">
+                    <div attrs="{'invisible': ['|',('module_hr_recruitment','=',False),('alias_domain', '=', False)]}">
+                        <label string="Default job email address"/>
+                        <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
+                        @
+                        <field name="alias_domain" class="oe_inline" readonly="1"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,6 @@
+-
+  !python {model: stock.warehouse}: |
+    #enable purchase on main warehouse
+    main_warehouse = self.browse(cr, uid, ref('stock.warehouse0'), context=context)
+    self.write(cr, uid, main_warehouse.id, {'buy_to_resupply': True}, context=context)
+

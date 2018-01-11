@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_membership_invoice_view" model="ir.ui.view">
+            <field name="name">membership.invoice.view.form</field>
+            <field name="model">membership.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Membership Invoice">
+                    <group>
+                        <field name="product_id" domain="[('membership','=',True)]" widget="selection" on_change="onchange_product(product_id)"/>
+                        <field name="member_price"/>
+                    </group>
+                    <footer>
+                        <button string="Invoice Membership" name="membership_invoice" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_membership_invoice_view" model="ir.actions.act_window">
+            <field name="name">Join Membership</field>
+            <field name="res_model">membership.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_membership_invoice_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <act_window name="Invoice Membership"
+            res_model="membership.invoice"
+            src_model="res.partner"
+            multi="True"
+            key2="client_action_multi"
+            view_mode="form"
+            id="action_membership_invoice_view"/>
+
+    </data>
+</openerp>

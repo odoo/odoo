@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates xml:space="preserve">
+<t t-name="im_chat.Conversation">
+    <div class="oe_im_chatview_header">
+        <span class="oe_im_chatview_header_name"></span>
+        <span class="oe_im_chatview_nbr_messages"/>
+        <span class="oe_im_chatview_right">
+            <div class="oe_im_chatview_close">×</div>
+        </span>
+    </div>
+    <div class="oe_im_chatview_content">
+        <div class="oe_im_chatview_status"/>
+        <div class="oe_im_chatview_content_bubbles"></div>
+    </div>
+    <div class="oe_im_chatview_footer">
+        <input class="oe_im_chatview_input" t-att-placeholder="widget.inputPlaceholder" />
+    </div>
+</t>
+<t t-name="im_chat.Conversation_content">
+    <t t-foreach="_.keys(list)" t-as="date">
+        <div class="oe_im_chatview_date_separator">
+            <t t-esc="Date.parse(date).toString(Date.CultureInfo.formatPatterns.longDate)"/>
+        </div>
+        <t t-foreach="list[date]" t-as="bubble">
+            <t t-if="bubble[0].type === 'message'">
+                <t t-call="im_chat.Conversation_message_bubble">
+                    <t t-set="messages" t-value="bubble"/>
+                </t>
+            </t>
+            <t t-if="bubble[0].type === 'meta'">
+                <t t-call="im_chat.Conversation_technical_bubble">
+                    <t t-set="messages" t-value="bubble"/>
+                </t>
+            </t>
+        </t>
+    </t>
+</t>
+<t t-name="im_chat.Conversation_message_bubble">
+    <div class="oe_im_chatview_message_bubble">
+        <div class="oe_im_chatview_clip">
+            <img class="oe_im_chatview_avatar" t-att-src="_.last(messages).from_id[2]"/>
+        </div>
+        <div class="oe_im_chatview_from"><t t-esc="_.last(messages).from_id[1]"/></div>
+        <div class="oe_im_chatview_bubble_list">
+            <t t-foreach="messages" t-as="m">
+                <div class="oe_im_chatview_bubble_item"><t t-raw="m.message"/></div>
+            </t>
+        </div>
+        <div class="oe_im_chatview_time"><t t-esc="Date.parse((_.last(messages).create_date)).toString('HH:mm')"/></div>
+    </div>
+</t>
+<t t-name="im_chat.Conversation_technical_bubble">
+    <div class="oe_im_chatview_technical_bubble">
+        <div class="oe_im_chatview_from"><t t-esc="_.last(messages).from_id[1]"/></div>
+        <div>
+            <t t-foreach="messages" t-as="m">
+                <div><t t-raw="m.message"/></div>
+            </t>
+        </div>
+        <div class="oe_im_chatview_time"><t t-esc="Date.parse((_.last(messages).create_date)).toString('HH:mm')"/></div>
+    </div>
+</t>
+
+<t t-name="im_chat.UserWidget">
+    <div class="oe_im_user ui-draggable">
+        <span class="oe_im_user_clip">
+            <img t-att-src="widget.get('image_url')" class="oe_im_user_avatar"/>
+        </span>
+        <span class="oe_im_user_name"><t t-esc="widget.get('name')"/></span>
+        <img t-att-src="'/im_chat/static/src/img/green.png'" t-att-data-im-user-id="widget.get('id')" class="oe_im_user_online"/>
+    </div>
+</t>
+<t t-name="im_chat.InstantMessaging">
+    <div class="oe_im">
+        <div class="oe_im_frame_header">
+            <span class="oe_e oe_im_search_icon">ô</span>
+            <input class="oe_im_searchbox" placeholder="Search users..."/>
+            <span class="oe_e oe_im_search_clear">[</span>
+        </div>
+        <div class="oe_im_users"></div>
+        <div class="oe_im_content"></div>
+    </div>
+</t>
+<t t-name="im_chat.ImTopButton">
+    <li t-att-title='_t("Display Instant Messaging")'>
+        <a href="#">
+              <i id="oe_topbar_imbutton_icon" class="fa fa-comments-o"/>
+        </a>
+    </li>
+</t>
+</templates>

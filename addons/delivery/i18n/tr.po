@@ -1,0 +1,584 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * delivery
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:04+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>\n"
+"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-8/language/tr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: tr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid "<="
+msgstr "<="
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a delivery price list for a specific region.\n"
+"              </p><p>\n"
+"                The delivery price list allows you to compute the cost and\n"
+"                sales price of the delivery according to the weight of the\n"
+"                products and other criteria. You can define several price lists\n"
+"                for each delivery method: per country or a zone in a specific\n"
+"                country defined by a postal code range.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Belirli bir bölge için bir teslimat fiyat listesi oluşturmak için tıklayın.\n              </p><p>\n                Teslimat fiyat listesi, ürünlerin ağırlığına ve diğer kriterlere göre\n                maliyet ve satış fiyatı hesaplamanızı sağlar. Her teslimat yöntemi\n                için birçok fiyat listesi oluşturabilirsiniz: posta kodu alanı ile tanımlanan\n                ülke için ya da belirli bir ülkedeki bir bölge için.\n              </p>\n            "
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allow to automatically compute the delivery price\n"
+"                according to your settings; on the sales order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Yeni bir teslimat yöntemi tanımlamak için tıklayın. \n              </p><p>\n                Her taşıyıcının (örn. UPS) birçok yöntemi olabilir (örn.\n                UPS Express, UPS Standard) ve bu yöntemlere ait ödeme kuralları\n                olabilir.\n              </p><p>\n                Bu yöntemler, ayarlarınıza göre teslimat fiyatlarını\n                satış siparişlerinde (teklife göre) veya faturada (teslimat\n                emirlerine göre) otomatik olarak hesaplar.\n              </p>\n            "
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid ">="
+msgstr ">="
+
+#. module: delivery
+#: field:delivery.carrier,active:0 field:delivery.grid,active:0
+msgid "Active"
+msgstr "Etkin"
+
+#. module: delivery
+#: view:sale.order:delivery.view_order_withcarrier_form
+msgid "Add in Quote"
+msgstr "Teklife Ekle"
+
+#. module: delivery
+#: field:delivery.carrier,pricelist_ids:0
+msgid "Advanced Pricing"
+msgstr "Gelişmiş Fiyatlandırma"
+
+#. module: delivery
+#: field:delivery.carrier,use_detailed_pricelist:0
+msgid "Advanced Pricing per Destination"
+msgstr "Adrese göre Peşin Fiyatlandırma"
+
+#. module: delivery
+#: field:delivery.carrier,amount:0
+msgid "Amount"
+msgstr "Tutar"
+
+#. module: delivery
+#: help:delivery.carrier,amount:0
+msgid ""
+"Amount of the order to benefit from a free shipping, expressed in the "
+"company currency"
+msgstr "Bedelsiz nakliyeden yararlanacak sipariş tutarı, firma para biriminde belirtilmiştir."
+
+#. module: delivery
+#: field:delivery.carrier,available:0
+msgid "Available"
+msgstr "Uygun"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.carrier:delivery.view_delivery_carrier_tree
+#: field:delivery.grid,carrier_id:0
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: field:stock.picking,carrier_id:0 view:website:stock.report_picking
+msgid "Carrier"
+msgstr "Nakliyeci"
+
+#. module: delivery
+#: view:stock.picking:delivery.view_picking_withcarrier_out_form
+msgid "Carrier Information"
+msgstr "Taşıyıcı Bilgisi"
+
+#. module: delivery
+#: field:stock.picking,carrier_tracking_ref:0
+msgid "Carrier Tracking Ref"
+msgstr "Nakliyeci İzleme Ref"
+
+#. module: delivery
+#: help:delivery.carrier,use_detailed_pricelist:0
+msgid ""
+"Check this box if you want to manage delivery prices that depends on the "
+"destination, the weight, the total of the order, etc."
+msgstr "Teslimat fiyatlarını varış yerine, ağırlığa, sipariş toplamına, v.s. göre yönetmek istiyorsanız bu kutuyu işaretleyin."
+
+#. module: delivery
+#: help:sale.order,carrier_id:0
+msgid ""
+"Complete this field if you plan to invoice the shipping based on picking."
+msgstr "Sevkiyatı toplamaya göre faturalandırmayı planlıyorsanız, bu alanı tamamlayın."
+
+#. module: delivery
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+msgid "Condition"
+msgstr "Koşul"
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Maliyet Fiyatı"
+
+#. module: delivery
+#: view:delivery.grid:delivery.view_delivery_grid_form
+#: field:delivery.grid,country_ids:0
+msgid "Countries"
+msgstr "Ülkeler"
+
+#. module: delivery
+#: field:delivery.carrier,create_uid:0 field:delivery.grid,create_uid:0
+#: field:delivery.grid.line,create_uid:0
+msgid "Created by"
+msgstr "Oluşturan"
+
+#. module: delivery
+#: field:delivery.carrier,create_date:0 field:delivery.grid,create_date:0
+#: field:delivery.grid.line,create_date:0
+msgid "Created on"
+msgstr "Oluşturma"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:162
+#, python-format
+msgid "Default price"
+msgstr "Varsayılan Fiyat"
+
+#. module: delivery
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
+msgstr "Teslimat"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "Teslimat Tablosu"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_grid_line
+msgid "Delivery Grid Line"
+msgstr "Teslimat Tablo Satırı"
+
+#. module: delivery
+#: field:delivery.carrier,grids_id:0
+msgid "Delivery Grids"
+msgstr "Teslimat Tabloları"
+
+#. module: delivery
+#: field:delivery.carrier,name:0 field:res.partner,property_delivery_carrier:0
+#: field:sale.order,carrier_id:0
+msgid "Delivery Method"
+msgstr "Teslimat Yöntemi"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "Teslimat Yöntemleri"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
+msgid "Delivery Pricelist"
+msgstr "Teslimat Fiyat Listesi"
+
+#. module: delivery
+#: field:delivery.carrier,product_id:0
+msgid "Delivery Product"
+msgstr "Teslimat Ürünü"
+
+#. module: delivery
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Delivery by Poste"
+msgstr "Postayla Teslim"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.grid:delivery.view_delivery_grid_form
+#: view:delivery.grid:delivery.view_delivery_grid_tree
+msgid "Delivery grids"
+msgstr "Teslimat tablosu"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.grid:delivery.view_delivery_grid_form
+msgid "Destination"
+msgstr "İstikamet"
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0
+msgid "Fixed"
+msgstr "Sabit"
+
+#. module: delivery
+#: field:delivery.carrier,free_if_more_than:0
+msgid "Free If Order Total Amount Is More Than"
+msgstr "Sipariş Toplam Tutarı Bundan Fazlaysa Bedelsizdir"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:151
+#, python-format
+msgid "Free if more than %.2f"
+msgstr "Eğer %.2f den fazla ise ücretsiz"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+msgid "General Information"
+msgstr "Genel Bilgi"
+
+#. module: delivery
+#: help:delivery.grid.line,sequence:0
+msgid "Gives the sequence order when calculating delivery grid."
+msgstr "Teslimat çizelgesini hesaplarken sıralama numarasını verir."
+
+#. module: delivery
+#: help:delivery.grid,sequence:0
+msgid "Gives the sequence order when displaying a list of delivery grid."
+msgstr "Bir teslimat tablsunu görüntülerken diziliş sırasını verir."
+
+#. module: delivery
+#: field:delivery.grid.line,grid_id:0
+msgid "Grid"
+msgstr "Tablo"
+
+#. module: delivery
+#: field:delivery.grid,line_ids:0
+msgid "Grid Line"
+msgstr "Tablo Satırı"
+
+#. module: delivery
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_tree
+msgid "Grid Lines"
+msgstr "Tablo Satırları"
+
+#. module: delivery
+#: field:delivery.grid,name:0
+msgid "Grid Name"
+msgstr "Tablo Adı"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+#: view:delivery.grid:delivery.view_delivery_grid_form
+msgid "Grid definition"
+msgstr "Tablo tanımı"
+
+#. module: delivery
+#: field:delivery.carrier,id:0 field:delivery.grid,id:0
+#: field:delivery.grid.line,id:0
+msgid "ID"
+msgstr "No"
+
+#. module: delivery
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr "Etkin alan Yanlış olarak ayarlıysa, nakliyeciyi silmeden gizleyebilirsiniz."
+
+#. module: delivery
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr "Aktif alanı Yanlış olarak ayarlaysa, teslimat tablosunu silmeden gizleyebilirsiniz."
+
+#. module: delivery
+#: help:delivery.carrier,free_if_more_than:0
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
+msgstr "Eğer sipariş belirli bir tutarın üzerinde ise, müşteri bedelsiz teslimattan faydalanabilir"
+
+#. module: delivery
+#: view:sale.order:delivery.view_order_withcarrier_form
+msgid ""
+"If you don't 'Add in Quote', the exact price will be computed when invoicing"
+" based on delivery order(s)."
+msgstr "Eğer 'Teklife Ekle'me yapmazsanız, gerçek fiyat teslim emirlerine göre faturalama yaparken hesaplanacaktır."
+
+#. module: delivery
+#: field:sale.order.line,is_delivery:0
+msgid "Is a Delivery"
+msgstr "Bir teslimattır"
+
+#. module: delivery
+#: help:delivery.carrier,available:0
+msgid "Is the carrier method possible with the current order."
+msgstr "Taşıma yöntemi geçerli sipariş için olası mıdır."
+
+#. module: delivery
+#: help:delivery.carrier,normal_price:0
+msgid ""
+"Keep empty if the pricing depends on the advanced pricing per destination"
+msgstr "Fiyatlandırmayı her varış yeri için peşin fiyatlandırmaya göre yapacaksanız boş bırakın"
+
+#. module: delivery
+#: field:delivery.carrier,write_uid:0 field:delivery.grid,write_uid:0
+#: field:delivery.grid.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Son Güncelleyen"
+
+#. module: delivery
+#: field:delivery.carrier,write_date:0 field:delivery.grid,write_date:0
+#: field:delivery.grid.line,write_date:0
+msgid "Last Updated on"
+msgstr "Son Güncelleme"
+
+#. module: delivery
+#: field:delivery.grid.line,max_value:0
+msgid "Maximum Value"
+msgstr "En Çok Değer"
+
+#. module: delivery
+#: field:delivery.grid.line,name:0
+msgid "Name"
+msgstr "Adı"
+
+#. module: delivery
+#: field:stock.picking,weight_net:0
+msgid "Net Weight"
+msgstr "Net Ağırlık"
+
+#. module: delivery
+#: field:stock.move,weight_net:0
+msgid "Net weight"
+msgstr "Net Ağırlık"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:71
+#, python-format
+msgid "No Grid Available!"
+msgstr "Çizelge Mevcut değil!"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:71
+#, python-format
+msgid "No grid matching for this carrier!"
+msgstr "Bu taşıyıcıyla eşleşen çizelge yok!"
+
+#. module: delivery
+#: field:delivery.carrier,normal_price:0
+msgid "Normal Price"
+msgstr "Normal Fiyat"
+
+#. module: delivery
+#: field:stock.picking,number_of_packages:0
+msgid "Number of Packages"
+msgstr "Paket Sayısı"
+
+#. module: delivery
+#: field:delivery.grid.line,operator:0
+msgid "Operator"
+msgstr "Operatör"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:74
+#, python-format
+msgid "Order not in Draft State!"
+msgstr "Sipariş Taslak Durumda değil!"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Partner"
+msgstr "İş Ortağı"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_picking
+msgid "Picking List"
+msgstr "Toplama Listesi"
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_picking_tree
+msgid "Picking to be invoiced"
+msgstr "Faturalanacak toplama"
+
+#. module: delivery
+#: field:delivery.carrier,price:0 selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+msgid "Price"
+msgstr "Fiyat"
+
+#. module: delivery
+#: field:delivery.grid.line,price_type:0
+msgid "Price Type"
+msgstr "Fiyat Türü"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+msgid "Pricing Information"
+msgstr "Fiyat Bilgisi"
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: delivery
+#: field:delivery.grid.line,list_price:0
+msgid "Sale Price"
+msgstr "Satış Fiyatı"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Siparişi Satırı"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:237
+#, python-format
+msgid ""
+"Selected product in the delivery method doesn't fulfill any of the delivery "
+"grid(s) criteria."
+msgstr "Teslimat çizelgesi kriterlerini karşılamayan ürünü teslimat yönteminde seç."
+
+#. module: delivery
+#: field:delivery.grid,sequence:0 field:delivery.grid.line,sequence:0
+msgid "Sequence"
+msgstr "Sıra"
+
+#. module: delivery
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "Sıkıştırmayı Başlat"
+
+#. module: delivery
+#: view:delivery.grid:delivery.view_delivery_grid_form
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "Durumu"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_move
+msgid "Stock Move"
+msgstr "Stok Hareketi"
+
+#. module: delivery
+#: code:addons/delivery/stock.py:91
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr "Nakliyeci %s (id: %d) teslimat tablosuna sahip değil!"
+
+#. module: delivery
+#: code:addons/delivery/sale.py:74
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr "Teslimat satırı eklemek için sipariş durumu taslak olarak ayarlanmalıdır."
+
+#. module: delivery
+#: help:delivery.carrier,partner_id:0
+msgid "The partner that is doing the delivery service."
+msgstr "Teslimat hizmetini veren iş ortağı."
+
+#. module: delivery
+#: help:res.partner,property_delivery_carrier:0
+msgid "This delivery method will be used when invoicing from picking."
+msgstr "Bu teslimat yöntemi, toplama üzerinden faturalandırma yaparken kullanılacaktır."
+
+#. module: delivery
+#: field:delivery.grid,zip_to:0
+msgid "To Zip"
+msgstr "Sıkıştırılacak"
+
+#. module: delivery
+#: field:delivery.carrier,partner_id:0
+msgid "Transport Company"
+msgstr "Nakliye Firması"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:237
+#, python-format
+msgid "Unable to fetch delivery method!"
+msgstr "Teslim yöntemi alınamıyor!"
+
+#. module: delivery
+#: field:stock.move,weight_uom_id:0 field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
+msgstr "Ölçü Birimi"
+
+#. module: delivery
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
+msgstr "Ölçü Birimi (Ölçü Birimi) Ağırlık ölçü birimidir"
+
+#. module: delivery
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
+msgstr "Ağırlık ölçü birimi"
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0 field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "Değişken"
+
+#. module: delivery
+#: field:delivery.grid.line,variable_factor:0
+msgid "Variable Factor"
+msgstr "Değişken Faktörü"
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.picking,volume:0
+msgid "Volume"
+msgstr "Hacim"
+
+#. module: delivery
+#: code:addons/delivery/stock.py:90
+#, python-format
+msgid "Warning!"
+msgstr "Uyarı!"
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0 field:stock.move,weight:0
+#: view:stock.picking:delivery.view_picking_withcarrier_out_form
+#: field:stock.picking,weight:0 view:website:stock.report_picking
+msgid "Weight"
+msgstr "Ağırlık"
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+msgid "Weight * Volume"
+msgstr "Ağırlık * Hacim"
+
+#. module: delivery
+#: view:website:stock.report_picking
+msgid "Will be invoiced to:"
+msgstr "Buna faturalanacak:"
+
+#. module: delivery
+#: view:delivery.carrier:delivery.view_delivery_carrier_form
+msgid "Zip"
+msgstr "PKodu"
+
+#. module: delivery
+#: view:delivery.grid.line:delivery.view_delivery_grid_line_form
+msgid "in Function of"
+msgstr "Bunun yerine"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="open_journal_button_view" model="ir.ui.view">
+            <field name="name">Open Journal Button</field>
+            <field name="model">account.journal.select</field>
+            <field name="arch" type="xml">
+                <form string="Journal Select">
+                    <label string="Are you sure you want to open Journal Entries?"/>
+                    <footer>
+                        <button string="Open Entries" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_open_journal_button" model="ir.actions.act_window">
+            <field name="name">Open Journal</field>
+            <field name="res_model">account.journal.select</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+           <field name="view_id" ref="open_journal_button_view"/>
+           <field name="target">new</field>
+        </record>
+
+        <record id="ir_open_journal_period" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.journal.period</field>
+            <field name="name">Open Journal</field>
+            <field eval="'ir.actions.act_window,%d'%action_open_journal_button" name="value"/>
+        </record>
+    </data>
+</openerp>

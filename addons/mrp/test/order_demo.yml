@@ -1,0 +1,17 @@
+-
+  MRP user can create Production Order, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_mrp_user'
+-
+  I create Production Order of PC Assemble SC349 to produce 5.0 Unit.
+-
+  !record {model: mrp.production, id: mrp_production_test1}:
+    product_id: product.product_product_3
+    product_qty: 5.0
+    location_src_id: stock.stock_location_14
+    location_dest_id: stock.stock_location_output
+    bom_id: mrp_bom_9
+    routing_id: mrp.mrp_routing_1
+    
+    

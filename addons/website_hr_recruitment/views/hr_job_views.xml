@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_hr_job_form" model="ir.ui.view">
+        <field name="name">hr.job.form.inherit</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <xpath expr="//sheet/div" position="before">
+                <field name="website_url" invisible="1"/>
+                <field name="website_published" class="pull-right" widget="website_button"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</openerp>

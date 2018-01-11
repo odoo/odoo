@@ -1,0 +1,138 @@
+<openerp>
+    <data>
+
+        <!--
+        Resource: res.country.state
+        Update states
+        -->
+        <record id="state_SJ" model="res.country.state">
+            <field name="code">SJ</field>
+            <field name="name">San Jos&#233;</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <record id="state_A" model="res.country.state">
+            <field name="code">A</field>
+            <field name="name">Alajuela</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <record id="state_H" model="res.country.state">
+            <field name="code">H</field>
+            <field name="name">Heredia</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <record id="state_C" model="res.country.state">
+            <field name="code">C</field>
+            <field name="name">Cartago</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <record id="state_P" model="res.country.state">
+            <field name="code">P</field>
+            <field name="name">Puntarenas</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <record id="state_G" model="res.country.state">
+            <field name="code">G</field>
+            <field name="name">Guanacaste</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <record id="state_L" model="res.country.state">
+            <field name="code">L</field>
+            <field name="name">Lim&#243;n</field>
+            <field name="country_id" ref="base.cr"/>
+        </record>
+        <!--
+        Resource: res.partner.title
+        Update partner titles
+        -->
+        <record id="base.res_partner_title_pvt_ltd" model="res.partner.title">
+            <field name="name">Corporation</field>
+            <field name="shortcut">Corp.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="base.res_partner_title_ltd" model="res.partner.title">
+            <field name="name">Limited Company</field>
+            <field name="shortcut">Ltd.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="base.res_partner_title_sir" model="res.partner.title">
+            <field name="name">Mister</field>
+            <field name="shortcut">Sr.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="base.res_partner_title_miss" model="res.partner.title">
+            <field name="name">Miss</field>
+            <field name="shortcut">Mss.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="base.res_partner_title_madam" model="res.partner.title">
+            <field name="name">Madam</field>
+            <field name="shortcut">Ms.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_sal" model="res.partner.title">
+            <field name="name">Sociedad An&#243;nima Laboral</field>
+            <field name="shortcut">S.A.L.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="res_partner_title_asoc" model="res.partner.title">
+            <field name="name">Asociation</field>
+            <field name="shortcut">Asoc.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="res_partner_title_gov" model="res.partner.title">
+            <field name="name">Government</field>
+            <field name="shortcut">Gov.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="res_partner_title_edu" model="res.partner.title">
+            <field name="name">Educational Institution</field>
+            <field name="shortcut">Edu.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="res_partner_title_prof" model="res.partner.title">
+            <field name="name">Professor</field>
+            <field name="shortcut">Prof.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="res_partner_title_indprof" model="res.partner.title">
+            <field name="name">Independant Professional</field>
+            <field name="shortcut">Ind. Prof.</field>
+            <field name="domain">partner</field>
+        </record>
+        <record id="res_partner_title_dr" model="res.partner.title">
+            <field name="name">Doctor</field>
+            <field name="shortcut">Dr.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_dra" model="res.partner.title">
+            <field name="name">Doctora</field>
+            <field name="shortcut">Dra.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_msc" model="res.partner.title">
+            <field name="name">Msc.</field>
+            <field name="shortcut">Msc.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_mba" model="res.partner.title">
+            <field name="name">MBA</field>
+            <field name="shortcut">MBA</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_lic" model="res.partner.title">
+            <field name="name">Licenciado</field>
+            <field name="shortcut">Lic.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_licda" model="res.partner.title">
+            <field name="name">Licenciada</field>
+            <field name="shortcut">Licda.</field>
+            <field name="domain">contact</field>
+        </record>
+        <record id="res_partner_title_ing" model="res.partner.title">
+            <field name="name">Ingeniero/a</field>
+            <field name="shortcut">Ing.</field>
+            <field name="domain">contact</field>
+        </record>
+    </data>
+</openerp>

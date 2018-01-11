@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+    <record id="view_sale_receipt_report_graph" model="ir.ui.view">
+         <field name="name">sale.receipt.report.graph</field>
+         <field name="model">sale.receipt.report</field>
+         <field name="arch" type="xml">
+             <graph string="Sales Receipts Analysis" type="pivot">
+                 <field name="partner_id" type="row"/>
+                 <field name="date_due" type="col"/>
+                 <field name="price_total" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_sale_receipt_report_search" model="ir.ui.view">
+        <field name="name">sale.receipt.report.search</field>
+        <field name="model">sale.receipt.report</field>
+        <field name="arch" type="xml">
+            <search string="Sales Receipts Analysis">
+                <field name="date"/>
+                <field name="date_due"/>
+                <filter string="Draft" domain="[('state','=','draft')]" help = "Draft Vouchers"/>
+                <filter string="Pro-forma" domain="[('state','=','proforma')]" help = "Pro-forma Vouchers"/>
+                <filter string="Posted" name="current" domain="[('state','not in', ('draft','cancel'))]" help = "Validated Vouchers"/>
+                <field name="partner_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="journal_id"/>
+                    <field name="account_id"/>
+                    <field name="pay_now"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Partner" name="partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Type" context="{'group_by':'type'}"/>
+                    <filter string="Journal" context="{'group_by':'journal_id'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Due Month" context="{'group_by':'date_due:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_sale_receipt_report_all" model="ir.actions.act_window">
+        <field name="name">Sales Receipts Analysis</field>
+        <field name="res_model">sale.receipt.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_partner':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="search_view_id" ref="view_sale_receipt_report_search"/>
+        <field name="help" type="html">
+          <p>
+            From this report, you can have an overview of the amount invoiced
+            to your customer as well as payment delays. The tool search can
+            also be used to personalise your Invoices reports and so, match
+            this analysis to your needs.
+          </p>
+        </field>
+
+    </record>
+
+    <menuitem action="action_sale_receipt_report_all" id="menu_action_sale_receipt_report_all" parent="account.menu_finance_reporting" sequence="3"/>
+
+   </data>
+</openerp>

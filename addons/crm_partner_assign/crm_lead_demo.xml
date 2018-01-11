@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+      <data noupdate="1">
+
+            <!--  Demo Leads -->
+            <record id="crm_case_partner_assign_1" model="crm.lead">
+                  <field name="type">lead</field>
+                  <field name="name">Specifications and price of your phones</field>
+                  <field name="contact_name">Steve Martinez</field>
+                  <field name="partner_name"></field>
+                  <field name="partner_id" ref=""/>
+                  <field name="function">Reseller</field>
+                  <field name="country_id" ref="base.uk"/>
+                  <field name="city">Edinburgh</field>
+                  <field name="categ_ids" eval="[(6, 0, [ref('crm.categ_oppor1')])]"/>
+                  <field name="priority">2</field>
+                  <field name="section_id" ref="sales_team.crm_case_section_2"/>
+                  <field name="user_id" ref=""/>
+                  <field name="stage_id" ref="crm.stage_lead1"/>
+                  <field name="description">Hi,
+
+            Please, can you give me more details about your phones, including their specifications and their prices.
+
+            Regards,
+            Steve</field>
+                  <field eval="1" name="active"/>
+                  <field name="partner_assigned_id" ref="portal.partner_demo_portal"/>
+            </record>
+      </data>
+</openerp>

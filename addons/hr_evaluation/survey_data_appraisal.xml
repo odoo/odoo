@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Appraisal form -->
+        <record model="survey.survey" id="appraisal_form">
+            <field name="title">Employee Appraisal Form</field>
+            <field name="stage_id" ref="survey.stage_permanent" />
+            <field name="res_model">hr_evaluation</field>
+            <field name="auth_required" eval="True" />
+            <field name="users_can_go_back" eval="True" />
+            <field name="description">&lt;p&gt; &lt;/p&gt;</field>
+            <field name="thank_you_message">&lt;p&gt; &lt;/p&gt;</field>
+        </record>
+        <!-- Page 1 -->
+        <record model="survey.page" id="appraisal_1">
+            <field name="title">Employee Appraisal Form</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="sequence">1</field>
+            <field name="description">&lt;h2&gt;Overall Purpose Of Employee Appraisal&lt;/h2&gt;
+&lt;ul&gt;&lt;li&gt;To initiate a clear and open communication of performance expectations
+&lt;li&gt;To assist employees in their professional growth, through the identification of strengths and opportunities for
+development&lt;/ul&gt;
+&lt;h2&gt;At the outset of the appraisal time period&lt;/h2&gt;
+&lt;ul&gt;&lt;li&gt;It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the
+coming year, including major employee responsibilities and corresponding benchmarks against which results will be
+evaluated.
+&lt;li&gt;Critical or key elements of performance and professional development needs (if any), should also be noted at this time&lt;/ul&gt;
+&lt;h2&gt;At the conclusion of the appraisal time period&lt;/h2&gt;
+&lt;ul&gt;&lt;li&gt;The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-appraisal and a starting
+point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.
+Once the form had been filled, the employee send it to his supervisor.
+&lt;li&gt;It is the primary responsibility of the supervisor to gather the necessary input from the appropriate sources of feedback
+(internal and/or external customers, peers). In case of collaboration with Odoo SA Belgium, the supervisor must
+receive completed evaluation form from the employee's Belgian project manager.
+&lt;li&gt;The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad
+hoc fields.
+&lt;li&gt;The employee may choose to offer comments or explanation regarding the completed review.
+&lt;li&gt;The supervisor send the form to the HR department in India and in Belgium&lt;/ul&gt;</field>
+        </record>
+        <record model="survey.question" id="appraisal_1_1">
+            <field name="page_id" ref="appraisal_1" />
+            <field name="sequence">1</field>
+            <field name="question">Name</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="appraisal_1_2">
+            <field name="page_id" ref="appraisal_1" />
+            <field name="sequence">2</field>
+            <field name="question">Position Title</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="appraisal_1_3">
+            <field name="page_id" ref="appraisal_1" />
+            <field name="sequence">3</field>
+            <field name="question">Appraisal for Period</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="appraisal_1_4">
+            <field name="page_id" ref="appraisal_1" />
+            <field name="sequence">4</field>
+            <field name="question">Date of review</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="appraisal_1_5">
+            <field name="page_id" ref="appraisal_1" />
+            <field name="sequence">5</field>
+            <field name="question">Appraiser</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <!-- Page 2 -->
+        <record model="survey.page" id="appraisal_2">
+            <field name="title">Work Plan</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="sequence">2</field>
+            <field name="description">&lt;p&gt; &lt;/p&gt;</field>
+        </record>
+        <record model="survey.question" id="appraisal_2_1">
+            <field name="page_id" ref="appraisal_2" />
+            <field name="sequence">1</field>
+            <field name="question">Objectives</field>
+            <field name="type">free_text</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="appraisal_2_2">
+            <field name="page_id" ref="appraisal_2" />
+            <field name="sequence">2</field>
+            <field name="question">Results</field>
+            <field name="type">free_text</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="appraisal_2_3">
+            <field name="page_id" ref="appraisal_2" />
+            <field name="sequence">3</field>
+            <field name="question">Additional Comments</field>
+            <field name="type">free_text</field>
+        </record>
+        <!-- Page 3 -->
+        <record model="survey.page" id="appraisal_3">
+            <field name="title">Employee Performance in Key Areas</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="sequence">3</field>
+            <field name="description">The appraiser should rate the employee’s major work accomplishments and performance according to the metric provided
+below:&lt;ol&gt;
+&lt;li&gt; Significantly exceeds standards and expectations required of the position
+&lt;li&gt; Exceeds standards and expectations
+&lt;li&gt; Meet standards and expectations
+&lt;li&gt; Did not meet standards and expectations
+&lt;li&gt; Significantly below standards and expectations&lt;/ol&gt;</field>
+        </record>
+        <record model="survey.question" id="appraisal_3_1">
+            <field name="page_id" ref="appraisal_3" />
+            <field name="sequence">1</field>
+            <field name="question">Subject</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+                <record model="survey.label" id="acol_3_1_1">
+                    <field name="question_id" ref="appraisal_3_1"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="acol_3_1_2">
+                    <field name="question_id" ref="appraisal_3_1"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="acol_3_1_3">
+                    <field name="question_id" ref="appraisal_3_1"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="acol_3_1_4">
+                    <field name="question_id" ref="appraisal_3_1"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="acol_3_1_5">
+                    <field name="question_id" ref="appraisal_3_1"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_1">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">1</field>
+                    <field name="value">Ability to cope with multidisciplinarity of team</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_2">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">2</field>
+                    <field name="value">Enthusiasm &amp; implication toward projects/assignments</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_3">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">3</field>
+                    <field name="value">Compliance to internal rules and processes (timesheets completion, etc.)</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_4">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">4</field>
+                    <field name="value">Team spirit: ability to work efficiently with peers, manage the conflicts with diplomacy</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_5">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">5</field>
+                    <field name="value">Initiative and self autonomy</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_6">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">6</field>
+                    <field name="value">Ability to follow and complete work as instructed</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_7">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">7</field>
+                    <field name="value">Decision making</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_8">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">8</field>
+                    <field name="value">Customer commitment</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_9">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">9</field>
+                    <field name="value">Communication skills (written &amp; verbally): clearness, concision, exactitude</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_10">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">10</field>
+                    <field name="value">Technical skills regarding to the job requirements</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_11">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">11</field>
+                    <field name="value">Analytical and synthetic mind</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_12">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">12</field>
+                    <field name="value">Promptness and attendance record</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_13">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">13</field>
+                    <field name="value">Adaptability: Ability to adapt oneself to organizational changes while keeping efficiency</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_14">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">14</field>
+                    <field name="value">Creativity and forward looking aptitude</field>
+                </record>
+                <record model="survey.label" id="arow_3_1_15">
+                    <field name="question_id_2" ref="appraisal_3_1"/>
+                    <field name="sequence">15</field>
+                    <field name="value">Time management: projects/tasks are completed on time</field>
+                </record>
+        <record model="survey.question" id="appraisal_3_2">
+            <field name="page_id" ref="appraisal_3" />
+            <field name="sequence">2</field>
+            <field name="question">Supervisors only</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="acol_3_2_1">
+                    <field name="question_id" ref="appraisal_3_2"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="acol_3_2_2">
+                    <field name="question_id" ref="appraisal_3_2"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="acol_3_2_3">
+                    <field name="question_id" ref="appraisal_3_2"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="acol_3_2_4">
+                    <field name="question_id" ref="appraisal_3_2"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="acol_3_2_5">
+                    <field name="question_id" ref="appraisal_3_2"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="arow_3_2_1">
+                    <field name="question_id_2" ref="appraisal_3_2"/>
+                    <field name="sequence">1</field>
+                    <field name="value">Results of the bottom-up survey and mitigation actions to face technical, organizational, structural and/or relational issues</field>
+                </record>
+                <record model="survey.label" id="arow_3_2_2">
+                    <field name="question_id_2" ref="appraisal_3_2"/>
+                    <field name="sequence">2</field>
+                    <field name="value">Delegation: Ability to efficiently assign tasks to other people</field>
+                </record>
+                <record model="survey.label" id="arow_3_2_3">
+                    <field name="question_id_2" ref="appraisal_3_2"/>
+                    <field name="sequence">3</field>
+                    <field name="value">Leadership: create a challenging and motivating work environment aligned with the company's strategy</field>
+                </record>
+                <record model="survey.label" id="arow_3_2_4">
+                    <field name="question_id_2" ref="appraisal_3_2"/>
+                    <field name="sequence">4</field>
+                    <field name="value">Leadership: sustain subordinates in their professional growth</field>
+                </record>
+                <record model="survey.label" id="arow_3_2_5">
+                    <field name="question_id_2" ref="appraisal_3_2"/>
+                    <field name="sequence">5</field>
+                    <field name="value">Ability to manage planning resources, risks, budgets and deadlines</field>
+                </record>
+        <!-- Page 4 -->
+        <record model="survey.page" id="appraisal_4">
+            <field name="title">Professional Development and Performance Plan</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="sequence">4</field>
+            <field name="description">&lt;p&gt;Identify professional, performance, or project objectives you recommend for employee’s continued career development
+over the coming year.&lt;/p&gt;</field>
+        </record>
+        <record model="survey.question" id="appraisal_4_1">
+            <field name="page_id" ref="appraisal_4" />
+            <field name="sequence">1</field>
+            <field name="question">Professional Development Objectives</field>
+            <field name="type">free_text</field>
+        </record>
+        <record model="survey.question" id="appraisal_4_2">
+            <field name="page_id" ref="appraisal_4" />
+            <field name="sequence">2</field>
+            <field name="question">Personal Performance Objectives</field>
+            <field name="type">free_text</field>
+        </record>
+        <record model="survey.question" id="appraisal_4_3">
+            <field name="page_id" ref="appraisal_4" />
+            <field name="sequence">3</field>
+            <field name="question">Project Objectives</field>
+            <field name="type">free_text</field>
+        </record>
+        <!-- Page 5 -->
+        <record model="survey.page" id="appraisal_5">
+            <field name="title">Employee Comments</field>
+            <field name="survey_id" ref="appraisal_form" />
+            <field name="description">&lt;p&gt;&lt;/p&gt;</field>
+            <field name="sequence">5</field>
+        </record>
+        <record model="survey.question" id="appraisal_5_1">
+            <field name="page_id" ref="appraisal_5" />
+            <field name="sequence">1</field>
+            <field name="question">Use the following space to make any comments regarding the above performance evaluation.</field>
+            <field name="type">free_text</field>
+        </record>
+        <!-- Employee Opinion form -->
+        <record model="survey.survey" id="opinion_form">
+            <field name="title">Employee Opinion Form</field>
+            <field name="stage_id" ref="survey.stage_permanent" />
+            <field name="res_model">hr_evaluation</field>
+            <field name="auth_required" eval="True" />
+            <field name="users_can_go_back" eval="True" />
+            <field name="description">&lt;p&gt; &lt;/p&gt;</field>
+            <field name="thank_you_message">&lt;p&gt; &lt;/p&gt;</field>
+        </record>
+        <!-- Page 1 -->
+        <record model="survey.page" id="opinion_1">
+            <field name="title">Appraisal Process</field>
+            <field name="survey_id" ref="opinion_form" />
+            <field name="sequence">1</field>
+            <field name="description">&lt;h2&gt;At the supervisor's appraisal date&lt;/h2&gt;
+&lt;p&gt;His direct reports will be invited through Odoo to express a feedback on their supervisor's leadership and to give their opinion about their own engagement and effectiveness, the continuous improvement and openness in action in thecompany...&lt;/p&gt;
+&lt;p&gt;The employees will send back their anonymous answers to Odoo. The data will be handled by the HR manager and a brief summary of the data will be sent to the concerned supervisor, to his team and to the supervisor's supervisor.&lt;/p&gt;
+&lt;p&gt;The appraiser should rate the employee's major work accomplishments and performance according to the metric provided below
+&lt;ol&gt;
+&lt;li&gt;Significantly exceeds standards and expectations required of the position&lt;/li&gt;
+&lt;li&gt;Exceeds standards and expectations&lt;/li&gt;
+&lt;li&gt;Meet standards and expectations&lt;/li&gt;
+&lt;li&gt;Did not meet standards and expectations&lt;/li&gt;
+&lt;li&gt;Significantly below standards and expectations&lt;/li&gt;
+&lt;/ol&gt;&lt;/p&gt;</field>
+        </record>
+        <record model="survey.question" id="opinion_1_1">
+            <field name="page_id" ref="opinion_1" />
+            <field name="sequence">1</field>
+            <field name="question">Name of your direct supervisor</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question" id="opinion_1_2">
+            <field name="page_id" ref="opinion_1" />
+            <field name="sequence">2</field>
+            <field name="question">Date</field>
+            <field name="type">textbox</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <!-- Page 2 -->
+        <record model="survey.page" id="opinion_2">
+            <field name="title">Evaluation</field>
+            <field name="survey_id" ref="opinion_form" />
+            <field name="sequence">2</field>
+            <field name="description">&lt;p&gt; &lt;/p&gt;</field>
+        </record>
+        <record model="survey.question" id="opinion_2_1">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">1</field>
+            <field name="question">Engagement</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="opcol_2_1_1">
+                    <field name="question_id" ref="opinion_2_1"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="opcol_2_1_2">
+                    <field name="question_id" ref="opinion_2_1"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="opcol_2_1_3">
+                    <field name="question_id" ref="opinion_2_1"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="opcol_2_1_4">
+                    <field name="question_id" ref="opinion_2_1"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="opcol_2_1_5">
+                    <field name="question_id" ref="opinion_2_1"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="oprow_2_1_1">
+                    <field name="question_id_2" ref="opinion_2_1"/>
+                    <field name="sequence">1</field>
+                    <field name="value">I am proud to tell others I work here</field>
+                </record>
+                <record model="survey.label" id="oprow_2_1_2">
+                    <field name="question_id_2" ref="opinion_2_1"/>
+                    <field name="sequence">2</field>
+                    <field name="value">My job provides me with a sense of personal accomplishment</field>
+                </record>
+                <record model="survey.label" id="oprow_2_1_3">
+                    <field name="question_id_2" ref="opinion_2_1"/>
+                    <field name="sequence">3</field>
+                    <field name="value">I would prefer to remain with this company even if a comparable job were available in another company</field>
+                </record>
+                <record model="survey.label" id="oprow_2_1_4">
+                    <field name="question_id_2" ref="opinion_2_1"/>
+                    <field name="sequence">4</field>
+                    <field name="value">Taking everything into account, how satisfied are you with your current job?</field>
+                </record>
+                <record model="survey.label" id="oprow_2_1_5">
+                    <field name="question_id_2" ref="opinion_2_1"/>
+                    <field name="sequence">5</field>
+                    <field name="value">I am willing to put in a great deal of effort beyond what is expected to help my workgroup succeed</field>
+                </record>
+        <record model="survey.question" id="opinion_2_2">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">2</field>
+            <field name="question">Leadership</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="opcol_2_2_1">
+                    <field name="question_id" ref="opinion_2_2"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="opcol_2_2_2">
+                    <field name="question_id" ref="opinion_2_2"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="opcol_2_2_3">
+                    <field name="question_id" ref="opinion_2_2"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="opcol_2_2_4">
+                    <field name="question_id" ref="opinion_2_2"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="opcol_2_2_5">
+                    <field name="question_id" ref="opinion_2_2"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="oprow_2_2_1">
+                    <field name="question_id_2" ref="opinion_2_2"/>
+                    <field name="sequence">1</field>
+                    <field name="value">Demonstrates genuine concern for me as a person</field>
+                </record>
+                <record model="survey.label" id="oprow_2_2_2">
+                    <field name="question_id_2" ref="opinion_2_2"/>
+                    <field name="sequence">2</field>
+                    <field name="value">I consistently acquire new knowledge, skills or understanding through contact with my supervisor. He helps me growing my compete</field>
+                </record>
+                <record model="survey.label" id="oprow_2_2_3">
+                    <field name="question_id_2" ref="opinion_2_2"/>
+                    <field name="sequence">3</field>
+                    <field name="value">Listens and takes into account all ideas and do his best to put in place the best of these</field>
+                </record>
+                <record model="survey.label" id="oprow_2_2_4">
+                    <field name="question_id_2" ref="opinion_2_2"/>
+                    <field name="sequence">4</field>
+                    <field name="value">I believe the information that I get from the person I report to.</field>
+                </record>
+        <record model="survey.question" id="opinion_2_3">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">3</field>
+            <field name="question">Effectiveness</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="opcol_2_3_1">
+                    <field name="question_id" ref="opinion_2_3"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="opcol_2_3_2">
+                    <field name="question_id" ref="opinion_2_3"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="opcol_2_3_3">
+                    <field name="question_id" ref="opinion_2_3"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="opcol_2_3_4">
+                    <field name="question_id" ref="opinion_2_3"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="opcol_2_3_5">
+                    <field name="question_id" ref="opinion_2_3"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="oprow_2_3_1">
+                    <field name="question_id_2" ref="opinion_2_3"/>
+                    <field name="sequence">1</field>
+                    <field name="value">I'm efficient at work and my achievements are successful</field>
+                </record>
+                <record model="survey.label" id="oprow_2_3_2">
+                    <field name="question_id_2" ref="opinion_2_3"/>
+                    <field name="sequence">2</field>
+                    <field name="value">I have enough work</field>
+                </record>
+                <record model="survey.label" id="oprow_2_3_3">
+                    <field name="question_id_2" ref="opinion_2_3"/>
+                    <field name="sequence">3</field>
+                    <field name="value">I mostly work on value-added tasks for the company, the products or the services</field>
+                </record>
+        <record model="survey.question" id="opinion_2_4">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">4</field>
+            <field name="question">Continuous Improvement</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="opcol_2_4_1">
+                    <field name="question_id" ref="opinion_2_4"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="opcol_2_4_2">
+                    <field name="question_id" ref="opinion_2_4"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="opcol_2_4_3">
+                    <field name="question_id" ref="opinion_2_4"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="opcol_2_4_4">
+                    <field name="question_id" ref="opinion_2_4"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="opcol_2_4_5">
+                    <field name="question_id" ref="opinion_2_4"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="oprow_2_4_1">
+                    <field name="question_id_2" ref="opinion_2_4"/>
+                    <field name="sequence">1</field>
+                    <field name="value">My work contributes towards the continuous improvement of the company, our services or products</field>
+                </record>
+                <record model="survey.label" id="oprow_2_4_2">
+                    <field name="question_id_2" ref="opinion_2_4"/>
+                    <field name="sequence">2</field>
+                    <field name="value">What I did several months ago is still of use to the company, the services or the products today</field>
+                </record>
+                <record model="survey.label" id="oprow_2_4_3">
+                    <field name="question_id_2" ref="opinion_2_4"/>
+                    <field name="sequence">3</field>
+                    <field name="value">Overall, I believe the quality of products and/or services my workgroup delivers is improving</field>
+                </record>
+                <record model="survey.label" id="oprow_2_4_4">
+                    <field name="question_id_2" ref="opinion_2_4"/>
+                    <field name="sequence">4</field>
+                    <field name="value">Our workgroup identifies and reduces waste of time in our activities and processes</field>
+                </record>
+        <record model="survey.question" id="opinion_2_5">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">5</field>
+            <field name="question">Openness</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="opcol_2_5_1">
+                    <field name="question_id" ref="opinion_2_5"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="opcol_2_5_2">
+                    <field name="question_id" ref="opinion_2_5"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="opcol_2_5_3">
+                    <field name="question_id" ref="opinion_2_5"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="opcol_2_5_4">
+                    <field name="question_id" ref="opinion_2_5"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="opcol_2_5_5">
+                    <field name="question_id" ref="opinion_2_5"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="oprow_2_5_1">
+                    <field name="question_id_2" ref="opinion_2_5"/>
+                    <field name="sequence">1</field>
+                    <field name="value">I know the company's values and live them</field>
+                </record>
+                <record model="survey.label" id="oprow_2_5_2">
+                    <field name="question_id_2" ref="opinion_2_5"/>
+                    <field name="sequence">2</field>
+                    <field name="value">My best achievements have been communicated to the community, internally or to customers</field>
+                </record>
+        <record model="survey.question" id="opinion_2_6">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">6</field>
+            <field name="question">Miscellaneous</field>
+            <field name="type">matrix</field>
+            <field name="matrix_subtype">simple</field>
+        </record>
+                <record model="survey.label" id="opcol_2_6_1">
+                    <field name="question_id" ref="opinion_2_6"/>
+                    <field name="sequence">1</field>
+                    <field name="value">1</field>
+                </record>
+                <record model="survey.label" id="opcol_2_6_2">
+                    <field name="question_id" ref="opinion_2_6"/>
+                    <field name="sequence">2</field>
+                    <field name="value">2</field>
+                </record>
+                <record model="survey.label" id="opcol_2_6_3">
+                    <field name="question_id" ref="opinion_2_6"/>
+                    <field name="sequence">3</field>
+                    <field name="value">3</field>
+                </record>
+                <record model="survey.label" id="opcol_2_6_4">
+                    <field name="question_id" ref="opinion_2_6"/>
+                    <field name="sequence">4</field>
+                    <field name="value">4</field>
+                </record>
+                <record model="survey.label" id="opcol_2_6_5">
+                    <field name="question_id" ref="opinion_2_6"/>
+                    <field name="sequence">5</field>
+                    <field name="value">5</field>
+                </record>
+                <record model="survey.label" id="oprow_2_6_1">
+                    <field name="question_id_2" ref="opinion_2_6"/>
+                    <field name="sequence">1</field>
+                    <field name="value">Actions by Executive management show genuine interest in the well-being of employees</field>
+                </record>
+                <record model="survey.label" id="oprow_2_6_2">
+                    <field name="question_id_2" ref="opinion_2_6"/>
+                    <field name="sequence">2</field>
+                    <field name="value">I have the same opportunity to succeed as others with similar experiences, performance and educational background</field>
+                </record>
+                <record model="survey.label" id="oprow_2_6_3">
+                    <field name="question_id_2" ref="opinion_2_6"/>
+                    <field name="sequence">3</field>
+                    <field name="value">Compared to similar jobs in other companies where I could work, my total compensation...</field>
+                </record>
+                <record model="survey.label" id="oprow_2_6_4">
+                    <field name="question_id_2" ref="opinion_2_6"/>
+                    <field name="sequence">4</field>
+                    <field name="value">I understand the company strategy and how my workgroup supports it</field>
+                </record>
+        <record model="survey.question" id="opinion_2_7">
+            <field name="page_id" ref="opinion_2" />
+            <field name="sequence">7</field>
+            <field name="question">Additional comments</field>
+            <field name="type">free_text</field>
+        </record>
+    </data>
+</openerp>

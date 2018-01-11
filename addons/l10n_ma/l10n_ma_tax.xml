@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+<data>
+
+<!--model de code de taxe -->
+  <record model="account.tax.code.template" id="vat_ma_tax_root">
+        <field name="name">tax</field>
+</record>
+
+
+  <record model="account.tax.code.template" id="ctva_a">
+    <field name="name">Ventilation du chiffre d’affaires total</field>
+    <field name="code">A</field>
+    <field name="parent_id" ref="vat_ma_tax_root" />
+  </record>
+  <record model="account.tax.code.template" id="ctva_010">
+    <field name="name">Montant du chiffre d’affaires réalisé y compris les affaires non imposables (HT)</field>
+    <field name="code">10</field>
+    <field name="parent_id" ref="ctva_a"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_020">
+    <field name="name">-Opérations situées hors champ d’application de la TVA</field>
+    <field name="code">20</field>
+    <field name="parent_id" ref="ctva_a"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_030">
+    <field name="name">-Opérations exonérées sans droit à déduction (art 91du CGI)</field>
+    <field name="code">30</field>
+    <field name="parent_id" ref="ctva_a"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_040">
+    <field name="name">-Opérations exonérées avec droit à déduction (art 92 du CGI)</field>
+    <field name="code">40</field>
+    <field name="parent_id" ref="ctva_a"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_050">
+    <field name="name">-Opérations faites en suspension de la TVA (art 94 du CGI)</field>
+    <field name="code">50</field>
+    <field name="parent_id" ref="ctva_a"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_060">
+    <field name="name">Chiffre d’affaires imposable à répartir (différence : ligne 10 – (20 + 30 +40 +50) (HT)</field>
+    <field name="code">60</field>
+    <field name="parent_id" ref="ctva_a"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_b">
+    <field name="name">Ventilation du chiffre d’affaires imposable</field>
+    <field name="code">B</field>
+    <field name="parent_id" ref="vat_ma_tax_root" />
+  </record>
+  <record model="account.tax.code.template" id="ctva_tn20ht">
+    <field name="name">TAUX NORMAL DE 20% (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_080ht">
+    <field name="name">-Opération de production et de distribution (HT)</field>
+    <field name="code">80</field>
+    <field name="parent_id" ref="ctva_tn20ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_081ht">
+    <field name="name">-Opérations d'entreprises de travaux immobiliers (HT)</field>
+    <field name="code">81</field>
+    <field name="parent_id" ref="ctva_tn20ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_082ht">
+    <field name="name">-Prestations de services (HT)</field>
+    <field name="code">82</field>
+    <field name="parent_id" ref="ctva_tn20ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_083ht">
+    <field name="name">-Opérations de crédit bail (HT)</field>
+    <field name="code">83</field>
+    <field name="parent_id" ref="ctva_tn20ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_084ht">
+    <field name="name">-Professions libérales visées à l’article 89-I-12°-b du CGI(HT)</field>
+    <field name="code">84</field>
+    <field name="parent_id" ref="ctva_tn20ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tn20tva">
+    <field name="name">TAUX NORMAL DE 20% (TVA exigible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_080tva">
+    <field name="name">-Opération de production et de distribution (TVA)</field>
+    <field name="code">80</field>
+    <field name="parent_id" ref="ctva_tn20tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_081tva">
+    <field name="name">-Opérations d'entreprises de travaux immobiliers (TVA)</field>
+    <field name="code">81</field>
+    <field name="parent_id" ref="ctva_tn20tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_082tva">
+    <field name="name">-Prestations de services (TVA)</field>
+    <field name="code">82</field>
+    <field name="parent_id" ref="ctva_tn20tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_083tva">
+    <field name="name">-Opérations de crédit bail (TVA)</field>
+    <field name="code">83</field>
+    <field name="parent_id" ref="ctva_tn20tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_084tva">
+    <field name="name">-Professions libérales visées à l’article 89-I-12°-b du CGI(TVA)</field>
+    <field name="code">84</field>
+    <field name="parent_id" ref="ctva_tn20tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr14ht">
+    <field name="name">TAUX REDUIT DE 14% (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr14addht">
+    <field name="name">TR 14%- Avec droit à déduction (HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_tr14ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_085ht">
+    <field name="name">-Beurre à l’exclusion du beurre de fabrication artisanale visé à l’article 91 (IA. 2°)</field>
+    <field name="code">85</field>
+    <field name="parent_id" ref="ctva_tr14addht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_086ht">
+    <field name="name">-Graisses alimentaires (animales ou végétales), margarines ou saindoux</field>
+    <field name="code">86</field>
+    <field name="parent_id" ref="ctva_tr14addht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_087ht">
+    <field name="name">-Thé (en vrac ou conditionné)</field>
+    <field name="code">87</field>
+    <field name="parent_id" ref="ctva_tr14addht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_088ht">
+    <field name="name">-Opérations de transport de voyageurs et de marchandises</field>
+    <field name="code">88</field>
+    <field name="parent_id" ref="ctva_tr14addht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_089ht">
+    <field name="name">-Véhicule utilitaire léger économique, et cyclomoteur économique et produits et matières entrant dans leur fabrication</field>
+    <field name="code">89</field>
+    <field name="parent_id" ref="ctva_tr14addht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_090ht">
+    <field name="name">Énergie électrique</field>
+    <field name="code">90</field>
+    <field name="parent_id" ref="ctva_tr14addht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr14sddht">
+    <field name="name">TR 14%- Sans droit à déduction (HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_tr14ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_091ht">
+    <field name="name">Les prestations de services rendues par tout agent démarcheur ou courtier d’assurances à raison des contrats apportés par lui à une entreprise d’assurances</field>
+    <field name="code">91</field>
+    <field name="parent_id" ref="ctva_tr14sddht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr14tva">
+    <field name="name">TAUX REDUIT DE 14% (TVA exigible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr14addtva">
+    <field name="name">TR 14%- Avec droit à déduction (TVA)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_tr14tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_085tva">
+    <field name="name">-Beurre à l’exclusion du beurre de fabrication artisanale visé à l’article 91 (IA. 2°) (TVA)</field>
+    <field name="code">85</field>
+    <field name="parent_id" ref="ctva_tr14addtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_086tva">
+    <field name="name">-Graisses alimentaires (animales ou végétales), margarines ou saindoux (TVA)</field>
+    <field name="code">86</field>
+    <field name="parent_id" ref="ctva_tr14addtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_087tva">
+    <field name="name">-Thé (en vrac ou conditionné) (TVA)</field>
+    <field name="code">87</field>
+    <field name="parent_id" ref="ctva_tr14addtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_088tva">
+    <field name="name">-Opérations de transport de voyageurs et de marchandises (TVA)</field>
+    <field name="code">88</field>
+    <field name="parent_id" ref="ctva_tr14addtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_089tva">
+    <field name="name">-Véhicule utilitaire léger économique, et cyclomoteur économique et produits et matières entrant dans leur fabrication (TVA)</field>
+    <field name="code">89</field>
+    <field name="parent_id" ref="ctva_tr14addtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_090tva">
+    <field name="name">-Énergie électrique (TVA)</field>
+    <field name="code">90</field>
+    <field name="parent_id" ref="ctva_tr14addtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr14sddtva">
+    <field name="name">TR 14%- Sans droit à déduction (TVA)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_tr14tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_091tva">
+    <field name="name">Les prestations de services rendues par tout agent démarcheur ou courtier d’assurances à raison des contrats apportés par lui à une entreprise d’assurances (TVA)</field>
+    <field name="code">91</field>
+    <field name="parent_id" ref="ctva_tr14sddtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr10ht">
+    <field name="name">TAUX REDUIT DE 1O% (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_092ht">
+    <field name="name">-Opérations de restauration et de logement dans des hôtels (HT)</field>
+    <field name="code">92</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_093ht">
+    <field name="name">-Opérations de restauration fournies par les prestataires de services au personnel salarié des entreprises (HT)</field>
+    <field name="code">93</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_094ht">
+    <field name="name">-Exploitation ou location d’hôtel ou ensemble immobilier à destination touristique (HT)</field>
+    <field name="code">94</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_095ht">
+    <field name="name">-Les huiles fluides alimentaires (HT)</field>
+    <field name="code">95</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_096ht">
+    <field name="name">-Le sel de cuisines (gemme ou marin) (HT)</field>
+    <field name="code">96</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_097ht">
+    <field name="name">-Le riz usiné, les farines et semoules de riz et les farines de féculents, les pâtes alimentaires (HT)</field>
+    <field name="code">97</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_098ht">
+    <field name="name">-Les opérations de banque et de crédit et les commissions de change (HT)</field>
+    <field name="code">98</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_099ht">
+    <field name="name">-Les transactions relatives aux valeurs mobilières (HT)</field>
+    <field name="code">99</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_100ht">
+    <field name="name">-Les opérations de crédit foncier, de crédit à la construction et de crédit à l’hôtellerie (HT)</field>
+    <field name="code">100</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_101ht">
+    <field name="name">-Les transactions portant sur les actions et les parts sociales (HT)</field>
+    <field name="code">101</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_102ht">
+    <field name="name">-Les opérations de crédit agricole (HT)</field>
+    <field name="code">102</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_103ht">
+    <field name="name">-Les opérations afférentes aux prêts et avances consentis aux collectivités locales par le fonds d’équipement communal ainsi que celles au profit dudit fonds (HT)</field>
+    <field name="code">103</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_104ht">
+    <field name="name">-Les opérations des avocats, interprètes, notaires, adoul, huissiers de justice et vétérinaires (HT)</field>
+    <field name="code">104</field>
+    <field name="parent_id" ref="ctva_tr10ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr10tva">
+    <field name="name">TAUX REDUIT DE 1O% (TVA exigible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_092tva">
+    <field name="name">-Opérations de restauration et de logement dans des hôtels (TVA)</field>
+    <field name="code">92</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_093tva">
+    <field name="name">-Opérations de restauration fournies par les prestataires de services au personnel salarié des entreprises (TVA)</field>
+    <field name="code">93</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_094tva">
+    <field name="name">-Exploitation ou location d’hôtel ou ensemble immobilier à destination touristique (TVA)</field>
+    <field name="code">94</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_095tva">
+    <field name="name">-Les huiles fluides alimentaires (TVA)</field>
+    <field name="code">95</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_096tva">
+    <field name="name">-Le sel de cuisines (gemme ou marin) (TVA)</field>
+    <field name="code">96</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_097tva">
+    <field name="name">-Le riz usiné, les farines et semoules de riz et les farines de féculents, les pâtes alimentaires (TVA)</field>
+    <field name="code">97</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_098tva">
+    <field name="name">-Les opérations de banque et de crédit et les commissions de change (TVA)</field>
+    <field name="code">98</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_099tva">
+    <field name="name">-Les transactions relatives aux valeurs mobilières (TVA)</field>
+    <field name="code">99</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_100tva">
+    <field name="name">-Les opérations de crédit foncier, de crédit à la construction et de crédit à l’hôtellerie (TVA)</field>
+    <field name="code">100</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_101tva">
+    <field name="name">-Les transactions portant sur les actions et les parts sociales (TVA)</field>
+    <field name="code">101</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_102tva">
+    <field name="name">-Les opérations de crédit agricole (TVA)</field>
+    <field name="code">102</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_103tva">
+    <field name="name">-Les opérations afférentes aux prêts et avances consentis aux collectivités locales par le fonds d’équipement communal ainsi que celles au profit dudit fonds (TVA)</field>
+    <field name="code">103</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_104tva">
+    <field name="name">-Les opérations des avocats, interprètes, notaires, adoul, huissiers de justice et vétérinaires (TVA)</field>
+    <field name="code">104</field>
+    <field name="parent_id" ref="ctva_tr10tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr07ht">
+    <field name="name">TAUX REDUIT DE 7% (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_105ht">
+    <field name="name">L’eau livrée aux réseaux de distribution publique et les prestations d’assainissement (HT)</field>
+    <field name="code">105</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_106ht">
+    <field name="name">Location de compteurs d'eau et d'électricité (HT)</field>
+    <field name="code">106</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_107ht">
+    <field name="name">Gaz de pétrole et les autres hydrocarbures gazeux (HT)</field>
+    <field name="code">107</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_108ht">
+    <field name="name">Huiles de pétrole ou de schistes, brutes ou raffinées (HT)</field>
+    <field name="code">108</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_109ht">
+    <field name="name">Produits pharmaceutiques, matières premières et produits entrant dans leurs compositions ainsi que les emballages non récupérables de ces produits et matières (HT)</field>
+    <field name="code">109</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_110ht">
+    <field name="name">Les fournitures scolaires, produits et matières entrant dans leur composition (HT)</field>
+    <field name="code">110</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_111ht">
+    <field name="name">Aliments de bétail et des animaux de basse cour (HT)</field>
+    <field name="code">111</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_112ht">
+    <field name="name">Sucre raffiné ou aggloméré (HT)</field>
+    <field name="code">112</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_113ht">
+    <field name="name">Conserves de sardines (HT)</field>
+    <field name="code">113</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_114ht">
+    <field name="name">Lait en poudre (HT)</field>
+    <field name="code">114</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_115ht">
+    <field name="name">Savon de ménage (HT)</field>
+    <field name="code">115</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_116ht">
+    <field name="name">Voiture économique et produits et matières entrant dans sa fabrication (HT)</field>
+    <field name="code">116</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_117ht">
+    <field name="name">Péage dans les autoroutes (HT)</field>
+    <field name="code">117</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_tr07tva">
+    <field name="name">TAUX REDUIT DE 7% (TVA exigible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_b"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_105tva">
+    <field name="name">L’eau livrée aux réseaux de distribution publique et les prestations d’assainissement (TVA)</field>
+    <field name="code">105</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_106tva">
+    <field name="name">Location de compteurs d'eau et d'électricité (TVA)</field>
+    <field name="code">106</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_107tva">
+    <field name="name">Gaz de pétrole et les autres hydrocarbures gazeux (TVA)</field>
+    <field name="code">107</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_108tva">
+    <field name="name">Huiles de pétrole ou de schistes, brutes ou raffinées (TVA)</field>
+    <field name="code">108</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_109tva">
+    <field name="name">Produits pharmaceutiques, matières premières et produits entrant dans leurs compositions ainsi que les emballages non récupérables de ces produits et matières (TVA)</field>
+    <field name="code">109</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_110tva">
+    <field name="name">Les fournitures scolaires, produits et matières entrant dans leur composition (TVA)</field>
+    <field name="code">110</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_111tva">
+    <field name="name">Aliments de bétail et des animaux de basse cour (TVA)</field>
+    <field name="code">111</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_112tva">
+    <field name="name">Sucre raffiné ou aggloméré (TVA)</field>
+    <field name="code">112</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_113tva">
+    <field name="name">Conserves de sardines (TVA)</field>
+    <field name="code">113</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_114tva">
+    <field name="name">Lait en poudre (TVA)</field>
+    <field name="code">114</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_115tva">
+    <field name="name">Savon de ménage (TVA)</field>
+    <field name="code">115</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_116tva">
+    <field name="name">Voiture économique et produits et matières entrant dans sa fabrication (TVA)</field>
+    <field name="code">116</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_117tva">
+    <field name="name">Péage dans les autoroutes (TVA)</field>
+    <field name="code">117</field>
+    <field name="parent_id" ref="ctva_tr07tva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_118ht">
+    <field name="name">Reversement de la TVA à différents titres (cessation, régularisation,....)</field>
+    <field name="code">118</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_119ht">
+    <field name="name">TOTAL de la TVA exigible</field>
+    <field name="code">119</field>
+    <field name="parent_id" ref="ctva_tr07ht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_c">
+    <field name="name">Ventilation des déductions</field>
+    <field name="code">C</field>
+    <field name="parent_id" ref="vat_ma_tax_root" />
+  </record>
+  <record model="account.tax.code.template" id="ctva_aniht">
+    <field name="name">1-ACHATS NON IMMOBILISES (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_c"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_ani_psht">
+    <field name="name">Prestations de services (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_aniht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_120ht">
+    <field name="name">Prestations de service au taux normal (HT)</field>
+    <field name="code">120</field>
+    <field name="parent_id" ref="ctva_ani_psht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_121ht">
+    <field name="name">Transport (HT)</field>
+    <field name="code">121</field>
+    <field name="parent_id" ref="ctva_ani_psht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_122ht">
+    <field name="name">Opérations de banque (HT)</field>
+    <field name="code">122</field>
+    <field name="parent_id" ref="ctva_ani_psht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_123ht">
+    <field name="name">Hôtels de voyageurs, et ensemble immobiliers à destination touristique (HT)</field>
+    <field name="code">123</field>
+    <field name="parent_id" ref="ctva_ani_psht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_ani_bmht">
+    <field name="name">Biens matériels (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_aniht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_124">
+    <field name="name">-Achats à l'importation (20%) (HT)</field>
+    <field name="code">124</field>
+    <field name="parent_id" ref="ctva_ani_bmht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_125">
+    <field name="name">-Achats à l'intérieur (20%) (HT)</field>
+    <field name="code">125</field>
+    <field name="parent_id" ref="ctva_ani_bmht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_126">
+    <field name="name">-Achats à l'importation (14%) (HT)</field>
+    <field name="code">126</field>
+    <field name="parent_id" ref="ctva_ani_bmht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_127">
+    <field name="name">-Achats à l'intérieur (14%) (HT)</field>
+    <field name="code">127</field>
+    <field name="parent_id" ref="ctva_ani_bmht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_128">
+    <field name="name">-Achat à l'importation (7%) (HT)</field>
+    <field name="code">128</field>
+    <field name="parent_id" ref="ctva_ani_bmht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_129">
+    <field name="name">-Achat à l'intérieur (7%) (HT)</field>
+    <field name="code">129</field>
+    <field name="parent_id" ref="ctva_ani_bmht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_130">
+    <field name="name">Travaux à façons (HT)</field>
+    <field name="code">130</field>
+    <field name="parent_id" ref="ctva_aniht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_131ht">
+    <field name="name">Sous-traitance (travaux immobiliers) (HT)</field>
+    <field name="code">131</field>
+    <field name="parent_id" ref="ctva_aniht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_anitva">
+    <field name="name">1-ACHATS NON IMMOBILISES (TVA déductible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_c"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_ani_pstva">
+    <field name="name">Prestations de services (TVA déductible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_anitva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_120tva">
+    <field name="name">Prestations de service au taux normal (TVA)</field>
+    <field name="code">120</field>
+    <field name="parent_id" ref="ctva_ani_pstva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_121tva">
+    <field name="name">Transport (TVA)</field>
+    <field name="code">121</field>
+    <field name="parent_id" ref="ctva_ani_pstva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_122tva">
+    <field name="name">Opérations de banque (TVA)</field>
+    <field name="code">122</field>
+    <field name="parent_id" ref="ctva_ani_pstva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_123tva">
+    <field name="name">Hôtels de voyageurs, et ensemble immobiliers à destination touristique (TVA)</field>
+    <field name="code">123</field>
+    <field name="parent_id" ref="ctva_ani_pstva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_ani_bmtva">
+    <field name="name">Biens matériels (TVA déductible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_anitva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_124tva">
+    <field name="name">-Achats à l'importation (20%) (TVA)</field>
+    <field name="code">124</field>
+    <field name="parent_id" ref="ctva_ani_bmtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_125tva">
+    <field name="name">-Achats à l'intérieur (20%) (TVA)</field>
+    <field name="code">125</field>
+    <field name="parent_id" ref="ctva_ani_bmtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_126tva">
+    <field name="name">-Achats à l'importation (14%) (TVA)</field>
+    <field name="code">126</field>
+    <field name="parent_id" ref="ctva_ani_bmtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_127tva">
+    <field name="name">-Achats à l'intérieur (14%) (TVA)</field>
+    <field name="code">127</field>
+    <field name="parent_id" ref="ctva_ani_bmtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_128tva">
+    <field name="name">-Achat à l'importation (7%) (TVA)</field>
+    <field name="code">128</field>
+    <field name="parent_id" ref="ctva_ani_bmtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_129tva">
+    <field name="name">-Achat à l'intérieur (7%) (TVA)</field>
+    <field name="code">129</field>
+    <field name="parent_id" ref="ctva_ani_bmtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_130tva">
+    <field name="name">Travaux à façons (TVA déductible)</field>
+    <field name="code">130</field>
+    <field name="parent_id" ref="ctva_anitva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_131tva">
+    <field name="name">Sous-traitance (travaux immobiliers) (TVA déductible)</field>
+    <field name="code">131</field>
+    <field name="parent_id" ref="ctva_anitva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_immht">
+    <field name="name">2-IMMOBILISATIONS (Base HT)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_c"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_132ht">
+    <field name="name">-Achats à l'importation (HT)</field>
+    <field name="code">132</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_133ht">
+    <field name="name">-Achats à l'intérieur (HT)</field>
+    <field name="code">133</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_134ht">
+    <field name="name">-Livraison à soi-même autre que les constructions (HT)</field>
+    <field name="code">134</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_135ht">
+    <field name="name">-Installation et pose (HT)</field>
+    <field name="code">135</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_136ht">
+    <field name="name">-Constructions (HT)</field>
+    <field name="code">136</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_137ht">
+    <field name="name">-Livraison à soi-même de constructions (HT)</field>
+    <field name="code">137</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_138ht">
+    <field name="name">-Déduction complémentaire de la régularisation du prorata (HT)</field>
+    <field name="code">138</field>
+    <field name="parent_id" ref="ctva_immht"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_immtva">
+    <field name="name">2-IMMOBILISATIONS (TVA déductible)</field>
+    <field name="code"/>
+    <field name="parent_id" ref="ctva_c"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_132tva">
+    <field name="name">-Achats à l'importation (TVA)</field>
+    <field name="code">132</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_133tva">
+    <field name="name">-Achats à l'intérieur (TVA)</field>
+    <field name="code">133</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_134tva">
+    <field name="name">-Livraison à soi-même autre que les constructions (TVA)</field>
+    <field name="code">134</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_135tva">
+    <field name="name">-Installation et pose (TVA)</field>
+    <field name="code">135</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_136tva">
+    <field name="name">-Constructions (TVA)</field>
+    <field name="code">136</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_137tva">
+    <field name="name">-Livraison à soi-même de constructions (TVA)</field>
+    <field name="code">137</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+  <record model="account.tax.code.template" id="ctva_138tva">
+    <field name="name">-Déduction complémentaire de la régularisation du prorata (TVA)</field>
+    <field name="code">138</field>
+    <field name="parent_id" ref="ctva_immtva"/>
+  </record>
+
+
+<!-- account chart  -->
+    <record id="l10n_kzc_temp_chart" model="account.chart.template">
+        <field name="name">Plan comptable marocain</field>
+        <field name="account_root_id" ref="pcg_0"/>
+        <field name="tax_code_root_id" ref="vat_ma_tax_root"/>
+        <field name="bank_account_view_id" ref="pcg_514"/>
+        <field name="property_account_receivable" ref="pcg_3488"/>
+        <field name="property_account_payable" ref="pcg_4488"/>
+        <field name="currency_id" ref="base.MAD"/>
+        <field name="property_account_income_categ" ref="pcg_7111"/>
+        <field name="property_account_expense_categ" ref="pcg_1486"/>
+    </record>
+
+  <record model="account.tax.template" id="tva_exo">
+    <field name="name">Exonere de TVA</field>
+    <field name="type_tax_use">all</field>
+    <field name="account_collected_id"/>
+    <field name="account_paid_id"/>
+    <field name="amount">0</field>
+    <field name="type">none</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_vt20">
+    <field name="name">TVA 20% VENTES</field>
+    <field name="type_tax_use">sale</field>
+    <field name="account_collected_id" ref="pcg_445520"/>
+    <field name="account_paid_id" ref="pcg_445520"/>
+    <field name="amount">0.2</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_vt14">
+    <field name="name">TVA 14% VENTES</field>
+    <field name="type_tax_use">sale</field>
+    <field name="account_collected_id" ref="pcg_445514"/>
+    <field name="account_paid_id" ref="pcg_445514"/>
+    <field name="amount">0.14</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_vt10">
+    <field name="name">TVA 10% VENTES</field>
+    <field name="type_tax_use">sale</field>
+    <field name="account_collected_id" ref="pcg_445510"/>
+    <field name="account_paid_id" ref="pcg_445510"/>
+    <field name="amount">0.1</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_vt07">
+    <field name="name">TVA 7% VENTES</field>
+    <field name="type_tax_use">sale</field>
+    <field name="account_collected_id" ref="pcg_445507"/>
+    <field name="account_paid_id" ref="pcg_445507"/>
+    <field name="amount">0.07</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_ac20">
+    <field name="name">TVA 20% ACHATS</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="account_collected_id" ref="pcg_3455220"/>
+    <field name="account_paid_id" ref="pcg_3455220"/>
+    <field name="amount">0.2</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_acim">
+    <field name="name">TVA 20% ACHATS (immobilisation)</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="account_collected_id" ref="pcg_34551"/>
+    <field name="account_paid_id" ref="pcg_34551"/>
+    <field name="amount">0.2</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_ac14">
+    <field name="name">TVA 14% ACHATS</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="account_collected_id" ref="pcg_3455214"/>
+    <field name="account_paid_id" ref="pcg_3455214"/>
+    <field name="amount">0.14</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_ac10">
+    <field name="name">TVA 10% ACHATS</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="account_collected_id" ref="pcg_3455210"/>
+    <field name="account_paid_id" ref="pcg_3455210"/>
+    <field name="amount">0.1</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+  <record model="account.tax.template" id="tva_ac07">
+    <field name="name">TVA 7% ACHATS</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="account_collected_id" ref="pcg_3455207"/>
+    <field name="account_paid_id" ref="pcg_3455207"/>
+    <field name="amount">0.07</field>
+    <field name="type">percent</field>
+    <field name="chart_template_id" ref="l10n_kzc_temp_chart"/>
+  </record>
+
+</data>
+</openerp>

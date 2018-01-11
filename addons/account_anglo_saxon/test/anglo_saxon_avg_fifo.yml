@@ -1,0 +1,303 @@
+-
+  In order to test anglo_saxon Configure Different Accounts.
+-
+  !record {model: account.account, id: account_anglo_stock_valuation_fifo}:
+    code: X3000f
+    name: Stock Valuation Account- (test)
+    parent_id: account.cas
+    type: other
+    user_type: account.data_account_type_asset
+-
+  Configure Stock Interim account (Received).
+-
+  !record {model: account.account, id: account_anglo_stock_input_fifo}:
+    code: X2800f
+    name: Stock Interim account (Received)
+    parent_id: account.cos
+    type: other
+    user_type: account.data_account_type_expense
+-
+  Configure Stock Interim account (Delivered).
+-
+  !record {model: account.account, id: account_anglo_stock_output_fifo}:
+    code: X2801f
+    name: Stock Interim account (Delivered)
+    parent_id: account.rev
+    type: other
+    user_type: account.data_account_type_income
+-
+  Configure Price difference creditor Account.
+-
+  !record {model: account.account, id: account_anglo_price_difference_fifo}:
+    code: X7095f
+    name: Price difference creditor Account
+    parent_id: account.cos
+    type: other
+    user_type: account.data_account_type_expense
+-
+  Configure Cash Bank Account.
+-
+  !record {model: account.account, id: account_anglo_cash_fifo}:
+    code: X5000f
+    name: Cash/Bank Account 
+    parent_id: account.cash  
+    type: other
+    user_type: account.data_account_type_asset
+    reconcile: True
+-
+  Configure Creditor Account Payable. 
+-
+  !record {model: account.account, id: account_anglo_payable_fifo}:
+    code: X440001f
+    name: Creditor Account Payable 
+    parent_id: account.a_pay  
+    type: other
+    user_type: account.data_account_type_payable
+    reconcile: True
+-
+  Configure Debtor Account Receivable. 
+-
+  !record {model: account.account, id: account_anglo_receivable_fifo}:
+    code: X400001f
+    name: Debtor Account Receivable 
+    parent_id: account.a_recv  
+    type: other
+    user_type: account.data_account_type_receivable
+    reconcile: True
+-
+  Configure Cost of Good sale Account.
+-
+  !record {model: account.account, id: account_anglo_cogs_fifo}:
+    code: X7000f
+    name: Cost of goods sale account
+    parent_id: account.o_expense
+    type: other
+    user_type: account.data_account_type_expense
+-
+  Configure Income Account.
+-
+  !record {model: account.account, id: account_anglo_income_fifo}:
+    code: X8000f
+    name: Income Account
+    parent_id: account.o_income
+    type: other
+    user_type: account.data_account_type_income
+-
+  I configure the account receivable of supplier
+-
+  !record {model: res.partner, id: base.res_partner_3}:
+    property_account_payable: account_anglo_payable_fifo
+    property_account_receivable: account_anglo_receivable_fifo
+-
+  I configure the account receivable of Customer.
+-
+  !record {model: res.partner, id: base.res_partner_13}:
+    property_account_payable: account_anglo_payable_fifo
+    property_account_receivable: account_anglo_receivable_fifo
+-
+  I configure the product category with stock valuation account.
+-
+  !record {model: product.category, id: product.product_category_4}:
+    property_stock_valuation_account_id: account_anglo_stock_valuation_fifo
+-
+  I create a product with required accounts, and cost method average (but same applies for fifo)
+-
+  !record {model: product.product, id: product_fifo_anglo_saxon}: 
+    name: 'FIFO product for anglo saxon tests'
+    list_price: 20.00
+    standard_price: 0
+    categ_id: product.product_category_4
+    valuation: 'real_time'
+    property_account_income: account_anglo_income_fifo
+    property_account_expense: account_anglo_cogs_fifo
+    property_account_creditor_price_difference: account_anglo_price_difference_fifo
+    property_stock_account_input: account_anglo_stock_input_fifo
+    property_stock_account_output: account_anglo_stock_output_fifo
+    cost_method: 'average'
+-
+  I create a draft Purchase Order.
+-
+  !record {model: purchase.order, id: purchase_order_001_fifo}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: 1
+    order_line:
+      - product_id: product_fifo_anglo_saxon
+        product_qty: 1
+        price_unit: 9
+        date_planned: !eval "'%s' % (time.strftime('%Y-%m-%d'))"
+        taxes_id: []
+-
+  I confirm the purchase order.
+-
+  !workflow {model: purchase.order, ref: purchase_order_001_fifo, action: purchase_confirm}
+-
+  Receipt is ready for process so now we do it.
+-
+  !python {model: stock.picking}: |
+    picking_id = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_001_fifo"), context=context).picking_ids[0]
+    picking_id.do_transfer()
+-
+  I check the Stock Interim account (Received) is credit successfully.
+-
+  !assert {model: account.account, id : account_anglo_stock_input_fifo, string : Stock Interim account (Received) is not credited successfully.}:
+    - credit == 9
+-
+  I check the Stock valuation account is debit sucessfully.
+-
+  !assert {model: account.account, id : account_anglo_stock_valuation_fifo, string : Stock valuation account is not debited successfully.}:
+    - debit == 9
+-
+  I Validate Invoice of Purchase Order after having changed the price to 10.
+-
+  !python {model: purchase.order}: |
+    invoice_ids = [x.id for x in self.browse(cr, uid, ref("purchase_order_001_fifo")).invoice_ids]
+    line_ids = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', invoice_ids)])
+    self.pool.get('account.invoice.line').write(cr, uid, line_ids, {'price_unit': 10})
+    self.pool.get('account.invoice').signal_workflow(cr, uid, invoice_ids, 'invoice_open')
+-
+  I check the Stock Interim account (Received) is debited sucessfully when Invoice validated.
+-
+  !assert {model: account.account, id : account_anglo_stock_input_fifo, string : Stock Interim account (Received) is not debited successfully.}:
+    - debit == 9
+-
+  I check the Price difference creditor Account is debited sucessfully when Invoice validated.
+-
+  !assert {model: account.account, id : account_anglo_price_difference_fifo, string : Price difference creditor Account is not debited successfully.}:
+    - debit == 1
+-
+  I check Payable(creditor) Account is Credited sucessfully when Invoice validated.
+-
+  !assert {model: account.account, id : account_anglo_payable_fifo, string : Payable(creditor) Account is not Credited successfully.}:
+    - credit == 10
+-
+  I pay the invoice.
+-
+  !python {model: purchase.order}: |
+    invoice_ids = self.browse(cr, uid, ref("purchase_order_001_fifo")).invoice_ids
+    order = self.browse(cr, uid, ref("purchase_order_001_fifo"))
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
+    for invoice in invoice_ids:
+        invoice.pay_and_reconcile(invoice.amount_total, ref('account_anglo_cash_fifo'), ref('account.period_8'), journal_ids[0], ref('account_anglo_cash_fifo'), ref('account.period_8'), journal_ids[0], name='test')
+-
+  I check Payable(Creditors) Account is Debited sucessfully after invoice paid.
+-
+  !assert {model: account.account, id : account_anglo_payable_fifo, string : Payable(Creditors) Account is not Debited successfully.}:
+    - debit == 10
+-
+  I check Bank/Cash account is credited sucessfully after invoice paid.
+-
+  !assert {model: account.account, id : account_anglo_cash_fifo, string: Bank/Cash account is not credited successfully.}:
+    - credit == 10
+-
+  I create an Outgoing Picking order
+-
+  !record {model: stock.picking, id: stock_picking_out001_fifo}:
+    partner_id: base.res_partner_13
+    move_lines:
+      - company_id: base.main_company
+        location_id: stock.stock_location_stock
+        product_id: product_fifo_anglo_saxon
+        product_uom_qty: 1.0
+        location_dest_id: stock.stock_location_customers
+    invoice_state: 2binvoiced
+    move_type: direct
+    picking_type_id: stock.picking_type_out
+-
+  I need to check the availability of the product, So I make my picking order for processing later.
+-
+  !python {model: stock.picking}: |
+    self.action_confirm(cr, uid, [ref('stock_picking_out001_fifo')], context=context)
+-
+  I check the product availability, Product is available in the stock and ready to be sent.
+-
+  !python {model: stock.picking}: |
+    picking = self.browse(cr, uid, ref("stock_picking_out001_fifo"))
+    assert picking.state == "confirmed", "Picking should be confirmed."
+    for move_line in picking.move_lines:
+      assert move_line.state == "confirmed", "Move should be confirmed."
+-
+  I process the delivery.
+-
+  !python {model: stock.picking}: |
+    picking = self.pool.get('stock.picking').browse(cr, uid, ref("stock_picking_out001_fifo"), context=context)
+    picking.do_transfer()
+- 
+  I check Stock Interim account (Delivery) is debited successfully.
+-
+  !assert {model: account.account, id : account_anglo_stock_output_fifo, string : Stock Interim account (Delivery) is not debited successfully.}:
+    - debit == 9
+-
+  I check the Stock valuation account is credited sucessfully.
+-
+  !assert {model: account.account, id : account_anglo_stock_valuation_fifo, string : Stock valuation account is not credited successfully.}: 
+    - credit == 9
+-
+  As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
+-
+  !python {model: stock.invoice.onshipping}: |
+    wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
+      {'active_ids': [ref("stock_picking_out001_fifo")], "active_model": "stock.picking"})
+    self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
+      "search_default_available": 1, "tz": False, "active_model": "stock.picking",
+      "contact_display": "partner", "active_ids": [ref("stock_picking_out001_fifo")], "active_id": ref("stock_picking_out001_fifo")})
+-
+  I check that the customer invoice is created successfully.
+-
+  !python {model: account.invoice}: |
+    partner_id = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001_fifo')).partner_id.id
+    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner_id)])
+    assert inv_ids, 'No Invoice is generated!'
+-
+  I open the Invoice.
+-
+  !python {model: stock.picking}: |
+    move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001_fifo')).name
+    account_invoice = self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
+    account_invoice_line = self.pool.get('account.invoice.line').search(cr, uid, [('invoice_id', 'in', account_invoice)])
+    self.pool.get('account.invoice.line').write(cr, uid, account_invoice_line, {'invoice_line_tax_id': [(6, 0, [])]})
+    self.pool.get('account.invoice').button_reset_taxes(cr, uid, account_invoice)
+    self.pool.get('account.invoice').signal_workflow(cr, uid, account_invoice, 'invoice_open')
+-
+  I check Income Account is Credited sucessfully when Invoice validated.
+-
+  !assert {model: account.account, id : account_anglo_income_fifo, string : Income Account is not Credited successfully.}:
+    - credit == 20
+-
+  I check Cost of goods sold account for debit.
+-
+  !assert {model: account.account, id : account_anglo_cogs_fifo, string : Cost of goods sale is not Debited successfully.}:
+    - debit == 9
+-
+  I check Stock Interim account (Delivery)
+-
+  !assert {model: account.account, id : account_anglo_stock_output_fifo, string : Stock Interim account (Delivery) is not credited successfully.}:
+    - credit == 9
+-
+  I check Receivable(Debtor) Account for debit.
+-
+  !assert {model: account.account, id : account_anglo_receivable_fifo, string : Receivable(Debtors) Account is not Debited successfully.}: 
+    - debit == 20
+-
+  I pay the invoice.
+-
+  !python {model: account.invoice}: |
+    move_name = self.pool.get('stock.picking').browse(cr, uid, ref('stock_picking_out001_fifo')).name
+    account_invoice= self.pool.get('account.invoice').search(cr, uid, [('origin', '=', move_name)])
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash')], limit=1)
+    pay = self.pay_and_reconcile(cr, uid, account_invoice,
+                        20.0, ref('account_anglo_cash_fifo'), ref('account.period_8'),
+                        journal_ids[0], ref('account_anglo_cash_fifo'),
+                        ref('account.period_8'), journal_ids[0],
+                        name='Payment for test customer invoice')
+    assert (pay == True), "Incorrect Payment."
+-
+  I check Receivable(Debtor) Account for credit.
+-
+  !assert {model: account.account, id : account_anglo_receivable_fifo, string : Receivable(Debtors) Account is not Credited successfully.}: 
+    - credit == 20
+-
+  I check Bank/Cash account is debited sucessfully after invoice paid.
+-
+  !assert {model: account.account, id : account_anglo_cash_fifo, string: Bank/Cash account is not successfully credited.}:
+    - debit == 20

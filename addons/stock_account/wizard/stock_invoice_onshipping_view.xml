@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_invoice_onshipping" model="ir.ui.view">
+            <field name="name">Stock Invoice Onshipping</field>
+            <field name="model">stock.invoice.onshipping</field>
+            <field name="arch" type="xml">
+              <form string="Create invoice">
+                  <h1>
+                      <field name="journal_type" readonly="1"/>
+                  </h1>
+                  <group>
+                      <field name="journal_id" domain="[('type','=',journal_type)]" on_change="onchange_journal_id(journal_id)"/>
+                      <field name="group"/>
+                      <field name="invoice_date" />
+                  </group>
+                  <footer>
+                      <button name="open_invoice" string="Create" type="object" class="oe_highlight"/>
+                      or
+                      <button string="Cancel" class="oe_link" special="cancel"/>
+                  </footer>
+             </form>
+            </field>
+        </record>
+
+        <act_window name="Create Draft Invoices"
+            res_model="stock.invoice.onshipping"
+            src_model="stock.picking"
+            key2="client_action_multi"
+            multi="True"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            id="action_stock_invoice_onshipping"/>
+    </data>
+</openerp>

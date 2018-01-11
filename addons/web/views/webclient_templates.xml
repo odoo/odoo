@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="web.assets_common">
+            <script type="text/javascript" src="/web/static/lib/es5-shim/es5-shim.min.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+            <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/globalization/en-US.js"></script>
+            <script type="text/javascript" src="/web/static/lib/spinjs/spin.js"></script>
+
+            <!-- jQuery stuff -->
+            <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.timeago/jquery.timeago.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
+
+            <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+
+            <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/openerpframework.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/tour.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+        </template>
+
+        <template id="jqueryui_conflict" name="jquery.ui.conflict">
+            <!-- TODO: get rid of this hack once jQuery.ui is removed -->
+            <script type="text/javascript" charset="utf-8">
+                $.fn.bstooltip = $.fn.tooltip;
+                $.fn.bsbutton = $.fn.button;
+            </script>
+            <t t-raw="0"/>
+            <script type="text/javascript" charset="utf-8">
+                $.fn.tooltip = $.fn.bstooltip;
+                $.fn.button = $.fn.bsbutton;
+            </script>
+        </template>
+
+        <template id="web.assets_backend">
+            <!-- Datejs -->
+            <script type="text/javascript" src="/web/static/lib/datejs/core.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/parser.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/sugarpak.js"></script>
+            <script type="text/javascript" src="/web/static/lib/datejs/extras.js"></script>
+
+            <!-- jQuery addons -->
+            <script type="text/javascript" src="/web/static/lib/jquery.validate/jquery.validate.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.autosize/jquery.autosize.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo-min.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/cleditor/jquery.cleditor.css"/>
+            <script type="text/javascript" src="/web/static/lib/cleditor/jquery.cleditor.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/jquery.textext/jquery.textext.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.textext/jquery.textext.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/select2/select2.css"/>
+            <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css"/>
+            <script type="text/javascript" src="/web/static/lib/bootstrap/js/bootstrap.js"></script>
+
+            <!-- jQuery ui -->
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css"/>
+
+            <t t-call="web.jqueryui_conflict">
+                <script type="text/javascript" src="/web/static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js"></script>
+            </t>
+
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js"></script>
+
+            <link rel="stylesheet" href="/web/static/lib/jquery.ui.notify/css/ui.notify.css"/>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui.notify/js/jquery.notify.js"></script>
+
+
+            <!-- Backbone -->
+            <script type="text/javascript" src="/web/static/lib/backbone/backbone.js"></script>
+
+            <!-- Internals -->
+            <script type="text/javascript" charset="utf-8">
+                openerp._modules = <t t-raw="get_modules_order()"/>;
+            </script>
+            <link rel="stylesheet" href="/web/static/src/css/base.css"/>
+            <link rel="stylesheet" href="/web/static/src/css/data_export.css"/>
+            <link rel="stylesheet" href="/base/static/src/css/modules.css"/>
+
+            <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/testing.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/pyeval.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/formats.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/chrome.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/views.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/data.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/data_export.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/search.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_list.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_form.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_list_editable.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/view_tree.js"></script>
+            <script type="text/javascript" src="/base/static/src/js/apps.js"></script>
+
+        </template>
+
+        <template id="web.assets_webclient_manifest">
+            <!-- This bundle can be used for module manifest asset declaration backward compatibility -->
+            <t t-foreach="manifest_list('css')" t-as="css_file">
+                <link rel="stylesheet" t-att-href="css_file"/>
+            </t>
+            <t t-foreach="manifest_list('js')" t-as="js_file">
+                <script type="text/javascript" t-att-src="js_file"></script>
+            </t>
+        </template>
+
+        <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title>Odoo</title>
+                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                    <link rel="stylesheet" href="/web/static/src/css/full.css" />
+                    <t t-raw="head or ''"/>
+                </head>
+                <body t-att-class="body_classname">
+                    <t t-raw="0"/>
+                </body>
+            </html>
+        </template>
+
+        <template id="web.menu">
+            <ul class="nav navbar-nav navbar-left oe_application_menu_placeholder">
+                <li t-foreach="menu_data['children']" t-as="menu">
+                    <t t-call="web.menu_link"/>
+                </li>
+                <li id="menu_more_container" class="dropdown" style="display: none;">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">More <b class="caret"></b></a>
+                    <ul id="menu_more" class="dropdown-menu"></ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right oe_user_menu_placeholder" style="display: none;"/>
+            <ul class="nav navbar-nav navbar-right oe_systray" style="display: none;"/>
+        </template>
+        <template id="web.menu_secondary">
+            <a class="oe_logo" t-att-href="'/web/?debug' if debug else '/web'">
+                <span class="oe_logo_edit">Edit Company data</span>
+                <img src='/web/binary/company_logo'/>
+            </a>
+            <div>
+                <div>
+                    <div class="oe_secondary_menus_container">
+                        <t t-foreach="menu_data['children']" t-as="menu">
+                            <div style="display: none" class="oe_secondary_menu" t-att-data-menu-parent="menu['id']">
+                                <t t-foreach="menu['children']" t-as="menu">
+                                    <div class="oe_secondary_menu_section">
+                                        <t t-esc="menu['name']"/>
+                                    </div>
+                                    <t t-call="web.menu_secondary_submenu"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_footer">
+                Powered by <a href="http://www.odoo.com" target="_blank"><span>Odoo</span></a>
+            </div>
+        </template>
+        <template id="web.menu_secondary_submenu">
+            <ul t-if="menu['children']" class="oe_secondary_submenu nav nav-pills nav-stacked">
+                <li t-foreach="menu['children']" t-as="menu">
+                    <t t-call="web.menu_link"/>
+                    <t t-call="web.menu_secondary_submenu"/>
+                </li>
+            </ul>
+        </template>
+        <template id="web.menu_link">
+            <t t-set="debug_param" t-value="'?&amp;debug=' if debug else ''"/>
+            <a t-att-href="'/web%s#menu_id=%s&amp;action=%s' % (debug_param, menu['id'], menu['action'] and menu['action'].split(',')[1] or '')"
+                t-att-class="'oe_menu_toggler' if menu.get('children') else 'oe_menu_leaf'"
+                t-att-data-menu="menu['id']"
+                t-att-data-action-model="menu['action'] and menu['action'].split(',')[0] or ''"
+                t-att-data-action-id="menu['action'] and menu['action'].split(',')[1] or ''">
+                <span class="oe_menu_text">
+                    <t t-esc="menu['name']"/>
+                </span>
+            </a>
+        </template>
+
+        <template id="web.webclient_bootstrap" name="Webclient Bootstrap">
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <t t-call-assets="web.assets_common"/>
+                    <t t-call-assets="web.assets_backend"/>
+                    &lt;!--[if lte IE 9]&gt; <link rel="stylesheet" href="/web/static/src/css/ie.css"/> &lt;![endif]--&gt;
+                    <script type="text/javascript">
+                        $(function() {
+                            var s = new openerp.init();
+                            <t t-if="init">
+                                <t t-raw="init"/>
+                            </t>
+                            <t t-if="not init">
+                                var wc = new s.web.WebClient();
+                                wc.setElement($(document.body));
+                                wc.start();
+                            </t>
+                        });
+                    </script>
+                </t>
+
+                <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation" groups="base.group_user,base.group_portal">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>    
+                    </div>
+                    <div class="navbar-collapse collapse" id="oe_main_menu_placeholder">
+                        <t t-call="web.menu"/>
+                    </div>
+                </nav>
+                <div class="openerp openerp_webclient_container">
+                    <table class="oe_webclient">
+                        <tr>
+                            <td class="oe_leftbar" valign="top">
+                                <div groups="base.group_user,base.group_portal">
+                                    <t t-call="web.menu_secondary"/>
+                                </div>
+                            </td>
+                            <td class="oe_application"/>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </template>
+
+        <template id="web.login_layout" name="Login Layout">
+            <t t-call="web.layout">
+                <t t-set="head">
+                    <link href="/web/static/src/css/base.css" rel="stylesheet"/>
+                    <link href="/web/static/lib/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+                </t>
+                <t t-set="body_classname" t-value="'oe_single_form'"/>
+                <div class="oe_single_form_container modal-content">
+                    <div class="oe_single_form_logo">
+                        <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}"/>
+                    </div>
+                    <hr/>
+                    <t t-raw="0"/>
+
+                    <div class="oe_single_form_footer" t-if="not disable_footer">
+                        <t t-if="not disable_database_manager">
+                            <a class="oe_login_manage_db" t-attf-href="/web/database/manager{{ '?debug' if debug else '' }}">Manage Databases</a>
+                            <span class="oe_footer_seperator"> | </span>
+                        </t>
+                        <a href="https://www.odoo.com" target="_blank">Powered by <span>Odoo</span></a>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <template id="web.database_select" name="Database select widget">
+            <script type="text/javascript">
+                function dbchanged(db) {
+                    document.location = "/web/login?<t t-if="debug">debug&amp;</t>db=" + db;
+                }
+            </script>
+            <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                <label for="db" class="control-label">Database</label>
+                <select name="db" id="db" class="form-control" required="required" t-att-autofocus="'autofocus' if request.db not in databases else None" onchange="dbchanged(this.value)">
+                    <option></option>
+                    <t t-foreach="databases" t-as="db">
+                        <option t-att-selected="'selected' if db == request.db else None">
+                            <t t-esc="db"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+        </template>
+
+        <template id="web.login" name="Login">
+            <t t-call="web.login_layout">
+                <form class="oe_login_form" role="form" t-attf-action="/web/login{{ '?debug' if debug else '' }}" method="post" onsubmit="this.action = this.action + location.hash">
+
+                    <t t-call="web.database_select"/>
+
+                    <div class="form-group field-login">
+                        <label for="login" class="control-label">Email</label>
+                        <input type="text" name="login" t-att-value="login" id="login" class="form-control" required="required" autofocus="autofocus"/>
+                    </div>
+
+                    <div class="form-group field-password">
+                        <label for="password" class="control-label">Password</label>
+                        <input type="password" name="password" id="password" class="form-control" required="required" t-att-autofocus="'autofocus' if login else None"/>
+                    </div>
+
+                    <p class="alert alert-danger" t-if="error">
+                        <t t-esc="error"/>
+                    </p>
+                    <p class="alert alert-success" t-if="message">
+                        <t t-esc="message"/>
+                    </p>
+
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <div class="clearfix oe_login_buttons">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
+
+                </form>
+            </t>
+        </template>
+
+        <template id="web.qunit_suite">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+                    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+                    <title>Odoo Web Tests</title>
+
+                    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+                    <link rel="stylesheet" href="/web/static/lib/qunit/qunit.css"/>
+                    <script src="/web/static/lib/qunit/qunit.js"></script>
+
+                    <t t-call="web.assets_common"/>
+                    <t t-call="web.assets_backend"/>
+
+                    <style>
+                        body { overflow: auto !important; }
+                    </style>
+                    <script type="text/javascript" id="qunit_config">
+                        localStorage.clear();
+                        QUnit.config.testTimeout = 5 * 60 * 1000;
+                        QUnit.moduleDone(function(result) {
+                            console.log(result.name + " (" + result.passed + "/" + result.total + " passed tests)");
+                        });
+                        QUnit.done(function(result) {
+                            if (result.failed === 0) {
+                                console.log('ok');
+                            } else {
+                                console.log('error');
+                            }
+                        });
+                        openerp.web.qweb.add_template("/web/webclient/qweb");
+                    </script>
+
+                    <script type="text/javascript" src="/web/static/test/testing.js"></script>
+                    <script type="text/javascript" src="/web/static/test/framework.js"></script>
+                    <script type="text/javascript" src="/web/static/test/registry.js"></script>
+                    <script type="text/javascript" src="/web/static/test/form.js"></script>
+                    <script type="text/javascript" src="/web/static/test/data.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list-utils.js"></script>
+                    <script type="text/javascript" src="/web/static/test/formats.js"></script>
+                    <script type="text/javascript" src="/web/static/test/rpc-misordered.js"></script>
+                    <script type="text/javascript" src="/web/static/test/evals.js"></script>
+                    <script type="text/javascript" src="/web/static/test/search.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list.js"></script>
+                    <script type="text/javascript" src="/web/static/test/list-editable.js"></script>
+                    <script type="text/javascript" src="/web/static/test/mutex.js"></script>
+                </head>
+
+                <body id="oe" class="openerp">
+                    <div id="qunit"></div>
+                    <div id="qunit-fixture"></div>
+                </body>
+            </html>
+
+        </template>
+
+    </data>
+</openerp>

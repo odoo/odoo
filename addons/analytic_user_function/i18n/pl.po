@@ -1,0 +1,138 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic_user_function
+# 
+# Translators:
+# zbik2607 <darek@krokus.com.pl>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2017-09-23 21:13+0000\n"
+"Last-Translator: zbik2607 <darek@krokus.com.pl>\n"
+"Language-Team: Polish (http://www.transifex.com/odoo/odoo-8/language/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,account_id:0
+#: model:ir.model,name:analytic_user_function.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Konto analityczne"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Pozycja analityczna"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,create_uid:0
+msgid "Created by"
+msgstr "Utworzono przez"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,create_date:0
+msgid "Created on"
+msgstr "Data utworzenia"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid ""
+"Define a specific service (e.g. Senior Consultant)\n"
+"                            and price for some users to use these data instead\n"
+"                            of the default values when invoicing the customer."
+msgstr "Zdefiniuj specjalną usługę (np. Zaawansowane konsultacje)\n                            i ceny dla dla części użytkowników, aby je stosować\n                            zamiast domyślnych wartości przy fakturowaniu."
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:108
+#: code:addons/analytic_user_function/analytic_user_function.py:137
+#, python-format
+msgid "Error!"
+msgstr "Błąd!"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid "Invoice Price Rate per User"
+msgstr "Procent ceny faktury na użytkownika"
+
+#. module: analytic_user_function
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_form
+#: view:analytic.user.funct.grid:analytic_user_function.analytic_user_funct_grid_tree
+msgid "Invoicing Data"
+msgstr "Dane fakturowane"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_uid:0
+msgid "Last Updated by"
+msgstr "Ostatnio modyfikowano przez"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,write_date:0
+msgid "Last Updated on"
+msgstr "Data ostatniej modyfikacji"
+
+#. module: analytic_user_function
+#: view:account.analytic.account:analytic_user_function.view_account_analytic_account_form_inherit
+msgid ""
+"Odoo will recursively search on parent accounts\n"
+"                            to check if specific conditions are defined for a\n"
+"                            specific user. This allows to set invoicing\n"
+"                            conditions for a group of contracts."
+msgstr "OpenERP przeszuka rekurencyjnie konta nadrzędne\naby sprawdzić specjalne warunki dla konkretnego\nużytkownika. To pozwoli ustawić warunki fakturowania \ndla grupy umów."
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,price:0
+msgid "Price"
+msgstr "Cena"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_analytic_user_funct_grid
+msgid "Price per User"
+msgstr "Cena na użytkownika"
+
+#. module: analytic_user_function
+#: help:analytic.user.funct.grid,price:0
+msgid "Price per hour for this user."
+msgstr "Cena godzinowa dla użytkownika"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,product_id:0
+msgid "Service"
+msgstr "Usługa"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:109
+#: code:addons/analytic_user_function/analytic_user_function.py:138
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+msgstr "Nie zdefiniowano konta wydatkowego dla tego produktu: \"%s\" (id:%d)"
+
+#. module: analytic_user_function
+#: model:ir.model,name:analytic_user_function.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Pozycja karty czasu pracy"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,uom_id:0
+msgid "Unit of Measure"
+msgstr "Jednostka Miary"
+
+#. module: analytic_user_function
+#: field:analytic.user.funct.grid,user_id:0
+msgid "User"
+msgstr "Użytkownik"
+
+#. module: analytic_user_function
+#: field:account.analytic.account,user_product_ids:0
+msgid "Users/Products Rel."
+msgstr "Zależność Użytk./Produkt"

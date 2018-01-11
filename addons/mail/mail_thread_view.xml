@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="action_mail_inbox_feeds" model="ir.actions.client">
+            <field name="name">Inbox</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+              'needaction_menu_ref': ['mail.mail_tomefeeds', 'mail.mail_starfeeds']
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                  ('to_read', '=', True),
+                  ('starred', '=', False),
+                ],
+                'view_mailbox': True,
+                'view_inbox': True,
+                'read_action': 'read',
+                'show_compose_message': False
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_mail_to_me_feeds" model="ir.actions.client">
+            <field name="name">To: me</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+              'search_default_message_unread': True,
+              'needaction_menu_ref': ['mail.mail_starfeeds', 'mail.mail_inboxfeeds']
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                    ('partner_ids.user_ids', 'in', [uid])
+                ],
+                'view_mailbox': True,
+                'read_action': 'read',
+                'show_compose_message': False
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    <b>No private message.</b>
+                </p><p>
+                    This list contains messages sent to you.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_mail_star_feeds" model="ir.actions.client">
+            <field name="name">To-do</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+              'search_default_message_unread': True
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                    ('starred', '=', True),
+                ],
+                'view_mailbox': True,
+                'read_action': 'read',
+                'compose_as_todo': True,
+                'show_compose_message': False
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    <b>No todo.</b>
+                </p><p>
+                    When you process messages in your inbox, you can mark some
+                    as <i>todo</i>. From this menu, you can process all your todo.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_mail_archives_feeds" model="ir.actions.client">
+            <field name="name">Archives</field>
+            <field name="tag">mail.wall</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+              'needaction_menu_ref': ['mail.mail_tomefeeds', 'mail.mail_starfeeds', 'mail.mail_inboxfeeds']
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                    '|',
+                    ('notification_ids.partner_id.user_ids', 'in', [uid]),
+                    ('author_id.user_ids', 'in', [uid]),
+                ],
+                'view_mailbox': True,
+                'show_compose_message': False
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    No message found and no message sent yet.
+                </p><p>
+                    Click on the top-right icon to compose a message. This
+                    message will be sent by email if it's an internal contact.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_mail_redirect" model="ir.actions.server">
+            <field name="name">Mail Redirection (Document / Inbox)</field>
+            <field name="condition">True</field>
+            <field name="model_id" ref="model_mail_thread"/>
+            <field name="code">action = pool.get('mail.thread').message_redirect_action(cr, uid, context)</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+
+        <!-- MENU -->
+
+        <!-- Top menu item -->
+        <menuitem name="Messaging"
+          id="mail.mail_feeds_main"
+          groups="base.group_user"
+          sequence="10"/>
+
+        <!-- Left-side menu: Feeds -->
+        <menuitem id="mail.mail_feeds" name="Messaging" parent="mail.mail_feeds_main" groups="base.group_user" sequence="10"/>
+        <menuitem id="mail_my_stuff" name="Organizer" parent="mail.mail_feeds_main"/>
+
+        <record id="mail_inboxfeeds" model="ir.ui.menu">
+          <field name="name">Inbox</field>
+          <field name="sequence" eval="10"/>
+          <field name="action" ref="action_mail_inbox_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+        </record>
+        <record id="mail_tomefeeds" model="ir.ui.menu">
+          <field name="name">To: me</field>
+          <field name="sequence" eval="11"/>
+          <field name="action" ref="action_mail_to_me_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+        </record>
+        <record id="mail_starfeeds" model="ir.ui.menu">
+          <field name="name">To-do</field>
+          <field name="sequence" eval="14"/>
+          <field name="action" ref="action_mail_star_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+        </record>
+        <record id="mail_archivesfeeds" model="ir.ui.menu">
+          <field name="name">Archives</field>
+          <field name="sequence" eval="16"/>
+          <field name="action" ref="action_mail_archives_feeds"/>
+          <field name="parent_id" ref="mail.mail_feeds"/>
+        </record>
+    </data>
+</openerp>

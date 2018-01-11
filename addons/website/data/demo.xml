@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="default_website" model="website">
+            <field name="social_twitter">https://twitter.com/odooapps</field>
+            <field name="social_facebook">https://www.facebook.com/Odoo</field>
+            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
+            <field name="social_linkedin">http://www.linkedin.com/company/odoo</field>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="rml_header1">Great Product for Great People</field>
+        </record>
+    </data>
+
+    <data noupdate="1">
+
+        <!--
+            Some demo data for front-end server action generating templates
+            -->
+
+        <template id="template_partner_post" name="Partner Post and Thanks (Website Server Action Demo)">
+<t t-call="website.layout">
+    <t t-set="additional_title">Partner Detail</t>
+    <div id="wrap">
+        <div class="oe_structure">
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h2>Thank you for posting a message !</h2>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</t>
+        </template>
+
+        <record id="action_partner_post" model="ir.actions.server">
+            <field name="name">Website Partner Post and Thanks Demo</field>
+            <field name="condition">True</field>
+            <field name="website_published" eval="True"/>
+            <field name="website_path">partner_thanks</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="code">
+partner_id, partner = False, None
+post_partner_id = request.params.get('partner_id')
+post_body = request.params.get('body')
+if post_partner_id:
+    try:
+        post_partner_id = int(post_partner_id)
+    except:
+        post_partner_id = False
+if post_partner_id:
+    partner_ids = pool['res.partner'].search(cr, uid, [('id', '=', post_partner_id)], context=context)
+    partner_id = partner_ids and partner_ids[0] or False
+if partner_id and post_body:
+    partner = pool['res.partner'].message_post(cr, uid, partner_id, body=post_body, subtype='mail.mt_comment', context=context)
+values = {
+    'partner': partner,
+}
+response = request.website.render("website.template_partner_post", values)
+            </field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+
+        <template id="template_partner_comment" name="Partner Comment (Website Server Action Demo)">
+<t t-call="website.layout">
+    <t t-set="additional_title">Partners</t>
+    <div id="wrap">
+        <div class="oe_structure">
+            <section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="text-center">Send a Message to our Partners</h1>
+                            <h3 class="text-muted text-center">Discuss and Comments</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container">
+            <div class="row">
+                <form class="form-horizontal" action="/website/action/website.action_partner_post" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Recipient</label>
+                        <div class="col-sm-10">
+                            <select t-if="partners" name="partner_id" class="form-control">
+                                <t t-foreach="partners" t-as="partner"><option t-att-value="partner.id" t-esc="partner.name"/></t>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Message</label>
+                        <div class="col-sm-10">
+                            <textarea name="body" rows="10" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default btn-primary">
+                                Send <span class="fa fa-long-arrow-right"/>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</t>
+        </template>
+
+        <record id="action_partner_comment" model="ir.actions.server">
+            <field name="name">Website Partners Comment Form</field>
+            <field name="condition">True</field>
+            <field name="website_published" eval="True"/>
+            <field name="website_path">partner_comment</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="code">
+partner_ids = pool['res.partner'].search(cr, uid, [('customer', '=', True)], context=context)
+partners = pool['res.partner'].browse(cr, uid, partner_ids, context=context)
+values = {
+    'partners': partners,
+}
+response = request.render("website.template_partner_comment", values)
+            </field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+        </record>
+    </data>
+</openerp>

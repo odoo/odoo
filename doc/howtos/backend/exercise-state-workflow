@@ -1,0 +1,102 @@
+# HG changeset patch
+# Parent c72382bf0c5794135fa318f6ba59899b2277d8c5
+# Parent  82f902dbb7aab4d3ddd9caaa9170536afa9d274d
+
+diff --git a/openacademy/__openerp__.py b/openacademy/__openerp__.py
+--- a/openacademy/__openerp__.py
++++ b/openacademy/__openerp__.py
+@@ -29,6 +29,7 @@
+         'templates.xml',
+         'views/openacademy.xml',
+         'views/partner.xml',
++        'views/session_workflow.xml',
+     ],
+     # only loaded in demonstration mode
+     'demo': [
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -70,7 +70,7 @@ class Session(models.Model):
+         ('draft', "Draft"),
+         ('confirmed', "Confirmed"),
+         ('done', "Done"),
+-    ], default='draft')
++    ])
+ 
+     @api.multi
+     def action_draft(self):
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -97,13 +97,13 @@
+             <field name="arch" type="xml">
+                 <form string="Session Form">
+                     <header>
+-                        <button name="action_draft" type="object"
++                        <button name="draft" type="workflow"
+                                 string="Reset to draft"
+                                 states="confirmed,done"/>
+-                        <button name="action_confirm" type="object"
++                        <button name="confirm" type="workflow"
+                                 string="Confirm" states="draft"
+                                 class="oe_highlight"/>
+-                        <button name="action_done" type="object"
++                        <button name="done" type="workflow"
+                                 string="Mark as done" states="confirmed"
+                                 class="oe_highlight"/>
+                         <field name="state" widget="statusbar"/>
+diff --git a/openacademy/views/session_workflow.xml b/openacademy/views/session_workflow.xml
+new file mode 100644
+--- /dev/null
++++ b/openacademy/views/session_workflow.xml
+@@ -0,0 +1,50 @@
++<openerp>
++    <data>
++        <record model="workflow" id="wkf_session">
++            <field name="name">OpenAcademy sessions workflow</field>
++            <field name="osv">openacademy.session</field>
++            <field name="on_create">True</field>
++        </record>
++
++        <record model="workflow.activity" id="draft">
++            <field name="name">Draft</field>
++            <field name="wkf_id" ref="wkf_session"/>
++            <field name="flow_start" eval="True"/>
++            <field name="kind">function</field>
++            <field name="action">action_draft()</field>
++        </record>
++        <record model="workflow.activity" id="confirmed">
++            <field name="name">Confirmed</field>
++            <field name="wkf_id" ref="wkf_session"/>
++            <field name="kind">function</field>
++            <field name="action">action_confirm()</field>
++        </record>
++        <record model="workflow.activity" id="done">
++            <field name="name">Done</field>
++            <field name="wkf_id" ref="wkf_session"/>
++            <field name="kind">function</field>
++            <field name="action">action_done()</field>
++        </record>
++
++        <record model="workflow.transition" id="session_draft_to_confirmed">
++            <field name="act_from" ref="draft"/>
++            <field name="act_to" ref="confirmed"/>
++            <field name="signal">confirm</field>
++        </record>
++        <record model="workflow.transition" id="session_confirmed_to_draft">
++            <field name="act_from" ref="confirmed"/>
++            <field name="act_to" ref="draft"/>
++            <field name="signal">draft</field>
++        </record>
++        <record model="workflow.transition" id="session_done_to_draft">
++            <field name="act_from" ref="done"/>
++            <field name="act_to" ref="draft"/>
++            <field name="signal">draft</field>
++        </record>
++        <record model="workflow.transition" id="session_confirmed_to_done">
++            <field name="act_from" ref="confirmed"/>
++            <field name="act_to" ref="done"/>
++            <field name="signal">done</field>
++        </record>
++    </data>
++</openerp>

@@ -1,0 +1,315 @@
+<openerp>
+    <data>
+        <!-- Delivery Carriers -->
+        <menuitem id="menu_delivery" name="Delivery" parent="stock.menu_stock_configuration" groups="base.group_no_one" sequence="50"/>
+
+        <record id="view_delivery_carrier_tree" model="ir.ui.view">
+            <field name="name">delivery.carrier.tree</field>
+            <field name="model">delivery.carrier</field>
+            <field name="arch" type="xml">
+                <tree string="Carrier">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="price" invisible="'order_id' not in context"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_delivery_carrier_form" model="ir.ui.view">
+            <field name="name">delivery.carrier.form</field>
+            <field name="model">delivery.carrier</field>
+            <field name="arch" type="xml">
+                <form string="Carrier">
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="active"/>
+                    </group>
+                    <group name="general">
+                        <group string="General Information">
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group string="Pricing Information">
+                            <field name="normal_price" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
+                            <label for="free_if_more_than"/>
+                            <div>
+                                <field name="free_if_more_than" attrs="{'readonly':[('use_detailed_pricelist', '=', True)]}"/>
+                                <field name="amount" attrs="{'required':[('free_if_more_than','&lt;&gt;',False)], 'invisible':[('free_if_more_than','=',False)]}"/>
+                            </div>
+                            <field name="use_detailed_pricelist"/>
+                        </group>
+                    </group>
+
+                    <field name="pricelist_ids" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree">
+                        <tree string="Delivery grids">
+                              <field name="sequence"/>
+                              <field name="name"/>
+                        </tree>
+                        <form string="Delivery grids">
+                             <group>
+                                <group>
+                                    <field name="name"/>
+                                </group>
+                                <group>
+                                    <field name="active"/>
+                                    <field name="sequence"/>
+                                </group>
+                             </group>
+                             <notebook>
+                                <page string="Grid definition">
+                                   <field name="line_ids"/>
+                                </page>
+                                <page string="Destination">
+                                    <group>
+                                        <group>
+                                            <field name="country_ids" widget="many2many_tags"/>
+                                            <field name="state_ids" widget="many2many_tags"/>
+                                        </group>
+                                        <group>
+                                            <label for="zip_from" string="Zip"/>
+                                            <div>
+                                                <field name="zip_from" class="oe_inline"/>
+                                                -
+                                                <field name="zip_to" class="oe_inline"/>
+                                            </div>
+                                        </group>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </form>
+                   </field>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_delivery_carrier_form" model="ir.actions.act_window">
+            <field name="name">Delivery Methods</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">delivery.carrier</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new deliver method. 
+              </p><p>
+                Each carrier (e.g. UPS) can have several delivery methods (e.g.
+                UPS Express, UPS Standard) with a set of pricing rules attached
+                to each method.
+              </p><p>
+                These methods allow to automatically compute the delivery price
+                according to your settings; on the sales order (based on the
+                quotation) or the invoice (based on the delivery orders).
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="stock.menu_stock_configuration" sequence="15"/>
+
+        <!-- Delivery Grids -->
+        <record id="view_delivery_grid_tree" model="ir.ui.view">
+            <field name="name">delivery.grid.tree</field>
+            <field name="model">delivery.grid</field>
+            <field name="arch" type="xml">
+                <tree string="Delivery grids">
+                    <field name="sequence"/>
+                    <field name="carrier_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_delivery_grid_form" model="ir.ui.view">
+            <field name="name">delivery.grid.form</field>
+            <field name="model">delivery.grid</field>
+            <field name="arch" type="xml">
+                <form string="Delivery grids">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="carrier_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <notebook>
+                        <page string="Grid definition">
+                            <field name="line_ids"/>
+                        </page>
+                        <page string="Destination">
+                            <group string="Countries">
+                                <field name="country_ids" nolabel="1"/>
+                            </group>
+                            <group string="States">
+                                <field colspan="2" name="state_ids" nolabel="1"/>
+                                <field name="zip_from"/>
+                                <field name="zip_to"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="action_delivery_grid_form" model="ir.actions.act_window">
+            <field name="name">Delivery Pricelist</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">delivery.grid</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a delivery price list for a specific region.
+              </p><p>
+                The delivery price list allows you to compute the cost and
+                sales price of the delivery according to the weight of the
+                products and other criteria. You can define several price lists
+                for each delivery method: per country or a zone in a specific
+                country defined by a postal code range.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery"/>
+
+        <record id="view_delivery_grid_line_form" model="ir.ui.view">
+            <field name="name">delivery.grid.line.form</field>
+            <field name="model">delivery.grid.line</field>
+            <field name="arch" type="xml">
+                <form string="Grid Lines">
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                    <group>
+                        <group>
+                            <label for="type" string="Condition"/>
+                            <div>
+                                <field name="type" class="oe_inline"/>
+                                <field name="operator" class="oe_inline"/>
+                                <field name="max_value" class="oe_inline"/>
+                            </div>
+                            <label for="price_type"/>
+                            <div>
+                                <field name="price_type" class="oe_inline"/>
+                                <label string=" in Function of " class="oe_inline" attrs="{'invisible':[('price_type','=','fixed')]}"/>
+                                <field name="variable_factor" attrs="{'invisible':[('price_type','=','fixed')]}" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="list_price"/>
+                            <field name="standard_price"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_delivery_grid_line_tree" model="ir.ui.view">
+            <field name="name">delivery.grid.line.tree</field>
+            <field name="model">delivery.grid.line</field>
+            <field name="arch" type="xml">
+                <tree string="Grid Lines">
+                    <field name="sequence" widget="handle" />
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="operator"/>
+                    <field name="max_value" nolabel="1"/>
+                    <field name="list_price"/>
+                    <field name="standard_price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
+            <field name="name">delivery.stock.picking_withcarrier.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Additional Info']/group[last()]" position="after">
+                <separator string="Carrier Information"/>
+                <group>
+                    <group>
+                        <field name="carrier_id"/>
+                        <field name="carrier_tracking_ref"/>
+                    </group>
+                    <group>
+                        <label for="weight" string="Weight"/>
+                        <div>
+                            <field name="weight" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                        <field name="number_of_packages"/>
+                    </group>
+                </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_picking_tree" model="ir.actions.act_window">
+            <field name="name">Picking to be invoiced</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('invoice_state','=','2binvoiced'),('state','=','done'),('type','=','out')]</field>
+            <field name="filter" eval="True"/>
+            <field name="context">{'default_invoice_state': '2binvoiced', 'default_type': 'out', 'contact_display': 'partner'}</field>
+            <field name="search_view_id" eval="False"/>
+        </record>
+
+        <record id="view_picking_withweight_internal_move_form" model="ir.ui.view">
+            <field name="name">stock.picking_withweight.internal.move.form.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_expected']" position="after">
+                    <field name="weight"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_move_withweight_form" model="ir.ui.view">
+            <field name="name">stock.move.form.weight</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='main_grp']" position="inside">
+                    <group>
+                        <label for="weight"/>
+                        <div>
+                            <field name="weight" nolabel="1" class="oe_inline"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline"/>
+                        </div>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_withcarrier_form" model="ir.ui.view">
+            <field name="name">delivery.sale.order_withcarrier.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='sale_total']" position="after">
+                    <group style="width: 65%%">
+                        <label for="carrier_id"/>
+                        <div>
+                            <field name="carrier_id" context="{'order_id':active_id or False}" class="oe_inline"/>
+                            <button name="delivery_set" string="Add in Quote" type="object"
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                            <br/>
+                            <label string="If you don't 'Add in Quote', the exact price will be computed when invoicing based on delivery order(s)."
+                                class="oe_edit_only"
+                                attrs="{'invisible':['|',('carrier_id','=',False),('state','not in',('draft','sent'))]}"/>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_analytic_journal_view" model="ir.ui.view">
+            <field name="name">Account Analytic Journal</field>
+            <field name="model">account.analytic.journal.report</field>
+            <field name="arch" type="xml">
+                <form string="Select Period">
+                    <group col="4">
+                        <field name="date1"/>
+                        <field name="date2"/>
+                        <field name="analytic_account_journal_id" widget="many2many_tags" class="oe_inline" required="1" colspan="4"/>
+                    </group>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_journal" model="ir.actions.act_window">
+            <field name="name">Analytic Journal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.journal.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_analytic_journal_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="account_analytic_journal_values">
+            <field name="model_id" ref="account.model_account_analytic_journal" />
+            <field name="name">Account Analytic Journal</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_analytic_journal'))" />
+            <field name="key">action</field>
+            <field name="model">account.analytic.journal</field>
+        </record>
+        
+        <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"
+            name="Analytic" parent="account.menu_finance_generic_reporting"
+            sequence="4"/>
+        <menuitem groups="analytic.group_analytic_accounting"
+            action="account.action_account_analytic_journal"
+            id="account_analytic_journal_print" parent="account.next_id_40"/>
+
+    </data>
+</openerp>

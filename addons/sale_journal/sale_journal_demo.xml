@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+
+    <record model="sale_journal.invoice.type" id="daily">
+        <field name="name">Daily invoicing</field>
+    </record>
+    <record model="sale_journal.invoice.type" id="monthly">
+        <field name="name">Monthly invoicing</field>
+        <field name="invoicing_method">grouped</field>
+    </record>
+
+    <record model="ir.property" id="sale_journal.property_invoice_type_def">
+        <field name="value" eval="'sale_journal.invoice.type,'+str(daily)"/>
+    </record>
+
+</data>
+</openerp>

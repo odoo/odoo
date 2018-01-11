@@ -1,0 +1,191 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_gamification
+# 
+# Translators:
+# jonas jensen <j.jensen@tcomp.dk>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2017-08-17 12:29+0000\n"
+"Last-Translator: jonas jensen <j.jensen@tcomp.dk>\n"
+"Language-Team: Danish (http://www.transifex.com/odoo/odoo-8/language/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_gamification
+#: model:ir.actions.act_window,help:hr_gamification.challenge_list_action2
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to create a challenge. \n"
+"                </p>\n"
+"                <p>\n"
+"                    Assign a list of goals to chosen users to evaluate them.\n"
+"                    The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
+"                    The goals are created for the specified users or member of the group.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.actions.act_window,help:hr_gamification.goals_menu_groupby_action2
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to create a goal. \n"
+"                </p>\n"
+"                <p>\n"
+"                    A goal is defined by a user and a goal type.\n"
+"                    Goals can be created automatically by using challenges.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.ui.menu,name:hr_gamification.gamification_badge_menu_hr
+msgid "Badges"
+msgstr "Badges"
+
+#. module: hr_gamification
+#: view:hr.employee:hr_gamification.hr_hr_employee_view_form
+msgid ""
+"Badges are rewards of good work. Give them to people you believe deserve it."
+msgstr "Badges er belønninger af godt arbejde. Giv dem til folk, du mener fortjener det."
+
+#. module: hr_gamification
+#: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
+msgid "Cancel"
+msgstr "Annuller"
+
+#. module: hr_gamification
+#: model:ir.actions.act_window,name:hr_gamification.challenge_list_action2
+#: model:ir.ui.menu,name:hr_gamification.gamification_challenge_menu_hr
+msgid "Challenges"
+msgstr "Udfordringer"
+
+#. module: hr_gamification
+#: view:hr.employee:hr_gamification.hr_hr_employee_view_form
+msgid "Click to grant this employee his first badge"
+msgstr "Klik for at tildele denne medarbejder hans første badge"
+
+#. module: hr_gamification
+#: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
+msgid "Describe what they did and why it matters (will be public)"
+msgstr "Beskriv hvad de gjorde og hvilken forskel det gjorde (vil være offentlig)"
+
+#. module: hr_gamification
+#: field:gamification.badge.user,employee_id:0
+#: field:gamification.badge.user.wizard,employee_id:0
+#: model:ir.model,name:hr_gamification.model_hr_employee
+msgid "Employee"
+msgstr "Ansat"
+
+#. module: hr_gamification
+#: field:hr.employee,badge_ids:0
+msgid "Employee Badges"
+msgstr "Medarbejder badges"
+
+#. module: hr_gamification
+#: field:hr.employee,goal_ids:0
+msgid "Employee HR Goals"
+msgstr "Medarbejder HR mål"
+
+#. module: hr_gamification
+#: model:ir.ui.menu,name:hr_gamification.menu_hr_gamification
+msgid "Engagement"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_gamification_badge
+msgid "Gamification badge"
+msgstr "Gamification badge"
+
+#. module: hr_gamification
+#: model:ir.model,name:hr_gamification.model_gamification_badge_user
+msgid "Gamification user badge"
+msgstr "Gamification bruger badge"
+
+#. module: hr_gamification
+#: view:hr.employee:hr_gamification.hr_hr_employee_view_form
+msgid "Goals"
+msgstr ""
+
+#. module: hr_gamification
+#: model:ir.actions.act_window,name:hr_gamification.goals_menu_groupby_action2
+#: model:ir.ui.menu,name:hr_gamification.gamification_goal_menu_hr
+msgid "Goals History"
+msgstr "Målhistorik"
+
+#. module: hr_gamification
+#: view:hr.employee:hr_gamification.hr_hr_employee_view_form
+msgid "Grant a Badge"
+msgstr "Tildel et badge"
+
+#. module: hr_gamification
+#: view:gamification.badge:hr_gamification.hr_badge_form_view
+msgid "Granted Employees"
+msgstr ""
+
+#. module: hr_gamification
+#: field:hr.employee,has_badges:0
+msgid "Has Badges"
+msgstr ""
+
+#. module: hr_gamification
+#: view:hr.employee:hr_gamification.hr_hr_employee_view_form
+msgid "Received Badges"
+msgstr "Modtog badges"
+
+#. module: hr_gamification
+#: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
+#: model:ir.actions.act_window,name:hr_gamification.action_reward_wizard
+msgid "Reward Employee"
+msgstr "Beløn medarbejder"
+
+#. module: hr_gamification
+#: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
+msgid "Reward Employee with"
+msgstr "Beløn medarbejder med"
+
+#. module: hr_gamification
+#: constraint:gamification.badge.user:0
+msgid "The selected employee does not correspond to the selected user."
+msgstr "Den valgte medarbejder svarer ikke til den benyttede bruger."
+
+#. module: hr_gamification
+#: code:addons/hr_gamification/wizard/grant_badge.py:45
+#: code:addons/hr_gamification/wizard/grant_badge.py:48
+#, python-format
+msgid "Warning!"
+msgstr "Advarsel!"
+
+#. module: hr_gamification
+#: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
+msgid "What are you thank for?"
+msgstr ""
+
+#. module: hr_gamification
+#: code:addons/hr_gamification/wizard/grant_badge.py:48
+#, python-format
+msgid "You can not send a badge to yourself"
+msgstr "Du kan ikke sende et badge til dig selv :-)"
+
+#. module: hr_gamification
+#: code:addons/hr_gamification/wizard/grant_badge.py:45
+#, python-format
+msgid "You can send badges only to employees linked to a user."
+msgstr "Du kan kun sende badges til medarbejdere der er linket til en bruger. "
+
+#. module: hr_gamification
+#: view:gamification.badge.user.wizard:hr_gamification.view_badge_wizard_reward
+msgid "or"
+msgstr "eller"
+
+#. module: hr_gamification
+#: view:hr.employee:hr_gamification.hr_hr_employee_view_form
+msgid "to reward this employee for a good action"
+msgstr "for at belønne denne medarbejder for en god indsats"

@@ -1,0 +1,2188 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2017-03-14 06:47+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: survey
+#: model:email.template,body_html:survey.email_template_survey
+msgid ""
+"\n"
+"                \n"
+"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+"                    <p>Hello,</p>\n"
+"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"                    <p>Thanks for your participation!</p>\n"
+"                </div>\n"
+"                \n"
+"            "
+msgstr "\n                \n                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n                    <p>Hallo,</p>\n                    <p>Wij voeren een enquête uit en jouw reactie wordt gewaardeerd..</p>\n                    <p><a href=\"__URL__\">Kik hier voor het starten van de enquête</a></p>\n                    <p>Bedankt voor de deelname!</p>\n                </div>\n                \n            "
+
+#. module: survey
+#: view:survey.page:survey.survey_page_tree
+msgid "#Questions"
+msgstr "#Vragen"
+
+#. module: survey
+#: code:addons/survey/survey.py:246 code:addons/survey/survey.py:543
+#: code:addons/survey/survey.py:662
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopie)"
+
+#. module: survey
+#: view:website:survey.page
+msgid "&times;"
+msgstr "&times;"
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">Click to add a survey.</p>\n"
+"                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>\n"
+"                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">Klik om een enquete te maken.</p>\n                <p>U kunt een enquete maken voor verschillende doeleinden: Klanttevredenheid, diensten beoordeling, sollicitatiegesprekken, periodieke evaluaties werknemers, marketingcampagnes, etc.</p>\n                <p>Ontwerp eenvoudig uw enquête, stuur uitnodigingen om te beantwoorden via e-mail en analyseer de antwoorden.</p>\n            "
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_1
+#: model:survey.page,description:survey.feedback_3
+#: model:survey.survey,thank_you_message:survey.feedback_form
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_4
+msgid "<p>If you do not contribute or develop in Odoo, skip this page.</p>"
+msgstr "<p>Sla deze pagina over indien u niet bijdraagt of ontwikkeld in Odoo.</p>"
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
+msgid ""
+"<p>Nobody has replied to your survey yet.</p>\n"
+"            "
+msgstr "<p>Nog niemand heeft gereageerd op uw enquête.</p>\n            "
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_user_input
+msgid ""
+"<p>Nobody has replied to your surveys yet.</p>\n"
+"            "
+msgstr "<p>Nog niemand heeft gereageerd op uw enquêtes.</p>\n            "
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_2
+msgid ""
+"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"what have been your difficulties.</p>"
+msgstr "<p>Deze vragen hebben betrekking op de gebuikersvriendelijkheid en toegankelijkheid van Odoo. Probeer uw eerste ervaringen met Odoo te herinneren en uw moeilijheden te beschrijven.</p>"
+
+#. module: survey
+#: model:survey.survey,description:survey.feedback_form
+msgid "<p>This survey should take less than five minutes.</p>"
+msgstr "<p>Deze enquête duurt normaal minder dan vijf minuten.</p>"
+
+#. module: survey
+#: constraint:survey.label:0
+msgid "A label must be attached to one and only one question"
+msgstr "Een label mag slechts aan een vraag gekoppeld zijn"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "A length must be positive!"
+msgstr "Lengte moet positief zijn!"
+
+#. module: survey
+#: help:survey.survey,description:0
+msgid "A long description of the purpose of the survey"
+msgstr "Een lange omschrijving van het doel van de enquête"
+
+#. module: survey
+#: help:survey.label,quizz_mark:0
+msgid ""
+"A positive score indicates a correct answer; a negative or null score "
+"indicates a wrong answer"
+msgstr "Een positieve score geeft een correct antwoord aan; een negatieve score of nul geeft een fout antwoord aan."
+
+#. module: survey
+#: view:website:survey.page
+msgid "A problem has occured"
+msgstr "Er heeft zich een probleem voorgedaan"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr "Een proces wordt gedefinieerd voor alle bedrijfsstromen"
+
+#. module: survey
+#: constraint:survey.user_input_line:0
+msgid "A question cannot be unanswered and skipped"
+msgstr "Een vraag moet ingevuld worden en kan niet overgeslagen worden"
+
+#. module: survey
+#: sql_constraint:survey.user_input:0
+msgid "A token must be unique!"
+msgstr "Een token moet uniek zijn"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "Over uw Odoo gebruik"
+
+#. module: survey
+#: field:survey.mail.compose.message,active_domain:0
+msgid "Active domain"
+msgstr "Actief domein"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"Add list of email of recipients (will not converted in partner), separated "
+"by commas, semicolons or newline..."
+msgstr "Voeg een e-mail lijst toe van de geadresseerden (wordt niet toegevoegd aan relaties in odoo), gescheiden door komma's, puntkomma's of nieuwe regel ..."
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Add list of existing contacts..."
+msgstr "Voeg lijst van bestaande contacten toe..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "Akkoord"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "All Data"
+msgstr "Alle gegevens"
+
+#. module: survey
+#: view:website:survey.result
+msgid "All surveys"
+msgstr "Alle enquêtes"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Allow Comments"
+msgstr "Commentaren toestaan"
+
+#. module: survey
+#: help:survey.page,description:0
+msgid "An introductory text to your page"
+msgstr "Een introductietekst tot uw pagina"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Analyze Answers"
+msgstr "Analyseer antwoorden"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Answer Choices"
+msgstr "Antwoordkeuzes"
+
+#. module: survey
+#: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
+msgid "Answer Type"
+msgstr "Antwoordsoort"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Answered"
+msgstr "Beantwoord"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,user_input_line_ids:0
+#: field:survey.user_input,user_input_line_ids:0
+msgid "Answers"
+msgstr "Antwoorden"
+
+#. module: survey
+#: help:survey.mail.compose.message,no_auto_thread:0
+msgid ""
+"Answers do not go in the original document' discussion thread. This has an "
+"impact on the generated message-id."
+msgstr "Antwoorden worden niet toegevoegd aan de discussie lijst van het originele document. Dit heeft gevolgen voor het gegenereerde bericht-id."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "Gebruikt u Odoo iedere dag?"
+
+#. module: survey
+#: field:survey.mail.compose.message,attachment_ids:0
+msgid "Attachments"
+msgstr "Bijlagen"
+
+#. module: survey
+#: field:survey.mail.compose.message,author_id:0
+msgid "Author"
+msgstr "Auteur"
+
+#. module: survey
+#: help:survey.mail.compose.message,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "Schrijver van het bericht. Als deze niet ingesteld is, kan email_from een e-mailadres bevatten wat niet overeenkomt met een relatie."
+
+#. module: survey
+#: field:survey.mail.compose.message,author_avatar:0
+msgid "Author's Avatar"
+msgstr "Avatar van auteur"
+
+#. module: survey
+#: help:survey.mail.compose.message,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr "Automatisch opgeschoonde HTML-inhoud"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Average"
+msgstr "Gemiddeld"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: survey
+#: field:survey.survey,res_model:0
+msgid "Category"
+msgstr "Categorie"
+
+#. module: survey
+#: field:survey.mail.compose.message,child_ids:0
+msgid "Child Messages"
+msgstr "Onderliggende berichten"
+
+#. module: survey
+#: view:website:survey.simple_choice
+msgid "Choose..."
+msgstr "Kies..."
+
+#. module: survey
+#: view:website:survey.result
+msgid "Clear All Filters"
+msgstr "Verwijder alle filters"
+
+#. module: survey
+#: code:addons/survey/survey.py:141
+#: code:addons/survey/wizard/survey_email_compose_message.py:51
+#, python-format
+msgid "Click here to start survey"
+msgstr "Klik hier om de enquête te starten"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:109
+#, python-format
+msgid "Click here to take survey"
+msgstr "Klik hier om de enquête te doen"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: view:website:survey.page
+msgid "Close"
+msgstr "Sluiten"
+
+#. module: survey
+#: field:survey.stage,closed:0 model:survey.stage,name:survey.stage_closed
+msgid "Closed"
+msgstr "Gesloten"
+
+#. module: survey
+#: field:survey.survey,color:0
+msgid "Color Index"
+msgstr "Kleur index"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+#: view:website:survey.result_comments
+msgid "Comment"
+msgstr "Opmerking"
+
+#. module: survey
+#: field:survey.question,comment_count_as_answer:0
+msgid "Comment Field is an Answer Choice"
+msgstr "Opmerkingen veld is een antwoord Keuze"
+
+#. module: survey
+#: field:survey.question,comments_message:0
+msgid "Comment Message"
+msgstr "Opmerkingen bericht"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "Community en medewerkers"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.user_input,state:0
+msgid "Completed"
+msgstr "Voltooid"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Compose Email"
+msgstr "E-mail opstellen"
+
+#. module: survey
+#: field:survey.mail.compose.message,composition_mode:0
+msgid "Composition mode"
+msgstr "Opmaak modus"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "Configuratiewizard bestaat voor elke belangrijke instelling"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Constraints"
+msgstr "Beperkingen"
+
+#. module: survey
+#: field:survey.mail.compose.message,body:0
+msgid "Contents"
+msgstr "Inhoud"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
+msgstr "Kopieer en plak de HTML code hieronder om deze link toe te voegen aan een webpagina."
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Copy, paste and share the web link below to your audience."
+msgstr "Kopieer, plak en deel de website link hieronder naar uw publiek."
+
+#. module: survey
+#: field:survey.user_input_line,date_create:0
+msgid "Create Date"
+msgstr "Aanmaakdatum"
+
+#. module: survey
+#: field:survey.label,create_uid:0
+#: field:survey.mail.compose.message,create_uid:0
+#: field:survey.page,create_uid:0 field:survey.question,create_uid:0
+#: field:survey.stage,create_uid:0 field:survey.survey,create_uid:0
+#: field:survey.user_input,create_uid:0
+#: field:survey.user_input_line,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: survey
+#: field:survey.label,create_date:0
+#: field:survey.mail.compose.message,create_date:0
+#: field:survey.page,create_date:0 field:survey.question,create_date:0
+#: field:survey.stage,create_date:0 field:survey.survey,create_date:0
+#: field:survey.user_input,create_date:0
+#: field:survey.user_input_line,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: survey
+#: field:survey.user_input,date_create:0
+msgid "Creation Date"
+msgstr "Aanmaakdatum"
+
+#. module: survey
+#: help:survey.mail.compose.message,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr "De huidige gebruiker heeft een ster notificatie gekoppeld aan dit bericht."
+
+#. module: survey
+#: help:survey.mail.compose.message,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr "De huidige gebruiker heeft een ongelezen notificatie gekoppeld aan dit bericht."
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_matrix
+msgid "Data"
+msgstr "Gegevens"
+
+#. module: survey
+#: field:survey.mail.compose.message,date:0
+#: selection:survey.user_input_line,answer_type:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Date and Time"
+msgstr "Datum en tijd"
+
+#. module: survey
+#: field:survey.user_input_line,value_date:0
+msgid "Date answer"
+msgstr "Datum antwoord"
+
+#. module: survey
+#: help:survey.user_input,deadline:0
+msgid "Date by which the person can open the survey and submit answers"
+msgstr "Datum waarop de persoon de enquête kan openen en antwoorden kan ingeven"
+
+#. module: survey
+#: help:survey.survey,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Datum van het laatste bericht verstuurt op deze regel."
+
+#. module: survey
+#: field:survey.user_input,deadline:0
+msgid "Deadline"
+msgstr "Deadline"
+
+#. module: survey
+#: help:survey.mail.compose.message,date_deadline:0
+msgid ""
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty, the invitation is still valid."
+msgstr "Deadline tot wanneer antwoorden op de enquête valide zijn. Als het veld leeg is, is de uitnodiging nog steeds valide."
+
+#. module: survey
+#: field:survey.mail.compose.message,date_deadline:0
+msgid "Deadline to which the invitation to respond is valid"
+msgstr "Deadline tot wanneer reactie op de uitnodiging valide is"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Delete!"
+msgstr "Verwijder!"
+
+#. module: survey
+#: field:survey.page,description:0 field:survey.question,description:0
+#: field:survey.survey,description:0
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr "Omschrijvingen en help tooltips zijn duidelijk genoeg"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Design"
+msgstr "Ontwerp"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "Niet akkoord"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,display_mode:0
+msgid "Display mode"
+msgstr "Weergavemodus"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "Heeft u een voorstel om nieuwe bijdrages aan te trekken?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "Heeft u een voorstel om mensen te helpen met bijdragen?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr "Heeft u voorstellen over hoe we de weergave van het proces kunnen verbeteren?"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_draft
+msgid "Draft"
+msgstr "Concept"
+
+#. module: survey
+#: field:survey.user_input,email:0
+msgid "E-mail"
+msgstr "E-mail"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Edit Pages and Questions"
+msgstr "Wijzig pagina's en vragen"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Email"
+msgstr "E-mail"
+
+#. module: survey
+#: field:survey.survey,email_template_id:0
+msgid "Email Template"
+msgstr "E-mail sjabloon"
+
+#. module: survey
+#: help:survey.mail.compose.message,email_from:0
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found for incoming emails."
+msgstr "E-mail adres van zender. Dit veld wordt ingesteld wanneer geen overeenkomstige relatie wordt gevonden voor binnenkomende e-mails."
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr "E-mail opmaak wizard voor enquête"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr "Ergonomie en gebruiksgemak"
+
+#. module: survey
+#: field:survey.question,constr_error_msg:0
+#: field:survey.question,validation_error_msg:0
+msgid "Error message"
+msgstr "Foutmelding"
+
+#. module: survey
+#: code:addons/survey/survey.py:439
+#, python-format
+msgid "Error!"
+msgstr "Fout!"
+
+#. module: survey
+#: field:survey.mail.compose.message,partner_ids:0
+msgid "Existing contacts"
+msgstr "Bestaande contacten"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr "Extra voorgestelde modules zijn relevant"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Filters"
+msgstr "Filters"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr "Financieel Management"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Finished surveys"
+msgstr "Voltooide enquêtes"
+
+#. module: survey
+#: field:survey.stage,fold:0
+msgid "Folded in kanban view"
+msgstr "Gevouwen in de kanban weergave"
+
+#. module: survey
+#: field:survey.survey,message_follower_ids:0
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Format"
+msgstr "Formaat"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Free Text"
+msgstr "Vrije tekst"
+
+#. module: survey
+#: field:survey.user_input_line,value_free_text:0
+msgid "Free Text answer"
+msgstr "Vrije tekst antwoord"
+
+#. module: survey
+#: field:survey.mail.compose.message,email_from:0
+msgid "From"
+msgstr "Van"
+
+#. module: survey
+#: view:website:survey.survey view:website:survey.survey_init
+msgid "Go back to surveys"
+msgstr "Ga terug naar enquêtes"
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_matrix
+msgid "Graph"
+msgstr "Grafiek"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+#: view:survey.question:survey.survey_question_search
+#: view:survey.user_input:survey.survey_user_input_search
+#: view:survey.user_input_line:survey.survey_response_line_search
+msgid "Group By"
+msgstr "Groepeer op"
+
+#. module: survey
+#: help:survey.survey,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Bevat de samenvatting van de chatter (aantal berichten,...). Deze samenvatting is direct in html formaat om zo in de kanban weergave te worden ingevoegd."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "Hoe draagt u bij of bent u van plan om bij te dragen aan Odoo?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Ressources"
+msgstr "Personeelsbeheer"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "Ik ontwikkel nieuwe functies"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "Ik publiceer mijn ontwikkelingen niet"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "Ik help vertalen"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr "Ik host ze op mijn eigen website"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "Ik neem deel aan discussies en forums"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Launchpad, like all official Odoo projects"
+msgstr "Ik gebruik Github, zoals alle officiële Odoo projecten"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "Ik gebruik een ander repository systeem (SourceForge)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr "Ik gebruik de contextuele hulp in Odoo"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "Ik schrijf documentatie"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr "Ik zou graag bijdragen maar weet niet hoe?"
+
+#. module: survey
+#: field:survey.label,id:0 field:survey.mail.compose.message,id:0
+#: field:survey.page,id:0 field:survey.question,id:0 field:survey.stage,id:0
+#: field:survey.survey,id:0 field:survey.user_input,id:0
+#: field:survey.user_input_line,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: survey
+#: field:survey.user_input,token:0
+msgid "Identification token"
+msgstr "Identificatie token"
+
+#. module: survey
+#: help:survey.survey,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
+
+#. module: survey
+#: help:survey.survey,users_can_go_back:0
+msgid "If checked, users can go back to previous pages."
+msgstr "Indien aangevinkt kunnen gebruikers terug naar vorige pagina's."
+
+#. module: survey
+#: help:survey.stage,closed:0
+msgid "If closed, people won't be able to answer to surveys in this column."
+msgstr "Indien gesloten kunnen mensen niet antwoorden op enquêtes in deze kolom."
+
+#. module: survey
+#: code:addons/survey/survey.py:649
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
+#, python-format
+msgid "If other, precise:"
+msgstr "Indien andere, specifieer:"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "If you wish, you can"
+msgstr "Als je wenst kan je"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_in_progress
+msgid "In progress"
+msgstr "In behandeling"
+
+#. module: survey
+#: help:survey.mail.compose.message,parent_id:0
+msgid "Initial thread message."
+msgstr "Initiële bericht thread."
+
+#. module: survey
+#: field:survey.question,validation_email:0
+msgid "Input must be an email"
+msgstr "Invoer moet een e-mail zijn"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+msgid "Invitations sent"
+msgstr "Uitnodigingen verstuurd"
+
+#. module: survey
+#: field:survey.survey,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Is een volger"
+
+#. module: survey
+#: field:survey.survey,designed:0
+msgid "Is designed?"
+msgstr "Is ontworpen?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr "Het kan verbeterd worden"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "Het helpt in het begin"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr "Het is duidelijk"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "Het is compleet"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "Het is up-to-date"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr "Het is gemakkelijk om het proces te vinden dat u nodig hebt"
+
+#. module: survey
+#: field:survey.label,sequence:0
+msgid "Label Sequence order"
+msgstr "Label volgorde"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_label_form
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Labels"
+msgstr "Labels"
+
+#. module: survey
+#: field:survey.survey,message_last_post:0
+msgid "Last Message Date"
+msgstr "Laatste bericht datum"
+
+#. module: survey
+#: field:survey.label,write_uid:0
+#: field:survey.mail.compose.message,write_uid:0 field:survey.page,write_uid:0
+#: field:survey.question,write_uid:0 field:survey.stage,write_uid:0
+#: field:survey.survey,write_uid:0 field:survey.user_input,write_uid:0
+#: field:survey.user_input_line,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatst aangepast door"
+
+#. module: survey
+#: field:survey.label,write_date:0
+#: field:survey.mail.compose.message,write_date:0
+#: field:survey.page,write_date:0 field:survey.question,write_date:0
+#: field:survey.stage,write_date:0 field:survey.survey,write_date:0
+#: field:survey.user_input,write_date:0
+#: field:survey.user_input_line,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst aangepast op"
+
+#. module: survey
+#: field:survey.user_input,last_displayed_page_id:0
+msgid "Last displayed page"
+msgstr "Laatst weergegeven pagina"
+
+#. module: survey
+#: selection:survey.user_input,type:0
+msgid "Link"
+msgstr "Koppeling"
+
+#. module: survey
+#: field:survey.mail.compose.message,multi_email:0
+msgid "List of emails"
+msgstr "Lijst van e-mails"
+
+#. module: survey
+#: field:survey.mail.compose.message,is_log:0
+msgid "Log an Internal Note"
+msgstr "Maak een interne notitie"
+
+#. module: survey
+#: field:survey.survey,auth_required:0 view:website:survey.auth_required
+msgid "Login required"
+msgstr "Aanmelding vereist"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Long Text Zone"
+msgstr "Lange tekstzone"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,constr_mandatory:0
+msgid "Mandatory Answer"
+msgstr "Verplicht antwoord"
+
+#. module: survey
+#: selection:survey.user_input,type:0
+msgid "Manually"
+msgstr "Handmatig"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Matrix"
+msgstr "Matrix"
+
+#. module: survey
+#: field:survey.question,matrix_subtype:0
+msgid "Matrix Type"
+msgstr "Matrix Type"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Matrix:"
+msgstr "Matrix:"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max date cannot be smaller than min date!"
+msgstr "Maximum datum kan niet kleiner zijn dan minimum datum!"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max length cannot be smaller than min length!"
+msgstr "Maximum lengte kan niet kleiner zijn dan minimum lengte!"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max value cannot be smaller than min value!"
+msgstr "Maximum waarde kan niet kleiner zijn dan minimum waarde!"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Maximum"
+msgstr "Maximum"
+
+#. module: survey
+#: field:survey.question,validation_max_date:0
+msgid "Maximum Date"
+msgstr "Maximum datum"
+
+#. module: survey
+#: field:survey.question,validation_length_max:0
+msgid "Maximum Text Length"
+msgstr "Maximum tekstlengte"
+
+#. module: survey
+#: field:survey.question,validation_max_float_value:0
+msgid "Maximum value"
+msgstr "Maximum waarde"
+
+#. module: survey
+#: field:survey.mail.compose.message,record_name:0
+msgid "Message Record Name"
+msgstr "Bericht veldnaam"
+
+#. module: survey
+#: help:survey.mail.compose.message,type:0
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr "Berichttype: e-mail voor e-mailbericht, notificatie voor systeembericht, commentaar voor andere berichten zoals gebruiker beantwoord"
+
+#. module: survey
+#: help:survey.mail.compose.message,message_id:0
+msgid "Message unique identifier"
+msgstr "Bericht unieke identifier"
+
+#. module: survey
+#: field:survey.mail.compose.message,message_id:0
+msgid "Message-Id"
+msgstr "Bericht-Id"
+
+#. module: survey
+#: field:survey.survey,message_ids:0
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: survey
+#: help:survey.survey,message_ids:0
+msgid "Messages and communication history"
+msgstr "Berichten en communicatie historie"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Minimum"
+msgstr "Minimum"
+
+#. module: survey
+#: field:survey.question,validation_min_date:0
+msgid "Minimum Date"
+msgstr "Minimum datum"
+
+#. module: survey
+#: field:survey.question,validation_length_min:0
+msgid "Minimum Text Length"
+msgstr "Minimum tekstlengte"
+
+#. module: survey
+#: field:survey.question,validation_min_float_value:0
+msgid "Minimum value"
+msgstr "Minimum waarde"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Most Common"
+msgstr "Meest voorkomend"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple choice: multiple answers allowed"
+msgstr "Meerkeuze: meerdere antwoorden toegestaan"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple choice: only one answer"
+msgstr "Meerkeuze: maar een antwoord"
+
+#. module: survey
+#: selection:survey.question,matrix_subtype:0
+msgid "Multiple choices per row"
+msgstr "Meerkeuzeopties per rij"
+
+#. module: survey
+#: field:survey.stage,name:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: survey
+#: help:survey.mail.compose.message,record_name:0
+msgid "Name get of the related document."
+msgstr "Verkrijg naam van het gerelateerde document."
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "New"
+msgstr "Nieuw"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Next page"
+msgstr "Volgende pagina"
+
+#. module: survey
+#: field:survey.mail.compose.message,no_auto_thread:0
+msgid "No threading for answers"
+msgstr "Geen berichten voor antwoorden"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "Nee, ik heb het juist getest"
+
+#. module: survey
+#: view:website:survey.notopen
+msgid "Not open"
+msgstr "Niet open"
+
+#. module: survey
+#: view:website:survey.nopages
+msgid "Not ready"
+msgstr "Niet gereed"
+
+#. module: survey
+#: selection:survey.user_input,state:0
+msgid "Not started yet"
+msgstr "Nog niet gestart"
+
+#. module: survey
+#: field:survey.mail.compose.message,notification_ids:0
+msgid "Notifications"
+msgstr "Meldingen"
+
+#. module: survey
+#: field:survey.mail.compose.message,notified_partner_ids:0
+msgid "Notified partners"
+msgstr "Op de hoogte gebrachte relaties"
+
+#. module: survey
+#: field:survey.mail.compose.message,notify:0
+msgid "Notify followers"
+msgstr "Meld volgers"
+
+#. module: survey
+#: help:survey.mail.compose.message,notify:0
+msgid "Notify followers of the document (mass post only)"
+msgstr "Meld aan volgers van dit document (alleen bulk bericht)"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Number"
+msgstr "Nummer"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,column_nb:0
+msgid "Number of columns"
+msgstr "Aantal kolommen"
+
+#. module: survey
+#: field:survey.survey,tot_comp_survey:0
+msgid "Number of completed surveys"
+msgstr "Aantal voltooide enquêtes"
+
+#. module: survey
+#: field:survey.survey,tot_sent_survey:0
+msgid "Number of sent surveys"
+msgstr "Aantal verzonden enquêtes"
+
+#. module: survey
+#: field:survey.survey,tot_start_survey:0
+msgid "Number of started surveys"
+msgstr "Aantal gestarte enquêtes"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Numerical Value"
+msgstr "Numerieke waarde"
+
+#. module: survey
+#: field:survey.user_input_line,value_number:0
+msgid "Numerical answer"
+msgstr "Numeriek antwoord"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Occurence"
+msgstr "Aantal keer"
+
+#. module: survey
+#: selection:survey.question,matrix_subtype:0
+msgid "One choice per row"
+msgstr "één keuze per rij"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#, python-format
+msgid "One email at least is incorrect: %s"
+msgstr "Minstens één e-mail is fout: %s"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Options"
+msgstr "Instellingen"
+
+#. module: survey
+#: field:survey.mail.compose.message,mail_server_id:0
+msgid "Outgoing mail server"
+msgstr "Uitgaande mailserver"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+#: view:survey.question:survey.survey_question_search
+#: field:survey.user_input_line,page_id:0 view:website:survey.page
+msgid "Page"
+msgstr "Pagina"
+
+#. module: survey
+#: field:survey.page,title:0
+msgid "Page Title"
+msgstr "Paginatitel"
+
+#. module: survey
+#: field:survey.page,sequence:0
+msgid "Page number"
+msgstr "Paginanummer"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_pages
+#: model:ir.actions.act_window,name:survey.action_survey_page_form
+#: model:ir.ui.menu,name:survey.menu_survey_page_form1
+#: field:survey.survey,page_ids:0
+msgid "Pages"
+msgstr "Pagina's"
+
+#. module: survey
+#: field:survey.mail.compose.message,parent_id:0
+msgid "Parent Message"
+msgstr "Bovenliggend bericht"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.user_input,state:0
+msgid "Partially completed"
+msgstr "Deels voltooid"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+#: field:survey.user_input,partner_id:0
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
+msgid "Partner Survey Mailing"
+msgstr "Relatie enquête mailing"
+
+#. module: survey
+#: help:survey.mail.compose.message,notified_partner_ids:0
+msgid ""
+"Partners that have a notification pushing this message in their mailboxes"
+msgstr "Relaties welke berichten ontvangen via de e-mail."
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_permanent
+msgid "Permanent"
+msgstr "Permanent"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Pie Chart"
+msgstr "Taartgrafiek"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#, python-format
+msgid "Please enter at least one valid recipient."
+msgstr "Vul minstens één valide ontvanger in."
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:112
+#, python-format
+msgid "Please select a survey"
+msgstr "Selecteer een enquête alsjeblieft"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Previous page"
+msgstr "Vorige pagina"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Print Survey"
+msgstr "Enquête afdrukken"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "Print These Answers"
+msgstr "Deze antwoorden afdrukken"
+
+#. module: survey
+#: field:survey.survey,print_url:0
+msgid "Print link"
+msgstr "Link afdrukken"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "Projectmanagement"
+
+#. module: survey
+#: field:survey.mail.compose.message,public_url_html:0
+msgid "Public HTML web link"
+msgstr "Publieke HTML web link"
+
+#. module: survey
+#: field:survey.survey,public_url:0
+msgid "Public link"
+msgstr "Publieke link"
+
+#. module: survey
+#: field:survey.survey,public_url_html:0
+msgid "Public link (html version)"
+msgstr "Publieke link (HTML versie)"
+
+#. module: survey
+#: field:survey.user_input,print_url:0
+msgid "Public link to the empty survey"
+msgstr "Publieke link naar de lege enquête"
+
+#. module: survey
+#: field:survey.user_input,result_url:0
+msgid "Public link to the survey results"
+msgstr "Publieke link naar de enquête resultaten"
+
+#. module: survey
+#: field:survey.mail.compose.message,public_url:0
+msgid "Public url"
+msgstr "Publieke URL"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "Inkoopbeheer"
+
+#. module: survey
+#: view:survey.label:survey.survey_label_search
+#: field:survey.label,question_id:0 field:survey.label,question_id_2:0
+#: view:survey.question:survey.survey_question_search
+#: field:survey.user_input_line,question_id:0 view:website:survey.result
+msgid "Question"
+msgstr "Vraag"
+
+#. module: survey
+#: field:survey.question,question:0
+msgid "Question Name"
+msgstr "Naam van de vraag"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Question name"
+msgstr "Naam van de vraag"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_page_question
+#: model:ir.actions.act_window,name:survey.act_survey_question
+#: model:ir.actions.act_window,name:survey.action_survey_question_form
+#: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: field:survey.page,question_ids:0
+msgid "Questions"
+msgstr "Vragen"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "Vraag voor ontwikkelaars"
+
+#. module: survey
+#: field:survey.survey,quizz_mode:0
+msgid "Quiz mode"
+msgstr "Toetsmodus"
+
+#. module: survey
+#: selection:survey.question,display_mode:0
+msgid "Radio Buttons/Checkboxes"
+msgstr "Radioknoppen/selectievakjes"
+
+#. module: survey
+#: field:survey.mail.compose.message,res_id:0
+msgid "Related Document ID"
+msgstr "Gerelateerde document ID"
+
+#. module: survey
+#: field:survey.mail.compose.message,model:0
+msgid "Related Document Model"
+msgstr "Gerelateerde document model"
+
+#. module: survey
+#: help:survey.mail.compose.message,reply_to:0
+msgid ""
+"Reply email address. Setting the reply_to bypasses the automatic thread "
+"creation."
+msgstr "Antwoord e-mail adres."
+
+#. module: survey
+#: field:survey.mail.compose.message,reply_to:0
+msgid "Reply-To"
+msgstr "Antwoord aan"
+
+#. module: survey
+#: field:survey.survey,result_url:0
+msgid "Results link"
+msgstr "Resultaat link"
+
+#. module: survey
+#: field:survey.user_input_line,value_suggested_row:0
+msgid "Row answer"
+msgstr "Rij antwoord"
+
+#. module: survey
+#: field:survey.question,labels_ids_2:0
+msgid "Rows of the Matrix"
+msgstr "Rijen van de matrix"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr "De configuratiewizard uitvoeren is een goede manier om tijd te besparen"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "Verkoopbeheer"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Save as a new template"
+msgstr "Sla op als een nieuw sjabloon"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Save as new template"
+msgstr "Opslaan als nieuw sjabloon"
+
+#. module: survey
+#: field:survey.user_input,quizz_score:0
+msgid "Score for the quiz"
+msgstr "Score voor de quiz"
+
+#. module: survey
+#: field:survey.label,quizz_mark:0
+msgid "Score for this answer"
+msgstr "Score voor dit antwoord"
+
+#. module: survey
+#: field:survey.user_input_line,quizz_mark:0
+msgid "Score given for this answer"
+msgstr "Score gegeven voor dit antwoord"
+
+#. module: survey
+#: view:survey.label:survey.survey_label_search
+msgid "Search Label"
+msgstr "Zoeklabel"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+msgid "Search Page"
+msgstr "Pagina zoeken"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_search
+msgid "Search Question"
+msgstr "Vragen zoeken"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Search Survey"
+msgstr "Enquête zoeken"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_search
+msgid "Search User input lines"
+msgstr "Zoek de door de gebruikers ingevoerde regels"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Select Options"
+msgstr "Kies opties"
+
+#. module: survey
+#: selection:survey.question,display_mode:0
+msgid "Selection Box"
+msgstr "Selectiebox"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Send"
+msgstr "Verzenden"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid "Send by email the public web link to your audience."
+msgstr "Stuur de publieke weblink via mail door naar uw publiek."
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid ""
+"Send private invitation to your audience (only one response per recipient "
+"and per invitation)."
+msgstr "Stuur een privé uitnodiging naar uw publiek (maar een antwoord per ontvanger en per uitnodiging)."
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "Sent Invitation Again"
+msgstr "Verstuur uitnodiging opnieuw"
+
+#. module: survey
+#: field:survey.question,sequence:0 field:survey.stage,sequence:0
+msgid "Sequence"
+msgstr "Volgnummer"
+
+#. module: survey
+#: sql_constraint:survey.stage:0
+msgid "Sequence number MUST be a natural"
+msgstr "Het volgorde getal moet een geheel getal zijn"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Share &amp; Invite"
+msgstr "Deel &amp; Uitnodigen"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Share and invite by email"
+msgstr "Delen en uitnodigen via e-mail"
+
+#. module: survey
+#: field:survey.mail.compose.message,public:0
+msgid "Share options"
+msgstr "Deel opties"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid "Share the public web link to your audience."
+msgstr "Deel de publieke link met uw publiek."
+
+#. module: survey
+#: field:survey.question,comments_allowed:0
+msgid "Show Comments Field"
+msgstr "Toon commentaar veld"
+
+#. module: survey
+#: field:survey.user_input_line,skipped:0 view:website:survey.result
+msgid "Skipped"
+msgstr "Overgeslagen"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Something went wrong while contacting survey server."
+msgstr "Er ging iets mis tijdens het verbinden met de enquête server."
+
+#. module: survey
+#: view:website:survey.result
+msgid "Sorry, No one answered this question."
+msgstr "Sorry, niemand heeft deze vraag beantwoord."
+
+#. module: survey
+#: view:website:survey.no_result
+msgid "Sorry, No one answered this survey yet"
+msgstr "Sorry, nog niemand heeft deze enquête beantwoord"
+
+#. module: survey
+#: view:survey.stage:survey.survey_stage_form field:survey.survey,stage_id:0
+msgid "Stage"
+msgstr "Fase"
+
+#. module: survey
+#: field:survey.mail.compose.message,starred:0
+msgid "Starred"
+msgstr "Met ster"
+
+#. module: survey
+#: view:website:survey.survey_init
+msgid "Start Survey"
+msgstr "Start enquête"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+msgid "Started"
+msgstr "Gestart"
+
+#. module: survey
+#: field:survey.user_input,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: survey
+#: field:survey.mail.compose.message,subject:0
+msgid "Subject"
+msgstr "Onderwerp"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Subject..."
+msgstr "Onderwerp..."
+
+#. module: survey
+#: view:website:survey.page
+msgid "Submit survey"
+msgstr "Verstuur enquête"
+
+#. module: survey
+#: field:survey.mail.compose.message,subtype_id:0
+msgid "Subtype"
+msgstr "Subtype"
+
+#. module: survey
+#: field:survey.user_input_line,value_suggested:0
+msgid "Suggested answer"
+msgstr "Voorgesteld antwoord"
+
+#. module: survey
+#: field:survey.label,value:0
+msgid "Suggested value"
+msgstr "Voorgestelde waarde"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Suggestion"
+msgstr "Suggestie"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Sum"
+msgstr "Som"
+
+#. module: survey
+#: field:survey.survey,message_summary:0
+msgid "Summary"
+msgstr "Samenvatting"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_survey
+#: field:survey.mail.compose.message,survey_id:0
+#: view:survey.page:survey.survey_page_search field:survey.page,survey_id:0
+#: view:survey.question:survey.survey_question_search
+#: field:survey.question,survey_id:0 view:survey.survey:survey.survey_form
+#: view:survey.survey:survey.survey_tree
+#: view:survey.user_input:survey.survey_user_input_search
+#: field:survey.user_input,survey_id:0
+#: view:survey.user_input_line:survey.survey_response_line_search
+#: field:survey.user_input_line,survey_id:0
+msgid "Survey"
+msgstr "Enquête"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_tree
+msgid "Survey Answer Line"
+msgstr "Enquête antwoordregel"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_label
+#: view:survey.label:survey.survey_label_tree
+msgid "Survey Label"
+msgstr "Enquête label"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Survey Options"
+msgstr "Enquête opties"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_page
+#: view:survey.page:survey.survey_page_form
+#: view:survey.page:survey.survey_page_tree
+msgid "Survey Page"
+msgstr "Enquête pagina"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_question
+#: view:survey.question:survey.survey_question_form
+#: view:survey.question:survey.survey_question_tree
+msgid "Survey Question"
+msgstr "Enquêtevraag"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_stage
+msgid "Survey Stage"
+msgstr "Fase enquête"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Enquête gebruikers invoer"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_user_input_line
+msgid "Survey User Input Line"
+msgstr "Enquête gebruikers invoerregel"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
+msgid "Survey User Input lines"
+msgstr "Enquête gebruikers invoerregels"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_selected_survey_user_input
+msgid "Survey User input"
+msgstr "Enquête gebruikers invoer"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+#: view:survey.user_input:survey.survey_user_input_tree
+msgid "Survey User inputs"
+msgstr "Enquête gebruikers invoeren"
+
+#. module: survey
+#: field:survey.question,page_id:0
+msgid "Survey page"
+msgstr "Enquête pagina"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_form
+#: model:ir.ui.menu,name:survey.menu_survey_form
+#: model:ir.ui.menu,name:survey.menu_surveys
+#: model:ir.ui.menu,name:survey.menu_surveys_configuration
+msgid "Surveys"
+msgstr "Enquêtes"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+msgid "System notification"
+msgstr "Systeem melding"
+
+#. module: survey
+#: help:survey.mail.compose.message,notification_ids:0
+msgid ""
+"Technical field holding the message notifications. Use notified_partner_ids "
+"to access notified partners."
+msgstr "Technisch veld bevat de berichtnotificaties. Gebruik notified_partner_ids voor toegang tot geïnformeerde partners."
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Test"
+msgstr "Test"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Test Survey"
+msgstr "Enquête testen"
+
+#. module: survey
+#: field:survey.user_input,test_entry:0
+msgid "Test entry"
+msgstr "Test invoer"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Text"
+msgstr "Tekst"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Text Input"
+msgstr "Tekstinvoer"
+
+#. module: survey
+#: field:survey.user_input_line,value_text:0
+msgid "Text answer"
+msgstr "Tekst antwoord"
+
+#. module: survey
+#: field:survey.survey,thank_you_message:0
+msgid "Thank you message"
+msgstr "Bedankt bericht"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "Thank you!"
+msgstr "Dank u!"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr "The 'Usability/Extended View' group helps in daily work"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr "The 'Usability/Extended View' group hides only optional fields"
+
+#. module: survey
+#: constraint:survey.user_input_line:0
+msgid "The answer must be in the right type"
+msgstr "Het antwoord moet van het juiste type zijn"
+
+#. module: survey
+#: code:addons/survey/survey.py:647
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
+#, python-format
+msgid "The answer you entered has an invalid format."
+msgstr "Het antwoord dat u heeft ingevuld heeft een ongeldig formaat."
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#, python-format
+msgid ""
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
+msgstr "De inhoud van de tekst bevat niet '__URL__'.  __URL__ wordt automatisch omgezet in een specifieke url voor deze enquête"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr "De huidige menustructuur is goed"
+
+#. module: survey
+#: sql_constraint:survey.user_input:0
+msgid "The deadline cannot be in the past"
+msgstr "De deadline kan niet in het verleden zijn"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr "De groepen ingesteld op de menu items zijn relevant"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr "Het aantal groepen is goed"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr "De veiligheidsregels gedefinieerd voor deze groep zijn zinvol"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr "Er zijn te weinig groepen gedefinieerd, beveiliging is niet accuraat genoeg"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr "Er zijn te veel groepen gedefinieerd, beveiliging is te complex om in te stellen"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr "Er zijn te veel menu's. Het is te complex om te begrijpen"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr "Ze zijn netjes en correct"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr "Ze zijn handig op dagelijkse basis"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
+msgstr "Ze helpen nieuwe gebruikers Odoo te begrijpen"
+
+#. module: survey
+#: code:addons/survey/survey.py:700
+#, python-format
+msgid "This answer must be an email address"
+msgstr "Dit antwoord moet een geildig e-mailadres zijn"
+
+#. module: survey
+#: code:addons/survey/survey.py:742
+#, python-format
+msgid "This is not a date/time"
+msgstr "Dit is geen datum/tijd"
+
+#. module: survey
+#: code:addons/survey/survey.py:719
+#, python-format
+msgid "This is not a number"
+msgstr "Dit is geen cijfer"
+
+#. module: survey
+#: help:survey.mail.compose.message,multi_email:0
+msgid ""
+"This list of emails of recipients will not converted in contacts. Emails "
+"separated by commas, semicolons or newline."
+msgstr "De lijst van e-mails of ontvangers wordt niet geconverteerd in contacten. E-mails gescheiden door komma's, puntkomma's of nieuwe lijn."
+
+#. module: survey
+#: help:survey.survey,thank_you_message:0
+msgid "This message will be displayed when survey is completed"
+msgstr "Dit bericht wordt getoond als de enquête voltooid is"
+
+#. module: survey
+#: code:addons/survey/survey.py:646
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
+#, python-format
+msgid "This question requires an answer."
+msgstr "Deze vraagt moet beantwoord worden."
+
+#. module: survey
+#: view:website:survey.nopages
+msgid "This survey has no pages by now!"
+msgstr "Deze enquête heeft geen pagina's nu!"
+
+#. module: survey
+#: view:website:survey.notopen
+msgid "This survey is not open. Thank you for your interest!"
+msgstr "Deze enquête is niet open. Bedankt voor je interesse!"
+
+#. module: survey
+#: view:website:survey.auth_required
+msgid "This survey is open only to registered people. Please"
+msgstr "Deze enquête is alleen open voor geregistreerde mensen. Alsjeblieft"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr "Deze veiligheidsregels zijn standaard en kunnen, in de meeste gevallen, zonder aanpassing direct worden gebruikt"
+
+#. module: survey
+#: field:survey.survey,title:0
+msgid "Title"
+msgstr "Titel"
+
+#. module: survey
+#: field:survey.mail.compose.message,to_read:0
+msgid "To read"
+msgstr "Te lezen"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "Helemaal akkoord"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "Helemaal niet akkoord"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Try refreshing."
+msgstr "Probeer te vernieuwen"
+
+#. module: survey
+#: field:survey.mail.compose.message,type:0
+#: view:survey.question:survey.survey_question_search
+msgid "Type"
+msgstr "Soort"
+
+#. module: survey
+#: field:survey.question,type:0
+msgid "Type of Question"
+msgstr "Type vraag"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Type of answers"
+msgstr "Type antwoorden"
+
+#. module: survey
+#: field:survey.question,labels_ids:0
+msgid "Types of answers"
+msgstr "Type antwoorden"
+
+#. module: survey
+#: field:survey.survey,message_unread:0
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
+
+#. module: survey
+#: field:survey.mail.compose.message,use_active_domain:0
+msgid "Use active domain"
+msgstr "Gebruik actieve domein"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: field:survey.mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Gebruik sjabloon"
+
+#. module: survey
+#: help:survey.question,description:0
+msgid ""
+"Use this field to add             additional explanations about your "
+"question"
+msgstr "Gebruik dit veld om extra uitleg te geven over je vraag"
+
+#. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
+msgstr "Gebruik feedback formulier"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_search
+#: field:survey.user_input_line,user_input_id:0
+msgid "User Input"
+msgstr "Gebruikersinvoer"
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "User Input Lines"
+msgstr "Gebruikers invoerregels"
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_number
+#: view:website:survey.result_text
+msgid "User Responses"
+msgstr "Gebruikers reacties"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "User can come back in the previous page"
+msgstr "Gebruikers kunnen terugkomen naar de vorige pagina"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_user_input_line_form
+msgid "User input line details"
+msgstr "Gebruikers invoerregel details"
+
+#. module: survey
+#: field:survey.survey,user_input_ids:0
+msgid "User responses"
+msgstr "Gebruikers antwoorden"
+
+#. module: survey
+#: field:survey.survey,users_can_go_back:0
+msgid "Users can go back"
+msgstr "Gebruikers kunnen terug gaan"
+
+#. module: survey
+#: help:survey.mail.compose.message,vote_user_ids:0
+msgid "Users that voted for this message"
+msgstr "Gebruikers die op dit bericht hebben gestemd."
+
+#. module: survey
+#: help:survey.survey,auth_required:0
+msgid ""
+"Users with a public link will be requested to login before taking part to "
+"the survey"
+msgstr "Gebruikers met een publieke link wordt gevraagd om zich aan te melden voor ze deelnemen aan de enquête"
+
+#. module: survey
+#: field:survey.question,validation_required:0
+msgid "Validate entry"
+msgstr "Valideer invoer"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "View Results"
+msgstr "Bekijk resultaten"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "View results"
+msgstr "Bekijk resultaten"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Vote"
+msgstr "Stem"
+
+#. module: survey
+#: field:survey.mail.compose.message,vote_user_ids:0
+msgid "Votes"
+msgstr "Stemmen"
+
+#. module: survey
+#: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898
+#: code:addons/survey/survey.py:1030
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#, python-format
+msgid "Warning!"
+msgstr "Waarschuwing!"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr "Wat denk je van de configuratiewizard?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid ""
+"What do you think about the documentation available on doc.openerp.com?"
+msgstr "Wat denk je over de documentatie beschikbaar op doc.odoo.com?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr "Wat denk u van de gebruikersgroepen?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr "Wat is uw mening over de proces weergaven van Odoo, beschikbaar in de webclient?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr "Wat denk u van de structuur van de menu's?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr "Waar ontwikkel je je nieuwe functies?"
+
+#. module: survey
+#: help:survey.mail.compose.message,is_log:0
+msgid "Whether the message is an internal note (comment mode only)"
+msgstr "Of het bericht een interne notitie is (alleen commentaar modus)"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "Welke modules gebruik/test u?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "Ja, ik gebruik een versie < 7.0"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "Ja, ik gebruik een versie die lokaal is geïnstalleerd"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "Ja, ik gebruik de online versie van Odoo"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Public in website\" "
+"setting must be enabled)."
+msgstr "U kunt uw enquête via een openbare web koppeling te delen en/of privé uitnodigingen sturen aan uw publiek. Mensen kunnen per uitnodiging één keer beantwoorden, en wanneer ze maar willen met de openbare web link (in dit geval, moet de instelling \"Openbaar in de website\" worden ingeschakeld)."
+
+#. module: survey
+#: code:addons/survey/survey.py:898 code:addons/survey/survey.py:1030
+#, python-format
+msgid "You cannot duplicate this             element!"
+msgstr "Het is niet mogelijk dit element niet dupliceren!"
+
+#. module: survey
+#: code:addons/survey/survey.py:439
+#, python-format
+msgid "You cannot send an invitation for a survey that has no questions."
+msgstr "Het is niet mogelijk een uitnodiging versturen voor een enquête die geen vragen heeft."
+
+#. module: survey
+#: code:addons/survey/survey.py:445
+#, python-format
+msgid "You cannot send invitations for closed surveys."
+msgstr "Het is niet mogelijk uitnodigingen versturen voor gesloten enquêtes."
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "You scored"
+msgstr "U heeft een score van"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Your answers have probably not been recorded."
+msgstr "Uw antwoorden zijn waarschijnlijk niet geregistreerd."
+
+#. module: survey
+#: view:website:survey.auth_required
+msgid "log in"
+msgstr "log in"
+
+#. module: survey
+#: view:website:survey.page
+msgid "on"
+msgstr "op"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "or"
+msgstr "of"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "points."
+msgstr "punten."
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "review your answers"
+msgstr "controleer uw antwoorden"
+
+#. module: survey
+#: view:website:survey.datetime
+msgid "yyyy-mm-dd hh:mm:ss"
+msgstr "yyyy-mm-dd uu:mm:ss"

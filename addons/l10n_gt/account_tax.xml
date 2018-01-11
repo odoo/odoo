@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data>
+
+        <!-- Definiciones del IVA -->
+
+        <record id="impuestos_raiz" model="account.tax.code.template">
+            <field name="name">General Guatemala</field>
+        </record>
+
+        <!-- Impuestos IVA -->
+
+        <record id="impuestos_balance" model="account.tax.code.template">
+            <field name="name">Balance del IVA</field>
+            <field name="parent_id" ref="impuestos_raiz"/>
+        </record>
+
+        <!-- IVA por Pagar -->
+
+        <record id="impuestos_iva_por_pagar_balance" model="account.tax.code.template">
+            <field name="name">IVA por Pagar Balance</field>
+            <field name="parent_id" ref="impuestos_balance"/>
+        </record>
+
+        <record id="impuestos_iva_por_pagar" model="account.tax.code.template">
+            <field name="name">IVA por Pagar</field>
+            <field name="parent_id" ref="impuestos_iva_por_pagar_balance"/>
+        </record>
+
+        <!-- IVA por Cobrar -->
+
+        <record id="impuestos_iva_por_cobrar_balance" model="account.tax.code.template">
+            <field name="name">IVA por Cobrar Balance</field>
+            <field name="parent_id" ref="impuestos_balance"/>
+        </record>
+
+        <record id="impuestos_iva_por_cobrar" model="account.tax.code.template">
+            <field name="name">IVA por Cobrar</field>
+            <field name="parent_id" ref="impuestos_iva_por_cobrar_balance"/>
+        </record>
+
+        <!-- Base IVA -->
+
+        <record id="impuestos_base_iva" model="account.tax.code.template">
+            <field name="name">Base Impositiva</field>
+            <field name="parent_id" ref="impuestos_balance"/>
+        </record>
+
+        <!-- Compras -->
+
+        <record id="impuestos_base_iva_compras_balance" model="account.tax.code.template">
+            <field name="name">Base Impositiva de Compras Balance</field>
+            <field name="parent_id" ref="impuestos_base_iva"/>
+        </record>
+
+        <record id="impuestos_base_iva_compras" model="account.tax.code.template">
+            <field name="name">Base Impositiva de Compras</field>
+            <field name="parent_id" ref="impuestos_base_iva_compras_balance"/>
+        </record>
+
+        <!-- Ventas -->
+
+        <record id="impuestos_base_iva_ventas_balance" model="account.tax.code.template">
+            <field name="name">Base Impositiva de Ventas Balance</field>
+            <field name="parent_id" ref="impuestos_base_iva"/>
+        </record>
+
+        <record id="impuestos_base_iva_ventas" model="account.tax.code.template">
+            <field name="name">Base Impositiva de Ventas</field>
+            <field name="parent_id" ref="impuestos_base_iva_ventas_balance"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,60 @@
+-
+  In order to test resource.
+-
+  I assign working calendar '45 Hours/Week' to human resource.
+-
+  !python {model: resource.resource}: |    
+    self.write(cr, uid, [ref('resource_analyst'), ref('resource_designer'), ref('resource_developer')], {'calendar_id' : ref('timesheet_group1'), 'resource_type': 'user'})
+
+-
+  I had Project of OpenERP Integration of 50 Hours with three human resource assigned on it. I have started project from this week start.
+-
+  First, I  generate the resource detail and check the resource Efficiency assigned.
+-
+  !python {model: resource.resource}: |
+    resources = self.generate_resources(cr, uid, [ref('base.user_root'),ref('base.user_demo')], ref('timesheet_group1'), context)
+    for resource in resources.values():
+        assert resource.get('efficiency', 0.0) == 1.0, 'Invalid resource generated.'
+-
+  I check per day work hour availability of the Resource based on Working Calendar Assigned to each resource, for first day of the week.
+-
+  !python {model: resource.resource}: |
+    calendar_pool = self.pool.get('resource.calendar')
+    resources = self.browse(cr, uid,  [ref('resource_analyst'), ref('resource_designer'), ref('resource_developer')], context)
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    dt = now - timedelta(days=now.weekday()) 
+    for resource in resources:
+        result = calendar_pool.working_hours_on_day(cr, uid, resource.calendar_id, dt, context)
+        assert result == 9.0, 'Wrong calculation of day work hour availability of the Resource (found %d).' % result
+-
+  Now, resource "Developer" drafted leave on Thursday in this week.
+-
+  !python {model: resource.calendar.leaves}: |
+    from datetime import datetime,timedelta
+    now = datetime.now()
+    dt = (now - timedelta(days=now.weekday()) ) + timedelta(days=3) 
+    self.write(cr, uid, [ref('resource_dummyleave')], {'resource_id': ref('resource_developer'), 'calendar_id': ref('timesheet_group1'),  'date_from': dt.strftime("%Y-%m-%d 09:00:00"), 'date_to': dt.strftime("%Y-%m-%d 18:00:00")})
+
+-
+  I check Actual working hours on resource 'Developer' from this week
+-
+  !python {model: resource.calendar}: |
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
+    now = datetime.now()
+    dt_from = now - relativedelta(days=now.weekday(), hour=8, minute=30) 
+    dt_to = dt_from + relativedelta(days=6, hour=17) 
+    hours = self.interval_hours_get(cr, uid, ref('timesheet_group1'), dt_from, dt_to, resource=ref('resource_developer'))
+    assert hours > 27 , 'Invalid Total Week working hour calculated, got %r, expected > 27' % hours
+-
+  Project Analysis work is of 20 hours which will start from Week start so i will calculate working schedule for resource Analyst for the same.
+-
+  !python {model: resource.calendar}: |
+    
+    from datetime import datetime, timedelta
+    now = datetime.now()
+    work_intreval = self.interval_min_get(cr, uid, ref('timesheet_group1'), now, 20.0, resource=ref('resource_designer'))
+    assert len(work_intreval) >= 5, 'Wrong Schedule Calculated'
+    
+

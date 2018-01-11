@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_move_line_reconcile_full" model="ir.ui.view">
+            <field name="name">account.move.line.reconcile.full.form</field>
+            <field name="model">account.move.line.reconcile</field>
+            <field name="arch" type="xml">
+                <form string="Reconciliation">
+                    <group col="4" string="Reconciliation Transactions">
+                        <field name="trans_nbr"/>
+                        <newline/>
+                        <field name="credit"/>
+                        <field name="debit"/>
+                    </group><group string="Write-Off">
+                        <field name="writeoff"/>
+                    </group>
+                    <footer>
+                        <button string="Reconcile" name="trans_rec_reconcile_full" type="object" default_focus="1" attrs="{'invisible':[('writeoff','!=',0)]}" class="oe_highlight"/>
+                        <button string="Reconcile With Write-Off" name="trans_rec_addendum_writeoff" type="object" attrs="{'invisible':[('writeoff','=',0)]}" class="oe_highlight"/>
+                        <button string="Partial Reconcile" name="trans_rec_reconcile_partial_reconcile" type="object" attrs="{'invisible':[('writeoff','=',0)]}" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_move_line_reconcile" model="ir.actions.act_window">
+            <field name="name">Reconcile Entries</field>
+            <field name="res_model">account.move.line.reconcile</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_move_line_reconcile_full"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="action_account_move_line_reconcile_prompt_values">
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field name="name">Reconcile Entries</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_view_account_move_line_reconcile'))" />
+            <field name="key">action</field>
+            <field name="model">account.move.line</field>
+        </record>
+
+        <record id="account_move_line_reconcile_writeoff" model="ir.ui.view">
+            <field name="name">account.move.line.reconcile.writeoff.form</field>
+            <field name="model">account.move.line.reconcile.writeoff</field>
+            <field name="arch" type="xml">
+                <form string="Information addendum">
+                    <header>
+                        <button string="Reconcile" name="trans_rec_reconcile" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group string="Write-Off Move" col="4">
+                        <field name="journal_id"/>
+                        <field name="writeoff_acc_id" domain="[('type', '&lt;&gt;', 'view')]"/>
+                        <field name="date_p"/>
+                        <field name="comment"/>
+                        <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
+                    </group>
+               </form>
+            </field>
+        </record>
+    </data>
+</openerp>

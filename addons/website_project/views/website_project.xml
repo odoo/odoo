@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- Project --> 
+<template id="task_kanban_card" name="TaskKanban">
+    <div class="thumbnail">
+        <a t-attf-href="/web#model=project.task&amp;id=#{object_id.id}"><span t-field="object_id.name"/></a>
+        <div>
+            Assigned to <span t-field="object_id.user_id"/>
+        </div>
+        <div>
+            <span t-foreach="object_id.categ_ids" t-as="categ_id" class="label">
+                <t t-esc="categ_id.name"/>
+            </span>
+        </div>
+        <small>
+            <i class="fa fa-clock-o"></i> <span t-field="object_id.date_start"/><br/>
+            <t t-if="object_id.date_end">Ending Date: <span t-field="object_id.date_end"/></t>
+        </small>
+    </div>
+</template>
+<template id="index" name="Project">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Project</t>
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <div class="container">
+                <h4 t-field="project.name"/>
+                <t t-call="website.kanban">
+                    <t t-set="model">project.task</t>
+                    <t t-set="domain" t-value="[('project_id', '=', project.id)]"/>
+                    <t t-set="column">stage_id</t>
+                    <t t-set="template">website_project.task_kanban_card</t>
+                    <t t-set="step">10</t>
+                    <t t-set="scope">3</t>
+                </t>
+            </div>
+            <div class="oe_structure"/>
+      </div>
+    </t>
+</template>
+
+</data>
+</openerp>

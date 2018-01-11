@@ -1,0 +1,13 @@
+<openerp>
+    <data>
+        <record model="ir.actions.act_window" id="hr_recruitment_stage_form_installer">
+            <field name="name">Review Recruitment Stages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.recruitment.stage</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">Check if the following stages are matching your recruitment process. Don't forget to specify the department if your recruitment process is different according to the job position.</field>
+            <field name="view_id" ref="hr_recruitment.hr_recruitment_stage_tree"/>
+        </record>
+    </data>
+</openerp>

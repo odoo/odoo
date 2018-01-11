@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!--
+        Resource: account.account.type
+        Add usual account types
+        -->
+        <record id="account_account_type_asset" model="account.account.type">
+            <field name="code">A</field>
+            <field name="name">Asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_asset_valuation" model="account.account.type">
+            <field name="code">AV</field>
+            <field name="name">Asset valuation</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_cash" model="account.account.type">
+            <field name="code">C</field>
+            <field name="name">Cash</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_equity" model="account.account.type">
+            <field name="code">Eq</field>
+            <field name="name">Equity</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">detail</field>
+        </record>
+        <record id="account_account_type_expense" model="account.account.type">
+            <field name="code">Ex</field>
+            <field name="name">Expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_income" model="account.account.type">
+            <field name="code">I</field>
+            <field name="name">Income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="account_account_type_passive" model="account.account.type">
+            <field name="code">Pas</field>
+            <field name="name">Passive</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="account_account_type_payable" model="account.account.type">
+            <field name="code">Pay</field>
+            <field name="name">Payable</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_account_type_receivable" model="account.account.type">
+            <field name="code">R</field>
+            <field name="name">Receivable</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_account_type_tax" model="account.account.type">
+            <field name="code">T</field>
+            <field name="name">Tax</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="account_account_type_view" model="account.account.type">
+            <field name="code">V</field>
+            <field name="name">View</field>
+            <field name="close_method">none</field>
+        </record>
+    </data>
+</openerp>

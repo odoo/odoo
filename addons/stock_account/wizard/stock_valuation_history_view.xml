@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_wizard_valuation_history" model="ir.ui.view">
+            <field name="name">Stock Valuation</field>
+            <field name="model">wizard.valuation.history</field>
+            <field name="arch" type="xml">
+                <form string="Choose your date">
+                    <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', False)]}">
+                        Choose the date for which you want to get the stock valuation of your products.
+
+                        This will filter the stock operation that weren't done at the selected date, to retreive the quantity
+                        you had, and gives you the inventory value according to the standard price used at that time.
+                    </p>
+                    <p class="oe_gray" attrs="{'invisible': [('choose_date', '=', True)]}">
+                        Retrieve the stock valuation of your products at current day
+                    </p>
+                    <group>
+                        <field name="choose_date"/>
+                        <field name="date" attrs="{'invisible': [('choose_date', '=', False)]}"/>
+                    </group>
+                    <footer>
+                        <button name="open_table" string="Retrieve the Inventory Value" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_wizard_stock_valuation_history" model="ir.actions.act_window">
+            <field name="name">Stock Valuation</field>
+            <field name="res_model">wizard.valuation.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wizard_valuation_history"/>
+            <field name="target">new</field>
+        </record>
+        <menuitem id="menu_action_wizard_valuation_history" action="action_wizard_stock_valuation_history" parent="stock.next_id_61" sequence="1"/>
+
+    <record id="view_stock_history_report_tree" model="ir.ui.view">
+        <field name="name">Stock Value At Date</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <tree string="Stock Value At Date" create="0" delete="0">
+                <field name="location_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
+                <field name="move_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="date"/>
+                <field name="source"/>
+                <field name="quantity" sum="# of Products "/>
+                <field name="inventory_value" sum="Total Value"/>
+           </tree>
+        </field>
+    </record>
+    <record id="view_stock_history_report_graph" model="ir.ui.view">
+        <field name="name">stock.history.value.graph</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <graph string="Stock Value At Date" type="pivot">
+                <field name="product_id" type="row"/>
+                <field name="inventory_value" type="measure"/>
+                <field name="quantity" type="measure"/>
+                <field name="location_id" type="row"/>
+            </graph>
+        </field>
+    </record>
+    <record id="view_stock_history_report_search" model="ir.ui.view">
+        <field name="name">stock.history.report.search</field>
+        <field name="model">stock.history</field>
+        <field name="arch" type="xml">
+            <search string="Stock Value At Date">
+                <field name="product_id"/>
+                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <group expand="1" string="Group By">
+                    <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}" name='group_by_product'/>
+                    <filter string="Product Category" icon="terp-accessories-archiver" context="{'group_by':'product_categ_id'}"/>
+                    <filter string="Location" icon="terp-accessories-archiver" context="{'group_by':'location_id'}" name='group_by_location'/>
+                    <filter string="Move" icon="terp-accessories-archiver" context="{'group_by':'move_id'}"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                 </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_history_tree" model="ir.actions.act_window">
+            <field name="name">Current Inventory Valuation</field>
+            <field name="res_model">stock.history</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d %H:%M:%S'))]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'search_default_group_by_product': True, 'search_default_group_by_location': True}</field>
+    </record>
+    <menuitem action="action_history_tree"
+            id="menu_action_history_tree"
+            parent="stock.menu_stock_inventory_control"
+            groups="stock.group_locations"
+            sequence="20"/>
+    </data>
+</openerp>
+

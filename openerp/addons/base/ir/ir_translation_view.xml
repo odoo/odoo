@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Translations -->
+        <record id="view_translation_search" model="ir.ui.view">
+            <field name="model">ir.translation</field>
+            <field name="arch" type="xml">
+                <search string="Translations">
+                    <filter icon="terp-gdu-smart-failing"
+                        string="Untranslated"
+                        domain="['|',('value', '=', False),('value','=','')]"/>
+                    <filter name="openerp-web"
+                        string="Web-only translations"
+                        domain="[('comments', 'like', 'openerp-web')]"/>
+                    <field name="name" operator="="/>
+                    <field name="lang"/>
+                    <field name="src"/>
+                    <field name="value"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_translation_form" model="ir.ui.view">
+            <field name="model">ir.translation</field>
+            <field name="arch" type="xml">
+                <form string="Translations">
+                   <header>
+                        <field name="state" widget="statusbar" nolabel="1"/>
+                   </header>
+                   <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="lang"/>
+                        </group>
+                        <group>
+                            <field name="module" groups="base.group_no_one"/>
+                            <field name="type"/>
+                            <field name="res_id"/>
+                        </group>
+                        <group string="Source Term">
+                           <field name="source" nolabel="1" height="400"/>
+                        </group>
+                        <group string="Translation">
+                           <field name="value" nolabel="1" height="400"/>
+                        </group>
+                        <group string="Comments">
+                           <field name="comments" nolabel="1" height="100"/>
+                        </group>
+                    </group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_translation_tree" model="ir.ui.view">
+            <field name="model">ir.translation</field>
+            <field name="arch" type="xml">
+                <tree string="Translations" editable="top">
+                    <field name="source"/>
+                    <field name="value"/>
+                    <field name="name"/>
+                    <field name="lang"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_translation" model="ir.actions.act_window">
+            <field name="name">Translated Terms</field>
+            <field name="res_model">ir.translation</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_translation_tree"/>
+        </record>
+
+        <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app" />
+
+    </data>
+</openerp>

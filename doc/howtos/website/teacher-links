@@ -1,0 +1,27 @@
+# HG changeset patch
+# Parent 91ffd360f3ffd44acb605c09753498b3d5f3f210
+# Parent  976a92eff9104d355cb86a0b41e883a19e75e923
+
+diff --git a/academy/templates.xml b/academy/templates.xml
+--- a/academy/templates.xml
++++ b/academy/templates.xml
+@@ -6,7 +6,9 @@
+                 <div class="oe_structure">
+                     <div class="container">
+                         <t t-foreach="teachers" t-as="teacher">
+-                            <p><t t-esc="teacher.id"/> <t t-esc="teacher.name"/></p>
++                            <p><a t-attf-href="/academy/{{ slug(teacher) }}">
++                              <t t-esc="teacher.name"/></a>
++                            </p>
+                         </t>
+                     </div>
+                 </div>
+@@ -18,7 +20,7 @@
+                 <div class="oe_structure"/>
+                 <div class="oe_structure">
+                     <div class="container">
+-                        <p><t t-esc="person.id"/> <t t-esc="person.name"/></p>
++                        <h3><t t-esc="person.name"/></h3>
+                     </div>
+                 </div>
+                 <div class="oe_structure"/>

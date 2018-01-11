@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<projects>
+    <project type="fields" name="priority,id">
+        <name type="field" name="name"></name>
+        <manager type="field" name="manager.name"></manager>
+        <parent type="field" name="parent_id.name"></parent>
+        <members type="zoom" name="members">
+            <member_name type="field" name="name"/>
+            <member_login type="field" name="login"/>
+        </members>
+        <planned_hours type="field" name="planned_hours"/>
+        <effective_hours type="field" name="effective_hours"/>
+        <date_start type="field" name="date_start"/>
+        <date_stop type="field" name="date_end"/>
+        <notes type="field" name="notes"/>
+        <state type="field" name="state"/>
+        <tasks>
+            <task type="zoom" name="tasks">
+                <task_name type="field" name="name"/>
+                <task_descritpion type="field" name="description"/>
+                <task_sequence type="field" name="sequence"/>
+                <task_priority type="field" name="priority"/>
+                <task_deadline type="field" name="date_deadline"/>
+                <task_description type="field" name="description"/>
+                <task_planned_hours type="field" name="planned_hours"/>
+                <task_effective_hours type="field" name="effective_hours" />
+                <task_user_id type="field" name="user_id.login"/>
+            </task>
+        </tasks>
+    </project>
+</projects>

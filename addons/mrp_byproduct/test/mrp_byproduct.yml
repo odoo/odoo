@@ -1,0 +1,80 @@
+-
+  In order to test mrp_byproduct with OpenERP, I add byproduct in bill of material.
+  I make a production order, confirm it so stock moves for byproducts are generated.
+-
+  I add a sub product in Bill of material for product External Hard Disk.
+-
+  !record {model: mrp.bom, id: mrp.mrp_bom_9}:
+    product_id: product.product_product_28
+    name: External Hard Disk + Subproduct
+    product_uom: product.product_uom_unit
+    sub_products:
+      - product_id: product.product_product_33
+        product_uom: product.product_uom_unit
+        product_qty: 2.0
+        subproduct_type: fixed
+-
+  I create a production order for External Hard Disk.
+-
+  !record {model: mrp.production, id: mrp_production_mo0}:
+    product_id: product.product_product_28
+    product_qty: 2.0
+    product_uom: product.product_uom_unit
+    bom_id: mrp.mrp_bom_9
+    location_src_id: stock.stock_location_stock
+-
+  I compute the data of production order.
+-
+  !python {model: mrp.production}: |
+    self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"active_ids": [ref("mrp_production_mo0")],"active_id": ref("mrp_production_mo0")})
+-
+  I confirm the production order.
+-
+    !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
+-
+  I check production order state.
+-
+  !assert {model: mrp.production, id: mrp_production_mo0, severity: error, string: Production order should be in state confirmed}:
+    - state == 'confirmed'
+-
+  Now I check the stock moves for the byproduct I created in the bill of material.
+  This move is created automatically when I confirmed the production order.
+-
+  !python {model: stock.move}: |
+    move_ids = self.search(cr, uid, [('product_id','=',ref('product.product_product_33'))])
+    assert move_ids, 'No moves are created !'
+-
+  I want to start the production so I force the reservation of products.
+-
+  !python {model: mrp.production}: |
+    self.force_production(cr, uid, [ref("mrp_production_mo0")], {"active_ids":[ref("mrp.menu_mrp_production_action")], "active_id": ref("mrp.menu_mrp_production_action"),})
+-
+  I start the production.
+-
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
+-
+  I consume and produce the production of products.
+-
+  I create record for selecting mode and quantity of products to produce.
+-
+  !record {model: mrp.product.produce, id: mrp_product_produce0}:
+    product_qty: 2.00
+    mode: 'consume_produce'
+-
+  I finish the production order.
+-
+  !python {model: mrp.product.produce}: |
+    qty = self.browse(cr, uid, ref('mrp_product_produce0')).product_qty
+    ctx = context.copy()
+    ctx['active_id'] = ref("mrp_production_mo0")
+    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce0')], qty, [], context=ctx)
+    self.write(cr, uid, [ref('mrp_product_produce0')], lines['value'], context=context)
+    self.do_produce(cr, uid, [ref("mrp_product_produce0")], {"active_model": "mrp.production", "active_ids":[ref("mrp_production_mo0")], "active_id": ref("mrp_production_mo0")})
+-
+  I see that stock moves of External Hard Disk including Headset USB are done now.
+-
+  !python {model: stock.move}: |
+    production_order = self.pool.get('mrp.production').browse(cr, uid, ref("mrp_production_mo0"))
+    move_ids = self.search(cr, uid, [('origin','=',production_order.name), ('product_id','in',[ref("product.product_product_28"),ref("product.product_product_33")])])
+    moves = self.browse(cr, uid, move_ids)
+    assert all(move.state == 'done' for move in moves), 'Moves are not done!'

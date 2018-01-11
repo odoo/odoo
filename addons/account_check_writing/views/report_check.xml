@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_check">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <!-- This report is (obviously) a work in progress -->
+            <div class="page">
+                <address t-field="o.partner_id"
+                    t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true, "no_tag_br": true}' />
+
+                <span t-esc="formatLang(o.date , date=True)"/><br/>
+                <span t-field="o.amount"
+                    t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/><br/>
+                <span t-esc="fill_stars(o.amount_in_word)"/>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Due Date</th>
+                            <th>Description</th>
+                            <th>Original Amount</th>
+                            <th>Open Balance</th>
+                            <th>Discount</th>
+                            <th>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="get_lines(o.line_dr_ids)" t-as="l">
+                            <td>
+                                <p t-if="l['date_due']">
+                                    <span t-esc="formatLang(l['date_due'], date=True)"/>
+                                </p>
+                            </td>
+                            <td class="text-right"><span t-esc="l['name']"/></td>
+                            <td class="text-right"><span t-esc="formatLang(l['amount_original'])"/></td>
+                            <td class="text-right"><span t-esc="formatLang(l['amount_unreconciled'])"/></td>
+                            <td class="text-right"></td>
+                            <td class="text-right"><span t-esc="formatLang(l['amount'])"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

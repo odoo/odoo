@@ -1,0 +1,15 @@
+-
+  create invoice and state is 'open' and pay some invoice
+-
+  !python {model: res.partner}: |
+    invoice_ids = self.create_membership_invoice(cr, uid, [ref("base.res_partner_1"),ref("base.res_partner_14"),ref("base.res_partner_24"),ref("base.res_partner_19"),ref("base.res_partner_8"),ref("base.res_partner_5"),ref("base.res_partner_21"),ref("base.res_partner_6"),ref("base.res_partner_16"),ref("base.res_partner_10")], product_id=ref("membership_1"), datas={"amount":80.00})
+    invoice_pool = self.pool.get('account.invoice')
+    invoice_pool.signal_workflow(cr, uid, invoice_ids, 'invoice_open')
+
+    for id in invoice_ids[-4:]:
+        pay = invoice_pool.pay_and_reconcile(cr, uid, [id],
+            9050.0, ref('account.cash'), ref('account.period_10'),
+            ref('account.bank_journal'), ref('account.cash'),
+            ref('account.period_10'), ref('account.bank_journal'),
+            name='Payment for test customer invoice')
+        assert (pay == True), "Incorrect Payment"

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_followup">
+    <t t-call="report.html_container">
+        <t t-foreach="ids_to_objects(data['form']['partner_ids'])" t-as="o">
+            <t t-esc="setLang(o.partner_id.lang)"/>
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="row">
+                        <div class="col-xs-5 col-xs-offset-7">
+                            <div t-field="o.invoice_partner_id"
+                                t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                             <span t-field="o.partner_id.vat"/>
+                        </div>
+                    </div>
+
+                    <p>
+                        Document: Customer account statement<br/>
+                        Date: <span t-esc="formatLang(data['form']['date'], date=True)"/><br/>
+                        Customer ref: <span t-field="o.partner_id.ref"/>
+                    </p>
+
+                    <p t-raw="get_text(o,data['form']['followup_id']).replace('\n', '&lt;br&gt;')"/>
+
+                    <t t-foreach="getLines(o)" t-as="cur_lines">
+                        <table class="table table-condensed" style="margin-top: 50px;">
+                            <thead>
+                                <tr>
+                                    <th>Invoice Date</th>
+                                    <th>Description</th>
+                                    <th class="text-center">Ref</th>
+                                    <th class="text-center">Maturity Date</th>
+                                    <th class="text-right">Amount</th>
+                                    <th class="text-center">Li.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="cur_lines['line']" t-as="line">
+                                    <td><span t-esc="formatLang(line['date'],date = True)"/></td>
+                                    <td><span t-esc="line['name']"/></td>
+                                    <td><span t-esc="line['ref']"/></td>
+                                    <td class="text-center"><span t-esc="line['date_maturity'] and formatLang(line['date_maturity'], date=True)"/></td>
+                                    <td class="text-right"><span t-esc="formatLang(line['balance'], currency_obj=line['currency_id'])"/></td>
+                                    <td><span t-esc="line['blocked'] and 'X' or ''"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-set="total" t-value="reduce(lambda x,y: x+y['balance'], cur_lines['line'], 0.00)"/>
+                        <p>Total: <span t-esc="formatLang(total, currency_obj=cur_lines['currency'])"/></p>
+                    </t>
+            </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_l10nfrbilan">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Bilan</h2>
+                <div class="row mt32 mb32">
+                    <div class="col-xs-3">
+                        <span t-esc="res_company.name"/>
+                        <br/>au
+                        <span t-esc="time.strftime('%d-%m-%Y', time.strptime(date_stop,'%Y-%m-%d'))"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <p>Imprimé le
+                            <span t-esc="time.strftime('%d-%m-%Y')"/>
+                            <br/>Tenue de compte:
+                            <span t-esc="res_company.currency_id.name"/>
+                        </p>
+                    </div>
+                </div>
+                <h3>Actif</h3>
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Brut</th>
+                            <th>Amortissements et d&#xE9;pr&#xE9;ciations</th>
+                            <th>Net</th>
+                        </tr>
+                    </thead>
+                    <tr>
+                        <td>Capital souscrit - non appel&#xE9;</td>
+                        <td class="text-right">
+                            <span t-esc="bavar1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>ACTIF IMMOBILIS&#xC9;</strong>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>IMMOBILISATIONS INCORPORELLES</strong>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Frais d'&#xE9;tablissement</td>
+                        <td class="text-right">
+                            <span t-esc="bavar2" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar2b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar2+bavar2b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Frais de recherche et de d&#xE9;veloppement</td>
+                        <td class="text-right">
+                            <span t-esc="bavar3" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar3b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar3+bavar3b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Concessions, brevets, licences,..., droits et valeurs similaires</td>
+                        <td class="text-right">
+                            <span t-esc="bavar4" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar4b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar4+bavar4b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Fonds commercial</td>
+                        <td class="text-right">
+                            <span t-esc="bavar5" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar5b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar5+bavar5b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autres</td>
+                        <td class="text-right">
+                            <span t-esc="bavar6" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar6b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar6+bavar6b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Immobilisations incorporelles en cours</td>
+                        <td class="text-right">
+                            <span t-esc="bavar7" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar7b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar7+bavar7b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Avances et acomptes</td>
+                        <td class="text-right">
+                            <span t-esc="bavar8" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar8" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>IMMOBILISATIONS CORPORELLES</strong>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Terrains</td>
+                        <td class="text-right">
+                            <span t-esc="bavar9" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar9b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar9+bavar9b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Constructions</td>
+                        <td class="text-right">
+                            <span t-esc="bavar10" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar10b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar10+bavar10b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Installations techniques,mat&#xE9;riel et outillage</td>
+                        <td class="text-right">
+                            <span t-esc="bavar11" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar11b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar11+bavar11b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autres</td>
+                        <td class="text-right">
+                            <span t-esc="bavar12" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar12b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar12+bavar12b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Immobilisations corporelles en cours</td>
+                        <td class="text-right">
+                            <span t-esc="bavar13" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar13b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar13+bavar13b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Avances et acomptes</td>
+                        <td class="text-right">
+                            <span t-esc="bavar14" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar14" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>IMMOBILISATIONS FINANCI&#xC9;RES</strong>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Participations</td>
+                        <td class="text-right">
+                            <span t-esc="bavar15" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar15b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar15+bavar15b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Cr&#xE9;ances rattach&#xE9;es &#xE0; des participations</td>
+                        <td class="text-right">
+                            <span t-esc="bavar16" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar16b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar16+bavar16b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Titres immobilis&#xE9;s de l'activit&#xE9; de portefeuille</td>
+                        <td class="text-right">
+                            <span t-esc="bavar17" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar17b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar17+bavar17b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autres titres immobilis&#xE9;s</td>
+                        <td class="text-right">
+                            <span t-esc="bavar18" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar18b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar18+bavar18b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Pr&#xEA;ts</td>
+                        <td class="text-right">
+                            <span t-esc="bavar19" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar19b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar19+bavar19b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autres</td>
+                        <td class="text-right">
+                            <span t-esc="bavar20" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar20b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar20+bavar20b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">
+                            <strong>TOTAL I</strong>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="at1a" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-at1b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="at1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ACTIF CIRCULANT</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>STOCK EN COURS</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Mati&#xE8;res premi&#xE8;res et autres approvisionnements</td>
+                        <td class="text-right">
+                            <span t-esc="bavar21" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar21b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar21+bavar21b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>En-cours de production [biens et services]</td>
+                        <td class="text-right">
+                            <span t-esc="bavar22" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar22b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar22+bavar22b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Produits interm&#xE9;diaires et finis</td>
+                        <td class="text-right">
+                            <span t-esc="bavar23" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar23b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar23+bavar23b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Marchandises</td>
+                        <td class="text-right">
+                            <span t-esc="bavar24" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar24b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar24+bavar24b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Avances et acomptes vers&#xE9;s sur commandes</td>
+                        <td class="text-right">
+                            <span t-esc="bavar25" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar25" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CR&#xC9;ANCES</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Cr&#xE9;ances clients et comptes rattach&#xE9;s</td>
+                        <td class="text-right">
+                            <span t-esc="bavar26" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar26b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar26+bavar26b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autres</td>
+                        <td class="text-right">
+                            <span t-esc="bavar27" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar27b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar27+bavar27b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Capital souscrit - appel&#xE9; , non vers&#xE9;</td>
+                        <td class="text-right">
+                            <span t-esc="bavar28" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar28" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>VALEURS MOBILI&#xC8;RES DE PLACEMENT</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Actions propres</td>
+                        <td class="text-right">
+                            <span t-esc="bavar29" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar29b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar29+bavar29b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autres titres</td>
+                        <td class="text-right">
+                            <span t-esc="bavar30" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-bavar30b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="bavar30+bavar30b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Instruments de tr&#xE9;sorerie</td>
+                        <td class="text-right">
+                            <span t-esc="bavar31" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar31" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Disponibilit&#xE9;s</td>
+                        <td class="text-right">
+                            <span t-esc="bavar32" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar32" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Charges constat&#xE9;s d'avance</td>
+                        <td class="text-right">
+                            <span t-esc="bavar33" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar33" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">
+                            <strong>TOTAL II</strong>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="at2a" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-at2b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="at2" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Charges &#xE0; r&#xE9;partir sur plusieurs exercices ( III )</td>
+                        <td class="text-right">
+                            <span t-esc="bavar34" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar34" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Primes de remboursement des emprunts ( IV )</td>
+                        <td class="text-right">
+                            <span t-esc="bavar35" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar35" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>&#xC9;carts de conversion actif ( V )</td>
+                        <td class="text-right">
+                            <span t-esc="bavar36" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td></td>
+                        <td class="text-right">
+                            <span t-esc="bavar36" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-right">
+                            <strong>TOTAL ACTIF ( I + II + III + IV + V )</strong>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="at1a+at2a" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="-at1b-at2b" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                        <td class="text-right">
+                            <span t-esc="actif" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>
+                        </td>
+                    </tr>
+                </table>
+
+                <h3>Passif</h3>
+                <table class="table table-condensed">
+                    <tbody>
+                        <tr>
+                            <td><strong>CAPITAUX PROPRES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Capital [dont vers&#xE9;...]</td>
+                            <td><span t-esc="bpvar1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Primes d'&#xE9;mission, de fusion, d'apport</td>
+                            <td><span t-esc="bpvar2" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&#xC9;carts de r&#xE9;&#xE9;valuation</td>
+                            <td><span t-esc="bpvar3" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&#xC9;cart d'&#xE9;quivalence</td>
+                            <td><span t-esc="bpvar4" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>R&#xC9;SERVES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>R&#xE9;serve l&#xE9;gale</td>
+                            <td><span t-esc="bpvar5" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>R&#xE9;serves statutaires ou contractuelles</td>
+                            <td><span t-esc="bpvar6" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>R&#xE9;serves r&#xE9;glement&#xE9;es</td><td><span t-esc="bpvar7" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td></tr>
+                        <tr>
+                            <td>Autres r&#xE9;serves</td>
+                            <td><span t-esc="bpvar8" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Report &#xE0; nouveau</td>
+                            <td><span t-esc="bpvar9" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>R&#xC9;SULTAT DE L'EXERCICE [b&#xE9;n&#xE9;fice ou perte]</strong></td>
+                            <td><span t-esc="bpvar10" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Subventions d'investissement</td>
+                            <td><span t-esc="bpvar11" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Provisions r&#xE9;glement&#xE9;es</td>
+                            <td><span t-esc="bpvar12" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><strong>TOTAL I</strong></td>
+                            <td><span t-esc="pt1" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>PROVISIONS</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Provisions pour risques</td>
+                            <td><span t-esc="bpvar13" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Provisions pour charges</td>
+                            <td><span t-esc="bpvar14" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><strong>TOTAL II</strong></td>
+                            <td><span t-esc="pt2" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>DETTES</strong></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Emprunts obligataires convertibles</td>
+                            <td><span t-esc="bpvar15" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Autres emprunts obligataires</td>
+                            <td><span t-esc="bpvar16" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Emprunts et dettes aupr&#xE8;s des &#xE9;tablissements de cr&#xE9;dit</td>
+                            <td><span t-esc="bpvar17" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Emprunts et dettes financi&#xE8;res diverses</td>
+                            <td><span t-esc="bpvar18" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Avances et acomptes re&#xE7;us sur commandes en cours</td>
+                            <td><span t-esc="bpvar19" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Dettes fournisseurs et comptes rattach&#xE9;s </td>
+                            <td><span t-esc="bpvar20" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Dettes fiscales et sociales</td>
+                            <td><span t-esc="bpvar21" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Dettes sur immobilisations et comptes rattach&#xE9;s</td>
+                            <td><span t-esc="bpvar22" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Autres dettes</td>
+                            <td><span t-esc="bpvar23" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Instruments de tr&#xE9;sorerie</td>
+                            <td><span t-esc="bpvar24" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>Produits constat&#xE9;s d'avance</td>
+                            <td><span t-esc="bpvar25" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td class="text-right"><strong>TOTAL III</strong></td>
+                            <td><span t-esc="pt3" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&#xC9;carts de conversion passif <font face="Times-Roman">( IV )</font></td>
+                            <td><span t-esc="bpvar26" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>TOTAL G&#xC9;N&#xC9;RAL (I + II + III + IV)</strong></td>
+                            <td><span t-esc="passif" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                        <tr>
+                            <td>&amp;nbsp;</td>
+                            <td>&amp;nbsp;</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ACTIF - PASSIF</strong></td>
+                            <td><span t-esc="round(actif-passif,2)" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

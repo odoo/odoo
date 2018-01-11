@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Fiscal Position Account Templates -->
+
+        <!-- Position 2 - NON-EU Countries -->
+        <!-- inkopen laag -->
+        <record
+            id="position_account_non_eu_purchase_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_7001" />
+            <field name="account_dest_id" ref="l10n_nl.a_7017" />
+        </record>
+        <!-- inkopen hoog. NB: id not according to convention! -->
+        <record
+            id="position_account_non_eu_purchase_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_expense" />
+            <field name="account_dest_id" ref="l10n_nl.a_7018" />
+        </record>
+        <!-- inkopen overig -->
+        <record
+            id="position_account_non_eu_purchase_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_7003" />
+            <field name="account_dest_id" ref="l10n_nl.a_7019" />
+        </record>
+        <!-- verkopen fabricage -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_non_eu_production_sales_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8001" />
+            <field name="account_dest_id" ref="l10n_nl.a_8020" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_non_eu_production_sales_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8002" />
+            <field name="account_dest_id" ref="l10n_nl.a_8020" />
+        </record>   
+        <!-- verkopen overig -->
+        <record
+            id="position_account_non_eu_sales_production_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8003" />
+            <field name="account_dest_id" ref="l10n_nl.a_8020" />
+        </record>  
+        <!-- verkopen handel -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_non_eu_sales_trade_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8011" />
+            <field name="account_dest_id" ref="l10n_nl.a_8021" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_non_eu_sales_trade_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_sale" />
+            <field name="account_dest_id" ref="l10n_nl.a_8021" />
+        </record>   
+        <!-- verkopen overig -->
+        <record
+            id="position_account_non_eu_sales_trade_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8013" />
+            <field name="account_dest_id" ref="l10n_nl.a_8021" />
+        </record>   
+        <!-- verkopen diensten fabricage -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_non_eu_sales_service_production_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8041" />
+            <field name="account_dest_id" ref="l10n_nl.a_8060" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_non_eu_sales_service_production_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8042" />
+            <field name="account_dest_id" ref="l10n_nl.a_8060" />
+        </record>   
+        <!-- verkopen overig -->
+        <record
+            id="position_account_non_eu_sales_service_production_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8043" />
+            <field name="account_dest_id" ref="l10n_nl.a_8060" />
+        </record>  
+        <!-- verkopen diensten handel -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_non_eu_sales_service_trade_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8051" />
+            <field name="account_dest_id" ref="l10n_nl.a_8061" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_non_eu_sales_service_trade_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_non_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8052" />
+            <field name="account_dest_id" ref="l10n_nl.a_8061" />
+        </record>   
+        <!-- verkopen overig: is er niet?? -->
+        
+        <!-- Position 3 - EU Countries -->
+        <!-- inkopen laag -->
+        <record
+            id="position_account_eu_purchase_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_7001" />
+            <field name="account_dest_id" ref="l10n_nl.a_7014" />
+        </record>
+        <!-- inkopen hoog -->
+        <record
+            id="position_account_eu_purchase_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_expense" />
+            <field name="account_dest_id" ref="l10n_nl.a_7015" />
+        </record>
+        <!-- inkopen overig -->
+        <record
+            id="position_account_eu_purchase_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_7003" />
+            <field name="account_dest_id" ref="l10n_nl.a_7016" />
+        </record>
+        <!-- verkopen fabricage -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_eu_sales_production_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8001" />
+            <field name="account_dest_id" ref="l10n_nl.a_8000" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_eu_sales_production_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8002" />
+            <field name="account_dest_id" ref="l10n_nl.a_8000" />
+        </record>   
+        <!-- verkopen overig -->
+        <record
+            id="position_account_eu_sales_production_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8003" />
+            <field name="account_dest_id" ref="l10n_nl.a_8000" />
+        </record>  
+        <!-- verkopen handel -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_eu_sales_trade_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8011" />
+            <field name="account_dest_id" ref="l10n_nl.a_8010" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_eu_sales_trade_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_sale" />
+            <field name="account_dest_id" ref="l10n_nl.a_8010" />
+        </record>   
+        <!-- verkopen overig -->
+        <record
+            id="position_account_eu_sales_trade_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8013" />
+            <field name="account_dest_id" ref="l10n_nl.a_8010" />
+        </record>   
+        <!-- verkopen diensten fabricage -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_eu_sales_service_production_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8041" />
+            <field name="account_dest_id" ref="l10n_nl.a_8040" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_eu_sales_service_production_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8042" />
+            <field name="account_dest_id" ref="l10n_nl.a_8040" />
+        </record>   
+        <!-- verkopen overig -->
+        <record
+            id="position_account_eu_sales_service_production_other"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8043" />
+            <field name="account_dest_id" ref="l10n_nl.a_8040" />
+        </record>  
+        <!-- verkopen diensten handel -->
+        <!-- verkopen laag -->
+        <record
+            id="position_account_eu_sales_service_trade_low"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8051" />
+            <field name="account_dest_id" ref="l10n_nl.a_8050" />
+        </record>     
+        <!-- verkopen hoog -->
+        <record
+            id="position_account_eu_sales_service_trade_high"
+            model="account.fiscal.position.account.template">
+            <field name="position_id"     ref="fiscal_position_template_eu" />
+            <field name="account_src_id"  ref="l10n_nl.a_8052" />
+            <field name="account_dest_id" ref="l10n_nl.a_8050" />
+        </record>   
+        <!-- verkopen overig: is er niet?? -->
+
+    </data>
+</openerp>

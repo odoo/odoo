@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="product_template_public" model="ir.rule">
+        <field name="name">Public product template</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[('website_published', '=', True), ("sale_ok", "=", True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    
+    <record id="product_supplierinfo_public" model="ir.rule">
+        <field name="name">Public product supplierinfo</field>
+        <field name="model_id" ref="product.model_product_supplierinfo"/>
+        <field name="domain_force">[('product_tmpl_id.website_published','=',True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- toggle multi salesteam mode -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(3, ref('base.group_mono_salesteams')), (4, ref('base.group_multi_salesteams'))]"/>
+    </record>
+
+</data>
+</openerp>

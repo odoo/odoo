@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+    <menuitem name="Document Management" id="menu_document_management_configuration" parent="knowledge.menu_document_configuration" sequence="1"/>
+
+    <record model="ir.ui.view" id="view_document_directory_form">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="arch" type="xml">
+            <form string="Directories" col="4">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
+                <notebook colspan="4">
+                <page string="Definition">
+                    <group string="Directory Type" colspan="4">
+                        <field name="type"/>
+                    </group>
+                    <group col="4" attrs="{'invisible': [('type','!=','ressource')]}">
+                        <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
+                            attrs="{'required': [('type','=','ressource')] }"/>
+                        <newline/>
+                        <field name="resource_field"     domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
+                        <field name="ressource_tree"/>
+                        <newline/>
+                        <field name="domain" attrs="{'required': [('type','=','ressource')], 'readonly': [('type','=','static')]}"/>
+                    </group>
+                    <group col="4">
+                        <field name="ressource_parent_type_id"/>
+                        <field name="ressource_id" readonly="1"/>
+                    </group>
+                    <group col="2" attrs="{'invisible': [('type','!=','ressource'),('ressource_parent_type_id','=',False)]}">
+                        <field name="resource_find_all"/>
+                    </group>
+
+                </page>
+                <page string="Generated Files" groups="base.group_no_one">
+                    <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
+                    <field name="content_ids" nolabel="1" colspan="4" >
+                        <form string="Contents">
+                            <group col="4">
+                                <field name="name"/>
+                                <field name="sequence"/>
+                                <field name="prefix"/>
+                                <field name="suffix"/>
+                                <field name="extension"/>
+                                <field name="include_name"/>
+                                <separator string="PDF Report" colspan="4"/>
+                                <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            </group>
+                        </form>
+                        <tree string="Contents">
+                            <field name="sequence" string="Seq."/>
+                            <field name="name"/>
+                            <field name="suffix"/>
+                            <field name="extension"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Dynamic context" groups="base.group_no_one">
+                    <label colspan="4" string="Define words in the context, for all child directories and files" />
+                    <field name="dctx_ids" nolabel="1" colspan="4">
+                        <tree string="Fields" editable="bottom">
+                            <field name="field"/>
+                            <field name="expr"/>
+                        </tree>
+                        <form string="Fields">
+                            <group col="4">
+                                <field name="field"/>
+                                <field name="expr"/>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+                <page string="Security">
+                    <label colspan="4" string="Only members of these groups will have access to this directory and its files." />
+                    <label colspan="4" string="These groups, however, do NOT apply to children directories, which must define their own groups." />
+                    <field name="group_ids" colspan="4" nolabel="1"/>
+                </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_document_directory_tree">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Directories" toolbar="1">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="create_date"/>
+                <field name="write_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_document_directory_filter" model="ir.ui.view">
+        <field name="name">Search View: Document Directory</field>
+        <field name="model">document.directory</field>
+        <field name="arch" type="xml">
+            <search string="Search Document Directory">
+                <field name="name" string="Document Directory"/>
+                <filter string="Static" domain="[('type','=','directory')]"/>
+                <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="user_id" />
+                <group expand="0" string="Group By">
+                    <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+           </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_directory_form">
+        <field name="name">Directories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.directory</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_document_directory_filter"/>
+    </record>
+
+    <record id="action_dir_view1" model="ir.actions.act_window.view">
+        <field eval="10" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_document_directory_tree"/>
+        <field name="act_window_id" ref="action_document_directory_form"/>
+    </record>
+    <record id="action_dir_view2" model="ir.actions.act_window.view">
+        <field eval="20" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_document_directory_form"/>
+        <field name="act_window_id" ref="action_document_directory_form"/>
+    </record>
+
+    <menuitem
+        action="action_document_directory_form"
+        id="menu_document_directories"
+        parent="menu_document_management_configuration"/>
+
+
+    <record model="ir.actions.act_window" id="action_document_directory_tree">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Directories' Structure</field>
+        <field name="res_model">document.directory</field>
+        <field name="view_type">tree</field>
+        <field name="view_id" ref="document.view_document_directory_tree"/>
+        <field name="domain">[('ressource_parent_type_id','=',False),('parent_id','=',False)]</field>
+    </record>
+    <menuitem
+        action="action_document_directory_tree"
+        id="menu_document_directories_tree"
+        parent="menu_document_management_configuration" sequence="5"/>
+
+    <record model="ir.ui.view" id="view_document_file_form">
+        <field name="name">ir.attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="base.view_attachment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='datas_fname']" position="replace">
+                <field name="datas_fname" invisible="1"/>
+            </xpath>
+            <field name="url" position="after">
+                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+            </field>
+            <field name="company_id" position="before">
+                <field name="parent_id"/>
+                <field name="partner_id"/>
+            </field>
+            <xpath expr="//div[@name='creation_div']" position='after'>
+                <label for="write_uid" string="Modification"/>
+                <div>
+                    <field name="write_uid" readonly="1" class="oe_inline"/> on 
+                    <field name="write_date" readonly="1" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//group[@name='description_group']" position='after'>
+                <group string="Indexed Content" colspan="4">
+                    <field name="index_content" nolabel="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_attach_filter_inherit0" model="ir.ui.view">
+            <field name="name">IR Attachment0</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="base.view_attachment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='my_documents_filter']" position="replace">
+                    <filter name="my_documents_filter" string="My Document(s)" icon="terp-personal" domain="[('user_id','=',uid)]" help="Filter on my documents"/>
+                </xpath>
+                <xpath expr="//field[@name='create_uid']" position="replace">
+                    <field name="user_id"/>
+                    <field name="parent_id" />
+                    <field name="index_content"/>
+                </xpath>
+            </field>
+    </record>
+    <record id="view_attach_filter_inherit2" model="ir.ui.view">
+            <field name="name">IR Attachment2</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="base.view_attachment_search"/>
+            <field name="arch" type="xml">
+                <filter string="Owner" position="replace">
+                    <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
+                </filter>
+            </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="view_document_file_tree">
+        <field name="name">ir.attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <tree colors="blue:type in ('url',)" string="Attachments">
+                <field name="name"/>
+                <field name="parent_id" />
+                <field name="user_id"/>
+                <field name="company_id"/>
+                <field name="create_date" groups="base.group_no_one"/>
+                <field name="write_date" groups="base.group_no_one"/>
+                <field name="partner_id"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_file_form">
+        <field name="name">Documents</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a new document. 
+          </p><p>
+            The Documents repository gives you access to all attachments, such
+            as mails, project documents, invoices etc.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_document_file_directory_form">
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.attachment</field>
+        <field name="name">Directory</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('parent_id','child_of',active_id)]</field>
+        <field name="context">{'parent_id':active_id}</field>
+    </record>
+
+    <record model="ir.values" id="ir_action_document_file_directory_form">
+        <field name="key2" eval="'tree_but_open'"/>
+        <field name="model" eval="'document.directory'"/>
+        <field name="name">Browse Files</field>
+        <field name="value" eval="'ir.actions.act_window,%d'%action_document_file_directory_form"/>
+    </record>
+
+
+    <act_window domain="[('partner_id', '=', active_id)]"
+        context="{'default_partner_id': active_id}"
+        id="act_res_partner_document" name="Related Documents"
+        res_model="ir.attachment"
+        src_model="res.partner"/>
+
+    <act_window
+        domain="[('parent_id', '=', active_id)]"
+        context="{'default_parent_id': active_id}"
+        id="zoom_directory" name="Related Documents"
+        res_model="ir.attachment"
+        src_model="document.directory"/>
+</data>
+</openerp>
+

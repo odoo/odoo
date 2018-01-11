@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wkf_sale" model="workflow">
+            <field name="name">sale.order.basic</field>
+            <field name="osv">sale.order</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activity -->
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+        
+        <record id="act_sent" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">sent</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'sent'})</field>
+        </record>
+     
+        <record id="act_router" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">router</field>
+            <field name="kind">function</field>
+            <field name="action">action_wait()</field>
+            <field name="split_mode">OR</field>
+        </record>
+        
+        <record id="act_wait_invoice" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">wait_invoice</field>
+        </record>
+
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">done</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">action_done()</field>
+            <field name="join_mode">AND</field>
+        </record>
+
+        <record id="act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_cancel2" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">cancel2</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_invoice" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice</field>
+            <field name="kind">subflow</field>
+            <field name="subflow_id" search="[('name','=','account.invoice.basic')]"/>
+            <field name="action">action_invoice_create()</field>
+        </record>
+        <record id="act_invoice_except" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice_except</field>
+            <field name="kind">function</field>
+            <field name="action">action_invoice_cancel()</field>
+        </record>
+        <record id="act_invoice_end" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice_end</field>
+            <field name="kind">function</field>
+            <field name="action">action_invoice_end()</field>
+        </record>
+        <record id="act_invoice_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice_cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+
+        <!-- Transistion -->
+
+        <record id="trans_draft_sent" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_sent"/>
+            <field name="signal">quotation_sent</field>
+        </record>
+        <record id="trans_draft_router" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_router"/>
+            <field name="signal">order_confirm</field>
+        </record>
+        <record id="trans_draft_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
+        <record id="trans_sent_router" model="workflow.transition">
+            <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_router"/>
+            <field name="signal">order_confirm</field>
+        </record>
+        <record id="trans_sent_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
+        <record id="trans_router_wait_invoice" model="workflow.transition">
+            <field name="act_from" ref="act_router"/>
+            <field name="act_to" ref="act_wait_invoice"/>
+        </record>
+        <record id="trans_wait_invoice_all_lines_invoiced" model="workflow.transition">
+            <field name="act_from" ref="act_wait_invoice"/>
+            <field name="act_to" ref="act_invoice_end"/>
+            <field name="signal">all_lines</field>
+        </record>
+        <record id="trans_wait_invoice_cancel2" model="workflow.transition">
+            <field name="act_from" ref="act_wait_invoice"/>
+            <field name="act_to" ref="act_cancel2"/>
+            <field name="signal">cancel</field>
+        </record>
+        <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
+            <field name="act_from" ref="act_wait_invoice"/>
+            <field name="act_to" ref="act_invoice"/>
+            <field name="signal">manual_invoice</field>
+        </record>
+        <record id="trans_invoice_invoice_end" model="workflow.transition">
+            <field name="act_from" ref="act_invoice"/>
+            <field name="act_to" ref="act_invoice_end"/>
+            <field name="signal">subflow.paid</field>
+        </record>
+        <record id="trans_invoice_invoice_except" model="workflow.transition">
+            <field name="act_from" ref="act_invoice"/>
+            <field name="act_to" ref="act_invoice_except"/>
+            <field name="signal">subflow.cancel</field>
+        </record>
+        <record id="trans_invoice_except_invoice" model="workflow.transition">
+            <field name="act_from" ref="act_invoice_except"/>
+            <field name="act_to" ref="act_invoice"/>
+            <field name="signal">invoice_recreate</field>
+        </record>
+        <record id="trans_invoice_except_invoice_end" model="workflow.transition">
+            <field name="act_from" ref="act_invoice_except"/>
+            <field name="act_to" ref="act_invoice_end"/>
+            <field name="signal">invoice_corrected</field>
+        </record>
+        <record id="trans_invoice_except_invoice_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_invoice_except"/>
+            <field name="act_to" ref="act_invoice_cancel"/>
+            <field name="signal">invoice_cancel</field>
+        </record>
+        <record id="trans_invoice_end_done" model="workflow.transition">
+            <field name="act_from" ref="act_invoice_end"/>
+            <field name="act_to" ref="act_done"/>
+        </record>
+
+    <!--
+        Procurements creation and checking branch
+    -->
+    
+        <!-- Activity -->
+        
+        <record id="act_wait_ship" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">wait_ship</field>
+        </record>
+        
+        <record id="act_cancel3" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">cancel3</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_ship" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship</field>
+            <field name="kind">function</field>
+            <field name="action">action_ship_create()</field>
+        </record>
+
+        <record id="act_ship_ignore" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_ignore</field>
+            <field name="kind">function</field>
+            <field name="action">action_ignore_delivery_exception()</field>
+        </record>
+        
+        <record id="act_ship_end" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_end</field>
+            <field name="kind">dummy</field>
+        </record>
+        
+        <record id="act_ship_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_ship_except" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_except</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'shipping_except'})</field>
+        </record>
+        
+        
+
+        <!-- Transition -->
+        
+        <record id="trans_router_wait_ship" model="workflow.transition">
+            <field name="act_from" ref="sale.act_router"/>
+            <field name="act_to" ref="act_wait_ship"/>
+        </record>
+        
+        <record id="trans_router_wait_invoice_shipping" model="workflow.transition">
+            <field name="act_from" ref="sale.act_wait_invoice"/>
+            <field name="act_to" ref="sale.act_invoice_end"/>
+            <field name="condition">(order_policy=='picking')</field>
+        </record>
+
+        <record id="trans_wait_invoice_invoice" model="workflow.transition">
+            <field name="act_from" ref="sale.act_wait_invoice"/>
+            <field name="act_to" ref="sale.act_invoice"/>
+            <field name="condition">order_policy=='prepaid'</field>
+        </record>
+        
+        <record id="trans_wait_ship_cancel3" model="workflow.transition">
+            <field name="act_from" ref="act_wait_ship"/>
+            <field name="act_to" ref="act_cancel3"/>
+            <field name="signal">cancel</field>
+        </record>
+
+        <record id="trans_wait_ship_ship" model="workflow.transition">
+            <field name="act_from" ref="act_wait_ship"/>
+            <field name="act_to" ref="act_ship"/>
+            <field name="condition">procurement_needed() and ((order_policy!='prepaid') or invoiced)</field>
+        </record>
+        <record id="trans_wait_ship_done" model="workflow.transition">
+            <field name="act_from" ref="act_wait_ship"/>
+            <field name="act_to" ref="act_ship_end"/>
+            <field name="condition">not procurement_needed()</field>
+        </record>
+        
+        <record id="trans_ship_end_done" model="workflow.transition">
+            <field name="act_from" ref="act_ship_end"/>
+            <field name="act_to" ref="sale.act_done"/>
+        </record>
+        
+        <record id="trans_ship_ship_end" model="workflow.transition">
+            <field name="act_from" ref="act_ship"/>
+            <field name="act_to" ref="act_ship_end"/>
+            <field name="signal">ship_end</field>
+            <field name="trigger_model" eval="False"/> <!-- Force empty  -->
+            <field name="trigger_expr_id" eval="False"/> <!-- Force empty -->
+            <field name="condition" eval="True"/> <!-- Force empty -->
+        </record>
+        
+        <record id="trans_ship_ship_except" model="workflow.transition">
+            <field name="act_from" ref="act_ship"/>
+            <field name="act_to" ref="act_ship_except"/>
+            <field name="signal">ship_except</field>
+            <field name="condition" eval="True"/> <!-- Force empty -->
+        </record>
+        
+        <record id="trans_ship_except_ship" model="workflow.transition">
+            <field name="act_from" ref="act_ship_except"/>
+            <field name="act_to" ref="act_ship"/>
+            <field name="signal">ship_recreate</field>
+        </record>
+        
+        <record id="trans_ship_except_ship_ignore" model="workflow.transition">
+            <field name="act_from" ref="act_ship_except"/>
+            <field name="act_to" ref="act_ship_ignore"/>
+            <field name="signal">ship_corrected</field>
+        </record>
+
+        <record id="trans_ship_ignore_ship_end" model="workflow.transition">
+            <field name="act_from" ref="act_ship_ignore"/>
+            <field name="act_to" ref="act_ship_end"/>
+        </record>
+        
+        <record id="trans_ship_except_ship_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_ship_except"/>
+            <field name="act_to" ref="act_ship_cancel"/>
+            <field name="signal">ship_cancel</field>
+        </record>
+        
+
+    </data>
+</openerp>

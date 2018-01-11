@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_asset_depreciation_confirmation_wizard" model="ir.ui.view">
+            <field name="name">asset.depreciation.confirmation.wizard</field>
+            <field name="model">asset.depreciation.confirmation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Compute Asset">
+                    <group>
+                        <field name="period_id"/>
+                    </group>
+                    <footer>
+                        <button string="Compute" name="asset_compute" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+             </field>
+        </record>
+
+        <record id="action_asset_depreciation_confirmation_wizard" model="ir.actions.act_window">
+            <field name="name">Compute Assets</field>
+            <field name="res_model">asset.depreciation.confirmation.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_asset_depreciation_confirmation_wizard"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_asset_depreciation_confirmation_wizard"
+            id="menu_asset_depreciation_confirmation_wizard"
+            parent="account.menu_finance_recurrent_entries" />
+
+    </data>
+</openerp>

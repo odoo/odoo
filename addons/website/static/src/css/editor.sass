@@ -1,0 +1,495 @@
+@import "common"
+
+/* ---- CKEditor Minimal Reset ---- {{{ */
+
+.navbar.navbar-inverse .cke_chrome
+    border: none
+
+.navbar.navbar-inverse .cke_inner
+    background: transparent
+
+.navbar.navbar-inverse
+    .cke_toolbar
+        position: relative
+        top: 1px
+    .cke_combo_button
+        padding-top: 3px
+        padding-bottom: 3px
+    .cke_button
+        padding-top: 7px
+        padding-bottom: 7px
+
+.navbar.navbar-inverse .cke_top
+    background: transparent
+    border: none
+    +box-shadow(none)
+    -ms-filter: "alpha(opacity=50)"
+
+#cke_1_top
+    padding: 0
+
+#cke_wrapwrap
+    -moz-box-shadow: none
+    -webkit-box-shadow: none
+    box-shadow: none
+    .cke_button
+        padding-top: 5px
+        padding-bottom: 5px
+    .cke_combo_button
+        padding-top: 1px
+        padding-bottom: 1px
+
+// }}}
+ 
+/* ---- OpenERP Style ---- {{{ */
+
+.oe_website_editorbar
+    position: fixed
+    top: 0
+    right: 0
+    display: block
+    width: 100%
+    padding: 2px
+    margin: 0
+    z-index: 20000
+    @include background(#414141, linear-gradient(#646060, #262626))
+    +box-sizing(border-box)
+    li
+        display: inline
+        color: #eee
+        &:hover
+            background: rgba(0,0,0,0.2)
+            +text-shadow(black 0px 0px 3px)
+            color: white
+
+.oe_website_editorbar .oe_rte_toolbar
+    div.dropdown
+        display: inline-block
+        li
+            display: list-item
+
+    button
+        font-family: FontAwesome
+        font-weight: normal
+        font-style: normal
+        text-decoration: inherit
+        &.oe_button_list
+            padding-right: 3px
+            &:after
+                content: "\F0D7"
+                padding-left: 6px
+
+.oe_editable:focus
+    outline: none !important
+
+.css_editable_display
+    display: block !important
+
+.css_editable_hidden
+    display: none !important
+
+.cke_editable .css_editable_mode_hidden
+    display: none
+
+.cke_editable .css_editable_mode_display
+    display: block !important
+
+.oe_structure.oe_empty:empty, [data-oe-type=html]:empty, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child
+    background-image: url('/website/static/src/img/edit_here.png') !important
+
+.oe_structure.oe_empty:empty:before, [data-oe-type=html]:empty:before, .oe_structure.oe_empty > .oe_drop_zone.oe_insert:only-child:before, [data-oe-type=html] > .oe_drop_zone.oe_insert:only-child:before
+    content: 'Press The Top-Left Edit Button' !important
+
+[data-oe-type=html].oe_no_empty:empty:before
+    content: '' !important
+
+[data-oe-type=html].oe_no_empty:empty
+    background-image: none !important
+    height: 16px !important
+
+#website-top-edit
+    width: 100%
+    > ul > li
+        margin: 0
+
+#website-top-navbar
+    min-height: 34px
+    height: 34px
+    form
+        margin: 0
+        button, a
+            padding: 4px 8px 4px 8px
+            margin-top: 2px
+            font-size: 13px
+
+// }}}
+
+/* ---- EDITOR BAR ---- {{{ */
+
+table.editorbar-panel
+    cursor: pointer
+    width: 100%
+    td
+        border: 1px solid #aaa
+    td.selected
+        background-color: #b1c9d9
+
+.link-style
+    .dropdown > .btn
+        min-width: 160px
+    .link-style
+        display: none
+    li
+        text-align: center
+        label
+            width: 100px
+            margin: 0 5px
+    .col-sm-2 > *
+        line-height: 2em
+
+// }}}
+
+/* ---- TRANSLATIONS ---- {{{ */
+
+.oe_translate_or
+    color: white
+    padding: 0 0 0 1em
+.oe_translate_examples li
+    margin: 10px
+    padding: 4px
+.oe_translatable_text
+    outline: 1px solid black
+.oe_translatable_field
+    outline: 1px dashed black
+.oe_translatable_text.oe_dirty, .oe_translatable_field.oe_dirty
+    outline-color: red
+.oe_translatable_text.oe_dirty:empty
+    padding: 0 10px
+.oe_translatable_todo
+    background: rgb(255, 255, 182)
+
+// }}}
+
+/* ---- MENU ---- {{{ */
+
+div.oe_menu_buttons
+    top: -8px
+    right: -8px
+
+ul.oe_menu_editor
+    .fa-home
+        display: none
+    > li:first-child > div > span > .fa-home
+        display: block
+    .oe_menu_placeholder
+        outline: 1px dashed #4183C4
+    ul
+        list-style: none
+    li div
+        cursor: move
+    .disclose
+        cursor: pointer
+        width: 10px
+        display: none
+
+// }}}
+
+/* ---- RTE ---- {{{ */
+
+// bootstrap makes .btn elements unselectable -> RTE double-click can't know
+// about them either
+.oe_editable .btn, .btn.oe_editable
+    +user-select(auto)
+    cursor: text !important
+
+.modal-dialog.select-media
+    width: 80%
+
+.modal .existing-attachments
+    .pager
+        margin: 0
+
+.modal .image-preview
+    margin-bottom: 0.5em
+
+.modal-footer
+    text-align: left
+
+.modal.nosave
+    .wait
+        display: inline-block !important
+        visibility: visible !important
+    .modal-body
+        .filepicker, .image-preview
+            display: none
+        .wait
+            width: 100%
+    .modal-footer .save
+        display: none
+
+// fontawesome modal
+.modal
+    .font-icons-icons
+        font-size: 2em
+        max-height: 9em
+        overflow: auto
+
+        .font-icons-icon
+            display: inline-block
+            width: 2em
+            padding: 0.25em
+            text-align: center
+            cursor: pointer
+
+    .font-icons
+        position: relative
+        display: block
+
+        &:before
+            +opacity(0.7)
+            position: absolute
+            top: 2px
+            left: 3px
+            font-size: 2em
+    #icon-search
+        padding-left: 2.5em
+
+    #fa-preview
+        text-align: center
+
+        span
+            cursor: pointer
+            padding: 0 15px
+        .font-icons-selected
+            background-color: #ddd
+
+$attachment-border-color: #848490
+.existing-attachments
+    .pager .disabled
+        display: none
+
+    .existing-attachment-cell
+        position: relative
+        .img
+            border: 1px solid $attachment-border-color
+        .existing-attachment-remove
+            position: absolute
+            top: 0
+            left: 15px // padding-left on col-*
+
+            cursor: pointer
+            background: white
+            padding: 2px
+            border: 1px solid $attachment-border-color
+            border-top: none
+            border-left: none
+            +border-bottom-right-radius(8px)
+        &.media_selected
+            > i, > img 
+                border-width: 5px
+                border-color: rgb(0, 248, 248)
+
+// wrapper positioned relatively for drag&drop widget which is disabled below.
+// Breaks completely horribly crazy products listing page, so take it out.
+.cke_widget_wrapper
+    position: static !important
+
+.cke_widget_inline
+    display: inline !important
+
+// prevent inline widgets from entirely disappearing when their (textual)
+// content is removed
+.cke_widget_editable
+    // basic config
+    &:empty:after
+        opacity: 0.3
+        white-space: pre-wrap
+    // no @placeholder -> just add some padding
+    &:not([placeholder]):empty::after
+        content: " "
+    // with placeholder and when not (yet) focused -> display placeholder
+    &[placeholder]:not(:focus):empty::after
+        content: attr(placeholder)
+
+.oe_carlos_danger
+    outline: 1px solid red !important
+    background-color: #ffd9dd !important
+
+.hover-edition
+    display: inline-block
+    position: absolute
+    top: 0
+    left: 0
+    // This z-index is due to .navbar of bootstrap & jQuery-transfo
+    z-index: 1001
+.preview-container
+    text-align: center
+    line-height: 100px
+    height: 100px
+    > *
+        max-height: 100px
+        line-height: 100px
+        margin: 0 auto
+        display: inline-block
+
+// fontawesome
+.cke_editable .fa
+    cursor: pointer
+
+.img-responsive
+    text-align: center
+
+// }}}
+
+/* ---- MOBILE PREVIEW ---- {{{ */
+
+$mobile_preview_background: #000000
+$mobile_preview_border: #1C1F1F
+$icon_close: #E00101
+.oe_mobile_preview
+    &.modal .modal-content
+        height: 660px
+        background-color: $mobile_preview_background
+        border: 2px solid $mobile_preview_border
+        +border-radius(10px)
+        margin: auto
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
+        max-width: 330px
+        .modal-header
+            background-color: $mobile_preview_background
+            border-bottom: 0
+            +border-top-left-radius(10px)
+            +border-top-right-radius(10px)
+            .modal-title
+                color: $mobile_preview_border
+            .close
+                color: lightgrey
+                +opacity(1)
+            .close:hover
+                color: $icon_close
+                +opacity(1)
+        .modal-body
+            background-color: $mobile_preview_background
+            max-height: 600px
+            padding: 0
+            margin: 0
+            .oe_mobile_viewport
+                width: 320px
+                height: 568px
+                padding: 5px
+                border: none
+        .modal-footer
+            background-color: $mobile_preview_background
+
+// }}}
+
+/* ---- SEO TOOLS ---- {{{ */
+
+$remove_color: $icon_close
+$in_title_color: #5cb85c
+$in_description_color: #428bca
+$in_body_color: #5bc0de
+$highlighted_text_color: #ffffff
+.oe_seo_configuration
+    .modal-dialog
+        width: 80%
+    .oe_remove
+        color: $remove_color
+    .oe_seo_suggestion
+        cursor: pointer
+    .oe_seo_keyword
+        padding: .2em .4em .2em .5em
+        +border-radius(.4em)
+    li.oe_seo_preview_g
+        line-height: 1.2
+        list-style: none
+        list-style-image: none
+        list-style-position: outside
+        list-style-type: none
+        font-size: small
+        font-family: arial,sans-serif
+        h3
+            font-size: medium
+        .r
+            margin: 0
+            font-size: 16px
+            font-style: normal
+            font-weight: normal
+            overflow: hidden
+            text-overflow: ellipsis
+            -webkit-text-overflow: ellipsis
+            white-space: nowrap
+            a
+                color: rgb(30, 15, 190)
+                text-decoration: underline
+                text-transform: none
+                em
+                    font-style: normal !important
+        .s
+            color: #444
+            max-width: 42em
+        .kv,.slp
+            display: block
+            margin-bottom: 1px
+        .f
+            color: #666
+            margin-bottom: 1px
+            cite
+                color: #006621
+                font-style: normal
+                font-size: 14px
+        .st
+            line-height: 1.24
+
+
+// }}}
+
+/* ---- ACE EDITOR ---- {{{ */
+
+$editorbar_height: 30px
+$infobar_height: 20px
+// TODO Fix => might break with themes
+
+.oe_ace_view_editor
+    position: fixed
+    // top property is set programmatically
+    right: 0
+    z-index: 1001
+    height: 100%
+    background: #2F3129
+    color: white
+    .oe_ace_view_editor_title
+        width: 100%
+        padding-top: 0
+        padding-left: 0
+        height: $editorbar_height
+        .oe_view_list
+            width: 50%
+            height: $editorbar_height
+            @include editor-font
+        .btn
+            height: $editorbar_height
+            padding: 0 4px 0 4px
+            @include editor-font
+    .ace_editor
+        position: absolute
+        top: $editorbar_height + $infobar_height
+        right: 0
+        // bottom property is set programmatically
+        left: 0
+        .ace_gutter
+            cursor: ew-resize
+    #ace-view-id
+        padding: 0 1em
+    &.oe_ace_open
+        +opacity(0.97)
+    &.oe_ace_closed
+        z-index: -1000
+        +opacity(0)
+
+// }}}
+
+// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

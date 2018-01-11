@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+# Aleksandar Vangelovski <aleksandarv@hbee.eu>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-09-22 11:44+0000\n"
+"Last-Translator: Aleksandar Vangelovski <aleksandarv@hbee.eu>\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "Check Validity"
+msgstr "Провери валидност"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:114
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
+
+#. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr "Ако чекирате, партнерските даночни броеви ќе бидат целосно валидирани во однос на EU's VIES услугите наспроти тоа на едноставна формат валидација (проверка на сума)."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:130
+#, python-format
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "ДДВ бројот за увоз [%s] не е валиден !"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr "Даночниот број [%s] за партнер [%s] изгледа не е валиден. \nЗабелешка: очекуваниот формат е %s"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr "Даночниот број [%s] за партнер [%s] или неуспешно бил спроведен од VIES VAT валидациската проверка или не го исполнил условот на форматирање %s."
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES ДДВ проверка"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "на пр. BE0477472701"

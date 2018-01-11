@@ -1,0 +1,164 @@
+<?xml version="1.0" ?>
+<openerp>
+<data>
+
+    <!-- FIELD LIST -->
+
+    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_form">
+        <field name="name">ir.model.fields.anonymization.form</field>
+        <field name="model">ir.model.fields.anonymization</field>
+        <field name="arch" type="xml">
+            <form string="Anonymized Field">
+                <sheet>
+                <group col="4">
+                    <field name="model_id" on_change="onchange_model_id(model_id)" />
+                    <field name="model_name" on_change="onchange_model_name(model_name)" />
+                    <field name="field_id"
+                           on_change="onchange_field_id(field_id, model_name)"
+                           domain="[('model_id','=',model_id), ('ttype', 'not in', ['function', 'binary', 'many2many', 'many2one', 'one2many', 'reference'])]" />
+                    <field name="field_name" on_change="onchange_field_name(field_name, model_name)" />
+                    <field name="state" />
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_tree">
+        <field name="name">ir.model.fields.anonymization.tree</field>
+        <field name="model">ir.model.fields.anonymization</field>
+        <field name="arch" type="xml">
+            <tree string="Anonymized Fields">
+                <field name="model_id" />
+                <field name="model_name" />
+                <field name="field_id" />
+                <field name="field_name" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_ir_model_fields_anonymization_tree">
+        <field name="name">Anonymized Fields</field>
+        <field name="res_model">ir.model.fields.anonymization</field>
+        <field name="view_type">form</field>
+        <field name="context">{'manual': True}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- ANONYMIZE WIZARD -->
+      <!-- VIEW 1 -->
+
+    <record model="ir.ui.view" id="view_ir_model_fields_anonymize_wizard_form">
+        <field name="name">ir.model.fields.anonymize.wizard.form</field>
+        <field name="model">ir.model.fields.anonymize.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Database Anonymization">
+                <header>
+                    <button name="anonymize_database"
+                            string="Anonymize Database"
+                            type="object"
+                            states="clear" />
+                    <button name="reverse_anonymize_database"
+                            string="Reverse the Database Anonymization"
+                            type="object"
+                            states="anonymized" />
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <field name="summary" readonly="0"/>
+                <group name="placeholder1" col="4">
+                    <field name="file_export" />
+                    <field name="file_import" />
+                    <field name="msg" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+
+    <record model="ir.actions.act_window" id="action_ir_model_fields_anonymize_wizard">
+        <field name="name">Anonymize Database</field>
+        <field name="res_model">ir.model.fields.anonymize.wizard</field>
+        <field name="target">new</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <!-- HISTORY -->
+
+    <record model="ir.actions.act_window" id="action_ir_model_fields_anonymization_history_tree">
+        <field name="name">Anonymization History</field>
+        <field name="res_model">ir.model.fields.anonymization.history</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_history_form">
+        <field name="name">ir.model.fields.anonymization.history.form</field>
+        <field name="model">ir.model.fields.anonymization.history</field>
+        <field name="arch" type="xml">
+            <form string="Anonymization History">
+                <sheet>
+                <group col="4">
+                    <field name="date"/>
+                    <field name="state"/>
+                    <field name="filepath"/>
+                    <field name="direction"/>
+                </group>
+                <group string="Message" col="1">
+                    <field name="msg" nolabel="1" readonly="0"/>
+                </group>
+                <group string="Fields" col="1">
+                    <field name="field_ids" nolabel="1">
+                        <tree>
+                            <field name="model_id" />
+                            <field name="field_id" />
+                        </tree>
+                    </field>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_ir_model_fields_anonymization_history_tree">
+        <field name="name">ir.model.fields.anonymization.history.tree</field>
+        <field name="model">ir.model.fields.anonymization.history</field>
+        <field name="arch" type="xml">
+            <tree string="Anonymization History">
+                <field name="date" />
+                <field name="state" />
+                <field name="filepath" />
+                <field name="direction" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MENUS -->
+
+    <menuitem id="menu_administration_anonymization"
+              name="Database anonymization"
+              parent="base.menu_administration"
+              sequence="30" />
+
+    <menuitem id="menu_administration_anonymization_history"
+              name="Anonymization History"
+              action="action_ir_model_fields_anonymization_history_tree"
+              parent="menu_administration_anonymization"
+              sequence="10" />
+
+    <menuitem id="menu_administration_anonymization_fields"
+              name="Anonymized Fields"
+              action="action_ir_model_fields_anonymization_tree"
+              parent="menu_administration_anonymization"
+              sequence="20" />
+
+    <menuitem id="menu_administration_anonymization_wizard"
+              action="action_ir_model_fields_anonymize_wizard"
+              name="Anonymize database"
+              parent="menu_administration_anonymization"
+              sequence="30" />
+
+</data>
+</openerp>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="arch" type="xml">
+                <field name="use_tasks" position="after">
+                    <field name="use_timesheets"/>
+                    <field name="hours_quantity"/>
+                    <field name="currency_id"/>
+                    <field name="partner_id"/>
+                </field>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <a t-if="record.use_timesheets.raw_value" style="margin-right: 10px"
+                        name="open_timesheets" type="object"><field name="hours_quantity"/> Hours</a>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_invoice_form" model="ir.ui.view">
+            <field name="name">Inherit project form : Invoicing Data</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="options_active"]' position='inside'>
+                    <field name="use_timesheets" class="oe_inline"/>
+                    <label for="use_timesheets"/>
+                </xpath>
+                <xpath expr='//div[@name="buttons"]' position="inside">
+                    <button class="oe_inline oe_stat_button" name="open_timesheets" type="object" attrs="{'invisible':[('use_timesheets','=', 0)]}"
+                        icon="fa-calendar" string="Timesheets"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="project_invoice_search" model="ir.ui.view">
+            <field name="name">Inherit project search view : Invoicing Data</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.view_project_project_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='//filter[@string="Template"]' position='after'>
+                    <filter string="Billable" domain="[('to_invoice','!=', False)]"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
+            <field name="name">account.analytic.line.search.account_id</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="arch" type="xml">
+                 <field name="account_id" position="replace">
+                     <field name="account_id" string="Analytic account/project"/>
+                 </field>
+            </field>
+         </record>
+        <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.account_id</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+            <field name="arch" type="xml">
+                <field name="account_id"  position="replace">
+                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
+                </field>
+            </field>
+        </record>
+       <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.account_id</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <field name="account_id"  position="replace">
+                    <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Menus -->
+        <record id="action_project_timesheet_bill_task" model="ir.actions.act_window">
+            <field name="name">Invoice Tasks</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_to_invoice': 1}</field>
+            <field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
+            <field name="help" type="html">
+              <p>
+                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.
+                If you want to record new jobs to invoice, you should use the timesheet menu instead.
+              </p>
+            </field>
+        </record>
+        <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
+            id="menu_hr_timesheet_sign_in"
+            parent="hr_attendance.menu_hr_attendance"
+            sequence="5" groups="base.group_hr_attendance" />
+
+        <menuitem id="menu_project_billing" name="Invoicing"
+                  parent="base.menu_main_pm" sequence="5"
+                  groups="project.group_project_manager"/>
+        <menuitem id="menu_project_billing_line" name="Invoice Tasks"
+            parent="menu_project_billing" action="action_project_timesheet_bill_task"/>
+
+        <!--
+            Time Tracking menu in project Management
+        -->
+<!--        <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="hr_timesheet.act_hr_timesheet_line_evry1_all_form"/> -->
+
+        <record id="action_account_analytic_overdue" model="ir.actions.act_window">
+            <field name="name">Customer Projects</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{}</field>
+            <field name="domain">[('type','=','normal')]</field>
+            <field name="search_view_id" ref="account_analytic_analysis.view_account_analytic_account_overdue_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a customer contract.
+              </p><p>
+                You will find here the contracts related to your customer
+                projects in order to track the invoicing progress.
+              </p>
+            </field>
+        </record>
+        <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
+            action="account_analytic_analysis.action_account_analytic_overdue"/>
+
+    </data>
+</openerp>

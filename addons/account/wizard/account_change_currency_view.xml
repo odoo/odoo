@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_change_currency" model="ir.ui.view">
+            <field name="name">Change Currency</field>
+            <field name="model">account.change.currency</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Currency">
+                    <group string="This wizard will change the currency of the invoice">
+                        <field name="currency_id"/>
+                    </group>
+                    <footer>
+                        <button name="change_currency" string="Change Currency" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_change_currency" model="ir.actions.act_window">
+            <field name="name">Change Currency</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.change.currency</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_account_change_currency"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

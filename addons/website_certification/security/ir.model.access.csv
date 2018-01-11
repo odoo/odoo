@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_certifications_public,certification.certification public,model_certification_certification,,1,0,0,0
+access_certifications_types_public,certification.type public,model_certification_type,,1,0,0,0
+access_certifications_users,certification.certification users,model_certification_certification,base.group_user,1,0,0,0
+access_certifications_types_users,certification.type users,model_certification_type,base.group_user,1,0,0,0
+access_certifications_marketing,certification.certification marketing,model_certification_certification,marketing.group_marketing_user,1,1,1,1
+access_certifications_types_marketing,certification.type marketing,model_certification_type,marketing.group_marketing_user,1,1,1,1

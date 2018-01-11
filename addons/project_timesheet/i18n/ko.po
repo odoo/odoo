@@ -1,0 +1,334 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * project_timesheet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goh Gangtai <gangtai.goh@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-10-19 06:31+0000\n"
+"PO-Revision-Date: 2015-10-19 09:20+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a customer contract.\n"
+"              </p><p>\n"
+"                You will find here the contracts related to your customer\n"
+"                projects in order to track the invoicing progress.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                고객과의 계약을 추가합니다.\n              </p><p>\n                송장 진행 상황을 추적하기 위해서 귀하의 고객 프로젝트와 관련된 계약을\n                여기에서 찾을 수 있습니다.\n              </p>\n            "
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:56
+#, python-format
+msgid ""
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project"
+" '%s'.</p>"
+msgstr "<p class=\"oe_view_nocontent_create\">'%s' 프로젝트에 대한 시간기록표 기록.</p>"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid ""
+"<p>\n"
+"                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use the timesheet menu instead.\n"
+"              </p>\n"
+"            "
+msgstr "<p>\n                여기 시간기록표와 귀하가 계약한 구매를 찾을 수 있습니다. 그리고 고객에게 재청구할 수 있습니다.\n                송장에 새 작업을 기록하려면 대신 시간기록표 메뉴를 사용해야 합니다.\n              </p>\n            "
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:59
+#, python-format
+msgid ""
+"<p>Timesheets on this project may be invoiced to %s, according to the terms "
+"defined in the contract.</p>"
+msgstr "<p>이 프로젝트의 시간기록표는 계약서에 정의된 조건에 따라 %s에게 청구될 수 있습니다.</p>"
+
+#. module: project_timesheet
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_form_inherit_account_id
+msgid "Analytic Account/Project"
+msgstr "분석 계정/프로젝트"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "분석 명세"
+
+#. module: project_timesheet
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_search_account_inherit
+#: view:account.analytic.line:project_timesheet.view_account_analytic_line_tree_inherit_account_id
+msgid "Analytic account/project"
+msgstr "분석 계정/프로젝트"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "April"
+msgstr "4월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "August"
+msgstr "8월"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:82
+#: code:addons/project_timesheet/project_timesheet.py:86
+#: code:addons/project_timesheet/project_timesheet.py:90
+#: code:addons/project_timesheet/project_timesheet.py:97
+#, python-format
+msgid "Bad Configuration!"
+msgstr "환경 설정 오류!"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.project_invoice_search
+msgid "Billable"
+msgstr "청구 가능"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_invoicing_contracts
+msgid "Contracts to Renew"
+msgstr "계약 갱신"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
+msgid "Customer Projects"
+msgstr "고객 프로젝트"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,name:0
+msgid "Date"
+msgstr "날짜"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "December"
+msgstr "12월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "2월"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group By"
+msgstr "그룹화"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by month of date"
+msgstr "해당 날짜의 월별 그룹"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Group by year of date"
+msgstr "해당 날짜의 연도별 그룹"
+
+#. module: project_timesheet
+#: view:project.project:project_timesheet.view_project_kanban_inherited
+msgid "Hours"
+msgstr "시간"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:294
+#, python-format
+msgid "Invalid Action!"
+msgstr "잘못된 동작!"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:321
+#, python-format
+msgid "Invalid Analytic Account!"
+msgstr "잘못된 분석 계정!"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
+msgid "Invoice Tasks"
+msgstr "송장 작업"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_project_billing
+msgid "Invoicing"
+msgstr "송장 발행"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "January"
+msgstr "1월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "July"
+msgstr "7월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "June"
+msgstr "6월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "March"
+msgstr "3월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "May"
+msgstr "5월"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,month:0
+msgid "Month"
+msgstr "월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "November"
+msgstr "11월"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "October"
+msgstr "10월"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_res_partner
+msgid "Partner"
+msgstr "파트너"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:83
+#, python-format
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr "\"%s\" 사용자에 대한 임직원을 정의하십시오. 하나는 작성해야 합니다."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:91
+#, python-format
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:98
+#, python-format
+msgid ""
+"Please define product and product category property account on the related employee.\n"
+"Fill in the HR Settings of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:87
+#, python-format
+msgid ""
+"Please define product and product category property account on the related employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr "관련된 직원에 제품과 제품 분류 속성 계정을 정의하십시오.\n직원 양식의 인사 설정 탭에 입력하십시오."
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_project
+msgid "Project"
+msgstr "프로젝트"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task_work
+msgid "Project Task Work"
+msgstr "프로젝트 업무 작업"
+
+#. module: project_timesheet
+#: field:project.task.work,hr_analytic_timesheet_id:0
+msgid "Related Timeline Id"
+msgstr "관련된 시간기록 ID"
+
+#. module: project_timesheet
+#: selection:report.timesheet.task.user,month:0
+msgid "September"
+msgstr "9월"
+
+#. module: project_timesheet
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by Project"
+msgstr "프로젝트별 로그인 / 로그아웃"
+
+#. module: project_timesheet
+#: model:ir.model,name:project_timesheet.model_project_task
+msgid "Task"
+msgstr "업무"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "업무 시간"
+
+#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
+#: view:report.timesheet.task.user:project_timesheet.view_task_hour_per_month_graph
+msgid "Task Hours Per Month"
+msgstr "월별 업무 시간"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+msgid "Tasks by User"
+msgstr "사용자별 업무"
+
+#. module: project_timesheet
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "시간기록표 시간"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:67
+#: view:project.project:project_timesheet.project_invoice_form
+#, python-format
+msgid "Timesheets"
+msgstr "시간기록표"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,user_id:0
+msgid "User"
+msgstr "사용자"
+
+#. module: project_timesheet
+#: view:report.timesheet.task.user:project_timesheet.view_report_timesheet_task_user_search
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "연도"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:294
+#, python-format
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr "프로젝트에 할당된 파트너를 삭제할 수 없습니다. 하지만 활성 확인란의 선택을 취소할 수는 있습니다."
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:321
+#, python-format
+msgid ""
+"You cannot select a Analytic Account which is in Close or Cancelled state."
+msgstr "마감 또는 취소된 상태의 분석 계정을 선택할 수 없습니다."

@@ -1,0 +1,37 @@
+<openerp>
+  <data noupdate="1">
+      <!-- After installation of the module, open the related menu -->
+      <record id="base.open_menu" model="ir.actions.todo">
+          <field name="action_id" ref="hr.action_client_hr_menu"/>
+          <field name="state">open</field>
+      </record>
+  </data>
+  <data>
+        <record id="product_expense_installer_tree_view" model="ir.ui.view">
+            <field name="name">product.product.tree</field>
+            <field name="model">product.product</field>
+            <field eval="37" name="priority"/>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Products">
+                    <field name="name"/>
+                    <field name="standard_price"/>
+                    <field name="list_price"/>
+                    <field name="uom_id" string="Unit of Measure"/>
+                </tree>
+            </field>
+        </record> 
+ 
+        <record model="ir.actions.act_window" id="product_normal_form_view_installer">
+           <field name="name">Review Your Expenses Products</field>
+           <field name="type">ir.actions.act_window</field>
+           <field name="res_model">product.product</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">tree,form</field>
+           <field name="context" eval="'{\'default_type\':\'service\',\'default_purchase_ok\':True, \'default_sale_ok\':False, \'default_hr_expense_ok\':True,\'default_categ_id\': ' + str(ref('cat_expense')) +'}'"/>
+           <field name="domain">[('hr_expense_ok','=',True)]</field>
+           <field name="view_id" ref="product_expense_installer_tree_view"/>
+           <field name="help">Define one product for each expense type allowed for an employee (travel by car, hostel, restaurant, etc). If you reimburse the employees at a fixed rate, set a cost and a unit of measure on the product. If you reimburse based on real costs, set the cost at 0.00. The user will set the real price when recording his expense sheet.</field>
+       </record>
+
+    </data>
+</openerp>

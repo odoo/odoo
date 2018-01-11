@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <template id="report_payslipdetails">
+        <t t-call="report.html_container">
+            <t t-call="report.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <h2>Pay Slip Details</h2>
+                    <p t-field="o.name"/>
+
+                    <table class="table table-condensed table-bordered">
+                        <tr>
+                            <td><strong>Name</strong></td>
+                            <td><span t-field="o.employee_id"/></td>
+                            <td><strong>Designation</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <div t-field="o.employee_id.address_home_id"
+                                    t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Email</strong></td>
+                            <td><span t-field="o.employee_id.work_email"/></td>
+                            <td><strong>Identification No</strong></td>
+                            <td><span t-field="o.employee_id.job_id"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Reference</strong></td>
+                            <td><span t-field="o.number"/></td>
+                            <td><strong>Bank Account</strong></td>
+                            <td><span t-field="o.employee_id.otherid"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Date From</strong></td>
+                            <td><span t-field="o.date_from"/></td>
+                            <td><strong>Date To</strong></td>
+                            <td><span t-field="o.date_to"/></td>
+                        </tr>
+                    </table>
+
+                    <h3>Details by Salary Rule Category</h3>
+                    <table class="table table-condensed mb32">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Salary Rule Category</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="get_details_by_rule_category(o.details_by_salary_rule_category)" t-as="h">
+                                <t t-if="h['level']==0">
+                                    <tr>
+                                        <td>
+                                            <strong><span t-esc="h['code']"/></strong>
+                                        </td>
+                                        <td>
+                                            <strong><span t-esc="h['rule_category']"/></strong>
+                                        </td>
+                                        <td>
+                                            <strong><span t-esc="formatLang(h['total'], currency_obj=o.company_id.currency_id)"/></strong>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="h['level']!=0">
+                                    <tr>
+                                        <td>
+                                            <span t-esc="h['code']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="'..'*h['level']"/><span t-esc="h['rule_category']"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="formatLang(h['total'], currency_obj=o.company_id.currency_id)"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <p class="text-right"><strong>Authorized signature</strong></p>
+                </div>
+            </t>
+            </t>
+        </t>
+    </template>
+</data>
+</openerp>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="account.account.type" id="data_account_type_view">
+          <field name="name">Root/View</field>
+          <field name="code">view</field>
+          <field name="close_method">none</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_receivable">
+          <field name="name">Receivable</field>
+          <field name="code">receivable</field>
+          <field name="close_method">unreconciled</field>
+          <field name="report_type">asset</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_payable">
+          <field name="name">Payable</field>
+          <field name="code">payable</field>
+          <field name="close_method">unreconciled</field>
+          <field name="report_type">liability</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_bank">
+          <field name="name">Bank</field>
+          <field name="code">bank</field>
+          <field name="close_method">balance</field>
+          <field name="report_type">asset</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_cash">
+          <field name="name">Cash</field>
+          <field name="code">cash</field>
+          <field name="close_method">balance</field>
+          <field name="report_type">asset</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_asset">
+          <field name="name">Asset</field>
+          <field name="code">asset</field>
+          <field name="close_method">balance</field>
+          <field name="report_type">asset</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_liability">
+            <field name="name">Liability</field>
+            <field name="code">liability</field>
+            <field name="close_method">balance</field>
+          <field name="report_type">liability</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_income">
+          <field name="name">Income</field>
+          <field name="code">income</field>
+          <field name="close_method">none</field>
+          <field name="report_type">income</field>
+        </record>
+        <record model="account.account.type" id="data_account_type_expense">
+          <field name="name">Expense</field>
+          <field name="code">expense</field>
+          <field name="close_method">none</field>
+          <field name="report_type">expense</field>
+        </record>
+    </data>
+</openerp>
+

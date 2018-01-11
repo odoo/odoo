@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Front-end assets: custom css -->
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Shop">
+            <xpath expr="." position="inside">
+                <link rel='stylesheet' href='/website_forum_doc/static/src/css/website_forum_doc.css'/>
+            </xpath>
+        </template>
+
+        <!-- Layout add nav and footer -->
+        <template id="header_footer_custom" inherit_id="website.footer_default"
+            name="Footer Documentation Link">
+            <xpath expr="//ul[@id='products']" position="inside">
+                <li><a href="/forum/how-to">Documentation</a></li>
+            </xpath>
+        </template>
+
+        <!-- Page Index -->
+        <template id="toc" name="Documentation Index">
+            <t t-set="level" t-value="level+1"/>
+            <t t-foreach="titles" t-as="title">
+                <div t-attf-class="h#{str(level) + (level&lt;3 and ' page-header' or '')}">
+                    <t t-esc="title.name"/>
+                    <small t-if="len(title.post_ids)">
+                        <t t-esc="len(title.post_ids)"/>
+                        <t t-if="len(title.post_ids)==1">essay</t>
+                        <t t-if="len(title.post_ids)&gt;1">essays</t>
+                    </small>
+                </div>
+
+                <ul t-if="title.post_ids" class="mt32">
+                    <li t-foreach="title.post_ids" t-as="post">
+                        <a t-attf-href="/forum/how-to/#{slug(title)}/#{slug(post)}" t-field="post.name"/>
+                    </li>
+                </ul>
+
+                <t t-set="titles" t-value="title.child_ids"/>
+                <t t-call="website_forum_doc.toc"/>
+            </t>
+        </template>
+
+        <template id="breadcrumb" name="Documentation Breadcrumb">
+            <t t-if="toc.parent_id">
+                <t t-call="website_forum_doc.breadcrumb">
+                    <t t-set="toc" t-value="toc.parent_id"/>
+                </t>
+            </t>
+            <li t-if="toc">
+                <a t-attf-href="/forum/how-to/#{ slug(toc) }" t-field="toc.name"/>
+            </li>
+        </template>
+
+        <template id="documentation" name="Documentation Index">
+            <t t-call="website.layout">
+                <section class="container mt16" t-if="toc">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <ol class="breadcrumb mb0">
+                                <t t-call="website_forum_doc.breadcrumb">
+                                    <t t-set="toc" t-value="toc.parent_id"/>
+                                </t>
+                                <li class="active">
+                                    <span t-field="toc.name"/>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <form class="navbar-form navbar-right mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="form-group">
+                                    <input type="search" class="form-control"
+                                        name="search" placeholder="Search..."
+                                        t-att-value="search or ''"/>
+                                    <button type="submit" class="btn btn-default">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+                <section class="container">
+                    <t t-set="level" t-value="toc and 1 or 0"/>
+                    <h1 class="page-header" t-if="toc">
+                        <t t-esc="toc.name"/>
+                    </h1>
+                    <t t-set="titles" t-value="sections"/>
+                    <t t-call="website_forum_doc.toc"/>
+                </section>
+                <div class="oe_structure"/>
+            </t>
+        </template>
+
+        <template id="documentation_post" name="Documentation Question">
+            <t t-call="website.layout">
+                <section class="container mt16" t-if="toc">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <ol class="breadcrumb mb0">
+                                <t t-call="website_forum_doc.breadcrumb">
+                                    <t t-set="toc" t-value="toc.parent_id"/>
+                                </t>
+                                <li>
+                                    <a t-attf-href="/forum/how-to/#{ slug(toc) }" t-field="toc.name"/>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-4 text-right" t-if="forum">
+                            <form class="navbar-form navbar-right mt0" role="search" t-attf-action="/forum/#{ slug(forum) }" method="get">
+                                <div class="form-group">
+                                    <input type="search" class="form-control"
+                                        name="search" placeholder="Search..."
+                                        t-att-value="search or ''"/>
+                                    <button type="submit" class="btn btn-default">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="container">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <h1 class="page-header" t-field="post.name"/>
+                            <blockquote class="oe_toc_content" t-if="bool(post.content)">
+                                <t t-raw="post.content"/>
+                            </blockquote>
+
+                            <t t-if="post.child_ids">
+                                <t t-raw="post.child_ids[0].content"/>
+                            </t>
+                            <div t-if="len(toc.post_ids)&gt;1">
+                                <h2 class="page-header">Related topics</h2>
+                                <ul>
+                                    <t t-foreach="toc.post_ids" t-as="topic">
+                                        <li t-if="post.id != topic.id">
+                                            <a t-attf-href="/forum/how-to/#{slug(toc)}/#{slug(topic)}" t-field="topic.name"/>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div><div class="col-sm-3">
+                            <div class="panel panel-default mt48" id="about_doc">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Need more info?</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="text-muted">
+                                        This documentation page has been extracted
+                                        from the Q&amp;A section where you can
+                                        discuss it and get feedback.
+                                    </div>
+                                    &amp;nbsp; <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(post)}" class="fa fa-arrow-right mt16"> Related question</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <div class="oe_structure mt16 mb16"/>
+            </t>
+        </template>
+
+
+        <!--TOC ON FORUM POST-->
+        <template id="forum_question_doc" inherit_id="website_forum.post_description_full" name="Forum Post to Doc">
+            <xpath expr="//ul[@id='options']" position="inside">
+                <li t-if="(not question.documentation_stage_id) and user.karma&gt;=200">
+                    <a t-attf-href="/forum/#{ slug(forum) }/question/#{slug(question)}/promote" class="text-muted fa fa-bookmark-o">
+                        Promote to Doc
+                    </a>
+                </li>
+            </xpath>
+            <xpath expr="//hr" position="before">
+                <div class="alert alert-success alert-dismissable mt16" t-if="question.documentation_toc_id">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+                    This question has been included in the <a href="/forum/how-to">official documentation</a>.
+                </div>
+            </xpath>
+        </template>
+
+        <template id="promote_question">
+            <t t-call="website.layout">
+                <section class="container">
+                    <h1 class="page-header">Promote question to documentation</h1>
+                    <p>
+                        To be promoted in the official documentation the question
+                        and answer must satisfy the following criteria:
+                    </p>
+                    <ul>
+                        <li>The question title is short and descriptive</li>
+                        <li>The question describes a real business problem, not a software problem</li>
+                        <li>The answer is understandable for someone who does not know Odoo</li>
+                    </ul>
+                    <p>
+                        Before submiting the question, help us improve its quality by
+                        editing the question and the main answer.
+                    </p>
+                </section>
+                <div class="container">
+                    <div class="well">
+                        <form t-attf-action="/forum/#{ slug(forum) }/promote_ok" method="post" role="form" class="form-horizontal">
+                            <input name="post_id" t-att-value="post.id" type="hidden"/>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="reason">Question:</label>
+                                <div class="col-md-8 mt8">
+                                    <span t-field="post.name"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="reason">Publish in Chapter:</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" name="toc_id">
+                                        <option/>
+                                        <t t-foreach="chapters or []" t-as="chapter">
+                                            <option t-att-value="chapter.id"><t t-esc="chapter.display_name"/></option>
+                                        </t>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-md-8">
+                                    <button class="btn btn-primary">Push to documentation</button>
+                                    <span class="text-muted">or</span>
+                                    <a class="btn btn-link" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post) }">cancel</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <section class="container">
+                    <h2 class="page-header">Samples</h2>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Good question titles</h4>
+                            <ul>
+                                <li>How to forecast sales revenues?</li>
+                                <li>How to compute future inventories for a product?</li>
+                            </ul>
+
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Bad questions</h4>
+                            <ul>
+                                <li>What report should I use to compute probabilities per stage?</li>
+                                <li>What's the available stock field?</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row mb64">
+                        <div class="col-sm-6">
+                            <h4>Good answer structure</h4>
+                            <ol>
+                                <li>Describe the business solution</li>
+                                <li>Explain how to implement it in Odoo</li>
+                                <li>Benefits of having done this setup</li>
+                            </ol>
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Bad answer structure</h4>
+                            <ol>
+                                <li>Explain how to configure in Odoo</li>
+                                <li>No business benefit</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
+
+    </data>
+</openerp>

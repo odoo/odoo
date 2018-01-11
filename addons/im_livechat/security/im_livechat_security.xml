@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="module_category_im_livechat" model="ir.module.category">
+            <field name="name">Live Support</field>
+            <field name="sequence" eval="20" />
+        </record>
+
+        <record id="group_im_livechat" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_im_livechat"/>
+            <field name="comment">The user will be able to join support channels.</field>
+        </record>
+
+        <record id="group_im_livechat_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="comment">The user will be able to delete support channels.</field>
+            <field name="category_id" ref="module_category_im_livechat"/>
+            <field name="implied_ids" eval="[(4, ref('im_livechat.group_im_livechat'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="message_rule_1" model="ir.rule">
+            <field name="name">Live Support Managers can read messages from live support</field>
+            <field name="model_id" ref="im_chat.model_im_chat_message"/>
+            <field name="groups" eval="[(6,0,[ref('im_livechat.group_im_livechat_manager')])]"/>
+            <field name="domain_force">[('to_id.channel_id', '!=', None)]</field>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="0"/>
+        </record>
+
+    </data>
+</openerp>

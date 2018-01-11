@@ -1,0 +1,89 @@
+-
+  I create the procurement order and run that procurement.
+-
+  !python {model: make.procurement}: |
+    context.update({'active_model':'product.product', 'active_ids': [ref('product.product_product_13')], 'active_id': ref('product.product_product_13')})
+-
+  !record {model: make.procurement, id: procurement_product_hdd3}:
+    product_id: product.product_product_13
+    qty: 15
+    uom_id: product.product_uom_unit
+    warehouse_id: stock.warehouse0
+-
+  !python {model: make.procurement}: |
+    self.make_procurement(cr, uid, [ref('procurement_product_hdd3')], context)
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  I check requisition details which created after run procurement.
+-
+  !python {model: procurement.order}: |
+    procurement_ids = self.search(cr, uid, [('requisition_id','!=', False)])
+    for procurement in self.browse(cr, uid, procurement_ids, context=context):
+        requisition = procurement.requisition_id
+        assert requisition.date_end == procurement.date_planned, "End date is not correspond."
+        assert len(requisition.line_ids) == 1, "Requisition Lines should be one."
+        line = requisition.line_ids[0]
+        assert line.product_id.id == procurement.product_id.id, "Product is not correspond."
+        assert line.product_uom_id.id == procurement.product_uom.id, "UOM is not correspond."
+        assert line.product_qty == procurement.product_qty, "Quantity is not correspond."
+-
+  I send the purchase order associated to the requisition.
+-
+  !python {model: purchase.requisition}: |
+    po = self.pool.get('purchase.order')
+    for element in self.browse(cr, uid, [ref("requisition1")], context=context):
+      for purchase in element.purchase_ids:
+        po.write(cr, uid, purchase.id, {'state': 'sent'}, context=context)
+
+-
+  Give access rights of Purchase Requisition User to open requisition
+-
+  !context
+    uid: 'res_users_purchase_requisition_user'
+-
+  I open another requisition and set tender state to choose bidding line.
+-
+  !python {model: purchase.requisition}: |
+    self.tender_in_progress(cr, uid, [ref("requisition1")], context=context)
+    self.tender_open(cr, uid, [ref("requisition1")], context=context)
+- 
+  Supplier send one RFQ so I create requisition request of that supplier.
+-
+  !python {model: purchase.requisition.partner}: |
+    context.update({"active_model": "purchase.requisition","active_ids": [ref("requisition1")],"active_id": ref("requisition1")})
+- 
+  !record {model: purchase.requisition.partner, id: requisition_partner_0}:
+    partner_id: base.res_partner_12
+- 
+  !python {model: purchase.requisition.partner}: |
+    context.update({"mail_create_nolog" : True })
+    self.create_order(cr, uid, [ref("requisition_partner_0")], context=context)
+-
+  I check that the RFQ details which created for supplier.
+-
+  !python {model: purchase.order}: |
+    purchase_requisition = self.pool.get("purchase.requisition")
+    purchase_ids = self.search(cr, uid, [('requisition_id','=',ref("requisition1"))])
+    assert purchase_ids, "RFQ is not created."
+    for rfq in self.browse(cr, uid, purchase_ids, context=context):
+        if rfq.partner_id.id == ref('base.res_partner_12'):
+            break
+    else:
+        assert False, "No PO found for res_partner_12."
+-
+  I confirmed RFQ which has best price.
+-
+  !python {model: purchase.order}: |
+    purchase = self.browse(cr, uid, ref('rfq2'), context=context)
+    purchase.signal_workflow('purchase_confirm')
+
+-
+  I check status of requisition after confirmed best RFQ.
+-
+  !python {model: purchase.requisition}: |
+    requisition = self.browse(cr, uid, ref('requisition1'), context=context)
+    requisition.state == 'done', "Requisition should be closed."

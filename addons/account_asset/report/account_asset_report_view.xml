@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record model="ir.ui.view" id="action_account_asset_report_graph">
+        <field name="name">asset.asset.report.graph</field>
+        <field name="model">asset.asset.report</field>
+        <field name="arch" type="xml">
+            <graph string="Assets Analysis" type="pivot">
+                <field name="asset_category_id" type="row"/>
+                <field name="purchase_date" type="col"/>
+                <field name="posted_value" type="measure"/>
+                <field name="gross_value" type="measure"/>
+                <field name="depreciation_value" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_asset_asset_report_search" model="ir.ui.view">
+        <field name="name">asset.asset.report.search</field>
+        <field name="model">asset.asset.report</field>
+        <field name="arch" type="xml">
+            <search string="Assets Analysis">
+                <field name="purchase_date"/>
+                <field name="depreciation_date"/>
+                <filter string="Draft" domain="[('state','=','draft')]" help="Assets in draft state"/>
+                <filter string="Running" domain="[('state','=','open')]" help="Assets in running state"/>
+                <separator/>
+                <filter string="Posted" name="posted" domain="[('move_check','=',True)]" help="Posted depreciation lines" context="{'unposted_value_visible': 0}"/>
+                <field name="asset_id"/>
+                <field name="asset_category_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
+                    <filter string="Asset Category" name="asset_category" context="{'group_by':'asset_category_id'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Purchase Month" help="Date of asset purchase"
+                        context="{'group_by':'purchase_date:month'}"/>
+                    <filter string="Depreciation Month" help="Date of depreciation"
+                        context="{'group_by':'depreciation_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_asset_asset_report">
+        <field name="name">Assets Analysis</field>
+        <field name="res_model">asset.asset.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="search_view_id" ref="view_asset_asset_report_search"/>
+        <field name="context">{'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="help" type="html">
+          <p>
+            From this report, you can have an overview on all depreciation. The
+            tool search can also be used to personalise your Assets reports and
+            so, match this analysis to your needs;
+          </p>
+        </field>
+    </record>
+
+    <menuitem action="action_asset_asset_report"
+              id="menu_action_asset_asset_report"
+              parent="account.menu_finance_reporting"/>
+</data>
+</openerp>

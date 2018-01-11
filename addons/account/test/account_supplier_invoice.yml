@@ -1,0 +1,96 @@
+-
+  Test with that Finance manager who can only create supplier invoice. 
+-
+  !context
+    uid: 'res_users_account_manager'
+-
+  In order to test account invoice I create a new supplier invoice
+-
+  I create a Tax Codes
+-
+  !record {model: account.tax.code, id: tax_case}:
+    name: Tax_case
+    company_id: base.main_company
+    sign: 1
+-
+  I create a Tax
+-
+  !record {model: account.tax, id: tax10}:
+    name: Tax 10.0
+    amount: 10.0
+    type: fixed
+    sequence: 1
+    company_id: base.main_company
+    type_tax_use: all
+    tax_code_id: tax_case
+-
+  I create a supplier invoice
+-
+  !record {model: account.invoice, id: account_invoice_supplier0, view: invoice_supplier_form}:
+    account_id: account.a_pay
+    check_total: 3000.0
+    company_id: base.main_company
+    currency_id: base.EUR
+    invoice_line:
+      - account_id: account.a_expense
+        name: '[PCSC234] PC Assemble SC234'
+        price_unit: 300.0
+        product_id: product.product_product_3
+        quantity: 10.0
+        uos_id: product.product_uom_unit
+        invoice_line_tax_id:
+                  - tax10
+    journal_id: account.expenses_journal
+    partner_id: base.res_partner_12
+    reference_type: none
+    type: in_invoice
+-
+  I check that Initially supplier invoice state is "Draft"
+-
+  !assert {model: account.invoice, id: account_invoice_supplier0}:
+    - state == 'draft'
+-
+  I change the state of invoice to open by clicking Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_supplier0}
+-
+  I check that the invoice state is now "Open"
+-
+  !assert {model: account.invoice, id: account_invoice_supplier0}:
+    - state == 'open'
+-
+  I verify that account move is created
+-
+  !python {model: account.invoice}: |
+    move_obj = self.pool.get('account.move')
+    inv = self.browse(cr, uid, ref('account_invoice_supplier0'))
+    move = inv.move_id
+    get_period = move_obj._get_period(cr, uid, {'lang': u'en_US', 'active_model': 'ir.ui.menu',
+      'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')})
+    amt = move_obj._search_amount(cr, uid, move_obj, 'amount', [('amount', '=', 3100.0)], {'lang': u'en_US', 'active_model': 'ir.ui.menu',
+      'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')})
+    ids = amt[0][2]
+    amt_compute = move_obj._amount_compute(cr, uid, list(ids), 'amount', None, {'lang': u'en_US', 'active_model': 'ir.ui.menu',
+      'active_ids': [ref('menu_action_move_journal_line_form')], 'tz': False, 'active_id': ref('menu_action_move_journal_line_form')}, where ='')
+    move_amount = amt_compute.values()
+    assert(inv.move_id and move.period_id.id == get_period and move_amount[0] == 3100.0), ('Journal Entries has not been created')
+-
+  I cancel the account move which is in posted state and verifies that it gives warning message
+-
+  !python {model: account.move}: |
+    from openerp.osv import osv
+    inv_obj = self.pool.get('account.invoice')
+    inv = inv_obj.browse(cr, uid, ref('account_invoice_supplier0'))
+    try:
+      mov_cancel = self.button_cancel(cr, uid, [inv.move_id.id], {'lang': u'en_US', 'tz': False,
+        'active_model': 'ir.ui.menu', 'journal_type': 'purchase', 'active_ids': [ref('menu_action_invoice_tree2')],
+        'type': 'in_invoice', 'active_id': ref('menu_action_invoice_tree2')})
+      assert False, "This should never happen!"
+    except osv.except_osv:
+      pass
+-
+  I verify that 'Period Sum' and 'Year sum' of the tax code are the expected values 
+-
+  !python {model: account.tax.code}: |
+    tax_code = self.browse(cr, uid, ref('tax_case'))
+    assert(tax_code.sum_period == 100.0 and tax_code.sum == 100.0), "Incorrect 'Period Sum' / 'Year sum' expected twice 100.0, got period=%r and year=%r)" % (tax_code.sum_period,tax_code.sum)

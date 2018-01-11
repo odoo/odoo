@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sale_config_settings" model="ir.ui.view">
+            <field name="name">crm settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <data>
+	            <div name="config_sale" position="before">
+	                <separator string="Sale Services"/>
+	                <group>
+                        <label for="id" string="Pre-Sale Services"/>
+                        <div>
+                            <div>
+                                <field name="group_scheduled_calls" class="oe_inline"/>
+                                <label for="group_scheduled_calls"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="After-Sale Services"/>
+                        <div>
+                            <div>
+                                <field name="module_crm_claim" class="oe_inline"/>
+                                <label for="module_crm_claim"/>
+                            </div>
+                            <div>
+                                <field name="module_crm_helpdesk" class="oe_inline"/>
+                                <label for="module_crm_helpdesk"/>
+                            </div>
+                        </div>
+                    </group>
+	            </div>
+                <xpath expr="//p[@name='config_email_integration']" position="after">
+                    <group name="default_alias">
+                        <label for="id" string="Leads Email Alias"/>
+                        <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <div>
+                                <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
+                                @
+                                <field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
+                            <p>
+                                All emails sent to this address and processed by the mailgateway
+                                will create a new lead.
+                            </p>
+                        </div>
+                        <div attrs="{'invisible': [('alias_domain', '!=', False)]}">
+                            <p>
+                                To be able to set your Leads Email Alias, you need to fill your alias domain first.
+                            </p>
+                            <button type="action" name="%(base_setup.action_general_configuration)d"
+                                string="Configure alias domain" class="oe_link" />
+                        </div>
+                    </group>
+                </xpath>
+                </data>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
+            sequence="1" action="base_setup.action_sale_config"/>
+
+    </data>
+</openerp>

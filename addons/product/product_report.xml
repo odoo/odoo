@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report id="report_product_label" model="product.product" name="product.product.label" string="Products Labels" xml="product/report/product_label.xml" xsl="product/report/product_label.xsl"/>
+
+        <report 
+            id="action_report_pricelist" 
+            string="Pricelist" 
+            model="product.product" 
+            report_type="qweb-pdf" 
+            name="product.report_pricelist" 
+            file="product.report_pricelist"
+	    menu="False"/>
+    </data>
+</openerp>

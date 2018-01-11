@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    <!--
+        ALL BUGS
+    -->
+    <record model="ir.actions.act_window" id="project_issue_categ_act0">
+        <field name="name">Issues</field>
+        <field name="res_model">project.issue</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,calendar,form,graph</field>
+        <field name="view_id" eval="False"/>
+        <field name="domain" eval=""/>
+        <field name="search_view_id" ref="view_project_issue_filter"/>
+        <field name="help" type="html">
+            <p>
+                The Odoo issues tacker allows you to efficiantly manage things
+                like internal requests, software development bugs, customer
+                complaints, project troubles, material breakdowns, etc.
+            </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view0">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="project_issue_kanban_view"/>
+        <field name="act_window_id" ref="project_issue_categ_act0"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view0">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="project_issue_tree_view"/>
+        <field name="act_window_id" ref="project_issue_categ_act0"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_view0">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="project_issue_calendar_view"/>
+        <field name="act_window_id" ref="project_issue_categ_act0"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_form_view0">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="project_issue_form_view"/>
+        <field name="act_window_id" ref="project_issue_categ_act0"/>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="action_crm_tag_graph_view0">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="project_issue_graph_view"/>
+        <field name="act_window_id" ref="project_issue_categ_act0"/>
+    </record>
+
+    <menuitem name="Issues" id="menu_project_issue_track"  parent="project.menu_project_management"
+            action="project_issue_categ_act0" sequence="15"/>
+</data>
+</openerp>

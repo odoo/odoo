@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="blog_blog_1" model="blog.blog">
+            <field name="name">Our News</field>
+            <field name="subtitle">Sharing our evolution with passion</field>
+            <field name="description">Presentation of new Odoo features</field>
+        </record>
+
+        <record id="menu_news" model="website.menu">
+            <field name="name">News</field>
+            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">40</field>
+        </record>
+    </data>
+
+    <data>
+
+        <!-- jump to blog at install -->
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Blogs</field>
+            <field name="target">self</field>
+            <field name="url" eval="'/blog/'+str(ref('website_blog.blog_blog_1'))+'/#tutorial.blog=true'"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Blog-related subtypes for messaging / Chatter -->
+        <record id="mt_blog_blog_published" model="mail.message.subtype">
+            <field name="name">Published Post</field>
+            <field name="res_model">blog.blog</field>
+            <field name="default" eval="True"/>
+            <field name="description">Published Post</field>
+        </record>
+
+    </data>
+</openerp>

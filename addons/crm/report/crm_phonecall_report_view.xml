@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- Phone calls by user and section Graph View -->
+
+        <record id="view_report_crm_phonecall_graph" model="ir.ui.view">
+            <field name="name">crm.phonecall.report.graph</field>
+            <field name="model">crm.phonecall.report</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Phone calls" type="pivot" stacked="True">
+                    <field name="section_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                    <field name="nbr" type="measure"/>
+                    <field name="duration" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+<!-- Custom reports (aka filters) -->
+        <record id="filter_crm_phonecall_sales_team" model="ir.filters">
+            <field name="name">By Sales Team</field>
+            <field name="model_id">crm.phonecall.report</field>
+            <field name="domain">[('state','=','done')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['categ_id'], 'measures': ['nbr', 'duration']}</field>
+        </record>
+        <record id="filter_crm_phonecall_delay_to_close" model="ir.filters">
+            <field name="name">Delay To Close</field>
+            <field name="model_id">crm.phonecall.report</field>
+            <field name="domain">[('state','=','done')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['categ_id'], 'measures': ['delay_close']}</field>
+        </record>
+        <record id="filter_crm_phonecall_phone_call_to_do" model="ir.filters">
+            <field name="name">Phone Calls To Do</field>
+            <field name="model_id">crm.phonecall.report</field>
+            <field name="domain">[('state','in',('draft','open'))]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['section_id'], 'measures': ['nbr']}</field>
+        </record>
+
+
+<!-- Phone calls by user and section Search View -->
+
+    <record id="view_report_crm_phonecall_filter" model="ir.ui.view">
+            <field name="name">crm.phonecall.report.select</field>
+            <field name="model">crm.phonecall.report</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <filter string="Todo" name="todo" domain="[('state','in',('draft','open'))]"
+                        help="Phone calls which are in draft and open state"/>
+                    <filter string="Held" name="held" domain="[('state','=','done')]"
+                        help="Phone calls which are in closed state"/>
+                    <filter string="Not Held" domain="[('state','=','pending')]"
+                        help="Phone calls which are in pending state"/>
+                    <separator/>
+                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
+                            help="Phone calls that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
+                    <separator/>
+                    <filter string="My Phone Calls" help="Phone Calls that are assigned to me" domain="[('user_id','=',uid)]" />
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                            groups="base.group_multi_salesteams"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="opening_date"/>
+                        <field name="date_closed"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" name="Salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Customer" context="{'group_by':'partner_id'}" />
+                        <filter string="Status" context="{'group_by':'state'}" />
+                        <separator/>
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" help="Month of call"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+<!-- Phone calls by user and section Action -->
+
+        <record id="action_report_crm_phonecall" model="ir.actions.act_window">
+            <field name="name">Phone Calls Analysis</field>
+            <field name="res_model">crm.phonecall.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_id" ref="view_report_crm_phonecall_graph"/>
+            <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
+            <field name="help">From this report, you can analyse the performance of your sales team, based on their phone calls. You can group or filter the information according to several criteria and drill down the information, by adding more groups in the report.</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_report_crm_phonecall_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_phonecall_graph"/>
+            <field name="act_window_id" ref="action_report_crm_phonecall"/>
+        </record>
+
+        <menuitem name="Phone Calls Analysis"
+            groups="base.group_sale_salesman"
+            action="action_report_crm_phonecall"
+            id="menu_report_crm_phonecalls_tree" parent="base.next_id_64" sequence="15"/>
+
+    </data>
+</openerp>

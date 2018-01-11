@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_crm_case_jobs_filter_inherit" model="ir.ui.view">
+            <field name="name">Jobs - Recruitment Search</field>
+            <field name="model">hr.applicant</field>
+            <field name="inherit_id" ref="hr_recruitment.view_crm_case_jobs_filter" />
+            <field name="arch" type="xml">
+                <field name="job_id" position="before">
+                    <field name="index_content" string="Resume Content"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="hr_applicant_resumes">
+            <field name="name">Resumes and Letters</field>
+            <field name="res_model">ir.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="mail.view_document_file_kanban"/>
+            <field name="domain">[('res_model','=','hr.applicant')]</field>
+            <field name="context" eval="{'default_res_model': 'hr.applicant'}"/>
+            <field name="help" type="html">
+            <p>
+             Search through resumes and motivation letters.
+            </p>
+            </field>
+        </record>
+
+        <menuitem
+            name="Resumes and Letters"
+            parent="base.menu_crm_case_job_req_main"
+            id="menu_crm_case_categ0_act_job02" action="hr_applicant_resumes" sequence="3"/>            
+
+   </data>
+</openerp>
+    
+

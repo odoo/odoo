@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="state">open</field>
+        </record>
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Leave Management application installed!</field>
+            <field name="body"><![CDATA[<p>Manage employee leaves from the top menu "Human Resources". Employees can create leave requests that are validated by their manager and/or HR officers.</p>
+<p>Once validated, they are visible in the employee's calendar. HR officers can define leave types and allocate leaves to employees and employee categories.</p>]]></field>
+        </record>
+
+
+        <!-- Casual leave -->
+        <record model="hr.holidays.status" id="holiday_status_cl">
+            <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
+            <field name="color_name">black</field>
+        </record>
+
+        <!-- Sick leave -->
+        <record model="hr.holidays.status" id="holiday_status_sl">
+            <field name="name">Sick Leaves</field>
+            <field name="limit">True</field>
+            <field name="color_name">red</field>
+        </record>
+
+        <!-- Compensatory Days -->
+        <record model="hr.holidays.status" id="holiday_status_comp">
+            <field name="name">Compensatory Days</field>
+            <field name="limit">True</field>
+            <field name="color_name">lavender</field>
+        </record>
+
+        <!--Unpaid Leave -->
+        <record model="hr.holidays.status" id="holiday_status_unpaid">
+            <field name="name">Unpaid</field>
+            <field name="limit">True</field>
+            <field name="color_name">brown</field>
+        </record>
+
+        <!-- Holidays-related subtypes for messaging / Chatter -->
+        <record id="mt_holidays_confirmed" model="mail.message.subtype">
+            <field name="name">To Approve</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="description">Request confirmed and waiting approval</field>
+        </record>
+        <record id="mt_holidays_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="description">Request approved</field>
+        </record>
+        <record id="mt_holidays_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="default" eval="False"/>
+            <field name="description">Request refused</field>
+        </record>
+
+    </data>
+</openerp>

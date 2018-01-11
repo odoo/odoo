@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_analytic_chart_view" model="ir.ui.view">
+            <field name="name">Chart of Analytic Accounts</field>
+            <field name="model">account.analytic.chart</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Account Charts">
+                    <group string="Select the Period for Analysis" col="4">
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <label string="(Keep empty to open the current situation)" colspan="4"/>
+                    </group>
+                    <footer>
+                        <button name="analytic_account_chart_open_window" string="Open Charts" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_chart" model="ir.actions.act_window">
+            <field name="name">Chart of Analytic Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_analytic_chart_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Chart of Analytic Accounts"
+            parent="account.menu_finance_charts"
+            action="action_account_analytic_chart"
+            id="menu_action_analytic_account_tree2"
+            icon="STOCK_INDENT"
+            groups="analytic.group_analytic_accounting"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,924 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * lunch
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:32+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_alert
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch alert. \n"
+"            </p>\n"
+"              <p>\n"
+"                Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
+"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.\n"
+"            </p>\n"
+"            <p>\n"
+"                Example: <br/>\n"
+"                - Recurency: Everyday<br/>\n"
+"                - Time interval: from 00h00 am to 11h59 pm<br/>\n"
+"                - Message: \"You must order before 10h30 am\"\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате известување за ручек. \n            </p>\n              <p>\n                Известувањата се користат за да ги предупредат вработените за можни проблеми со нарачките за ручек.\n                Да креирате известување за ручек треба да ја дефинирате неговата повторливост, временскиот интервал во кој што известувањето треба да се изврши и порака што ќе се прикаже.\n            </p>\n            <p>\n                Пример: <br/>\n                - Повторување: Секој ден<br/>\n                - Временски интервал: од 00ч00 до 23ч59<br/>\n                - Порака: \"Мора да нарачате пред 10ч30 наутро\"\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_product_categories
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch category. \n"
+"            </p>\n"
+"              <p>\n"
+"                Here you can find every lunch categories for products.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате категорија на ручек. \n            </p>\n              <p>\n                Овде можете да ги најдете сите категории на ручек за производи.\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a lunch order. \n"
+"            </p>\n"
+"            <p>\n"
+"                A lunch order is defined by its user, date and order lines.\n"
+"                Each order line corresponds to a product, an additional note and a price.\n"
+"                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.\n"
+"            </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате налог за ручек. \n            </p>\n            <p>\n                Налог за ручек е дефиниран од неговиот корисник, датум и ставки од налогот.\n                Секоја ставка одговара на производ, дополнителна забелешка и цена.\n                Пред да ги изберете вашите ставки на налогот, не заборавајте да ги прочитате предупредувањата прикажани во цреникавата област.\n            </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_control_accounts
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new payment. \n"
+"            </p>\n"
+"              <p>\n"
+"                A cashmove can either be an expense or a payment.<br/>\n"
+"                An expense is automatically created at the order receipt.<br/>\n"
+"                A payment represents the employee reimbursement to the company.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате нова уплата. \n            </p>\n              <p>\n                Готовинско движење може да биде или трошок или уплата.<br/>\n                Трошок се креира автоматски при приемот на нарачката.<br/>\n                Уплата претставува надоместок од вработениот до компанијата.\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment. \n"
+"            </p>\n"
+"              <p>\n"
+"                Here you can see the employees' payment. A payment is a cash move from the employee to the company.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате уплата. \n            </p>\n              <p>\n                Овде можете да ги видите уплатите од вработените. Уплата е готовинско движење од вработениот до компанијата.\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_products
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a product for lunch. \n"
+"            </p>\n"
+"              <p>\n"
+"                A product is defined by its name, category, price and supplier.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате производ за ручек. \n            </p>\n              <p>\n                Производ е дефиниран од, категорија, цена и добавувач.\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_control_suppliers
+msgid ""
+"<p>\n"
+"                Here you can see every orders grouped by suppliers and by date.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> red X to announce that the order isn't available\n"
+"              </p>\n"
+"            "
+msgstr "<p>\n                Овде можете да ги видите вашите нарачки групирани според  добавувачи и според датум.\n              </p>\n              <p>\n                - Кликнете на <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> да најавите дека нарачката е нарачана <br/>\n                - Кликнете на <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> да најавите дека нарачката е примена <br/>\n                - Кликнете на <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> црвен X да најавите дека нарачката не е достапна\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_order_by_supplier_form
+msgid ""
+"<p>\n"
+"                Here you can see today's orders grouped by suppliers.\n"
+"              </p>\n"
+"              <p>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> to announce that the order is ordered <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> to announce that the order is received <br/>\n"
+"                - Click on the <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> to announce that the order isn't available\n"
+"              </p>\n"
+"            "
+msgstr "<p>\n                Овде можете да ги видите денешните нарачки групирани според добавувач.\n              </p>\n              <p>\n                - Кликнете на <img src=\"../../../web/static/src/img/icons/terp-call-start.png\"/> да најавите дека нарачката е нарачана <br/>\n                - Кликнете на <img src=\"../../../web/static/src/img/icons/gtk-apply.png\"/> да најавите дека нарачката е примена <br/>\n                - Кликнете на <img src=\"../../../web/static/src/img/icons/gtk-cancel.png\"/> да најавите дека нарачката не е достапна\n              </p>\n            "
+
+#. module: lunch
+#: model:ir.actions.act_window,help:lunch.action_lunch_cashmove_form
+msgid ""
+"<p>\n"
+"                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.\n"
+"                An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "A cancelled meal should not be paid by employees."
+msgstr "Откажан оброк не би требало да биде платен од страна на вработените."
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:267
+#, python-format
+msgid "Add"
+msgstr "Додади"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_cash
+msgid "Administrate Cash Moves"
+msgstr "Администрирај готовински движења"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_admin
+msgid "Administrate Orders"
+msgstr "Администрирај нарачки"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_alert
+#: model:ir.ui.menu,name:lunch.menu_lunch_alert field:lunch.order,alerts:0
+msgid "Alerts"
+msgstr "Известувања"
+
+#. module: lunch
+#: field:lunch.cashmove,amount:0
+msgid "Amount"
+msgstr "Износ"
+
+#. module: lunch
+#: field:lunch.alert,active_to:0
+msgid "And"
+msgstr "И"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "April"
+msgstr "Април"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "Are you sure you want to cancel these meals?"
+msgstr "Дали сте сигурни дека сакате да ги откажете овие оброци?"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid "Are you sure you want to order these meals?"
+msgstr "Дали сте сигурни дека сакате да ги нарачате овие оброци?"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "August"
+msgstr "Август"
+
+#. module: lunch
+#: field:lunch.alert,active_from:0
+msgid "Between"
+msgstr "Помеѓу"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
+msgid "By Employee"
+msgstr "По Вработен"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "By Supplier"
+msgstr "Според добавувач"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+msgid "By User"
+msgstr "Според корисник"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+#: view:lunch.order.order:lunch.order_order_lines_view
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "Cancel Orders"
+msgstr "Откажи нарачки"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "Cancel a meal means that we didn't receive it from the supplier."
+msgstr "Откажување на оброк значи дека не сме го добиле од добавувачот."
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.cancel_order_lines
+msgid "Cancel meals"
+msgstr "Откажи оброци"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+#: selection:lunch.order.line,state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: lunch
+#: field:lunch.order.line,cashmove:0
+msgid "Cash Move"
+msgstr "Движење на готовина"
+
+#. module: lunch
+#: field:lunch.product,category_id:0 field:lunch.product.category,name:0
+msgid "Category"
+msgstr "Категорија"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_config
+msgid "Configuration"
+msgstr "Конфигурација"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+msgid "Confirm"
+msgstr "Потврди"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+msgid "Confirmed"
+msgstr "Потврдено"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_control_accounts
+#: model:ir.ui.menu,name:lunch.menu_lunch_control_accounts
+msgid "Control Accounts"
+msgstr "Контролирај сметки"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_control_suppliers
+msgid "Control Suppliers"
+msgstr "Контролирај добавувачи"
+
+#. module: lunch
+#: field:lunch.alert,create_uid:0 field:lunch.cancel,create_uid:0
+#: field:lunch.cashmove,create_uid:0 field:lunch.order,create_uid:0
+#: field:lunch.order.line,create_uid:0 field:lunch.order.order,create_uid:0
+#: field:lunch.product,create_uid:0 field:lunch.product.category,create_uid:0
+#: field:lunch.validation,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: lunch
+#: field:lunch.alert,create_date:0 field:lunch.cancel,create_date:0
+#: field:lunch.cashmove,create_date:0 field:lunch.order,create_date:0
+#: field:lunch.order.line,create_date:0 field:lunch.order.order,create_date:0
+#: field:lunch.product,create_date:0
+#: field:lunch.product.category,create_date:0
+#: field:lunch.validation,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: lunch
+#: field:lunch.cashmove,date:0 field:lunch.order,date:0
+#: field:lunch.order.line,date:0
+msgid "Date"
+msgstr "Датум"
+
+#. module: lunch
+#: field:report.lunch.order.line,date:0
+msgid "Date Order"
+msgstr "Датум на налогот"
+
+#. module: lunch
+#: field:lunch.alert,specific_day:0 field:report.lunch.order.line,day:0
+msgid "Day"
+msgstr "Ден"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "December"
+msgstr "Декември"
+
+#. module: lunch
+#: field:lunch.cashmove,description:0 field:lunch.product,description:0
+#: view:website:lunch.report_lunchorder
+msgid "Description"
+msgstr "Опис"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Did your received these meals?"
+msgstr "Дали ги примивте овие оброци?"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:199
+#, python-format
+msgid "Don't forget the alerts displayed in the reddish area"
+msgstr "Не ги заборавајте известувањата прикажани во црвеникавата област"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove
+msgid "Employee Payments"
+msgstr "Плаќања на вработени"
+
+#. module: lunch
+#: selection:lunch.alert,alter_type:0
+msgid "Every Day"
+msgstr "Секој ден"
+
+#. module: lunch
+#: selection:lunch.alert,alter_type:0
+msgid "Every Week"
+msgstr "Секоја недела"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "February"
+msgstr "Февруари"
+
+#. module: lunch
+#: field:lunch.alert,friday:0
+msgid "Friday"
+msgstr "Петок"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Group By"
+msgstr "Групирање според"
+
+#. module: lunch
+#: model:ir.module.category,description:lunch.module_lunch_category
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr "Ви помага да управувате со вашите потреби за ручек, ако сте менаџер ќе можете да креирате нови производи, готовински движења и да потврдите или откажете нарачки."
+
+#. module: lunch
+#: field:lunch.alert,id:0 field:lunch.cancel,id:0 field:lunch.cashmove,id:0
+#: field:lunch.order,id:0 field:lunch.order.line,id:0
+#: field:lunch.order.order,id:0 field:lunch.product,id:0
+#: field:lunch.product.category,id:0 field:lunch.validation,id:0
+#: field:report.lunch.order.line,id:0
+#: field:report.lunch.report_lunchorder,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: lunch
+#: field:lunch.cashmove,state:0
+msgid "Is an order or a Payment"
+msgstr "е нарачка или плаќање"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "January"
+msgstr "Јануари"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "July"
+msgstr "Јули"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "June"
+msgstr "Јуни"
+
+#. module: lunch
+#: field:lunch.alert,write_uid:0 field:lunch.cancel,write_uid:0
+#: field:lunch.cashmove,write_uid:0 field:lunch.order,write_uid:0
+#: field:lunch.order.line,write_uid:0 field:lunch.order.order,write_uid:0
+#: field:lunch.product,write_uid:0 field:lunch.product.category,write_uid:0
+#: field:lunch.validation,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: lunch
+#: field:lunch.alert,write_date:0 field:lunch.cancel,write_date:0
+#: field:lunch.cashmove,write_date:0 field:lunch.order,write_date:0
+#: field:lunch.order.line,write_date:0 field:lunch.order.order,write_date:0
+#: field:lunch.product,write_date:0 field:lunch.product.category,write_date:0
+#: field:lunch.validation,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_form_view
+msgid "List"
+msgstr "Листа"
+
+#. module: lunch
+#: model:ir.module.category,name:lunch.module_lunch_category
+#: model:ir.ui.menu,name:lunch.menu_lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_title
+msgid "Lunch"
+msgstr "Ручек"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_alert
+msgid "Lunch Alert"
+msgstr "Известување за ручек"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:43
+#: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
+#: model:ir.model,name:lunch.model_lunch_order
+#: view:website:lunch.report_lunchorder
+#, python-format
+msgid "Lunch Order"
+msgstr "Нарачка на ручек"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_report_lunch_order_line
+msgid "Lunch Orders Statistics"
+msgstr "Статистика за нарачки на ручек"
+
+#. module: lunch
+#: model:res.groups,name:lunch.group_lunch_manager
+msgid "Manager"
+msgstr "Менаџер"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "March"
+msgstr "Март"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "May"
+msgstr "Мај"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view field:lunch.alert,message:0
+msgid "Message"
+msgstr "Порака"
+
+#. module: lunch
+#: field:lunch.alert,monday:0
+msgid "Monday"
+msgstr "Понеделник"
+
+#. module: lunch
+#: field:report.lunch.order.line,month:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+msgid "My Account grouped"
+msgstr "Мојот налог групирано"
+
+#. module: lunch
+#: view:lunch.order:lunch.view_search_my_order
+msgid "My Orders"
+msgstr "Мои нарачки"
+
+#. module: lunch
+#: view:website:lunch.report_lunchorder
+msgid "Name/Date"
+msgstr "Име/Датум"
+
+#. module: lunch
+#: selection:lunch.order,state:0 selection:lunch.order.line,state:0
+msgid "New"
+msgstr "Ново"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_form
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_form
+msgid "New Order"
+msgstr "Нова нарачка"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Not Received"
+msgstr "Не примени"
+
+#. module: lunch
+#: field:lunch.order.line,note:0 field:report.lunch.order.line,note:0
+msgid "Note"
+msgstr "Белешка"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "November"
+msgstr "Ноември"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "October"
+msgstr "Октомври"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Once a meal is received a new cash move is created for the employee."
+msgstr "Кога ќе се прими оброк ново готовинско движење се креира за вработениот."
+
+#. module: lunch
+#: field:lunch.cashmove,order_id:0 selection:lunch.cashmove,state:0
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+#: field:lunch.order.line,order_id:0 view:website:lunch.report_lunchorder
+msgid "Order"
+msgstr "Нарачка"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid "Order Meals"
+msgstr "Нарачај оброци"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Order Month"
+msgstr "Месец на нарачка"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid ""
+"Order a meal doesn't mean that we have to pay it.\n"
+"                        A meal should be paid when it is received."
+msgstr "Нарачување на оброк не значи дека треба да се плати.\n                        Оброкот треба да се плати кога ќе се прими."
+
+#. module: lunch
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+msgid "Order lines Tree"
+msgstr "Дрво на ставки од нарачка"
+
+#. module: lunch
+#: view:lunch.order.order:lunch.order_order_lines_view
+msgid "Order meal"
+msgstr "Нарачак оброк"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.order_order_lines
+msgid "Order meals"
+msgstr "Нарачај оброци"
+
+#. module: lunch
+#: selection:lunch.order.line,state:0
+msgid "Ordered"
+msgstr "Нарачано"
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_form_view
+msgid "Orders Form"
+msgstr "Нарачки од"
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_tree_view
+msgid "Orders Tree"
+msgstr "Дрво на нарачки"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_by_supplier_form
+#: model:ir.ui.menu,name:lunch.menu_lunch_control_suppliers
+msgid "Orders by Supplier"
+msgstr "Нарачки по добавувач"
+
+#. module: lunch
+#: selection:lunch.order,state:0
+msgid "Partially Confirmed"
+msgstr "Делумно потврдено"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+#: selection:lunch.cashmove,state:0
+msgid "Payment"
+msgstr "Плаќање"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_tree
+msgid "Previous Orders"
+msgstr "Претходни нарачки"
+
+#. module: lunch
+#: field:lunch.order.line,price:0 field:lunch.product,price:0
+msgid "Price"
+msgstr "Цена"
+
+#. module: lunch
+#: field:lunch.order.line,product_id:0 field:lunch.product,name:0
+msgid "Product"
+msgstr "Производ"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_product_categories
+#: model:ir.ui.menu,name:lunch.menu_lunch_product_categories
+msgid "Product Categories"
+msgstr "Категории на производ"
+
+#. module: lunch
+#: view:lunch.product.category:lunch.product_category_form_view
+msgid "Product Category:"
+msgstr "Категорија на производ:"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_products
+#: model:ir.ui.menu,name:lunch.menu_lunch_products
+#: field:lunch.order,order_line_ids:0
+msgid "Products"
+msgstr "Производи"
+
+#. module: lunch
+#: view:lunch.product:lunch.products_form_view
+#: view:lunch.product.category:lunch.product_category_form_view
+msgid "Products Form"
+msgstr "Формулар за производи"
+
+#. module: lunch
+#: view:lunch.product:lunch.products_tree_view
+msgid "Products Tree"
+msgstr "Дрво на производи"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "Receive Meals"
+msgstr "Прими оброци"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.validate_order_lines
+msgid "Receive meals"
+msgstr "Прими оброци"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+#: selection:lunch.order.line,state:0
+msgid "Received"
+msgstr "Примено"
+
+#. module: lunch
+#: field:lunch.alert,alter_type:0
+msgid "Recurrency"
+msgstr "Повторливост"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove
+msgid "Register Cash Moves"
+msgstr "Регитрирај движења на готовина"
+
+#. module: lunch
+#: field:lunch.alert,saturday:0
+msgid "Saturday"
+msgstr "Сабота"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view
+msgid "Schedule Date"
+msgstr "Планиран датум"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view
+msgid "Schedule Hour"
+msgstr "Закажи час"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_search_view
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Search"
+msgstr "Пребарувај"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:193
+#, python-format
+msgid "Select a product and put your order comments on the note."
+msgstr "Изберете производ и внесете ги вашите коментари за нарачката."
+
+#. module: lunch
+#: view:lunch.order:lunch.orders_form_view
+msgid "Select your order"
+msgstr "Изберете ја вашата нарачка"
+
+#. module: lunch
+#: selection:report.lunch.order.line,month:0
+msgid "September"
+msgstr "Септември"
+
+#. module: lunch
+#: selection:lunch.alert,alter_type:0
+msgid "Specific Day"
+msgstr "Одреден ден"
+
+#. module: lunch
+#: field:lunch.order,state:0 field:lunch.order.line,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: lunch
+#: field:lunch.alert,sunday:0
+msgid "Sunday"
+msgstr "Недела"
+
+#. module: lunch
+#: field:lunch.order.line,supplier:0 field:lunch.product,supplier:0
+msgid "Supplier"
+msgstr "Добавувач"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Supplier Order by Month"
+msgstr "Налози за набавка според месец"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:190
+#, python-format
+msgid "This is the first time you order a meal"
+msgstr "Ова е прв пат да нарачате оброк"
+
+#. module: lunch
+#: field:lunch.alert,thursday:0
+msgid "Thursday"
+msgstr "Четврток"
+
+#. module: lunch
+#: view:lunch.order.line:lunch.lunch_order_line_search_view
+msgid "Today"
+msgstr "Денес"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_order_by_supplier_form
+msgid "Today's Orders by Supplier"
+msgstr "Денешни нарачки според добавувач"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.casmove_tree
+#: view:lunch.cashmove:lunch.casmove_tree_view
+#: view:lunch.order:lunch.orders_tree_view field:lunch.order,total:0
+#: view:lunch.order.line:lunch.orders_order_lines_tree_view
+#: view:website:lunch.report_lunchorder
+msgid "Total"
+msgstr "Вкупно"
+
+#. module: lunch
+#: field:report.lunch.order.line,price_total:0
+msgid "Total Price"
+msgstr "Вкупна цена"
+
+#. module: lunch
+#: field:lunch.alert,tuesday:0
+msgid "Tuesday"
+msgstr "Вторник"
+
+#. module: lunch
+#: view:website:lunch.report_lunchorder
+msgid "Unit Price"
+msgstr "Единечна цена"
+
+#. module: lunch
+#: field:lunch.order.line,user_id:0
+#: model:res.groups,name:lunch.group_lunch_user
+msgid "User"
+msgstr "Корисник"
+
+#. module: lunch
+#: field:lunch.cashmove,user_id:0 field:lunch.order,user_id:0
+#: field:report.lunch.order.line,user_id:0
+msgid "User Name"
+msgstr "Корисничко име"
+
+#. module: lunch
+#: view:lunch.order:lunch.view_search_my_order
+msgid "Users"
+msgstr "Корисници"
+
+#. module: lunch
+#: field:lunch.alert,wednesday:0
+msgid "Wednesday"
+msgstr "Среда"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_order
+msgid "Wizard to order a meal"
+msgstr "Волшебник за нарачка на оброк"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view
+msgid "Write the message you want to display during the defined period..."
+msgstr "Запишете ја пораката што сакате да се прикаже за време на дефинираниот период..."
+
+#. module: lunch
+#: field:report.lunch.order.line,year:0
+msgid "Year"
+msgstr "Година"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
+msgid "Your Account"
+msgstr "Вашиот налог"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
+msgid "Your Lunch Account"
+msgstr "Вашиот налог за ручек"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_order_tree
+msgid "Your Orders"
+msgstr "Ваши нарачки"
+
+#. module: lunch
+#: code:addons/lunch/lunch.py:196
+#, python-format
+msgid "Your favorite meals will be created based on your last orders."
+msgstr "Вашите омилени оброци ќе бидат креирани базирано на вашите последни нарачки"
+
+#. module: lunch
+#: view:lunch.alert:lunch.alert_form_view
+#: view:lunch.alert:lunch.alert_tree_view
+msgid "alert tree"
+msgstr "дрво на известувања"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cancel
+msgid "cancel lunch order"
+msgstr "откажи нарачка за ручек"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+msgid "cancel order lines"
+msgstr "откажи ставки од нарачка"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.casmove_form_view
+msgid "cashmove form"
+msgstr "формулар за готовинско движење"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.casmove_tree
+#: view:lunch.cashmove:lunch.casmove_tree_view
+msgid "cashmove tree"
+msgstr "дрво на готовински движења"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cashmove
+#: view:lunch.cashmove:lunch.view_lunch_cashmove_filter
+msgid "lunch cashmove"
+msgstr "готовинско движење за ручек"
+
+#. module: lunch
+#: view:lunch.cashmove:lunch.view_lunch_employee_payment_filter
+msgid "lunch employee payment"
+msgstr "плаќање на вработени за ручек"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order_line
+msgid "lunch order line"
+msgstr "ставка од нарачка за ручек"
+
+#. module: lunch
+#: view:lunch.order:lunch.view_search_my_order
+msgid "lunch orders"
+msgstr "нарачки за руичек"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "lunch product"
+msgstr "производ за ручек"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "lunch product category"
+msgstr "категорија на производ за ручек"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_validation
+msgid "lunch validation for order"
+msgstr "валидација на ручек за нарачка"
+
+#. module: lunch
+#: view:lunch.cancel:lunch.cancel_order_lines_view
+#: view:lunch.order.order:lunch.order_order_lines_view
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "or"
+msgstr "или"
+
+#. module: lunch
+#: field:lunch.order.line,name:0
+msgid "unknown"
+msgstr "непознато"
+
+#. module: lunch
+#: view:lunch.validation:lunch.validate_order_lines_view
+msgid "validate order lines"
+msgstr "потврди ставки од налог"

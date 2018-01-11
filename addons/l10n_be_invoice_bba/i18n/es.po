@@ -1,0 +1,145 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_be_invoice_bba
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2015-07-17 07:27+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Spanish (http://www.transifex.com/odoo/odoo-8/language/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_be_invoice_bba
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "¡El número de factura debe ser único por compañía!"
+
+#. module: l10n_be_invoice_bba
+#: model:ir.model,name:l10n_be_invoice_bba.model_account_invoice
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: l10n_be_invoice_bba
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "¡Error! No se pueden crear miembros asociados recursivamente."
+
+#. module: l10n_be_invoice_bba
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "¡Comunicación BBA estructurada no válida!"
+
+#. module: l10n_be_invoice_bba
+#: selection:res.partner,out_inv_comm_algorithm:0
+msgid "Random"
+msgstr "Aleatorio"
+
+#. module: l10n_be_invoice_bba
+#: help:res.partner,out_inv_comm_type:0
+msgid "Select Default Communication Type for Outgoing Invoices."
+msgstr "Seleccione el tipo de comunicación predeterminada para facturas salientes."
+
+#. module: l10n_be_invoice_bba
+#: help:res.partner,out_inv_comm_algorithm:0
+msgid ""
+"Select Algorithm to generate the Structured Communication on Outgoing "
+"Invoices."
+msgstr "Seleccione el algoritmo para generar la comunicación estructurada en facturas salientes."
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:109
+#: code:addons/l10n_be_invoice_bba/invoice.py:135
+#, python-format
+msgid ""
+"The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\n"
+"Please create manually a unique BBA Structured Communication."
+msgstr "¡El máximo diario de facturas emitidas con una comunicación BBA estructurada generada automáticamente se ha superado!\nPor favor, cree manualmente una comunicación BBA estructurada única."
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:150
+#, python-format
+msgid "Error!"
+msgstr "¡Error!"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:121
+#, python-format
+msgid ""
+"The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!\n"
+"Please correct the Partner record."
+msgstr "¡La empresa debe tener un número de referencia de entre 3 y 7 dígitos para la generación de comunicaciones BBA estructuradas!\nPor favor, corrija el registro de empresa."
+
+#. module: l10n_be_invoice_bba
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr "Error: Código EAN invalido"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:108
+#: code:addons/l10n_be_invoice_bba/invoice.py:120
+#: code:addons/l10n_be_invoice_bba/invoice.py:134
+#: code:addons/l10n_be_invoice_bba/invoice.py:162
+#: code:addons/l10n_be_invoice_bba/invoice.py:172
+#: code:addons/l10n_be_invoice_bba/invoice.py:197
+#, python-format
+msgid "Warning!"
+msgstr "¡Advertencia!"
+
+#. module: l10n_be_invoice_bba
+#: selection:res.partner,out_inv_comm_algorithm:0
+msgid "Customer Reference"
+msgstr "Referencia del cliente"
+
+#. module: l10n_be_invoice_bba
+#: field:res.partner,out_inv_comm_type:0
+msgid "Communication Type"
+msgstr "Tipo de comunicación"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:173
+#: code:addons/l10n_be_invoice_bba/invoice.py:198
+#, python-format
+msgid ""
+"The BBA Structured Communication has already been used!\n"
+"Please create manually a unique BBA Structured Communication."
+msgstr "¡La comunicación BBA estructurada ya ha sido usada!\nCree por favor manualmente una comunicación BBA estructurada única."
+
+#. module: l10n_be_invoice_bba
+#: selection:res.partner,out_inv_comm_algorithm:0
+msgid "Date"
+msgstr "Fecha"
+
+#. module: l10n_be_invoice_bba
+#: model:ir.model,name:l10n_be_invoice_bba.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:151
+#, python-format
+msgid ""
+"Unsupported Structured Communication Type Algorithm '%s' !\n"
+"Please contact your OpenERP support channel."
+msgstr "¡Algoritmo de tipo de comunicación estructura '%s' no soportado!\nPor favor contacto con el canal de soporte OpenERP."
+
+#. module: l10n_be_invoice_bba
+#: field:res.partner,out_inv_comm_algorithm:0
+msgid "Communication Algorithm"
+msgstr "Algoritmo de comunicación"
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:163
+#, python-format
+msgid ""
+"Empty BBA Structured Communication!\n"
+"Please fill in a unique BBA Structured Communication."
+msgstr "¡Comunicación BBA estructurada vacía!\nPor favor rellene una comunicación BBA estructurada única."

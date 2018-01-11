@@ -1,0 +1,45 @@
+-
+  I create a draft Sale Order with 2 lines but 1 canceled in order to check if the canceled lines are not considered in the logic
+-
+  !record {model: sale.order, id: sale_order_cl_3}:
+    partner_id: base.res_partner_15
+    partner_invoice_id: base.res_partner_address_25
+    partner_shipping_id: base.res_partner_address_25
+    pricelist_id: product.list0
+    order_policy: manual
+-
+  !record {model: sale.order.line, id: sale_order_cl_3_line_1}:
+    order_id: sale_order_cl_3
+    product_id: product.product_product_27
+    product_uom_qty: 1
+    product_uom: 1
+    price_unit: 3645
+    name: 'Laptop Customized'
+-
+  !record {model: sale.order.line, id: sale_order_cl_3_line_2}:
+    order_id: sale_order_cl_3
+    product_id: product.product_product_12
+    product_uom_qty: 1
+    product_uom: 1
+    price_unit: 12.50
+    name: 'Mouse, Wireless'
+-
+  I cancel the first line
+-
+   !python {model: sale.order.line, id: sale_order_cl_3_line_1}: |
+     self.button_cancel()
+-
+  I confirm the sale order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_cl_3}
+-
+  I check that no procurement has been generated for the canceled line
+-
+  !assert {model: sale.order.line, id: sale_order_cl_3_line_1, string: The canceled line should not have a procurement}:
+    - not procurement_ids
+-
+  I check that we have only 1 stock move, for the not canceled line
+-
+  !python {model: sale.order, id: sale_order_cl_3}: |
+    moves = self.picking_ids.mapped('move_lines')
+    assert len(moves) == 1, "We should have 1 move, got %s" % len(moves)

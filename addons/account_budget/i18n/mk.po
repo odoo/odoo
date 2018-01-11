@@ -1,0 +1,506 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_budget
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 06:43+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new budget.\n"
+"              </p><p>\n"
+"                A budget is a forecast of your company's income and/or expenses\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликнете да креирате нов буџет.\n              </p><p>\n                Буџет е прогноза на приходот на вашата компанија и/или трошоците\n                очекувани во некој иден период. Буџетот е дефиниран според\n                финансиски сметки и/или аналитички конта (што може да претставуваат\n                проекти, оддели, категории на производи, итн.)\n              </p><p>\n                Со водењето сметка каде одат вашите пари, помалку веројатно\n                е да потрошите повеќе од планирано, и поверојатно да ги исполните\n                вашите финансиски цели. Прогнозирајте буџет со детализирање на очекуван \n                приход по аналитичко конто и следете ја неговата еволуција базирана на\n                реалните состојби реализирани за тој период.\n              </p>\n            "
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
+msgid "Account Budget  crossvered summary report"
+msgstr "Буџет"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_crossvered_report
+msgid "Account Budget crossvered report"
+msgstr ""
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_analytic
+#: model:ir.model,name:account_budget.model_account_budget_report
+msgid "Account Budget report for analytic account"
+msgstr "Извештај на сметка Буџет за аналитичката сметка"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: field:account.budget.post,account_ids:0
+msgid "Accounts"
+msgstr "Сметки"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Analysis from"
+msgstr "Анализа од"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Analysis from:"
+msgstr "Анализа од:"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,analytic_account_id:0
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Analytic Account"
+msgstr "Аналитичка сметка"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Analytic Budget"
+msgstr "Аналитички буџет"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Approve"
+msgstr "Одобри"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_tree
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: field:crossovered.budget.lines,crossovered_budget_id:0
+#: model:ir.actions.report.xml,name:account_budget.action_report_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Budget"
+msgstr "Буџет"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+msgid "Budget Line"
+msgstr "Ставка од буџет"
+
+#. module: account_budget
+#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+#: field:account.analytic.account,crossovered_budget_line:0
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: field:account.budget.post,crossovered_budget_line:0
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget,crossovered_budget_line:0
+#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_form
+#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_search
+#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_tree
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budget Lines"
+msgstr "Ставки од буџет"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Budget:"
+msgstr "Буџет:"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:account.budget.post:account_budget.view_budget_post_search
+#: view:account.budget.post:account_budget.view_budget_post_tree
+#: field:crossovered.budget.lines,general_budget_id:0
+#: model:ir.model,name:account_budget.model_account_budget_post
+msgid "Budgetary Position"
+msgstr "Буџетска позиција"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "Буџетски позиции"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_report
+#: model:ir.actions.report.xml,name:account_budget.action_report_analytic_account_budget
+#: model:ir.actions.report.xml,name:account_budget.action_report_crossovered_budget
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+#: model:ir.ui.menu,name:account_budget.menu_action_account_budget_post_tree
+#: model:ir.ui.menu,name:account_budget.next_id_31
+#: model:ir.ui.menu,name:account_budget.next_id_pos
+msgid "Budgets"
+msgstr "Буџети"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Cancel Budget"
+msgstr "Откажи буџет"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: account_budget
+#: field:account.budget.post,code:0 field:crossovered.budget,code:0
+msgid "Code"
+msgstr "Код"
+
+#. module: account_budget
+#: field:account.budget.post,company_id:0
+#: field:crossovered.budget,company_id:0
+#: field:crossovered.budget.lines,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Confirm"
+msgstr "Потврди"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Confirmed"
+msgstr "Потврдено"
+
+#. module: account_budget
+#: field:account.budget.analytic,create_uid:0
+#: field:account.budget.crossvered.report,create_uid:0
+#: field:account.budget.crossvered.summary.report,create_uid:0
+#: field:account.budget.post,create_uid:0
+#: field:account.budget.report,create_uid:0
+#: field:crossovered.budget,create_uid:0
+#: field:crossovered.budget.lines,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: account_budget
+#: field:account.budget.analytic,create_date:0
+#: field:account.budget.crossvered.report,create_date:0
+#: field:account.budget.crossvered.summary.report,create_date:0
+#: field:account.budget.post,create_date:0
+#: field:account.budget.report,create_date:0
+#: field:crossovered.budget,create_date:0
+#: field:crossovered.budget.lines,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Currency"
+msgstr "Валута"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Currency:"
+msgstr "Валута:"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Description"
+msgstr "Опис"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: selection:crossovered.budget,state:0
+msgid "Done"
+msgstr "Завршено"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: selection:crossovered.budget,state:0
+msgid "Draft"
+msgstr "Нацрт"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+msgid "Draft Budgets"
+msgstr "Нацрт буџети"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Duration"
+msgstr "Времетраење"
+
+#. module: account_budget
+#: field:crossovered.budget,date_to:0 field:crossovered.budget.lines,date_to:0
+msgid "End Date"
+msgstr "Краен датум"
+
+#. module: account_budget
+#: field:account.budget.analytic,date_to:0
+#: field:account.budget.crossvered.report,date_to:0
+#: field:account.budget.crossvered.summary.report,date_to:0
+#: field:account.budget.report,date_to:0
+msgid "End of period"
+msgstr "Крај на период"
+
+#. module: account_budget
+#: code:addons/account_budget/account_budget.py:124
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
+
+#. module: account_budget
+#: field:account.budget.analytic,id:0
+#: field:account.budget.crossvered.report,id:0
+#: field:account.budget.crossvered.summary.report,id:0
+#: field:account.budget.post,id:0 field:account.budget.report,id:0
+#: field:crossovered.budget,id:0 field:crossovered.budget.lines,id:0
+#: field:report.account_budget.report_analyticaccountbudget,id:0
+#: field:report.account_budget.report_budget,id:0
+#: field:report.account_budget.report_crossoveredbudget,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_budget
+#: field:account.budget.analytic,write_uid:0
+#: field:account.budget.crossvered.report,write_uid:0
+#: field:account.budget.crossvered.summary.report,write_uid:0
+#: field:account.budget.post,write_uid:0
+#: field:account.budget.report,write_uid:0
+#: field:crossovered.budget,write_uid:0
+#: field:crossovered.budget.lines,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: account_budget
+#: field:account.budget.analytic,write_date:0
+#: field:account.budget.crossvered.report,write_date:0
+#: field:account.budget.crossvered.summary.report,write_date:0
+#: field:account.budget.post,write_date:0
+#: field:account.budget.report,write_date:0
+#: field:crossovered.budget,write_date:0
+#: field:crossovered.budget.lines,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: account_budget
+#: field:account.budget.post,name:0 field:crossovered.budget,name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,paid_date:0
+msgid "Paid Date"
+msgstr "Датум на плаќање"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Perc(%)"
+msgstr "Проц(%)"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,percentage:0
+msgid "Percentage"
+msgstr "Процент"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget.lines,planned_amount:0
+#: view:website:account_budget.report_budget
+msgid "Planned Amount"
+msgstr "Планиран износ"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Planned Amt"
+msgstr "Планиран изн"
+
+#. module: account_budget
+#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget.lines,practical_amount:0
+#: view:website:account_budget.report_budget
+msgid "Practical Amount"
+msgstr "Реален износ"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Practical Amt"
+msgstr "Реален износ"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "Print"
+msgstr "Печати"
+
+#. module: account_budget
+#: view:account.budget.report:account_budget.account_budget_report_view
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "Печати буџети"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
+msgid "Print Summary"
+msgstr "Печати резиме"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+msgid "Printed at:"
+msgstr "Печатено на:"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Reset to Draft"
+msgstr "Ресетирај до нацрт"
+
+#. module: account_budget
+#: field:crossovered.budget,creating_user_id:0
+msgid "Responsible User"
+msgstr "Одговорен корисник"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "Select Dates Period"
+msgstr "Избери период од датуми"
+
+#. module: account_budget
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Почетен датум"
+
+#. module: account_budget
+#: field:account.budget.analytic,date_from:0
+#: field:account.budget.crossvered.report,date_from:0
+#: field:account.budget.crossvered.summary.report,date_from:0
+#: field:account.budget.report,date_from:0
+msgid "Start of period"
+msgstr "Почеток на период"
+
+#. module: account_budget
+#: field:crossovered.budget,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: account_budget
+#: code:addons/account_budget/account_budget.py:124
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "Буџетот '%s' нема сметки!"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget.lines,theoritical_amount:0
+#: view:website:account_budget.report_budget
+msgid "Theoretical Amount"
+msgstr "Теоретски износ"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Theoretical Amt"
+msgstr "Теоретски изн."
+
+#. module: account_budget
+#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Theoritical Amount"
+msgstr "Теоретски износ"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+msgid "This wizard is used to print budget"
+msgstr "Овој волшебник се користи печатење на буџет"
+
+#. module: account_budget
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+msgid "This wizard is used to print summary of budgets"
+msgstr "Овој волшебник се користи за печатење на резиме на буџети"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+msgid "To Approve"
+msgstr "За Одобрување"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+msgid "To Approve Budgets"
+msgstr "За одобрување на буџети"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Total:"
+msgstr "Вкупно:"
+
+#. module: account_budget
+#: field:crossovered.budget,validating_user_id:0
+msgid "Validate User"
+msgstr "Валидирај корисник"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Validated"
+msgstr "Валидирано"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+msgid "at"
+msgstr "на"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "or"
+msgstr "или"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "to"
+msgstr "до"

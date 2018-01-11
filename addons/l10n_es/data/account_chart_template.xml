@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <!-- Plantillas de los planes contables -->
+        <record id="account_chart_template_common" model="account.chart.template">
+            <field name="name">PGCE común</field>
+            <field name="visible" eval="False"/>
+            <field name="complete_tax_set" eval="False"/>
+        </record>
+
+        <record id="account_chart_template_assoc" model="account.chart.template">
+            <field name="name">PGCE entidades sin ánimo de lucro 2008</field>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="parent_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="account_chart_template_assoc_value" model="ir.values">
+            <field name="name">PGCE entidades sin ánimo de lucro 2008</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_assoc"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
+
+        <record id="account_chart_template_pymes" model="account.chart.template">
+            <field name="name">PGCE PYMEs 2008</field>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="parent_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="account_chart_template_pymes_value" model="ir.values">
+            <field name="name">PGCE PYMEs 2008</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_pymes"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
+
+        <record id="account_chart_template_full" model="account.chart.template">
+            <field name="name">PGCE completo 2008</field>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="parent_id" ref="account_chart_template_common"/>
+        </record>
+
+        <record id="account_chart_template_full_value" model="ir.values">
+            <field name="name">PGCE completo 2008</field>
+            <field name="model">account.chart.template</field>
+            <field name="key">default</field>
+            <field name="res_id" ref="account_chart_template_full"/>
+            <field name="value" ref="base.EUR"/>
+        </record>
+
+    </data>
+</openerp>

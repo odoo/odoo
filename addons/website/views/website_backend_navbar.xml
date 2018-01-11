@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<!-- Front-end/Back-end integration -->
+<template id="user_navbar" inherit_id="website.layout" groups="base.group_user">
+<xpath expr="//body/div['id=wrawrap']" position="before">
+<t t-if="website and menu_data">
+    <nav id="oe_main_menu_navbar" class="navbar navbar-inverse" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#oe_applications">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>    
+        </div>
+
+        <ul id="oe_applications" class="nav navbar-nav navbar-left navbar-collapse collapse">
+            <li class="dropdown active">
+                <a href="#" class="dropdown-toggle hidden-xs" data-toggle="dropdown"><i class="fa fa-th-large"></i> Website<b class="caret"/></a>
+                <ul class="dropdown-menu">
+                    <li t-foreach="menu_data['children']" t-as="menu">
+                        <t t-call="web.menu_link"/>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+        <ul id="oe_editzone" class="nav navbar-nav hidden-xs" style="padding-left: 20px; display: none;" groups="base.group_website_publisher">
+            <li><button type="button" data-action="edit" class="btn btn-primary btn-xs">Edit</button></li>
+        </ul>
+
+        <ul id="oe_systray" class="nav navbar-nav navbar-right pull-right hidden-xs">
+            <!-- Mobile -->
+            <li>
+                <a data-action="show-mobile-preview" href="#">
+                    <span title="Mobile preview"><i class="fa fa-mobile"/></span>
+                </a>
+            </li>
+
+            <!-- Promote -->
+            <li groups="base.group_website_designer">
+                <a data-action="promote-current-page" href="#">
+                    <span title="Promote page on the web">Promote</span>
+                </a>
+            </li>
+
+            <!-- Content -->
+            <li class="dropdown" groups="base.group_website_publisher">
+                <a id="content-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Content <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu oe_content_menu" role="menu">
+                    <li groups="base.group_website_designer"><a data-action="edit_menu" href="#"><span title="Edit Top Menu">Edit Menu</span></a></li>
+                    <li class="divider" groups="base.group_website_designer"> </li>
+                    <li groups="base.group_website_designer"><a href="#" data-action="new_page">New Page</a></li>
+                </ul>
+            </li>
+
+            <!-- Customize -->
+            <li class="dropdown" id="customize-menu" groups="base.group_website_designer">
+                <a id="customize-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Customize <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#advanced-view-editor" data-action='ace'>HTML Editor</a></li>
+                    <li><a href="/page/website.themes">Change Theme</a></li>
+                    <li><a href="/web#return_label=Website&amp;action=website.action_module_website">Install Apps</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </li>
+
+            <!-- Help -->
+            <li class="dropdown">
+                <a id="help-menu-button" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    Help <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu" id="help-menu">
+                    <li class="dropdown-header">HELP &amp; TUTORIALS</li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</t>
+</xpath>
+</template>
+</data>
+</openerp>

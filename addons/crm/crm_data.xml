@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_crm_menu" model="ir.actions.client">
+            <field name="name">Open Sale Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_base_partner')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_crm_menu"/>
+            <field name="state">open</field>
+        </record>
+
+
+        <!-- Crm Source -->
+        <record model="crm.tracking.source" id="crm_source_search_engine">
+            <field name="name">Search engine</field>
+        </record>
+        <record model="crm.tracking.source" id="crm_source_mailing">
+            <field name="name">Mailing Partner</field>
+        </record>
+        <record model="crm.tracking.source" id="crm_source_newsletter">
+            <field name="name">Newsletter</field>
+        </record>
+
+        <!-- Crm Medium -->
+        <record model="crm.tracking.medium" id="crm_medium_website">
+            <field name="name">Website</field>
+        </record>
+        <record model="crm.tracking.medium" id="crm_medium_phone">
+            <field name="name">Phone</field>
+        </record>
+        <record model="crm.tracking.medium" id="crm_medium_direct">
+            <field name="name">Direct</field>
+        </record>
+        <record model="crm.tracking.medium" id="crm_medium_email">
+            <field name="name">Email</field>
+        </record>
+        <record model="crm.tracking.medium" id="crm_medium_banner">
+            <field name="name">Banner Ad</field>
+        </record>
+
+
+        <record model="crm.case.section" id="sales_team.section_sales_department">
+            <field name="use_leads">True</field>
+            <field name="alias_name">sales</field>
+        </record>
+
+        <!-- Payment Mode -->
+
+        <record model="crm.payment.mode" id="payment_mode_1">
+            <field name="name">Cash</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_2">
+            <field name="name">Check</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_3">
+            <field name="name">Credit Card</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+
+        <record model="crm.payment.mode" id="payment_mode_4">
+            <field name="name">Demand Draft</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+
+        <!--default alias for leads-->
+        <record id="mail_alias_lead_info" model="mail.alias">
+            <field name="alias_name">info</field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_root"/>
+            <field name="alias_parent_model_id" ref="model_crm_case_section"/>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">CRM application installed!</field>
+            <field name="body"><![CDATA[<p>From the top Sales menu you can track leads and opportunities, get accurate forecast on your sales pipeline, plan meetings and phonecalls, get realtime statistics and efficiently organize the communication with your prospects.</p>
+<p>To manage quotations and sale orders, install the "Sales Management" application.</p>]]></field>
+        </record>
+
+    </data>
+
+</openerp>

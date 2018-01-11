@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <record id="view_report_campaign_analysis_graph" model="ir.ui.view">
+        <field name="name">campaign.analysis.graph</field>
+        <field name="model">campaign.analysis</field>
+        <field name="arch" type="xml">
+            <graph string="Marketing Reports" type="pivot" stacked="True">
+                <field name="segment_id" type="row"/>
+                <field name="month" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_campaign_analysis_tree" model="ir.ui.view">
+        <field name="name">campaign.analysis.tree</field>
+        <field name="model">campaign.analysis</field>
+        <field name="arch" type="xml">
+            <tree string="Marketing Reports" create="false">
+                <field name="year" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="date" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="campaign_id" invisible="1"/>
+                <field name="activity_id" invisible="1"/>
+                <field name="segment_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="country_id" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+                <field name="count"/>
+                <field name="total_cost" string="Cost"/><!-- sum="Cost"/-->
+                <field name="revenue"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_campaign_analysis_search" model="ir.ui.view">
+        <field name="name">campaign.analysis.search</field>
+        <field name="model">campaign.analysis</field>
+        <field name="arch" type="xml">
+            <search string="Campaign Analysis">
+                <field name="date"/>
+                <filter string="To Do" domain="[('state','=','todo')]"/>
+                <filter string="Done" domain="[('state','=','done')]"/>
+                <filter string="Exceptions" domain="[('state','=','exception')]"/>
+                <field name="campaign_id"/>
+                <field name="activity_id"/>
+                <field name="segment_id"/>
+                <field name="partner_id"/>
+                <field name="country_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Campaign" name="Campaign" context="{'group_by':'campaign_id'}" />
+                    <filter string="Segment" name="Segment" context="{'group_by':'segment_id'}"/>
+                    <filter string="Activity" name="activity" context="{'group_by':'activity_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Month" context="{'group_by':'month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_campaign_analysis_all" model="ir.actions.act_window">
+        <field name="name">Campaign Analysis</field>
+        <field name="res_model">campaign.analysis</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph,tree</field>
+        <field name="context">{'group_by': [], 'group_by_no_leaf':1}</field>
+        <field name="search_view_id" ref="view_campaign_analysis_search"/>
+    </record>
+
+    <menuitem action="action_campaign_analysis_all" id="menu_action_campaign_analysis_all" parent="base.marketing_reporting_menu" sequence="20"/>
+
+    </data>
+</openerp>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_registrationbadge">
+            <t t-call="report.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row">
+                        <!-- Inner right -->
+                        <div class="col-xs-6 text-center" style="padding-left:7mm; border-left:1px dashed black; height: 149mm; -webkit-transform:rotate(180deg); padding-top: 7mm">
+                             <div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div>
+                                            <span t-if="o.event_id.organizer_id.company_id.logo_web and o.event_id.organizer_id.is_company">
+                                                <img t-att-src="'data:image/png;base64,%s' % o.event_id.organizer_id.company_id.logo_web" style="max-height:1cm; max-width:4cm;"/>
+                                            </span>
+                                            <div>
+                                                <h5 t-field="o.event_id.name"/>
+                                            </div>
+                                            <div>
+                                                <h5>June 4th - 6th , 2014</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 text-center">
+                                        <t t-if="o.event_ticket_id">
+                                        <div>
+                                            <strong><span t-field="o.event_ticket_id"/></strong>
+                                        </div>
+                                        </t>
+                                        <div>
+                                            <t t-if="o.partner_id.is_company == True">
+                                                <small>
+                                                    <h3 t-field="o.partner_id.name"/>
+                                                    <h5 t-field="o.name"/>
+                                                </small>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-xs-12 mt32 text-center" style="background: lightgrey;">
+                                        <h3>Status</h3>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+
+                        <!-- Inner left -->
+                        <div class="col-xs-6" style="padding-right:7mm; height: 149mm; -webkit-transform:rotate(180deg); padding-top: 2mm;">
+                            <span t-field="o.event_id.badge_back"/>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <!-- Back -->
+                        <div class="col-xs-6 text-center" style="padding-right:7mm; border-top:1px dashed black; height: 148mm;">
+                            <span t-field="o.event_id.badge_innerleft"/>
+                        </div>
+
+                        <!-- Front -->
+                        <div class="col-xs-6 text-center" style="border-left:1px dashed black; border-top:1px dashed black; height: 148mm; text-center">
+                            <span t-field="o.event_id.badge_innerright"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+        </template>
+    </data>
+</openerp>

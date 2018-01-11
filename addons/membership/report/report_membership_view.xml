@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- REPORTING/MEMBERSHIP BY YEAR  -->
+        <record model="ir.ui.view" id="view_report_membership_search">
+            <field name="name">report.membership.search</field>
+            <field name="model">report.membership</field>
+            <field name="arch" type="xml">
+                <search string="Membership">
+                    <filter string="Forecast" context="{'waiting_invoiced_totpending_visible':0}" help="This will display waiting, invoiced and total pending columns"/>
+                    <filter string="Revenue Done" name="Revenue" context="{'paid_old_totearned_visible':0}" help="This will display paid, old and total earned columns"/>
+                    <field name="partner_id"/>
+                    <field name="membership_id"/>
+                    <field name="user_id"/>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" name="salesman"
+                            context="{'group_by':'user_id'}"/>
+                        <filter string="Associated Partner" name="associate_member_id"
+                            context="{'group_by':'associate_member_id'}"/>
+                        <filter string="Membership Product" name="product"
+                            context="{'group_by':'membership_id'}"/>
+                        <filter string="Current Membership State"
+                            context="{'group_by':'membership_state'}"/>
+                        <filter string="Company"
+                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Month" name="start_date"
+                            context="{'group_by':'start_date:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_report_membership_graph1">
+            <field name="name">report.membership.graph1</field>
+            <field name="model">report.membership</field>
+            <field name="arch" type="xml">
+                <graph string="Membership" type="pivot">
+                    <field name="membership_id" type="row"/>
+                    <field name="start_date" interval="month" type="col"/>
+                    <field name="quantity" type="measure"/>
+                    <field name="num_paid" type="measure"/>
+                    <field name="num_invoiced" type="measure"/>
+                    <field name="tot_earned" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_report_membership_tree">
+            <field name="name">Members Analysis</field>
+            <field name="res_model">report.membership</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="search_view_id" ref="view_report_membership_search"/>
+            <field name="context">{"search_default_start_date":1,"search_default_member":1, 'search_default_Revenue':1, 'search_default_this_month':1, 'search_default_salesman':1,'group_by_no_leaf':1}</field>
+        </record>
+
+        <menuitem name="Members Analysis" parent="base.menu_report_association"
+            action="action_report_membership_tree"
+            id="menu_report_membership"
+            groups="base.group_partner_manager"/>
+
+    </data>
+</openerp>

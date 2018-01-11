@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="account.action_wizard_multi_chart_todo" model="ir.actions.todo">
+            <field name="state">open</field>
+        </record>
+
+        <!-- Plantilla de cuentas -->
+
+        <record id="cuentas_plantilla" model="account.chart.template">
+            <field name="name">Plantilla de cuentas de Honduras (sencilla)</field>
+            <field name="account_root_id" ref="plan_raiz"/>
+            <field name="tax_code_root_id" ref="impuestos_raiz"/>
+            <field name="bank_account_view_id" ref="cta1101"/>
+            <field name="property_account_receivable" ref="cta110201"/>
+            <field name="property_account_payable" ref="cta210101"/>
+            <field name="property_account_income_categ" ref="cta410101"/>
+            <field name="property_account_expense_categ" ref="cta510101"/>
+            <field name="currency_id" ref="base.HNL"/>
+        </record>
+
+        <!-- Compras e ISV por Cobrar -->
+
+        <record id="impuestos_plantilla_isv_por_cobrar" model="account.tax.template">
+            <field name="chart_template_id" ref="cuentas_plantilla"/>
+            <field name="name">ISV por Cobrar</field>
+        <field name="amount" eval="0.15"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="cta110301"/>
+            <field name="account_paid_id" ref="cta110301"/>
+            <field name="base_code_id" ref="impuestos_base_isv_compras"/>
+            <field name="tax_code_id" ref="impuestos_isv_por_cobrar"/>
+            <field name="ref_base_code_id" ref="impuestos_base_isv_compras"/>
+            <field name="ref_tax_code_id" ref="impuestos_isv_por_cobrar"/>
+            <field name="type_tax_use">purchase</field>
+        <field name="price_include" eval="True"/>
+        </record>
+
+        <!-- Ventas e ISV por Pagar -->
+
+        <record id="impuestos_plantilla_isv_por_pagar" model="account.tax.template">
+            <field name="chart_template_id" ref="cuentas_plantilla"/>
+            <field name="name">ISV por Pagar</field>
+            <field name="amount" eval="0.15"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="cta210201"/>
+            <field name="account_paid_id" ref="cta210201"/>
+            <field name="base_code_id" ref="impuestos_base_isv_ventas"/>
+            <field name="tax_code_id" ref="impuestos_isv_por_pagar"/>
+            <field name="ref_base_code_id" ref="impuestos_base_isv_ventas"/>
+            <field name="ref_tax_code_id" ref="impuestos_isv_por_pagar"/>
+            <field name="type_tax_use">sale</field>
+       <field name="price_include" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

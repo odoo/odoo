@@ -1,0 +1,697 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="0">
+
+#
+# Tax Code Template Configuration
+#
+    <record model="account.tax.code.template" id="vat_code_tax">
+        <field name="name">Decont TVA</field>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva">
+        <field name="name">TVA COLECTATA</field>
+        <field name="code">b)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvati">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA colectata - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvati24">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 24% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvac_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvati20">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 20% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvac_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvati09">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 09% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvac_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvati05">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 05% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvac_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvati00">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 00% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvac_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvais">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvais24">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 24% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvac_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvais20">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 20% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvac_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvais09">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 09% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvac_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvais05">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 05% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvac_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvais00">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 00% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvac_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaib">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaib24">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 24% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvac_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaib20">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 20% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvac_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaib09">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 09% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvac_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaib05">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 05% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvac_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tvaib00">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 00% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvac_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva24">
+        <field name="name">TVA 24%</field>
+        <field name="code">TVA colectata 24%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva20">
+        <field name="name">TVA 20%</field>
+        <field name="code">TVA colectata 20%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva19">
+        <field name="name">TVA 19%</field>
+        <field name="code">TVA colectata 19%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva09">
+        <field name="name">TVA 9%</field>
+        <field name="code">TVA colectata 9%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva05">
+        <field name="name">TVA 5%</field>
+        <field name="code">TVA colectata 5%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_tva00">
+        <field name="name">TVA 0%</field>
+        <field name="code">TVA colectata 0%</field>
+        <field name="parent_id" ref="vat_code_tvac_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza">
+        <field name="name">BAZA TVA COLECTAT</field>
+        <field name="code">a)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazati">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA colectata - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazati24">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 24% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazati20">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 20% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazati09">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 09% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazati05">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 05% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazati00">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA colectata 00% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazais">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazais24">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 24% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazais20">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 20% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazais09">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 09% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazais05">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 05% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazais00">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA colectata 00% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaib">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaib24">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 24% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaib20">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 20% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaib09">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 09% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaib05">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 05% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaib00">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA colectata 00% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza24">
+        <field name="name">Baza TVA 24%</field>
+        <field name="code">TVA colectata 24%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza20">
+        <field name="name">Baza TVA 20%</field>
+        <field name="code">TVA colectata 20%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza19">
+        <field name="name">Baza TVA 19%</field>
+        <field name="code">TVA colectata 19%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza09">
+        <field name="name">Baza TVA 9%</field>
+        <field name="code">TVA colectata 9%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza05">
+        <field name="name">Baza TVA 5%</field>
+        <field name="code">TVA colectata 5%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_baza00">
+        <field name="name">Baza TVA 0%</field>
+        <field name="code">TVA colectata 0%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvac_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva">
+        <field name="name">TVA DEDUCTIBILA</field>
+        <field name="code">d)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvati">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvati24">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 24% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvad_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvati20">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 20% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvad_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvati09">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 09% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvad_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvati05">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 05% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvad_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvati00">
+        <field name="name">TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 00% - taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvad_tvati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvais">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvais24">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 24% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvad_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvais20">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 20% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvad_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvais09">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 09% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvad_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvais05">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 05% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvad_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvais00">
+        <field name="name">TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 00% - intracomunitar servicii</field>
+        <field name="parent_id" ref="vat_code_tvad_tvais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvaib">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvaib24">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 24% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvad_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvaib20">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 20% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvad_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvaib09">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 09% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvad_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvaib05">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 05% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvad_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tvaib00">
+        <field name="name">TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 00% - intracomunitar bunuri</field>
+        <field name="parent_id" ref="vat_code_tvad_tvaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva24">
+        <field name="name">TVA 24%</field>
+        <field name="code">TVA deductibila 24%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva20">
+        <field name="name">TVA 20%</field>
+        <field name="code">TVA deductibila 20%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva19">
+        <field name="name">TVA 19%</field>
+        <field name="code">TVA deductibila 19%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva09">
+        <field name="name">TVA 9%</field>
+        <field name="code">TVA deductibila 9%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva05">
+        <field name="name">TVA 5%</field>
+        <field name="code">TVA deductibila 5%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_tva00">
+        <field name="name">TVA 0%</field>
+        <field name="code">TVA deductibila 0%</field>
+        <field name="parent_id" ref="vat_code_tvad_tva"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza">
+        <field name="name">BAZA TVA DEDUCTIBIL</field>
+        <field name="code">c)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazati">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazati24">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 24% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazati20">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 20% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazati09">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 09% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazati05">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 05% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazati00">
+        <field name="name">Baza TVA Taxare Inversa</field>
+        <field name="code">TVA deductibila 00% - taxare inversa(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazati"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazais">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazais24">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 24% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazais20">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 20% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazais09">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 09% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazais05">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 05% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazais00">
+        <field name="name">Baza TVA Intracomunitar Servicii</field>
+        <field name="code">TVA deductibila 00% - intracomunitar servicii(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazais"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazaib">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazaib24">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 24% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazaib20">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 20% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazaib09">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 09% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazaib05">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 05% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_bazaib00">
+        <field name="name">Baza TVA Intracomunitar Bunuri</field>
+        <field name="code">TVA deductibila 00% - intracomunitar bunuri(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_bazaib"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza24">
+        <field name="name">Baza TVA 24%</field>
+        <field name="code">TVA deductibila 24%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza20">
+        <field name="name">Baza TVA 20%</field>
+        <field name="code">TVA deductibila 20%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza19">
+        <field name="name">Baza TVA 19%</field>
+        <field name="code">TVA deductibila 19%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza09">
+        <field name="name">Baza TVA 9%</field>
+        <field name="code">TVA deductibila 9%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza05">
+        <field name="name">Baza TVA 5%</field>
+        <field name="code">TVA deductibila 5%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_baza00">
+        <field name="name">Baza TVA 0%</field>
+        <field name="code">TVA deductibila 0%(Baza)</field>
+        <field name="parent_id" ref="vat_code_tvad_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvanex_baza">
+        <field name="name">BAZA TVA NEEXIGIBILA</field>
+        <field name="code">e)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_nex_baza">
+        <field name="name">Baza TVA Neexigibil Colectat</field>
+        <field name="code">Baza TVA Neexigibil Colectat</field>
+        <field name="parent_id" ref="vat_code_tvanex_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_nex_baza">
+        <field name="name">Baza TVA Neexigibil Deductibil</field>
+        <field name="code">Baza TVA Neexigibil Deductibil</field>
+        <field name="parent_id" ref="vat_code_tvanex_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvanex">
+        <field name="name">TVA NEEXIGIBILA</field>
+        <field name="code">f)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_nex">
+        <field name="name">TVA Neexigibil Colectat</field>
+        <field name="code">TVA Neexigibil Colectat</field>
+        <field name="parent_id" ref="vat_code_tvanex"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvad_nex">
+        <field name="name">TVA Neexigibil Deductibil</field>
+        <field name="code">TVA Neexigibil Deductibil</field>
+        <field name="parent_id" ref="vat_code_tvanex"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvati_baza">
+        <field name="name">BAZA TVA TAXARE INVERSA</field>
+        <field name="code">g)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTI">
+        <field name="name">Baza TVA Taxare inversa</field>
+        <field name="code">Baza TVA Taxare inversa</field>
+        <field name="parent_id" ref="vat_code_tvati_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvatisc_baza">
+        <field name="name">BAZA TVA TAXARE SCUTITA</field>
+        <field name="code">h)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTISC">
+        <field name="name">Baza TVA Taxare Scutita - Vanzari</field>
+        <field name="code">Baza TVA Taxare Scutita - Vanzari</field>
+        <field name="parent_id" ref="vat_code_tvatisc_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTISCA">
+        <field name="name">Baza TVA Taxare Scutita - Achizitii</field>
+        <field name="code">Baza TVA Taxare Scutita - Achizitii</field>
+        <field name="parent_id" ref="vat_code_tvatisc_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvatine_baza">
+        <field name="name">BAZA TVA TAXARE INTRACOMUNITARA NEIMPOZABILA</field>
+        <field name="code">i)</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTINE">
+        <field name="name">Baza TVA Taxare intracomunitara neimpozabila - Vanzari</field>
+        <field name="code">Baza TVA Taxare intracomunitara neimpozabila - Vanzari</field>
+        <field name="parent_id" ref="vat_code_tvatine_baza"/>
+    </record>
+
+    <record model="account.tax.code.template" id="vat_code_tvac_bazaTINEA">
+        <field name="name">Baza TVA Taxare intracomunitara neimpozabila - Achizitii</field>
+        <field name="code">Baza TVA Taxare intracomunitara neimpozabila - Achizitii</field>
+        <field name="parent_id" ref="vat_code_tvatine_baza"/>
+    </record>
+
+</data>
+</openerp>

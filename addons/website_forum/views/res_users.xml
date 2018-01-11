@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Update user form !-->
+        <record id="view_users_form_forum" model="ir.ui.view">
+            <field name="name">res.users.form.forum</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <field name="signature" position="after">
+                    <field name="karma" string="Forum Karma"/>
+                </field>
+                <xpath expr="//div[contains(@class, 'oe_right oe_button_box')]" position="inside">
+                    <br/>
+                    <field name="website_published" class="pull-right" widget="website_button"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Update user prefrence form!-->
+        <record id="view_users_form_simple_modif_forum" model="ir.ui.view">
+            <field name="name">res.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <group name="preferences" position="before">
+                    <div style="margin-top: 19px;">
+                        <field name="website_published" class="pull-right" widget="website_button"/>
+                    </div>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</openerp>

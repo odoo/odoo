@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<!-- Page --> 
+
+<template id="aboutus" inherit_id="website.aboutus" customize_show="True" name="Our Team">
+    <xpath expr="//div[@class='oe_structure']" position="after">
+        <section class="container">
+            <div class="col-sm-12 text-center" t-if="len(employee_ids)">
+                <h2>Our Team</h2>
+            </div>
+            <div t-foreach="employee_ids" t-as="employee" class="col-sm-3 col-lg-2 mt16 text-center colsize">
+                <t t-call="website.publish_management"><t t-set="object" t-value="employee"/></t>
+                <div class="clearfix"/>
+                <img t-att-src="website.image_url(employee, 'image_medium')" class="img shadow img-rounded"/>
+                <div class="mt8">
+                    <strong t-field="employee.name"></strong>
+                </div>
+                <div t-field="employee.job_id"/>
+                <div t-field="employee.public_info" class="text-muted mt16"/>
+            </div>
+        </section>
+    </xpath>
+</template>
+
+ </data>
+</openerp>

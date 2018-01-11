@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_mail_mass_mailing_test_form">
+            <field name="name">mail.mass_mailing.test.form</field>
+            <field name="model">mail.mass_mailing.test</field>
+            <field name="arch" type="xml">
+                <form string="Send a Sample Mail">
+                    <p class="text-muted">
+                        Send a sample of this mailing to the above of email addresses for test purpose.
+                    </p>
+                    <group>
+                        <field name="email_to"/>
+                    </group>
+                    <footer>
+                        <button string="Send Sample Mail" name="send_mail_test" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mail_mass_mailing_test" model="ir.actions.act_window">
+            <field name="name">Mailing Test</field>
+            <field name="res_model">mail.mass_mailing.test</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

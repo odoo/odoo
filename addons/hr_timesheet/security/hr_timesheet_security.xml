@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="property_rule_timesheet_manager" model="ir.rule">
+            <field name="name">Manager HR Analytic Timesheet</field>
+            <field name="model_id" ref="model_hr_analytic_timesheet"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4,ref('base.group_hr_manager')), (4,ref('base.group_hr_user'))]"/>
+        </record>
+
+        <record id="property_rule_timesheet_employee" model="ir.rule">
+            <field name="name">Employee HR Analytic Timesheet</field>
+            <field name="model_id" ref="model_hr_analytic_timesheet"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</openerp>

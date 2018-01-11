@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!--
+        Default bank account description
+        -->
+        <record id="bank_iban" model="res.partner.bank.type">
+            <field name="name">IBAN Account</field>
+            <field name="code">iban</field>
+            <field name="format_layout">%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s</field>
+        </record>
+        <record id="bank_swift_field" model="res.partner.bank.type.field">
+            <field name="name">bank_bic</field>
+            <field name="bank_type_id" ref="bank_iban"/>
+            <field eval="False" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+        <record id="bank_country_field" model="res.partner.bank.type.field">
+            <field name="name">country_id</field>
+            <field name="bank_type_id" ref="bank_iban"/>
+            <field eval="False" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+        <record id="bank_zip_field" model="res.partner.bank.type.field">
+            <field name="name">zip</field>
+            <field name="bank_type_id" ref="bank_iban"/>
+            <field eval="False" name="required"/>
+            <field eval="False" name="readonly"/>
+        </record>
+    </data>
+</openerp>

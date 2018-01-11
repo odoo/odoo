@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_journal_pos_user_form">
+            <field name="name">POS Journal</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Point of Sale">
+                        <group col="4" colspan="4">
+                            <field name="journal_user"/>
+                            <field name="amount_authorized_diff"/>
+                            <field name="self_checkout_payment_method" />   <!-- FIXME : this field is obsolete -->
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
+            <field name="name">account.bank.statement.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <search string="Search Cash Statements">
+                    <field name="name" string="Cash Statement"/>
+                    <field name="date"/>
+                    <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                    <field name="journal_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record id="view_pos_confirm_cash_statement_filter" model="ir.ui.view">
+            <field name="name">account.bank.statement.inherit2</field>
+            <field name="model">account.bank.statement</field>
+            <field name="arch" type="xml">
+                <search string="Search Cash Statements">
+                    <field name="name" string="Cash Statement"/>
+                    <field name="date"/>
+                    <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                    <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                    <field name="journal_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                        <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_new_bank_statement_tree" model="ir.actions.act_window">
+            <field name="name">Cash Register</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+            <field name="domain">[('journal_id.type', '=', 'cash')]</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="account.view_bank_statement_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement2_all">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_tree"/>
+        </record>
+
+        <record id="view_cash_statement_pos_tree" model="ir.ui.view">
+            <field name="name">account.bank.statement.tree</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_cash_statement_tree"/>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="after">
+                    <field name="user_id" string="Responsible"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_new_bank_statement_all_tree" model="ir.actions.act_window">
+            <field name="name">Cash Registers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bank.statement</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="search_view_id" ref="account.view_account_bank_statement_filter"/>
+            <field name="context">{'search_default_state_draft': 1, 'search_default_state_open': 1}</field>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register1">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_cash_statement_pos_tree"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="act_cash_statement_all_register">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account.view_bank_statement_form2"/>
+            <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
+        </record>
+    </data>
+</openerp>

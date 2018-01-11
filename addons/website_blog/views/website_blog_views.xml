@@ -1,0 +1,200 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <menuitem name="Knowledge" id="knowledge.menu_document"/>
+        <menuitem name="Blog Posts" id="menu_wiki" parent="knowledge.menu_document" sequence="20" />
+
+        <!-- Blog views -->
+        <record model="ir.ui.view" id="view_blog_blog_list">
+            <field name="name">blog.blog.list</field>
+            <field name="model">blog.blog</field>
+            <field name="arch" type="xml">
+                <tree string="Blogs">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_blog_blog_form">
+            <field name="name">blog.blog.form</field>
+            <field name="model">blog.blog</field>
+            <field name="arch" type="xml">
+                <form string="Blog">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- page list view  -->
+        <record model="ir.ui.view" id="view_blog_post_list">
+            <field name="name">blog.post.list</field>
+            <field name="model">blog.post</field>
+            <field name="arch" type="xml">
+                <tree string="Blog Posts">
+                    <field name="name"/>
+                    <field name="blog_id"/>
+                    <field name="create_uid" invisible="1"/>
+                    <field name="write_uid"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
+        <!-- page form view  -->
+        <record model="ir.ui.view" id="view_blog_post_form">
+            <field name="name">blog.post.form</field>
+            <field name="model">blog.post</field>
+            <field name="arch" type="xml">
+                <form string="Blog Post">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Name"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                            <field name="subtitle" placeholder="Blog Subtitle"/>
+                        </group>
+                        <group>
+                            <field name="blog_id"/>
+                        </group>
+                        <group>
+                            <field name="visits"/>
+                            <field name="ranking" invisible="1"/>
+                        </group>
+                        <group string="Technical" groups="base.group_no_one">
+                            <field name="write_uid" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}"/>
+                            <field name="write_date"/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <!-- page search view  -->
+        <record model="ir.ui.view" id="view_blog_post_search">
+            <field name="name">blog.post.search</field>
+            <field name="model">blog.post</field>
+            <field name="arch" type="xml">
+                <search string="Blog Post">
+                    <field name="name" string="Content" filter_domain="['|', ('name','ilike',self), ('content','ilike',self)]"/>
+                    <field name="write_uid"/>
+                    <field name="blog_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Blog" domain="[]" context="{'group_by': 'blog_id'}"/>
+                        <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Last Contributor" domain="[]" context="{'group_by': 'write_uid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <!-- page action -->
+        <record model="ir.actions.act_window" id="action_blog_post">
+            <field name="name">Blog Posts</field>
+            <field name="res_model">blog.post</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_blog_post_list"/>
+            <field name="search_view_id" ref="view_blog_post_search"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new blog post.
+                </p>
+            </field>
+        </record>
+        <menuitem id="menu_page" parent="menu_wiki" name="Blog Posts" action="action_blog_post" sequence="10"/>
+
+        <record model="ir.actions.act_window" id="action_blog_blog">
+            <field name="name">Blogs</field>
+            <field name="res_model">blog.blog</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_blog" parent="menu_wiki" name="Blogs" action="action_blog_blog" sequence="20"/>
+
+        <!-- History Tree view -->
+        <record model="ir.ui.view" id="view_blog_history_tree">
+            <field name="name">blog.post.history.tree</field>
+            <field name="model">blog.post.history</field>
+            <field name="arch" type="xml">
+                <tree string="Document History">
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                    <field name="post_id"/>
+                </tree>
+            </field>
+        </record>
+        <!-- History Form view  -->
+        <record model="ir.ui.view" id="view_blog_history_form">
+            <field name="name">blog.post.history.form</field>
+            <field name="model">blog.post.history</field>
+            <field name="arch" type="xml">
+                <form string="Blog Post History">
+                    <label for="post_id" class="oe_edit_only"/>
+                    <h1><field name="post_id" select="1" /></h1>
+                    <label for="create_date" class="oe_edit_only"/>
+                    <field name="create_date" readonly="1"/>
+                </form>
+            </field>
+        </record>
+        <!-- History Action  -->
+        <record model="ir.actions.act_window" id="action_history">
+            <field name="name">Page history</field>
+            <field name="res_model">blog.post.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="menu_page_history" parent="menu_wiki" name="Pages history" action="action_history" sequence="30" groups="base.group_no_one"/>
+        <act_window
+            id="action_related_page_history"
+            context="{'search_default_post_id': [active_id], 'default_post_id': active_id}"
+            domain="[('post_id','=',active_id)]"
+            name="Page History"
+            res_model="blog.post.history"
+            src_model="blog.post"/>
+
+        <record model="ir.ui.view" id="blog_tag_tree">
+            <field name="name">blog_tag_tree</field>
+            <field name="model">blog.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tag List" create="false">
+                    <field name="name"/>
+                    <field name="post_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="blog_tag_form">
+            <field name="name">blog_tag_form</field>
+            <field name="model">blog.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tag Form">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <label for="post_ids" string="Used in: "/>
+                        <field name="post_ids"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_tags">
+            <field name="name">Blog Tags</field>
+            <field name="res_model">blog.tag</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="view_id" ref="blog_tag_tree"/>
+        </record>
+
+        <menuitem id="menu_blog_tag" parent="menu_wiki" name="Blog Tags" action="action_tags" sequence="40" />
+    </data>
+</openerp>

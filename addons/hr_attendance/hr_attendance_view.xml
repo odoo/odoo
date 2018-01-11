@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <form string="Employee attendances">
+                    <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="name"/>
+                        <field name="action"/>
+                        <field name="action_desc"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances">
+                    <field name="name"/>
+                    <field name="action"/>
+                    <field name="action_desc"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_attendance_who" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field eval="3" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Employee attendances">
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="action"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_hr_attendance_filter">
+            <field name="name">view_hr_attendance_filter</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <search string="Hr Attendance Search">
+                    <field name="name" string="Attendance"/>
+                    <field name="action"/>
+                    <filter string="Today" name="today" domain="[('name','&gt;=',current_date),('name','&lt;=',current_date)]" />
+                    <filter string="Current Month" domain="[('name','&gt;=', datetime.datetime.now().strftime('%Y-%m-01'))]" />
+                    <separator/>
+                    <filter string="My Attendance" domain="[('employee_id.user_id.id', '=', uid)]" />
+                    <field name="employee_id"/>
+                    <group expand="0" string="Group By">
+                        <filter name="employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                        <separator/>
+                        <filter name="groupby_name" string="Month" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_hr_attendance_graph" model="ir.ui.view">
+            <field name="name">hr.attendance.graph</field>
+            <field name="model">hr.attendance</field>
+            <field name="arch" type="xml">
+                <graph string="Attendance" type="pivot">
+                    <field name="employee_id" type="row"/>
+                    <field name="name" type="col"/>
+                    <field name="worked_hours" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="open_view_attendance" model="ir.actions.act_window">
+            <field name="name">Attendances</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_today":1}</field>
+            <field name="search_view_id" ref="view_hr_attendance_filter" />
+            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using Odoo's web service features.</field>
+        </record>
+
+        <record id="action_hr_attendance_graph" model="ir.actions.act_window">
+            <field name="name">Attendance Analysis</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_hr_attendance_graph"/>
+        </record>
+
+        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="5" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
+
+        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="10" groups="base.group_hr_attendance"/>
+
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20" groups="base.group_hr_attendance"/>
+
+        <menuitem
+            action="action_hr_attendance_graph"
+            id="menu_hr_attendance_graph"
+            parent="hr.menu_hr_reporting"
+            sequence="3"
+        />
+
+        <record id="edit_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.form</field>
+            <field name="model">hr.action.reason</field>
+            <field name="arch" type="xml">
+                <form string="Define attendance reason">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="action_type"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_attendance_reason" model="ir.ui.view">
+            <field name="name">hr.action.reason.tree</field>
+            <field name="model">hr.action.reason</field>
+            <field name="arch" type="xml">
+                <tree string="Attendance reasons">
+                    <field name="name" />
+                    <field name="action_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_view_attendance_reason" model="ir.actions.act_window">
+            <field name="name">Attendance Reasons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.action.reason</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_attendance_reason"/>
+        </record>
+
+        <menuitem
+            sequence="35" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" groups="base.group_hr_attendance" name="Attendance"/>
+        <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config" groups="base.group_hr_attendance"/>
+
+        <record id="hr_attendance_employee" model="ir.ui.view">
+            <field name="name">hr.employee.form1</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <field name="active" position="before">
+                    <label for="state" groups="base.group_hr_attendance"/>
+                    <div groups="base.group_hr_attendance">
+                        <field name="state" class="oe_inline"/> -
+                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

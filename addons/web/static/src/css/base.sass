@@ -1,0 +1,2837 @@
+@charset "utf-8"
+
+// Variables {{{
+$facets-border: #afafb6
+$section-title-color: #7C7BAD
+$tag-bg-light: #f0f0fa
+$tag-bg-dark: #7C7BAD
+$tag-border: #afafb6
+$tag-border-selected: #a6a6fe
+$hover-background: #f0f0fa
+$link-color: #7C7BAD
+$sheet-max-width: 860px
+$sheet-min-width: 650px
+$sheet-padding: 16px
+// }}}
+// Mixins {{{
+@font-face
+    font-family: 'mnmliconsRegular'
+    src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.woff') format('woff')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
+
+@font-face
+    font-family: 'EntypoRegular'
+    src: url('/web/static/src/font/entypo-webfont.eot') format('eot')
+    src: url('/web/static/src/font/entypo-webfont.eot?#iefix') format('embedded-opentype')
+    src: url('/web/static/src/font/entypo-webfont.woff') format('woff')
+    src: url('/web/static/src/font/entypo-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/entypo-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
+
+@mixin reset()
+    border: none
+    padding: 0
+    margin: 0
+    background: none
+    @include radius(0)
+    @include box-shadow(none)
+
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+    background-color: mix($startColor, $endColor)
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+    background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
+    background-image:         linear-gradient(to bottom, $startColor, $endColor)
+
+@mixin radial-gradient($gradient)
+    background-position: center center
+    background-image: -webkit-radial-gradient(circle, $gradient)
+    background-image: -moz-radial-gradient($gradient)
+    background-image: -ms-radial-gradient($gradient)
+    background-image: radial-gradient(circle, $gradient)
+
+@mixin radius($radius: 5px)
+    -moz-border-radius: $radius
+    -webkit-border-radius: $radius
+    border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+    -moz-box-shadow: $bsval
+    -webkit-box-shadow: $bsval
+    box-shadow: $bsval
+
+@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
+    -webkit-transition: $transval
+    -moz-transition: $transval
+    -ms-transition: $transval
+    -o-transition: $transval
+    transition: $transval
+
+@mixin opacity($opacity: .5)
+    filter: alpha(opacity=$opacity * 100)
+    opacity: $opacity
+
+@mixin background-clip($clip: padding-box)
+    -webkit-background-clip: $clip
+    -moz-background-clip: $clip
+    background-clip: $clip
+
+@mixin box-sizing($type: content)
+    // type = border || content || padding
+    -webkit-box-sizing: #{$type}-box
+    -moz-box-sizing: #{$type}-box
+    -ms-box-sizing: #{$type}-box
+    box-sizing: #{$type}-box
+
+@mixin skew-gradient($startColor: #555, $endColor: #333)
+    background-color: $endColor
+    background: -moz-linear-gradient(135deg, $endColor, $startColor)
+    background: -o-linear-gradient(135deg, $startColor, $endColor)
+    background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
+    background: -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+
+@mixin transform($transform)
+    -webkit-transform: $transform
+    -moz-transform: $transform
+    -ms-transform: $transform
+    -o-transform: $transform
+    transform: $transform
+
+@mixin keyframes($name)
+    @-webkit-keyframes #{$name}
+        @content
+    @-moz-keyframes #{$name}
+        @content
+    @-ms-keyframes #{$name}
+        @content
+    @-o-keyframes #{$name}
+        @content
+    @keyframes #{$name}
+        @content
+
+
+// Transforms the (readable) text of an inline element into an mmlicons icon,
+// allows for actual readable text in-code (and in readers?) with iconic looks
+@mixin text-to-icon($icon-name, $color: #404040)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    text-shadow: none
+    font-weight: normal
+    &:before
+        font: 21px "mnmliconsRegular"
+        content: $icon-name
+        color: $color
+
+@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    text-shadow: none
+    font-weight: normal
+    &:before
+        font: $size "entypoRegular"
+        content: $icon-name
+        color: $color
+
+// }}}
+
+#oe_main_menu_navbar
+    min-height: 34px
+    z-index: 1001
+    border-radius: 0
+    li a, li button
+        padding: 4px 8px 4px 8px
+        margin-top: 2px
+        font-size: 13px
+    .oe_topbar_avatar
+        max-height: 18px
+        width: auto
+        
+#oe_main_menu_navbar.navbar
+    margin-bottom: 0px
+
+.oe_systray
+    margin-right: 0px !important
+
+.apps-client
+    border: 0
+
+// Notifications {{{
+.oe_notification
+    z-index: 1600
+    
+.oe_webclient_timezone_notification
+    a
+        color: white
+        text-decoration: underline
+    p
+        margin-top: 1em
+    dt
+        font-weight: bold
+.oe_timezone_systray
+    span
+        margin-top: 1px
+        background-color: #f6cf3b
+// }}}
+// Top Menu {{{
+.navbar
+    .oe_topbar_name
+        max-width: 150px
+        display: inline-block
+        height: 15px // Customize to manage caret when topbar_name is over sized.
+        text-overflow: ellipsis
+        white-space: nowrap
+        overflow: hidden // Customize to bring ellipsis when topbar_name is over sized.
+// }}}
+
+.openerp
+    // Global style {{{
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 13px
+    background: white
+    &.openerp_webclient_container
+        height: 95% // fallback for browsers without support for calc()
+        height: calc(100% - 34px)
+        overflow: auto
+    @media (max-width: 768px)
+        &.openerp_webclient_container
+            height: 90% // fallback for browsers without support for calc()
+            height: calc(100% - 52px)
+    // }}}
+    //Placeholder style{{{
+    \:-moz-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    \::-webkit-input-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    \:-ms-input-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    //}}}
+    // Tag reset {{{
+    a
+        text-decoration: none
+        cursor: pointer !important
+    table
+        padding: 0
+        border-collapse: collapse
+    thead
+        font-weight: bold
+        background-color: #f0f0f0
+        th
+            border-left: 1px solid #dfdfdf
+            &:first-child
+                border-left: none
+            &.null
+                border-left: none
+    th, td
+        padding: 0
+        text-align: left
+    th
+        font-weight: bold
+        vertical-align: middle
+    td
+        vertical-align: top
+    .oe_title
+        float: left
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden    
+    .oe_form_group
+        clear: both
+    .zebra tbody tr:nth-child(odd) td
+        background-color: #f0f0fa
+        @include vertical-gradient(#f0f0fa, #eeeef6)
+    .zebra tbody tr:hover td
+        @include vertical-gradient(#eee, #dedede)
+    input, textarea, select
+        padding: 2px 4px
+        border: 1px solid #ccc
+        @include radius(3px)
+        background: white
+    img
+        vertical-align: middle
+    h4
+        margin: 4px 0
+        font-weight: bold
+        font-size: inherit
+    // }}}
+    // Button style {{{
+    a.button:link, a.button:visited, button, .oe_button, input[type='submit']
+        display: inline-block
+        border: 1px solid rgba(0,0,0,0.4)
+        color: #4c4c4c
+        margin: 0
+        padding: 3px 12px
+        font-size: 13px
+        text-align: center
+        @include vertical-gradient(#efefef, #d8d8d8)
+        @include radius(3px)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        text-shadow: 0 1px 1px rgba(255, 255, 255, .5)
+        -webkit-font-smoothing: antialiased
+        outline: none
+
+    a.button:hover, button:hover,.oe_button:hover, input[type='submit']:hover
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        cursor: pointer
+        background-position: 0
+
+    a.button:focus, button:focus, .oe_button:focus, input[type='submit']:focus
+        border: 1px solid #80bfff
+        background-position: 0
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
+
+    a.button:active, a.button.active, button:active, .oe_button:active, .oe_button.active, input[type='submit']:active, input[type='submit'].active
+        @include vertical-gradient(#e3e3e3, #f6f6f6)
+        @include box-shadow(none)
+
+    a.button.disabled, button:disabled, .oe_button:disabled, input[type='submit']:disabled
+        background: #efefef !important
+        border: 1px solid #d1d1d1 !important
+        @include box-shadow(none !important)
+        color: #aaa !important
+        cursor: default
+        text-shadow: 0 1px 1px #fff !important
+    // }}}
+    // Jquery ui Overrides {{{
+    .ui-widget-content a
+        color: $link-color
+    .oe_bounce_container
+        display: inline-block
+
+    // Bug lp:1051746
+    .text-tag .text-button
+        height: auto !important
+        min-height: 16px
+
+    // bug noted in jquery ui CSS doesn't seem to occur in IE9,
+    // so remove position:relative
+    .ui-tabs
+        position: static
+
+    // }}}
+    // Generic classes {{{
+    .oe_i
+        font-family: "mnmliconsRegular" !important
+        font-size: 21px
+        font-weight: 300 !important
+    .oe_e
+        font-family: "entypoRegular" !important
+        font-size: 34px
+        font-weight: 300 !important
+        line-height: 100%
+    .oe_left
+        float: left
+        margin-right: 8px
+        width: 305px
+    .oe_right
+        float: right
+        margin-left: 8px
+    .oe_text_center
+        text-align: center
+    .oe_text_left
+        text-align: left
+    .oe_text_right
+        text-align: right
+    .oe_clear
+        clear: both
+    .oe_wait
+        cursor: wait
+    .oe_fade
+        color: #888
+        font-weight: normal
+    .oe_bold
+        font-weight: bold
+    .oe_inline
+        width: auto !important
+    .oe_highlight
+        color: white
+        background: #DC5F59
+    button.oe_highlight
+        @include vertical-gradient(#df3f3f, #a21a1a)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
+    button.oe_highlight:hover
+        @include vertical-gradient(lighten(#e04f4f, 2%), lighten(#a21a1a, 2%))
+    button.oe_highlight:active
+        @include vertical-gradient(lighten(#a21a1a, 8%), darken(#df3f3f, 8%))
+    .oe_background_grey
+        background: #eee !important
+
+    .oe_form_dirty
+        .oe_highlight_on_dirty
+            color: white
+            background: #dc5f59
+            font-weight: bold
+        button.oe_highlight_on_dirty
+            @include vertical-gradient(#dc5f59, #b33630)
+            @include box-shadow(none)
+            &:hover
+                background: #ED6F6A
+    .oe_warning_redirect
+        border: none !important
+        padding: 0 !important
+        margin-left: 20px !important
+        background: #f5f7f9 !important
+        box-shadow: none !important
+        &:hover
+            text-decoration: underline !important
+    .oe_stat_button
+        font-weight: normal
+        width: 132px !important
+        height: 40px
+        color: #666
+        margin: 0px -1px -1px 0px
+        padding: 0
+        border: 1px solid #dddddd
+        border-radius: 0
+        box-shadow: none
+        background: white
+        > div
+            display: table-cell
+            vertical-align: middle
+            text-align: left
+            padding: 0
+            line-height: 120%
+        .stat_button_icon
+            color: #7C7BAD
+            font-size: 24px
+            padding: 0px 3px
+            width: 37px
+            text-align: center
+        .oe_form_field_percent_pie
+            width: 42px
+        .oe_form_field_bar_chart
+            width: 42px
+        svg
+            width: 38px
+            height: 38px
+            display: inline
+            vertical-align: middle
+    .oe_stat_button:hover
+        background: #7c7bad
+        color: white
+        .fa
+            color: white
+    .oe_button_box
+        width: 400px
+        text-align: right
+        .oe_stat_button
+            display: inline-table
+    .oe_avatar
+        > img
+            max-height: 90px
+            max-width: 90px
+            @include radius(3px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.4))
+            border: none
+            margin-bottom: 10px
+    .oe_avatar + div
+        margin-left: 5px
+    .oe_image_small > img
+        max-width: 50px
+        max-height: 50px
+    .oe_image_medium > img
+        max-width: 180px
+        max-height: 180px
+    .oe_button.oe_link
+        @include reset()
+        img
+            display: inline-block
+        span
+            @include reset()
+            color: $link-color
+            font-weight: bold
+            &:hover
+                text-decoration: underline
+    .oe_webclient, .modal-body
+        .oe_star_on, .oe_star_off
+            color: #cccccc
+            text-shadow: 0 0 2px black
+            vertical-align: top
+            position: relative
+            top: -8px
+        .oe_star_on:hover, .oe_star_off:hover
+            text-decoration: none
+        .oe_star_on
+            color: gold
+    p.oe_grey
+        max-width: 650px
+    .oe_grey
+        color: #aaa
+    // Added for generic error message and customize bootstrap3 <pre>,<hr>
+    .oe_error_detail 
+        hr
+            display: block
+            -webkit-margin-before: 0.5em
+            -webkit-margin-after: 0.5em
+            -webkit-margin-start: auto
+            -webkit-margin-end: auto
+            border-style: inset
+            border-width: 1px
+    // }}}
+    // Kanban state (used in form and kanban) {{{
+    .oe_kanban_status
+        position: relative
+        display: inline-block
+        height: 12px
+        width: 12px
+        @include radius(6px)
+        @include radial-gradient((#eee 0%, #ccc 40%, #bbb 100%))
+        // +background-image(radial-gradient(45px 45px, #0ff 10px, #1e90ff 30px))
+    .oe_kanban_status_green
+        background: green
+        @include radial-gradient((#55dd55 0%, #44aa44 40%, #339933 100%))
+    .oe_kanban_status_red
+        background: red
+        @include radial-gradient((#ee7777 0%, #cc3333 40%, #bb0808 100%))
+    .btn-group.kanban_state
+        padding-top: 8px
+        margin-right: 4px !important
+        a
+            color: #333333
+    // }}}
+    // Tags (for many2many tags, among others) {{{
+    .oe_tag
+        border: 1px solid $tag-border
+        font-size: 11px
+        padding: 2px 4px
+        margin: 0 2px 2px 0
+        @include radius(3px)
+        background: $tag-bg-light
+        color: #4C4C4C
+        display: inline-block
+        word-break: break-word
+    .oe_tag_dark
+        background: $tag-bg-dark
+        color: #eee
+    .oe_form_field_radio
+        &.oe_horizontal
+            white-space: nowrap
+            label
+                display: inline-block
+                text-align: center
+                height: 16px
+        &.oe_vertical
+            label
+                margin-left: 4px
+        &.oe_form_required
+            .oe_radio_input
+                border: 2px solid transparent
+                display: inline-block
+                height: 12px
+                width: 12px
+                vertical-align: top
+                border-radius: 10px
+                margin: 1px 0
+            &.oe_form_invalid
+                .oe_radio_input
+                    border-color: red
+    .oe_tags
+        &.oe_inline
+            min-width: 250px
+        .text-wrap
+            width: 100% !important
+            position: static
+            textarea
+                width: 100% !important
+        .text-core
+            height: initial !important
+            word-break: break-word
+            .text-wrap .text-dropdown .text-list .text-suggestion em
+                font-style: italic
+                text-decoration: none
+        margin-bottom: 1px
+    // }}}
+    // Notebook {{{
+    .oe_notebook
+        margin: 8px 0
+        padding: 0 16px
+        list-style: none
+        zoom: 1
+    .oe_notebook.ui-corner-all
+        @include radius(0)
+    .oe_notebook:before, .oe_notebook:after
+        display: table
+        content: ""
+        zoom: 1
+    .oe_notebook:after
+        clear: both
+    .oe_notebook > li
+        float: left
+    .oe_notebook > li > a
+        display: block
+        color: #808080
+    .oe_notebook > li.ui-tabs-active > a
+        color: #4c4c4c
+    .oe_notebook
+        border-color: #ddd
+        border-style: solid
+        border-width: 0 0 1px
+    .oe_notebook > li
+        position: relative
+    .oe_notebook > li > a
+        padding: 0 12px
+        margin-right: 2px
+        line-height: 30px
+        border: 1px solid transparent
+        @include radius(4px 4px 0 0)
+    .oe_notebook > li > a:hover
+        text-decoration: none
+        background-color: #eee
+        border-color: #eee #eee #ddd
+    .ui-tabs .oe_notebook.ui-tabs-nav li.ui-tabs-active
+        border-bottom: none
+        padding-bottom: 1px
+    .oe_notebook > li.ui-state-active > a, .oe_notebook > li.ui-state-active > a:hover
+        background-color: #ffffff
+        border: 1px solid #ddd
+        border-bottom-color: transparent
+        cursor: default
+    .oe_notebook_page
+        padding: 0
+        //Customize label weight according bootstrap3
+        > label:not([for])
+            font-weight: normal !important
+        // End of customize 
+    div.ui-tabs
+        padding: 3px 0px 3px 0px
+    .ui-tabs-hide
+        display: none
+    // }}}
+    // Dropdown {{{
+    .oe_dropdown, .oe_dropdown_hover, .oe_dropdown_toggle
+        position: relative
+        cursor: pointer
+    .oe_dropdown_toggle
+        color: #2B2B2B
+        font-weight: normal
+    .oe_dropdown_hover:hover .oe_dropdown_menu, .oe_dropdown_menu.oe_opened
+        display: block
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        z-index: 3
+        margin: 0
+        border: 1px solid $tag-border
+        background: white
+        padding: 4px 0
+        min-width: 140px
+        text-align: left
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        > li
+            &:hover
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+                @include box-shadow(none)
+            list-style-type: none
+            float: none
+            display: block
+            position: relative
+            margin: 0
+            padding: 2px 8px
+            > a
+                white-space: nowrap
+                display: block
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+    .oe_dropdown_arrow:after
+        vertical-align: top
+        margin-top: 8px
+        //margin-left set at 3px to avoid a strange overflow
+        margin-left: 3px
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid#404040
+        @include opacity(0.5)
+    .oe_sidebar
+        white-space: nowrap
+        .oe_dropdown_menu
+            .oe_sidebar_add_attachment
+                height: 20px
+                cursor: pointer
+                padding-left: 6px
+                margin-top: 6px
+                span
+                    font-weight: bold
+                .oe_hidden_input_file
+                    width: 200px
+                &:hover
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+            li
+                .oe_sidebar_delete_item
+                    position: absolute
+                    top: 4px
+                    right: 4px
+                    display: none
+                    width: 12px
+                    height: 12px
+                    padding: 1px
+                    color: #8786b7
+                    line-height: 8px
+                    text-align: center
+                    font-weight: bold
+                    text-shadow: 0 1px 1px white
+                    &:hover
+                        text-decoration: none
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        @include radius(2px)
+                &:hover
+                    .oe_sidebar_delete_item
+                        display: inline-block
+    // }}}
+    // Loading {{{
+    .oe_loading
+        display: none
+        z-index: 1001
+        position: fixed
+        top: 0
+        right: 50%
+        padding: 4px 12px
+        background: #A61300
+        color: white
+        text-align: center
+        border: 1px solid #900
+        border-top: none
+        -moz-border-radius-bottomright: 8px
+        -moz-border-radius-bottomleft: 8px
+        border-bottom-right-radius: 8px
+        border-bottom-left-radius: 8px
+    // }}}
+    // CrashManager {{{
+    .oe_dialog_warning
+        width: 100%
+        p
+            text-align: center
+    .oe_dialog_icon
+        padding: 5px
+        width: 32px
+    // }}}
+    // DatabaseManager {{{
+    .oe_database_manager
+        background: #fff
+        color: #000
+        text-align: left
+        .oe_database_manager_menu
+            color: #000
+    // }}}
+    // WebClient {{{
+    .oe_webclient
+        width: 100%
+        height: 100%
+        border-spacing: 0px
+    // }}}
+    // WebClient.fullscreen {{{
+    .oe_content_full_screen
+        .oe_application
+            top: 0
+            left: 0
+        .oe_topbar, .oe_leftbar
+            display: none
+    // }}}
+    // Webclient.leftbar {{{
+    .oe_leftbar
+        display: none
+        width: 220px
+        background: #f0eeee
+        border-right: 1px solid $tag-border
+        text-shadow: none
+        > div
+            height: 100%
+            display: table
+            width: 220px
+            position: relative
+            a.oe_logo
+                display: table-row
+                text-align: center
+                img
+                    margin: 14px 0
+                    border: 0
+                .oe_logo_edit
+                    margin: 14px 0
+                    position: absolute
+                    top: 1px
+                    padding: 4px
+                    width: 100%
+                    display: none
+                    text-align: center
+                    color: #eee
+                    background: rgba(37,37,37,0.9)
+                    @include box-sizing(border)
+                &:hover .oe_logo_edit_admin
+                    display: block
+            > div
+                display: table-row
+                height: 100%
+                > div
+                    position: relative
+                    height: 100%
+                    > div.oe_secondary_menus_container
+                        position: absolute
+                        top: 0
+                        bottom: 0
+                        left: 0
+                        right: 0
+                        overflow-x: hidden
+                        overflow-y: auto
+            .oe_footer
+                background: #f0eeee
+                text-align: center
+                a
+                    font-weight: bold
+                    color: black
+                    span
+                        color: #a24689
+    // }}}
+    // Webclient.leftbar items {{{
+
+    .oe_secondary_menu_section
+        font-weight: bold
+        margin-left: 8px
+        color: $link-color
+    .oe_secondary_submenu
+        margin-bottom: 10px !important
+        line-height: 1.1em
+        margin-top: 3px
+        .oe_menu_text
+            white-space: nowrap
+            overflow: hidden
+            display: inline-block
+            text-overflow: ellipsis
+            max-width: 85%
+            margin-top: 1px
+        .badge
+            &:hover
+                cursor: pointer
+                @include transform(scale(1.1))
+        .oe_menu_toggler:before
+            width: 0
+            height: 0
+            display: inline-block
+            content: "&darr"
+            text-indent: -99999px
+            vertical-align: top
+            margin-left: -12px
+            margin-top: 4px
+            margin-right: 4px
+            border-top: 4px solid transparent
+            border-bottom: 4px solid transparent
+            border-left: 4px solid #4c4c4c
+            @include opacity(0.5)
+        .oe_menu_opened:before
+            margin-top: 6px
+            margin-left: -16px
+            margin-right: 4px
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #4c4c4c
+        .oe_secondary_submenu li
+            margin-left: 20px
+    // }}}
+    // About openerp {{{
+    $link-color-odoo: #a24689
+    .oe_about
+        .label
+            background-color: $link-color-odoo
+        a
+            color: $link-color-odoo
+
+        .user-details
+            position: relative
+            padding: 0
+            margin-bottom: 275px
+            .user-image
+                width: 100%
+                text-align: center
+            .user-info-block
+                width: 100%
+                position: absolute
+                top: 55px
+                padding-top: 35px
+                .user-heading
+                    text-align: center
+                    margin: 10px 0 0
+                .navigation
+                    li
+                        a
+                            padding: 10px 20px
+                        &.active a
+                            background: $link-color-odoo
+                            color: #fff
+                .user-body
+                    text-align: center
+                    .tab-content > div
+                        float: left
+                        width: 100%
+        a.oe_activate_debug_mode
+            color: white !important
+            font-size: 100%
+        #social
+            i
+                margin: 10px
+                &:hover
+                    @include transform(scale(1.3))
+            .social-fb:hover
+                color: #3B5998
+            .social-tw:hover
+                color: #4099FF
+            .social-gp:hover
+                color: #d34836
+            .social-lk:hover
+                color: #007bb6
+    // }}}
+    // ActionManager {{{
+    a.oe_form_uri:hover
+        text-decoration: underline
+    .oe_application
+        width: 100%
+        height: 100%
+        a
+            color: $link-color
+        > div
+            position: relative
+            height: 100%
+            > .oe_view_manager
+                > .oe_view_manager_wrapper
+                    display: table-row
+                    height: 100%
+                    > div
+                        position: relative
+                        height: 100%
+                        > .oe_view_manager_body
+                            position: absolute
+                            top: 0
+                            bottom: 0
+                            left: 0
+                            right: 0
+                            overflow: auto
+
+
+        .oe_breadcrumb_item:not(:last-child)
+            max-width: 7em
+            white-space: nowrap
+            text-overflow: ellipsis
+        .oe_breadcrumb_title > *
+            display: inline-block
+            overflow: hidden
+            font-weight: bold
+    // }}}
+    // ViewManager common {{{
+    .oe_view_manager
+        display: table
+        height: inherit
+        width: 100%
+        .oe_view_manager_view_kanban:not(:empty)
+            height: 100%
+        &[data-view-type=kanban]
+            .oe_view_manager_body
+                display: table-row
+
+        table.oe_view_manager_header
+            border-collapse: separate
+            width: 100%
+            table-layout: fixed
+            .oe_header_row
+                //min-height: 26px
+                //line-height: 26px
+                clear: both
+                text-shadow: 0 1px 1px white
+            .oe_header_row:last-child
+                td
+                    padding-top: 0
+            .oe_header_row:first-child
+                td
+                    padding-top: 8px
+            .oe_view_manager_sidebar
+                margin: 0px auto
+                text-align: center
+                .oe_dropdown_arrow:after
+                    opacity: 0.9
+            td
+                line-height: 26px
+            h2
+                font-size: 18px
+                margin: 0
+                float: left
+                line-height: 30px
+                a
+                    color: $link-color
+            .oe_dropdown_menu
+                line-height: normal
+            .oe_button_group
+                display: inline-block
+                border: 1px solid #ababab
+                @include radius(5px)
+                li
+                    float: left
+                    border-right: 1px solid #ababab
+                    &:last-child
+                        border: none
+                a
+                    color: #4c4c4c
+                    &:hover
+                        text-decoration: none
+                .active
+                    background: #999
+                    @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                    a
+                        color: #fff
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+            .oe_view_manager_buttons
+                white-space: nowrap
+        // }}}
+        // ViewManager.switches {{{
+        .oe_view_manager_switch
+            padding: 0
+            margin: 0 0 0 8px
+            li
+                margin: 0
+                width: 24px
+                height: 24px
+                line-height: 16px
+                padding: 0
+                text-align: center
+                list-style-type: none
+                a
+                    position: relative
+            .oe_vm_switch_list:after, .oe_vm_switch_tree:after
+                padding: 2px
+                content: "i"
+            .oe_vm_switch_form:after
+                content: "m"
+            .oe_vm_switch_graph:after
+                font-family: "mnmliconsRegular" !important
+                font-size: 21px
+                font-weight: 300 !important
+                content: "}"
+                top: -2px
+                position: relative
+            .oe_vm_switch_gantt:after
+                font-family: "mnmliconsRegular" !important
+                font-size: 21px
+                font-weight: 300 !important
+                content: "y"
+                top: -2px
+                position: relative
+            .oe_vm_switch_calendar:after
+                content: "P"
+            .oe_vm_switch_kanban:after
+                content: "k"
+            .oe_vm_switch_diagram:after
+                content: "f"
+        // }}}
+    // List pager {{{
+    .oe_list_pager
+        line-height: 26px
+    .oe_pager_value
+        float: left
+        margin-right: 8px
+    ul.oe_pager_group
+        padding: 0
+        margin: 0
+    .oe_pager_group
+        float: left
+        height: 24px
+        line-height: 24px
+        display: inline-block
+        border: 1px solid #ababab
+        cursor: pointer
+        @include radius(5px)
+        li
+            height: 24px
+            line-height: 24px
+            padding: 0
+            margin: 0
+            list-style-type: none
+            float: left
+            border-right: 1px solid #ababab
+            &:last-child
+                border: none
+        a
+            color: #4c4c4c
+            padding: 0 8px
+            &:hover
+                text-decoration: none
+        .active
+            background: #999
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+            a
+                color: #fff
+                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    .oe_list_pager.oe_list_pager_single_page .oe_pager_group
+        display: none
+    // }}}
+    // ViewManager application {{{
+    .oe_view_manager_current
+        height: 100%
+        > .oe_view_manager_header
+            border-bottom: 1px solid #cacaca
+            @include vertical-gradient(#fcfcfc, #dedede)
+            @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+            .oe_header_row
+                td
+                    padding: 8px
+            .oe_header_row:first-child
+                td
+                    padding-top: 8px
+    // }}}
+    // ViewManager inline {{{
+    .oe_view_manager_inline, .oe_view_manager_inlineview
+        height: 100%
+        > .oe_view_manager_header
+            display: none
+    // }}}
+    // FormPopup {{{
+    .oe_popup_form 
+        display: table
+        .oe_formview .oe_form_pager
+            display: none !important
+        // Customize label weight for popup wizard appear from another wizard according bootstrap3
+        table label
+            font-weight: normal
+        // End of customize
+    .oe_popup_list_pager
+        float: right
+    // }}}
+    // SearchView {{{
+    .oe_searchview
+        cursor: text
+        position: relative
+        float: right
+        padding: 1px 0
+        line-height: 18px
+        min-width: 400px
+        border: 1px solid #ababab
+        background: white
+        @include radius(13px)
+        @include box-shadow(0 1px 2px rgba(0,0,0,0.2) inset)
+        input, textarea
+            padding: 3px
+            height: 14px
+            font-size: 12px
+            line-height: 18px
+        //Customize searchview input, select
+        input:not([type]), input[type="text"], input[type="number"]
+            width: 156px
+            height: 22px
+        input[type="checkbox"]
+            margin: 3px 3px 3px 4px
+        select
+            margin: 2px 4px 2px 0 
+        //End of customize
+        &.oe_focused
+            border-color: $tag-border-selected
+            @include box-shadow(0 1px 2px $tag-border-selected inset)
+        .oe_searchview_clear
+            cursor: pointer
+            position: absolute
+            top: 0
+            right: 18px
+            width: 15px
+            height: 24px
+            background: url(../img/search_reset.gif) center center no-repeat
+        .oe_searchview_unfold_drawer
+            position: absolute
+            top: 0
+            right: 0
+            height: 24px
+            padding: 0 7px 0 4px
+            color: #ccc
+            cursor: pointer
+            &:hover
+                color: #999
+            &:before
+                position: absolute
+                top: 10px
+                right: 7px
+                width: 0
+                height: 0
+                display: inline-block
+                content: ""
+                vertical-align: top
+                border-top: 5px solid #4C4C4C
+                border-left: 5px solid transparent
+                border-right: 5px solid transparent
+                @include opacity()
+
+        .oe_searchview_search
+            @include text-to-icon("r", #a3a3a3)
+            @include box-shadow(none)
+            @include radius(0)
+            position: absolute
+            left: 3px
+            top: 1px
+            padding: 0
+            border: none
+            background: transparent
+
+        .oe_searchview_facets
+            min-height: 22px
+            margin: 0 35px 0 15px
+            *
+                vertical-align: top
+                display: inline-block
+                line-height: 17px
+            .oe_searchview_facet
+                margin: 1px 0
+                font-size: 11px
+                &:focus
+                    outline: none
+            .oe_searchview_input
+                padding: 0 0 0 6px
+                font-size: 12px
+                height: 16px
+                margin-top: 3px
+                &:focus
+                    outline: none
+            .oe_searchview_facet
+                position: relative
+                cursor: pointer
+                padding: 0
+                -webkit-font-smoothing: auto
+                // spacing for opera, FF
+                &:focus
+                    border-color: $tag-border-selected
+                    @include box-shadow(0 0 3px 1px $tag-border-selected)
+                .oe_facet_values
+                    background: $tag-bg-light
+                    @include radius(0 3px 3px 0)
+                .oe_facet_category, .oe_facet_value
+                    padding: 0 4px
+                .oe_facet_category
+                    color: white
+                    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                .oe_facet_category.oe_i
+                    font-size: 16px
+                .oe_facet_value
+                    border-left: 1px solid $tag-border
+                    text-shadow: 0 1px 1px white
+                    color: #4C4C4C
+                    &:last-child
+                        padding-right: 16px
+                .oe_facet_remove
+                    position: absolute
+                    top: 3px
+                    right: 3px
+                    color: #8786b7
+                    line-height: 8px
+                    width: 12px
+                    height: 12px
+                    padding-top: 1px
+                    text-align: center
+                    font-weight: bold
+                    cursor: pointer
+                    text-shadow: 0 1px 1px white
+                    &:hover
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        @include radius(2px)
+
+        .oe-autocomplete
+            display: none
+            position: absolute
+            width: 300px
+            background-color: white
+            border: 1px solid #afafb6
+            z-index: 666
+            margin-top: 2px
+            cursor: default
+            @include radius(3px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3))
+            ul
+                list-style-type: none
+                padding-left: 0
+                margin: 5px 0px
+                li
+                    padding-left: 20px
+                    text-shadow: 0 0 0 white
+                    span:first-child
+                        margin-right: 5px
+                    span.oe-expand
+                        cursor: pointer
+                li.oe-indent
+                    margin-left: 20px
+                li.oe-selection-focus
+                    background-color: #7c7bad
+                    color: white
+                li.oe-separator
+                    margin-top: 2px
+                    margin-bottom: 2px
+                    border-top: 1px solid #afafb6
+                li.oe-separator:last-child
+                    display: none
+
+
+    .oe_searchview_drawer_container
+        overflow: auto
+    .oe_searchview_drawer
+        display: none
+        width: 100%
+        cursor: default
+        display: none
+        overflow: hidden
+        border-bottom: 1px solid $tag-border
+        text-align: left
+        padding: 8px 0
+        .badge
+            font-size: 12px
+            line-height: 12px
+        > div:first-child
+            border: none
+            padding-left: 0
+            li:hover:not(.badge)
+                background-color: $hover-background
+        .col-md-5
+            padding-left: 0
+        dl 
+            margin-bottom: 0
+        dt
+            color: $section-title-color
+            font-size: 13px
+            line-height: 24px
+        dd
+            line-height: 24px
+            font-size: 13px
+            padding-top: 3px
+        h4, h4 *
+            margin: 0 0 0 2px
+            padding-left: 20px
+            cursor: pointer
+            font-weight: normal
+            display: inline-block
+            &:hover
+                background-color: $hover-background
+        h4:before
+            content: "▸ "
+            color: #a3a3a3
+        button
+            margin: 4px 0
+        .button
+            border: none
+            background: transparent
+            padding: 0 2px
+            @include box-shadow(none)
+            @include radius(0)
+        .oe_searchview_section
+            ul
+                margin: 0 8px 
+                padding: 0
+                list-style: none
+                display: inline
+            li
+                display: inline-block
+                cursor: pointer
+                position: relative
+                margin-right: 8px
+                > span
+                    display: inline-block
+                    max-width: 250px
+                    text-overflow: ellipsis
+                    vertical-align: bottom
+                    overflow: hidden
+        form
+            margin-left: 12px
+            p
+                margin: 4px 0
+                line-height: 18px
+            button
+                margin: 0 0 8px -3px // Managed margin-left according bootstrap3
+        .oe_searchview_savefilter
+            form
+                display: none
+        .oe_searchview_custom
+            display: none
+            li
+                cursor: pointer
+                position: relative
+                line-height: 14px
+                margin-right: 0
+                button
+                    position: absolute
+                    top: 0
+                    right: 5px
+                a
+                    margin-left: 10px
+                    position: inherit
+                    visibility: hidden
+                    display: inline-block
+                span:hover:not(.badge)
+                    background-color: $hover-background
+            li:hover a
+                visibility: visible
+            //Customize for searchview label
+            label
+                font-weight: normal
+            //End of Customize
+        .oe_searchview_dashboard
+            form
+                display: none
+                margin-top: 2px
+
+        .oe_searchview_advanced
+            overflow: auto
+            form
+                display: none
+                margin-top: 8px
+            button.oe_add_condition:before
+                content: "Z"
+                font-family: "entypoRegular" !important
+                font-size: 24px
+                font-weight: 300 !important
+                margin-right: 4px
+            ul
+                list-style: none
+                padding: 0
+            li
+                position: relative
+                list-style: none
+                margin: 0
+                white-space: nowrap
+                &:first-child .searchview_extended_prop_or
+                    visibility: hidden
+                    margin-left: -14px
+            .searchview_extended_prop_or
+                opacity: 0.5
+                margin-left: -14px //Customize 'or' in searchview
+        .oe_opened
+            h4:before
+                content: "▾ "
+                position: relative
+                top: -1px
+            form
+                display: block
+
+        // delete buttons
+        .oe_searchview_custom_delete, .searchview_extended_delete_prop
+            display: inline-block
+            width: 12px
+            height: 12px
+            line-height: 12px
+            padding: 1px
+            color: #8786b7
+            line-height: 8px
+            text-align: center
+            font-weight: bold
+            text-shadow: 0 1px 1px white
+            &:hover
+                text-decoration: none
+                color: white
+                background: #8786b7
+                text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                @include radius(2px)
+        .oe_searchview_custom_delete
+            display: none
+            position: absolute
+            bottom: 1px
+            right: 4px
+        .oe_searchview_custom_private, .oe_searchview_custom_public
+            &:hover
+                .oe_searchview_custom_delete
+                    display: inline-block
+        .oe_searchview_custom_public:after
+            content: ","
+            font-family: "entypoRegular" !important
+            font-size: 22px
+            font-weight: 300 !important
+            margin: 0 0 0 4px
+            padding: 0
+    .oe_popup_search
+        .oe_searchview_drawer
+            clear: right
+    // }}}
+    // Views Common {{{
+    .oe_view_nocontent
+        padding: 15px
+        margin-top: 0
+        color: #777777
+        font-size: 125%
+        max-width: 700px
+        .oe_view_nocontent_create
+            margin-top: 0
+            padding-top: 35px
+            color: #4c4c4c
+            &:before
+                content: ""
+                display: inline-block
+                position: absolute
+                width: 70px
+                height: 80px
+                margin-left: -70px
+                margin-top: -50px
+                background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px
+        > p
+            padding-left: 78px
+        .oe_empty_custom_dashboard
+            background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0
+            margin-top: -15px
+            padding: 100px 0 0 137px
+            min-height: 327px
+            margin-left: -15px
+    .oe_view.oe_cannot_create
+        .oe_view_nocontent_create
+            display: none
+    // }}}
+    // FormView.base and dynamic tags {{{
+    .oe_formview
+        background: white
+    .oe_form_dropdown_section
+        position: relative
+        display: inline-block
+    .oe_form_invalid
+        input, select, textarea
+            background-color: #F66 !important
+            border: 1px solid #D00 !important
+    .oe_view_manager_current .oe_form_editable
+        .oe_highlight
+            color: #404040
+            background: none
+        button.oe_highlight
+            @include vertical-gradient(#efefef, #d8d8d8)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        button.oe_highlight:active
+            @include vertical-gradient(#e3e3e3, #f6f6f6)
+            @include box-shadow(none)
+        button.oe_highlight:hover
+            @include vertical-gradient(#f6f6f6, #e3e3e3)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+    .oe_form_invisible
+        display: none !important
+    .oe_form_editable
+        .oe_read_only
+            display: none !important
+    .oe_form_readonly
+        .oe_edit_only, .oe_form_field:empty
+            display: none !important
+        .oe_form .oe_form_field_date
+            width: auto
+        .oe_form_field_boolean.boolean
+            position: relative
+            top: -20px
+            width: 14px
+            height: 14px
+            z-index: 10000
+            // IE needs a color in order for the layer to respond to mouse events
+            backgroundColor: "#fff"
+            opacity: 0
+    // Sheet and padding
+    .oe_form_nosheet
+        margin: 16px
+        > header
+            margin: -16px -16px 0 -16px
+            padding: 0
+    .oe_form_nosheet.oe_form_nomargin
+        margin: 0
+        > header
+            margin: 0
+    .oe_form_sheetbg
+        padding: 16px 0
+    .oe_form_sheet_width
+        min-width: 650px
+        max-width: $sheet-max-width
+        margin: 0 auto
+    .oe_form_sheet
+        background: white
+        min-height: 330px
+        padding: 16px
+        .oe_list
+            overflow-x: auto
+    // Sheet inline mode
+    .oe_application
+        .oe_form_sheetbg
+            background: url(/web/static/src/img/form_sheetbg.png)
+            border-bottom: 1px solid #ddd
+            z-index: 1
+            // Customize font weight according bootstrap3
+            .oe_subtotal_footer label
+                font-weight: bold
+            table label
+                font-weight: normal
+            // End of customize
+        .oe_form_sheet
+            border: 1px solid #c8c8d3 //$tag-border
+            @include box-shadow(0 4px 20px rgba(0,0,0,0.15))
+            .ui-tabs
+                margin: 0 -16px
+            .oe_notebook_page
+                padding: 0 16px
+    // }}}
+    // FormView.header {{{
+    .oe_form > :not(.oe_form_nosheet) header, .oe_form > .oe_form_nosheet header
+        padding-left: 2px
+        ul:not(.oe_tooltip_technical):not(.oe_dropdown_menu)
+            display: inline-block
+            float: right
+        .oe_button
+            margin: 3px 2px 1px
+            &:first-child
+                margin-left: 6px
+
+    .oe_form  header
+        border-bottom: 1px solid #cacaca
+        padding-left: 2px
+        @include vertical-gradient(#fcfcfc, #dedede)
+        > span
+            margin-left: 4px        
+        
+    // }}}
+    // FormView.custom tags and classes {{{
+    .oe_form
+        header
+            .oe_tags
+                margin: 5px 0 0 5px
+                width: 400px
+                padding-bottom: 0
+        div.oe_chatter
+            box-sizing: border-box
+            min-width: $sheet-min-width + 2* $sheet-padding
+            max-width: $sheet-max-width + 2* $sheet-padding
+            margin: 0 auto
+            padding: 16px 16px 48px
+        div.oe_form_configuration
+            p, ul, ol
+                color: #aaa
+                max-width: 650px
+            label
+                min-width: 150px
+            .oe_form_group_cell_label
+                padding: 1px 0
+            .oe_form_group_cell div div
+                padding: 1px 0
+        .oe_subtotal_footer
+            width: 1% !important
+            td.oe_form_group_cell
+                text-align: right
+                padding: 0 !important
+            td.oe_form_group_cell_label
+                border-right: none
+            .oe_subtotal_footer_separator
+                min-width: 108px
+                border-top: 1px solid #cacaca
+                margin-top: 4px
+                padding-top: 4px
+                font-weight: bold
+                font-size: 18px
+            label:after
+                content: ":"
+            label.oe_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 11px 2px 0px !important
+            label.oe_form_label_help
+                font-weight: normal !important
+        .oe_form_box_info
+            background: #fe9
+            border-bottom: 1px solid #cb6
+            padding: 4px
+            > p
+                margin: auto
+        .oe_form_box_warning
+            background: #bd362f
+            border-bottom: 1px solid #900
+            padding: 4px
+            *
+                color: white
+                text-shadow: none
+            > p
+                margin: auto
+    // }}}
+    // FormView.group {{{
+    .oe_form
+        .oe_form_button
+            margin: 2px
+        td.oe_form_group_cell_label
+            border-right: 1px solid #ddd
+            padding: 2px 0px
+            label
+                line-height: 18px
+                display: block
+                min-width: 150px
+                font-weight: bold !important
+        td.oe_form_group_cell + .oe_form_group_cell
+            padding: 2px 0 2px 8px
+        .oe_form_group
+            width: 100%
+            margin: 9px 0 9px 0
+            .oe_form_group_cell.oe_group_right
+                padding-left: 20px
+    // }}}
+    // FormView.label {{{
+    .oe_form
+        .oe_form_label_help[for], .oe_form_label[for]
+            white-space: nowrap
+            padding-right: 8px
+            span
+                font-size: 80%
+                color: darkGreen
+                vertical-align: top
+                position: relative
+                top: -4px
+                padding: 0 2px
+    // }}}
+    // FormView.separator {{{
+    .oe_horizontal_border
+        border-bottom: 1px solid black
+    .oe_horizontal_separator
+        font-weight: bold
+        font-size: 20px
+        margin: 15px 0px 10px 0px
+        color: $section-title-color
+        &:empty
+            height: 5px
+    .oe_vertical_separator
+        border-left: 1px solid #666
+        padding: 0 4px 0 4px
+    // }}}
+    // FormView.progressbar {{{
+    .oe_form_field_progressbar
+        display: inline-block
+        min-width: 70px
+    .oe_form_field_progressbar.ui-progressbar
+        height: 22px
+        font-size: 10px
+        @include box-sizing(border)
+        border: 1px solid #999
+        @include radius(3px)
+        background: white
+        min-width: 50px
+        span
+            position: absolute
+            margin-left: 10px
+            font-weight: bold
+        .ui-widget-header
+            background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+    // }}}
+    // FormView.fields {{{
+    .oe_form
+        .oe_form_field_text
+            width: 100%
+            .oe_form_text_content
+                text-overflow: ellipsis
+                display: inline-block
+                white-space: pre-wrap
+                overflow-x: hidden
+                width: 100%
+        .oe_form_field_char input,
+        .oe_form_field_url input,
+        .oe_form_field_email input,
+        .oe_form_field_text textarea,
+        .oe_form_field_selection select
+            width: 100%
+        .oe_notebook_page .oe_form_field_text textarea
+            min-height: 96px
+        .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
+            width: 500px
+        h1, h2, h3, h4, h5, h6
+            margin: 0 0 4px 0
+            input
+                height: inherit !important
+                font-size: inherit
+        // Customize for formview
+        .oe_title h1, h1
+            font-weight: bold
+            font-size: 2em
+        h2
+            font-size: 1.5em
+        label
+            font-weight: bold
+            margin-bottom: 0px
+            display: inline
+        // End of customize
+        .oe_form_field
+            width: 100%
+            display: inline-block
+            padding: 2px 2px 2px 0px
+            vertical-align: top
+            input
+                margin: 0px
+        input[type="text"], input[type="password"], input[type="file"], select
+            height: 22px
+            padding-top: 2px
+        input[type="text"], input[type="password"], input[type="file"], select, textarea
+            @include box-sizing(border)
+            background: white
+            min-width: 60px
+            color: #1f1f1f
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+        input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
+            background: #E5E5E5 !important
+            color: #666
+        textarea[disabled]
+            border: none
+            padding-left: 8px
+            @include box-shadow(none)
+            @include radius(0px)
+            color: #4c4c4c
+        textarea.oe_inline[disabled]
+            border-left: 8px solid #eee
+        .oe_form_field_url button img
+            vertical-align: top
+        .oe_form_field_monetary,
+        .oe_form_field_date,
+        .oe_form_field_datetime
+            white-space: nowrap
+        .oe_form_field_boolean
+            width: auto
+        .oe_datepicker_container
+            display: none
+        .oe_datepicker_root
+            display: inline-block
+        .oe_form_required
+            input:not([disabled]):not([readonly]), select:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])
+                background-color: #D2D2FF !important
+        .oe_form_invalid
+            input, select, textarea
+                background-color: #F66 !important
+                border: 1px solid #D00 !important
+        .oe_input_icon
+            cursor: pointer
+            margin: 3px 0 0 -21px
+            vertical-align: top
+        .oe_input_icon_disabled
+            position: absolute
+            cursor: default
+            opacity: 0.5
+            filter: alpha(opacity=50)
+            right: 5px
+            top: 3px
+        .oe_form_field_with_button.oe_no_button > .oe_button
+            display: none
+        .oe_form_field_with_button:not(.oe_no_button)
+            > .oe_button
+                float: right
+                @include radius(0)
+                border-bottom-left-radius: 0px
+                height: 22px
+        .oe_form_field_with_button
+            input
+                width: 100%
+            > div
+                position: relative
+                overflow: hidden
+        .oe_form_embedded_html
+            position: relative
+            width: 100%
+            margin: auto
+            overflow: auto            
+            text-align: justify
+        .oe_form_field_html .oe_input_icon
+            float: right
+            margin: 4px 7px
+
+    .oe_form_editable
+        .oe_form
+            .oe_form_field_integer input
+                width: 6em
+            .oe_form_field_float input
+                width: 7em
+            .oe_form_field_date input
+                width: 100px
+            .oe_form_field_datetime input
+                width: 150px
+    // }}}
+    // FormView.fields_binary {{{
+    /* http://www.quirksmode.org/dom/inputfile.html
+     * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
+     */
+    .oe_hidden_input_file
+        // Position: relative is used for the hidden input[type=file]
+        // Do not remove it anymore !
+        position: relative
+        input.oe_form_binary_file
+            z-index: 0
+            line-height: 0
+            font-size: 12px
+            position: absolute
+            top: 1px
+            left: 0
+            right: 0
+            opacity: 0
+            filter: alpha(opacity = 0)
+            -ms-filter: "alpha(opacity=0)"
+            margin: 0
+            padding: 0
+    .oe_form
+        .oe_form_field_binary
+            display: inline-block
+        .oe_form_field_image
+            padding: 0
+            position: relative
+            display: inline-block
+            width: auto
+            vertical-align: top
+            .oe_form_field_image_controls
+                position: absolute
+                top: 1px
+                padding: 6px 0
+                width: 100%
+                display: none
+                text-align: center
+                color: #eee
+                background: rgba(37,37,37,0.9)
+                @include radius(3px 3px 0 0)
+                @include box-sizing(border)
+            &:hover .oe_form_field_image_controls
+                display: block
+    .oe_fileupload
+        display: inline-block
+        clear: both
+        width: 100%
+        margin-bottom: -15px
+        .oe_add
+            float: left
+            position: relative
+            width: 100%
+            left: +2px
+            margin: 9px 0 /* Customize margin according bootstrap3 */
+            overflow: hidden
+            button
+                display: inline
+                height: 24px
+                font-size: 12px
+                line-height: 12px
+                vertical-align: middle
+            button.oe_attach
+                width: 24px
+                background: transparent
+                color: #7C7BAD
+                box-shadow: none
+                border: none
+                text-shadow: none
+                .oe_e
+                    position: relative
+                    top: -10px
+                    left: -9px                    
+            input.oe_form_binary_file
+                display: inline-block
+                margin-left: -85px
+                height: 22px
+                width: 152px
+                margin-top: -24px
+                cursor: pointer
+            .oe_attach_label
+                color: #7C7BAD
+                margin-left: -3px
+        .oe_attachments
+            margin-bottom: 4px
+            margin-right: 0px
+            font-size: 12px
+            border-radius: 2px
+            border: solid 1px rgba(124,123,173,0.14)
+            .oe_attachment
+                padding: 2px
+                padding-left: 4px
+                padding-right: 4px
+                .oe_e
+                    font-size: 23px
+                    margin-top: -5px
+                .oe_e:hover
+                    text-decoration: none
+            .oe_attachment:nth-child(odd)
+                background: white
+            .oe_attachment:nth-child(even)
+                background: #F4F5FA
+    // }}}
+    // FormView.many2one {{{
+    .oe_form_field_many2one
+        display: inline-block
+        td:first-child
+            position: relative
+        span.oe_m2o_drop_down_button
+            position: absolute
+            top: 2px
+            right: 0px
+        .oe_m2o_cm_button
+            line-height: 14px
+            float: right
+            padding-left: 2px
+        input
+            padding-right: 13px
+    &.ui-autocomplete
+        // http://bugs.jqueryui.com/ticket/8749
+        // https://github.com/jquery/jquery-ui/commit/d693ce5324f6f3be8479ef083e4eaf3c705ef043
+        // Odoo 8.0 currently uses JQuery 1.9.1, and the above fix, that we need, is in 1.9.2.
+        top: 0
+        left: 0
+        li.oe_m2o_dropdown_option a
+            font-style: italic
+            padding-left: 2em
+        li:not(.oe_m2o_dropdown_option) + li.oe_m2o_dropdown_option
+            margin-top: 10px
+    // }}}
+    // FormView.fieldstatus {{{
+    ul.oe_form_status, ul.oe_form_status_clickable
+        display: inline-block
+        margin: 0
+        padding: 0 18px 0 0
+        li
+            display: inline-block
+            list-style-type: none
+            // It is probably a bad idea to modify this margin
+            margin: 0 -18px 0 0
+            padding: 0
+            @include vertical-gradient(#fcfcfc, #dedede)
+            &:first-child > .label
+                border-left: 1px solid #cacaca
+                padding-left: 14px
+            &:last-child
+                border-right: 1px solid #cacaca
+                > .label
+                    padding-right: 14px
+                > .arrow
+                    display: none
+            > .label
+                color: #4c4c4c
+                text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
+                padding: 7px
+                display: inline-block
+                padding-left: 24px
+                margin: 0
+                position: relative
+                // Customize for statusbar label
+                line-height: normal
+                font-size: 100%
+                font-weight: normal
+                // End of customize
+            > .arrow
+                width: 17px
+                height: 30px
+                display: inline-block
+                vertical-align: top
+                overflow: hidden
+                margin-left: -5px
+                span
+                    position: relative
+                    width: 24px
+                    height: 24px
+                    display: inline-block
+                    margin-left: -12px
+                    margin-top: 3px
+                    box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
+                    @include skew-gradient(#fcfcfc, #dedede)
+                    @include radius(3px)
+                    @include transform(rotate(45deg))
+        ul.oe_dropdown_menu
+            display: none
+            padding: 0
+            min-width: 0
+            &.oe_opened
+                display: block
+            li
+                margin: 0
+                width: 100%
+                span.label
+                    padding-left: 14px
+
+        li.oe_active
+            @include vertical-gradient(#729fcf, #3465a4)
+            > .arrow span
+                @include skew-gradient(#729fcf, #3465a4)
+            > .label
+                color: white
+                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
+    ul.oe_form_status_clickable
+        li
+            cursor: pointer
+            &:hover
+                @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
+                > .label
+                    text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                > .arrow span
+                    @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
+            > .label
+                color: $link-color
+        li.oe_active
+            &:hover
+                @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                > .label
+                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
+                > .arrow span
+                    @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+    // }}}
+    // FormView.one2many {{{
+    .oe_form .oe_form_field_one2many > .oe_view_manager
+        .oe_list_pager_single_page
+            display: none
+    .oe_form_field_one2many,.oe_form_field_many2many
+        // TODO: oe_form_field_one2many_list?
+        > .oe_view_manager
+            .oe_list_pager_single_page
+                display: none !important
+            .oe_view_manager_view_list
+                min-height: 132px
+
+        .oe_form_field_one2many_list_row_add
+            font-weight: bold
+        .oe_list_content
+            > thead
+                border-bottom: 1px
+            > tbody
+                tr:nth-child(odd)
+                    background: transparent
+        .oe_list .oe_list_edit_row_save
+            background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
+            &:before
+                visibility: hidden
+
+        &> .oe_view_manager
+            .oe_header_row_top
+                display: none
+            .oe_view_manager_header2
+                td
+                    padding: 0px 8px
+                    line-height: 16px
+                    .oe_i
+                        font-size: 13px
+                    .oe_pager_group
+                        height: auto
+                        line-height: 16px
+                        li
+                            height: auto
+                            line-height: 16px
+        .oe_list_buttons.oe_editing .oe_list_save
+            // keep "save row" button hidden in o2m
+            visibility: hidden
+    .oe_form_editable
+        .oe_list_editable
+            .oe_list_content
+                td.oe_required
+                    background-color: #d2d2ff
+                td.oe_readonly
+                    background-color: #eee
+
+    $row-height: 27px
+    .oe_list_editable .oe_list_content td.oe_list_field_cell
+        padding: 4px 6px 3px
+    .oe_list.oe_list_editable.oe_editing
+        .oe_edition .oe_list_field_cell
+            *
+                visibility: hidden
+            color: transparent
+            text-shadow: none
+        .oe_m2o_drop_down_button
+            top: 5px
+        .oe_m2o_cm_button
+            line-height: 19px
+        .oe_input_icon
+            margin-top: 5px
+        .oe_form_field
+            &.oe_list_field_handle
+                color: transparent
+            &.oe_readonly
+                padding: 4px 6px 3px
+                text-align: left
+            min-width: 0
+            max-width: none
+            input, textarea
+                height: $row-height
+                @include radius(0)
+                border: 1px solid #aaf
+                margin: 0
+            input, textarea, select
+                min-width: 0
+            textarea.field_text
+                position: relative
+                z-index: 1
+            &.oe_form_field_float,&.oe_form_view_integer
+                &.oe_readonly
+                    padding: 6px 0px 0px
+                    text-align: right
+                span
+                    padding: 0px 6px
+                input
+                    width: 100% !important
+                    text-align: right
+            &.oe_form_field_datetime,&.oe_form_field_date
+                input.oe_datepicker_master
+                    width: 100% !important
+            &.oe_form_field_reference
+                display: table
+    .oe_list_group_name
+        white-space: nowrap
+    // }}}
+    // FormView.many2many {{{
+    .oe_form .oe_form_field_many2many > .oe_list
+        .oe_list_pager_single_page
+            display: none
+    // }}}
+    // ListView {{{
+    .oe_list_buttons
+        .oe_alternative
+            visibility: hidden
+        .oe_list_save, .oe_list_discard
+            display: none
+        &.oe_editing
+            .oe_list_add
+                display: none
+            .oe_list_save
+                display: inline-block
+            .oe_list_discard
+                display: inline
+            .oe_alternative
+                visibility: visible
+
+    .oe_list
+        &.oe_cannot_edit
+            .oe_list_header_handle, .oe_list_field_handle
+                display: none !important
+                padding: 0 !important
+        &.oe_cannot_delete
+            .oe_list_record_delete
+                display: none !important
+
+        .oe_form
+            .oe_form_nosheet
+                margin: 0 // FIXME: either class or border should not be by default
+                padding: 0
+                border: none
+            .oe_form_field
+                width: auto
+                position: absolute
+                margin: 0 !important // dammit
+                padding: 0
+            .oe_form_field_boolean input
+                margin: 1px 0 0 10px !important
+        .oe_list_content .oe_group_header
+            @include vertical-gradient(#fcfcfc, #dedede)
+
+    .oe_list_content
+        width: 100%
+        td:first-child, th:first-child
+            &:after
+                border-width: 0
+        td.oe_number
+            text-align: right !important
+            max-width: 100px
+        td.oe_list_field_date, th.oe_list_header_date
+            min-width: 6em
+        > thead
+            border-bottom: 2px solid #cacaca
+            background: #eee
+            vertical-align: top
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        th.oe_sortable, th.oe_sortable div
+            cursor: pointer
+        th.oe_sortable div
+            position: relative
+        th.oe_sortable div:after
+            margin-right: 6px
+            content: ""
+            margin-top: 7px
+            border-width: 0 4px 4px
+            border-style: solid
+            border-color: #000 transparent
+            visibility: hidden
+        th.sortup div:after
+            float: right
+            visibility: visible
+            @include opacity(0.6)
+        .oe_list_header_many2many_tags
+            min-width: 70px
+        th.sortdown div:after
+            float: right
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
+        > tbody
+            cursor: pointer
+            > tr
+                height: $row-height
+                border-top: 1px solid #ddd
+                > td.oe_list_field_cell
+                    padding: 3px 6px
+                    white-space: pre-line
+                > td, > th
+                    > button
+                        border: none
+                        background: transparent
+                        padding: 0
+                    > button.btn_txt
+                        border: 1px solid rgba(0,0,0,0.4)
+                        background: #e3e3e3
+                        padding: 3px 12px
+                > td.oe_list_checkbox:first-child, th.oe_list_checkbox:first-child
+                    width: 17px
+                    &:after
+                        border-width: 0
+                > td.oe_list_field_boolean input
+                    @include opacity()
+                > td.oe_list_field_boolean input:-moz-read-only
+                    @include opacity(1.0)
+            > tr:nth-child(odd)
+                background-color: #f0f0fa
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+
+        > tfoot
+            border-top: 2px solid #cacaca
+            border-bottom: 1px solid #cacaca
+            background: #eee
+            font-weight: bold
+
+
+        .numeric
+            text-align: right
+            width: 82px
+            input
+                text-align: right
+        th.oe_list_header_handle
+            font-size: 1px
+            overflow: hidden
+            text-indent: -9001px
+        td.oe_list_field_handle
+            width: 1em
+            padding: 0 !important
+            cursor: ns-resize
+            .oe_list_handle
+                @include text-to-entypo-icon("}",#E0E0E0,18px)
+                margin-right: 7px
+        .oe_list_field_progressbar progress
+            width: 100%
+    // }}}
+    // Tree view {{{
+    .tree_header
+        background-color: #f0f0f0
+        border-bottom: 1px solid #cacaca
+        color: #4c4c4c
+        padding: 5px
+        height: 25px
+        button
+            float: right
+            height: 27px
+            margin-right: 5px
+    .oe-treeview-table
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        color: #4c4c4c
+        th
+            padding: 10px
+            font-weight: bold
+            background-color: #f0f0f0
+            border-bottom: 2px solid #cacaca
+
+        td
+            cursor: pointer
+            vertical-align: middle
+            text-align: left
+            vertical-align: middle
+            height: 20px
+            padding-left: 4px
+            padding-right: 4px
+            border-right: 1px solid #e7e7e7
+
+        td.oe_number
+            text-align: right !important
+        tr
+            border-bottom: 1px solid #d6d6d6
+            &:hover
+                background-color: #e7e7e7
+        span
+            font-size: 90%
+            font-weight: normal
+            white-space: nowrap
+            display: block
+        .treeview-tr.oe-treeview-first
+            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
+        .oe_open .treeview-tr.oe-treeview-first
+            background-image: url(/web/static/src/img/collapse.gif)
+        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
+            margin-left: 16px
+    // }}}
+    // Debugging stuff {{{
+    .oe_layout_debugging
+        .oe_form_group
+            outline: 2px dashed green
+        .oe_form_group_cell
+            outline: 1px solid blue
+        .oe_form_group:hover, .oe_form_group_cell:hover
+            outline-color: red
+        .oe_form_group_row_incomplete > td:last-child:after
+            content: "[Incomplete Row]"
+            background: red
+            padding: 2px
+            font-weight: bold
+            color: white
+            float: right
+        .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after
+            content: "[newline]"
+    .oe_debug_view
+        float: left
+    .oe_debug_view_log
+        font-size: 95%
+        line-height: 1.2em
+    // }}}
+    // Bootstrap HACKS {{{
+    .oe_navbar .dropdown-menu
+        font-size: 13px
+        padding: 4px 0
+        background: #333333 !important
+        background: rgba(37, 37, 37, 0.9) !important
+        border-color: #999999
+        border-color: rgba(0, 0, 0, 0.2)
+        background-color: #414141
+        text-shadow: none
+        @include vertical-gradient(#646060, #262626)
+        @include radius(3px)
+        li
+            a,a:hover,a:focus
+                color: #eeeeee
+
+    // Minimized unused white space and label weight for wizard popup
+    .oe_view_manager_new .oe_form_nosheet
+        margin-top: 8px
+        .oe_form_label
+            font-weight: normal
+
+    // Customize bootstrap3 for leftbar
+    .nav-pills
+        li > a
+            padding: 6px 4px 2px 18px
+            color: #4c4c4c
+        .nav-stacked > li > ul
+            padding-left: 16px
+    .nav-pills > li.active,a.list-group-item.active
+        > a
+            background-color: #7c7bad
+            color: white
+            border-radius: 0
+        a:hover,a:focus
+            background-color: #7c7bad
+        .badge
+            background-color: white
+            color: #7c7bad
+            text-shadow: none
+    .badge
+        font-weight: normal
+        font-size: 11px
+        background-color: #7c7bad
+
+    // Customize for global tags
+    button, body
+        line-height: normal
+    h1,h2
+        font-weight: bold
+    h3
+        font-size: 1.17em
+        font-weight: bold
+    p
+        display: block
+        -webkit-margin-before: 1em
+        -webkit-margin-after: 1em
+        -webkit-margin-start: 0px
+        -webkit-margin-end: 0px
+    pre
+        background-color: #FFFFFF
+        border: none
+        padding: 10px 0 3px 0
+
+
+
+    // Customize for chatter
+    h5
+        font-weight: bold
+        font-size: smaller
+    .oe_form .oe_subtype label, .oe_subtype label
+        font-weight: normal
+    .oe_msg_subtype_check
+        margin: 3px 3px 0 !important
+    // }}}
+// Customize for kanban tooltip
+.jqstooltip
+    height: auto !important
+    width: auto !important
+    padding: 0
+        
+@-moz-document url-prefix()
+    .openerp
+        .oe_searchview .oe_searchview_search
+            top: -1px
+        .oe_form_field_many2one .oe_m2o_cm_button
+            line-height: 18px
+        .oe_webclient
+            .oe_star_on, .oe_star_off
+                top: 0px
+
+// Kitten Mode {{{
+.kitten-mode-activated
+    background-size: cover
+    background-attachment: fixed
+    >*
+        opacity: 0.70
+.loading-kitten
+    @include radius(15px)
+    @include box-shadow(0 0 5px 5px #999)
+// }}}
+
+// jQueryUI top level {{{
+// The jQuery-ui overlay and Autocomplete are outside the .openerp div, please don't add indentation !!!
+div.ui-widget-overlay
+    background: black
+    @include opacity(0.3)
+// TODO: I think only the overlay is problematic, the other top level widgets should use $.fn.openerpClass()
+//       eg: $el.autocomplete().openerpClass();
+.ui-widget
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 13px
+
+.ui-menu
+    padding: 2px 0
+    @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+    margin-top: 4px
+    border: 1px solid $tag-border
+    .ui-menu-item
+        width: 100%
+        padding: 0
+        a
+            padding: 1px 16px
+            color: #404040
+        a.ui-corner-all
+            @include radius(0)
+        a.ui-state-active
+            background: #f0f0fa
+    .ui-menu-item a.ui-state-hover, .ui-menu-item a.ui-state-active
+        background: $tag-bg-dark
+        //color: #4c4c4c
+        //@include vertical-gradient(#f0f0fa, #eeeef6)
+
+.ui-corner-all
+    @include radius(3px)
+// }}}
+
+.openerp
+    .db_option_table
+        td
+            padding-bottom: 10px !important
+
+// Server side single forms {{{
+@mixin single-form($width: 400px)
+    padding: 10px
+    position: absolute
+    left: 50%
+    top: 50%
+    width: $width
+    /* Set margins to offset 50% of the w/h */
+    margin-top: -($width / 2)
+    margin-left: -($width / 2)
+
+body.oe_single_form
+    background: #eee url(/web/static/src/img/form_sheetbg.png)
+    height: 100%
+
+    .oe_single_form_logo
+        padding: 10px
+        text-align: center
+        margin-bottom: 10px
+
+    .oe_single_form_footer
+        position: absolute
+        bottom: -30px
+        right: 0px
+        width: 100%
+        text-align: center
+
+    .oe_single_form_container
+        @include single-form(400px)
+
+// }}}
+
+// Internet Explorer 9+ specifics {{{
+.openerp_ie
+    .placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    .oe_form_binary_file
+        width: 80px
+    .oe_form_field_boolean input
+        background: #fff
+    .db_option_table .oe_form_field_selection
+        width: auto
+    input[type='checkbox']
+        border: none
+        background: none
+        box-shadow: none
+    .oe_logo
+        img
+            border: none
+    .oe_header_row
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+    .oe_view_manager_view_kanban
+        display: table-cell
+    .oe_view_manager_buttons
+        button.oe_write_full
+            padding-top: 0
+            padding-bottom: 0
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_edit
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_create
+            padding-top: 0
+            padding-bottom: 0
+    .oe_kanban_image
+        border: none
+    .oe_msg_icon
+        border: none
+    .oe_form
+        header
+            ul
+                height: 29px
+    .oe_attach
+        filter: none
+    .oe_link
+        filter: none
+    .oe_kanban_show_more
+        clear: both
+        text-align: center
+    &.oe_kanban_grouped .oe_kanban_show_more .oe_button
+        width: 100%
+        padding: 3px 12px
+
+    .oe_form_buttons button
+        padding-top: 0
+        padding-bottom: 0
+    .oe_sidebar button
+        padding-top: 0
+        padding-bottom: 0
+    img
+        border: none
+    //buttons.
+    .oe_dropdown_arrow
+        line-height: 1.7em
+    .oe_form_buttons, .oe_view_manager_buttons
+        button
+            line-height: 1.7em
+        .oe_highlight
+            line-height: 1.7em
+    .oe_topbar
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#646060', endColorstr='#262626')
+    .ui-state-error, .ui-widget-content .ui-state-error, .ui-widget-header .ui-state-error
+        filter: progid:DXImageTransform.Microsoft.gradient(enabled=false)
+    .oe_popup_form
+        width: 99% !important
+    .oe_form_label
+        white-space: normal !important
+    ul.oe_form_status, ul.oe_form_status_clickable
+        li
+            display: inline-block
+            clear: both
+            &:last-child
+                overflow: hidden
+                border-right: 1px solid #cacaca
+                > .label
+                    padding-right: 14px
+                    border-right: none
+                > .arrow
+                    display: inline-block
+                    opacity: 0
+                    filter: alpha(opacity = 0)
+                    border: none
+                    width: 0
+                    border-right: none 
+            > .label
+                border-bottom: 1px solid #cacaca
+                background: transparent
+            > .arrow
+                span
+                    background-color: #eeeeee !important
+        li.oe_active
+            > .label
+                border-bottom: 1px solid #729fcf
+            > .arrow span
+                background-color: #729fcf !important
+
+    .oe_webclient
+        height: auto !important
+// }}}
+
+// @media print {{{
+@media print
+    body
+        height: auto !important
+    .openerp#announcement_bar_table
+        display: none
+    .openerp
+        .oe_application, .oe_view_manager_wrapper
+            height: auto !important
+        .oe_application > div > .oe_view_manager > .oe_view_manager_wrapper > div > .oe_view_manager_body
+            overflow: visible
+            position: relative !important
+        .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default, .oe_topbar, .oe_leftbar, .oe_loading
+            // We use !important here because jQuery adds @style = display: block on elements when using $.fn.show()
+            display: none !important
+        .oe_list_content
+            button, input[type=checkbox]
+                visibility: hidden
+        .tree_header button, .oe_mail .oe_mail_thread_msg .oe_mail_unread, .oe_mail_fetch_more, .oe_m2o_drop_down_button img, .oe_form_field_one2many_list_row_add
+            visibility: hidden
+        a
+            &.oe_m2o_cm_button, &.oe_e
+                visibility: hidden
+        .oe_form
+            .oe_form_field_date img, .oe_form_field_datetime img
+                visibility: hidden
+        .oe_notebook > li.ui-tabs-selected
+            display: block
+        .oe_application
+            .oe_form_sheet, .oe_form_sheetbg
+                border: 0px !important
+                box-shadow: 0px 0px 0px
+                .oe_list
+                    overflow-x: visible
+        .oe_view_manager_current > .oe_view_manager_header
+            border: 0px !important
+            box-shadow: 0px 0px 0px
+        text-shadow: none
+        .text-core .text-wrap .text-arrow
+            background: none
+        .openerp div.oe_mail_wall
+            overflow: hidden !important
+    .openerp.openerp_webclient_container
+        overflow: visible
+// }}}
+
+// End of customize
+
+// Customize bootstrap3 for tooltip
+.tooltip
+    padding: 0
+    margin: 0
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 12px
+    background: white
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+    background-color: transparent
+    z-index: 1800
+    .tooltip-inner
+        text-align: left !important
+        max-width: 350px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
+
+// Hack for ui icon {{{
+.ui-icon
+    width: 18px
+    height: 18px
+// End hack}}}
+
+// Customized modal according bootstrap3
+.modal
+    .modal-header button.close
+        border: none
+        background: none
+        padding: 1px
+        height: 18px
+        font-size: 20px
+    .modal-body
+        overflow-x: auto
+    .modal-footer
+        text-align: left
+    .oe_button
+        margin: 0 4px 0 0
+    .oe_act_window.modal-body
+        padding: 0
+
+.ui-datepicker
+    z-index: 1500 !important
+
+input[type="radio"], input[type="checkbox"]
+    margin-right: 4px
+    margin-left: 4px
+
+.blockUI.blockOverlay
+    background-color: black
+    opacity: 0.6000000238418579
+
+/* ---- EDITOR TOUR ---- {{{ */
+
+div.tour-backdrop
+    z-index: 2009
+.popover.tour
+    &.orphan .arrow
+        display: none
+    .popover-navigation
+        padding: 9px 14px
+        *[data-role="end"]
+            float: right
+        *[data-role="next"],*[data-role="end"]
+            cursor: pointer
+.popover.fixed
+    position: fixed
+.tour-backdrop
+    position: fixed
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    z-index: 1100
+    background-color: #000
+    opacity: 0.8
+
+
+// }}}
+
+body
+    overflow: hidden
+
+// hack to make IE11 work
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) 
+    .oe_secondary_menus_container 
+        position: static !important
+
+
+
+// au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+// vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

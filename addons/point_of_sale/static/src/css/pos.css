@@ -1,0 +1,1886 @@
+/* --- Fonts --- */
+
+@font-face{
+    font-family: 'Inconsolata';
+    src: url(../fonts/Inconsolata.otf);
+}
+
+/* --- Styling of OpenERP Elements --- */
+.ui-dialog, .modal-dialog {
+    background: white;
+    padding: 10px;
+    border-radius: 3px;
+    font-family: sans-serif;
+    box-shadow: 0px 10px 40px rgba(0,0,0,0.4);
+    position: absolute;
+    top: 30px;
+    height: 400px;
+    overflow: scroll;
+}
+.ui-dialog button, .modal-dialog button {
+    padding: 8px;
+    min-width: 48px;
+}
+.ui-dialog .ui-icon-closethick{
+    float: right;
+}
+/* --- Generic Restyling and Resets --- */
+
+html {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font-family: sans-serif;
+}
+table {
+    border-spacing: 0px;
+    border-collapse: collapse;
+}
+td {
+    padding: 0px;
+}
+
+.oe_hidden{
+    display: none !important;
+}
+.clearfix:after {
+    content:" ";
+    display: block;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+    clear: both;
+}
+
+
+.pos input::-webkit-outer-spin-button,
+.pos input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pos button{
+    box-shadow: none;
+    outline: none;
+    border: none;
+    font-family: 'Lato';
+}
+.pos button:hover{
+    background: default;
+}
+
+.pos .oe_hidden{
+    display: none !important;
+}
+
+.pos ul, .pos li  {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.pos {
+    padding: 0;
+    margin: 0;
+    background-color: #f0eeee;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    font-size: 12px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+    text-shadow: none;
+    overflow: hidden;
+}
+
+/*  ********* The black loading screen ********* */
+
+.pos .loader{
+    background-color: #222;
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    z-index: 999;
+    text-align: center;
+    font-family: Lato;
+    color: #555555;
+}
+
+.pos .loader-feedback{
+    width: 400px;
+    height: 160px;
+    margin: -60px -200px;
+    position: absolute;
+    left: 50%; top: 50%;
+    text-align: center;
+}
+.pos .loader-feedback h1{
+    font-weight: 300;
+}
+.pos .loader-feedback .progressbar{
+    background: rgb(73,73,73);
+    height: 1px;
+}
+.pos .loader-feedback .progressbar > .progress{
+    height: 100%;
+    background: white;
+    width: 0%;
+    box-shadow: 0px 0px 5px rgba(255,255,255,0.35);
+}
+.pos .loader-feedback .button{
+    display: inline-block;
+    margin: 25px auto;
+    line-height: 42px;
+    padding: 0px 16px;
+    font-size: 20px;
+    font-weight: 300;
+    border: solid 1px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pos .loader-feedback .button:active{
+    color: #222;
+    background: #555555;
+}
+/*  ********* Generic Layout Constructs  ********* */
+
+.pos .window{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    display: table;
+    border: none;
+}
+.pos .window .subwindow{
+    display: table-row;
+    width: 100%;
+    height: 100%;
+}
+.pos .window .subwindow.collapsed{
+    height: 0px;
+}
+.pos .window .subwindow-container .collapsed{
+    height: 0px;
+}
+.pos .subwindow .subwindow-container{
+    display: table-cell;
+    position: relative;
+}
+/* firefox seems to ignore the relative positionning of the subwindow-container
+ * putting this inside subwindow-container fixes it.
+ */ 
+.pos .subwindow .subwindow-container-fix{
+    height: 100%;
+    position: relative;
+}
+
+/* ---- Scrollers ----- */
+
+.pos .scroller-container{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+}
+.pos .scroller{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.pos .scroller.horizontal{
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.pos .scroller-content{
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .scroller-container ::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.pos .scroller-container ::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: solid 1px rgb(200,200,200);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.pos .scroller-container ::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
+}
+
+/*  ********* Generic element styling  ********* */
+
+.pos a {
+    text-decoration: none;
+    color: #555555;
+}
+.pos button, .pos a.button {
+    display: inline-block;
+    cursor: pointer;
+    padding: 4px 10px;
+    font-size: 11px;
+    border: 1px solid #cacaca;
+    background: #e2e2e2;
+    border-radius: 3px;
+}
+.pos ul, .pos ol {
+    padding: 0;
+    margin: 0;
+}
+.pos li {
+    list-style-type: none;
+}
+.pos .pos-right-align {
+    text-align: right;
+}
+.pos .pos-center-align {
+    text-align: center;
+}
+.pos .pos-disc-font {
+    font-size: 12px;
+    font-style:italic;
+    color: #808080;
+}
+
+/*  ********* The black header bar ********* */
+
+
+.pos .pos-topheader {
+    position:absolute;
+    left:0;
+    top:0;
+    width: 100%;
+    height: 48px;
+    margin:0;
+    padding:0;
+    color: gray;
+    background: #393939;
+}
+
+/*  a) The left part of the top-bar */
+
+.pos .pos-branding{
+    position: absolute;
+    display: table-cell;
+    left:0;
+    top:0;
+    width:439px;
+    height:100%;
+    margin:0;
+    padding:0;
+    border-right: 1px solid #373737;
+    text-align:left;
+    line-height:100%;
+    vertical-align: middle;
+}
+.pos .pos-logo {
+    height: 35px;
+    margin-left: 7px;
+    margin-top: 2px;
+    vertical-align:middle;
+} 
+.pos .pos-branding .username{
+    float:right;
+    color:#DDD;
+    font-size:16px;
+    margin-right:32px;
+    line-height: 48px;
+    font-style:italic;
+}
+
+/*  b) The right part of the top-bar */
+
+.pos .pos-rightheader {
+    position: absolute;
+    left:440px;
+    right:0;
+    top:0;
+    height:100%;
+}
+
+.pos .order-button{
+    color: #f0f0f0;
+    display: inline-block;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    height: 46px;
+    padding: 4px 8px;
+    margin: 3px;
+    margin-bottom: 0px;
+    margin-right: 2px;
+    padding-top: 0px;
+    background: #8b8b8b;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    vertical-align: top;
+    line-height: 42px;
+    text-align: center;
+    box-shadow: 0px -5px 10px -6px rgb(82,82,82) inset;
+    cursor: pointer;
+    min-width: 45px;
+}
+.pos .order-button.selected{
+    font-weight: 900;
+    background: #EEEEEE;
+    color: rgb(75,75,75);
+    height: 45px;
+    border-bottom: solid 1px rgb(196, 196, 196);
+    box-shadow: none;
+}
+
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+    vertical-align: middle;
+}
+.pos .order-button.selected .order-sequence{
+    color: white;
+    background: black;
+    display: inline-block;
+    line-height: 24px;
+    min-width: 24px;
+    border-radius: 12px;
+    margin-right: 4px;
+    margin-left: -4px;
+}
+
+.pos .order-button.square{
+    margin-left:1px;
+    background: #5c5c5c;
+    color: rgb(160,160,160);
+    font-size: 18px;
+    line-height: 45px;
+}
+.pos .order-button:not(.square) > .fa {
+    font-size: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.pos .order-button .order-sequence{
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.pos .order-selector {
+    display: inline-block;
+    max-width: 640px;
+    max-height: 48px;
+    white-space: nowrap;
+    overflow: hidden;
+    overflow-x: auto;
+}
+.pos .orders {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 8px;
+}
+
+/*  c) The session buttons */
+
+.pos .pos-rightheader .header-button{
+    float: right;
+    height: 48px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border-right: 1px solid #292929;
+    border-left: 1px solid #292929;
+    color: #DDD;
+    line-height: 48px;
+    text-align: center;
+    cursor: pointer;
+
+    -webkit-transition-property: background;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+.pos .pos-rightheader .header-button:last-child{
+    border-left:  1px solid #3a3a3a;
+}
+.pos .pos-rightheader .header-button:active{
+    background: rgba(0,0,0,0.2);
+    color:#EEE;
+}
+.pos .pos-rightheader .header-button.confirm {
+    background: #359766;
+    color: white;
+    font-weight: bold;
+}
+
+/*  c) The notifications indicator */
+
+.pos .oe_status{
+    float:right; 
+    color: rgba(255,255,255,0.4);
+    padding: 14px;
+    line-height: 20px;
+    font-size: 20px;
+    vertical-align:middle;
+    font-style: italic;
+    cursor:pointer;
+}
+.pos .oe_status.oe_inactive{
+    cursor: default;
+}
+.pos .oe_status .oe_icon{
+    display:inline-block;
+    cursor:pointer;
+    width:20px; height:16px;
+    color: white;
+}
+.pos .oe_status .oe_red,
+.pos .oe_icon.oe_red {
+    color: rgb(197, 52, 0);
+}
+.pos .oe_statu .oe_green,
+.pos .oe_icon.oe_green {
+    color: rgb(94, 185, 55);
+}
+.pos .oe_status .oe_orange,
+.pos .oe_icon.oe_orange {
+    color: rgb(239, 153, 65);
+}
+
+/*  ********* Contains everything below the  bar ********* */
+
+.pos .pos-content {
+    width: 100%;
+    position: absolute;
+    top: 48px;
+    bottom: 0;
+    background: #F0EEEE;
+}
+
+/*  ********* The leftpane contains the order, numpad and paypad ********* */
+
+.pos .pos-leftpane {
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    position:absolute;
+    left:0;
+    width:440px;
+    top:0px;
+    bottom:0;
+    border-right: solid 1px #CECBCB;
+}
+.pos .pos-leftpane .pads {
+    background: #F0EEEE;
+    white-space: nowrap;
+}
+/*  ********* The control buttons ********* */
+
+.pos .control-buttons {
+    padding-top: 8px;
+}
+.pos .control-button {
+    background: #e2e2e2;
+    border: solid 1px #BEBEBE;
+    display: inline-block;
+    line-height: 38px;
+    min-width: 38px;
+    text-align: center;
+    border-radius: 3px;
+    padding: 0px 10px;
+    font-size: 18px;
+    margin-left: 6px;
+    cursor: pointer;
+}
+.pos .control-button .fa{
+    margin-right: 4px;
+}
+
+.pos .control-button.highlight{
+    background: #6EC89B;
+    border: solid 1px #6EC89B;
+    color: white;
+}
+.pos .control-button:active {
+    background: #7F82AC;
+    border: solid 1px #7F82AC;
+    color: white;
+}
+.pos .control-button.disabled,
+.pos .control-button.disabled:active{
+    background: #e2e2e2;
+    border: solid 1px #BEBEBE;
+    opacity: 0.5;
+    cursor: default;
+    color: inherit;
+}
+
+/*  ********* The paypad contains the payment buttons ********* */
+
+.pos .paypad {
+    padding: 8px 4px 8px 8px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    width: 205px;
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.pos .paypad button {
+    height: 39px;
+    display: block;
+    width: 100%;
+    margin: 0px -6px 4px -2px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #555555;
+    font-size: 14px;
+}
+.pos .paypad button:active, 
+.pos .numpad button:active, 
+.pos .numpad .selected-mode, 
+.pos .popup  button:active{
+    border: none;
+    color: white;
+    background: #7f82ac;
+}
+
+/*  ********* The Numpad ********* */
+
+.pos .numpad {
+    padding: 8px 8px 8px 4px;
+    display: inline-block;
+    text-align: center;
+}
+.pos .numpad button {
+    height: 50px;
+    width: 50px;
+    margin: 0px 0px 4px 0px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #555555;
+}
+.pos .input-button {
+    font-size: 24px;
+}
+.pos .mode-button {
+    font-size: 14px;
+}
+
+/*  ********* The right pane contains the screens and headers ********* */
+
+.pos .rightpane {
+    position: absolute;
+    top: 0;
+    /*bottom: 105px;*/
+    bottom:0;
+    left: 440px;
+    right: 0;
+    vertical-align: top;
+    -webkit-transform: translate3d(0,0,0);
+}
+
+.pos .rightpane-header {
+    padding: 0;
+    height: 48px;
+    border-bottom: 1px solid #c7c7c7;
+    background: #d3d3d3;
+    text-align: center;
+}
+
+/*  ********* The product list  ********* */
+
+.pos .product-list {
+    padding: 10px;
+    text-align: left;
+    -webkit-transform: translate3d(0,0,0);
+}
+
+.pos .product-list-scroller{
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    width:100%;
+    height:100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    -webkit-transform: translate3d(0,0,0);
+
+}
+.pos .product-list-container {
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+}
+
+/*  a) the product list navigation bar */
+
+.pos .breadcrumbs{
+    display: inline-block;
+    text-align: left;
+    float:left;
+}
+.pos .breadcrumb{
+    float: left;
+    display: inline-block;
+    line-height: 48px;
+    height: 48px;
+    min-width: 48px;
+}
+.pos .breadcrumb:last-child {
+    padding-right: 3px;
+    border-right: 1px solid #c5c5c5;
+}
+.pos .breadcrumb-button {
+    display: inline-block;
+    padding: 0 9px;
+    vertical-align: top;
+    color: #808080;
+    font-size: 14px;
+    cursor: pointer;
+}
+.pos .breadcrumb-arrow{
+    width: 28px;
+}
+.pos .breadcrumb-homeimg {
+    width: 27px;
+    margin: 12px 6px;
+}
+
+/*  b) the search box */
+
+.pos .searchbox {
+    position: absolute;
+    right: 2px;
+}
+.pos .searchbox input {
+    width: 100px;
+    border: 1px solid #cecbcb;
+    padding: 10px 20px;
+    padding-left: 38px;
+    margin: 6px;
+    background: url("../img/search.png") no-repeat 15px;
+    background-color: white;
+    border-radius: 20px;
+    font-family: Lato;
+    font-size: 13px;
+}
+.pos .searchbox input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+.pos .search-clear {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    top: 11px;
+    left: 11px;
+    cursor: pointer;
+}
+
+/*  c) the categories list */
+
+.pos .categories {
+    position: relative;
+}
+.pos .categories h4 {
+    display: inline-block;
+    margin: 9px 5px;
+}
+
+.pos .category-list {
+    text-align: left;
+    padding: 10px;
+    background: rgb(229, 229, 229);
+    border-bottom: 1px solid #cecece;
+}
+.pos .category-list.simple {
+    padding: 0px;
+    background: #cecece;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    border-bottom: none;
+}
+
+
+/*  d) the category button */
+
+.pos .category-button {
+    position: relative;
+    vertical-align: top;
+    display: inline-block;
+    font-size: 11px;
+    margin: 5px !important;
+    width: 120px;
+    height:120px;
+    background:#fff;
+    border: 1px solid #d7d7d7;
+    border-radius: 3px;
+    border-bottom-width: 3px;
+    cursor: pointer;
+}
+
+.pos .category-simple-button{
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 1px;
+    margin-bottom: 1px;
+    padding: 5px 12px;
+    line-height: 32px;
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+    cursor: pointer;
+    background: #e2e2e2;
+}
+.pos .category-simple-button:active{
+    color: white;
+    background: #7f82ac;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+
+
+.pos .category-button .category-img {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pos .category-button .category-img img {
+    max-height: 100px;
+    max-width:  120px;
+    vertical-align: middle;
+}
+
+.pos .category-button .category-name {
+    position: absolute;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    bottom: 0;
+    top: auto;
+    line-height: 14px;
+    width: 100%;
+    /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
+     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh. 
+    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
+    /*background:#FFF;*/
+    padding: 3px;
+    padding-top: 15px;
+    color: #7C7BAD;
+}
+
+/*  e) the product */
+
+.pos .product {
+    position:relative;
+    vertical-align: top;
+    display: inline-block;
+    line-height: 100px;
+    font-size: 11px;
+    margin: 5px !important;
+    width: 120px;
+    height:120px;
+    background:#fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    border-bottom-width: 3px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.pos .product .product-img {
+    position: relative;
+    width: 120px;
+    height: 100px;
+    background: white;
+    text-align: center;
+}
+
+.pos .product .product-img img {
+    max-height: 100px;
+    max-width:  120px;
+    vertical-align: middle;
+}
+
+.pos .product .price-tag {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    vertical-align: top;
+    color: white;
+    line-height: 13px;
+    background: #7f82ac;
+    padding: 2px 5px;
+    border-radius: 2px;
+}
+
+.pos .product .product-name {
+    position: absolute;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    bottom:0;
+    top:auto;
+    line-height: 14px;
+    width:100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    /* troublesome in latest webkit
+    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    */
+    /*background:#FFF;*/
+    padding: 3px;
+    padding-top:15px;
+}
+
+
+/*  ********* The Screens  ********* */
+
+.pos .screen {
+    position:absolute;
+    text-align: center;
+    top:0px;
+    bottom:0px;
+    width:100%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.pos .screen header h2 {
+    margin-top: 0px;
+    padding-top: 7px;
+}
+.pos .screen p{
+    font-size: 18px;
+}
+.pos .dialog{
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+.pos .dialog p{
+    font-size: 25px;
+    margin-top: 10px;
+    color: #5a5a5a;
+}
+
+/* a) Generic Screen Layout Constructs */
+
+.screen .screen-content{
+    margin: 0px auto;
+    max-width: 1024px;
+    text-align: left;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.screen .top-content{
+    position: absolute;
+    left: 0px; top: 0px; right: 0px;
+    height: 64px;
+    border-bottom: dashed 1px rgb(215,215,215);
+    text-align: center;
+}
+.screen .top-content .button {
+    position: absolute;
+    top: 0px;
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 20px;
+    background: rgb(230, 230, 230);
+    margin: 12px;
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+}
+.screen .top-content .button.highlight{
+    background: rgb(110,200,155);
+    color: white;
+    border: solid 1px rgb(110,200,155);
+}
+.screen .top-content .button.back {
+    left: 0px;
+    margin-left: 16px;
+}
+.screen .top-content .button.next{
+    right: 0px;
+    margin-right: 16px;
+}
+.screen .left-content{
+    position: absolute;
+    left:0px; top: 64px; bottom: 0px;
+    right:50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-right: dashed 1px rgb(215,215,215);
+}
+.screen .right-content{
+    position: absolute;
+    right:0px; top: 64px; bottom: 0px;
+    left:50%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.screen .centered-content{
+    position: absolute;
+    right:25%; top: 64px; bottom: 0px;
+    left:25%;
+    border-right: dashed 1px rgb(215,215,215);
+    border-left: dashed 1px rgb(215,215,215);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.screen .full-content{
+    position: absolute;
+    right: 0%; top: 65px; bottom: 0px;
+    left: 0%;
+}
+
+/* a) Layout for the Product Screen */
+
+.pos .screen .layout-table {
+    border:none;
+    width:100%;
+    height:100%;
+}
+
+.pos .screen .header-row {
+    border:none;
+    width:100%;
+    height:0px;
+}
+
+.pos .screen .header-cell{
+    border:none;
+    width:100%;
+    height:0px;
+}
+.pos .screen .content-row {
+    width:100%;
+    height:100%;
+}
+.pos .screen .content-cell{
+    width:100%;
+}
+.pos .screen .content-cell .content-container{
+    height:100%;
+    position:relative;
+}
+
+/* b) The payment screen */
+
+
+.pos .pos-payment-container {
+    display: inline-block;
+    font-size: 16px;
+    text-align: left;
+    width: 360px;
+}
+.pos .payment-due-total {
+    text-align: center;
+    font-weight: bold;
+    font-size: 48px;
+    margin: 27px;
+    text-shadow: 0px 2px rgb(202, 202, 202);
+}
+.pos .paymentline{
+    position: relative;
+    padding: 8px;
+    border-box: 3px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+}
+.pos .paymentline-name{
+    margin-bottom: 8px;
+}
+.pos .paymentline-input{
+    font-size: 20px;
+    font-family: Lato;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    outline: none;
+    border: none;
+    padding: 6px 8px;
+    background: white;
+    color: #484848;
+    text-align: right;
+    border-radius: 3px;
+    box-shadow: 0px 2px rgba(143, 143, 143, 0.3) inset;
+}
+
+.pos .paymentline-input:focus{
+    color: rgb(130, 124, 255);
+    box-shadow: 0px 2px rgba(219, 219, 219, 0.3) inset;
+    -webkit-animation: all 250ms linear;
+}
+
+.paymentline-delete {
+    width: 32px;
+    height: 32px;
+    padding: 5px;
+    text-align: center;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    position: absolute;
+    bottom: 10px;
+    left: 8px;
+    cursor: pointer;
+}
+
+.pos .pos-payment-container .left-block{
+    display: inline-block;
+    width:49%;
+    margin:0;
+    padding:0;
+    text-align:left;
+}
+.pos .pos-payment-container .infoline{
+    margin-top:5px;
+    margin-bottom:5px;
+    padding: 0px 8px;
+    opacity: 0.5;
+}
+.pos .pos-payment-container .infoline.bigger{
+    opacity: 1;
+    font-size: 20px;
+}
+.pos .pos-payment-container .right-block{
+    display: inline-block;
+    width:49%;
+    margin:0;
+    padding:0;
+    text-align:right;
+}
+.pos .paymentline.selected{
+    background: rgb(220,220,220);
+}
+
+/* c) The receipt screen */
+
+.pos .pos-receipt-container {
+    font-size: 0.75em;
+}
+
+.pos .pos-sale-ticket {
+    text-align: left;
+    width: 300px;
+    background-color: white;
+    margin: 20px;
+    padding: 15px;
+    font-size: 14px;
+    padding-bottom:30px;
+    display: inline-block;
+    font-family: "Inconsolata";
+    border: solid 1px rgb(220,220,220);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.pos .pos-sale-ticket pre{
+    font-family: "Inconsolata";
+}
+.pos .pos-sale-ticket .emph{
+    font-size: 20px;
+    margin:5px;
+}
+.pos .pos-sale-ticket table {
+    width: 100%;
+    border: 0;
+    table-layout: fixed;
+}
+.pos .pos-sale-ticket table td {
+    border: 0;
+    word-wrap: break-word;
+}
+
+@page {
+    margin: 0;
+}
+
+@media print {
+    * {
+        color: black !important;
+    }
+    .oe_leftbar,
+    .pos .pos-topheader, 
+    .pos .pos-leftpane, 
+    .pos .keyboard_frame {
+        display: none !important;
+    }
+    .pos,
+    .pos .pos-content,
+    .pos .rightpane,
+    .pos .screen, 
+    .pos .window, 
+    .pos .window .subwindow, 
+    .pos .subwindow .subwindow-container{
+        display: block;
+        position: static;
+        height: auto;
+    }
+    .pos{
+        background: white !important;
+    }
+    .pos .rightpane {
+        left: 0px !important;
+        background-color: white;
+    }
+    .pos .receipt-screen header {
+        display: none !important;
+    }
+    .pos .receipt-screen {
+        text-align: left;
+    }
+    .pos-actionbar {
+        display: none !important;
+    }
+    .debug-widget{
+        display: none !important;
+    }
+    .pos *{
+        text-shadow: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+    .pos .pos-sale-ticket{
+        margin: 0;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border: none !important;
+        font-size: 13px !important;
+        width: 266px !important;
+    }
+}
+
+/* d) The Scale screen */
+
+.pos .scale-screen .product-price{
+    font-size: 25px;
+    margin: 16px;
+    text-align: center;
+    display: inline-block;
+    width: 40%;
+}
+.pos .scale-screen .computed-price{
+    font-size: 25px;
+    display: inline-block;
+    text-align: right;
+    margin: 16px;
+    margin-top: 0px;
+    padding: 16px;
+    background: white;
+    width: 40%;
+    border-radius: 3px;
+    font-family: Inconsolata;
+    font-weight: bold;
+    text-shadow: 0px 2px 0px rgb(210,210,210);
+    box-shadow: 0px 2px 0px rgb(225,225,225) inset;
+    float: right;
+}
+.pos .scale-screen .buy-product{
+    text-align: center;
+    font-size: 32px;
+    background: rgb(110,200,155);
+    color: white;
+    border-radius: 3px;
+    padding: 16px;
+    margin: 16px;
+    cursor: pointer;
+}
+
+.pos .scale-screen .weight{
+    text-align: right;
+    margin: 16px;
+    background: white;
+    padding: 20px;
+    padding-right: 30px;
+    font-size: 56px;
+    border-radius: 3px;
+    font-family: Inconsolata;
+    text-shadow: 0px 2px 0px rgb(210, 210, 210);
+    box-shadow: 0px 2px 0px rgb(225,225,225) inset;
+}
+
+
+/* e) The Client List Screen */
+
+.pos .clientlist-screen .client-list{
+    font-size: 16px;
+    width: 100%;
+    line-height: 40px;
+}
+.pos .clientlist-screen .client-list th,
+.pos .clientlist-screen .client-list td {
+    padding: 0px 8px;
+}
+.pos .clientlist-screen .client-list tr{
+    transition: all 150ms linear;
+    background: rgb(230,230,230);
+}
+.pos .clientlist-screen .client-list thead > tr,
+.pos .clientlist-screen .client-list tr:nth-child(even) {
+    background: rgb(247,247,247);
+}
+.pos .clientlist-screen .client-list tr.highlight{
+    transition: all 150ms linear;
+    background: rgb(110,200,155) !important;
+    color: white;
+}
+.pos .clientlist-screen .client-list tr.lowlight{
+    transition: all 150ms linear;
+    background: rgb(216, 238, 227);
+}
+.pos .clientlist-screen .client-list tr.lowlight:nth-child(even){
+    transition: all 150ms linear;
+    background: rgb(227, 246, 237);
+}
+.pos .clientlist-screen .client-details{
+    padding: 16px;
+    border-bottom: solid 5px rgb(110,200,155);
+}
+.pos .clientlist-screen .client-picture{
+    height: 64px;
+    width: 64px;
+    border-radius: 32px;
+    overflow: hidden;
+    text-align: center;
+    float: left;
+    margin-right: 16px;
+    background: white;
+    position: relative;
+}
+.pos .clientlist-screen .client-picture > img {
+    position: absolute;
+    top: -9999px;
+    bottom: -9999px;
+    right: -9999px;
+    left: -9999px;
+    max-height: 64px;
+    margin: auto;
+}
+.pos .clientlist-screen .client-picture > .fa {
+    line-height: 64px;
+    font-size: 32px;
+}
+.pos .clientlist-screen .client-picture .image-uploader {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+.pos .clientlist-screen .client-name {
+    font-size: 32px;
+    line-height: 64px;
+    margin-bottom:16px;
+}
+.pos .clientlist-screen .edit-buttons {
+    position: absolute;
+    right: 16px;
+    top: 10px;
+}
+.pos .clientlist-screen .edit-buttons .button{
+    display: inline-block;
+    margin-left: 16px;
+    color: rgb(128,128,128);
+    cursor: pointer;
+    font-size: 36px;
+}
+.pos .clientlist-screen .client-details-box{
+    position: relative;
+    font-size: 16px;
+}
+.pos .clientlist-screen .client-details-left{
+    width: 50%;
+    float: left;
+}
+.pos .clientlist-screen .client-details-right{
+    width: 50%;
+    float: right;
+}
+.pos .clientlist-screen .client-detail{
+    line-height: 24px;
+}
+.pos .clientlist-screen .client-detail > .label{
+    font-weight: bold;
+    display: inline-block;
+    width: 75px;
+    text-align: right;
+    margin-right: 8px;
+}
+.pos .clientlist-screen .client-details input,
+.pos .clientlist-screen .client-details select
+{
+    padding: 4px;
+    border-radius: 3px;
+    border: solid 1px #cecbcb;
+    margin-bottom: 4px;
+    background: white;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    color: #555555;
+    width: 340px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.pos .clientlist-screen .client-details input.client-name {
+    font-size: 24px;
+    line-height: 24px;
+    margin: 18px 6px;
+    width: 340px;
+}
+.pos .clientlist-screen .client-detail > .empty{
+    opacity: 0.3;
+}
+.pos .clientlist-screen .searchbox{
+    right: auto;
+    margin-left: -90px;
+    margin-top:8px;
+    left: 50%;
+}
+.pos .clientlist-screen .searchbox input{
+    width: 120px;
+}
+.pos .clientlist-screen .button.new-customer {
+    left: 50%;
+    margin-left: 120px;
+}
+
+
+/*  ********* The OrderWidget  ********* */
+
+.pos .order-container{
+    position: absolute;
+    top: 0px;
+    width:100%;
+    height: 100%;
+    background: #F0EEEE;
+}
+
+.pos .order-scroller{
+    width:100%;
+    height:100%;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.pos .scrollable-y{
+    overflow: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+.pos .order{
+    background: white;
+    padding-bottom:15px;
+    padding-top:15px;
+    margin-left:16px;
+    margin-right:16px;
+    margin-top:16px;
+    margin-bottom:16px;
+    font-size:16px;
+    border-radius: 3px;
+    border: solid 1px rgb(220,220,220);
+    text-align: left;
+    max-width: 500px;
+    -webkit-transform: translate3d(0,0,0);
+}
+
+.pos .order .empty{
+    text-align:center;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color:#999;
+    font-weight: normal;
+}
+
+.pos .order .summary{
+    width:100%;
+    text-align:right;
+    font-weight: bold;
+    margin-top:20px;
+    margin-bottom:10px;
+}
+.pos .order .summary .line{
+    float: right;
+    margin-right:15px;
+    margin-left: 15px;
+    padding-top:5px;
+    border-top: solid 2px;
+    border-color:#777;
+}
+.pos .order .summary .line .subentry{
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+}
+.pos .order .summary .line.empty{
+    text-align: right;
+    border-color:#BBB;
+    color:#999;
+}
+
+.pos .order .summary .fidpoints{
+    position: absolute;
+    left: 20px;
+    padding: 10px;
+    color: #6EC89B;
+    background: rgba(110, 200, 155, 0.17);
+    border-radius: 3px;
+}
+
+.submit-kitchen-button {
+    float: left;
+    background: rgb(61, 235, 82);
+    color: white;
+    padding: 12px 20px;
+    margin: 0px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/*  ********* The OrderLineWidget  ********* */
+
+.pos .order .orderline{
+    width:100%;
+    margin:0px;
+    padding-top:3px;
+    padding-bottom:10px;
+    padding-left:15px;
+    padding-right:15px;
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+        -ms-box-sizing: border-box;
+            box-sizing: border-box;
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+}
+.pos .order .orderline:active{
+    background: rgba(140,143,183,0.05);
+    -webkit-transition: background 50ms ease-in-out;
+       -moz-transition: background 50ms ease-in-out;
+            transition: background 50ms ease-in-out;
+}
+.pos .order .orderline.empty:active{
+    background: transparent;
+    cursor: default;
+}
+
+.pos .order .orderline.selected{
+    background: rgba(140,143,183,0.2);
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+    cursor: default;
+}
+.pos .order .orderline .product-name{
+    padding:0;
+    display:inline-block;
+    font-weight: bold;
+    width:80%;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+.pos .order .orderline .price{
+    padding:0;
+    font-weight: bold;
+    float:right;
+}
+.pos .order .orderline .info-list{
+    color: #888;
+    margin-left:10px;
+}
+.pos .order .orderline .info-list em{
+    color: #777;
+    font-weight: bold;
+    font-style:normal;
+}
+
+/*  ********* SplitBill ********* */
+
+.splitbill-screen .order-info {
+    text-align: center;
+    margin-bottom:20px;
+    padding: 20px 0px;
+    font-size: 64px;
+    color: #43996E;
+    text-shadow: 0px 2px white, 0px 2px 2px rgba(0, 0, 0, 0.27);
+    border-bottom: dashed 1px rgb(215,215,215);
+}
+.splitbill-screen .order .orderline.selected{
+    background: rgb(110,200,155);
+    color: white;
+    -webkit-transition: background 250ms ease-in-out;
+       -moz-transition: background 250ms ease-in-out;
+            transition: background 250ms ease-in-out;
+    cursor: default;
+}
+.splitbill-screen .order .orderline.partially.selected{
+    background: rgb(136, 214, 176);
+}
+.splitbill-screen .order .orderline.selected .info-list {
+    color: white;
+}
+.splitbill-screen .order .orderline.selected .info-list em{
+    color: white;
+    font-size: 24px;
+    vertical-align: top;
+}
+.splitbill-screen .paymentmethods {
+    margin: 16px;
+}
+.splitbill-screen .paymentmethod {
+    background: rgb(221, 221, 221);
+    line-height: 40px;
+    margin-bottom: 4px;
+    border-radius: 3px;
+    font-size: 16px;
+    border: solid 1px rgb(202, 202, 202);
+    cursor: pointer;
+    text-align: center;
+}
+
+/*  ********* The ActionBarWidget  ********* */
+
+.pos .pos-actionbar{
+    height: 105px;
+    background: #f5f5f5;    /*#ebebeb;*/
+    border-top: solid 1px #cecece;
+    z-index:900;
+}
+
+.pos .pos-actionbar ul{
+    list-style:  none;
+}
+
+.pos .pos-actionbar-button-list{
+    height: 100%;
+    margin: 0px;
+    padding-left:3px;
+    padding-right:3px;
+    overflow:hidden;
+}
+
+.pos .pos-actionbar .button{
+    width: 90px;
+    height: 90px;
+    text-align:center;
+    margin:3px;
+    margin-top:6px;
+    float:left;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+    border-radius: 3px;
+
+    background: #e2e2e2;
+}
+.pos .pos-actionbar .button .label{
+    margin-top: 37px;
+}
+.pos .pos-actionbar .button .icon{
+    margin-top: 10px;
+}
+.pos .pos-actionbar .button:active{
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+.pos .pos-actionbar .button.disabled{
+    opacity: 0.5;
+}
+.pos .pos-actionbar .button.disabled:active{
+    border: 1px solid #cacaca;
+    color: #555;
+    cursor: default;
+
+    background: #e2e2e2;
+}
+
+.pos .pos-actionbar .button.rightalign{
+    float:right;
+}
+/*  ********* The Debug Widget  ********* */
+
+.pos .debug-widget{
+    z-index:100000;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 200px;
+    font-size: 10px;
+    
+    background: rgba(0,0,0,0.82);
+    color: white;
+    padding-bottom: 10px;
+    cursor: move;
+    -webkit-transform: translate3d(0,0,0);
+}
+.pos .debug-widget .toggle{
+    position: absolute;
+    font-size: 16px;
+    cursor:pointer;
+    top:0px;
+    right:0px;
+    padding:10px;
+    padding-right:15px;
+}
+.pos .debug-widget .content{
+    overflow: hidden;
+}
+.pos .debug-widget h1{
+    background:black;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-top:0;
+    margin-bottom:0;
+}
+.pos .debug-widget .category{
+    background: black;
+    padding-left: 10px;
+    margin: 0px;
+    font-weight: bold;
+    padding-top:3px;
+    padding-bottom:3px;
+}
+.pos .debug-widget .button{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:pointer;
+}
+.pos .debug-widget .button:active{
+    background: rgba(96,21,177,0.45);
+}
+.pos .debug-widget input{
+    margin-left:10px;
+    margin-top:7px;
+    padding: 4px;
+    width: 180px;
+    border: none;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    border-radius: 3px;
+}
+.pos .debug-widget .status{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:default;
+}
+.pos .debug-widget .status.on{
+    background-color: #6cd11d;
+}
+.pos .debug-widget .event{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:default;
+    background-color: #1E1E1E;
+}
+
+/*  ********* The PopupWidgets  ********* */
+
+.pos .modal-dialog{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+.pos .modal-dialog .popup{
+    position: absolute;
+    left:50%;
+    top:50%;
+    width:500px;
+    height:400px;
+    margin-left: -250px;
+    margin-top: -200px;
+    padding:10px;
+    padding-top:20px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    background-color: #F0EEEE;
+    border-radius: 3px;
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.4);
+    z-index:1200;
+}
+.pos .popup .comment{
+    font-weight: normal;
+    font-size: 18px;
+    margin: 0px 16px;
+}
+.pos .popup .comment.traceback {
+    height: 264px;
+    overflow: auto;
+    font-size: 12px;
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: 'Inconsolata';
+    -webkit-user-select: text;
+       -moz-user-select: text;
+            user-select: text;
+}
+.pos .popup .footer{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:60px;
+    border-top: 1px solid #E0DDDD;
+}
+.pos .popup .button{
+    float:right;
+    width: 110px;
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    margin:3px;
+    margin-top:10px;
+    margin-right:10px;
+
+    font-size:   14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    border: 1px solid #cacaca;
+
+    background: #e2e2e2;
+}
+.pos .popup .button:active{
+    color: white;
+    background: #7f82ac;
+    border: 1px solid #7f82ac;
+
+    -webkit-transition-property: background, border;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: ease-out;
+}
+
+.pos .popup .button.big-left{
+    position:absolute;
+    top: 120px;
+    left:40px;
+    width: 180px;
+    height: 180px;
+    line-height:180px;
+}
+
+.pos .popup .button.big-right{
+    position:absolute;
+    top: 120px;
+    right:40px;
+    width: 180px;
+    height: 180px;
+    line-height:180px;
+}
+
+/*  ********* The Webkit Scrollbar  ********* */
+
+.pos *::-webkit-scrollbar{
+    width:  10px;
+    height: 10px;
+}
+.pos *::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: solid 1px rgb(200,200,200);
+}
+.pos *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 30px;
+}
+
+.pos.big-scrollbars *::-webkit-scrollbar{
+    width:  40px;
+    height: 40px;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-track{
+    background: rgb(224,224,224);
+    border-left: none;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-thumb{
+    background: rgb(168,168,168);
+    min-height: 40px;
+    border-radius: 3px;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button{
+    width:  40px;
+    height: 40px;
+    border-radius: 3px;
+    background: rgb(210,210,210);
+    background-size: cover;
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button:decrement{
+    background-image: url('../img/scroll-up.png');
+}
+.pos.big-scrollbars *::-webkit-scrollbar-button:increment{
+    background-image: url('../img/scroll-down.png');
+}
+
+
+/*  ********* Unsupported Browser Page ********* */
+
+.pos .not-supported-browser{
+    position: absolute;
+    z-index: 100000;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background: #2C2C2C;
+}
+.pos .not-supported-browser .message{
+    width:600px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: #d3d3d3;
+    font-size: 14px;
+}
+.pos .not-supported-browser img{
+    border-collapse: separate;
+}

@@ -1,0 +1,26 @@
+-
+  MRP user can cancelled Production Order, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_mrp_user'
+-
+  I first confirm order for PC Assemble SC349.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_test1}
+-
+  Now I cancel the production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
+    order.action_cancel(context=context)
+-
+  Now I check that the production order is cancelled.
+-
+  !assert {model: mrp.production, id: mrp_production_test1}:
+    - state == 'cancel'
+-
+  I remove cancelled production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
+    self.unlink(cr, uid, [order.id])

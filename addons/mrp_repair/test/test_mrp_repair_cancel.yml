@@ -1,0 +1,31 @@
+-
+  In order to test the cancel flow of mrp_repair module,
+  I start by creating new copy Repair order for "PC Assemble SC234" product with giving access rights of mrp user.
+-
+  !context
+    uid: 'res_mrp_repair_user'
+-
+  !python {model: mrp.repair}: |
+    copy_id = self.copy(cr, uid, ref("mrp_repair_rmrp1"))
+    context.update({'new_id':copy_id})
+-
+  I Cancel this Repair order.
+-
+  !python {model: mrp.repair.cancel}: |
+    new_id = context.get('new_id')
+    context.update({"active_model":"mrp.repair", "active_ids": [new_id],"active_id": new_id})
+    self.fields_view_get(cr, uid, False, "form", context)
+    self.cancel_repair(cr, uid, [new_id], context)
+-
+  I check that Repair order is in "Cancel" state.
+-
+  !python {model: mrp.repair}: |
+    new_id = context.get('new_id')
+    order = self.browse(cr, uid, [new_id])[0]
+    assert order.state == 'cancel',"Repair order should be in Cancel state."
+-
+  I Reopen the repair order as new.
+-
+  !python {model: mrp.repair}: |
+    new_id = context.get('new_id')
+    self.action_cancel_draft(cr, uid, [new_id])

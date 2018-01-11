@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--Partner Activation -->
+
+        <record model="ir.ui.view" id="res_partner_activation_form">
+            <field name="name">openerp_custom.res.partner.activation.form</field>
+            <field name="model">res.partner.activation</field>
+            <field name="arch" type="xml">
+                <form string="Activation">
+                    <group col="4">
+                        <field name="name" />
+                        <field name="sequence" />
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_partner_activation_tree">
+            <field name="name">openerp_custom.res.partner.activation.tree</field>
+            <field name="model">res.partner.activation</field>
+            <field name="arch" type="xml">
+                <tree string="Activation">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="res_partner_activation_act">
+            <field name="name">Partner Activations</field>
+            <field name="res_model">res.partner.activation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act" groups="base.group_no_one"/>
+
+    <!--Partner Grade -->
+
+
+    <record id="view_partner_grade_tree" model="ir.ui.view">
+        <field name="name">res.partner.grade.tree</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <tree string="Partner Grade">
+                <field name="sequence" invisible="1"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_partner_grade_form" model="ir.ui.view">
+        <field name="name">res.partner.grade.form</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <form string="Partner Grade">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="active"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="res_partner_grade_action" model="ir.actions.act_window">
+        <field name="name">Partner Grade</field>
+        <field name="res_model">res.partner.grade</field>
+        <field name="view_type">form</field>
+    </record>
+    <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
+        groups="base.group_no_one"
+        parent="base.menu_crm_config_lead" />
+
+    <!-- Partner form -->
+    <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
+        <field name="name">res.partner.geo.inherit.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="date_review_next"/>
+                <field name="grade_id"/>
+                <field name="activation"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_assign" model="ir.ui.view">
+        <field name="name">res.partner.geo.inherit.search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter string="Salesperson" position="after">
+                <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]" icon="terp-personal" />
+            </filter>
+            <field name="category_id" position="after">
+                <field name="grade_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_crm_partner_assign_form" model="ir.ui.view">
+        <field name="name">res.partner.assign.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='geo_localization']" position="replace">
+            <!-- <xpath expr="//notebook[last()]" position="inside"> -->
+                <page string="Geo Localization" name="geo_localization">
+                    <group>
+                        <group>
+                            <separator string="Partner Activation" colspan="2"/>
+                            <field name="grade_id" widget="selection"/>
+                            <field name="activation" widget="selection"/>
+                            <field name="assigned_partner_id"/>
+                            <field name="partner_weight"/>
+                        </group>
+                        <group>
+                            <separator string="Partner Review" colspan="2"/>
+                            <field name="date_review"/>
+                            <field name="date_review_next"/>
+                            <field name="date_partnership"/>
+                        </group>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Geo Localization" colspan="2"/>
+                        <button
+                            string="Geo Localize"
+                            name="geo_localize"
+                            colspan="2"
+                            icon="gtk-apply"
+                            type="object"/>
+                        <field name="partner_latitude"/>
+                        <field name="partner_longitude"/>
+                        <field name="date_localization"/>
+                    </group>
+                    <newline/>
+
+                    <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
+                         <tree string="Assigned Opportunities">
+                             <field name="create_date"/>
+                             <field name="name"/>
+                             <field name="type"/>
+                             <field name="probability" invisible="1"/>
+                             <field name="stage_id"/>
+                             <field name="section_id"
+                                    invisible="context.get('invisible_section', True)"
+                                    groups="base.group_multi_salesteams"/>
+                             <field name="user_id" />
+                             <button string="Convert to Opportunity"
+                                    name="convert_opportunity"
+                                    type="object" 
+                                    icon="gtk-convert"
+                                    attrs="{'invisible':[('type','=','opportunity')]}" />
+                             <button name="case_escalate" string="Escalate"
+                                    type="object"
+                                    icon="gtk-go-up" 
+                                    attrs="{'invisible':[('probability', '=', 100)]}" />
+                         </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    </data>
+</openerp>

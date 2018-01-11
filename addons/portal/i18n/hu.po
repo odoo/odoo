@@ -1,0 +1,393 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:47+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
+msgid ""
+"<p>\n"
+"                    <b>Good Job!</b> Your inbox is empty.\n"
+"                </p><p>\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
+"                    follow.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    <b>Szép munka!</b> Az ön postafiókja üres.\n                </p><p>\n                    A \"Beérkezett üzenetei\" tartalmazzák a privát üzeneteit vagy e-mailjeit\n                    továbbá az Ön által nyomon követett dokumentumokhoz vagy emberekhez\n                    kapcsolódó információkat.\n                </p>\n            "
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
+msgid ""
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    <b>Nincs teendő.</b>\n                </p><p>\n                    Ha a Beérkezett üzeneteinél végez műveletet, megjelölheti\n                    mint <i>teendő</i>. Ebből a menüből, minden teendőjét elvégezheti.\n                </p>\n            "
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
+msgid ""
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal contact.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    Nem található üzenet és nem lett még elküldve üzenet.\n                </p><p>\n                    Kattintson felül jobbra az ikonra egy üzenet összeállításához. Ez az\n                    üzenet lesz elküldve e-mailként, ha ez egy belső kapcsolat.\n                </p>\n            "
+
+#. module: portal
+#: code:addons/portal/mail_message.py:59
+#, python-format
+msgid "Access Denied"
+msgstr "Hozzáférés megtagadva"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_groups
+msgid "Access Groups"
+msgstr "Csoportok hozzáférése"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "Értékesítés utáni szolgáltatások"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "Apply"
+msgstr "Alkalmaz"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
+msgid "Archives"
+msgstr "Archívumok"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr "Számlázás"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "Cancel"
+msgstr "Mégsem"
+
+#. module: portal
+#: field:portal.wizard.user,partner_id:0
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#. module: portal
+#: view:portal.wizard.user:portal.wizard_user_tree_view
+msgid "Contacts"
+msgstr "Kapcsolatok"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:163
+#, python-format
+msgid "Contacts Error"
+msgstr "Ügyfelek hiba"
+
+#. module: portal
+#: field:portal.wizard,create_uid:0 field:portal.wizard.user,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: portal
+#: field:portal.wizard,create_date:0 field:portal.wizard.user,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:34
+#, python-format
+msgid ""
+"Dear %(name)s,\n"
+"\n"
+"You have been given access to %(company)s's %(portal)s.\n"
+"\n"
+"Your login account data is:\n"
+"  Username: %(login)s\n"
+"  Portal: %(portal_url)s\n"
+"  Database: %(db)s \n"
+"\n"
+"You can set or change your password via the following url:\n"
+"   %(signup_url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"Odoo - Open Source Business Applications\n"
+"http://www.openerp.com\n"
+msgstr "Tisztelt %(name)s,\n\nElérhetővé tettük részükre a hozzáférést: %(company)s's %(portal)s.\n\nA fiókjához tartozó hozzáférési adatok a következők:\n  Felhasználónév: %(login)s\n  Portál: %(portal_url)s\n  Adatbázis: %(db)s \n\nA jelszó beállításához vagy cseréjéhez használja a következő elérési utat (URL):\n   %(signup_url)s\n\n%(welcome_message)s\n\n--\nOdoo - Nyílt forráskódú alkalmazás\nhttp://www.openerp.com\n"
+
+#. module: portal
+#: view:share.wizard:portal.share_step2_form_portal
+msgid "Details"
+msgstr "Részletek"
+
+#. module: portal
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "E-mail"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:225
+#, python-format
+msgid "Email Required"
+msgstr "Email szükséges"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_thread
+msgid "Email Thread"
+msgstr "E-mail összefűzés"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:39
+#, python-format
+msgid "Existing Groups (e.g Portal Groups)"
+msgstr "Létező csoport (pl. Portál csoport)"
+
+#. module: portal
+#: view:share.wizard:portal.share_step1_form_portal
+#: field:share.wizard,group_ids:0
+msgid "Existing groups"
+msgstr "Már létező csoportok"
+
+#. module: portal
+#: view:share.wizard:portal.share_step1_form_portal
+#: field:share.wizard,user_ids:0
+msgid "Existing users"
+msgstr "Meglévő felhasználók"
+
+#. module: portal
+#: field:portal.wizard,id:0 field:portal.wizard.user,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: portal
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
+msgstr "Ha bejelölt, akkor a csoport portálként is használható."
+
+#. module: portal
+#: field:portal.wizard.user,in_portal:0
+msgid "In Portal"
+msgstr "Portálon"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr "Beérkezett üzenetek"
+
+#. module: portal
+#: field:portal.wizard,welcome_message:0
+msgid "Invitation Message"
+msgstr "Meghívó szövege"
+
+#. module: portal
+#: field:portal.wizard,write_uid:0 field:portal.wizard.user,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: portal
+#: field:portal.wizard,write_date:0 field:portal.wizard.user,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "Üzenet"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_messages
+msgid "Messaging"
+msgstr "Üzenetküldés"
+
+#. module: portal
+#: view:res.groups:portal.group_search_view
+msgid "Non-Portal Groups"
+msgstr "Nem portál csoportok"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Kimenő levelek"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:54
+#, python-format
+msgid "Please select at least one group to share with"
+msgstr "Kérem legalább egy csoport kiválasztását akivel megosztja"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:50
+#, python-format
+msgid "Please select at least one user to share with"
+msgstr "Kérem válasszon legalább egy felhasználót akivel megosztja"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0
+msgid "Portal"
+msgstr "Portál"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:portal.wizard_view
+msgid "Portal Access Management"
+msgstr "Portál hozzáférés kezelése"
+
+#. module: portal
+#: view:res.groups:portal.group_search_view
+msgid "Portal Groups"
+msgstr "Portál csoportok"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "Portál felhasználó beállítás"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_projects
+msgid "Projects"
+msgstr "Projektek"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid ""
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr "Válassza ki, hogy melyik felhasználónak kell hozzátartoznia az alábbi listán felsorolt portálhoz.\n                        Minden kiválasztott kapcsolathoz tartozó e-mailnek érvényesnek és egyedinek kell lennie.\n                        Ha szükséges, kijavíthatja a kapcsolatok e-mail címeit a listában."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:149
+#, python-format
+msgid "Several contacts have the same email: "
+msgstr "Egyes ügyfelek ugyanazzal az email-el rendelkeznek: "
+
+#. module: portal
+#: model:ir.model,name:portal.model_share_wizard
+msgid "Share Wizard"
+msgstr "Megosztás varázsló"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:146
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr "Egyes ügyfeleknek nincs érvényes email címe: "
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:152
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr "Egyes ügyfelek már létező portál felhasználók email címét tartalmazzák:"
+
+#. module: portal
+#: help:portal.wizard,portal_id:0
+msgid "The portal that users can be added in or removed from."
+msgstr "A portál amihez a felhasználók hozzáadhatók vagy onnan eltávolíthatók"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:60
+#, python-format
+msgid ""
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
+msgstr "Az igényelt műveletet nem lehetett végrehajtani biztonsági korlátok miatt. Kérem vegye fel a kapcsolatot a rendszer adminisztrátorral.\n\n(Dokumentum típus: %s, Művelet: %s)"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr "Ez a szöveg hozzá lesz adva az összes új portál felhasználónak elküldött leveléhez."
+
+#. module: portal
+#: help:portal.wizard,welcome_message:0
+msgid "This text is included in the email sent to new users of the portal."
+msgstr "Ez a szöveg belekerül a portál új felhasználójához küldött e-mailre."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:155
+#, python-format
+msgid ""
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr "Ennek a hibának az elhárításához, ezt teheti: \n- Javítsa ki az aktuális ügyfelek email címeit\n- Csak az egyéni email címekkel rendelkező ügyfeleknek engedélyezze a hozzáférést"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
+msgid "To-do"
+msgstr "Feladat"
+
+#. module: portal
+#: field:portal.wizard,user_ids:0
+msgid "Users"
+msgstr "Felhasználók"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:38
+#, python-format
+msgid "Users you already shared with"
+msgstr "Felhasználók akikkel már megosztott"
+
+#. module: portal
+#: field:portal.wizard.user,wizard_id:0
+msgid "Wizard"
+msgstr "Varázsló"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:226
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr "Kell lennie egy e-mail címének a felhasználói űrlapján az e-mail küldéséhez."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:33
+#, python-format
+msgid "Your Odoo account at %(company)s"
+msgstr "Az Odoo fiókja itt %(company)s"
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:46
+#, python-format
+msgid "access directly to"
+msgstr "Közvetlene elérés ehhez"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "or"
+msgstr "vagy"
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:48
+#, python-format
+msgid "your messages "
+msgstr "üzenetei "

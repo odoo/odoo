@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+
+    <data>
+        <record forcecreate="True" id="ir_cron_sync_all_cals" model="ir.cron">
+            <field name="name">Calendar synchronization</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">12</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field eval="'google.calendar'" name="model" />
+            <field eval="'synchronize_events_cron'" name="function" />
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,236 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_check_writing
+# 
+# Translators:
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 18:23+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
+"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-8/language/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you do\n"
+"                to your suppliers using checks. When you select a supplier, the\n"
+"                payment method and an amount for the payment, Odoo will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr "<p class = \"oe_view_nocontent_create\"> \nFaceți clic aici pentru a crea un nou cec. \n</ p> <p> \nFormularul de plată cec vă permite să urmăriți plățile efectuate\nfurnizorilor folosind cecuri. Când selectați un furnizor, \nmetodă de plată și o suma de plată, Odoo vă\npropune reconcilierea plății cu facturile neplătite\nale furnizorului.\n</ p> "
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Chitanta contabila"
+
+#. module: account_check_writing
+#: field:account.voucher,allow_check:0
+msgid "Allow Check Writing"
+msgstr "Permiteti Scrierea de Cecuri"
+
+#. module: account_check_writing
+#: field:account.journal,allow_check_writing:0
+msgid "Allow Check writing"
+msgstr "Permite scrierea de cecuri"
+
+#. module: account_check_writing
+#: field:account.voucher,amount_in_word:0
+msgid "Amount in Word"
+msgstr "Suma in litere"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "Cancel"
+msgstr "Anuleaza"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: model:ir.actions.report.xml,name:account_check_writing.action_report_check
+msgid "Check"
+msgstr "Cec"
+
+#. module: account_check_writing
+#: field:res.company,check_layout:0
+msgid "Check Layout"
+msgstr "Aspect Cec"
+
+#. module: account_check_writing
+#: help:account.journal,use_preprint_check:0
+msgid "Check if you use a preformated sheet for check"
+msgstr "Verificați dacă folosiți o foaie preformatată pentru cec"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check in middle"
+msgstr "Cecul la mijloc"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on Top"
+msgstr "Cecul in partea de sus"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on bottom"
+msgstr "Cecul in partea de jos"
+
+#. module: account_check_writing
+#: help:res.company,check_layout:0
+msgid ""
+"Check on top is compatible with Quicken, QuickBooks and Microsoft Money. "
+"Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on "
+"bottom is compatible with Peachtree, ACCPAC and DacEasy only"
+msgstr "Cecul in partea de sus este compatibil cu Quicken, QuickBooks si Microsoft Money. Cecul la mijloc este compatibil cu Peachtree, ACCPAC si DacEasy. Cecul in partea de jos este compatibil numai cu Peachtree, ACCPAC si DacEasy"
+
+#. module: account_check_writing
+#: help:account.journal,allow_check_writing:0
+msgid "Check this if the journal is to be used for writing checks."
+msgstr "Bifati aceasta casuta daca jurnalul va fi folosit pentru scrierea de cecuri."
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "Companii"
+
+#. module: account_check_writing
+#: field:account.check.write,create_uid:0
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: account_check_writing
+#: field:account.check.write,create_date:0
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Description"
+msgstr "Descriere"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Discount"
+msgstr "Reducere"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Due Date"
+msgstr "Data scadentei"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "Error!"
+msgstr "Eroare!"
+
+#. module: account_check_writing
+#: field:account.check.write,id:0
+#: field:report.account_check_writing.report_check,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_journal
+msgid "Journal"
+msgstr "Jurnal"
+
+#. module: account_check_writing
+#: field:account.check.write,write_uid:0
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: account_check_writing
+#: field:account.check.write,write_date:0
+msgid "Last Updated on"
+msgstr "Ultima actualizare în"
+
+#. module: account_check_writing
+#: field:account.check.write,check_number:0
+msgid "Next Check Number"
+msgstr "Numarul Cecului Urmator"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "No check selected "
+msgstr "Nici un cec selectat"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "One of the printed check already got a number."
+msgstr "Unul dintre cecurile imprimate are deja un numar."
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Open Balance"
+msgstr "Sold la deschidere"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Original Amount"
+msgstr "Suma Initiala"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Payment"
+msgstr "Plata"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_check_write
+msgid "Prin Check in Batch"
+msgstr "Tipareste Cecuri in Loturi"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: view:account.voucher:account_check_writing.view_vendor_payment_check_form
+msgid "Print Check"
+msgstr "Printeaza Cecul"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
+msgid "Print Check in Batch"
+msgstr "Imprima Cecuri in Lot"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "Printing error"
+msgstr "Eroare tipărire: "
+
+#. module: account_check_writing
+#: help:account.check.write,check_number:0
+msgid "The number of the next check number to be printed."
+msgstr "Numarul urmatorului cec care va fi tiparit."
+
+#. module: account_check_writing
+#: field:account.journal,use_preprint_check:0
+msgid "Use Preprinted Check"
+msgstr "Folositi Cecuri pre-tiparite"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_write_check
+#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
+msgid "Write Checks"
+msgstr "Scrieti Cecuri"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "or"
+msgstr "sau"

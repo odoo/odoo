@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_holiday_graph">
+            <field name="name">hr.holidays.report_graph</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <graph string="Leaves Summary" type="pivot">
+                    <field name="employee_id" type="row"/>
+                    <field name="type" type="row"/>
+                    <field name="date_from" type="col"/>
+                    <field name="number_of_days" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_hr_available_holidays_report">
+            <field name="name">Leaves Analysis</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" eval="view_holiday_simple"/>
+            <field name="domain">[('holiday_type','=','employee')]</field>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        </record>
+
+        <menuitem
+            name="Leaves Analysis" 
+            id="menu_hr_available_holidays_report_tree" 
+            action="action_hr_available_holidays_report" 
+            parent="hr.menu_hr_reporting" sequence="5" />
+
+
+    </data>
+</openerp>
+

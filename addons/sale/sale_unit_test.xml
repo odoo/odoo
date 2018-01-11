@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Resource: sale.order -->
+        <record id="test_order_1" model="sale.order">
+            <field model="product.pricelist" name="pricelist_id" search="[]"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field model="res.partner" name="partner_id" search="[]"/>
+            <field model="res.partner" name="partner_invoice_id" search="[]"/>
+            <field model="res.partner" name="partner_shipping_id" search="[]"/>
+        </record>
+        <!-- Resource: sale.order.line -->
+        <record id="test_order_1_line_1" model="sale.order.line">
+            <field name="order_id" ref="test_order_1"/>
+            <field name="name">[PCSC234] PC Assemble SC234</field>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">450</field>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+        </record>
+        <record id="test_order_1_line_3" model="sale.order.line">
+            <field name="order_id" ref="test_order_1"/>
+            <field name="name">[HDD-SH2] HDD SH-2</field>
+            <field name="product_id" ref="product.product_product_18"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">90</field>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uos_qty">3</field>
+        </record>
+
+        <assert id="test_order_1" model="sale.order" severity="error" string="The amount of the sales order is correctly computed">
+            <test expr="sum([l.price_subtotal for l in order_line]) == amount_untaxed"/>
+        </assert>
+
+        <workflow action="order_confirm" model="sale.order" ref="test_order_1"/>
+
+        <assert id="test_order_1" model="sale.order" string="the sales order is now in 'Manual in progress' state">
+            <test expr="state">manual</test>
+        </assert>
+
+        <workflow action="manual_invoice" model="sale.order" ref="test_order_1" uid="base.user_root"/>
+
+        <assert id="test_order_1" model="sale.order" string="the sales order is now in progress">
+            <test expr="state">progress</test>
+        </assert>
+
+        <!-- Treat generated invoice -->
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order has now a corresponding invoice">
+            <test expr="len(invoice_ids) == 1"/>
+        </assert>
+
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's has the same amount and is currently a draft">
+            <test expr="invoice_ids[0].amount_untaxed == amount_untaxed"/>
+            <test expr="invoice_ids[0].amount_total == amount_total"/>
+            <test expr="invoice_ids[0].state">draft</test>
+        </assert>
+
+        <workflow action="invoice_open" model="account.invoice">
+            <value eval="obj(ref('test_order_1')).invoice_ids[0].id" model="sale.order"/>
+        </workflow>
+
+        <function model="account.invoice" name="pay_and_reconcile">
+            <value eval="[obj(ref('test_order_1')).invoice_ids[0].id]" model="sale.order"/>
+            <value eval="obj(ref('test_order_1')).amount_total" model="sale.order"/>
+            <value model="account.account" search="[('type', '=', 'cash')]"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <value eval="ref('account.bank_journal')"/>
+            <value model="account.account" search="[('type', '=', 'cash')]"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))"/>
+            <value eval="ref('account.bank_journal')"/>
+        </function>
+
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's invoice is now paid">
+            <test expr="invoice_ids[0].state">paid</test>
+        </assert>
+
+        <!-- Treat generated picking -->
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order has now a correspending picking">
+            <test expr="len(picking_ids) == 1"/>
+        </assert>
+
+        <assert id="test_order_1" model="sale.order" severity="error" string="the sales order's picking will be sent to the good address and is already confirmed">
+            <test expr="picking_ids[0].partner_id == partner_shipping_id"/>
+            <!-- test expr="picking_ids[0].state">confirmed</test # Desactivated because of MRP_JIT -->
+        </assert>
+
+        <!-- Here we need to use the function tag because action_assign is a method of stock_picking and not part of the workflow -->
+        <function model="stock.picking" name="action_assign">
+            <value eval="[obj(ref('test_order_1')).picking_ids[0].id]" model="sale.order"/>
+        </function>
+
+        <assert id="test_order_1" model="sale.order" severity="fatal" string="the sales order's picking is now assigned">
+            <test expr="picking_ids[0].state">assigned</test>
+        </assert>
+
+        <!-- Do the same as in wizard_partial_picking lines 143-144 -->
+        <function model="stock.picking" name="action_move">
+            <value eval="[obj(ref('test_order_1')).picking_ids[0].id]" model="sale.order"/>
+        </function>
+
+        <workflow action="button_done" model="stock.picking">
+            <value eval="obj(ref('test_order_1')).picking_ids[0].id" model="sale.order"/>
+        </workflow>
+
+        <assert id="test_order_1" model="sale.order" string="the sales order's picking is now done">
+            <test expr="picking_ids[0].state">done</test>
+        </assert>
+
+        <!-- Run all schedulers -->
+        <function model="procurement.order" name="run_scheduler"/>
+
+        <assert id="test_order_1" model="sale.order" string="the sales order is now done">
+            <test expr="state">done</test>
+        </assert>
+    </data>
+</openerp>

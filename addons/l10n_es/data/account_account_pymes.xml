@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <!--
+          Cuentas que sólo están en el PGC PYMEs:
+            (2935), (296);
+            (5935), (596);
+            (663);
+            (7962), (7963);
+
+        Cuentas que tienen un nombre distinto en el plan de asociaciones:
+            (100), (103), (104), (1040), (1044), (12), (130);
+            (240), (249);
+            (490);
+            (65), (671), (691), (694);
+            (791), (794);
+
+        (2013-10-07)
+        Pedro M. Baeza - pedro.baeza@serviciosbaeza.com
+        Serv. Tecnol. Avanzados - http://www.serviciosbaeza.com
+        Refactorización general
+
+    -->
+
+    <data noupdate="0">
+
+        <record id="pgc_pymes_100" model="account.account.template">
+            <field name="code">100</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_10"/>
+            <field name="type">view</field>
+            <field name="name">Capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_100_child" model="account.account.template">
+            <field name="code">100</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_100"/>
+            <field name="type">other</field>
+            <field name="name">Capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_103" model="account.account.template">
+            <field name="code">103</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_10"/>
+            <field name="type">view</field>
+            <field name="name">Socios por desembolsos no exigidos</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1030" model="account.account.template">
+            <field name="code">1030</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_103"/>
+            <field name="type">view</field>
+            <field name="name">Socios por desembolsos no exigidos, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1030_child" model="account.account.template">
+            <field name="code">1030</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_1030"/>
+            <field name="type">other</field>
+            <field name="name">Socios por desembolsos no exigidos, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1034" model="account.account.template">
+            <field name="code">1034</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_103"/>
+            <field name="type">view</field>
+            <field name="name">Socios por desembolsos no exigidos, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1034_child" model="account.account.template">
+            <field name="code">1034</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_1034"/>
+            <field name="type">other</field>
+            <field name="name">Socios por desembolsos no exigidos, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_104" model="account.account.template">
+            <field name="code">104</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_10"/>
+            <field name="type">view</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1040" model="account.account.template">
+            <field name="code">1040</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_104"/>
+            <field name="type">view</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1040_child" model="account.account.template">
+            <field name="code">1040</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_1040"/>
+            <field name="type">other</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1044" model="account.account.template">
+            <field name="code">1044</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_104"/>
+            <field name="type">view</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_1044_child" model="account.account.template">
+            <field name="code">1044</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_1044"/>
+            <field name="type">other</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_12" model="account.account.template">
+            <field name="code">12</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_1"/>
+            <field name="type">view</field>
+            <field name="name">Resultados pendientes de aplicación</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_120" model="account.account.template">
+            <field name="code">120</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_12"/>
+            <field name="type">view</field>
+            <field name="name">Remanente</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_120_child" model="account.account.template">
+            <field name="code">120</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_120"/>
+            <field name="type">other</field>
+            <field name="name">Remanente</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_121" model="account.account.template">
+            <field name="code">121</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_12"/>
+            <field name="type">view</field>
+            <field name="name">Resultados negativos de ejercicios anteriores</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_121_child" model="account.account.template">
+            <field name="code">121</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_121"/>
+            <field name="type">other</field>
+            <field name="name">Resultados negativos de ejercicios anteriores</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_129" model="account.account.template">
+            <field name="code">129</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_12"/>
+            <field name="type">view</field>
+            <field name="name">Resultado del ejercicio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_129_child" model="account.account.template">
+            <field name="code">129</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_129"/>
+            <field name="type">other</field>
+            <field name="name">Resultado del ejercicio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_130_child" model="account.account.template">
+            <field name="code">130</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_130"/>
+            <field name="type">other</field>
+            <field name="name">Subvenciones oficiales de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_132_child" model="account.account.template">
+            <field name="code">132</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_132"/>
+            <field name="type">other</field>
+            <field name="name">Otras subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_240" model="account.account.template">
+            <field name="code">240</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_24"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2403" model="account.account.template">
+            <field name="code">2403</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_240"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2403_child" model="account.account.template">
+            <field name="code">2403</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2403"/>
+            <field name="type">other</field>
+            <field name="name">Participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2404" model="account.account.template">
+            <field name="code">2404</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_240"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2404_child" model="account.account.template">
+            <field name="code">2404</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2404"/>
+            <field name="type">other</field>
+            <field name="name">Participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2405" model="account.account.template">
+            <field name="code">2405</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_240"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2405_child" model="account.account.template">
+            <field name="code">2405</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2405"/>
+            <field name="type">other</field>
+            <field name="name">Participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_249" model="account.account.template">
+            <field name="code">249</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_24"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2493" model="account.account.template">
+            <field name="code">2493</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_249"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2493_child" model="account.account.template">
+            <field name="code">2493</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2493"/>
+            <field name="type">other</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2494" model="account.account.template">
+            <field name="code">2494</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_249"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2494_child" model="account.account.template">
+            <field name="code">2494</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2494"/>
+            <field name="type">other</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2495" model="account.account.template">
+            <field name="code">2495</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_249"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2495_child" model="account.account.template">
+            <field name="code">2495</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2495"/>
+            <field name="type">other</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_255_child" model="account.account.template">
+            <field name="code">255</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_255"/>
+            <field name="type">other</field>
+            <field name="name">Activos por derivados financieros</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2935" model="account.account.template">
+            <field name="code">2935</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_293"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de participaciones a largo plazo en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_2935_child" model="account.account.template">
+            <field name="code">2935</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_2935"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de participaciones a largo plazo en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_296" model="account.account.template">
+            <field name="code">296</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_29"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de  valor de participaciones en el patrimonio neto a largo plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_296_child" model="account.account.template">
+            <field name="code">296</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_296"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de  valor de participaciones en el patrimonio neto a largo plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pyme_490" model="account.account.template">
+            <field name="code">490</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_49"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="l10n_es.account_type_terceros"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pyme_490_child" model="account.account.template">
+            <field name="code">490</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pyme_490"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="l10n_es.account_type_terceros"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pyme_551" model="account.account.template">
+            <field name="code">551</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_55"/>
+            <field name="type">view</field>
+            <field name="name">Cuenta corriente con socios y administradores</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pyme_551_child" model="account.account.template">
+            <field name="code">551</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pyme_551"/>
+            <field name="type">other</field>
+            <field name="name">Cuenta corriente con socios y administradores</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_5935" model="account.account.template">
+            <field name="code">5935</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_593"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de participaciones a corto plazo en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_5935_child" model="account.account.template">
+            <field name="code">5935</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_5935"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de participaciones a corto plazo en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_596" model="account.account.template">
+            <field name="code">596</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_59"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de participaciones a corto plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_596_child" model="account.account.template">
+            <field name="code">596</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_596"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de participaciones a corto plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_65" model="account.account.template">
+            <field name="code">65</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_6"/>
+            <field name="type">view</field>
+            <field name="name">Otros gastos de gestión</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_650" model="account.account.template">
+            <field name="code">650</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_65"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas de créditos comerciales incobrables</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_650_child" model="account.account.template">
+            <field name="code">650</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_650"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas de créditos comerciales incobrables</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_651" model="account.account.template">
+            <field name="code">651</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_65"/>
+            <field name="type">view</field>
+            <field name="name">Resultados de operaciones en común</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_6510" model="account.account.template">
+            <field name="code">6510</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_651"/>
+            <field name="type">view</field>
+            <field name="name">Beneficio transferido (gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_6510_child" model="account.account.template">
+            <field name="code">6510</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_6510"/>
+            <field name="type">other</field>
+            <field name="name">Beneficio transferido (gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_6511" model="account.account.template">
+            <field name="code">6511</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_651"/>
+            <field name="type">view</field>
+            <field name="name">Pérdida soportada (partícipe o asociado no gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_6511_child" model="account.account.template">
+            <field name="code">6511</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_6511"/>
+            <field name="type">other</field>
+            <field name="name">Pérdida soportada (partícipe o asociado no gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_659" model="account.account.template">
+            <field name="code">659</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_65"/>
+            <field name="type">view</field>
+            <field name="name">Otras pérdidas en gestión corriente</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_659_child" model="account.account.template">
+            <field name="code">659</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_659"/>
+            <field name="type">other</field>
+            <field name="name">Otras pérdidas en gestión corriente</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_663_child" model="account.account.template">
+            <field name="code">663</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_663"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por valoración de instrumentos financieros por su valor razonable</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_671" model="account.account.template">
+            <field name="code">671</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_67"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas procedentes del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_671_child" model="account.account.template">
+            <field name="code">671</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_671"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas procedentes del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_691" model="account.account.template">
+            <field name="code">691</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_69"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas por deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_691_child" model="account.account.template">
+            <field name="code">691</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_691"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_694" model="account.account.template">
+            <field name="code">694</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_69"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas por deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_694_child" model="account.account.template">
+            <field name="code">694</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_694"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_763_child" model="account.account.template">
+            <field name="code">763</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_763"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios por valoración de instrumentos financieros por su valor razonable</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_791" model="account.account.template">
+            <field name="code">791</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_79"/>
+            <field name="type">view</field>
+            <field name="name">Reversión del deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_791_child" model="account.account.template">
+            <field name="code">791</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_791"/>
+            <field name="type">other</field>
+            <field name="name">Reversión del deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_794" model="account.account.template">
+            <field name="code">794</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_79"/>
+            <field name="type">view</field>
+            <field name="name">Reversión del deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_794_child" model="account.account.template">
+            <field name="code">794</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_794"/>
+            <field name="type">other</field>
+            <field name="name">Reversión del deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_7962" model="account.account.template">
+            <field name="code">7962</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_796"/>
+            <field name="type">view</field>
+            <field name="name">Reversión del deterioro de participaciones en instrumentos de patrimonio neto a largo plazo, otras partes vinculadas</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_7962_child" model="account.account.template">
+            <field name="code">7962</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_7962"/>
+            <field name="type">other</field>
+            <field name="name">Reversión del deterioro de participaciones en instrumentos de patrimonio neto a largo plazo, otras partes vinculadas</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_7963" model="account.account.template">
+            <field name="code">7963</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_796"/>
+            <field name="type">view</field>
+            <field name="name">Reversión del deterioro de participaciones en instrumentos de patrimonio neto a largo plazo, otras empresas</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+        <record id="pgc_pymes_7963_child" model="account.account.template">
+            <field name="code">7963</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_pymes_7963"/>
+            <field name="type">other</field>
+            <field name="name">Reversión del deterioro de participaciones en instrumentos de patrimonio neto a largo plazo, otras empresas</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_pymes"/>
+        </record>
+
+    </data>
+</openerp>

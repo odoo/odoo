@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <page string="Sales" position="after">
+                    <page string="Accounting" groups="account.group_account_invoice">
+                        <group>
+                            <label for="categ_id" string="Internal Category"/>
+                            <div><field name="categ_id" colspan="3" nolabel="1"/></div>
+                        </group>
+                        <group name="properties">
+                            <group>
+                                <field name="property_account_income" domain="[('type','=','other')]" groups="account.group_account_user"/>
+                                <field name="taxes_id" colspan="2" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="property_account_expense" domain="[('type','=','other')]" groups="account.group_account_user"/>
+                                <field name="supplier_taxes_id" colspan="2" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//group[@name='parent']" position="inside">
+                        <group name="account_property" string="Account Properties" colspan="2">
+                            <field name="property_account_income_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_account_expense_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

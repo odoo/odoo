@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_open_closed_fiscalyear" model="ir.ui.view">
+            <field name="name">account.open.closed.fiscalyear.form</field>
+            <field name="model">account.open.closed.fiscalyear</field>
+            <field name="arch" type="xml">
+                <form string="Cancel Fiscal Year Closing Entries">
+                    <separator string="Cancel Fiscal Year Closing Entries"/>
+                    <p class="oe_grey">
+This wizard will remove the end of year journal entries of selected fiscal year. Note that you can run this wizard many times for the same fiscal year.
+                    </p>
+                    <group>
+                        <field name="fyear_id" domain="[('state','=','draft'), ('end_journal_period_id', '!=', False)]"/>
+                    </group>
+                    <footer>
+                        <button string="Cancel Closing Entries" name="remove_entries" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Discard" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_open_closed_fiscalyear" model="ir.actions.act_window">
+            <field name="name">Cancel Closing Entries</field>
+            <field name="res_model">account.open.closed.fiscalyear</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_open_closed_fiscalyear"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_open_closed_fiscalyear"
+            id="menu_wizard_account_open_closed_fiscalyear"
+            sequence="18"
+            parent="menu_account_end_year_treatments" />
+
+    </data>
+</openerp>

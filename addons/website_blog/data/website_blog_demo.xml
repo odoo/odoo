@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <!-- <data noupdate="1"> -->
+    <data>
+
+        <!-- TAGS -->
+        <record id="blog_tag_1" model="blog.tag">
+            <field name="name">functional</field>
+        </record>
+        <record id="blog_tag_2" model="blog.tag">
+            <field name="name">website</field>
+        </record>
+
+        <!-- POSTS -->
+        <record id="blog_post_1" model="blog.post">
+            <field name="name">The Future of Emails</field>
+            <field name="subtitle">Ideas behing the Odoo communication tools.</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="website_published" eval="True"/>
+            <field name="website_meta_keywords">Odoo, email</field>
+            <field name="website_meta_description">The Future of Emails</field>
+            <field name="background_image">/website_blog/static/src/img/post1.jpg</field>
+            <field name="content"><![CDATA[
+        <section class="mt16 mb16 readable">
+            <p>
+                Emails are broken.
+            </p><p>
+                Emails make me waste my time. But I need them.
+                Given the importance that emails have in our lives,
+                it's incredible it's still one of the only software
+                areas that did not evolve in the past 20 years!
+            </p><p>
+                Reading my inbox is the most unproductive task I do
+                on a daily basis. I have to spend one full hour a
+                day to process my emails. All the junk flows in the
+                same inbox; spams, information that doesn't matter,
+                quoted answers of quoted answers, etc. At the end
+                of the hour, only 10 emails actually requested an
+                answer from me. With a good tool, I could have done
+                my job in 10 minutes!
+            </p>
+        </section>
+        <section class="mt16 mb16 readable">
+            <p>
+                At Odoo, we build tools to bring productivity to
+                enterprises. As emails and information flows are one of
+                the biggest wastes of time in companies, we have to fix
+                this.
+            </p><p>
+                To disrupt emails, you need more than just another user
+                interface. We need to rethink the whole communication flow.
+            </p>
+            <h3>The Communication Mechanism of Odoo</h3>
+            <p>
+                Here are the ideas behing the Odoo communication tools:
+            </p>
+            <ul>
+                <li>
+                    Get Things Done: your inbox is a
+                    todo list. You should be able to process (not only
+                    read) the inbox and easily mark messages for future
+                    actions. Every inbox should be empty after having
+                    been processed; no more overload of information.
+                    <img class="img-responsive" src="/website_blog/static/src/img/mail-sc-00.png"/>
+                </li><li>
+                    Keep control of what you want to receive or don't want
+                    to receive. People should never receive spam. You
+                    should follow/unfollow any kind of information in one
+                    click.
+                </li><li>
+                    Productivity is key: our smart user
+                    interface does not require you to click on every mail
+                    to read a thread. Reading a full thread, replying,
+                    attaching documents is super fast.
+                    <img class="img-responsive" src="/website_blog/static/src/img/mail-sc-03.png"/>
+                </li><li>
+                    A mix of push & pull: Today, people
+                    are victims of what others decide to push to them.
+                    Odoo differentiates:
+                    <ul>
+                        <li>
+                            Messages "for information":
+                            you can pull them when you need some specific
+                            information; they are not required to be read
+                            every day.You receive only what you decided
+                            to follow.This accounts for 90% of your daily
+                            emails.Use the "Inbox" menu for these.
+                        </li><li>
+                            Messages "for action": they
+                            require your immediate attention and you need
+                            to process them all. This accounts for 10%
+                            of your daily emails. Use the "To: me" menu
+                            for these.
+                        </li>
+                    </ul>
+                </li><li>
+                    Focus on the Content: Everything is
+                    stripped to emphasize on the real message. No more
+                    welcome introductions, greetings, signatures and legal
+                    notes.We standardize the layout of each message.
+                    (signatures are on the profile of a contact, not in
+                    every message)
+                </li><li>
+                    Folders and mailing lists are great tools but too
+                    complex in traditional email clients. In Odoo, a
+                    group of contacts that share a discussion can be
+                    created with one click. Every group should have it's
+                    own email address.
+                </li>
+            </ul>
+        </section>
+]]>
+</field>
+        </record>
+
+        <record id="blog_post_2" model="blog.post">
+            <field name="name">Integrating your CMS and E-Commerce</field>
+            <field name="subtitle">Building your company's website and selling your products online easy.</field>
+            <field name="blog_id" ref="blog_blog_1"/>
+            <field name="website_published" eval="True"/>
+            <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1'), ref('blog_tag_2')])]"/>
+            <field name="background_image">/website_blog/static/src/img/post2.jpg</field>
+            <field name="content">
+<![CDATA[<section class="row readable">
+            <div class="col-md-12 mb32">
+                <img class="img-responsive" src="/website_blog/static/src/img/CMS_WMS_screens.jpg"/>
+            </div>
+            <div class="col-md-6 col-md-offset-3 mb16 mt16">
+                <p class="text-center">
+                    New Features Launched
+                </p>
+                <p class="text-center">
+                    To add to an already comprehensive set of Odoo
+                    features, a website content management system (CMS
+                    or WMS) has been developed and a beta release is
+                    available from today, 31st January 2014.
+                </p>
+            </div>
+        </section>
+        <section class="readable">
+            <p>
+                Odoo claims to be 'the Open Source software that makes
+                building your company's website and selling your products
+                online easy'. So how true is this statement?
+            </p><p>
+                "Odoo's latest launch will allow a business to go from
+                zero to trading online quicker than ever before,” Stuart
+                Mackintosh, MD of Open Source specialist and Odoo
+                integration partner, OpusVL, explains. “The investment
+                required to have a fully automated business system is
+                dramatically reduced, enabling the small and medium
+                enterprise to compete at a level of functionality and
+                performance previously reserved for the big IT investors."
+            </p>
+            <blockquote>
+                <p>
+                    "Finally, the leading edge is being brought to the masses.
+                    It will now be the turn of the big players to catch up to
+                    the superior technologies of the SME."
+                </p>
+            </blockquote>
+            <p>
+                "This is another clever and highly disruptive move by
+                Odoo,which will force other technology providers to
+                take another look at the value they are providing to ensure
+                that their 'solutions' can still compete."
+            </p><p>
+                "Odoo now competes on many fronts, with no real
+                competition out there to knock them off the top spot.
+                With the launch of their integrated CMS and Ecommerce
+                systems,it only elevates their position as one of the leading
+                lights in the open source revolution. It will be at least 5
+                years before another ERP or CMS provider will be able to
+                compete at this level due to the technology currently
+                employed by most industry providers."
+            </p>
+            <h4>Adding to industry leading technology</h4>
+            <p>
+                Like many modern website editors, with Odoo you can edit
+                content in-line, enabling you to see exactly what you are
+                changing and ensure your changes suit the context.
+            </p><p>
+                However, unlike other web content management systems, it
+                fully integrates into the back-end database. This means
+                that when you edit a product description, image or price,
+                it updates the product database in real time, providing a
+                true self-service window into the business.
+            </p><p>
+                This provides a single source of data for your company and
+                removes the need to create offline synchronisation between
+                website and product database.
+            </p><p>
+                As it comes, there is a default website based on Bootstrap
+                3, the latest industry standard for rapid development of
+                multi-device websites backed by Twitter, so can be directly
+                integrated with many web tools and works across all devices
+                by default.
+            </p>
+        </section>
+]]>
+</field>
+        </record>
+    </data>
+</openerp>

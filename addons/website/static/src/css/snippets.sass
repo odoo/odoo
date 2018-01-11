@@ -1,0 +1,513 @@
+@import "compass/css3"
+@import "compass/css3/user-interface"
+@import "compass/css3/transition"
+
+
+/* ---- SNIPPET EDITOR ---- {{{ */
+
+#oe_snippets
+    position: fixed
+    top: 34px
+    left: 0px
+    right: 0px
+    padding-top: 6px
+    // top property is set programmatically
+    background: rgb(40,40,40)
+    +box-shadow(0px 10px 10px -10px black inset)
+    z-index: 1010
+    overflow: hidden
+    &:hover
+        height: auto
+    .scroll
+        white-space: nowrap
+        overflow-y: none
+    .nav
+        display: inline-block
+        border-bottom: none !important
+        vertical-align: middle
+        min-width: 120px
+        > li
+            display: block
+            float: none
+            &.active
+                background: black !important
+            > a
+                padding: 2px 10px !important
+                width: 100%
+                display: block
+                border: 0
+        z-index: 1
+    .pill-content
+        border: 0
+    .tab-content
+        margin-right: 120px
+        display: inline-block
+        white-space: normal
+        background: black
+        > div
+            background: rgb(0,0,0)
+            label
+                width: 44px
+                color: #fff
+                padding-left: 10px
+
+                div
+                    width: 100px
+                    text-align: center
+                    @include transform( translate(-39px, 44px) , rotate(-90deg) )
+                    @include transform-origin(50% 50%)
+
+.oe_snippet
+    display: inline-block
+    vertical-align: top
+    width: 93px
+    margin-left: 1px
+    margin-top: 0px
+    position: relative
+    overflow: hidden
+    +user-select(none)
+    cursor: move
+    .oe_snippet_thumbnail
+        text-align: center
+        height: 100%
+        background: transparent
+        color: white
+        position: relative
+        &:hover
+            .oe_snippet_thumbnail_img
+                @include transform( scale(.95,.95))
+        .oe_snippet_thumbnail_title
+            font-size: 12px
+            display: block
+            +text-shadow(0 0 2px rgb(0,0,0))
+        .oe_snippet_thumbnail_img
+            height: 74px
+            +box-shadow(inset 0px 0px 0px 3px #333333)
+            @include transform( scale(1,1))
+        span, div
+            line-height: 18px
+    & > :not(.oe_snippet_thumbnail)
+        display: none !important
+
+#oe_snippets .oe_snippet_thumbnail
+    @include background(#747474, radial-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.4)))
+
+// }}}}
+
+/* ---- SNIPPETS DROP ZONES ---- {{{ */
+
+.oe_drop_zone.oe_insert
+    display: block
+    height: 48px
+    margin: 0px
+    margin-top: -4px
+    margin-bottom: -44px
+    @include transition(margin 250ms linear)
+    width: 100%
+    position: absolute
+    z-index: 1000
+    &:not(.oe_vertical):before
+        content: ""
+        display: block
+        border-top: dashed 2px rgba(209, 178, 255, 0.72)
+        position: relative
+        top: 0px
+    &.oe_hover:before
+        border-top: dashed 2px rgba(116, 255, 161, 0.72)
+    &.oe_vertical
+        width: 48px
+        float: left
+        position: relative
+        margin: 0px -24px !important
+    &.oe_overlay
+        +border-radius(3px)
+        //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px))
+        //background-size: 100px 100px
+        background: rgba(153, 0, 255,.5)
+
+.oe_drop_zone, .oe_drop_zone_style
+    border: none
+    //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.1) ,rgba(255,255,255,.1) 35px, rgba(0,0,0,.1) 35px, rgba(0,0,0,.1) 75px))
+    //background-size: 100px 100px
+    background: rgba(153, 0, 255, .3)
+    +border-radius(4px)
+    &.oe_hover
+        background: rgba(0, 255, 133, .3)
+        z-index: 1001
+
+.oe_drop_zone_style
+    color: white
+    height: 48px
+    margin-bottom: 32px
+    padding-top: 12px
+
+// }}}
+
+/* ---- SNIPPET MANIPULATOR ----  {{{ */
+
+.resize_editor_busy
+    background-color: rgba(0,0,0,0.3)
+
+.oe_overlay
+    display: none
+    height: 0
+    position: absolute
+    background: transparent
+    z-index: 1001
+    //@include background-image( repeating-linear-gradient(45deg, rgba(255,255,255,.02) ,rgba(255,255,255,.02) 35px, rgba(0,0,0,.02) 35px, rgba(0,0,0,.02) 75px))
+    +border-radius(3px)
+    @include transition(opacity 100ms linear)
+    +box-sizing(border-box)
+    &.oe_active
+        display: block
+    .oe_handle
+        display: block !important
+        position: absolute
+        top: 50%
+        left: 50%
+        +box-sizing(border-box)
+        width: 16px
+        height: 16px
+        margin: -2px
+        > div
+            z-index: 1
+            position: absolute
+            border-style: dashed
+            border-width: 1px
+            border-color: #666666
+            +box-shadow(0px 0px 0px 1px rgba(255,255,255,0.5), 0px 0px 0px 1px rgba(255,255,255,0.5) inset)
+        &.e:before, &.w:before, &.s:before, &.n:before, &.size .oe_handle_button
+            z-index: 2
+            position: relative
+            top: 50%
+            left: 50%
+            display: block
+            background: rgba(255, 255, 255, 1)
+            border: solid 1px rgba(0, 0, 0, .2)
+            +border-radius(5px)
+            width: 18px
+            height: 18px
+            margin: -9px
+            padding-left: 1px
+            font-size: 14px
+            line-height: 14px
+            font-family: FontAwesome
+            color: rgba(0,0,0,.5)
+            @include transition(background 100ms linear)
+        &.e, &.w, &.s, &.n
+            &:hover:before
+                background: rgba(0, 0, 0, .5)
+                color: #fff
+                +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+        &.e, &.w
+            top: 4px
+            height: 100%
+            &:before
+                content: "\f0d9-\f0da"
+                line-height: 16px
+            > div
+                width: 0
+                height: 100%
+                top: 2px
+                left: 8px
+        &.e
+            left: auto
+            right: -6px
+            cursor: w-resize
+        &.w
+            left: -6px
+            cursor: e-resize
+        &.s, &.n
+            left: 2px
+            width: 100%
+            &:before
+                content: "\f07d"
+                text-align: center
+                padding: 1px
+            > div
+                width: 100%
+                height: 0
+                top: 7px
+                left: 1px
+        &.s
+            top: auto
+            cursor: n-resize
+        &.n
+            cursor: s-resize
+            > div
+                top: 5px
+        &.size
+            z-index: 3
+            top: auto
+            left: 50%
+            bottom: -6px
+            margin-left: -50px
+            .oe_handle_button
+                position: relative
+                z-index: 3
+                text-align: center
+                margin-left: -52px
+                margin-top: -10px
+                left: 0px
+                &:hover
+                    background: rgba(30, 30, 30, .8)
+                    color: #fff
+                    +box-shadow(0 0 5px 3px rgba(255,255,255,.7))
+            .size
+                position: absolute
+                width: 64px
+                cursor: row-resize
+                top: 9px
+                margin-left: 52px
+                padding: 0 5px
+            .auto_size
+                position: absolute
+                width: 100px
+                top: 9px
+                cursor: pointer
+        &.readonly
+            cursor: auto !important
+            &:before, &.size
+                display: none !important
+
+    .icon.btn
+        display: inline-block
+
+    .oe_overlay_options
+        position: absolute
+        left: 50% !important
+        text-align: center
+        top: -20px
+        z-index: 1002
+        > .btn-group
+            left: -50%
+            white-space: nowrap
+            > a
+                cursor: pointer
+                display: inline-block
+                float: none
+                margin: 0 -3px
+        .btn, a
+            cursor: pointer
+        .dropdown
+            display: inline-block
+        .dropdown-menu
+            text-align: left
+            min-width: 180px
+        .dropdown-menu select,.dropdown-menu input
+            display: block
+
+    &.block-w-left .w:before
+        content: "\F061" !important
+    &.block-w-right .w:before
+        content: "\F060" !important
+    &.block-w-left.block-w-right .w
+        display: none !important
+    &.block-e-left .e:before
+        content: "\F061" !important
+    &.block-e-right .e:before
+        content: "\F060" !important
+    &.block-e-left.block-e-right .e
+        display: none !important
+
+    &.block-s-top .s:before
+        content: "\F063" !important
+    &.block-s-bottom .s:before
+        content: "\f062" !important
+    &.block-n-top .n:before
+        content: "\F063" !important
+    &.block-n-bottom .n:before
+        content: "\f062" !important
+
+
+.s-resize-important, .s-resize-important *
+    cursor: s-resize !important
+.n-resize-important, .n-resize-important *
+    cursor: n-resize !important
+.e-resize-important, .e-resize-important *
+    cursor: e-resize !important
+.w-resize-important, .w-resize-important *
+    cursor: w-resize !important
+.move-important, .move-important *
+    cursor: move !important
+
+// }}}
+
+
+/* add CSS for bootstrap dropdown multi level */
+.dropdown-submenu
+    position: relative
+    z-index: 1000
+.dropdown-submenu
+    &>.dropdown-menu
+        top: 0
+        left: 100%
+        margin-top: -6px
+        margin-left: -1px
+        -webkit-border-radius: 0 6px 6px 6px
+        -moz-border-radius: 0 6px 6px 6px
+        border-radius: 0 6px 6px 6px
+    &:hover
+        &>.dropdown-menu
+            display: block
+        &>a:after
+            border-left-color: #ffffff
+    &>a:after
+        display: block
+        content: " "
+        float: right
+        width: 0
+        height: 0
+        border-color: transparent
+        border-style: solid
+        border-width: 5px 0 5px 5px
+        border-left-color: #cccccc
+        margin-top: 5px
+        margin-right: -10px
+    &.pull-left
+        float: none
+        &>.dropdown-menu
+            left: -100%
+            margin-left: 10px
+            -webkit-border-radius: 6px 0 6px 6px
+            -moz-border-radius: 6px 0 6px 6px
+            border-radius: 6px 0 6px 6px
+
+.oe_snippet_list
+    width: auto
+    white-space: nowrap
+    margin-left: 20px
+
+.oe_snippet_editor
+    position: fixed
+    z-index: 1000
+    bottom: 0
+    left: 0
+    right: 0
+    height: 214px
+    background: rgb(160,160,160)
+    box-shadow: 0 1px 3px rgb(100,100,100) inset
+    .oe_snippet
+        box-sizing: border-box
+        display: inline-block
+        width: 220px
+        height: 160px
+        border-radius: 3px
+        background: white
+        margin: 20px 20px 20px 0
+        cursor: pointer
+        border: 2px solid transparent
+        box-shadow: 0 1px 3px rgb(100,100,100)
+        position: relative
+        top: 0
+        overflow: hidden
+        vertical-align: top
+        user-select: none
+        white-space: normal
+        &:after
+            content: attr(name)
+            position: absolute
+            bottom: 0px
+            left: 0px
+            right: 0px
+            background: rgba(255,255,255,0.8)
+            text-align: center
+            color: black
+            padding: 8px
+        &.oe_selected, &.oe_active
+            border: 2px solid rgb(151, 137, 255)
+            box-shadow: 0px 3px 17px rgba(99, 53, 150, 0.59)
+        & > *
+            margin-top: 16px
+            line-height: 1em
+            zoom: 0.6
+        & > .container
+            margin-top: 15px
+            zoom: 0.17
+            line-height: 0.999em
+            line-height: 1em
+        & > .row
+            margin-top: 0px
+            zoom: 0.23
+            line-height: 0.999em
+        & > .span6
+            margin-top: 18px
+            zoom: 0.34
+        & > .span12
+            margin-top: 16px
+            zoom: 0.23
+        & > p
+            position: absolute
+            top: 0
+            right: 0
+            left: 0
+            bottom: 0
+            font-size: 20px
+            padding: 16px
+            zoom: 1
+            margin: 0px
+        &.oe_new
+            background: gray
+            box-shadow: 0px 1px 3px rgb(90,90,90) inset
+            border: 0px
+            &.oe_selected, &.oe_active
+                box-shadow: 0px 2px 0px 0px rgb(151,137,255) inset, 0px 3px 17px rgba(99, 53, 150, 0.59) inset
+            & > *
+                zoom: 1
+                margin: 0
+                line-height: 160px
+                text-align: center
+                color: white
+                font-size: 48px
+            &:after
+                position: absolute
+                left: 0px
+                right: 0px
+                top: 0px
+                bottom: 0px
+                background: transparent
+                color: white
+                text-shadow: 0px 1px 3px black
+                line-height: 160px
+                padding: 0px
+
+.oe_snippet_drop 
+    position: relative
+    border: 2px dashed rgb(174, 52, 255)
+    background: rgba(147, 52, 255, 0.1)
+    min-height: 28px
+    margin: -16px auto
+    border-radius: 5px
+    max-width: 50%
+    &.oe_accepting 
+        border: 2px dashed rgb(52, 255, 166)
+        background: rgba(52, 255, 190, 0.1)
+
+#website-top-edit
+    li.oe_snippet_editorbar 
+        padding: 1px 8px 2px
+        font: normal normal normal 12px Arial,Helvetica,Tahoma,Verdana,Sans-Serif
+        float: left
+        margin-top: 6px
+        border: 1px solid #a6a6a6
+        border-bottom-color: #979797
+        background: #eeeeee
+        border-radius: 3px
+        & > * 
+            display: inline-block
+            height: 22px
+            padding: 4px 6px
+            outline: 0
+            border: 0
+
+        a.button .icon 
+            cursor: inherit
+            background-repeat: no-repeat
+            margin-top: 1px
+            width: 16px
+            height: 16px
+            display: inline-block
+
+
+
+

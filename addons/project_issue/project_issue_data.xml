@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Case type_id -->
+        <!--    For Bugs    -->
+        <record model="project.issue.version" id="type1">
+            <field name="name">v1.0</field>
+        </record>
+
+        <record model="project.issue.version" id="type2">
+            <field name="name">v2.0</field>
+        </record>
+
+        <record model="project.issue.version" id="type3">
+            <field name="name">v3.0</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Issue Tracker application installed!</field>
+            <field name="body"><![CDATA[<p>Manage the issues you might face in a project, such as bugs in a system, client complaints or material breakdowns.</p><p>
+You can record issues, assign them to a responsible person, and keep track of their status as they evolve over time.</p><p>
+Access all issues from the top Project menu, and access the issues of a specific project via the projects gallery view.</p>]]></field>
+        </record>
+
+        <!-- Issue-related subtypes for messaging / Chatter -->
+        <record id="mt_issue_new" model="mail.message.subtype">
+            <field name="name">Issue Created</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Issue created</field>
+        </record>
+        <record id="mt_issue_assigned" model="mail.message.subtype">
+            <field name="name">Issue Assigned</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Issue assigned</field>
+        </record>
+        <record id="mt_issue_blocked" model="mail.message.subtype">
+            <field name="name">Issue Blocked</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Issue blocked</field>
+        </record>
+        <record id="mt_issue_ready" model="mail.message.subtype">
+            <field name="name">Issue Ready for Next Stage</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Issue Ready for Next Stage</field>
+        </record>
+        <record id="mt_issue_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+            <field name="description">Stage changed</field>
+        </record>
+        <!-- Project-related subtypes for messaging / Chatter -->
+        <record id="mt_project_issue_new" model="mail.message.subtype">
+            <field name="name">Issue Created</field>
+            <field name="sequence">20</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_issue_new')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_assigned" model="mail.message.subtype">
+            <field name="name">Issue Assigned</field>
+            <field name="sequence">21</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_issue_assigned')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_blocked" model="mail.message.subtype">
+            <field name="name">Issue Blocked</field>
+            <field name="sequence">22</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_issue_blocked')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_issue_stage" model="mail.message.subtype">
+            <field name="name">Issue Stage Changed</field>
+            <field name="sequence">23</field>
+            <field name="res_model">project.project</field>
+            <field name="description">Stage changed</field>
+            <field name="parent_id" eval="ref('mt_issue_stage')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        
+    </data>
+</openerp>

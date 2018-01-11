@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_sessionsummary">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <h2>Session Summary: <span t-field="o.name"/></h2>
+
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-3">
+                            <strong>Responsible</strong>:<br/>
+                            <span t-field="o.user_id"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Point of Sale</strong>:<br/>
+                            <span t-field="o.config_id"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Opening Date</strong>:<br/>
+                            <span t-field="o.start_at"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Closing Date</strong>:<br/>
+                            <span t-field="o.stop_at"/>
+                        </div>
+                    </div>
+
+                    <h4>Statement Summary</h4>
+
+                    <table class="table table-condensed mb32">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <strong>Reference</strong>
+                                </th>
+                                <th>
+                                    <strong>Journal</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Starting Balance</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Total Transactions</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Ending Balance</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Difference</strong>
+                                </th>
+                                <th class="text-right" groups="base.group_multi_currency">
+                                    <strong>Currency</strong>
+                                </th>
+                                <th class="text-right">
+                                    <strong>Status</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.statement_ids" t-as="statement">
+                                <td><span t-field="statement.name"/></td>
+                                <td><span t-field="statement.journal_id"/></td>
+                                <td class="text-right">
+                                    <span t-field="statement.balance_start"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="statement.total_entry_encoding"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="statement.balance_end_real"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="statement.difference"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right" groups="base.group_multi_currency">
+                                    <span t-field="statement.currency"
+                                        t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                </td>
+                                <td class="text-right"><span t-field="statement.state"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <t t-foreach="o.statement_ids" t-as="statement">
+                        <h4 t-if="statement.line_ids">Statement Details: <span t-esc="statement.name"/></h4>
+
+                        <table class="table table-condensed" t-if="statement.line_ids">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Reference</th>
+                                    <th>Partner</th>
+                                    <th>Account</th>
+                                    <th class="text-right">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="statement.line_ids" t-as="line">
+                                    <td><span t-field="line.date"/></td>
+                                    <td><span t-field="line.name"/></td>
+                                    <td><span t-field="line.ref"/></td>
+                                    <td><span t-field="line.partner_id"/></td>
+                                    <td><span t-field="line.account_id"/></td>
+                                    <td class="text-right">
+                                        <span t-field="line.amount"
+                                            t-field-options='{"widget": "monetary", "display_currency": "statement.currency"}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

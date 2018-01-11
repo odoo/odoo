@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-08-14 05:58+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "Check Validity"
+msgstr "유효성 검사"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "회사"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:114
+#, python-format
+msgid "Error!"
+msgstr "오류!"
+
+#. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr "선택하면 파트너의 부가가치세(VAT) 번호는 간단한 형식의 유효성 검사(체크섬)를 통해 확인하기 보다 완전한 유럽연합(EU)의 VIES 서비스에 의해 검증됩니다."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:130
+#, python-format
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "가져온 VAT 번호[%s]가 유효하지 않습니다 !"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "파트너"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr "파트너[%s]의 VAT 번호[%s]가 유효하지 않습니다.\n주의 : 관련 형식은 %s입니다"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr "파트너[%s]의 VAT 번호[%s]가 VIES VAT 유효성 검사를 통과하지 못했거나 유효한 형식 %s을(를) 사용하지 않았습니다."
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "VIES VAT 검사"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "예. BE0477472701"

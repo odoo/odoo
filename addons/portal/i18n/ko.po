@@ -1,0 +1,393 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * portal
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-08-03 04:35+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
+msgid ""
+"<p>\n"
+"                    <b>Good Job!</b> Your inbox is empty.\n"
+"                </p><p>\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
+"                    follow.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    <b>좋아요!</b> 받은 메시지가 비어있습니다.\n                </p><p>\n                    받은 메시지에는 개인 메세지나 팔로우하는 사람이나\n                    문서의 관련 정보와 이메일을 포함합니다.\n                </p>\n            "
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
+msgid ""
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark some\n"
+"                    as <i>todo</i>. From this menu, you can process all your todo.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    <b>할 일이 없습니다.</b>\n                </p><p>\n                    받은 편지함의 메세지를 처리할 때, <i>할일</i>로 설정할 수 있습니다.\n                    이 메뉴에서 사용자의 모든 할 일을 처리할 수 있습니다.\n                </p>\n            "
+
+#. module: portal
+#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
+msgid ""
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal contact.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    아직 보낸 메시지가 없거나 메시지를 발견하지 못했습니다.\n                </p><p>\n                    메시지를 작성하려면 오른쪽 상단 아이콘을 클릭합니다.\n                    저장된 연락처면 이메일로 메시지를 보냅니다.\n                </p>\n            "
+
+#. module: portal
+#: code:addons/portal/mail_message.py:59
+#, python-format
+msgid "Access Denied"
+msgstr "접근이 거부됨"
+
+#. module: portal
+#: model:ir.model,name:portal.model_res_groups
+msgid "Access Groups"
+msgstr "접근 그룹"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_after_sales
+msgid "After Sale Services"
+msgstr "판매 후 서비스"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "Apply"
+msgstr "적용"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
+msgid "Archives"
+msgstr "보관 메시지"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr "청구"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "Cancel"
+msgstr "취소"
+
+#. module: portal
+#: field:portal.wizard.user,partner_id:0
+msgid "Contact"
+msgstr "연락처"
+
+#. module: portal
+#: view:portal.wizard.user:portal.wizard_user_tree_view
+msgid "Contacts"
+msgstr "연락처"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:163
+#, python-format
+msgid "Contacts Error"
+msgstr "연락처 오류"
+
+#. module: portal
+#: field:portal.wizard,create_uid:0 field:portal.wizard.user,create_uid:0
+msgid "Created by"
+msgstr "작성자"
+
+#. module: portal
+#: field:portal.wizard,create_date:0 field:portal.wizard.user,create_date:0
+msgid "Created on"
+msgstr "작성일"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:34
+#, python-format
+msgid ""
+"Dear %(name)s,\n"
+"\n"
+"You have been given access to %(company)s's %(portal)s.\n"
+"\n"
+"Your login account data is:\n"
+"  Username: %(login)s\n"
+"  Portal: %(portal_url)s\n"
+"  Database: %(db)s \n"
+"\n"
+"You can set or change your password via the following url:\n"
+"   %(signup_url)s\n"
+"\n"
+"%(welcome_message)s\n"
+"\n"
+"--\n"
+"Odoo - Open Source Business Applications\n"
+"http://www.openerp.com\n"
+msgstr "반갑습니다 %(name)s님\n\n귀하는 %(company)s's %(portal)s에 접속하실 수 있습니다.\n\n귀하의 로그인 데이터는 다음과 같습니다 :\n  ID : %(login)s\n  포털 : %(portal_url)s\n  데이터베이스 : %(db)s \n\n비밀번호를 변경하려면 다음 URL을 방문하십시오 :\n   %(signup_url)s\n\n%(welcome_message)s\n\n--\nOdoo - 오픈소스 기업 응용 프로그램\nhttp://www.openerp.com\n"
+
+#. module: portal
+#: view:share.wizard:portal.share_step2_form_portal
+msgid "Details"
+msgstr "세부사항"
+
+#. module: portal
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "이메일"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:225
+#, python-format
+msgid "Email Required"
+msgstr "이메일 주소는 필수적입니다."
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_thread
+msgid "Email Thread"
+msgstr "이메일 스레드"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:39
+#, python-format
+msgid "Existing Groups (e.g Portal Groups)"
+msgstr "기존 그룹 (예: 포털 그룹)"
+
+#. module: portal
+#: view:share.wizard:portal.share_step1_form_portal
+#: field:share.wizard,group_ids:0
+msgid "Existing groups"
+msgstr "기존 그룹"
+
+#. module: portal
+#: view:share.wizard:portal.share_step1_form_portal
+#: field:share.wizard,user_ids:0
+msgid "Existing users"
+msgstr "기존 사용자"
+
+#. module: portal
+#: field:portal.wizard,id:0 field:portal.wizard.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: portal
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
+msgstr "선택하면 이 그룹을 포털에서 사용할 수 있습니다."
+
+#. module: portal
+#: field:portal.wizard.user,in_portal:0
+msgid "In Portal"
+msgstr "포털 내부"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
+msgstr "받은 메시지"
+
+#. module: portal
+#: field:portal.wizard,welcome_message:0
+msgid "Invitation Message"
+msgstr "초대 메시지"
+
+#. module: portal
+#: field:portal.wizard,write_uid:0 field:portal.wizard.user,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: portal
+#: field:portal.wizard,write_date:0 field:portal.wizard.user,write_date:0
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr "메시지"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_messages
+msgid "Messaging"
+msgstr "메시지 발송"
+
+#. module: portal
+#: view:res.groups:portal.group_search_view
+msgid "Non-Portal Groups"
+msgstr "비 포털 그룹"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "보내는 메일"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:54
+#, python-format
+msgid "Please select at least one group to share with"
+msgstr "함께하고자 하는 그룹을 하나 이상 선택하십시오"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:50
+#, python-format
+msgid "Please select at least one user to share with"
+msgstr "함께하고자 하는 사용자를 하나 이상 선택하십시오"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_menu field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0
+msgid "Portal"
+msgstr "포털"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:portal.wizard_view
+msgid "Portal Access Management"
+msgstr "포털 접근 관리"
+
+#. module: portal
+#: view:res.groups:portal.group_search_view
+msgid "Portal Groups"
+msgstr "포털 그룹"
+
+#. module: portal
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
+msgstr "포털 사용자 구성"
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_projects
+msgid "Projects"
+msgstr "프로젝트"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid ""
+"Select which contacts should belong to the portal in the list below.\n"
+"                        The email address of each selected contact must be valid and unique.\n"
+"                        If necessary, you can fix any contact's email address directly in the list."
+msgstr "연락처가 아래 목록에 포탈에 속하도록 선택합니다.\n                       각각 선택한 연락처의 이메일 주소가 고유하고 유효해야 합니다.\n                       필요하다면 목록에 있는 연락처의 이메일 주소에 직접 접근해서 해결할 수 있습니다."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:149
+#, python-format
+msgid "Several contacts have the same email: "
+msgstr "여러 개의 연락처에 동일한 이메일 :"
+
+#. module: portal
+#: model:ir.model,name:portal.model_share_wizard
+msgid "Share Wizard"
+msgstr "공유 마법사"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:146
+#, python-format
+msgid "Some contacts don't have a valid email: "
+msgstr "일부 연락처가 유효한 이메일을 가지고 있지 않습니다 : "
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:152
+#, python-format
+msgid "Some contacts have the same email as an existing portal user:"
+msgstr "일부 연락처가 기존 포털 사용자와 동일한 이메일을 가지고 있습니다 :"
+
+#. module: portal
+#: help:portal.wizard,portal_id:0
+msgid "The portal that users can be added in or removed from."
+msgstr "사용자를 추가하거나 제거할 수 있는 포털."
+
+#. module: portal
+#: code:addons/portal/mail_message.py:60
+#, python-format
+msgid ""
+"The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
+msgstr "요청한 작업은 보안 제한으로 인해 완료할 수 없습니다. 시스템 관리자에게 문의해 주십시오.\n\n(문서 유형 : %s, 작업 : %s)"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "This text is included in the email sent to new portal users."
+msgstr "새로운 포털 사용자에게 보내는 이메일에 포함된 문구."
+
+#. module: portal
+#: help:portal.wizard,welcome_message:0
+msgid "This text is included in the email sent to new users of the portal."
+msgstr "새로운 포털 사용자에게 보내는 이메일에 포함된 문구."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:155
+#, python-format
+msgid ""
+"To resolve this error, you can: \n"
+"- Correct the emails of the relevant contacts\n"
+"- Grant access only to contacts with unique emails"
+msgstr "이 오류를 해결하려면 : \n- 관련 연락처의 이메일 수정\n- 고유 이메일과 연락처에만 접근 권한 부여"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
+msgid "To-do"
+msgstr "할일 메시지"
+
+#. module: portal
+#: field:portal.wizard,user_ids:0
+msgid "Users"
+msgstr "사용자"
+
+#. module: portal
+#: code:addons/portal/wizard/share_wizard.py:38
+#, python-format
+msgid "Users you already shared with"
+msgstr "귀하는 이미 공유된 사용자입니다"
+
+#. module: portal
+#: field:portal.wizard.user,wizard_id:0
+msgid "Wizard"
+msgstr "마법사"
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:226
+#, python-format
+msgid ""
+"You must have an email address in your User Preferences to send emails."
+msgstr "이메일을 보내려면 사용자 기본 설정에 이메일 주소가 있어야 합니다."
+
+#. module: portal
+#: code:addons/portal/wizard/portal_wizard.py:33
+#, python-format
+msgid "Your Odoo account at %(company)s"
+msgstr "%(company)s의 Odoo 계정"
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:46
+#, python-format
+msgid "access directly to"
+msgstr "직접 접근"
+
+#. module: portal
+#: view:portal.wizard:portal.wizard_view
+msgid "or"
+msgstr "또는"
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:48
+#, python-format
+msgid "your messages "
+msgstr "귀하의 메시지"

@@ -1,0 +1,134 @@
+.in_container_hidden {
+	display: none;
+}
+.in_container {
+}
+.oe_pick_app_header{
+	margin-top: 0;
+}
+.oe_picking {
+	cursor: pointer;
+}
+.oe_kanban.oe_picking {
+	min-height: 80px;
+	margin-bottom: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.16);
+  	border-bottom-color: rgba(0, 0, 0, 0.3);
+  	-webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear;
+  	-moz-border-radius: 4px;
+  	-webkit-border-radius: 4px;
+  	border-radius: 4px;
+  	padding: 5px;
+}
+
+.oe_kanban_color_0 {
+  background-color: white;
+  color: #5a5a5a;
+}
+.oe_kanban_color_1 {
+  background-color: #cccccc;
+  color: #424242;
+}
+.oe_kanban_color_2 {
+  background-color: #ffc7c7;
+  color: #7a3737;
+}
+.oe_kanban_color_3 {
+  background-color: #fff1c7;
+  color: #756832;
+}
+.oe_kanban_color_4 {
+  background-color: #e3ffc7;
+  color: #5d6937;
+}
+.oe_kanban_color_5 {
+  background-color: #c7ffd5;
+  color: #1a7759;
+}
+.oe_kanban_color_6 {
+  background-color: #c7ffff;
+  color: #1a5d83;
+}
+.oe_kanban_color_7 {
+  background-color: #c7d5ff;
+  color: #3b3e75;
+}
+.oe_kanban_color_8 {
+  background-color: #e3c7ff;
+  color: #4c3668;
+}
+.oe_kanban_color_9 {
+  background-color: #ffc7f1;
+  color: #6d2c70;
+}
+
+/*Blinking text*/
+.blink_me {
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: 2;
+
+    -moz-animation-name: blinker;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: 2;
+
+    animation-name: blinker;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: 2;
+}
+
+@-moz-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@-webkit-keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes blinker {  
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}
+
+/*hide OpenERP leftbar, table should use all width by default and display vertical scrollbar if needed*/
+.oe_leftbar {
+    display: none;
+}
+
+table.oe_webclient.oe_content_full_screen{
+	width: 100%;
+}
+
+body{
+	overflow-y: visible !important;
+}
+
+/* --- Styling of OpenERP Elements ---
+	Needed for loading and error box */
+
+/* Increase z-index value to insure that loading goes above navbar of bootstrap*/
+.openerp .oe_loading {
+  display: none;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  right: 50%;
+  padding: 4px 12px;
+  background: #a61300;
+  color: white;
+  text-align: center;
+  border: 1px solid #990000;
+  border-top: none;
+  -moz-border-radius-bottomright: 8px;
+  -moz-border-radius-bottomleft: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+}

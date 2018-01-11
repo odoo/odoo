@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.vat.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_account_position" position="after">
+                    <label for="vat"/>
+                    <div name="vat_info">
+                        <field name="vat" on_change="vat_change(vat)" placeholder="e.g. BE0477472701" class="oe_inline"/>
+                        <button colspan="2" name="button_check_vat" string="Check Validity" type="object" icon="gtk-execute" class="oe_inline"/>
+                        <field name="vat_subjected" class="oe_inline"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+
+        <record id="company_form_vat" model="ir.ui.view">
+            <field name="name">res.company.form.vat.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <field name="vat_check_vies" />
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+

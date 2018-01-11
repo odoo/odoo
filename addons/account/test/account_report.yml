@@ -1,0 +1,181 @@
+-
+  In order to test the PDF reports defined on an invoice, we will create a Invoice Record
+-
+  !record {model: account.invoice, id: test_invoice_1}:
+    currency_id: base.EUR
+    company_id: base.main_company
+    partner_id: base.res_partner_1
+    state: draft
+    type: out_invoice
+    account_id: account.a_recv
+    name: Test invoice 1
+-
+  In order to test the PDF reports defined on an invoice, we will print an Invoice Report
+-
+  !python {model: account.invoice}: |
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('account.account_invoice_customer0')], 'account.report_invoice', {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account-invoice.'+format), 'wb+').write(data)
+-
+  In order to test the PDF reports defined on a partner, we will print the Overdue Report
+-
+  !python {model: res.partner}: |
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], 'account.report_overdue', {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
+-
+  Print the Aged Partner Balance Report
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Account Balance Sheet in Normal mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'account_report_id': ref('account_financial_report_balancesheet0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Account Balance Report in Normal mode through the wizard - From Account Chart
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Central Journal Report - From Account
+-
+  !python {model: account.journal.period}: |
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_central_journal',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the General Journal Report - From Journal
+-
+  !python {model: account.journal.period}: |
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
+                         ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the General Ledger Report in Normal Mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'),'landscape':False}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the General Ledger Report in Landscape Mode
+-
+  !python {model: account.account}: |
+    ctx={'landscape': True}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print Journal Report - From Model
+-
+  !python {model: account.journal.period}: |
+    journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'period_from':ref('period_1'), 'period_to':ref('period_12')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Partner Balance Report
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_partner_balance',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Partner Ledger Report
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'),'page_split': True}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Partner Ledger-Other Report
+-
+  !python {model: res.partner}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'),'page_split': False}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
+-
+  Print the Profit-Loss Report in Normal Mode
+-
+  !python {model: account.account}: |
+    ctx={}
+    data_dict = {'chart_account_id':ref('account.chart0'), 'target_move': 'all', 'account_report_id': ref('account_financial_report_balancesheet0')}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
+-
+ Print the Analytic Balance Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    data_dict = {}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_balance',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Cost Ledger Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root'),ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_our_super_product')]})
+    data_dict = {}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_cost',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Cost Ledger(Only Quantities) Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root'),ref('account.analytic_absences'),ref('account.analytic_internal'),ref('account.analytic_our_super_product')]})
+    data_dict = {}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_cost_ledger_journal',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Analytic Journal Report through the wizard
+-
+  !python {model: account.analytic.journal}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.journal','active_ids': [ref('account.cose_journal_sale'), ref('account.exp'), ref('account.sit')]})
+    data_dict = {}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_journal',wiz_data=data_dict, context=ctx, our_module='account')
+
+-
+ Print the Inverted Analytic Balance Report through the wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    data_dict = {}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+            id="account_transfers"
+            model="account.transfer"
+            name="account.transfer"
+            string="Transfers"
+            xml="account/report/transfer.xml"
+            xsl="account/report/transfer.xsl"
+        />
+        
+        <report
+            auto="False"
+            id="account_intracom"
+            menu="False"
+            model="account.move.line"
+            name="account.intracom"
+            string="IntraCom"
+        />
+
+        <!-- QWeb Reports -->
+        <report
+            id="action_report_vat"
+            model="account.tax.code"
+            report_type="qweb-pdf"
+            string="Account tax"
+            name="account.report_vat"
+            file="account.report_vat"
+        />
+
+        <report 
+            id="account_invoices"
+            model="account.invoice"
+            string="Invoices"
+            report_type="qweb-pdf"
+            name="account.report_invoice"
+            file="account.report_invoice"
+            attachment_use="True"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
+
+        <report 
+            id="action_report_trial_balance"
+            model="account.balance.report"
+            string="Trial Balance"
+            report_type="qweb-pdf"
+            name="account.report_trialbalance" 
+            file="account.report_trialbalance"
+        />
+
+        <report 
+            id="action_report_central_journal"
+            model="account.journal.period"
+            string="Central Journal"
+            report_type="qweb-pdf"
+            name="account.report_centraljournal"
+            file="account.report_centraljournal"
+        />
+
+        <report 
+            id="action_report_print_overdue"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Due Payments"
+            name="account.report_overdue"
+            file="account.report_overdue"
+        />
+
+        <report 
+            id="action_report_general_journal"
+            model="account.journal.period"
+            string="General Journal"
+            report_type="qweb-pdf"
+            name="account.report_generaljournal"
+            file="account.report_generaljournal"
+            menu="False"
+        />
+
+        <report 
+            id="action_report_account_journal" 
+            model="account.journal.period" 
+            string="Journal"
+            report_type="qweb-pdf"
+            name="account.report_journal" 
+            file="account.report_journal"
+        />
+
+        <report 
+            id="action_report_account_salepurchasejournal" 
+            model="account.journal.period" 
+            string="Journal"
+            report_type="qweb-pdf"
+            name="account.report_salepurchasejournal" 
+            file="account.report_salepurchasejournal"
+        />
+
+        <report 
+            id="action_account_3rdparty_account_balance" 
+            model="account.account" 
+            string="Partner Balance"
+            report_type="qweb-pdf" 
+            name="account.report_partnerbalance" 
+            file="account.report_partnerbalance" 
+            menu="False" 
+        />
+
+        <report 
+            id="action_report_aged_partner_balance"
+            model="res.partner"
+            string="Aged Partner Balance"
+            report_type="qweb-pdf"
+            name="account.report_agedpartnerbalance"
+            file="account.report_agedpartnerbalance"
+            menu="False"
+        />
+
+        <report
+            id="action_report_partner_ledger"
+            model="res.partner"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account.report_partnerledger"
+            file="account.report_partnerledger"
+            menu="False"
+        />
+
+        <report
+            id="action_report_partner_ledger_other"
+            model="res.partner"
+            string="Partner Ledger"
+            report_type="qweb-pdf"
+            name="account.report_partnerledgerother"
+            file="account.report_partnerledgerother"
+            menu="False"
+        />
+
+        <report 
+            id="action_report_financial"
+            model="account.financial.report"
+            string="Financial report"
+            report_type="qweb-pdf"
+            name="account.report_financial"
+            file="account.report_financial"
+            menu="False"
+        />
+
+        <report 
+            id="action_report_general_ledger" 
+            model="account.report.general.ledger" 
+            string="General Ledger"
+            report_type="qweb-pdf"
+            name="account.report_generalledger" 
+            file="account.report_generalledger"
+            menu="False"
+            auto="False"
+        />
+
+        <!-- Menu items -->
+        <menuitem
+            id="menu_tax_report"
+            name="Taxes"
+            groups="group_account_user,group_account_manager"
+            parent="account.menu_finance_generic_reporting"
+            sequence="3"
+        />
+    </data>
+</openerp>

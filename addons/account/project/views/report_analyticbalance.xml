@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_analyticbalance">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Analytic Balance - <span t-esc="res_company.currency_id.name"/></h2>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Account Name</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Total</td>
+                            <td>
+                                <span t-esc="formatLang(sum_all(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2'], 'debit'))"/>
+                            </td>
+                            <td>
+                                <span t-esc="formatLang(sum_all(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2'], 'credit'))"/>
+                            </td>
+                            <td>
+                                <span t-esc="formatLang(sum_balance(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2']),currency_obj=res_company.currency_id)"/>
+                            </td>
+                            <td>
+                                <span t-esc="formatLang(sum_all(get_objects(data['form']['empty_acc']), data['form']['date1'], data['form']['date2'], 'quantity'))"/>
+                            </td>
+                        </tr>
+                        <t t-foreach="get_objects(data['form']['empty_acc'])" t-as="o">
+                            <tr>
+                                <td><span t-esc="o['code']"/></td>
+                                <td><span t-esc="o['complete_name']"/></td>
+                                <td><span t-esc="formatLang(move_sum(o['id'], data['form']['date1'], data['form']['date2'], 'debit'))"/></td>
+                                <td><span t-esc="formatLang(move_sum(o['id'], data['form']['date1'], data['form']['date2'], 'credit'))"/></td>
+                                <td><span t-esc="formatLang(move_sum_balance(o['id'], data['form']['date1'], data['form']['date2']), currency_obj=res_company.currency_id)"/></td>
+                                <td><span t-esc="formatLang(move_sum(o['id'], data['form']['date1'], data['form']['date2'], 'quantity'))"/></td>
+                            </tr>
+                            <tr t-foreach="lines_g(o['id'], data['form']['date1'], data['form']['date2'])" t-as="move_g">
+                                <td><span t-esc="move_g['code']"/></td>
+                                <td><span t-esc="move_g['name']"/></td>
+                                <td><span t-esc="formatLang(move_g['debit'])"/></td>
+                                <td><span t-esc="formatLang(move_g['credit'])"/></td>
+                                <td><span t-esc="formatLang(move_g['balance'], currency_obj=res_company.currency_id)"/></td>
+                                <td><span t-esc="formatLang(move_g['quantity'])"/></td>
+                            </tr>    
+                        </t>
+                    </tbody>
+                </table> 
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

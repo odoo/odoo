@@ -1,0 +1,53 @@
+.openerp .oe_diagram_header h3.oe_diagram_title {
+    font-weight: normal;
+    color: #252424;
+    margin: 0 0 0 2px;
+}
+
+.openerp .oe_diagram_pager {
+    float:right;
+    /*text-align: right;*/
+    white-space: nowrap;
+}
+
+.openerp .oe_diagram_buttons {
+    float: left;
+}
+.openerp .clear{
+    clear:both;
+}
+/* We use a resizable diagram-container. The problem with a 
+ * resizable diagram is that the diagram catches the mouse events
+ * and the diagram is then impossible to resize. That's why the
+ * diagram has a height of 98.5%, so that the bottom part of the
+ * diagram can be used for resize
+ */
+.openerp .diagram-container{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:500px;
+    resize:vertical;
+    background-color:#FFF;
+    border:1px solid #DCDCDC;
+    overflow:hidden;
+}
+.openerp .oe_diagram_diagram{
+    margin:0;
+    padding:0;
+    background-color:#FFF;
+    width:100%;
+    height:98.5%;
+}
+
+/* prevent accidental selection of the text in the svg nodes */
+.openerp .oe_diagram_diagram *{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+

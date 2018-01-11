@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_general_configuration">
+            <field name="name">base.config.settings.oauth</field>
+            <field name="model">base.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='module_auth_oauth']/.." position="after">
+                    <div attrs="{'invisible':[('module_auth_oauth','=',False)]}">
+                        <div name="google">
+                            <div>
+                                <field name="auth_oauth_google_enabled" class="oe_inline"/>
+                                <label for="auth_oauth_google_enabled"/>
+                            </div>
+                            <div attrs="{'invisible':[('auth_oauth_google_enabled','=',False)]}">
+                                <blockquote>
+                                    To setup the signin process with Google, first you have to perform the following steps:<br/>
+                                    <br/>
+                                    - Go to the <a href="https://code.google.com/apis/console/">Google APIs console</a><br/>
+                                    - Ceate a new project<br/>
+                                    - Go to Api Access<br/>
+                                    - Create an oauth client_id<br/>
+                                    - Edit settings and set both Authorized Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>
+                                    <br/>
+                                    Now copy paste the client_id here: <field name="auth_oauth_google_client_id" class="oe_inline" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/>
+                                </blockquote>
+                            </div>
+                        </div>
+                        <div name="facebook">
+                            <div>
+                                <field name="auth_oauth_facebook_enabled" class="oe_inline"/>
+                                <label for="auth_oauth_facebook_enabled"/>
+                            </div>
+                            <div attrs="{'invisible':[('auth_oauth_facebook_enabled','=',False)]}">
+                                <blockquote>
+                                    To setup the signin process with Google, first you have to perform the following steps:<br/>
+                                    <br/>
+                                    Now copy paste the client_id here: <field name="auth_oauth_facebook_client_id" class="oe_inline" placeholder="e.g. 1234-xyz.apps.googleusercontent.com"/>
+                                </blockquote>
+
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_base_module_upgrade" model="ir.ui.view">
+            <field name="name">Module Upgrade</field>
+            <field name="model">base.module.upgrade</field>
+            <field name="arch" type="xml">
+                <form string="System Update">
+                    <p>This module will trigger the uninstallation of below modules.</p>
+                    <p><strong>This operation will permanently erase all data currently stored by the modules!</strong></p>
+                    <p>If you wish to cancel the process, press the cancel button below</p>
+                    <separator string="Impacted Modules"/>
+                    <field name="module_info"/>
+                    <footer>
+                        <button name="upgrade_module" string="Confirm" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" name="upgrade_module_cancel" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_module_upgrade" model="ir.actions.act_window">
+            <field name="name">Apply Schedule Upgrade</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.module.upgrade</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+           name="Apply Scheduled Upgrades"
+           action="action_view_base_module_upgrade"
+           groups="base.group_no_one"
+           id="menu_view_base_module_upgrade"
+           parent="menu_management"
+           sequence="50"/>
+
+       <record id="view_base_module_upgrade_install" model="ir.ui.view">
+            <field name="name">Module Upgrade Install</field>
+            <field name="model">base.module.upgrade</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <form string="Apply Schedule Upgrade">
+                    <div><label string="The selected modules have been updated / installed !"/></div>
+                    <div><label string="We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."/></div>
+                    <footer>
+                        <button name="config" string="Start configuration" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_base_module_upgrade_install" model="ir.actions.act_window">
+            <field name="name">Module Upgrade Install</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.module.upgrade</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_base_module_upgrade_install"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+<!-- CRM Claim Report Graph View -->
+
+        <record id="view_report_crm_claim_graph" model="ir.ui.view">
+            <field name="name">crm.claim.report.graph</field>
+            <field name="model">crm.claim.report</field>
+            <field name="arch" type="xml">
+                <graph string="Claims" type="pivot" stacked="True">
+                    <field name="stage_id" type="row"/>
+                    <field name="section_id" type="col"/>
+                    <field name="nbr" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+<!-- CRM Claim Report Custom reports (aka filters) -->
+        <record id="filter_report_crm_claim_workload" model="ir.filters">
+            <field name="name">Workload</field>
+            <field name="model_id">crm.claim.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['subject'], 'measures': ['email', 'delay_close']}</field>
+        </record>
+
+<!-- CRM Claim Report Search View -->
+
+        <record id="view_report_crm_claim_filter" model="ir.ui.view">
+            <field name="name">crm.claim.report.select</field>
+            <field name="model">crm.claim.report</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <filter string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <filter string="My Sales Team(s)" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" groups="base.group_multi_salesteams"/>
+                    <separator/>
+                    <filter string="My Company" context="{'invisible_section': False}" domain="[('company_id.user_ids','=',uid)]" help="My Company"/>
+                    <separator/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                            groups="base.group_multi_salesteams"/>
+                    <group  expand="0" string="Extended Filters...">
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>
+                        <field name="categ_id" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                        <field name="priority"/>
+                        <field name="type_action"/>
+                        <field name="create_date" />
+                        <field name="date_closed" />
+                        <field name="date_deadline" />
+                    </group>
+                    <group  expand="1" string="Group By">
+                        <filter string="Salesperson" name="Salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}" />
+                        <filter string="Category" context="{'group_by':'categ_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Claim Month" context="{'group_by':'claim_date:month'}" help="Month of claim"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+<!-- CRM Claim Report Action -->
+
+        <record id="action_report_crm_claim" model="ir.actions.act_window">
+            <field name="name">Claims Analysis</field>
+            <field name="res_model">crm.claim.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="context">{"search_default_year":1,"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_id" ref="view_report_crm_claim_graph"/>
+            <field name="search_view_id" ref="view_report_crm_claim_filter"/>
+            <field name="help">Have a general overview of all claims processed in the system by sorting them with specific criteria.</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_report_crm_claim_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_claim_graph"/>
+            <field name="act_window_id" ref="action_report_crm_claim"/>
+        </record>
+
+        <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
+            action="action_report_crm_claim" parent="base.next_id_64" sequence="15"/>
+
+    </data>
+</openerp>

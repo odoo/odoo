@@ -1,0 +1,648 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_online_training_email_template" model="email.template">
+            <field name="name">Online Training</field>
+            <field name="subject">Online Training</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[ 
+    <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:30px;font-weight: 300;">
+            Online Training + Certification
+    </div>
+     <div style="height:auto;text-left: center;font-size : 16px;color: #646464;margin-top:30px;margin-left:15px;margin-right:5px;">
+        These courses feature the same high quality course content found in our traditional classroom trainings, supplemented with
+        modular sessions and cloud-based labs. Many of our online learning courses also include dozens of recorded webinars and live
+        sessions by our senior instructors. At the end of the training, you can pass the Odoo Certification exam in one of the 5000+
+        Pearson VUE test centers worldwide.
+    </div>
+    <div style="height: auto;margin-top:30px;margin-bottom:10px;margin-left:20px;color: #646464;font-size:16px;">
+        <strong>Your advantages</strong>
+        <ul>
+            <li>Modular approach applied to the learning method</li>
+            <li>New interactive learning experience</li>
+            <li>Lower training budget for the same quality courses</li>
+            <li>Better comfort to facilitate your learning process</li>
+            <li>Odoo <a href="https://www.openerp.com/certification">Certification Exam</a> included (Pre-Ordered, available as of November 1st, 2013)</li>
+        </ul>
+    </div>
+    <hr color="DCDCFB"/>
+    <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:30px;font-weight: 300;">
+        Structure of the Training
+    </div>
+    <div>
+        <table>
+            <tr>
+                <td>
+                    <img src="/product_email_template/static/img/online_training.png"/>
+                </td>
+                <td style="height: auto;margin-top:10px;margin-bottom:10px;font-size:18px;color: #646464;">
+                    <strong>There are three components to the training</strong>
+                    <ul>
+                        <li>Videos with detailed demos</li>
+                        <li>Hands-on exercises and their solutions</li>
+                        <li>Live Q&A sessions with a trainer</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="height:auto;text-align: left;font-size : 14px;color: #646464;margin-top:10px;margin-left:15px;">
+        The 5-day training is modular, which means that you can choose to participate in the full training or to just 1 or 2 modules.
+        Nevertheless, <b>the first day of the training is compulsory</b> for everyone. The Monday is compulsory because the
+        introduction of Odoo is important before going through the other modules.<br/><br/>
+        Each day of the week starts from 9 AM (CEST/PST) to 12 PM (CEST/PST). A Q&A session will be hosted by an Odoo trainer.
+        Each day, the participants are expected to have done the following <b>BEFORE</b> attending the Q&A session:
+        <ul>
+            <li>Watch the videos for this day</li>
+            <li>Do the related exercises (written solutions will be provided upfront as well)</li>
+            <li>Send their questions by email before 5PM (CEST/PST) on the previous business day</li>
+        </ul><br/>
+        The Q&A session will be hosted on a web conference service.<b> A stable internet connection is required.</b> The trainer will
+        screen the questions for the day and select the most relevant ones to be answered during the session. The purpose of the
+        <b>Q&A session is not to cover questions related to a specific implementation project </b>or company-specific business
+        workflows. The <b>questions should be about the material covered in the videos </b>and the exercises and should benefit
+        the other participants of the training as well.<br/>
+        Each day of the week is dedicated to specific applications in Odoo as per the following planning:
+        <ul style="color: #6d57e0">
+            <li>
+                <strong><a href="https://www.openerp.com/online-training#Monday" style="text-decoration:none;" target=_new>Monday: </a></strong>
+                <a href="https://www.openerp.com/online-training#Monday_1" style="text-decoration:none;" target=_new>Introduction</a>,
+                <a href="https://www.openerp.com/online-training#Monday_2" style="text-decoration:none;" target=_new>CRM</a>,
+                <a href="https://www.openerp.com/online-training#Monday_3" style="text-decoration:none;" target=_new>Sales Management</a>
+            </li>
+            <li>
+                <strong><a href="https://www.openerp.com/online-training#Tuesday" style="text-decoration:none;" target=_new>Tuesday: </a></strong>
+                <a href="https://www.openerp.com/online-training#Tuesday_1" style="text-decoration:none;" target=_new>Access rights</a>,
+                <a href="https://www.openerp.com/online-training#Tuesday_2" style="text-decoration:none;" target=_new>Purchase</a>,
+                <a href="https://www.openerp.com/online-training#Tuesday_2" style="text-decoration:none;" target=_new>Sales &amp; Purchase management</a>,
+                <a href="https://www.openerp.com/online-training#Tuesday_4" style="text-decoration:none;" target=_new>Financial accounting</a>
+            </li>
+            <li>
+                <strong><a href="https://www.openerp.com/online-training#Wednesday" style="text-decoration:none;" target=_new>Wednesday: </a></strong>
+                <a href="https://www.openerp.com/online-training#Wednesday_1" style="text-decoration:none;" target=_new>Project management</a>,
+                <a href="https://www.openerp.com/online-training#Wednesday_2" style="text-decoration:none;" target=_new>Human resources</a>,
+                <a href="https://www.openerp.com/online-training#Wednesday_3" style="text-decoration:none;" target=_new>Contract management</a>
+            </li>
+            <li>
+                <strong><a href="https://www.openerp.com/online-training#Thursday" style="text-decoration:none;" target=_new>Thursday: </a></strong>
+                <a href="https://www.openerp.com/online-training#Thursday_1" style="text-decoration:none;" target=_new>Warehouse management</a>,
+                <a href="https://www.openerp.com/online-training#Thursday_2" style="text-decoration:none;" target=_new>Manufacturing (MRP) &amp; Sales</a>,
+                <a href="https://www.openerp.com/online-training#Thursday_4" style="text-decoration:none;" target=_new>Import/Export</a>
+            </li>
+            <li>
+                <strong><a href="https://www.openerp.com/online-training#Friday" style="text-decoration:none;" target=_new>Friday: </a></strong>
+                <a href="https://www.openerp.com/online-training#Friday_1" style="text-decoration:none;" target=_new>Pricelists</a>,
+                <a href="https://www.openerp.com/online-training#Friday_2" style="text-decoration:none;" target=_new>Point of Sale (POS)</a>,
+                <a href="https://www.openerp.com/online-training#Friday_3" style="text-decoration:none;" target=_new>Introduction to report customization</a>
+            </li>
+        </ul>
+    </div>
+    <div style="text-align: center;margin-top:30px;" >
+        <table cellspacing="5" align="center" cellpadding="5">
+            <tr style="font-size : 20px;color: #333333;margin-top:30px;">
+                <td>English</td></td>
+                <td>English</td></td>
+                <td>Spanish</td>
+            </tr>
+            <tr style="font-size : 10px;color: #646464;">
+                <td>Europe</td>
+                <td>USA & Canada</td>
+                <td>USA & Latin America</td>
+            </tr>
+            <tr style="font-size : 10px;color: #FFFFFF;background-color:#8b5bdd;">
+                <td><a href="http://onlinetrainingencet.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+                <td><a href="http://onlinetrainingenpst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+                <td><a href="http://onlinetrainingespst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+            </tr>
+        </table>
+    </div>
+    <hr color="DCDCFB"/>
+    <div style="height:auto;text-align: center;font-size : 40px;color: #333333;margin-top:40px;font-weight: 300;">
+        Content of the Training
+    </div>
+    <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
+        <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Monday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
+        Introduction, CRM & Sales
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Introduction: Get familiar with the V7.</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Odoo’s architecture</li>
+                        <li>How to create an Odoo Online instance</li>
+                        <li>List and form views, search and filter features</li>
+                        <li>Tooltips and drill-downs</li>
+                        <li>Advanced navigation</li>
+                        <li>Calendar, Graph, Kanban and Gantt views</li>
+                        <li>Social network features: emailing, internal communication</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                        The introduction exercises have been created to help you discover Odoo in an easy way. Their main objective is to present the different applications, menus, view types, shortcuts, field types, wizards, actions, etc.  It will help you to discover how to navigate in Odoo!<br/></br>
+                        Therefore, the Introduction is compulsory for everyone, even if you need to learn a specific module given on an other date. This obligation has been made to make sure that you are not lost if you arrive in the middle of the training for another module.
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">CRM Module</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Manage Lead & Opportunities</li>
+                        <li>Call, Meeting</li>
+                        <li>Partners & contacts</li>
+                        <li>Automated actions</li>
+                        <li>Import partners and contacts from LinkedIn</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Track all leads coming in and push them to real opportunities</li>
+                        <li>Improve the productivity of the sales force</li>
+                        <li>Access all documents and messages related to one lead/opportunity in one place</li>
+                        <li>Track the sales pipeline by month and stage to produce
+                        accurate sales forecasts at the individual and group
+                        levels</li>
+                        <li>Track individual performance of sales people</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Sales Module</div>
+        <table>
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Customers</li>
+                        <li>Products to sell</li>
+                        <li>Manual discounts</li>
+                        <li>Margins</li>
+                        <li>Sales & Warehouse: Invoicing control (On demand / On
+                        Delivery Order), Shipping policy (At once / Each product
+                        when available)</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Register orders from customers and create invoices</li>
+                        <li>Schedule deliveries (for products) or tasks (for service)</li>
+                        <li>Ensure that sales orders are properly invoiced by tracking pending sales orders</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <strong>CRM & Sales management:</strong>
+                    <ul>
+                        <li>From an opportunity to a sale order</li>
+                        <li>Claims</li>
+                        <li>Aftersale communication</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    Odoo can work with independent applications, so the
+                    whole commercial process can be integrated together in
+                    order to accomplish complete business flows.
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
+        <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Tuesday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
+        Access rights, Sales & Purchase, Financial accounting
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Access rights</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Users</li>
+                        <li>Groups</li>
+                        <li>Access rights and access rules</li>
+                        <li>Modules configuration</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                        Thanks to the integrated access rights management integrated, each user has an access to its relevant information. No overloaded screen with a lot of irrelevant data, no unwanted menu, etc. Only a clean interface!
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Purchase</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Suppliers</li>
+                        <li>Products</li>
+                        <li>Request for Quotation</li>
+                        <li>Purchase order</li>
+                        <li>Invoicing & Invoice control</li>
+                        <li>Incoming order (Complete/partial receipt)</li>
+                        <li>Purchase requisition</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Better negotiate volumes and prices based on historical data</li>
+                        <li>Centralize all the data to be able to build reporting and statistics</li>
+                        <li>Control the invoicing process</li>
+                        <li>Work with purchase requisitions to ask different suppliers to submit quotations</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <strong>Sales & Purchase management</strong>
+                    <ul>
+                        <li>Make to order product</li>
+                        <li>Retailer process: buy a product and sell it without any customization/manufacturing</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    Keep control of the replenishment process based on sales demands! Thanks to this integration, you will be able to automate the ordering for the missing units ordered by a customer
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Financial accounting</div>
+        <table>
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Invoices</li>
+                        <li>Refunds</li>
+                        <li>Journal Entries & Reconciliations</li>
+                        <li>Reports / Closing of fiscal year</li>
+                        <li>Accounts</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Rapidly encode your financial operations or accounting transactions</li>
+                        <li>Carry out payments easily and adequately reconcile these payments with invoices</li>
+                        <li>Quick creation of invoices with pre-set defaults on debtor/creditor and income/expense accounts</li>
+                        <li>Multiple manners to reconcile</li>
+                        <li>Configuration of accounts to ensure correct display in balance sheet and profit & loss statement</li>
+                        <li>Apply correct deferral methods to ensure the close of the fiscal year</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
+        <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Wednesday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
+        Project management, Human resources, Contract management
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Project Management</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Projects</li>
+                        <li>Tasks and tasks delegation</li>
+                        <li>Issues and issues escalation</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Manage and follow your projects, tasks and issues</li>
+                        <li>Discover the Kanban view to quickly operate some actions and to quickly detect any bottlenecks in your projects flows</li>
+                        <li>Discover the Gantt view to see how your project has been planned and adapt it according to new elements or to the people agenda</li>
+                        <li>Define project members & delegate tasks</li>
+                        <li>Register issues and escalate them</li>
+                        <li>Create automatically timesheet lines in the Human Resources menu from recorded work activities</li>
+                        <li>Track and invoice (to customers) the costs associated to a project</li>
+                        <li>Manage a support ticket system</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Human Resources</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Employees</li>
+                        <li>Recruitment</li>
+                        <li>Expenses</li>
+                        <li>Allocations and leaves requests</li>
+                        <li>Time management: timesheet and timesheet lines</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                     <strong>About Recruiting:</strong>
+                    <ul>
+                        <li>Better negotiate volumes and prices based on historical data</li>
+                        <li>Centralize all the data to be able to build reporting and statistics</li>
+                        <li>Control the invoicing process</li>
+                        <li>Work with purchase requisitions to ask different suppliers to submit quotations</li>
+                    </ul>
+                    <strong>About Holidays:</strong>
+                    <ul>
+                        <li>Track the number of vacation days accrued by each employee</li>
+                        <li>Allow managers to approve leave requests and plan backups for their teams</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Contract management</div>
+        <table>
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Contracts</li>
+                        <li>Invoicing methods
+                            <li>Sale orders</li>
+                            <li>Timesheets</li>
+                            <li>Expenses</li>
+                        </li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Centralize the data related to a specific contract in one single point</li>
+                        <li>Perform the invoicing from one single place (Sales order / Timesheet / Expenses)</li>
+                        <li>Follow the renewal process</li>
+                        <li>Compute statistics based on expected revenues</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
+        <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Thursday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
+        Warehouse management, Manufacturing (MRP) & Sales, Import/Export
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Warehouse management</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Stock moves</li>
+                        <li>Inventory</li>
+                        <li>Partial delivery / receipt</li>
+                        <li>Units of measure</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    Odoo Warehouse Management is at once very simple, flexible and complete. It is based on the concept of double entry that revolutionized accounting: ‘Nothing lost, everything moved’. In Odoo, we don’t talk about disappearance, consumption or loss of products: instead we speak only of stock moves from one place to another.
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Manufacturing (MRP)</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Bill of materials</li>
+                        <li>Multi-level BoM</li>
+                        <li>Routings</li>
+                        <li>Work center operations</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Manage the production planning</li>
+                        <li>Organize the different manufacturing orders to optimize the workload of the different resources</li>
+                        <li>From an operational perspective, track which products and quantities need to be manufactured</li>
+                    </ul>
+                    <strong>As a manager:</strong>
+                    <ul>
+                        <li>Define products to be assembled or to be sold as a kit</li>
+                        <li>Organize the pipeline of the production</li>
+                        <li>Track the cost of a manufacturing order and measure the efficiency of the department</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <strong>MRP & Sales</strong>
+                    <ul>
+                        <li>Product configuration Make to Stock / to Order</li>
+                        <li>Commercial BoM (kit)</li>
+                        <li>Just in Time</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    From the sales perspective, you will have a manufacturing order generated based on a request coming from a customer without any manual operation. This integration of those two aplications allows you to perform the following flow in an automated way: Sale order –> Stock level verification –> Production of the missing units –> Receival in stock of the finished goods –> Delivery to the customer.
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Import/Export</div>
+        <table>
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Import from CSV files</li>
+                        <li>Export as CSV or as Excel file</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Transfer data from one system to Odoo.</li>
+                    </ul>
+                    Odoo offers a simple way to import and export data. Odoo will guide you for this phase thanks to a FAQ directly integrated into the import screen
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="height:auto;text-align: center;font-size : 24px;color: #646464;margin-top:30px;">
+        <hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-right: 25px;" />Friday<hr style="display: inline-block; width: 15%; margin-bottom: 4px;margin-left: 25px;" /><br/><br/>
+        Pricelists, Point of Sale (POS), Introduction to report customization
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Pricelists</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Prices for returning customers</li>
+                        <li>Prices in foreign currencies (with exchange fees)</li>
+                        <li>Retailer prices (based on a minimal margin)</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    <ul>
+                        <li>Keep control on the pricing policy</li>
+                        <li>Allow discounts for some periods</li>
+                        <li>Ensure your margins even when you define discounts</li>
+                        <li>Allow different pricing by customer and/or supplier</li>
+                        <li>Update the prices in an easy way</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Point of Sale (POS)</div>
+        <table cellspacing="5">
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Payment methods (journals)</li>
+                        <li>POS Configuration</li>
+                        <li>POS front-end</li>
+                        <li>POS back-end</li>
+                        <li>Shops</li>
+                        <li>Sessions</li>
+                        <li>POS Orders</li>
+                        <li>Re-Invoicing</li>
+                        <li>Scanning / Self-scanning</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    Odoo POS is the first POS running in a 100% web based environment, which means any computer with a browser can host the POS. The POS is a two-part system with a front-end (interaction with the client) and a back-end (managers can configure the system, print reports, analyse, ...)<br/><br/>
+                     <strong>About the front-end:</strong>
+                    <ul>
+                        <li>Offline mode. Imagine several cases were having an offline mode is of prime interest: Connexion to server shutdown at a big supermarket / Use in environments that requires mobility but without wifi / Use in large environments like restaurants and gardens / Use in low tech environments</li>
+                    </ul>
+                    <strong>About the back-end:</strong>
+                    <ul>
+                        <li>Configure the products being sold in the POS</li>
+                        <li>Configure the payments methods</li>
+                        <li>Print daily sales report</li>
+                        <li>Analyze sales</li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: left;font-size : 24px;color: #646464;margin-top:30px;">Introduction to report customization</div>
+        <table>
+            <tr style="text-align: center;font-size : 20px;color: #FFFFFF;background-color:#969696;">
+                <th>Content</th>
+                <th>What will you learn?</th>
+            </tr>
+            <tr style="text-align: left;font-size : 16px;color: #646464;">
+                <td style="width:50%;">
+                    <ul>
+                        <li>Customize the layout of your invoices</li>
+                        <li>Change the footer/header of documents</li>
+                        <li>Add a field in a standard document / report</li>
+                    </ul>
+                </td>
+                <td style="width:50%;">
+                    This features will help you to fully customize the standard documents made from Odoo.
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div style="text-align: center;background-color:#FFFFFF;margin-top:30px;" >
+        <table cellspacing="5" align="center" cellpadding="5">
+            <tr style="font-size : 20px;color: #333333;margin-top:30px;">
+                <td>English</td>
+                <td>English</td>
+                <td>Spanish</td>
+            </tr>
+            <tr style="font-size : 10px;color: #646464;">
+                <td>Europe</td>
+                <td>USA & Canada</td>
+                <td>USA & Latin America</td>
+            </tr>
+            <tr style="font-size : 10px;color: #FFFFFF;background-color:#8b5bdd;">
+                <td><a href="http://onlinetrainingencet.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+                <td><a href="http://onlinetrainingenpst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+                <td><a href="http://onlinetrainingespst.eventbrite.com" style="text-decoration:none;color:#FFFFFF;" target=_new>Register</a></td>
+            </tr>
+        </table>
+    </div>
+    <hr color="DCDCFB"/>
+    <div style="height:auto;text-align: center;font-size : 30px;color: #333333;margin-top:10px;">
+            Training Material
+    </div>
+    <div style="height:auto;text-align: left;font-size : 16px;color: #646464;margin-top:30px;">
+        As soon as registration will be finalized (ie. payment confirmation), the participants will be provided with the material listed
+        below:
+        <ul>
+            <li>Access to online videos with detailed demos</li>
+            <li>Training material with exercises</li>
+            <li>Written solutions to the exercises</li>
+        </ul>
+        Therefore, there is an advantage to registering early to the training if you are interested in preparing your live sessions ahead of time. Moreover, the number of participants is limited per online session which is another reason to consider registering early and securing your seat.
+    </div>
+    <div style="text-align: center;background-color:#FFFFFF;margin-top:30px;font-size:20px;color:#4e66e7">
+        <table cellspacing="5">
+            <tr>
+                <td>
+                    With the live sessions, we learned a lot more than what was covered in the videos. Definitely a good start for building up a solid base of working knowledge of Odoo.
+                </td>
+                <td>
+                    The trainer did a wonderful job with the training! He was well informed and interactive online and offline. Thank you so much for the experience! 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    It would be very difficult to cover all of the possibilities of Odoo and I believe the major aspects were covered very well 
+                </td>
+                <td>
+                    The trainer has a very good knowledge of the subject, he understands the issues of the trainees very fast and provided answers with the right level of illustration.
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+            ]]>
+            </field>
+        </record>
+
+        <record id="product_online_training" model="product.product">
+            <field name="name">Online Training</field>
+            <field name="categ_id" ref="product.product_category_5"/>
+            <field name="standard_price">500</field>
+            <field name="list_price">900</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="email_template_id" ref="product_online_training_email_template"/>
+        </record>
+
+    </data>
+</openerp>

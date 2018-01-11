@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Survey users -->
+        <record model="res.groups" id="base.group_survey_user">
+            <field name="name">Survey / User</field>
+        </record>
+
+        <!-- Survey managers -->
+        <record model="res.groups" id="base.group_survey_manager">
+            <field name="name">Survey / Manager</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <!-- Record rules -->
+        <record id="survey_users_access" model="ir.rule">
+            <field name="name">Access to survey for regular users</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[('stage_id.closed', '=', False)]</field>
+            <field name="groups" eval="[(4, ref('base.group_survey_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record id="survey_manager_access" model="ir.rule">
+            <field name="name">Survey Manager access rights</field>
+            <field name="model_id" ref="survey.model_survey_survey"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_survey_manager'))]"/>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_create"/>
+        </record>
+
+        <record id="survey_input_public_access" model="ir.rule">
+            <field name="name">Public access to user_input</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_public'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record id="survey_input_users_access" model="ir.rule">
+            <field name="name">Access to user_input for regular users</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">['|', ('create_uid', '=', user.id), ('partner_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_survey_user'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record id="survey_input_manager_access" model="ir.rule">
+            <field name="name">Survey Manager access rights</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_survey_manager'))]"/>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_create"/>
+        </record>
+
+    </data>
+</openerp>

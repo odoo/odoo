@@ -1,0 +1,410 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="website.editorbar">
+        <div id="website-top-navbar" class="navbar navbar-inverse navbar-fixed-top hidden-xs" style="display: none;">
+            <div class="navbar-header" id="website-top-edit">
+                <ul class="nav navbar-nav js_editor_placeholder pull-right">
+                </ul>
+                <form class="navbar-form text-muted">
+                    <button type="button" data-action="save"
+                            class="btn btn-primary btn-xs">Save</button>
+                    or
+                    <a href="#" data-action="cancel" class="btn btn-link btn-xs">Discard</a>
+                </form>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.editor.dialog">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title"><t t-esc="title"/></h3>
+                    </div>
+                    <div class="modal-body"><t t-raw="0"/></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Save</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled"/>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.link.footer-button">
+        <button type="button" class="btn pull-left remove btn-danger">Remove Link</button>
+    </t>
+    <t t-name="website.editor.dialog.link">
+        <t t-call="website.editor.dialog">
+            <t t-set="title">Link to</t>
+            <form>
+                <ul class="list-group">
+                    <li class="list-group-item form-group active">
+                        <h4 class="list-group-item-heading">
+                            <label for="link-page" class="control-label">
+                                Page
+                            </label>
+                        </h4>
+                        <input class="page form-control url-source"
+                               id="link-page" type="hidden"/>
+                    </li>
+                    <li class="list-group-item form-group clearfix">
+                        <div class="pull-right" style="display: none;">
+                            <label>
+                                <input type="checkbox" class="window-new"/>
+                                Open in new window
+                            </label>
+                        </div>
+                        <h4 class="list-group-item-heading">
+                            <label for="link-external" class="control-label">
+                                URL or Email Address
+                            </label>
+                        </h4>
+                        <input type="text" class="form-control url email-address url-source"
+                               id="link-external" placeholder="https://www.odoo.com"/>
+                    </li>
+                </ul>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label for="link-text" class="col-sm-2 control-label">
+                            Link text
+                        </label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="link-text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal link-style">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Style
+                        </label>
+                        <div class="col-sm-4">
+                            <div class="dropdown" style="line-height: 2em;">
+                                <a data-toggle="dropdown" class="btn btn-default" href="#">Color Style <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <label class="btn btn-link">Link<input value="" class="link-style" type="radio" name="link-style-type" checked="checked"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default">Basic<input value="btn-default" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-success">Success<input value="btn-success" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-primary">Primary<input value="btn-primary" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-info">Info<input value="btn-info" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-warning">Warning<input value="btn-warning" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-danger">Danger<input value="btn-danger" class="link-style" type="radio" name="link-style-type"/></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="dropdown" style="line-height: 2em;">
+                                <a data-toggle="dropdown" class="btn btn-default" href="#">Size <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <li>
+                                        <label class="btn btn-default btn-xs">Extra Small<input value="btn-xs" class="link-style" type="radio" name="link-style-size"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default btn-sm">Small<input value="btn-sm" class="link-style" type="radio" name="link-style-size"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default">Default<input value="" class="link-style" type="radio" name="link-style-size" checked="checked"/></label>
+                                    </li>
+                                    <li>
+                                        <label class="btn btn-default btn-lg">Large<input value="btn-lg" class="link-style" type="radio" name="link-style-size"/></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-horizontal link-style">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                            Preview
+                        </label>
+                        <div class="col-sm-10" style="line-height: 2em;">
+                            <a id="link-preview" href="#"></a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </t>
+    <t t-name="website.editor.dialog.media">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog select-media">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Select a Media</h3>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
+                            <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
+                            <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
+                            <li class="search" style="float: right;">
+                                <ul class="pager mb0 mt0">
+                                    <li class="previous disabled"><a href="#">← Previous</a></li>
+                                    <li class="next disabled"><a href="#">Next →</a></li>
+                                </ul>
+                            </li>
+                            <li class="search" style="float: right;">
+                                <form action="#">
+                                    <div class="form-group font-icons fa fa-search mb0">
+                                        <input type="search" class="form-control" id="icon-search"/>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="editor-media-image">
+                                
+                            </div>
+                            <div class="tab-pane fade" id="editor-media-icon">
+                                
+                            </div>
+                            <div class="tab-pane fade" id="editor-media-video">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary save">Save</button>
+                        <button type="button" class="btn hidden wait" disabled="disabled"/>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.image">
+        <div>
+            <form method="POST"
+                  action="/website/attach"
+                  enctype="multipart/form-data"
+                  target="fileframe"
+                  class="form-inline">
+                <div class="well">
+                    <div class="form-group pull-left">
+                        <input type="file" name="upload" accept="image/*" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
+                        <input type="hidden" name="disable_optimization" value=""/>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary filepicker">Upload an image from your computer</button>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Alternate Upload</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" class="js_disable_optimization">Upload image without optimization</a></li>
+                            </ul>
+                        </div>
+                        <button type="button" class="btn hidden wait" disabled="disabled">Uploading...</button>
+                    </div>
+                    <div>
+                        <span class="text-muted"> — or — </span>
+                        <label for="iamgeurl">Add an image URL</label>
+                        <div class="form-group btn-group">
+                            <input type="text" name="url" class="form-control url pull-left" style="width: 320px;" id="iamgeurl" placeholder="http://openerp.com/logo.png"/>
+                            <button class="btn btn-default" type="submit">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="func"/>
+                <div class="help-block"/>
+                <div class="existing-attachments"/>
+            </form>
+        </div>
+        <iframe src="about:blank" name="fileframe" class="hidden"/>
+    </t>
+    <t t-name="website.editor.dialog.image.existing">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog select-image">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Select a Picture</h3>
+                    </div>
+                    <div class="modal-body has-error">
+                        <div class="existing-attachments"/>
+                        <div class="help-block"/>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.image.existing.content">
+        <div class="existing-attachments">
+            <div class="row mt16" t-foreach="rows" t-as="row">
+                <div class="col-sm-2 existing-attachment-cell"
+                     t-foreach="row" t-as="attachment">
+                    <i class="fa fa-times existing-attachment-remove" t-att-data-id="attachment.id"/>
+                    <img t-att-src="attachment.website_url" t-att-alt="attachment.name" t-att-title="attachment.name" class="img img-responsive"/>
+                </div>
+            </div>
+        </div>
+    </t>
+    <t t-name="website.editor.dialog.image.existing.error">
+        <div class="help-block">
+            <p>The image could not be deleted because it is used in the
+               following pages or views:</p>
+            <ul t-foreach="views" t-as="view">
+                <li>
+                    <a t-attf-href="/web#model=ir.ui.view&amp;id=#{view.id}">
+                        <t t-esc="view.name"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </t>
+    <t t-name="website.editor.table.panel">
+        <table class="editorbar-panel">
+            <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+        </table>
+    </t>
+    <t t-name="website.editor.table">
+        <table class="table table-bordered table-responsive">
+            <tbody>
+                <tr t-foreach="rows"><td t-foreach="cols">&#8203;</td></tr>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="website.editor.discard">
+        <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 class="modal-title">Discard edition</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            If you discard the current edition, <em>all</em>
+                            unsaved changes will be lost.
+                        </p>
+                        <p>You can cancel to return to the edition mode.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger">Discard</button>
+                        or
+                        <a href="#" data-dismiss="modal" aria-hidden="true">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.editor.hoverbutton.link">
+        <button contentEditable="false" type="button" class="btn btn-primary hover-edition-button btn-xs">Change</button>
+    </t>
+
+    <t t-name="website.editor.hoverbutton.media">
+        <div contentEditable="false" class="hover-edition dropdown">
+            <a class="btn btn-primary btn-sm" data-toggle="dropdown" href="#">Customize</a>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                <li><a href="#" class="hover-edition-button">Change Media</a></li>
+                <li><a href="#" class="hover-style-button">Style</a></li>
+                <li class="dropdown-submenu">
+                    <a href="#" tabindex="-1">Rotation</a>
+                    <ul class="dropdown-menu">
+                        <li data-value="fa-spin"><a>Spin</a></li>
+                        <li data-value="fa-flip-horizontal"><a>Horizontal flip</a></li>
+                        <li data-value="fa-flip-vertical"><a>Vertical flip</a></li>
+                    </ul>
+                </li>
+                <li><a href="#" data-value="fa-border">border</a></li>
+            </ul>
+        </div>
+    </t>
+
+    <t t-name="website.editor.dialog.font-icons">
+        <form action="#">
+            <input type="hidden" id="fa-icon"/>
+            <input type="hidden" id="fa-size"/>
+            <div class="font-icons-icons">
+                <t t-call="website.editor.dialog.font-icons.icons">
+                    <t t-set="icons" t-value="widget.icons"/>
+                </t>
+            </div>
+            <div class="form-group mt32" id="fa-preview">
+
+            </div>
+        </form>
+    </t>
+    <t t-name="website.editor.dialog.font-icons.icons">
+        <span t-foreach="icons" t-as="icon"
+              class="fa font-icons-icon"
+              t-att-data-id="icon.id">
+            <t t-esc="icon.text"/>
+        </span>
+    </t>
+
+    <t t-name="website.editor.dialog.video">
+        <form action="#" class="form-inline">
+            <div class="well">
+                <div class="form-group btn-group">
+                    <span class="text-muted pull-right" style="margin-left:10px; line-height: 2em;">(Youtube, Vimeo, Dailymotion)</span>
+                    <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left">Set a video URL</label>
+                    <input type="text"
+                        name="url"
+                        class="form-control url pull-left"
+                        style="width: 400px;"
+                        id="urlvideo"
+                        placeholder="//www.youtube.com/embed/yws1tbgNV7k"
+                        t-translation="off"/>
+                    <button class="btn btn-default">Preview</button>
+                </div>
+                <div class="form-group btn-group">
+                    <label for="urlvideo" style="width: 220px; line-height: 2em;" class="pull-left"><span class="text-muted">— or —</span> Embed Video (HTML)</label>
+                    <input type="text"
+                        name="embed"
+                        class="form-control url pull-left"
+                        style="width: 400px;"
+                        id="embedvideo"
+                        placeholder='&lt;iframe src="//www.youtube.com/embed/yws1tbgNV7k"&gt;&lt;/iframe&gt;'
+                        t-translation="off"/>
+                    <button class="btn btn-default">Preview</button>
+                </div>
+            </div>
+            
+            <div id="video-preview" style="width: 450px; margin: 0 auto;">
+                <div class="media_iframe_video">
+                    <iframe
+                        src=""
+                        frameborder="0"
+                        allowfullscreen="allowfullscreen"></iframe>
+                </div>
+            </div>
+
+            <input type="hidden" id="video_id" value=""/>
+            <input type="hidden" id="video_type" value=""/>
+
+            <div class="text-center mt32">
+                <div class="checkbox">
+                    <label><input type="checkbox" id="autoplay"/> Autoplay</label>
+                </div>
+            </div>
+        </form>
+    </t>
+
+</templates>

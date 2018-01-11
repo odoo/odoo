@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Leads by user and section Graph View -->
+        <record id="view_report_crm_lead_graph" model="ir.ui.view">
+            <field name="name">crm.lead.report.graph</field>
+            <field name="model">crm.lead.report</field>
+            <field name="arch" type="xml">
+                <graph string="Leads Analysis" type="pivot" stacked="True">
+                    <field name="section_id" type="row"/>
+                    <field name="create_date" interval="month" type="col"/>
+                    <field name="nbr_cases" type="measure"/>
+                    <field name="probable_revenue" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_report_crm_lead_graph_two" model="ir.ui.view">
+            <field name="name">crm.lead.report.graph.two</field>
+            <field name="model">crm.lead.report</field>
+            <field name="arch" type="xml">
+                <graph string="Leads Analysis" type="pivot" stacked="True">
+                    <field name="create_date" type="row"/>
+                    <field name="user_id" type="col"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_leads_long_term_revenue" model="ir.filters">
+            <field name="name">Long Term Revenue</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['country_id', 'section_id'], 'col_group_by': ['date_deadline'], 'measures': ['planned_revenue']}</field>
+        </record>
+        <record id="filter_leads_revenue_per_lead" model="ir.filters">
+            <field name="name">Revenue Per Lead</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['date_deadline:month'], 'measures': ['planned_revenue']}</field>
+        </record>
+        <record id="filter_leads_overpassed_deadline" model="ir.filters">
+            <field name="name">Overpassed Deadline</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['section_id'], 'col_group_by': ['partner_id'], 'measures': ['delay_expected']}</field>
+        </record>
+        <record id="filter_leads_salesperson" model="ir.filters">
+            <field name="name">By Salespersons</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month', 'user_id']}</field>
+        </record>
+        <record id="filter_leads_country" model="ir.filters">
+            <field name="name">By Country</field>
+            <field name="model_id">crm.lead.report</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['create_date:month', 'country_id']}</field>
+        </record>
+
+        <!-- Leads by user and section Search View -->
+        <record id="view_report_crm_lead_filter" model="ir.ui.view">
+            <field name="name">crm.lead.report.select</field>
+            <field name="model">crm.lead.report</field>
+            <field name="arch" type="xml">
+                <search string="Leads Analysis">
+                    <filter name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
+                    <filter name="opportunity" string="Opportunity" domain="[('type','=','opportunity')]" help="Show only opportunity"/>
+                    <separator/>
+                    <filter string="Won" name="won"
+                            domain="['&amp;', ('stage_id.probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                    <filter string="Lost" name="lost"
+                            domain="['&amp;', ('stage_id.probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
+                    <field name="section_id" context="{'invisible_section': False}"
+                            groups="base.group_multi_salesteams"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <group expand="0" string="Extended Filters">
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="campaign_id"/>
+                        <field name="medium_id"/>
+                        <field name="source_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <separator orientation="vertical"/>
+                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
+                        <field name="campaign_id" widget="selection"/>
+                        <field name="medium_id" widget="selection"/>
+                        <field name="source_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="create_date"/>
+                        <field name="opening_date"/>
+                        <field name="date_closed"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Salesperson" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
+                        <filter string="Country" context="{'group_by':'country_id'}" />
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <separator orientation="vertical" />
+                        <filter string="Creation Month" context="{'group_by':'create_date:month'}" name="month"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Leads by user and section Action -->
+       <record id="action_report_crm_lead" model="ir.actions.act_window">
+           <field name="name">Leads Analysis</field>
+           <field name="res_model">crm.lead.report</field>
+           <field name="view_type">form</field>
+           <field name="view_mode">graph</field>
+           <field name="context">{}</field>
+           <field name="domain">[]</field>
+           <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
+       </record>
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_graph"/>
+            <field name="act_window_id" ref="action_report_crm_lead"/>
+       </record>
+       <menuitem name="Leads Analysis" id="menu_report_crm_leads_tree"
+            groups="base.group_sale_manager"
+            parent="base.next_id_64" action="action_report_crm_lead" sequence="1"/>
+
+    </data>
+</openerp>

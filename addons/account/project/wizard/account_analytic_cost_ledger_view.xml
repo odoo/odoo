@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_analytic_cost_view" model="ir.ui.view">
+            <field name="name">Account Analytic Check</field>
+            <field name="model">account.analytic.cost.ledger</field>
+            <field name="arch" type="xml">
+            <form string="Select Period">
+                <header>
+                     <button name="check_report" string="Print" type="object" class="oe_highlight"/>
+                     or
+                     <button string="Cancel" class="oe_link" special="cancel"/>
+                </header>
+                <group col="4">
+                    <field name="date1"/>
+                    <field name="date2"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_analytic_cost" model="ir.actions.act_window">
+            <field name="name">Cost Ledger</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.cost.ledger</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_analytic_cost_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="account_analytic_cost_values">
+            <field name="model_id" ref="analytic.model_account_analytic_account" />
+            <field name="name">Account Analytic Cost</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_analytic_cost'))" />
+            <field name="key">action</field>
+            <field name="model">account.analytic.account</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <!--
+        followers main template
+        Template used to display the followers, the actions and the subtypes in a record.
+        -->
+    <div t-name="mail.followers" class="oe_followers">
+        <div class="oe_actions">
+            <div t-attf-class="btn-group oe_subtype_list">
+                <button class="btn oe_follower oe_notfollow">
+                    <span class="oe_follow">Follow</span>
+                    <span class="oe_unfollow">Unfollow</span>
+                    <span class="oe_following">Following</span>
+                </button>
+                <button type="button" t-attf-class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu"></ul>
+            </div>
+
+            <t t-if="widget.comment">
+                <h5 class="oe_comment"><t t-raw="widget.comment"/></h5>
+            </t>
+        </div>
+        <div class='oe_follower_title_box'>
+            <h4 class='oe_follower_title'>Followers</h4>
+            <a t-if="widget.view_is_editable" href='#' class="oe_invite">Add others</a>
+        </div>
+        <div class="oe_follower_list"></div>
+    </div>
+
+    <!--
+        followers.partner template
+        Template used to display a partner following the record
+        -->
+    <div t-name="mail.followers.partner" class='oe_partner'>
+        <img class="oe_mail_thumbnail oe_mail_frame" t-att-src="record.avatar_url"/>
+        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" t-att-title="record.name" t-att-data-partner="record.id"><t t-esc="record.name"/></a>
+        <span t-if="record.is_editable and (widget.records_length &gt; 1)" class="oe_edit_subtype oe_e oe_hidden" title="Edit subscription" t-att-data-id="record.id">&amp;</span>
+        <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
+    </div>
+    
+    <!--
+        followers.subtype template
+        Template used to display message subtypes of a follower subscription
+    -->
+    <t t-name="mail.followers.subtype">
+        <table class='oe_subtype'>
+            <tr>
+                <td width="10%">
+                    <input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/>
+                </td>
+                <td>
+                    <label t-att-for="'input_mail_followers_subtype_'+record.id+(dialog ? '_in_dialog': '')"><t t-raw="record.name"/></label>
+                </td>
+            </tr>
+        </table>
+    </t>
+
+    <t t-name="mail.followers.show_more">
+        <div class="oe_partner oe_show_more">And <t t-esc="number"/> more.</div>
+    </t>
+
+</template>

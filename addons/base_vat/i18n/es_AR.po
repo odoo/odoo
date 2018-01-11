@@ -1,0 +1,80 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_vat
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Leonardo Germán Chianea <noamixcontenidos@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-08-22 14:59+0000\n"
+"Last-Translator: Leonardo Germán Chianea <noamixcontenidos@gmail.com>\n"
+"Language-Team: Spanish (Argentina) (http://www.transifex.com/odoo/odoo-8/language/es_AR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: es_AR\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "Check Validity"
+msgstr "Verificar Validez"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:114
+#, python-format
+msgid "Error!"
+msgstr "¡Error!"
+
+#. module: base_vat
+#: help:res.company,vat_check_vies:0
+msgid ""
+"If checked, Partners VAT numbers will be fully validated against EU's VIES "
+"service rather than via a simple format validation (checksum)."
+msgstr "Si se marca, el CUIT del Partner se validará contra el servicio europeo VIES en lugar de sólo validar el formato."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:130
+#, python-format
+msgid "Importing VAT Number [%s] is not valid !"
+msgstr "El NIF importado [%s] no es válido"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:153
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
+msgstr "El NIF [%s] para la empresa [%s] no parece ser válido.\nNota: el formato esperado es %s"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:152
+#, python-format
+msgid ""
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr "El NIF [%s] para la empresa [%s] o bien falla en la comprobación de validación VIES o no respeta el formato esperado %s."
+
+#. module: base_vat
+#: field:res.company,vat_check_vies:0
+msgid "VIES VAT Check"
+msgstr "Validación VIES del CUIT"
+
+#. module: base_vat
+#: view:res.partner:base_vat.view_partner_form
+msgid "e.g. BE0477472701"
+msgstr "Ej. BE0477472701"

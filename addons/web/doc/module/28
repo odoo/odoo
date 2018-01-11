@@ -1,0 +1,13 @@
+Index: web_example/static/src/js/first_module.js
+===================================================================
+--- web_example.orig/static/src/js/first_module.js
++++ web_example/static/src/js/first_module.js
+@@ -66,7 +66,7 @@ openerp.web_example = function (instance
+                 user_id: instance.session.uid,
+                 time: time,
+             };
+-            this.model.call('create', [record]).done(function () {
++            return this.model.call('create', [record]).done(function () {
+                 self.display_record(record);
+             });
+         },

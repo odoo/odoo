@@ -1,0 +1,367 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Florian Hatat, 2015
+# Martin Trigaux, 2015
+# Richard Mathot <rim@odoo.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-30 15:40+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to setup a new automated action rule. \n"
+"              </p><p>\n"
+"                Use automated actions to automatically trigger actions for\n"
+"                various screens. Example: a lead created by a specific user may\n"
+"                be automatically set to a specific sales team, or an\n"
+"                opportunity which still has status pending after 14 days might\n"
+"                trigger an automatic reminder email.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Cliquez pour paramétrer une nouvelle règle d'action automatique. \n              </p><p>\n               Utilisez une action automatique pour déclencher automatiquement des actions pour\n                différents écrans. Par exemple  une piste créée par un utilisateur donné \n                peut être automatiquement assignée à une équipe de ventes donnée, ou une \n                opportunité qui est toujours en attente après 14 jours peut\n                déclencher un courriel automatique de rappel.\n              </p>\n            "
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+#: view:base.action.rule:base_action_rule.view_base_action_rule_tree
+msgid "Action Rule"
+msgstr "Règle d'action"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule
+msgid "Action Rules"
+msgstr "Règles d'action"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Actions"
+msgstr "Actions"
+
+#. module: base_action_rule
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_followers:0
+msgid "Add Followers"
+msgstr "Ajouter des abonnés"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
+#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+msgid "Automated Actions"
+msgstr "Actions automatisées"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "Based on Timed Condition"
+msgstr "D'après une condition de temps"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_pre_id:0
+msgid "Before Update Filter"
+msgstr "Filtre avant la mise à jour"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Closed"
+msgstr "Fermé"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Conditions"
+msgstr "Conditions"
+
+#. module: base_action_rule
+#: field:base.action.rule,create_date:0
+msgid "Create Date"
+msgstr "Date de création"
+
+#. module: base_action_rule
+#: field:base.action.rule,create_uid:0
+#: field:base.action.rule.lead.test,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Days"
+msgstr "Jours"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Delay After Trigger Date"
+msgstr "Délai après la date de déclenchement"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_range:0
+msgid ""
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
+msgstr "Délai après la date de déclenchement. Vous pouvez mettre une valeur négative si vous avez besoin d'un délai avant la date de déclenchement, comme envoyer un rappel 15 minutes avant une réunion."
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range:0
+msgid "Delay after trigger date"
+msgstr "Délai après la date de déclenchement"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range_type:0
+msgid "Delay type"
+msgstr "Type de délai"
+
+#. module: base_action_rule
+#: help:base.action.rule,server_action_ids:0
+msgid "Examples: email reminders, call object service, etc."
+msgstr "Exemples : rappel de courriel, avis de service, etc."
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Fields to Change"
+msgstr "Champs à modifier"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_id:0
+msgid "Filter"
+msgstr "Filtre"
+
+#. module: base_action_rule
+#: help:base.action.rule,sequence:0
+msgid "Gives the sequence order when displaying a list of rules."
+msgstr "Donne l'ordre de la séquence lors de l'affichage d'une liste de règles."
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid ""
+"Go to your \"Related Document Model\" page and set the filter parameters in "
+"the \"Search\" view (Example of filter based on Leads/Opportunities: "
+"Creation Date \"is equal to\" 01/01/2012)"
+msgstr "Allez à votre page \"Modèle de document associé\" et définissez les paramètres du filtre de la vue \"Recherche\" (Exemple de filtre sur \"Affaires/Opportunités\" : Date de création \"est égale à\" 01/01/2012)"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Hours"
+msgstr "Heures"
+
+#. module: base_action_rule
+#: field:base.action.rule,id:0 field:base.action.rule.lead.test,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_id:0
+msgid ""
+"If present, this condition must be satisfied before executing the action "
+"rule."
+msgstr "Si présente, la condition doit être satisfaite avant d'exécuter la règle d'action"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_pre_id:0
+msgid ""
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Si présent, la condition doit être satisfaite avant la mise à jour de l'enregistrement."
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "In Progress"
+msgstr "En cours"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "In order to create a new filter:"
+msgstr "Pour créer un nouveau filtre :"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid ""
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"users\""
+msgstr "Dans cette même vue de \"Recherche\", sélectionner le menu \"Sauvegarder le filtre actuel\", entrer le nom (ex: Créé le 01/01/2012) et ajouter l'option \"Partager avec tous les utilisateurs\""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,date_action_last:0
+msgid "Last Action"
+msgstr "Dernière action"
+
+#. module: base_action_rule
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Dernière exécution"
+
+#. module: base_action_rule
+#: field:base.action.rule,write_uid:0
+#: field:base.action.rule.lead.test,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière modification par"
+
+#. module: base_action_rule
+#: field:base.action.rule,write_date:0
+#: field:base.action.rule.lead.test,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Minutes"
+msgstr "Minutes"
+
+#. module: base_action_rule
+#: field:base.action.rule,model:0
+msgid "Model"
+msgstr "Modèle"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Mois"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "New"
+msgstr "Nouveau"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "On Creation"
+msgstr "À la création"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "On Creation & Update"
+msgstr "À la création et en lors d'une mise à jour"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "On Update"
+msgstr "Lors d'une mise à jour"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,partner_id:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Pending"
+msgstr "En attente"
+
+#. module: base_action_rule
+#: field:base.action.rule,model_id:0
+msgid "Related Document Model"
+msgstr "Modèle de document concerné"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,user_id:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "Nom de la règle"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid ""
+"Select when the action must be run, and add filters and/or timing "
+"conditions."
+msgstr "Sélectionnez quand exécuter l'action, et ajoutez des filtres et/ou des conditions de temps."
+
+#. module: base_action_rule
+#: field:base.action.rule,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+#: field:base.action.rule,server_action_ids:0
+msgid "Server Actions"
+msgstr "Actions du serveur"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Server actions to run"
+msgstr "Actions du serveur à exécuter"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible"
+msgstr "Définir comme responsable"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,state:0
+msgid "Status"
+msgstr "Statut"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,name:0
+msgid "Subject"
+msgstr "Sujet"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "The filter must therefore be available in this page."
+msgstr "Le filtre doit par conséquent être disponible dans cette page."
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_id:0
+msgid "Trigger Date"
+msgstr "Date de déclenchement"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_calendar_id:0
+msgid "Use Calendar"
+msgstr "Utiliser le calendrier"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_calendar_id:0
+msgid ""
+"When calculating a day-based timed condition, it is possible to use a "
+"calendar to compute the date based on working days."
+msgstr "Lors du calcul d'une condition basée sur les jours, il est possible d'utiliser un calendrier pour calculer une date basée sur les jours ouvrés."
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_id:0
+msgid ""
+"When should the condition be triggered. If present, will be checked by the "
+"scheduler. If empty, will be checked at creation and update."
+msgstr "Cas où devrait être déclenché la condition. Si renseigné, la valeur sera vérifiée par le planificateur de tâches"
+
+#. module: base_action_rule
+#: field:base.action.rule,kind:0
+msgid "When to Run"
+msgstr "Quand exécuter"
+
+#. module: base_action_rule
+#: help:base.action.rule,active:0
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr "Lorsque décoché, la règle est cachée et ne sera pas exécutée."

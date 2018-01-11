@@ -1,0 +1,395 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="True">
+
+#
+# Tax Code Template Configuration
+#
+
+        <record model="account.tax.code.template" id="tax_code">
+                <field name="name">Rejestr główny</field>
+        </record>
+
+
+#   E group
+# =======================================================================================
+
+        <record model="account.tax.code.template" id="v_do_przen">
+                <field name="name">Podatek - Do przeniesienia</field>
+                <field name="code">E - 55</field>
+                <field name="info">Kwota do przeniesienia na następny okres rozliczeniowy</field>
+                <field name="parent_id" ref="tax_code"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_nadwyzka">
+                <field name="name">Podatek - Nadwyżka naliczonego nad należnym</field>
+                <field name="code">E - 50</field>
+                <field name="info">Nadwyżka podatku naliczonego nad należnym</field>
+                <field name="parent_id" ref="v_do_przen"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_wplata_do_us">
+                <field name="name">Podatek - Do wpłaty do US</field>
+                <field name="code">E - 48</field>
+                <field name="info">Kwota podatku podlegająca wpłacie do urzędu skarbowego</field>
+                <field name="parent_id" ref="v_nadwyzka"/>
+                <field name="sign" eval="-1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_zakup_kas">
+                <field name="name">Podatek - Wydatek na kasy rejestrujące</field>
+                <field name="code">E - 46</field>
+                <field name="info">Kwota wydatkowana na zakup kas rejestrujących, do odliczenia w danym okresie rozliczeniowym</field>
+                <field name="parent_id" ref="v_wplata_do_us"/>
+                <field name="sign" eval="-1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_zaniechanie">
+                <field name="name">Podatek - Objęty zaniechaniem poboru</field>
+                <field name="code">E - 47</field>
+                <field name="info">Kwota podatku objęta zaniechaniem poboru</field>
+                <field name="parent_id" ref="v_wplata_do_us"/>
+                <field name="sign" eval="-1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_zakup_kas_okres">
+                <field name="name">Podatek - Wydatek na kasy do zwrotu w tym okresie</field>
+                <field name="code">E - 49</field>
+                <field name="info">Kwota wydatkowana na zakup kas rejestrujących, przysługująca do zwrotu w danym okresie rozliczeniowym</field>
+                <field name="parent_id" ref="v_nadwyzka"/>
+        </record>
+
+
+        <record model="account.tax.code.template" id="v_do_zwrotu">
+                <field name="name">Podatek - Do zwrotu</field>
+                <field name="code">E - 51</field>
+                <field name="info">Kwota do zwrotu na rachunek wskazany przez podatnika</field>
+                <field name="parent_id" ref="v_do_przen"/>
+                <field name="sign" eval="-1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_do_zwrotu_25">
+                <field name="name">Podatek - Do zwrotu 25 dni</field>
+                <field name="code">E - 52</field>
+                <field name="info">W tym kwota do zwrotu w terminie 25 dni</field>
+                <field name="parent_id" ref="v_do_zwrotu"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_do_zwrotu_60">
+                <field name="name">Podatek - Do zwrotu 60 dni</field>
+                <field name="code">E - 53</field>
+                <field name="info">W tym kwota do zwrotu w terminie 60 dni</field>
+                <field name="parent_id" ref="v_do_zwrotu"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_do_zwrotu_180">
+                <field name="name">Podatek - Do zwrotu 180 dni</field>
+                <field name="code">E - 54</field>
+                <field name="info">W tym kwota do zwrotu w terminie 180 dni</field>
+                <field name="parent_id" ref="v_do_zwrotu"/>
+        </record>
+
+
+# C group
+#================================================================================
+
+        <record model="account.tax.code.template" id="p_razem_c">
+                <field name="name">Podstawa - Razem C</field>
+                <field name="code">C.RAZEM - 35</field>
+                <field name="info">Poz 35 = suma kwot z poz 10, 11, 13, 15, 17, 19, 21, 22, 23, 25, 27 i 31</field>
+                <field name="parent_id" ref="tax_code"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_razem_c">
+                <field name="name">Podatek - Razem C</field>
+                <field name="code">C.RAZEM - 36</field>
+                <field name="info">Poz 36 = suma kwot z poz 16, 18, 20, 24, 26, 28, 32, 33, pomniejszona o kwotę z pozycji 34</field>
+                <field name="parent_id" ref="v_wplata_do_us"/>
+                <field name="sign" eval="1" />
+        </record>
+
+
+
+        <record model="account.tax.code.template" id="p_dost_kraj_zw">
+                <field name="name">Podstawa - Dostawa towarów/usług, kraj, zwolnione</field>
+                <field name="code">C.01 - 10</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, zwolnione od podatku</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_poza_kraj">
+                <field name="name">Podstawa - Dostawa towarów/usług, poza kraj</field>
+                <field name="code">C.02 - 11</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług poza terytorium kraju</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+                <field name="notprintable" eval="1" />
+
+        </record>
+
+        <record model="account.tax.code.template" id="p_us_poza_kraj_art100">
+                <field name="name">Podstawa - W tym usługi art 100.1.4</field>
+                <field name="code">C.02a - 12</field>
+                <field name="info">W tym świadczenie usług, o których mowa w art 100 ust. 1 pkt 4 ustawy. Do Dostawa towarów oraz świadczenie usług poza terytorium kraju</field>
+                <field name="parent_id" ref="p_dost_poza_kraj"/>
+                <field name="sign" eval="1" />
+                <field name="notprintable" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_kraj_0">
+                <field name="name">Podstawa - Dostawa towarów/usług, kraj, 0%</field>
+                <field name="code">C.03 - 13</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 0%</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_kraj_0_art129">
+                <field name="name">Podstawa - W tym towary art 129</field>
+                <field name="code">C.03a - 14</field>
+                <field name="info">W tym dostawa towarów, o której mowa w art. 129 ustawy. Do Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 0%</field>
+                <field name="parent_id" ref="p_dost_kraj_0"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_kraj_3">
+                <field name="name">Podstawa - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+                <field name="code">C.04 - 15</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 3% albo 5%</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_dost_kraj_3">
+                <field name="name">Podatek - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+                <field name="code">C.04 - 16</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 3% albo 5%</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_kraj_7">
+                <field name="name">Podstawa - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+                <field name="code">C.05 - 17</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 7% albo 8%</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_dost_kraj_7">
+                <field name="name">Podatek - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+                <field name="code">C.05 - 18</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 7% albo 8%</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_kraj_22">
+                <field name="name">Podstawa - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+                <field name="code">C.06 - 19</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 22% albo 23%</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_dost_kraj_22">
+                <field name="name">Podatek - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+                <field name="code">C.06 - 20</field>
+                <field name="info">Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 22% albo 23%</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_wspol">
+                <field name="name">Podstawa - Wew-wspól dostawa towarów</field>
+                <field name="code">C.07 - 21</field>
+                <field name="info">Wewnątrzwspólnotowa dostawa towarów</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+                <field name="notprintable" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_eksport">
+                <field name="name">Podstawa - Eksport towarów</field>
+                <field name="code">C.08 - 22</field>
+                <field name="info">Eksport towarów</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+                <field name="notprintable" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_wew_wspol_nab_tow">
+                <field name="name">Podstawa - Wewn-wspól. nabycie towarów</field>
+                <field name="code">C.09 - 23</field>
+                <field name="info">Wewnątrzwspólnotowe nabycie towarów</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_wew_wspol_nab_tow">
+                <field name="name">Podatek - Wewn-wspól. nabycie towarów</field>
+                <field name="code">C.09 - 24</field>
+                <field name="info">Wewnątrzwspólnotowe nabycie towarów</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_import_tow_art33a">
+                <field name="name">Podstawa - Import towarów art. 33a</field>
+                <field name="code">C.10 - 25</field>
+                <field name="info">Import towarów, podlegający rozliczeniu zgodnie z art 33a ustawy</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_import_tow_art33a">
+                <field name="name">Podatek - Import towarów art. 33a</field>
+                <field name="code">C.10 - 26</field>
+                <field name="info">Import towarów, podlegający rozliczeniu zgodnie z art 33a ustawy</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_import_uslug">
+                <field name="name">Podstawa - Import usług</field>
+                <field name="code">C.11 - 27</field>
+                <field name="info">Import usług</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_import_uslug">
+                <field name="name">Podatek - Import usług</field>
+                <field name="code">C.11 - 28</field>
+                <field name="info">Import usług</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_import_uslug_art28b">
+                <field name="name">Podstawa - W tym nabycie wg art 28b</field>
+                <field name="code">C.11a - 29</field>
+                <field name="info">W tym nabycie od podatników podatku od wartości dodanej usług, do których stosuje się art 28b ustawy</field>
+                <field name="parent_id" ref="p_import_uslug"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_import_uslug_art28b">
+                <field name="name">Podatek - W tym nabycie wg art 28b</field>
+                <field name="code">C.11a - 30</field>
+                <field name="info">W tym nabycie od podatników podatku od wartości dodanej usług, do których stosuje się art 28b ustawy</field>
+                <field name="parent_id" ref="v_import_uslug"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="p_dost_tow_podat_nabywca">
+                <field name="name">Podstawa - Dostawa towarów, podatnik nabywca</field>
+                <field name="code">C.12 - 31</field>
+                <field name="info">Dostawa towarów, dla której podatnikiem jest nabywca</field>
+                <field name="parent_id" ref="p_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_dost_tow_podat_nabywca">
+                <field name="name">Podatek - Dostawa towarów, podatnik nabywca</field>
+                <field name="code">C.12 - 32</field>
+                <field name="info">Dostawa towarów, dla której podatnikiem jest nabywca</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_spis_z_natury">
+                <field name="name">Podatek - Ze spisu z natury art 14.5</field>
+                <field name="code">C.13 - 33</field>
+                <field name="info">Kwota podatku należnego od towarów i usług objętych spisem z natury, o którym mowa w art.14 ust.5 ustawy</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_nab_transp_termin">
+                <field name="name">Podatek - Wew.wspól. nabycie środk. transp. termin</field>
+                <field name="code">C.14 - 34</field>
+                <field name="info">Kwota podatku należnego od wewnątrzwspólnotowego nabycia środków transportu, wykazanego w poz.34, podlegająca wpłacie w terminie, o którym mowa w art.103 ust.3  w związku z ust.4 ustawy</field>
+                <field name="parent_id" ref="v_razem_c"/>
+                <field name="sign" eval="-1" />
+        </record>
+
+#   D group
+# =======================================================================================
+
+        <record model="account.tax.code.template" id="p_razem_d">
+                <field name="name">Podstawa - Razem D</field>
+                <field name="code">D.RAZEM - 00</field>
+                <field name="info">Poz nieistniejąca = suma kwot z poz 49 i 51</field>
+                <field name="parent_id" ref="tax_code"/>
+                <field name="sign" eval="1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_razem_d">
+                <field name="name">Podatek - Razem D</field>
+                <field name="code">D.03 - 45</field>
+                <field name="info">Razem kwota podatku naliczonego do odliczenia</field>
+                <field name="parent_id" ref="v_wplata_do_us"/>
+                <field name="sign" eval="-1" />
+        </record>
+
+        <record model="account.tax.code.template" id="v_nadwyzka_z_poprz">
+                <field name="name">Podatek - Nadwyżka z poprzedniej deklaracji</field>
+                <field name="code">D.01 - 37</field>
+                <field name="info">Kwota nadwyżki z poprzedniej deklaracji</field>
+                <field name="parent_id" ref="v_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_nal_spis">
+                <field name="name">Podatek - Naliczony ze spisu z natury, art.113</field>
+                <field name="code">D.01 - 38</field>
+                <field name="info">Kwota podatku naliczonego wynikającego ze spisu z natury, o którym mowa w art.113 ust.5 ustawy</field>
+                <field name="parent_id" ref="v_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="p_nab_tow_usluga_st">
+                <field name="name">Podstawa - Nabycie towarów i usług ś.trwałe</field>
+                <field name="code">D.02 - 39</field>
+                <field name="info">Nabycie towarów i usług zaliczanych u podatnika do środków trwałych</field>
+                <field name="parent_id" ref="p_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_nab_tow_usluga_st">
+                <field name="name">Podatek - Nabycie towarów i usług ś.trwałe</field>
+                <field name="code">D.02 - 40</field>
+                <field name="info">Nabycie towarów i usług zaliczanych u podatnika do środków trwałych</field>
+                <field name="parent_id" ref="v_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="p_nab_tow_usluga">
+                <field name="name">Podstawa - Nabycie towarów i usług pozostałych</field>
+                <field name="code">D.02 - 41</field>
+                <field name="info">Nabycie towarów i usług pozostałych</field>
+                <field name="parent_id" ref="p_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_nab_tow_usluga">
+                <field name="name">Podatek - Nabycie towarów i usług pozostałych</field>
+                <field name="code">D.02 - 42</field>
+                <field name="info">Nabycie towarów i usług pozostałych</field>
+                <field name="parent_id" ref="v_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_korekta_st">
+                <field name="name">Podatek - Korekta naliczonego od nabycia ś.trwałych</field>
+                <field name="code">D.03 - 43</field>
+                <field name="info">Korekta podatku naliczonego od nabycia środków trwałych</field>
+                <field name="parent_id" ref="v_razem_d"/>
+        </record>
+
+        <record model="account.tax.code.template" id="v_korekta_poz">
+                <field name="name">Podatek - Korekta naliczonego od pozostałych nabyć</field>
+                <field name="code">D.03 - 44</field>
+                <field name="info">Korekta podatku naliczonego od pozostałych nabyć</field>
+                <field name="parent_id" ref="v_razem_d"/>
+        </record>
+
+</data>
+</openerp>

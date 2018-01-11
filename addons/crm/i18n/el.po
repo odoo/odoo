@@ -1,0 +1,3145 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Giorgos Diamantis <diamantis.g1@gmail.com>, 2015
+# Kostas Goutoudis <goutoudis@gmail.com>, 2015-2016
+# Slither Neigh <slitherneigh@yandex.com>, 2015
+# Γιώργος Μηντζιλώνης, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2017-02-02 11:52+0000\n"
+"Last-Translator: Γιώργος Μηντζιλώνης\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: crm
+#: field:crm.lead,meeting_count:0 field:res.partner,meeting_count:0
+msgid "# Meetings"
+msgstr "# Συναντήσεις"
+
+#. module: crm
+#: field:crm.lead.report,nbr_cases:0 field:crm.opportunity.report,nbr_cases:0
+#: field:crm.phonecall.report,nbr:0
+msgid "# of Cases"
+msgstr "# από Υποθέσεις"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.relate_partner_opportunities
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create an opportunity related to this customer.\n"
+"              </p><p>\n"
+"                Use opportunities to keep track of your sales pipeline, follow\n"
+"                up potential sales and better forecast your future revenues.\n"
+"              </p><p>\n"
+"                You will be able to plan meetings and phone calls from\n"
+"                opportunities, convert them into quotations, attach related\n"
+"                documents, track all discussions, and much more.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να δημιουργήσετε μια ευκαιρία σχετιζόμενη με αυτόν το πελάτη.\n</p><p>\nΧρησιμοποιείστε τις ευκαιρίες για να παρακολουθήσετε τον αγωγό πωλήσεων σας, ακολουθήσετε\nδυνητικές πωλήσεις και κάνετε καλύτερη πρόβλεψη των μελλοντικών σας εσόδων.\n</p><p>\nΘα μπορείτε να προγραμματίσετε συναντήσεις και τηλεφωνήματα από\nευκαιρίες, να τις μετατρέψετε σε προσφορές, να επισυνάψετε σχετικά\nέγγραφα, παρακολουθήσετε όλες τις συζητήσεις και πολλά περισσότερα.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_tracking_medium_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new channel.\n"
+"              </p><p>\n"
+"                Use channels to track the type of source of your leads and opportunities. Channels\n"
+"                are mostly used in reporting to analyse sales performance\n"
+"                related to marketing efforts.\n"
+"              </p><p>\n"
+"                Some examples of channels: company website, phone call\n"
+"                campaign, reseller, banner, etc.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να καθορίσετε ένα νέο κανάλι.\n</p><p>\nΧρησιμοποιήστε κανάλια για να παρακολουθήσετε τον τύπο των πηγών σας που μπορούν να οδηγήσουν σε πωλήσεις και ευκαιρίες. Τα κανάλια χρησιμοποιούνται κυρίως σε αναφορές για να αναλυθεί η επίδοση των πωλήσεων σε σχέση με το διενεργούμενο Marketing.\n</p><p>\nΜερικά παραδείγματα καναλιών: ο ιστότοπος της εταιρείας, τηλεφωνικές καμπάνιες, μεταπωλητές, διαφημιστικά πλαίσια, κτλ.\n</p>"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_segmentation_tree-act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new customer segmentation.\n"
+"              </p><p>\n"
+"                Create specific categories which you can assign to your\n"
+"                contacts to better manage your interactions with them. The\n"
+"                segmentation tool is able to assign categories to contacts\n"
+"                according to criteria you set.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να ορίσετε μια νέα κατάτμηση πελατών.\n</p><p>\nΔημιουργήστε καθορισμένες κατηγορίες τις οποίες μπορείτε να αναθέσετε στις\nεπαφές για να διαχειριστείτε καλύτερα την επικοινωνία μαζί τους. Το\nεργαλείο κατάτμησης είναι ικανό να αναθέσει κατηγορίες στις επαφές\nσύμφωνα με τα κριτήρα που εσείς ορίζετε.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_lead_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new sales tag.\n"
+"              </p><p>\n"
+"                Create specific tags that fit your company's activities\n"
+"                to better classify and analyse your leads and opportunities.\n"
+"                Such categories could for instance reflect your product\n"
+"                structure or the different types of sales you do.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΕπίλεξτε για να καθορίσετε μια νέα ετικέτα πωλήσεων.\n</p><p>\nΔημιουργήστε συγκεκριμένες ετικέτες που ταιριάζουν στις δραστηριότητες της εταιρίας σας \nγια να κατηγοροποιήσετε και αναλύσετε καλύτερα τις συστάσεις και ευκαιρίες.\nΑυτές οι κατηγορίες μπορούν πχ. να αντανακλούν την προϊοντική σας\nδομή ή τους διαφορετικούς τύπους των πωλήσεων που κάνετε.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_tracking_source_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new source.\n"
+"              </p><p>\n"
+"                Use channels to track the source of your leads and opportunities. Channels\n"
+"                are mostly used in reporting to analyse sales performance\n"
+"                related to marketing efforts.\n"
+"              </p><p>\n"
+"                Some examples of channels: partner's website, google.com, \n"
+"                email list name, etc.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Κάντε κλικ για να καθορίσετε μία νέα προέλευση.\n              </p><p>\n                Χρησιμοποιήστε κανάλια για να εντοπίσετε την πηγή των συστάσεων και των ευκαιριών σας. Τα κανάλια\n                χρησιμοποιούνται κυρίως στις αναφορές για την ανάλυση της απόδοσης των πωλήσεων\n                σε σχέση με τις προσπάθειες marketing.\n              </p><p>\n                Μερικά παραδείγματα καναλιών: website συνεργατών, google.com, \n                email list name, etc.\n              </p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_lead_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to set a new stage in your lead/opportunity pipeline.\n"
+"              </p><p>\n"
+"                Stages will allow salespersons to easily track how a specific\n"
+"                lead or opportunity is positioned in the sales cycle.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΕπιλέξτε να ρυθμίσετε ένα νέο στάδιο στον αγωγό των συστάσεων/ευκαιρίων.\n</p><p>\nΤα Στάδια θα επιτρέψουν στους πωλητές τα παρακολουθήσουν εύκολα πως μια συγκεκριμένη\nσύσταση ή ευκαιρία είναι τοποθετημένη στο κύκλο των πωλήσεων.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new category.\n"
+"          </p><p>\n"
+"            Create specific phone call categories to better define the type of\n"
+"            calls tracked in the system.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nΚάντε κλικ για να προσθέσετε μια νέα κατηγορία.\n</p><p>\nΔημιουργήστε συγκεκριμένες κατηγορίες τηλεφωνημάτων για καλύτερο καθορισμό του τύπου των\nτηλεφωνημάτων που παρακολουθούνται στο σύστημα α.\n</p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to log the summary of a phone call. \n"
+"          </p><p>\n"
+"            Odoo allows you to log inbound calls on the fly to track the\n"
+"            history of the communication with a customer or to inform another\n"
+"            team member.\n"
+"          </p><p>\n"
+"            In order to follow up on the call, you can trigger a request for\n"
+"            another call, a meeting or an opportunity.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Κάντε κλικ για να καταγράψετε την περίληψη μιας συνδιάλεξης. \n          </p><p>\n            Το Odoo σας επιτρέπει να καταγράψετε τις εισερχόμενες κλήσεις σας ώστε να μπορείτε να εντοπίσετε\n            το ιστορικό της επικοινωνίας με έναν πελάτη ή να ενημερώσετε ένα άλλο μέλος\n            της ομάδας.\n          </p><p>\n            Για να παρακολουθείτε την συνδιάσκεψη, μπορείτε να ενεργοποιήσετε μία αίτηση για\n            μία άλλη συνδιάσκεψη, μία συνάντηση ή μία ευκαιρία.\n          </p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to schedule a call \n"
+"          </p><p>\n"
+"            Odoo allows you to easily define all the calls to be done\n"
+"            by your sales team and follow up based on their summary.\n"
+"          </p><p>  \n"
+"            You can use the import feature to massively import a new list of\n"
+"            prospects to qualify.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Κάντε κλικ για να προγραμματίσετε μία συνδιάλεξη \n          </p><p>\n            Το Odoo σας επιτρέπει να καθορίσετε με ευκολία όλες τις κλήσεις που θα πρέπει να πραγματοποιηθούν\n            από την ομάδα πωλήσεών σας και την παρακολούθηση με βάση την σύνοψή τους.\n          </p><p>  \n            Μπορείτε να χρησιμοποιήσετε το εργαλείο εισαγωγής για να εισάγετε μαζικά μία νέα λίστα\n            πιθανών ευκαιριών.\n          </p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
+msgid ""
+"<p>\n"
+"                    Odoo helps you keep track of your sales pipeline to follow\n"
+"                    up potential sales and better forecast your future revenues.\n"
+"                </p><p>\n"
+"                    You will be able to plan meetings and phone calls from\n"
+"                    opportunities, convert them into quotations, attach related\n"
+"                    documents, track all discussions, and much more.\n"
+"                </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Επιλέξτε για να προγραμματίσετε μία συνδιάλεξη \n          </p><p>\n            Το Odoo σας επιτρέπει να καθορίζετε εύκολα όλες τις κλήσεις που πρέπει να πραγματοποιηθούν\n            από την ομάδα πωλήσεών σας και την παρακολούθηση με βάση την σύνοψή τους.\n          </p><p>  \n            Μπορείτε να χρησιμοποιήσετε το εργαλείο εισαγωγής για να εισάγετε μαζικά μία νέα λίστα\n            πιθανών ευκαιριών.\n          </p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
+msgid ""
+"<p>\n"
+"                    Use leads if you need a qualification step before creating an\n"
+"                    opportunity or a customer. It can be a business card you received,\n"
+"                    a contact form filled in your website, or a file of unqualified\n"
+"                    prospects you import, etc.\n"
+"                </p><p>\n"
+"                    Once qualified, the lead can be converted into a business\n"
+"                    opportunity and/or a new customer in your address book.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\n                    Χρησιμοποιήστε τις συστάσεις εάν χρειάζεστε ένα προπαρασκευαστικό βήμα πριν τη δημιουργία μιας\n                    ευκαιρίας ή ενός πελάτη. Μπορεί να είναι μια επαγγελματική κάρτα την οποία λάβατε,\n                    μία φόρμα επαφής που συμπληρώθηκε στον ιστότοπό σας, ή ένα εισαγόμενο αρχείο\n                    ανεπιφύλακτων προοπτικών, κ.λπ.\n                </p><p>\n                    Μόλις η σύσταση επιβεβαιωθεί, μπορεί να μετατραπεί σε επιχειρηματική\n                    ευκαιρία και/ή σε ένα νέο πελάτη στο βιβλίο διευθύνσεών σας.\n                </p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
+msgid ""
+"<p>\n"
+"                Odoo helps you keep track of your sales pipeline to follow\n"
+"                up potential sales and better forecast your future revenues.\n"
+"            </p><p>\n"
+"                You will be able to plan meetings and phone calls from\n"
+"                opportunities, convert them into quotations, attach related\n"
+"                documents, track all discussions, and much more.\n"
+"            </p>\n"
+"        "
+msgstr "<p>\n                Το Odoo σας βοηθά να παρακολουθείτε τον αγωγό πωλήσεών σας ώστε να ακολουθείτε\n                πιθανές πωλήσεις και να προβλέπετε καλύτερα τα μελλοντικά σας έσοδα.\n            </p><p>\n                Θα μπορείτε να προγραμματίζετε συναντήσεις και συνδιαλέξεις από\n                ευκαιρίες, να τις μετατρέπετε σε προσφορές, να επισυνάπτετε σχετικά\n                έγγραφα, να εντοπίζετε όλες τις συζητήσεις και πολλά περισσότερα.\n            </p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
+msgid ""
+"<p>\n"
+"                Use leads if you need a qualification step before creating an\n"
+"                opportunity or a customer. It can be a business card you received,\n"
+"                a contact form filled in your website, or a file of unqualified\n"
+"                prospects you import, etc.\n"
+"            </p><p>\n"
+"                Once qualified, the lead can be converted into a business\n"
+"                opportunity and/or a new customer in your address book.\n"
+"            </p>\n"
+"        "
+msgstr "<p>\n                Χρησιμοποιήστε τις συστάσεις αν χρειάζεστε ένα προπαρασκευαστικό βήμα πριν την δημιουργία\n                μιας ευκαιρίας ή ενός πελάτη. Μπορεί να είναι μια επαγγελματική κάρτα την οποία λάβατε,\n                μία φόρμα επαφής που συμπληρώθηκε στον ιστότοπό σας ή ένα εισαγόμενο αρχείο\n                ανεπιφύλακτων προοπτικών, κ.λπ.\n            </p><p>\n                Μόλις η σύσταση επιβεβαιωθεί, μπορεί να μετατραπεί σε επιχειρηματική\n                ευκαιρία και/ή σε ένα νέο πελάτη στο βιβλίο διευθύνσεών σας.\n            </p>\n        "
+
+#. module: crm
+#: model:email.template,body_html:crm.email_template_opportunity_reminder_mail
+msgid ""
+"<p>This opportunity did not have any activity since at least 5 days. Here are some details:</p>\n"
+"<ul>\n"
+"<li>Name: ${object.name}</li>\n"
+"<li>ID: ${object.id}</li>\n"
+"<li>Description: ${object.description}</field></li>\n"
+"</ul>"
+msgstr "<p>Αυτή η ευκαιρία δεν είχε καμία δραστηριότητα τις τελευταίες 5 μέρες. Μερικές λεπτομέρειες:</p>\n<ul>\n<li>Name: ${object.name}</li>\n<li>ID: ${object.id}</li>\n<li>Description: ${object.description}</field></li>\n</ul>"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "A Meeting"
+msgstr "Συνάντηση"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,exclude_contact:0
+msgid "A user associated to the contact"
+msgstr "Ένας χρήστης που σχετίζεται με την επαφή"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Accept Emails From"
+msgstr "Αποδοχή emails από"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,action:0
+msgid "Action"
+msgstr "Ενέργεια"
+
+#. module: crm
+#: field:crm.lead,active:0 field:crm.phonecall,active:0
+#: field:crm.tracking.medium,active:0
+msgid "Active"
+msgstr "Ενεργό"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Address"
+msgstr "Διεύθυνση"
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "After-Sale Services"
+msgstr "Υποστήριξη Μετά την Πώληση"
+
+#. module: crm
+#: field:crm.case.section,alias_id:0
+msgid "Alias"
+msgstr "Ψευδώνυμο"
+
+#. module: crm
+#: field:sale.config.settings,alias_domain:0
+msgid "Alias Domain"
+msgstr "Ψευδώνυμο Τομέα"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:304
+#, python-format
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr "Όλες οι επαφές πρέπει να έχουν το ίδιο email. Μόνο ο διαχειριστής μπορεί να συγχωνεύσει τις επαφές με διαφορετικά email."
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid ""
+"All emails sent to this address and processed by the mailgateway\n"
+"                                will create a new lead."
+msgstr "Όλα τα e-mails που έχουν σταλεί σε αυτή την διεύθυνση και έχουν επεξεργαστεί από τον διακομιστή αλληλογραφίας\n                                θα δημιουργήσουν μία νέα σύσταση."
+
+#. module: crm
+#: help:sale.config.settings,module_crm_helpdesk:0
+msgid ""
+"Allows you to communicate with Customer, process Customer query, and provide better help and support.\n"
+"-This installs the module crm_helpdesk."
+msgstr "Σας επιτρέπει να επικοινωνείτε με Πελάτες, να επεξεργάζεστε αιτήματα Πελατών και να παρέχετε καλύτερη εξυπηρέτηση και υποστήριξη.\n-Εγκαθιστά την εφαρμογή crm_helpdesk."
+
+#. module: crm
+#: help:sale.config.settings,group_fund_raising:0
+msgid "Allows you to trace and manage your activities for fund raising."
+msgstr "Επιτρέπει σε εσάς να παρακολουθήσετε και διαχειριστείτε τις δραστηριότητες σας για συλλογή χρημάτων"
+
+#. module: crm
+#: help:sale.config.settings,module_crm_claim:0
+msgid ""
+"Allows you to track your customers/suppliers claims and grievances.\n"
+"-This installs the module crm_claim."
+msgstr "Σας επιτρέπει να εντοπίσετε τα παράπονα και τις απαιτήσεις των πελατών/προμηθευτών σας.\n-Εγκαθιστά την εφαρμογή crm_claim."
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,deduplicate:0
+msgid "Apply deduplication"
+msgstr "Εφαρμογή της κατάργησης διπλότυπων"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Are you sure to execute the automatic merge of your contacts ?"
+msgstr "Είστε σίγουροι ότι θέλετε να εκτελέσετε την αυτόματη συγχώνευση των επαφών σας;"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"Are you sure to execute the list of automatic merges of your contacts ?"
+msgstr "Είστε σίγουροι ότι θέλετε να εκτελέσετε την λίστα των αυτόματων συγχωνεύσεων των επαφών σας;"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,user_id:0
+msgid "Assign To"
+msgstr "Ανάθεση σε"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Assign opportunities to"
+msgstr "Ανάθεση ευκαιριών σε"
+
+#. module: crm
+#: field:crm.lead.report,opening_date:0
+#: field:crm.opportunity.report,opening_date:0
+msgid "Assignation Date"
+msgstr "Ημερομηνία Ανάθεσης"
+
+#. module: crm
+#: field:crm.lead,date_open:0
+msgid "Assigned"
+msgstr "Ανατεθειμένη"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_partner_merge
+msgid "Automatic Merge"
+msgstr "Αυτόματη Συγχώνευση"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Automatic Merge Wizard"
+msgstr "Οδηγός Αυτόματης συγχώνευσης"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Available for mass mailing"
+msgstr "Διαθέσιμο για μαζική αποστολή mail"
+
+#. module: crm
+#: selection:crm.case.stage,type:0
+msgid "Both"
+msgstr "Και τα δύο"
+
+#. module: crm
+#: field:crm.lead,message_bounce:0
+msgid "Bounce"
+msgstr "Αναπήδηση"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_country
+#: model:ir.filters,name:crm.filter_opportunity_country
+msgid "By Country"
+msgstr "Κατά Χώρα"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_sales_team
+msgid "By Sales Team"
+msgstr "Κατά Ομάδα Πωλήσεων"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_salesperson
+#: model:ir.filters,name:crm.filter_opportunity_salesperson
+msgid "By Salespersons"
+msgstr "Με πωλητές "
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead_report
+msgid "CRM Lead Analysis"
+msgstr "Ανάλυση Συστάσεων CRM"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_opportunity_report
+msgid "CRM Opportunity Analysis"
+msgstr "Ανάλυση Ευκαιριών CRM"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_payment_mode
+msgid "CRM Payment Mode"
+msgstr "Τρόπος Πληρωμής CRM"
+
+#. module: crm
+#: field:crm.phonecall,name:0
+msgid "Call Summary"
+msgstr "Σύνοψη Κλήσης"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,name:0
+msgid "Call summary"
+msgstr "Σύνοψη Τηλεφωνημάτων"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+#: view:res.partner:crm.view_partners_form_crm1
+msgid "Calls"
+msgstr "Τηλεφωνήματα"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Calls Date by Month"
+msgstr "Ημερομηνία κλήσης ανά μήνα"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,campaign_id:0 field:crm.lead.report,campaign_id:0
+#: field:crm.opportunity.report,campaign_id:0
+#: view:crm.tracking.campaign:crm.crm_tracking_campaign_form
+#: view:crm.tracking.campaign:crm.crm_tracking_campaign_tree
+#: field:crm.tracking.mixin,campaign_id:0
+#: model:ir.model,name:crm.model_crm_tracking_campaign
+msgid "Campaign"
+msgstr "Εκστρατεία"
+
+#. module: crm
+#: field:crm.tracking.campaign,name:0
+msgid "Campaign Name"
+msgstr "Όνομα Εκστρατείας"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_tracking_campaign_act
+#: model:ir.ui.menu,name:crm.menu_crm_tracking_campaign_act
+msgid "Campaigns"
+msgstr "Εκστρατείες"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#. module: crm
+#: selection:crm.phonecall,state:0 selection:crm.phonecall.report,state:0
+msgid "Cancelled"
+msgstr "Ακυρωμένες"
+
+#. module: crm
+#: view:crm.case.categ:crm.crm_case_categ-view
+#: view:crm.case.categ:crm.crm_case_categ_tree-view
+msgid "Case Category"
+msgstr "Κατηγορία Θέματος"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
+msgid "Cases by Sales Team"
+msgstr "Υποθέσεις ανά Ομάδα Πώλησης"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_case_phonecall-act
+msgid "Categories"
+msgstr "Κατηγορίες"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Categorization"
+msgstr "Κατηγοριοποίηση"
+
+#. module: crm
+#: field:crm.phonecall,categ_id:0 field:crm.phonecall.report,categ_id:0
+#: field:crm.phonecall2phonecall,categ_id:0
+msgid "Category"
+msgstr "Κατηγορία"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_categ
+msgid "Category of Case"
+msgstr "Κατηγορία της Υπόθεσης"
+
+#. module: crm
+#: field:crm.case.stage,on_change:0
+msgid "Change Probability Automatically"
+msgstr "Άλλαξε την Πιθανότητα Αυτόματα"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,medium_id:0 field:crm.lead.report,medium_id:0
+#: field:crm.opportunity.report,medium_id:0
+#: view:crm.tracking.medium:crm.crm_tracking_medium_view_form
+#: field:crm.tracking.mixin,medium_id:0
+#: view:crm.tracking.source:crm.crm_tracking_source_view_form
+msgid "Channel"
+msgstr "Κανάλι"
+
+#. module: crm
+#: field:crm.tracking.medium,name:0
+msgid "Channel Name"
+msgstr "Όνομα Καναλιού"
+
+#. module: crm
+#: view:crm.tracking.medium:crm.crm_tracking_medium_view_tree
+#: view:crm.tracking.source:crm.crm_tracking_source_view_tree
+#: model:ir.actions.act_window,name:crm.crm_tracking_medium_action
+#: model:ir.model,name:crm.model_crm_tracking_medium
+msgid "Channels"
+msgstr "Κανάλια"
+
+#. module: crm
+#: help:crm.segmentation,exclusif:0
+msgid ""
+"Check if the category is limited to partners that match the segmentation criterions.                        \n"
+"If checked, remove the category from partners that doesn't match segmentation criterions"
+msgstr "Ελέγξτε αν η κατηγορία περιορίζεται σε συνεργάτες που ταιριάζουν με τα κριτήρια τμηματοποίησης.                        \nΕάν επιλεγεί, αφαιρέστε την κατηγορία από τους συνεργάτες που δεν ταιριάζουν με τα κριτήρια τμηματοποίησης"
+
+#. module: crm
+#: help:crm.segmentation,sales_purchase_active:0
+msgid ""
+"Check if you want to use this tab as part of the segmentation rule. If not "
+"checked, the criteria beneath will be ignored"
+msgstr "Επιλέξτε το αν επιθυμείτε να χρησιμοποιήσετε αυτή την ετικέτα σαν κομμάτι του κανόνα κατάτμησης. Αν δεν επιλεγεί, τα παρακάτω κριτήρια θα αγνοηθούν"
+
+#. module: crm
+#: help:crm.case.section,use_opportunities:0
+msgid "Check this box to manage opportunities in this sales team."
+msgstr "Επιλέξτε αυτό το πλαίσιο για τη διαχείριση των ευκαιριών σε αυτή την ομάδα πωλήσεων."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,city:0
+msgid "City"
+msgstr "Πόλη"
+
+#. module: crm
+#: help:crm.lead,categ_ids:0
+msgid ""
+"Classify and analyze your lead/opportunity categories like: Training, "
+"Service"
+msgstr "Ταξινομήστε και αναλύστε τις κατηγορίες Συστάσεων/Ευκαιριών ως: Κατάρτιση, Εξυπηρέτηση"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of leads."
+msgstr "Κάντε κλικ για να δείτε μία λεπτομερή ανάλυση των συστάσεων."
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of opportunities."
+msgstr "Κάντε κλικ για να δείτε μια λεπτομερή ανάλυση των ευκαιριών."
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.opportunity.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "Ημερομηνία Κλεισίματος"
+
+#. module: crm
+#: field:crm.lead,date_closed:0 field:crm.phonecall,date_closed:0
+msgid "Closed"
+msgstr "Κλειστές"
+
+#. module: crm
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
+#, python-format
+msgid "Closed/Dead leads cannot be converted into opportunities."
+msgstr "Κλειστές/Νεκρές Συστάσεις που δεν μπορούν να μετατραπούν σε ευκαιρίες"
+
+#. module: crm
+#: field:crm.lead,color:0
+msgid "Color Index"
+msgstr "Χρωμάτισε Ευρετήριο"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,company_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,company_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,company_id:0 field:crm.phonecall,company_id:0
+#: field:crm.phonecall.report,company_id:0
+msgid "Company"
+msgstr "Εταιρία"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Company Name"
+msgstr "Επωνυμία Εταιρίας"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Compute Segmentation"
+msgstr "Υπολογισμός Κατάτμησης"
+
+#. module: crm
+#: selection:crm.phonecall,state:0
+msgid "Confirmed"
+msgstr "Επιβεβαιωμένο"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Συμβουλευτική"
+
+#. module: crm
+#: field:crm.phonecall,partner_id:0
+#: field:crm.phonecall2phonecall,contact_name:0
+msgid "Contact"
+msgstr "Επαφή"
+
+#. module: crm
+#: field:crm.lead,contact_name:0
+msgid "Contact Name"
+msgstr "Όνομα Επαφής"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,partner_ids:0
+msgid "Contacts"
+msgstr "Επαφές"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
+#: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
+msgid "Contacts Segmentation"
+msgstr "Κατάτμηση των Επαφών"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Continue Process"
+msgstr "Συνέχιση Διαδικασίας"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_name:0
+msgid "Control Variable"
+msgstr "Έλεγχος Μεταβλητών"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
+msgid "Conversion Action"
+msgstr "Ενέργεια Συζήτησης"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Conversion Options"
+msgstr "Εναλλακτικές Συζήτησης"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Convert To"
+msgstr "Μετατροπή Σε"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Convert To Opportunity"
+msgstr "Μετατροπή σε Ευκαιρία"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Convert to Opportunities"
+msgstr "Μετατροπή σε Ευκαιρίες"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+msgid "Convert to Opportunity"
+msgstr "Μετατροπή σε Ευκαιρία"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
+msgid "Convert to opportunities"
+msgstr "Μετατροπή σε Ευκαιρίες"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
+#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
+msgid "Convert to opportunity"
+msgstr "Μετατροπή σε ευκαιρία"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,country_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,country_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,country_id:0
+msgid "Country"
+msgstr "Χώρα"
+
+#. module: crm
+#: field:crm.phonecall.report,create_date:0
+msgid "Create Date"
+msgstr "Ημερομηνία Δημιουργίας"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+msgid "Create Opportunity"
+msgstr "Δημιουργία Ευκαιρίας"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Create a new customer"
+msgstr "Δημιουργήστε ένα νέο πελάτη"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,create_uid:0
+#: field:base.partner.merge.line,create_uid:0
+#: field:crm.case.categ,create_uid:0 field:crm.case.stage,create_uid:0
+#: field:crm.lead,create_uid:0 field:crm.lead2opportunity.partner,create_uid:0
+#: field:crm.lead2opportunity.partner.mass,create_uid:0
+#: field:crm.merge.opportunity,create_uid:0
+#: field:crm.partner.binding,create_uid:0 field:crm.payment.mode,create_uid:0
+#: field:crm.phonecall,create_uid:0 field:crm.phonecall2phonecall,create_uid:0
+#: field:crm.segmentation,create_uid:0
+#: field:crm.segmentation.line,create_uid:0
+#: field:crm.tracking.campaign,create_uid:0
+#: field:crm.tracking.medium,create_uid:0
+#: field:crm.tracking.source,create_uid:0
+msgid "Created by"
+msgstr "Δημιουργήθηκε από"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,create_date:0
+#: field:base.partner.merge.line,create_date:0
+#: field:crm.case.categ,create_date:0 field:crm.case.stage,create_date:0
+#: field:crm.lead2opportunity.partner,create_date:0
+#: field:crm.lead2opportunity.partner.mass,create_date:0
+#: field:crm.merge.opportunity,create_date:0
+#: field:crm.partner.binding,create_date:0
+#: field:crm.payment.mode,create_date:0
+#: field:crm.phonecall2phonecall,create_date:0
+#: field:crm.segmentation,create_date:0
+#: field:crm.segmentation.line,create_date:0
+#: field:crm.tracking.campaign,create_date:0
+#: field:crm.tracking.medium,create_date:0
+#: field:crm.tracking.source,create_date:0
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Creation"
+msgstr "Δημιουργία"
+
+#. module: crm
+#: field:crm.lead,create_date:0 field:crm.lead.report,create_date:0
+#: field:crm.opportunity.report,create_date:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,create_date:0
+msgid "Creation Date"
+msgstr "Ημερομηνία Δημιουργίας"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Creation Month"
+msgstr "Μήνας Δημιουργίας"
+
+#. module: crm
+#: field:crm.segmentation,segmentation_line:0
+msgid "Criteria"
+msgstr "Κριτήρια"
+
+#. module: crm
+#: field:crm.lead,company_currency:0
+msgid "Currency"
+msgstr "Νόμισμα"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,current_line_id:0
+msgid "Current Line"
+msgstr "Τρέχουσα γραμμή"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:998 view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
+#: field:crm.partner.binding,partner_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#, python-format
+msgid "Customer"
+msgstr "Πελάτης"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1000
+#, python-format
+msgid "Customer Email"
+msgstr "Email Πελάτη"
+
+#. module: crm
+#: field:crm.lead,partner_name:0
+msgid "Customer Name"
+msgstr "Όνομα Πελάτη"
+
+#. module: crm
+#: field:crm.phonecall,date:0 field:crm.phonecall2phonecall,date:0
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#. module: crm
+#: help:crm.lead,message_last_post:0 help:crm.phonecall,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#. module: crm
+#: field:crm.lead,day_open:0
+msgid "Days to Assign"
+msgstr "Ημέρες εκχώρησης"
+
+#. module: crm
+#: field:crm.lead,day_close:0
+msgid "Days to Close"
+msgstr "Μέρες για να Κλείσει"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead2
+msgid "Dead"
+msgstr "Νεκρή"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.base_partner_merge_automatic_act
+#: model:ir.ui.menu,name:crm.partner_merge_automatic_menu
+msgid "Deduplicate Contacts"
+msgstr "Διαγραφή Διπλών Επαφών"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Deduplicate the other Contacts"
+msgstr "Ένα αντίγραφο άλλης επαφής"
+
+#. module: crm
+#: field:sale.config.settings,alias_prefix:0
+msgid "Default Alias Name for Leads"
+msgstr "Προεπιλεγμένο Ψευδώνυμο για τις Συστάσεις"
+
+#. module: crm
+#: field:crm.case.stage,case_default:0
+msgid "Default to New Sales Team"
+msgstr "Προεπιλεγμένο στις Νέες Ομάδες Πωλήσεων"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_delay_to_close
+msgid "Delay To Close"
+msgstr "Καθυστέρηση για Κλείσιμο"
+
+#. module: crm
+#: field:crm.lead.report,delay_open:0
+#: field:crm.opportunity.report,delay_open:0
+msgid "Delay to Assign"
+msgstr "Καθυστέρηση εκχώρησης"
+
+#. module: crm
+#: field:crm.lead.report,delay_close:0
+#: field:crm.opportunity.report,delay_close:0
+msgid "Delay to Close"
+msgstr "Καθυστέρηση για Κλείσιμο"
+
+#. module: crm
+#: field:crm.phonecall.report,delay_close:0
+msgid "Delay to close"
+msgstr "Καθυστέρηση για κλείσιμο"
+
+#. module: crm
+#: field:crm.phonecall.report,delay_open:0
+msgid "Delay to open"
+msgstr "Καθυστέρηση να ανοίξει"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Describe the lead..."
+msgstr "Περιγραφή της σύστασης..."
+
+#. module: crm
+#: field:crm.phonecall,description:0 field:crm.segmentation,description:0
+msgid "Description"
+msgstr "Περιγραφή"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Description..."
+msgstr "Περιγραφή..."
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Σχεδίαση"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,dst_partner_id:0
+msgid "Destination Contact"
+msgstr "Επαφή Προορισμού"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Do not link to a customer"
+msgstr "Μην συνδέσεις με ένα πελάτη"
+
+#. module: crm
+#: selection:crm.phonecall.report,state:0
+msgid "Draft"
+msgstr "Πρόχειρο"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Πρόχειρες Συστάσεις"
+
+#. module: crm
+#: field:crm.phonecall,duration:0 field:crm.phonecall.report,duration:0
+msgid "Duration"
+msgstr "Διάρκεια"
+
+#. module: crm
+#: help:crm.phonecall,duration:0
+msgid "Duration in minutes and seconds."
+msgstr "Διάρκεια σε λεπτά και δευτερόλεπτα."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Edit..."
+msgstr "Επεξεργασία"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_email:0
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,email_from:0
+#: field:crm.phonecall,email_from:0
+msgid "Email"
+msgstr "Email"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Email Alias"
+msgstr "Ψευδώνυμο μηνυμάτων"
+
+#. module: crm
+#: help:crm.lead,email_from:0
+msgid "Email address of the contact"
+msgstr "Email διεύθυνση της επαφής"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:301
+#: code:addons/crm/base_partner_merge.py:304
+#: code:addons/crm/base_partner_merge.py:316
+#: code:addons/crm/base_partner_merge.py:445
+#, python-format
+msgid "Error"
+msgstr "Σφάλμα"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:434
+#, python-format
+msgid "Error!"
+msgstr "Σφάλμα!"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Escalate"
+msgstr "Κλιμάκωση Θέματος"
+
+#. module: crm
+#: help:crm.lead,date_deadline:0
+msgid "Estimate of the date on which the opportunity will be won."
+msgstr "Προβλεπόμενη ημερομηνία στην οποία η ευκαιρία θα κερδηθεί"
+
+#. module: crm
+#: model:ir.model,name:crm.model_calendar_event
+msgid "Event"
+msgstr "Εκδήλωση"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Exclude contacts having"
+msgstr "Εξαίρεση επαφών που έχουν"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Excluded Answers :"
+msgstr "Εξαιρούμενες Απαντήσεις:"
+
+#. module: crm
+#: field:crm.segmentation,exclusif:0
+msgid "Exclusive"
+msgstr "Αποκλειστικά"
+
+#. module: crm
+#: field:crm.segmentation,state:0
+msgid "Execution Status"
+msgstr "Στάδιο Εκτέλεσης"
+
+#. module: crm
+#: field:crm.lead.report,date_deadline:0
+#: field:crm.opportunity.report,date_deadline:0
+msgid "Exp. Closing"
+msgstr "Αναμ. Κλεισίματα"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,date_deadline:0 help:crm.lead.report,date_deadline:0
+#: help:crm.opportunity.report,date_deadline:0
+msgid "Expected Closing"
+msgstr "Προβλεπόμενο Κλείσιμο"
+
+#. module: crm
+#: field:crm.lead,planned_revenue:0 field:crm.lead.report,probable_revenue:0
+#: field:crm.opportunity.report,expected_revenue:0
+msgid "Expected Revenue"
+msgstr "Προσδοκόμενα Έσοδα"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+msgid "Expected Revenues"
+msgstr "Προσδοκόμενα Έσοδα"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing"
+msgstr "Λήξη Κλεισίματος"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing Month"
+msgstr "Λήξη Μήνα Κλεισίματος"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Extended Filters"
+msgstr "Εκτεταμένα Φίλτρα"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Extended Filters..."
+msgstr "Εκτεταμένα Φίλτρα..."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Extra Info"
+msgstr "Επιπλέον Πληροφορίες"
+
+#. module: crm
+#: field:crm.lead,fax:0
+msgid "Fax"
+msgstr "Fax"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Finished"
+msgstr "Ολοκληρώθηκε"
+
+#. module: crm
+#: field:crm.case.stage,fold:0
+msgid "Folded in Kanban View"
+msgstr "Αναδίπλωση σε προβολή Kanban"
+
+#. module: crm
+#: field:crm.lead,message_follower_ids:0
+#: field:crm.phonecall,message_follower_ids:0
+msgid "Followers"
+msgstr "Ακόλουθοι"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:301
+#, python-format
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr "Για λόγους ασφάλειας, δεν μπορείτε να συγχωνεύσετε περισσότερες απο 3 επαφές μαζί. Μπορείτε να ξανα-ανοίξετε τον οδηγό πολλές φορές αν απαιτείται."
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,force_assignation:0
+msgid "Force assignation"
+msgstr "Ώθηση ανάθεσης"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:564
+#, python-format
+msgid "From %s : %s"
+msgstr "Από %s : %s"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
+msgid ""
+"From this report, you can analyse the performance of your sales team, based "
+"on their phone calls. You can group or filter the information according to "
+"several criteria and drill down the information, by adding more groups in "
+"the report."
+msgstr "Από αυτή την έκθεση,μπορείς να αναλύσεις την απόδοση της ομάδας πωλήσεων σου, βασισμένη στα τηλεφωνήματά τους. Μπορείς να ομαδοποιήσεις ή φιλτράρεις την πληροφορία σύμφωνα με διαφορετικά κριτήρια και να αναπτύξεις την πληροφόρηση, προσθέτοντας περισσότερες ομάδες μέσα στην έκθεση."
+
+#. module: crm
+#: field:crm.lead,function:0
+msgid "Function"
+msgstr "Λειτουργία"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Fund Raising"
+msgstr "Συλλογή Χρημάτων"
+
+#. module: crm
+#: field:crm.lead,email_cc:0
+msgid "Global CC"
+msgstr "Διεθνές CC"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Group By"
+msgstr "Ομαδοποίηση Ανά"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,number_group:0
+msgid "Group of Contacts"
+msgstr "Ομάδα Επαφών"
+
+#. module: crm
+#: model:ir.model,name:crm.model_ir_http
+msgid "HTTP routing"
+msgstr "Δρομολόγηση HTTP"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_partner_binding
+msgid "Handle partner binding or generation in CRM wizards."
+msgstr "Διαχειρίζεται το δέσιμο των συνεργατών ή την δημιουργία στους οδηγούς βοήθειας του CRM"
+
+#. module: crm
+#: selection:crm.phonecall,state:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: selection:crm.phonecall.report,state:0
+msgid "Held"
+msgstr "Έγινε"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "High"
+msgstr "Υψηλή"
+
+#. module: crm
+#: help:crm.lead,message_summary:0 help:crm.phonecall,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Κρατά την συνολική σύνοψη (αριθμός των μυνημάτων, ...). Αυτή η σύνοψη είναι κατ' ευθείαν σε html format για να μπορεί να ενσωματωθεί σε εμφανίσεις kanban."
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,id:0
+#: field:base.partner.merge.line,id:0 field:crm.case.categ,id:0
+#: field:crm.case.stage,id:0 field:crm.lead,id:0 field:crm.lead.report,id:0
+#: field:crm.lead2opportunity.partner,id:0
+#: field:crm.lead2opportunity.partner.mass,id:0
+#: field:crm.merge.opportunity,id:0 field:crm.opportunity.report,id:0
+#: field:crm.partner.binding,id:0 field:crm.payment.mode,id:0
+#: field:crm.phonecall,id:0 field:crm.phonecall.report,id:0
+#: field:crm.phonecall2phonecall,id:0 field:crm.segmentation,id:0
+#: field:crm.segmentation.line,id:0 field:crm.tracking.campaign,id:0
+#: field:crm.tracking.medium,id:0 field:crm.tracking.mixin,id:0
+#: field:crm.tracking.source,id:0
+msgid "ID"
+msgstr "Κωδικός"
+
+#. module: crm
+#: field:base.partner.merge.line,aggr_ids:0
+msgid "Ids"
+msgstr "Κωδικός"
+
+#. module: crm
+#: help:crm.lead,message_unread:0 help:crm.phonecall,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Εάν επιλεγεί τα νέα μηνύματα απαιτούν την προσοχή σας"
+
+#. module: crm
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr "Εάν το 'Εξαίρεση' είναι επιλεγμένο, αυτή η επαφή έχει αρνηθεί να δέχεται emails από μαζικές αποστολές και εκστρατείες marketing. Το Φίλτρο 'Διαθέσιμοι Για Μαζικές Αποστολές' επιτρέπει στους χρήστες να φιλτράρουν τις συστάσεις όταν εκτελούν μαζικές αποστολές ."
+
+#. module: crm
+#: help:crm.lead2opportunity.partner.mass,force_assignation:0
+msgid "If unchecked, this will leave the salesman of duplicated opportunities"
+msgstr "Αν δεν είναι επιλεγμένο, θα παραμείνουν στον πωλητή διπλές ευκαιρίες"
+
+#. module: crm
+#: help:crm.case.stage,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each "
+"sales team. It will not assign this stage to existing teams."
+msgstr "Εάν επιλέξετε αυτό το πεδίο, αυτό το στάδιο θα προτείνεται προρυθμισμένο σε κάθε ομάδα πώλησης. Δεν θα ανατεθεί αυτό το στάδιο σε υφιστάμενες ομάδες."
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_phone1
+msgid "Inbound"
+msgstr "Εισερχόμενη Κλήση"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Included Answers :"
+msgstr "Συμπεριλαμβανόμενες Απαντήσεις"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Πληροφορίες"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Internal Notes"
+msgstr "Εσωτερικές Σημειώσεις"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_is_company:0
+msgid "Is Company"
+msgstr "Είναι Εταιρεία"
+
+#. module: crm
+#: field:crm.lead,message_is_follower:0
+#: field:crm.phonecall,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Είναι Ακόλουθος"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:291
+#, python-format
+msgid "It's only possible to convert one phonecall at a time."
+msgstr "Είναι δυνατό να μετατρέψετε μόνο ένα τηλεφώνημα την κάθε φορά"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,exclude_journal_item:0
+msgid "Journal Items associated to the contact"
+msgstr "Στοιχεία Ημερολόγιου που σχετίζονται με την επαφή"
+
+#. module: crm
+#: field:crm.lead,date_action_last:0 field:crm.phonecall,date_action_last:0
+msgid "Last Action"
+msgstr "Τελευταία Ενέργεια"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Last Message"
+msgstr "Τελευταίο Μήνυμα"
+
+#. module: crm
+#: field:crm.lead,message_last_post:0 field:crm.phonecall,message_last_post:0
+msgid "Last Message Date"
+msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#. module: crm
+#: field:crm.lead,date_last_stage_update:0
+#: field:crm.lead.report,date_last_stage_update:0
+#: field:crm.opportunity.report,date_last_stage_update:0
+msgid "Last Stage Update"
+msgstr "Τελευταία Ενημέρωση Σταδίου"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,write_uid:0
+#: field:base.partner.merge.line,write_uid:0 field:crm.case.categ,write_uid:0
+#: field:crm.case.stage,write_uid:0 field:crm.lead,write_uid:0
+#: field:crm.lead2opportunity.partner,write_uid:0
+#: field:crm.lead2opportunity.partner.mass,write_uid:0
+#: field:crm.merge.opportunity,write_uid:0
+#: field:crm.partner.binding,write_uid:0 field:crm.payment.mode,write_uid:0
+#: field:crm.phonecall,write_uid:0 field:crm.phonecall2phonecall,write_uid:0
+#: field:crm.segmentation,write_uid:0 field:crm.segmentation.line,write_uid:0
+#: field:crm.tracking.campaign,write_uid:0
+#: field:crm.tracking.medium,write_uid:0 field:crm.tracking.source,write_uid:0
+msgid "Last Updated by"
+msgstr "Τελευταία Ενημέρωση από"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,write_date:0
+#: field:base.partner.merge.line,write_date:0
+#: field:crm.case.categ,write_date:0 field:crm.case.stage,write_date:0
+#: field:crm.lead2opportunity.partner,write_date:0
+#: field:crm.lead2opportunity.partner.mass,write_date:0
+#: field:crm.merge.opportunity,write_date:0
+#: field:crm.partner.binding,write_date:0 field:crm.payment.mode,write_date:0
+#: field:crm.phonecall,write_date:0 field:crm.phonecall2phonecall,write_date:0
+#: field:crm.segmentation,write_date:0
+#: field:crm.segmentation.line,write_date:0
+#: field:crm.tracking.campaign,write_date:0
+#: field:crm.tracking.medium,write_date:0
+#: field:crm.tracking.source,write_date:0
+msgid "Last Updated on"
+msgstr "Τελευταία Ενημέρωση στις"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:893 selection:crm.case.stage,type:0
+#: view:crm.lead:crm.crm_case_form_view_oppor selection:crm.lead,type:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
+#, python-format
+msgid "Lead"
+msgstr "Σύσταση"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Lead / Customer"
+msgstr "Σύσταση / Πελάτης"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_create
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead
+msgid "Lead Created"
+msgstr "Δημιουργία Σύστασης"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
+msgid "Lead To Opportunity Partner"
+msgstr "Σύσταση σε Ευκαιρία Συνεργάτη"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_create
+msgid "Lead created"
+msgstr "Δημιουργήθηκε Σύσταση"
+
+#. module: crm
+#: field:crm.phonecall,opportunity_id:0 model:ir.model,name:crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Σύσταση/Ευκαιρία"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_lead_mass_mail
+msgid "Lead/Opportunity Mass Mail"
+msgstr "Μαζική Αλληλογραφία Σύσταση/Ευκαιρία"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+#: field:crm.case.section,use_leads:0
+#: view:crm.lead:crm.crm_case_tree_view_leads
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
+#: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
+#: model:ir.ui.menu,name:crm.menu_crm_leads
+msgid "Leads"
+msgstr "Συστάσεις"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:84
+#, python-format
+msgid "Leads / Opportunities"
+msgstr "Συστάσεις / Ευκαιρίες"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_graph
+#: view:crm.lead.report:crm.view_report_crm_lead_graph_two
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_graph
+#: model:ir.actions.act_window,name:crm.action_report_crm_lead
+#: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
+#: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
+msgid "Leads Analysis"
+msgstr "Ανάλυση Ευκαιριών"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
+msgid ""
+"Leads Analysis allows you to check different CRM related information like "
+"the treatment delays or number of leads per state. You can sort out your "
+"leads analysis by different groups to get accurate grained analysis."
+msgstr "Η Ανάλυση των Συστάσεων σας επιτρέπει να ελέγξετε διαφορετικές, σχετικές με το CRM πληροφορίες όπως τις καθυστερήσεις για εξυπηρέτηση ή τον αριθμό των συστάσεων ανά στάδιο. Μπορείτε να ταξινομήσετε τις αναλύσεις των συστάσεων με διαφορετικές ομαδοποιήσεις για να έχετε μια ανάλυση με ακρίβεια και λεπτομέρεια ."
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Leads Email Alias"
+msgstr "Ψευδώνυμα Email Συστάσεων"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Leads Form"
+msgstr "Φόρμα Συστάσεων"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_calendar_view_leads
+msgid "Leads Generation"
+msgstr "Παραγωγή Συστάσεων"
+
+#. module: crm
+#: field:res.partner,opportunity_ids:0
+msgid "Leads and Opportunities"
+msgstr "Συστάσεις και Ευκαιρίες"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Συστάσεις από ΗΠΑ"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Leads that are assigned to me"
+msgstr "Συστάσεις που είναι ανατεθιμένες σε εμένα"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
+msgstr "Συστάσεις που δεν έχουν ζήτησει να εξαιρεθούν από καμπάνιες μαζικής αποστολής mails"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid ""
+"Leads that you selected that have duplicates. If the list is empty, it means"
+" that no duplicates were found"
+msgstr "Οι συστάσεις που έχετε επιλέξει έχουν διπλότυπα. Αν η λίστα είναι άδεια, σημαίνει ότι δεν βρέθηκαν διπλοεγγραφές."
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Leads with existing duplicates (for information)"
+msgstr "Συστάσεις με υπάρχουσες διπλοεγγραφές (για πληροφορίες)"
+
+#. module: crm
+#: field:crm.merge.opportunity,opportunity_ids:0
+msgid "Leads/Opportunities"
+msgstr "Συστάσεις/Ευκαιρίες"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,line_ids:0
+msgid "Lines"
+msgstr "Γραμμές"
+
+#. module: crm
+#: help:crm.case.stage,section_ids:0
+msgid ""
+"Link between stages and sales teams. When set, this limitate the current "
+"stage to the selected sales teams."
+msgstr "Σύνδεση μεταξύ σταδίων και ομάδων πώλησης. Όταν ρυθμιστεί, αυτή περιορίζει το τωρινό στάδιο στις επιλεγμένες ομάδες πωλήσεων."
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Link to an existing customer"
+msgstr "Σύνδεση με ένα υφιστάμενο πελάτη"
+
+#. module: crm
+#: help:crm.lead,partner_id:0
+msgid "Linked partner (optional). Usually created when converting the lead."
+msgstr "Συνδεόμενος συνεργάτης (προαιρετικό). Συνήθως δημιουργείται όταν μετατρέπετε την σύσταση"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Log Call"
+msgstr "Αρχειοθέτηση Τηλεφωνήματος"
+
+#. module: crm
+#: selection:crm.phonecall2phonecall,action:0
+msgid "Log a call"
+msgstr "Αρχειοθέτηση Τηλεφωνήματος"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
+msgid "Logged Calls"
+msgstr "Αρχειοθέτηση"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1058
+#, python-format
+msgid "Logged a call for %(date)s. %(description)s"
+msgstr "Καταγραφή συνδιάλεξης στις %(date)s. %(description)s"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_long_term_revenue
+msgid "Long Term Revenue"
+msgstr "Μακροπρόθεσμα Έσοδα"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Lost"
+msgstr "Χαμένη"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "Low"
+msgstr "Χαμηλή"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_mailing
+msgid "Mailing Partner"
+msgstr "Συνεργάτης Αλληλογραφίας"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mailings"
+msgstr "Αλληλογραφία"
+
+#. module: crm
+#: field:sale.config.settings,module_crm_claim:0
+msgid "Manage Customer Claims"
+msgstr "Διαχείριση Απαιτήσεων Πελατών"
+
+#. module: crm
+#: model:res.groups,name:crm.group_fund_raising
+#: field:sale.config.settings,group_fund_raising:0
+msgid "Manage Fund Raising"
+msgstr "Διαχείριση Συλλογής Κεφαλαίων"
+
+#. module: crm
+#: field:sale.config.settings,module_crm_helpdesk:0
+msgid "Manage Helpdesk and Support"
+msgstr "Διαχείριση Βοήθειας και Υποστήριξης"
+
+#. module: crm
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr "Υποχρεωτικό / Προαιρετικό"
+
+#. module: crm
+#: selection:crm.segmentation.line,operator:0
+msgid "Mandatory Expression"
+msgstr "Υποχρεωτική Έκφραση"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_as_lost
+msgid "Mark As Lost"
+msgstr "Ορισμός ως Χαμένη"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mark Lost"
+msgstr "Μάρκαρε ως Χαμένη"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mark Won"
+msgstr "Μάρκαρε ως Κερδισμένη"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
+msgid "Mass Lead To Opportunity Partner"
+msgstr "Μαζικές Συστάσεις σε Ευκαιρίες Συνεργάτη"
+
+#. module: crm
+#: field:crm.segmentation,partner_id:0
+msgid "Max Partner ID processed"
+msgstr "Μέγιστος Κωδικός Συνεργάτη που επεξεργάστηκε"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,maximum_group:0
+msgid "Maximum of Group of Contacts"
+msgstr "Ανώτατο όριο Ομάδας Επαφών"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+msgid "Meeting"
+msgstr "Συνάντηση"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1072
+#, python-format
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
+msgstr "Προγραμματίστηκε συνάντηση στις '%s'<br> Θέμα: %s <br> Διάρκεια: %s Ώρα(ες)"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
+#: model:ir.actions.act_window,name:crm.calendar_event_partner
+#: view:res.partner:crm.crm_lead_partner_kanban_view
+#: view:res.partner:crm.view_partners_form_crm1
+#: field:res.partner,meeting_ids:0
+msgid "Meetings"
+msgstr "Συναντήσεις"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Merge"
+msgstr "Συνένωση"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically"
+msgstr "Αυτόματη Συγχώνευση"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically all process"
+msgstr "Αυτόματη Συγχώνευση όλων των διαδικασίων"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Merge Leads/Opportunities"
+msgstr "Συνένωση Συστάσεων/Ευκαιριών"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Selection"
+msgstr "Συγχώνευση Επιλεγμένων"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_merge_opportunities
+#: model:ir.actions.act_window,name:crm.merge_opportunity_act
+msgid "Merge leads/opportunities"
+msgstr "Συνένωση συστάσεων/ευκαιριών"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_merge_opportunity
+msgid "Merge opportunities"
+msgstr "Συνένωση Ευκαιριών"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge the following contacts"
+msgstr "Συγχώνευση των παρακάτω Επαφών"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge with Manual Check"
+msgstr "Συγχώνευση με Χειροκίνητο Έλεγχο"
+
+#. module: crm
+#: help:crm.lead2opportunity.partner.mass,deduplicate:0
+msgid "Merge with existing leads/opportunities of each partner"
+msgstr "Συγχώνευση με υπάρχουσες Συστάσεις/Ευκαιρίες για κάθε συνεργάτη"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
+msgid "Merge with existing opportunities"
+msgstr "Συνένωση με υφιστάμενες ευκαιρίες"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:549
+#, python-format
+msgid "Merged lead"
+msgstr "Συνενωμένες Συστάσεις"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:543
+#, python-format
+msgid "Merged leads"
+msgstr "Συνενωμένες Συστάσεις"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:545
+#, python-format
+msgid "Merged opportunities"
+msgstr "Συνενωμένες ευκαιρίες"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:549
+#, python-format
+msgid "Merged opportunity"
+msgstr "Συνενωμένη ευκαιρία"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:326
+#, python-format
+msgid "Merged with the following partners:"
+msgstr "Συγχωνεύεται με τους παρακάτω συνεργάτες:"
+
+#. module: crm
+#: field:crm.lead,message_ids:0 field:crm.phonecall,message_ids:0
+msgid "Messages"
+msgstr "Μηνύματα"
+
+#. module: crm
+#: help:crm.lead,message_ids:0 help:crm.phonecall,message_ids:0
+msgid "Messages and communication history"
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#. module: crm
+#: field:base.partner.merge.line,min_id:0
+msgid "MinID"
+msgstr "MinID"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Misc"
+msgstr "Διάφορα"
+
+#. module: crm
+#: field:crm.lead,mobile:0 field:crm.phonecall,partner_mobile:0
+msgid "Mobile"
+msgstr "Κινητό"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Month"
+msgstr "Μήνας"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Month of call"
+msgstr "Μήνας του τηλεφωνήματος"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr "Οι Συστάσεις μου"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "My Opportunities"
+msgstr "Οι Ευκαιρίες μου"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "My Phone Calls"
+msgstr "Τα Τηλεφωνήματα μου"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "My Phonecalls"
+msgstr "Οι Συνδιαλέξεις μου"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "My Sales Team(s)"
+msgstr "Οι Ομάδες Πώλησης μου"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "My Team"
+msgstr "Η Ομάδα μου"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_name:0
+#: field:crm.case.categ,name:0 field:crm.payment.mode,name:0
+#: field:crm.segmentation,name:0
+msgid "Name"
+msgstr "Όνομα"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead5
+msgid "Negotiation"
+msgstr "Διαπραγμάτευση"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead1
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "New"
+msgstr "Νέα"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "New Mail"
+msgstr "Νέο Μήνυμα"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_newsletter
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#. module: crm
+#: field:crm.lead,date_action_next:0 field:crm.lead,title_action:0
+#: field:crm.phonecall,date_action_next:0
+msgid "Next Action"
+msgstr "Επόμενη Ενέργεια"
+
+#. module: crm
+#: field:crm.lead,date_action:0
+msgid "Next Action Date"
+msgstr "Επόμενη Ημερομηνία Ενέργειας"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1013
+#, python-format
+msgid "No Subject"
+msgstr "Χωρίς Θέμα"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:770
+#, python-format
+msgid ""
+"No customer name defined. Please fill one of the following fields: Company "
+"Name, Contact Name or Email (\"Name <email@address>\")"
+msgstr "Δεν καθορίστηκε όνομα πελάτη. Παρακαλώ συμπληρώστε ένα από τα ακόλουθα πεδία: Τίτλος Εταιράις, Όνομα Επαφής ή Email (\"Name <email@address>\")"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "No salesperson"
+msgstr "Κανένας πωλητής"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "Normal"
+msgstr "Κανονική"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Not Held"
+msgstr "Μη Γινόμενο"
+
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Not Running"
+msgstr "Ανενεργοί"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,note:0
+msgid "Note"
+msgstr "Σημείωση"
+
+#. module: crm
+#: field:crm.lead,description:0
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+#. module: crm
+#: help:crm.lead.report,delay_close:0
+#: help:crm.opportunity.report,delay_close:0
+#: help:crm.phonecall.report,delay_close:0
+msgid "Number of Days to close the case"
+msgstr "Ημέρες για το κλείσιμο της υπόθεσης"
+
+#. module: crm
+#: help:crm.lead.report,delay_open:0 help:crm.opportunity.report,delay_open:0
+#: help:crm.phonecall.report,delay_open:0
+msgid "Number of Days to open the case"
+msgstr "Αριθμός Ημερών για άνοιγμα υπόθεσης"
+
+#. module: crm
+#: field:crm.case.categ,object_id:0
+msgid "Object Name"
+msgstr "Όνομα Αντικειμένου"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:316
+#, python-format
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please"
+" ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr "Μόνο η επαφή προορισμός μπορεί να συνδεθεί με τα υπάρχοντα στοιχεία του ημερολογίου. Παρακαλούμε ρωτήστε τον Διαχειριστή εάν απαιτείται να συγχωνενεύσετε μερικές επαφές που συνδεόνται με τις υπάρχουσες εγγραφές ημερολογίου."
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,monthly_open_leads:0
+msgid "Open Leads per Month"
+msgstr "Άνοιγμα Συστάσεων ανά Μήνα"
+
+#. module: crm
+#: model:ir.actions.client,name:crm.action_client_crm_menu
+msgid "Open Sale Menu"
+msgstr "Άνοιξε Μενού Πωλήσεων"
+
+#. module: crm
+#: field:crm.phonecall,date_open:0
+msgid "Opened"
+msgstr "Ανοιχτά"
+
+#. module: crm
+#: field:crm.phonecall.report,opening_date:0
+msgid "Opening Date"
+msgstr "Μέρα Έναρξης"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_operator:0
+msgid "Operator"
+msgstr "Συνάρτηση"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,use_opportunities:0
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_graph_view_leads
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
+#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
+#: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
+#: model:ir.actions.act_window,name:crm.relate_partner_opportunities
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
+#: view:res.partner:crm.crm_lead_partner_kanban_view
+#: view:res.partner:crm.view_partners_form_crm1
+msgid "Opportunities"
+msgstr "Ευκαιρίες"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "Ανάλυση Ευκαιριών"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity
+#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
+msgid ""
+"Opportunities Analysis gives you an instant access to your opportunities "
+"with information such as the expected revenue, planned cost, missed "
+"deadlines or the number of interactions per opportunity. This report is "
+"mainly used by the sales manager in order to do the periodic review with the"
+" teams of the sales pipeline."
+msgstr "Η Ανάλυση των Ευκαιριών σας δίνει μια στιγμιαία προσπέλαση στις ευκαιρίες σας με πληροφόρηση όπως τα προσδοκόμενα έσοδα, προγραμματισμένα κόστη, χαμένες προθεσμίες ή το νούμερο των επικοινωνιών ανά ευκαιρία. Αυτή η έκθεση κυρίως χρησιμοποιείται από τον διευθυντή πωλήσεων για να μπορέσει να κάνει περιοδική ανασκόπηση με τις ομάδες και τον αγωγό πωλήσεων."
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
+msgid "Opportunities Cohort"
+msgstr "Ομάδα Ευκαιριών"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
+msgid "Opportunities Won Per Team"
+msgstr "Κερδισμένες Ευκαιρίες ανά Ομάδα"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Opportunities that are assigned to me"
+msgstr "Ευκαιρίες που είναι ανατεθιμένες σε εμένα"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:873 field:calendar.event,opportunity_id:0
+#: selection:crm.case.stage,type:0 view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: selection:crm.lead,type:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+#: field:res.partner,opportunity_count:0
+#, python-format
+msgid "Opportunity"
+msgstr "Ευκαιρίες"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_lost
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
+msgid "Opportunity Lost"
+msgstr "Χαμένη Ευκαιρία"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
+msgid "Opportunity Stage Changed"
+msgstr "Αλλαγές Στάδιων Ευκαιρίων"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_won
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
+msgid "Opportunity Won"
+msgstr "Κερδισμένη Ευκαιρία"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_lost
+msgid "Opportunity lost"
+msgstr "Χαμένη Ευκαιρία"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_won
+msgid "Opportunity won"
+msgstr "Κερδισμένη Ευκαιρία"
+
+#. module: crm
+#: field:crm.lead,opt_out:0
+msgid "Opt-Out"
+msgstr "Εξαίρεση"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Option"
+msgstr "Επιλογή"
+
+#. module: crm
+#: selection:crm.segmentation.line,operator:0
+msgid "Optional Expression"
+msgstr "Προαιρετική Έκφραση"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Options"
+msgstr "Δυνατότητες"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Άλλο"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Other Call"
+msgstr "Λοιπές Συνδιαλέξεις"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_phone2
+msgid "Outbound"
+msgstr "Εξερχόμενη Κλήση"
+
+#. module: crm
+#: field:crm.lead.report,delay_expected:0
+#: field:crm.opportunity.report,delay_expected:0
+#: model:ir.filters,name:crm.filter_leads_overpassed_deadline
+msgid "Overpassed Deadline"
+msgstr "Εκπρόθεσμη Προθεσμία"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_parent_id:0
+msgid "Parent Company"
+msgstr "Μητρική Εταιρεία"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter field:crm.lead,partner_id:0
+#: field:crm.lead.report,partner_id:0
+#: field:crm.opportunity.report,partner_id:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall.report,partner_id:0
+#: field:crm.phonecall2phonecall,partner_id:0
+#: model:ir.model,name:crm.model_res_partner
+msgid "Partner"
+msgstr "Συνεργάτης"
+
+#. module: crm
+#: field:crm.segmentation,categ_id:0
+msgid "Partner Category"
+msgstr "Κατηγορία Συνεργάτη"
+
+#. module: crm
+#: field:crm.lead,partner_address_email:0
+msgid "Partner Contact Email"
+msgstr "Email επαφής συνεργάτη"
+
+#. module: crm
+#: field:crm.lead,partner_address_name:0
+msgid "Partner Contact Name"
+msgstr "Όνομα Επαφής Συνεργάτη"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+#: model:ir.model,name:crm.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "Κατάτμηση Συνεργατών"
+
+#. module: crm
+#: view:crm.segmentation.line:crm.crm_segmentation_line-view
+#: view:crm.segmentation.line:crm.crm_segmentation_line_tree-view
+msgid "Partner Segmentation Lines"
+msgstr "Γραμμές Κατάτμησης Συνεργατών"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation_tree-view
+msgid "Partner Segmentations"
+msgstr "Κατάτμηση Πελατών"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:301
+#, python-format
+msgid "Partner has been <b>created</b>."
+msgstr "Ο Συνεργάτης έχει <b>δημιουργηθεί</b>."
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Partners"
+msgstr "Συνεργάτες"
+
+#. module: crm
+#: field:crm.lead,payment_mode:0
+#: view:crm.payment.mode:crm.view_crm_payment_mode_form
+#: view:crm.payment.mode:crm.view_crm_payment_mode_tree
+#: model:ir.actions.act_window,name:crm.action_crm_payment_mode
+msgid "Payment Mode"
+msgstr "Τρόπος Πληρωμής"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
+msgid "Payment Modes"
+msgstr "Τρόποι Πληρωμής"
+
+#. module: crm
+#: selection:crm.phonecall,state:0 selection:crm.phonecall.report,state:0
+msgid "Pending"
+msgstr "Εκκρεμμείς"
+
+#. module: crm
+#: field:crm.lead,phone:0 view:crm.phonecall:crm.crm_case_phone_form_view
+#: field:crm.phonecall,partner_phone:0 field:crm.phonecall2phonecall,phone:0
+msgid "Phone"
+msgstr "Τηλέφωνο"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:219
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+#, python-format
+msgid "Phone Call"
+msgstr "Τηλεφώνημα"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_calendar_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone
+#: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
+msgid "Phone Calls"
+msgstr "Τηλεφωνήματα"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
+#: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
+msgid "Phone Calls Analysis"
+msgstr "Ανάλυση Τηλεφωνημάτων"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_phone_call_to_do
+msgid "Phone Calls To Do"
+msgstr "Εκκρεμότητες Συνδιαλέξεων"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone Calls that are assigned to me"
+msgstr "Τηλεφωνήματα που είναι ανατεθιμένα σε εμένα"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_graph
+#: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
+msgid "Phone calls"
+msgstr "Τηλεφωνήματα"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall_report
+msgid "Phone calls by user and section"
+msgstr "Τηλεφωνήματα ανά χρήστη και τομέα"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls that are assigned to one of the sale teams I manage"
+msgstr "Τηλεφωνήματα που είναι ανατεθιμένα σε μια από τις ομάδες εγώ διαχειρίζομαι"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in closed state"
+msgstr "Τηλεφωνήματα που είναι σε στάδιο κλεισίματος"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in draft and open state"
+msgstr "Τηλεφωνήματα που είναι σε στάδια πρόχειρα και ανοικτά"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in pending state"
+msgstr "Τηλεφωνήματα που είναι σε στάδιο εκκρεμότητας"
+
+#. module: crm
+#: field:calendar.event,phonecall_id:0
+#: model:ir.model,name:crm.model_crm_phonecall
+msgid "Phonecall"
+msgstr "Τηλεφώνημα"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
+msgid "Phonecall Categories"
+msgstr "Κατηγορίες Τηλεφωνημάτων"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "Τηλεφώνημα σε Τηλεφώνημα"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:res.partner,phonecall_count:0 field:res.partner,phonecall_ids:0
+msgid "Phonecalls"
+msgstr "Τηλεφωνήματα"
+
+#. module: crm
+#: field:crm.lead,planned_cost:0
+msgid "Planned Costs"
+msgstr "Προγραμματισμένα Κόστη"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Planned Date"
+msgstr "Σχεδιασμένη Ημερομηνία"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,monthly_planned_revenue:0
+msgid "Planned Revenue per Month"
+msgstr "Υπολογιζόμενα Μηνιαία Έσοδα"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:643
+#, python-format
+msgid ""
+"Please select more than one element (lead or opportunity) from the list "
+"view."
+msgstr "Παρακαλώ επιλέξτε παραπάνω από ένα στοιχείο (σύσταση ή ευκαιρία) από την λίστα εμφάνισης."
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Pre-Sale Services"
+msgstr "Υπηρεσίες πριν-την-Πώληση"
+
+#. module: crm
+#: field:crm.lead,priority:0 field:crm.lead.report,priority:0
+#: field:crm.opportunity.report,priority:0 field:crm.phonecall,priority:0
+#: field:crm.phonecall.report,priority:0
+msgid "Priority"
+msgstr "Προτεραιότητα"
+
+#. module: crm
+#: field:crm.lead.report,probability:0
+#: field:crm.opportunity.report,probability:0
+msgid "Probability"
+msgstr "Πιθανότητα"
+
+#. module: crm
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "Πιθανότητα (%)"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Προιόν"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Profiling"
+msgstr "Ανάθεση Προφίλ"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Profiling Options"
+msgstr "Επιλογές Ανάθεσης Προφίλ"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead4
+msgid "Proposition"
+msgstr "Πρόταση"
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Purchase Amount"
+msgstr "Ποσό Αγοράς"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead3
+msgid "Qualification"
+msgstr "Αξιολόγηση"
+
+#. module: crm
+#: field:crm.lead,ref:0
+msgid "Reference"
+msgstr "Παραπομπή"
+
+#. module: crm
+#: field:crm.lead,ref2:0
+msgid "Reference 2"
+msgstr "Παραπομπή 2"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "References"
+msgstr "Παραπομπές"
+
+#. module: crm
+#: field:crm.lead,referred:0
+msgid "Referred By"
+msgstr "Αναφέρεται Από"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
+#: field:crm.partner.binding,action:0
+msgid "Related Customer"
+msgstr "Σχετιζόμενος Πελάτης"
+
+#. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_reminder_mail
+msgid ""
+"Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
+msgstr "Υπενθύμιση για τη Σύσταση: ${object.id} από ${object.partner_id != False and object.partner_id.name or object.contact_name}"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "Υπενθύμιση στον Χρήστη"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_case_stage_form
+#: field:crm.case.stage,requirements:0
+msgid "Requirements"
+msgstr "Απαιτήσεις"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,user_id:0
+msgid "Responsible"
+msgstr "Υπεύθυνος"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_revenue_per_lead
+msgid "Revenue Per Lead"
+msgstr "Έσοδα Ανά Σύσταση"
+
+#. module: crm
+#: field:crm.segmentation.line,name:0
+msgid "Rule Name"
+msgstr "Όνομα Κανόνα"
+
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Running"
+msgstr "Ενεργοί"
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Sale Amount"
+msgstr "Ποσό Πώλησης"
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Sale Services"
+msgstr "Εξυπηρέτηση Πωλήσεων"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Sales Purchase"
+msgstr "Αγορές / Πωλήσεις"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_categ_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+msgid "Sales Tags"
+msgstr "Ετικέτες Πωλήσεων"
+
+#. module: crm
+#: field:crm.case.categ,section_id:0
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,section_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,section_id:0
+#: field:crm.lead2opportunity.partner,section_id:0
+#: field:crm.lead2opportunity.partner.mass,section_id:0
+#: field:crm.merge.opportunity,section_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,section_id:0
+#: field:crm.payment.mode,section_id:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,section_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: field:crm.phonecall2phonecall,section_id:0
+#: field:crm.tracking.campaign,section_id:0
+msgid "Sales Team"
+msgstr "Ομάδα Πώλησης"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_section
+msgid "Sales Teams"
+msgstr "Ομάδες Πωλήσεων"
+
+#. module: crm
+#: help:crm.phonecall,section_id:0
+msgid "Sales team to which Case belongs to."
+msgstr "Ομάδα Πωλήσεων στην οποία η Υπόθεση ανήκει"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,user_ids:0
+msgid "Salesmen"
+msgstr "Πωλητής"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,user_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead2opportunity.partner,user_id:0
+#: field:crm.lead2opportunity.partner.mass,user_id:0
+#: field:crm.merge.opportunity,user_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Salesperson"
+msgstr "Πωλητής"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Schedule"
+msgstr "Προγραμματισμός"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Schedule Call"
+msgstr "Προγραμματισμός Τηλεφωνήματος"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Schedule Meeting"
+msgstr "Προγραμματισμός Σύσκεψης"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
+msgid "Schedule Other Call"
+msgstr "Προγραμμάτισε άλλο Τηλεφώνημα"
+
+#. module: crm
+#: selection:crm.phonecall2phonecall,action:0
+msgid "Schedule a call"
+msgstr "Προγραμματισμός Τηλεφωνήματος"
+
+#. module: crm
+#: field:sale.config.settings,group_scheduled_calls:0
+msgid "Schedule calls to manage call center"
+msgstr "Προγραμματισμός κλήσεων για διαχείριση call center"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Schedule/Log"
+msgstr "προγραμματισμός/Καταγραφή"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Schedule/Log a Call"
+msgstr "Προγραμματισμός/Αρχειοθέτηση Τηλεφωνήματος"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
+msgid "Scheduled Calls"
+msgstr "Προγραμματισμός"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "Scheduled a call for %(date)s. %(description)s"
+msgstr "Προγραμματίστηκε συνδιαλέξη στις %(date)s. %(description)s"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Search Leads"
+msgstr "Αναζήτηση Συστάσεων"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Search Opportunities"
+msgstr "Αναζήτηση Ευκαιριών"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Search Phonecalls"
+msgstr "Αναζήτηση Τηλεφωνημάτων"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Search duplicates based on duplicated data in"
+msgstr "Αναζήτηση διπλότυπων με βάση τα διπλά δεδομένα σε"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_search_engine
+msgid "Search engine"
+msgstr "Μηχανή αναζήτησης"
+
+#. module: crm
+#: field:crm.phonecall.report,section_id:0
+msgid "Section"
+msgstr "Τμήμα"
+
+#. module: crm
+#: field:crm.case.stage,section_ids:0
+msgid "Sections"
+msgstr "Τμήματα"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+#: field:crm.segmentation.line,segmentation_id:0
+#: model:ir.actions.act_window,name:crm.crm_segmentation-act
+msgid "Segmentation"
+msgstr "Κατάτμηση"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Segmentation Description"
+msgstr "Περιγραφή Κατάτμησης"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Segmentation Test"
+msgstr "Δοκιμή Κατάτμησης"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_segmentation_line
+msgid "Segmentation line"
+msgstr "Γραμμή Κατάτμησης"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Select Leads/Opportunities"
+msgstr "Επιλογή Συστάσεων/Ευκαιριών"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Select Stages for this Sales Team"
+msgstr "Επιλέξτε Στάδια για αυτήν την Ομάδα Πωλήσεων"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"Select the list of fields used to search for\n"
+"                            duplicated records. If you select several fields,\n"
+"                            Odoo will propose you to merge only those having\n"
+"                            all these fields in common. (not one of the fields)."
+msgstr "Επιλέξτε την λίστα των πεδίων που χρησιμοποιούνται για την αναζήτηση\nδιπλών εγγραφών. Εάν επιλέξετε πολλά πεδία,\nτο Odoo θα σας προτείνει να συγχωνεύσετε μόνο αυτές που έχουν\nκοινά στοιχεία σε όλα αυτά τα πεδία. (όχι ένα από τα πεδία)."
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Selection"
+msgstr "Επιλογή"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Send Email"
+msgstr "Στείλε Email"
+
+#. module: crm
+#: field:crm.case.stage,sequence:0
+msgid "Sequence"
+msgstr "Ιεράρχηση"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Υπηρεσίες"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Ορίστε ομάδα στο Τμήμα Πωλήσεων"
+
+#. module: crm
+#: help:crm.case.stage,on_change:0
+msgid ""
+"Setting this stage will change the probability automatically on the "
+"opportunity."
+msgstr "Ρυθμίζοντας αυτό το στάδιο θα αλλάξει την πιθανότητα αυτόματα στην ευκαιρία."
+
+#. module: crm
+#: model:res.groups,name:crm.group_scheduled_calls
+msgid "Show Scheduled Calls Menu"
+msgstr "Εμφάνιση Μενού Προγραμματισμένων Κλήσεων"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Show only lead"
+msgstr "Δείξε μόνο συστάσεις"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Show only opportunity"
+msgstr "Δείξε μόνο ευκαιρία"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Skip these contacts"
+msgstr "Παρήλειψη αυτών των επαφών"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Λογισμικό"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,source_id:0 field:crm.lead.report,source_id:0
+#: field:crm.opportunity.report,source_id:0
+#: field:crm.tracking.mixin,source_id:0
+#: model:ir.actions.act_window,name:crm.crm_tracking_source_action
+#: model:ir.model,name:crm.model_crm_tracking_source
+#: model:ir.ui.menu,name:crm.menu_crm_tracking_source
+msgid "Source"
+msgstr "Πηγή"
+
+#. module: crm
+#: field:crm.tracking.source,name:0
+msgid "Source Name"
+msgstr "Ονομασία Προέλευσης"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_case_stage_form
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,stage_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,stage_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,stage_id:0
+msgid "Stage"
+msgstr "Στάδιο"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_stage
+msgid "Stage Changed"
+msgstr "Αλλαγές Σταδίων"
+
+#. module: crm
+#: field:crm.case.stage,name:0
+msgid "Stage Name"
+msgstr "Όνομα Σταδίου"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_lead_stage_search
+msgid "Stage Search"
+msgstr "Αναζήτηση Σταδίου"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_stage
+msgid "Stage changed"
+msgstr "Στάδιο άλλαξε"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_stage
+msgid "Stage of case"
+msgstr "Στάδιο της υπόθεσης"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+#: field:crm.case.section,stage_ids:0
+#: view:crm.case.stage:crm.crm_case_stage_tree
+#: model:ir.actions.act_window,name:crm.crm_case_stage_act
+#: model:ir.actions.act_window,name:crm.crm_lead_stage_act
+#: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
+msgid "Stages"
+msgstr "Στάδια"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,state:0
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,state_id:0
+msgid "State"
+msgstr "Νομός/Πολιτεία"
+
+#. module: crm
+#: field:crm.phonecall,state:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: field:crm.phonecall.report,state:0
+msgid "Status"
+msgstr "Κατάσταση"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Stop Process"
+msgstr "Διακοπή Διαδικασίας"
+
+#. module: crm
+#: field:crm.lead,street:0
+msgid "Street"
+msgstr "Οδός"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Street..."
+msgstr "Οδός..."
+
+#. module: crm
+#: field:crm.lead,street2:0
+msgid "Street2"
+msgstr "Οδός 2"
+
+#. module: crm
+#: field:crm.lead,name:0
+msgid "Subject"
+msgstr "Θέμα"
+
+#. module: crm
+#: field:crm.lead,probability:0
+msgid "Success Rate (%)"
+msgstr "Ποσοστό Επιτυχίας (%)"
+
+#. module: crm
+#: field:crm.lead,message_summary:0 field:crm.phonecall,message_summary:0
+msgid "Summary"
+msgstr "Σύνοψη"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Tag"
+msgstr "Εικέτα"
+
+#. module: crm
+#: field:crm.lead,categ_ids:0
+msgid "Tags"
+msgstr "Ετικέτες"
+
+#. module: crm
+#: help:crm.case.section,alias_id:0
+msgid ""
+"The email address associated with this team. New emails received will "
+"automatically create new leads assigned to the team."
+msgstr "Η διεύθυνση email συνδεόμενη με αυτή την ομάδα. Νέα emails που λαμβάνονται θα δημιουργούν αυτόματα νέες συστάσεις ανατεθειμένες στην ομάδα."
+
+#. module: crm
+#: help:crm.case.section,use_leads:0
+msgid ""
+"The first contact you get with a potential customer is a lead you qualify "
+"before converting it into a real business opportunity. Check this box to "
+"manage leads in this sales team."
+msgstr "Η πρώτη επαφή που έχετε με ένα πιθανό πελάτη είναι μία σύσταση που αξιολογείτε ώς κατάλληλος πριν τον μετατρέψετε σε πραγματική επιχειρηματική ευκαιρία. Επιλέξτε αυτό το πλαίσιο για τη διαχείριση των συστάσεων σε αυτήν την ομάδα πωλήσεων."
+
+#. module: crm
+#: help:crm.lead,partner_name:0
+msgid ""
+"The name of the future partner company that will be created while converting"
+" the lead into opportunity"
+msgstr "Το όνομα του μελλοντικού συνεργάτη ο οποίος θα δημιουργηθεί όταν μετατραπεί η σύσταση σε ευκαιρία"
+
+#. module: crm
+#: help:crm.segmentation,name:0
+msgid "The name of the segmentation."
+msgstr "Το όνομα της κατάτμησης"
+
+#. module: crm
+#: help:crm.segmentation,categ_id:0
+msgid ""
+"The partner category that will be added to partners that match the "
+"segmentation criterions after computation."
+msgstr "Η Κατηγορία Συνεργάτη που θα προστεθεί σε όσους πελάτες πληρούν τα κριτήρια καταμερισμού μετά τον υπολογισμό."
+
+#. module: crm
+#: sql_constraint:crm.lead:0
+msgid "The probability of closing the deal should be between 0% and 100%!"
+msgstr "Η πιθανότητα κλεισίματος της συμφωνίας πρέπει να είναι μεταξύ 0% και 100%!"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"The selected contacts will be merged together. All\n"
+"                                documents linking to one of these contacts will be\n"
+"                                redirected to the aggregated contact. You can remove\n"
+"                                contacts from this list to avoid merging them."
+msgstr "Οι επιλεγμένες επαφές θα συγχωνευθούν μεταξύ τους.\nΌλα τα έγγραφα που συνδέονται με μία από αυτές τις επαφές\nθα μεταφερθούν στην συγκεντρωτική επαφή.\nΜπορείτε να αφαιρέσετε τις επαφές από τη λίστα για να\nαποφευχθεί η συγχώνευσή τους."
+
+#. module: crm
+#: help:crm.phonecall,state:0
+msgid ""
+"The status is set to Confirmed, when a case is created.\n"
+"When the call is over, the status is set to Held.\n"
+"If the callis not applicable anymore, the status can be set to Cancelled."
+msgstr "Η κατάσταση είναι ρυθμισμένο σε Επιβεβαιωμένη, όταν η περίπτωση έχει δημιουργηθεί\nΌταν η κλήση τερματιστεί, η κατάσταση έχει ορισθεί ώς Κρατούμενη.\nΑν η κλήση δεν ισχύει πλέον, η κατάσταση μπορεί να ορισθεί ώς Άκυρη."
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "There is no more contacts to merge for this request..."
+msgstr "Δεν υπάρχουν άλλες επαφές για να συγχωνεύσετε για αυτό το αίτημα..."
+
+#. module: crm
+#: help:crm.lead,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr "Αυτές οι email διευθύνσεις θα προστεθούν στο CC πεδίο όλων των εισερχόμενων και εξερχόμενων emails για αυτή την εγγραφή πριν αποσταλεί. Διαφορετικές πολλαπλάσιες email διευθύνσεις με ένα ερωτηματικό"
+
+#. module: crm
+#: help:crm.phonecall,email_from:0
+msgid "These people will receive email."
+msgstr "Οι παρακάτω θα λάβουν το email"
+
+#. module: crm
+#: help:sale.config.settings,group_scheduled_calls:0
+msgid "This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'"
+msgstr "Αυτό προσθέτει το μενού 'Προγραμματισμένες Κλήσεις' κάτω από το 'Πωλήσεις/ Τηλεφωνικές Κλήσεις'"
+
+#. module: crm
+#: help:crm.case.stage,type:0
+msgid ""
+"This field is used to distinguish stages related to Leads from stages "
+"related to Opportunities, or to specify stages available for both types."
+msgstr "Αυτό το πεδίο χρησιμοποιείται για να διαχωρίσει τα στάδια που σχετίζονται με τις Συστάσεις από τα στάδια που σχετίζονται με τις Ευκαιρίες, ή να καθορίσει στάδια διαθέσιμα και για τους δύο τύπους."
+
+#. module: crm
+#: help:crm.lead,campaign_id:0 help:crm.lead.report,campaign_id:0
+#: help:crm.opportunity.report,campaign_id:0
+#: help:crm.tracking.mixin,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr "Αυτό είναι το όνομα που θα σας βοηθήσει να ανιχνεύετε τις προσπάθειες των διαφορετικών εκστρατειών σας π.χ.: Φθινόπωρο_Κίνητρο, Χριστούγεννα_Ειδικό"
+
+#. module: crm
+#: help:crm.lead,medium_id:0 help:crm.lead.report,medium_id:0
+#: help:crm.opportunity.report,medium_id:0 help:crm.tracking.mixin,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Αυτή είναι μια μέθοδος παράδοσης. Π.χ.:Κάρτ ποστάλ, Email, ή Διαφημιστικό Πλαίσιο"
+
+#. module: crm
+#: help:crm.lead,source_id:0 help:crm.lead.report,source_id:0
+#: help:crm.opportunity.report,source_id:0 help:crm.tracking.mixin,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of"
+" email list"
+msgstr "Αυτή είναι μια πηγή του συνδέσμου Π.χ. Μηχανή Αναζήτησης, άλλος τομέας ή όνομα λίστας με email"
+
+#. module: crm
+#: help:crm.case.stage,probability:0
+msgid ""
+"This percentage depicts the default/average probability of the Case for this"
+" stage to be a success"
+msgstr "Αυτό το ποσοστό απεικονίζει την προεπιλεγμένη /μέση πιθανότητα της περίπτωσης για αυτό το στάδιο ώστε να γίνει μια επιτυχία"
+
+#. module: crm
+#: help:crm.case.stage,fold:0
+msgid ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
+msgstr "Αυτό το στάδιο αναδιπλώνεται σε προβολή kanban όταν δεν υπάρχουν αρχεία σε αυτό το στάδιο για να παρουσιαστούν."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,title:0
+msgid "Title"
+msgstr "Τίτλος"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "To Do"
+msgstr "Προς Εκτέλεση"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:397
+#, python-format
+msgid ""
+"To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n"
+"probability = 0 %, select \"Change Probability Automatically\".\n"
+"Create a specific stage or edit an existing one by editing columns of your opportunity pipe."
+msgstr "Για να απαλλάξετε την ροή των πωλήσεων σας και να ομαδοποίησετε όλες τις Χαμένες ευκαιρίες, διαμορφώστε ένα απο τα στάδια των πωλήσεων ώς εξής:\nπιθανότητα = 0 %, επιλέξτε \"Αλλάξτε την Πιθανότητα Αυτόματα\".\nΔημιουργήστε ένα συγκεκριμένο στάδιο ή επεξεργαστείτε το υφιστάμενο μέσω της επεξεργασίας των στηλών από την διοχέτευση των ευκαιριών σας."
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:417
+#, python-format
+msgid ""
+"To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n"
+"probability = 100 % and select \"Change Probability Automatically\".\n"
+"Create a specific stage or edit an existing one by editing columns of your opportunity pipe."
+msgstr "Για να απαλλάξετε την ροή διοχεύτευσης των πωλήσεων σας και για  να ομαδοποίησετε όλες τις Κερδισμένες ευκαιρίες, διαμορφώστε ένα από τα στάδια των πωλήσεων σας ώς εξής:\nπιθανότητα = 100 % και επιλέξτε 'Αλλάξτε την Πιθανότητα Αυτόματα'.\nΔημιουργήστε ένα συγκεκριμένο στάδιο ή επεξεργαστείτε ένα μέσω της επεξεργασίας των στηλών της ροής διοχέτευσης των ευκαιριών."
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: selection:crm.phonecall.report,state:0
+msgid "Todo"
+msgstr "Εκκρεμότητες"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.root_menu
+msgid "Tools"
+msgstr "Εργαλεία"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_top_opportunities
+msgid "Top Opportunities"
+msgstr "Κορυφαίες Ευκαιρίες"
+
+#. module: crm
+#: field:crm.lead.report,planned_revenue:0
+#: field:crm.opportunity.report,total_revenue:0
+msgid "Total Revenue"
+msgstr "Σύνολο Εσόδων"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Εκπαίδευση"
+
+#. module: crm
+#: field:crm.case.stage,type:0 field:crm.lead,type:0
+#: field:crm.lead.report,type:0 field:crm.opportunity.report,type:0
+msgid "Type"
+msgstr "Τύπος"
+
+#. module: crm
+#: help:crm.lead,type:0 help:crm.lead.report,type:0
+#: help:crm.opportunity.report,type:0
+msgid "Type is used to separate Leads and Opportunities"
+msgstr "Ο τύπος χρησιμοποιείται για να ξεχωρίσει τις Συστάσεις από τις Ευκαιρίες"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Unassigned"
+msgstr "Μη Ανατεθειμένη"
+
+#. module: crm
+#: field:crm.lead,message_unread:0 field:crm.phonecall,message_unread:0
+msgid "Unread Messages"
+msgstr "Μη αναγνωσμένο Μήνυμα"
+
+#. module: crm
+#: field:crm.lead,write_date:0
+msgid "Update Date"
+msgstr "Ενημέρωση Ημερομηνίας"
+
+#. module: crm
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "Χρησιμοποίησε τους Κανόνες Αγοράς / Πώλησης"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner.mass,action:0
+msgid "Use existing partner or create"
+msgstr "Χρήση υπάρχοντος συνεργάτη ή δημιουργία"
+
+#. module: crm
+#: help:crm.case.section,resource_calendar_id:0
+msgid "Used to compute open days"
+msgstr "Χρησιμοποιείται για να υπολογίσει τις ανοιχτές ημέρες"
+
+#. module: crm
+#: help:crm.case.stage,sequence:0
+msgid "Used to order stages. Lower is better."
+msgstr "Χρησιμοποιείται για να δώσει σειρά στα στάδια. Χαμηλότερο είναι το καλύτερο"
+
+#. module: crm
+#: field:crm.lead.report,user_id:0 field:crm.opportunity.report,user_id:0
+#: field:crm.phonecall.report,user_id:0
+msgid "User"
+msgstr "Χρήστης"
+
+#. module: crm
+#: field:crm.lead,user_email:0
+msgid "User Email"
+msgstr "Email Χρήστη"
+
+#. module: crm
+#: field:crm.lead,user_login:0
+msgid "User Login"
+msgstr "Σύνδεση Χρήστη"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_vat:0
+msgid "VAT"
+msgstr "ΦΠΑ"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_value:0
+msgid "Value"
+msgstr "Αξία"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+msgid "Very High"
+msgstr "Πολύ υψηλή"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+msgid "Very Low"
+msgstr "Πολύ χαμηλά"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:396 code:addons/crm/crm_lead.py:416
+#: code:addons/crm/crm_lead.py:643 code:addons/crm/crm_lead.py:769
+#: code:addons/crm/crm_phonecall.py:291
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
+#, python-format
+msgid "Warning!"
+msgstr "Προειδοποίηση!"
+
+#. module: crm
+#: help:crm.lead,section_id:0
+msgid ""
+"When sending mails, the default email address is taken from the sales team."
+msgstr "Όταν στέλνετε mails, η προεπιλεγμένη διεύθυνση email εισάγεται από την ομάδα πωλήσεων."
+
+#. module: crm
+#: field:base.partner.merge.line,wizard_id:0
+msgid "Wizard"
+msgstr "Οδηγός"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Won"
+msgstr "Κερδισμένη"
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Ώρες Εργασίας"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:434
+#, python-format
+msgid ""
+"You are already at the top level of your sales-team category.\n"
+"Therefore you cannot escalate furthermore."
+msgstr "Βρίσκεστε ήδη στην κορυφή της κατηγορίας ομάδα-πωλήσεων.\nΚατά συνέπεια δεν μπορείτε να ανεβείτε πιο πάνω."
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:310
+#, python-format
+msgid "You cannot merge a contact with one of his parent."
+msgstr "Δεν μπορείτε να συγχωνεύσετε μία επαφή με μία της μητρικής του."
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:446
+#, python-format
+msgid "You have to specify a filter for your selection"
+msgstr "Πρέπει να καθορίσετε ένα φίλτρο για την επιλογή σας"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "ZIP"
+msgstr "ΤΚ"
+
+#. module: crm
+#: field:crm.lead,zip:0
+msgid "Zip"
+msgstr "Τ.Κ."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "at"
+msgstr "στο"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "e.g. Call for proposal"
+msgstr "πχ. Τηλεφώνησε για μια πρόταση"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:971
+#, python-format
+msgid "lead"
+msgstr "σύσταση"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:91
+#, python-format
+msgid "leads"
+msgstr "συστάσεις"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "min(s)"
+msgstr "λεπτό(ά)"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:969
+#, python-format
+msgid "opportunity"
+msgstr "ευκαιρίες"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "or"
+msgstr "ή"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
+#, python-format
+msgid "unknown"
+msgstr "άγνωστο"

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
+
+        <record id="view_payment_mode_search" model="ir.ui.view">
+            <field name="name">payment.mode.search</field>
+            <field name="model">payment.mode</field>
+            <field name="arch" type="xml">
+                <search string="Payment Mode">
+                    <field name="name" string="Payment Mode"/>
+                    <field name="journal"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_payment_mode_tree" model="ir.ui.view">
+            <field name="name">payment.mode.tree</field>
+            <field name="model">payment.mode</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Mode">
+                    <field name="name"/>
+                    <field name="journal"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_payment_mode_form" model="ir.ui.view">
+            <field name="name">payment.mode.form</field>
+            <field name="model">payment.mode</field>
+            <field name="arch" type="xml">
+                <form string="Payment Mode">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="journal"/>
+                        <field name="bank_id" domain="[('partner_id','=',partner_id)]"  />
+                        <field name="company_id" widget='selection' groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                        <field name="partner_id" invisible="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="action_payment_mode_form" model="ir.actions.act_window">
+            <field name="name">Payment Mode</field>
+            <field name="res_model">payment.mode</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_payment_mode_search"/>
+        </record>
+
+        <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc" groups="base.group_no_one"/>
+
+        <record id="view_payment_order_form" model="ir.ui.view">
+            <field name="name">payment.order.form</field>
+            <field name="model">payment.order</field>
+            <field name="arch" type="xml">
+                <form string="Payment Order">
+                <header>
+                    <button name="open" states="draft" string="Confirm Payments" class="oe_highlight"/>
+                    <button name="set_done" states="open" string="Make Payments" type="object" class="oe_highlight"/>
+                    <button name="set_to_draft" states="cancel" string="Set to draft" type="object"/>
+                    <button name="cancel" states="draft,open" string="Cancel Payments"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
+                </header>
+                <sheet string="Payment order">
+                    <div class="oe_title">
+                        <label for="reference" class="oe_edit_only"/>
+                        <h1><field name="reference"/></h1>
+                    </div>
+                    <div class=" oe_right oe_button_box">
+                        <button class="oe_inline oe_stat_button oe_right" name="%(action_create_payment_order)d" string="Invoices" Help="Select Invoices to Pay"
+                               type="action" attrs="{'invisible':[('state','=','done')]}" icon="fa-pencil-square-o" widget="statinfo"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_invoice']}"/>
+                            <field name="mode"/>
+                        </group>
+                        <group>
+                            <field name="date_prefered"/>
+                            <field name="date_scheduled" attrs="{'readonly':[('date_prefered','!=','fixed')]}"/>
+                            <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" context="{'order_id': active_id or False}" >
+                        <form string="Payment Line">
+                            <notebook>
+                                <page string="Payment">
+                                    <group col="4">
+                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True),('amount_to_pay','>', 0)] "/>
+                                        <separator colspan="4" string="Transaction Information"/>
+                                        <field name="date"/>
+                                        <label for="amount_currency" string="Amount"/>
+                                        <div>
+                                            <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                            <field name="currency" nolabel="1" class="oe_inline"/>
+                                        </div>
+                                        <field name="partner_id" on_change="onchange_partner(partner_id,parent.mode)"/>
+                                        <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
+                                        <separator colspan="2" string="Owner Account"/>
+                                        <separator colspan="2" string="Destination Account"/>
+                                        <field colspan="2" name="info_owner" nolabel="1"/>
+                                        <field colspan="2" name="info_partner" nolabel="1"/>
+                                        <field colspan="4" name="communication"/>
+                                        <field colspan="4" name="communication2"/>
+                                        <field name="name"/>
+                                        <field name="state"/>
+                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                    </group>
+                                </page>
+                                <page string="Information">
+                                    <group col="4" string="General Information">
+                                        <label for="amount" groups="base.group_multi_currency"/>
+                                        <div groups="base.group_multi_currency">
+                                            <field name="amount" class="oe_inline"/>
+                                            <field name="company_currency" class="oe_inline"/>
+                                        </div>
+                                        <separator colspan="4" string="Entry Information"/>
+                                        <field name="create_date" readonly="1"/>
+                                        <field name="ml_maturity_date"/>
+                                        <field name="ml_inv_ref"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </form>
+                        <tree string="Payment Line">
+                            <field name="ml_inv_ref" />
+                            <field name="partner_id"/>
+                            <field name="communication"/>
+                            <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
+                            <field name="ml_maturity_date"/>
+                            <field name="date"/>
+                            <field name="amount_currency" string="Amount"/>
+                            <field name="currency"/>
+                            <field name="name"/>
+                            <field name="amount" sum="Total in Company Currency" invisible="1"/>
+                        </tree>
+                    </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_payment_order_tree" model="ir.ui.view">
+            <field name="name">payment.order.tree</field>
+            <field name="model">payment.order</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';gray:state in ('cancel','done');black:state == 'open'" string="Payment order">
+                    <field name="reference"/>
+                    <field name="mode"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date_created"/>
+                    <field name="date_done"/>
+                    <field name="total"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_payment_order_search" model="ir.ui.view">
+            <field name="name">payment.order.tree.search</field>
+            <field name="model">payment.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Payment Orders">
+                    <field name="reference" string="Payment Order"/>
+                    <field name="date_done"/>
+                    <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                    <filter string="Confirmed" domain="[('state','=','open')]" icon="terp-camera_test"/>
+                    <filter string="Done" domain="[('state','=','done')]" icon="terp-dialog-close"/>
+                    <field name="mode"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Payment Mode" context="{'group_by': 'mode'}" icon="terp-dolar"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payment_order_tree" model="ir.actions.act_window">
+            <field name="name">Payment Orders</field>
+            <field name="res_model">payment.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_payment_order_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a payment order.
+              </p><p>
+                A payment order is a payment request from your company to pay a
+                supplier invoice or a customer refund.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
+
+        <record id="action_payment_order_tree_new" model="ir.actions.act_window">
+            <field name="name">New Payment Order</field>
+            <field name="res_model">payment.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <record id="view_payment_line_form" model="ir.ui.view">
+            <field name="name">Payment Line</field>
+            <field name="model">payment.line</field>
+            <field name="arch" type="xml">
+                <form string="Payment Line">
+                    <notebook>
+                        <page string="Payment">
+                            <group col="4">
+                                <field name="order_id"/>
+                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0), ('account_id.reconcile', '=', True)]"/>
+                                <separator colspan="4" string="Transaction Information"/>
+                                <field name="date"/>
+                                <label for="amount_currency" groups="base.group_multi_currency"/>
+                                <div groups="base.group_multi_currency">
+                                    <field name="amount_currency" on_change="onchange_amount(amount_currency,currency,company_currency)" class="oe_inline"/>
+                                    <field name="currency" class="oe_inline"/>
+                                </div>
+                                <field name="partner_id" on_change="onchange_partner(partner_id, False)"/>
+                                <field domain="[('partner_id','=',partner_id)]" name="bank_id"/>
+                                <separator colspan="2" string="Owner Account"/>
+                                <separator colspan="2" string="Desitination Account"/>
+                                <field colspan="2" name="info_owner" nolabel="1"/>
+                                <field colspan="2" name="info_partner" nolabel="1"/>
+
+                                <field colspan="4" name="communication"/>
+                                <field colspan="4" name="communication2"/>
+                                <field name="name"/>
+                                <field name="state"/>
+                            </group>
+                        </page>
+                        <page string="Information">
+                            <group col="4" string="General Information">
+                                <label for="amoun"/>
+                                <div>
+                                    <field name="amount" class="oe_inline"/>
+                                    <field name="company_currency" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group col="4" string="Entry Information">
+                                <field name="create_date"/>
+                                <field name="ml_maturity_date"/>
+                                <field name="ml_inv_ref"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="view_payment_line_tree" model="ir.ui.view">
+            <field name="name">Payment Lines</field>
+            <field name="model">payment.line</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Payment Line">
+                    <field name="order_id"/>
+                    <field name="ml_inv_ref" />
+                    <field name="ml_maturity_date"/>
+                    <field name="partner_id"/>
+                    <field name="communication"/>
+                    <field name="amount" sum="Amount Total"/>
+                    <field name="amount_currency" sum="Currency Amount Total" groups="base.group_multi_currency"/>
+                    <field name="currency" groups="base.group_multi_currency"/>
+                    <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
+                    <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>
+                    <field name="create_date"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_payment_line_form" model="ir.actions.act_window">
+            <field name="name">Payment Line</field>
+            <field name="res_model">payment.line</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <record id="view_bank_statement_form" model="ir.ui.view">
+            <field name="name">account.bank.statement.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="account.view_bank_statement_form"/>
+            <field name="arch" type="xml">
+	            <xpath expr="//div[@name='import_buttons']" position="inside">
+	                <button class="oe_inline oe_stat_button" name="%(action_account_populate_statement_confirm)d" attrs="{'invisible':[('state','=','confirm')]}" string="Import Lines" help="Import Payment Lines" type="action" icon="fa-cogs" widget="statinfo"/>
+	            </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

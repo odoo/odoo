@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    <menuitem name="Import &amp; Synchronize" id="base.menu_import_crm"
+        parent="base.menu_base_partner"/>
+
+    <record id="view_crm_meeting_search" model="ir.ui.view">
+        <field name="name">CRM - Meetings Search</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="opportunity_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>

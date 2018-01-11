@@ -1,0 +1,1494 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_evaluation
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# hoxhe aits <hoxhe0@gmail.com>, 2015
+# Mohammed Ibrahim <m.ibrahim@mussder.com>, 2016
+# Mustafa Rawi <mustafa@cubexco.com>, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-05-12 12:57+0000\n"
+"Last-Translator: Mohammed Ibrahim <m.ibrahim@mussder.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:84
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+msgstr "\nالتاريخ: %(date)s\n\nعزيزي %(employee_name)s,\n\nأقوم حالياً بإجراء تقييم بشأن %(eval_name)s.\n\nأرجو منكم تسجيل استجابتكم عليه.\n\n\nشكراً,\n--\n%(user_signature)s\n\n        "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,nbr:0
+msgid "# of Requests"
+msgstr "# بشأن الطلبات"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(date)s: Current Date"
+msgstr "(date)s: التاريخ الجاري"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(employee_name)s: Partner name"
+msgstr "(employee_name)s: اسم الشريك"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(eval_name)s:Appraisal Name"
+msgstr "(eval_name)s:اسم التقييم"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(user_signature)s: User name"
+msgstr "(توقيعات_المستخدمين): اسم المستخدم"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.opinion_1
+msgid ""
+"<h2>At the supervisor's appraisal date</h2>\n"
+"<p>His direct reports will be invited through Odoo to express a feedback on their supervisor's leadership and to give their opinion about their own engagement and effectiveness, the continuous improvement and openness in action in thecompany...</p>\n"
+"<p>The employees will send back their anonymous answers to Odoo. The data will be handled by the HR manager and a brief summary of the data will be sent to the concerned supervisor, to his team and to the supervisor's supervisor.</p>\n"
+"<p>The appraiser should rate the employee's major work accomplishments and performance according to the metric provided below\n"
+"</p><ol>\n"
+"<li>Significantly exceeds standards and expectations required of the position</li>\n"
+"<li>Exceeds standards and expectations</li>\n"
+"<li>Meet standards and expectations</li>\n"
+"<li>Did not meet standards and expectations</li>\n"
+"<li>Significantly below standards and expectations</li>\n"
+"</ol>"
+msgstr "<H2> في تاريخ تقييم المشرف </ H2>\nسيدعى <p> وتقاريره مباشرة من خلال أوبنيرب للتعبير عن ردود الفعل على القيادة المشرف عليهم وإعطاء رأيهم حول المشاركة الخاصة وفعاليتها، والتحسين المستمر والانفتاح في العمل في الشركه </ P>\n<P> والموظفين سوف يرسلون إجاباتها مجهولة إلى أوبنيرب. وسيتم التعامل مع البيانات من قبل مدير الموارد البشرية، وسوف يتم إرسال ملخص موجز للبيانات إلى المشرف المختص لفريقه والمشرف المشرف. </ P>\n<p> والمثمن يجب أن يصنف الإنجازات العمل الرئيسية الموظف والأداء وفقا لقياس الواردة أدناه\n</ P> <رأ>\n<li> ويتجاوز إلى حد كبير المعايير والتوقعات المطلوبة من موقف </ لى>\n<li> ويتجاوز المعايير والتوقعات </ لى>\n<li> ومعايير لقاء والتوقعات </ لى>\n<li> ولم تستوفي المعايير والتوقعات </ لى>\n<li> وبشكل ملحوظ دون المعايير والتوقعات </ لى>\n</ OL>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_1
+msgid ""
+"<h2>Overall Purpose Of Employee Appraisal</h2>\n"
+"<ul><li>To initiate a clear and open communication of performance expectations\n"
+"</li><li>To assist employees in their professional growth, through the identification of strengths and opportunities for\n"
+"development</li></ul>\n"
+"<h2>At the outset of the appraisal time period</h2>\n"
+"<ul><li>It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the\n"
+"coming year, including major employee responsibilities and corresponding benchmarks against which results will be\n"
+"evaluated.\n"
+"</li><li>Critical or key elements of performance and professional development needs (if any), should also be noted at this time</li></ul>\n"
+"<h2>At the conclusion of the appraisal time period</h2>\n"
+"<ul><li>The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-appraisal and a starting\n"
+"point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.\n"
+"Once the form had been filled, the employee send it to his supervisor.\n"
+"</li><li>It is the primary responsibility of the supervisor to gather the necessary input from the appropriate sources of feedback\n"
+"(internal and/or external customers, peers). In case of collaboration with Odoo SA Belgium, the supervisor must\n"
+"receive completed evaluation form from the employee's Belgian project manager.\n"
+"</li><li>The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad\n"
+"hoc fields.\n"
+"</li><li>The employee may choose to offer comments or explanation regarding the completed review.\n"
+"</li><li>The supervisor send the form to the HR department in India and in Belgium</li></ul>"
+msgstr "<H2> الهدف العام من موظف تقييم </ H2>\n<UL> <li> لبدء اتصال واضح ومفتوح من توقعات الأداء\n</li> <li> لمساعدة الموظفين في نموهم المهني، من خلال تحديد نقاط القوة والفرص المتاحة لل\nتطوير </li/> </ UL>\n<H2> في بداية الفترة الزمنية تقييم </ H2>\n<UL> <li> وإنها مسؤولية مشتركة بين الموظف والمشرف (المثمن) لوضع خطة عمل قابلة لل\nالسنة المقبلة، بما في ذلك مسؤوليات الموظف الرئيسية وما يقابلها من معالم ضد الذي ستكون النتائج\nتقييم\n</li> <li> والعناصر الحرجة أو الرئيسة للأداء واحتياجات التطوير المهني (إن وجدت)، وينبغي أيضا أن يلاحظ في هذا الوقت </ li/> </ UL>\n<H2> وفي ختام الفترة الزمنية تقييم </ H2>\n<UL> <li> ويقوم الموظف مسؤولا عن الانتهاء من مسودة استمارة تقييم كأداة للتقييم الذاتي والانطلاق\nنقطة لتقييم المشرف. الموظف يمكن إضافة أمثلة من الإنجازات لكل معيار\n\nبمجرد ملء استمارة، الموظف إرسالها إلى المشرف.\n</ li> <li> ووهذه هي المسؤولية الأساسية للمشرف لجمع المدخلات اللازمة من المصادر المناسبة من ردود الفعل\n(العملاء الداخليين و / أو خارجي، والأقران). في حالة بالتعاون مع أوبنيرب SA بلجيكا، يجب على المشرف\nتلقي استمارة تقييم الانتهاء من مدير المشروع البلجيكي للموظف.\n</ li> <li> والمشرف يجمع ويدمج جميع مدخلات لتقييم الانتهاء. انه يحفز تقييمه في الإعلان\nالحقول المخصصة.\n</ li> <li> والموظف قد يختار لتقديم تعليق أو تفسير بشأن الاستعراض الذي أنجزه.\n</ لى> <li> والمشرف إرسال النموذج إلى إدارة الموارد البشرية في الهند وبلجيكا </ لى> </ UL>"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new appraisal.\n"
+"              </p><p>\n"
+"                Each employee may be assigned an Appraisal Plan. Such a plan\n"
+"                defines the frequency and the way you manage your periodic\n"
+"                personnel evaluation. You will be able to define steps and\n"
+"                attach interviews to each step. Odoo manages all kinds of\n"
+"                evaluations: bottom-up, top-down, self-evaluation and final\n"
+"                evaluation by the manager.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء تقييم جديد. .\n</p><p>كل موظف قد يتم تعيين له خطة تقييم. هذه الخطة\nيحدد وتيرة والطريقة التي تدير الدوري الخاص بك\nتقييم الموظفين. سوف تكون قادرا على تحديد الخطوات و\nإرفاق مقابلات مع كل خطوة. أوبنيرب تدير جميع أنواع\nالتقييم: من أسفل إلى أعلى، من أعلى إلى أسفل، والتقييم الذاتي والأخيرة\nالتقييم من قبل المدير .\n</p>"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new interview request related to a personal evaluation.\n"
+"              </p><p>\n"
+"                Interview requests are usually generated automatically by\n"
+"                Odoo according to an employee's appraisal plan. Each user\n"
+"                receives automatic emails and requests to evaluate their\n"
+"                colleagues periodically.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء طلب مقابلة جديدة تتعلق بتقييم شخصي.\n</p><p>\nعادة يتم إنشاء طلبات مقابلة تلقائيا من\nأوبنيرب وفقا لخطة تقييم الموظف. كل مستخدم\nيتلقى رسائل البريد الإلكتروني التلقائية وطلبات لتقييم بهم\nالزملاء بشكل دوري.\n</p>"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new appraisal plan.\n"
+"              </p><p>\n"
+"                You can define appraisal plans (ex: first interview after 6\n"
+"                months, then every year). Then, each employee can be linked to\n"
+"                an appraisal plan so that Odoo can automatically generate\n"
+"                interview requests to managers and/or subordinates.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لتحديد خطة تقييم جديدة.\n</p><p>يمكنك تحديد خطط التقييم (مثلا: المقابلة الأولى بعد 6\nأشهر، ثم كل سنة). ثم، كل موظف يمكن أن تكون مرتبطة\nخطة التقييم بحيث أوبنيرب يمكن أن تولد تلقائيا\nتطلب مقابلة للمديرين و / أو المرؤوسين.\n</p>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_2
+#: model:survey.page,description:hr_evaluation.opinion_2
+#: model:survey.survey,description:hr_evaluation.appraisal_form
+#: model:survey.survey,description:hr_evaluation.opinion_form
+#: model:survey.survey,thank_you_message:hr_evaluation.appraisal_form
+#: model:survey.survey,thank_you_message:hr_evaluation.opinion_form
+msgid "<p> </p>"
+msgstr "<p> </p>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_5
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_4
+msgid ""
+"<p>Identify professional, performance, or project objectives you recommend for employee’s continued career development\n"
+"over the coming year.</p>"
+msgstr "<p> تحديد محترف والأداء، أو أهداف المشروع المهنية التي توصي بها لموظفي التطوير الوظيفي المستمر\nخلال السنة المقبلة. </ P>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_3
+msgid ""
+"<p>The appraiser should rate the employee’s major work accomplishments and performance according to the metric provided\n"
+"below:</p><ol>\n"
+"<li> Significantly exceeds standards and expectations required of the position\n"
+"</li><li> Exceeds standards and expectations\n"
+"</li><li> Meet standards and expectations\n"
+"</li><li> Did not meet standards and expectations\n"
+"</li><li> Significantly below standards and expectations</li></ol>"
+msgstr "<p> والمثمن يجب أن يصنف الإنجازات العمل الرئيسية الموظف والأداء وفقا لقياس المقدمة\nأدناه: </ P> \n<lo>\n<li> ويتجاوز إلى حد كبير المعايير والتوقعات المطلوبة من موقف\n</ li> <li> وتتجاوز المعايير والتوقعات\n</ li> <li> ومعايير لقاء والتوقعات\n</ li> <li> ولم تستوفي المعايير والتوقعات\n</ li> <li> وبشكل ملحوظ دون المعايير والتوقعات </ li> </ OL>"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_1
+msgid "Ability to cope with multidisciplinarity of team"
+msgstr "القدرة على التعامل مع تعدد التخصصات من فريق ."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_6
+msgid "Ability to follow and complete work as instructed"
+msgstr "القدرة على متابعة واستكمال العمل وفقا للتعليمات "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_5
+msgid "Ability to manage planning resources, risks, budgets and deadlines"
+msgstr "القدرة على إدارة تخطيط الموارد، والمخاطر، والميزانيات والمواعيد النهائية ."
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,action:0
+msgid "Action"
+msgstr "إجراء"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_action:0
+msgid "Action Plan"
+msgstr "خطة الاجراء"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Action Plan..."
+msgstr "الخطة الإجرائية.."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Action to Perform"
+msgstr "اجراءات للتنفيذ"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_1
+msgid ""
+"Actions by Executive management show genuine interest in the well-being of "
+"employees"
+msgstr "الإجراءات من قبل الإدارة التنفيذية تظهر إهتمام حقيقي في رفاه الموظفين "
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,active:0
+msgid "Active"
+msgstr "نشط"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_13
+msgid ""
+"Adaptability: Ability to adapt oneself to organizational changes while "
+"keeping efficiency"
+msgstr "القدرة على التكيف: القدرة على التكيف مع نفسه إلى التغييرات التنظيمية مع الحفاظ على الكفاءة  "
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_2_3
+msgid "Additional Comments"
+msgstr "التعليقات الإضافية"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_7
+msgid "Additional comments"
+msgstr "تعليقات اضافية"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,send_answer_employee:0
+#: field:hr_evaluation.plan.phase,send_answer_manager:0
+msgid "All Answers"
+msgstr "كل الاجوبة"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_11
+msgid "Analytical and synthetic mind"
+msgstr "العقل التحليلي والاصطناعي"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,send_anonymous_employee:0
+#: field:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Anonymous Summary"
+msgstr "ملخص مجهول"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Answer Survey"
+msgstr "أجب عن الاستفتاء"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_tree
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
+msgid "Appraisal"
+msgstr "التقييم"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_graph
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
+#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
+msgid "Appraisal Analysis"
+msgstr "تحليل التقييم"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date:0
+msgid "Appraisal Deadline"
+msgstr "الموعد النهائي للتقييم"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,survey_id:0
+#: field:hr_evaluation.plan.phase,survey_id:0
+msgid "Appraisal Form"
+msgstr "نموذج تقييمي"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: field:hr_evaluation.evaluation,survey_request_ids:0
+msgid "Appraisal Forms"
+msgstr "نماذج التقييم"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
+msgid "Appraisal Interview"
+msgstr "تقييم المقابلة"
+
+#. module: hr_evaluation
+#: field:hr.employee,appraisal_count:0
+msgid "Appraisal Interviews"
+msgstr "تقييم المقابلات"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,phase_id:0
+msgid "Appraisal Phase"
+msgstr "مرحلة التقييم "
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
+#: field:hr_evaluation.plan,phase_ids:0
+msgid "Appraisal Phases"
+msgstr "مراحل التقييم"
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_plan_id:0
+#: field:hr.evaluation.interview,evaluation_id:0
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_tree
+#: field:hr_evaluation.plan,name:0 field:hr_evaluation.plan.phase,plan_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
+msgid "Appraisal Plan"
+msgstr "تقييم الخطة"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
+msgid "Appraisal Plan Phase"
+msgstr "طور تقييم الخطة"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_tree
+msgid "Appraisal Plan Phases"
+msgstr "أطوار خطة التقييم"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
+msgid "Appraisal Plans"
+msgstr "خطط التقييم"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.opinion_1
+msgid "Appraisal Process"
+msgstr "عملية التقييم"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
+msgid "Appraisal Reminders"
+msgstr "تقييم التذكير"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Appraisal Summary"
+msgstr "مختصر التقييم"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Appraisal Summary..."
+msgstr "موجز التقييم ."
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_3
+msgid "Appraisal for Period"
+msgstr "التقييم عن فترة"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisal that are in Plan In Progress state"
+msgstr "تقييم ان الخطة  في حالة متقدمة"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisal that are in waiting appreciation state"
+msgstr "التقييم في انتظار حالة تقييم"
+
+#. module: hr_evaluation
+#: view:hr.employee:hr_evaluation.hr_hr_employee_view_form
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
+msgid "Appraisals"
+msgstr "تقييمات"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisals Month"
+msgstr "شهر التقييمات "
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisals by Month"
+msgstr "التقييمات حسب الشهر"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_5
+msgid "Appraiser"
+msgstr "المقيم"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr_evaluation.evaluation,rating:0
+msgid "Appreciation"
+msgstr "التقدير"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Bottom-Up Appraisal Requests"
+msgstr "طلبات التقييم من اسفل-لأعلى"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Cancel Appraisal"
+msgstr "إلغاء تقييم"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+msgid "Cancel Survey"
+msgstr "إلغاء إستفتاء"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.interview,state:0
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Cancelled"
+msgstr "ملغي"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,mail_feature:0
+msgid ""
+"Check this box if you want to send mail to employees coming under this phase"
+msgstr "تفحص هذه الخانة اذا كنت تريد ارسال بريد الي الموظفين المندرجين تحت هذه القائمة"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,wait:0
+msgid ""
+"Check this box if you want to wait that all preceding phases are finished "
+"before launching this phase."
+msgstr "راجع هذه الخانة اذا كنت تريد كل المراحل السابقة التي أُنهت قبل بدء هذه المرحلة."
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,closed:0
+msgid "Close Date"
+msgstr "تاريخ الإغلاق"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_9
+msgid ""
+"Communication skills (written & verbally): clearness, concision, exactitude"
+msgstr "مهارات الاتصال (كتابة وشفهيا): الوضوح، الإيجاز، الدقة"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: field:hr_evaluation.plan,company_id:0
+#: field:hr_evaluation.plan.phase,company_id:0
+msgid "Company"
+msgstr "شركة"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_3
+msgid ""
+"Compared to similar jobs in other companies where I could work, my total "
+"compensation..."
+msgstr "بالمقارنة مع وظائف مماثلة في شركات أخرى يمكن العمل بها، مجموع التعويض..."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_3
+msgid ""
+"Compliance to internal rules and processes (timesheets completion, etc.)"
+msgstr "الامتثال للقواعد والإجراءات الداخلية (إتمام الجداول الزمنية، إلخ.)"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_4
+msgid "Continuous Improvement"
+msgstr "تحسن مستمر"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,create_date:0
+msgid "Create Date"
+msgstr "إنشاء تاريخ"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,create_uid:0
+#: field:hr_evaluation.evaluation,create_uid:0
+#: field:hr_evaluation.plan,create_uid:0
+#: field:hr_evaluation.plan.phase,create_uid:0
+msgid "Created by"
+msgstr "أُنشئ بواسطة"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,create_date:0
+#: field:hr_evaluation.evaluation,create_date:0
+#: field:hr_evaluation.plan,create_date:0
+#: field:hr_evaluation.plan.phase,create_date:0
+msgid "Created on"
+msgstr "إنشاؤه في"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Creation Month"
+msgstr "شهر الانشاء"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_14
+msgid "Creativity and forward looking aptitude"
+msgstr "الإبداع وأهلية التطلع للمستقبل"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_8
+msgid "Customer commitment"
+msgstr "التزام العميل"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_1_2
+msgid "Date"
+msgstr "تاريخ"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_4
+msgid "Date of review"
+msgstr "تاريخ المراجعة"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_last_post:0
+#: help:hr_evaluation.evaluation,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "تاريخ آخر رسالة نُشرت لهذا البند"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,deadline:0
+#: field:hr.evaluation.report,deadline:0
+msgid "Deadline"
+msgstr "الموعد النهائي"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Deadline Date"
+msgstr "تاريخ الموعد النهائي"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_7
+msgid "Decision making"
+msgstr "صناعة القرار"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,delay_date:0
+msgid "Delay to Start"
+msgstr "التأخر في البدء"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_2
+msgid "Delegation: Ability to efficiently assign tasks to other people"
+msgstr "توكيل: القدرة على إسناد المهام إلى أشخاص آخرين بكفاءة"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_1
+msgid "Demonstrates genuine concern for me as a person"
+msgstr "يدل على اهتمام صادق بالنسبة لي كشخص ."
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+msgid "Did not meet expectations"
+msgstr "لم تلب التوقعات"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Do not meet expectations"
+msgstr "لا يلبي التوقعات"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: selection:hr.evaluation.interview,state:0
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: selection:hr.evaluation.report,state:0
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Done"
+msgstr "تم"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.interview,state:0
+#: selection:hr.evaluation.report,state:0
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_3
+msgid "Effectiveness"
+msgstr "فعالية"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,mail_body:0
+msgid "Email"
+msgstr "بريد إلكتروني"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr.evaluation.report,employee_id:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: field:hr_evaluation.evaluation,employee_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_employee
+msgid "Employee"
+msgstr "موظف"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
+msgid "Employee Appraisal"
+msgstr "تقييم الموظف"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_1
+#: model:survey.survey,title:hr_evaluation.appraisal_form
+msgid "Employee Appraisal Form"
+msgstr "نموذج تقييم موظف"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_5
+msgid "Employee Comments"
+msgstr "تعليقات الموظف "
+
+#. module: hr_evaluation
+#: model:survey.survey,title:hr_evaluation.opinion_form
+msgid "Employee Opinion Form"
+msgstr "نموذج رأي الموظف"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_3
+msgid "Employee Performance in Key Areas"
+msgstr "أداء الموظف في المجالات الرئيسية"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,user_to_review_id:0
+msgid "Employee to evaluate"
+msgstr "موظف للتقييم"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date_close:0
+msgid "Ending Date"
+msgstr "تاريخ الانتهاء"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_1
+msgid "Engagement"
+msgstr "خوض"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_2
+msgid "Enthusiasm & implication toward projects/assignments"
+msgstr "الحماس والتضمين نحو المشاريع/المهام"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.opinion_2
+msgid "Evaluation"
+msgstr "تقييم"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
+msgid "Evaluations Statistics"
+msgstr "احصائيات التقييمات"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Exceeds expectations"
+msgstr "يتجاوز التوقعات"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Extended Filters..."
+msgstr "مرشحات مفصلة..."
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Final Interview"
+msgstr "المقابلة النهائية"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: selection:hr.evaluation.report,state:0
+msgid "Final Validation"
+msgstr "الصلاحية النهائية"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Final Validation Evaluations"
+msgstr "نهائي تصديق التقيمات"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "أول تقييم في (الأشهر)"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_follower_ids:0
+#: field:hr_evaluation.evaluation,message_follower_ids:0
+msgid "Followers"
+msgstr "المتابعون"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "General"
+msgstr "عام"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Group by..."
+msgstr "تجميع حسب..."
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_summary:0
+#: help:hr_evaluation.evaluation,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "يحمل ملخص المشارك (عدد الرسائل، ...). هذا ملخص مباشرة بتنسيق HTML من أجل إدراجها في عروض كانبان."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_1
+msgid "I am proud to tell others I work here"
+msgstr "أنا فخور لأن أقول للآخرين أنا أعمل هنا"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_5
+msgid ""
+"I am willing to put in a great deal of effort beyond what is expected to "
+"help my workgroup succeed"
+msgstr "أنا على استعداد لوضع قدر كبير من الجهد يتجاوز ما هو متوقع لأساعد على نجاح زملائي في مجموعة العمل "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_4
+msgid "I believe the information that I get from the person I report to."
+msgstr "أنا أصدق المعلومات التي أحصل عليها من الشخص الذي أرجع اليه \"المسؤول\"."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_2
+msgid ""
+"I consistently acquire new knowledge, skills or understanding through "
+"contact with my supervisor. He helps me growing my compete"
+msgstr "أنا اكتساب باستمرار المعرفة الجديدة والمهارات والفهم من خلال الاتصال مع المشرف الخاص بى . انه يساعدني فى نمو المنافسه الخاصه بى "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_3_2
+msgid "I have enough work"
+msgstr "لدي ما يكفي من العمل"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_2
+msgid ""
+"I have the same opportunity to succeed as others with similar experiences, "
+"performance and educational background"
+msgstr "لدي نفس الفرصة لتحقيق النجاح وغيرهم من ذوي الخبرات المماثله والأداء والخلفية التعليمية "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_5_1
+msgid "I know the company's values and live them"
+msgstr "أنا على علم بقيم المؤسسة وأعيش عليها"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_3_3
+msgid ""
+"I mostly work on value-added tasks for the company, the products or the "
+"services"
+msgstr "أنا أعمل في الغالب على المهام ذات قيمة مضافة للشركة، والمنتجات أو الخدمات "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_4
+msgid "I understand the company strategy and how my workgroup supports it"
+msgstr "أنا أفهم استراتيجية الشركة وكيف يعتمد عملى عليها ."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_3
+msgid ""
+"I would prefer to remain with this company even if a comparable job were "
+"available in another company"
+msgstr "أنا أفضل البقاء مع هذه الشركة حتى لو كانت الوظيفة قابلة للمقارنة في شركة أخرى "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_3_1
+msgid "I'm efficient at work and my achievements are successful"
+msgstr "أنا على الكفاءة في العمل وانجازاتي تكون ناجحة "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,id:0 field:hr.evaluation.report,id:0
+#: field:hr_evaluation.evaluation,id:0 field:hr_evaluation.plan,id:0
+#: field:hr_evaluation.plan.phase,id:0
+msgid "ID"
+msgstr "المعرّف"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_unread:0
+#: help:hr_evaluation.evaluation,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "عند التفعيل، يجب الانتباه الى الرسائل الجديدة"
+
+#. module: hr_evaluation
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_4
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_5
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_3_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_3_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_5_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_1_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_1_2
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_2
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_3
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_4
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_5
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_6
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_7
+msgid "If other, precise:"
+msgstr "إذا غير ذلك، اذكر بدقة:"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can propose an action "
+"plan"
+msgstr "إذا كان التقييم لا يقابل التوقعات، يمكنك اقتراح خطة عمل "
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "In Progress"
+msgstr "قيد التقدم"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.interview,state:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "In progress"
+msgstr "جاري التقدم"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "In progress Evaluations"
+msgstr "في مرحلة التقييم"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_5
+msgid "Initiative and self autonomy"
+msgstr "المبادرة و الحكم الذاتي "
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Internal Notes"
+msgstr "ملاحظات داخلية"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Interview Appraisal"
+msgstr "تقييم المعاينة"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_evaluation_calendar
+msgid "Interview Request"
+msgstr "طلب المقابلة"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
+msgid "Interview Requests"
+msgstr "طلبات المقابلة"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: field:hr.evaluation.interview,user_id:0
+msgid "Interviewer"
+msgstr "المقابل"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
+msgid "Interviews"
+msgstr "مقابلات"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_is_follower:0
+#: field:hr_evaluation.evaluation,message_is_follower:0
+msgid "Is a Follower"
+msgstr "متابع"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_last_post:0
+#: field:hr_evaluation.evaluation,message_last_post:0
+msgid "Last Message Date"
+msgstr "تاريخ آخر رسالة"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,write_uid:0
+#: field:hr_evaluation.evaluation,write_uid:0
+#: field:hr_evaluation.plan,write_uid:0
+#: field:hr_evaluation.plan.phase,write_uid:0
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,write_date:0
+#: field:hr_evaluation.evaluation,write_date:0
+#: field:hr_evaluation.plan,write_date:0
+#: field:hr_evaluation.plan.phase,write_date:0
+msgid "Last Updated on"
+msgstr "آخر تحديث فى"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_2
+msgid "Leadership"
+msgstr "قيادة"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_3
+msgid ""
+"Leadership: create a challenging and motivating work environment aligned "
+"with the company's strategy"
+msgstr "القيادة: خلق بيئة عمل صعبة ومحفزة تتماشى مع استراتيجية الشركة "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_4
+msgid "Leadership: sustain subordinates in their professional growth"
+msgstr "القيادة: الحفاظ على المرؤوسين في نموهم المهني"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Legend"
+msgstr "الدليل"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_3
+msgid ""
+"Listens and takes into account all ideas and do his best to put in place the"
+" best of these"
+msgstr "يستمع ويأخذ في الاعتبار جميع الأفكار ويبذل قصارى جهده لوضع أفضل من هذه "
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Mail Body"
+msgstr "هيئة البريد"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Mail Settings"
+msgstr "ضوابط البريد"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Meet expectations"
+msgstr "قابل التوقعات"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_ids:0
+#: field:hr_evaluation.evaluation,message_ids:0
+msgid "Messages"
+msgstr "رسائل"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_ids:0
+#: help:hr_evaluation.evaluation,message_ids:0
+msgid "Messages and communication history"
+msgstr "الرسائل و سجل التواصل"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_6
+msgid "Miscellaneous"
+msgstr "متفرقات"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Month"
+msgstr "شهر"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_5_2
+msgid ""
+"My best achievements have been communicated to the community, internally or "
+"to customers"
+msgstr "أفضل إنجازاتى تم إتصالها مع المجتمع ، داخليا أو للعملاء "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_2
+msgid "My job provides me with a sense of personal accomplishment"
+msgstr "عملي يوفرلى الشعور بالإنجاز الشخصي "
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_1
+msgid ""
+"My work contributes towards the continuous improvement of the company, our "
+"services or products"
+msgstr "عملي يسهم في تحسين مستمر للشركة، لدينا منتجات أو خدمات "
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_1
+msgid "Name"
+msgstr "الاسم"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_1_1
+msgid "Name of your direct supervisor"
+msgstr "اسم المشرف المباشر "
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,state:0
+msgid "New"
+msgstr "جديد"
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Appraisal Date"
+msgstr "تاريخ التقييم القادم"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_2_1
+msgid "Objectives"
+msgstr "أهداف"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_5
+msgid "Openness"
+msgstr "انفتاح"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_4
+msgid ""
+"Our workgroup identifies and reduces waste of time in our activities and "
+"processes"
+msgstr "لدينا مجموعة عمل يحدد ويقلل من هدر الوقت في الأنشطة والعمليات "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,rating:0
+msgid "Overall Rating"
+msgstr "التقييم العام"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_3
+msgid ""
+"Overall, I believe the quality of products and/or services my workgroup "
+"delivers is improving"
+msgstr "عموما، أعتقد أن جودة المنتجات و / أو خدماتي مجموعة العمل يسلم يتحسن "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,overpass_delay:0
+msgid "Overpassed Deadline"
+msgstr "تخطي الموعد النهائي"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Pending"
+msgstr "معلّق"
+
+#. module: hr_evaluation
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
+msgid "Periodic Appraisal"
+msgstr "التقييم الدوري"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Appraisal (months)"
+msgstr "التقييم دورياً (الشهور)"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_4_2
+msgid "Personal Performance Objectives"
+msgstr "أهداف الأداء الشخصي"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,name:0
+msgid "Phase"
+msgstr "طور"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: field:hr_evaluation.evaluation,plan_id:0
+msgid "Plan"
+msgstr "خطّة"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr "خطة في التقدم"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_2
+msgid "Position Title"
+msgstr "لقب المنصب"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Print Survey"
+msgstr "طباعة الإستفتاء"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_4_1
+msgid "Professional Development Objectives"
+msgstr "أهداف التنمية المهنية"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_4
+msgid "Professional Development and Performance Plan"
+msgstr "التنمية المهنية وخطة الأداء"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_4_3
+msgid "Project Objectives"
+msgstr "أهداف المشروع"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_12
+msgid "Promptness and attendance record"
+msgstr "الدقة في الوقت وسجل الحضور"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Public Notes"
+msgstr "ملاحظات عامة"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:83
+#, python-format
+msgid "Regarding "
+msgstr "متعلق "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,request_id:0
+msgid "Request ID"
+msgstr "معرف الطلب"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Reset to Draft"
+msgstr "أعادته للمسودة"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_2_2
+msgid "Results"
+msgstr "نتائج"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_1
+msgid ""
+"Results of the bottom-up survey and mitigation actions to face technical, "
+"organizational, structural and/or relational issues"
+msgstr "نتائج المسح والتخفيف من الإجراءات من أسفل إلى أعلى لمواجهة القضايا التقنية والتنظيمية والهيكلية و / أو علائقية "
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
+msgid "Review Appraisal Plans"
+msgstr "خطط استعراض تقييم"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Search Appraisal"
+msgstr "البحث عن تقييم"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Self Appraisal Requests"
+msgstr "طلبات التقييم الذاتية"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Send Reminder Email"
+msgstr "ارسل بريد تذكير"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Send Request"
+msgstr "أرسل طلب"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_answer_employee:0
+msgid "Send all answers to the employee"
+msgstr "ارسل جميع الاجوبة للموظفين"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_answer_manager:0
+msgid "Send all answers to the manager"
+msgstr "ارسل جميع الاجوبة الى المدير"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
+msgid "Send an anonymous summary to the employee"
+msgstr "ارسل ملخص مجهول الى الموظف"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Send an anonymous summary to the manager"
+msgstr "ارسل ملخص مجهول للمدير"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,mail_feature:0
+msgid "Send mail for this phase"
+msgstr "ارسل بريد لهذه المرحلة"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Send to Employees"
+msgstr "ارسل الى الموظفين"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Send to Managers"
+msgstr "ارسل للمديرين"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,sequence:0
+msgid "Sequence"
+msgstr "مسلسل"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+msgid "Significantly bellow expectations"
+msgstr "توقعات منخفضة بشكل ملحوظ"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Significantly below expectations"
+msgstr "أقل بكثير من التوقعات"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Significantly exceeds expectations"
+msgstr "يتجاوز التوقعات بشكل كبير"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Start Appraisal"
+msgstr "بدء التقييم"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,state:0
+msgid "State"
+msgstr "الحالة"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr.evaluation.report,state:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: field:hr_evaluation.evaluation,state:0
+msgid "Status"
+msgstr "الحالة"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,email_subject:0
+#: model:survey.question,question:hr_evaluation.appraisal_3_1
+msgid "Subject"
+msgstr "الموضوع"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_summary:0
+#: field:hr_evaluation.evaluation,message_summary:0
+msgid "Summary"
+msgstr "ملخّص"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_3_2
+msgid "Supervisors only"
+msgstr "المشرفين فقط"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+msgid "Survey"
+msgstr "إستفتاء"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,request_id:0
+msgid "Survey Request"
+msgstr "طلب استطلاع"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_4
+msgid ""
+"Taking everything into account, how satisfied are you with your current job?"
+msgstr "أخذ كل شيء في الاعتبار، ما مدى رضاك ​​عن عملك الحالي؟"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_4
+msgid ""
+"Team spirit: ability to work efficiently with peers, manage the conflicts "
+"with diplomacy"
+msgstr "روح الفريق: القدرة على العمل بكفاءة مع الأقران، إدارة الغختلافات بدبلوماسية"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_10
+msgid "Technical skills regarding to the job requirements"
+msgstr "المهارات التقنية المتعلقة بمتطلبات الوظيفة"
+
+#. module: hr_evaluation
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_4
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_5
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_5_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_2
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_2
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_3
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_4
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_5
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
+msgid "The answer you entered has an invalid format."
+msgstr "الجواب الذي أدخلته يحتوي على تنسيق غير صالح."
+
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr "تاريخ التقييم التالي يحسب بتاريخ خطة التقييم (أول تقييم + دورياً)"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
+msgstr "يبين عدد الشهر التأخير بين كل تقييم لتلك الخطة (قبل الخطة او بعدها)"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.evaluation,rating:0
+msgid "This is the appreciation on which the evaluation is summarized."
+msgstr "هذا هو التقدير الذي تم تلخيصه من التقييم "
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_first:0
+msgid ""
+"This number of months will be used to schedule the first evaluation date of "
+"the employee when selecting an evaluation plan. "
+msgstr "عدد الشهور هذا سيتم استخدامه لتحديد موعد أول تقييم للموظف عند اختيار خطة تقييم "
+
+#. module: hr_evaluation
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_3
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_4
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_5
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_2_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_2_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_2_3
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_3_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_3_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_4_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_4_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_4_3
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_5_1
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_1_1
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_1_2
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_1
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_2
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_3
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_4
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_5
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_6
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_7
+msgid "This question requires an answer."
+msgstr "هذا السؤال يحتاج إلى إجابة."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_15
+msgid "Time management: projects/tasks are completed on time"
+msgstr "إدارة الوقت: يتم الانتهاء من المشاريع/المهام في الوقت المحدد"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+msgid "To Do"
+msgstr "في انتظار التنفيذ"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Top-Down Appraisal Requests"
+msgstr "طلبات التقييم من أعلى لأسفل"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_unread:0
+#: field:hr_evaluation.evaluation,message_unread:0
+msgid "Unread Messages"
+msgstr "رسائل غير مقروءة"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_5_1
+msgid ""
+"Use the following space to make any comments regarding the above performance"
+" evaluation."
+msgstr "استخدام المساحة التالية لإجراء أية تعليقات بشأن تقييم الأداء أعلاه."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Validate Appraisal"
+msgstr "التحقق من صحة التقييم"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,wait:0
+msgid "Wait Previous Phases"
+msgstr "انتظر المراحل السابقة"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Waiting Appreciation"
+msgstr "انتظار التقدير"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:239
+#: code:addons/hr_evaluation/hr_evaluation.py:339
+#, python-format
+msgid "Warning!"
+msgstr "تحذير!"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,website_message_ids:0
+#: field:hr_evaluation.evaluation,website_message_ids:0
+msgid "Website Messages"
+msgstr "رسائل الموقع الإلكتروني"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,website_message_ids:0
+#: help:hr_evaluation.evaluation,website_message_ids:0
+msgid "Website communication history"
+msgstr "سجل اتصال الموقع الإلكتروني"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_2
+msgid ""
+"What I did several months ago is still of use to the company, the services "
+"or the products today"
+msgstr "ماذا فعلت قبل عدة أشهر لا يزال مفيد للشركة، الخدمات أو المنتجات اليوم"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_2
+msgid "Work Plan"
+msgstr "خطة عمل"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:239
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal forms have not been "
+"completed."
+msgstr "لا يمكنك تغيير الحالة، لأنه لم يتم الانتهاء من بعض نماذج التقييم."
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:339
+#, python-format
+msgid "You cannot start evaluation without Appraisal."
+msgstr "لا يمكنك بدء التقييم بدون تقييم مسبق"

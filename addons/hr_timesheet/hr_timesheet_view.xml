@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="hr_timesheet_line_tree" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.tree</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="arch" type="xml">
+                <tree editable="top" string="Timesheet Activities">                  
+                    <field name="date" on_change="on_change_date(date)"/>
+                    <field name="user_id" on_change="on_change_user_id(user_id)" required="1" options='{"no_open": True}'
+                        context="{'default_groups_ref': ['base.group_user']}"/>
+                    <field name="name"/>
+                    <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1, 'default_type': 'contract'}" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="unit_amount" string="Duration" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" sum="Total time" widget="float_time"/>
+                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="amount" sum="Total cost" invisible="1"/>
+                    <field name="general_account_id" invisible="1"/>
+                    <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hr_timesheet_line_form" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet Activities">
+                    <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_id" on_change="on_change_user_id(user_id)" required="1"
+                                context="{'default_groups_ref': ['base.group_user']}"/>
+                        </group>
+                        <group>
+                            <field name="date" on_change="on_change_date(date)"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Information">
+                        <group>
+                            <group string="Product">
+                                <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]"/>
+                                <label string="Duration" for="unit_amount"/>
+                                <div>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
+                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group string="Accounting">
+                                <field domain="[('type','=','normal'),('state', '&lt;&gt;', 'close'),('parent_id','!=',False)]" name="account_id" select="1" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="amount"/>
+                                <field name="general_account_id"/>
+                                <field name="journal_id"/>
+                            </group>
+                        </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_line_search" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.search</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="account_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Analytic account" icon="terp-folder-green" domain="[]" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
+                        <filter string="Timesheet Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Timesheet by Month"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_analytic_cost_revenue">
+            <field name="context">{'search_default_group_date': 1, 'search_default_group_journal': 1}</field>
+            <field name="domain">[('account_id','child_of', active_id)]</field>
+            <field name="name">Costs &amp; Revenues</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="src_model">account.analytic.account</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p>
+                No activity yet on this contract.
+              </p><p>
+                In Odoo, contracts and projects are implemented using
+                analytic account. So, you can track costs and revenues to analyse
+                your margins easily.
+              </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+              </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sale orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+              </p>
+            </field>
+        </record>
+
+ 
+        <record id="account_analytic_account_timesheet_form" model="ir.ui.view">
+            <field name="name">account.analytic.account.invoice.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="project"]' position='inside'>
+                    <field name="use_timesheets"/>
+                    <label for="use_timesheets"/>
+                </xpath>
+                <xpath expr='//div[@name="buttons"]' position='inside'>
+                    <button class="oe_inline oe_stat_button" type="action" name="%(act_analytic_cost_revenue)d" 
+                        icon="fa-usd"  string="Cost/Revenue" widget="statinfo"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="act_hr_timesheet_accounts_form" model="ir.actions.act_window">
+            <field name="name">Timesheet Accounts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('use_timesheets','=', True)]</field>
+            <field name="context">{'default_use_timesheets':1}</field>
+        </record>
+
+        <menuitem parent="hr.menu_hr_configuration" id="menu_timesheet_accounts" action="act_hr_timesheet_accounts_form" sequence="7" groups="base.group_hr_manager"/>
+        
+        <record id="act_hr_timesheet_line_evry1_all_form" model="ir.actions.act_window">
+            <field name="name">Timesheet Activities</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.analytic.timesheet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_today":1}</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record activities.
+              </p><p>
+                You can register and track your workings hours by project every
+                day. Every time spent on a project will become a cost in the
+                analytic accounting/contract and can be re-invoiced to
+                customers if required.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_hr_working_hours" parent="hr_attendance.menu_hr_time_tracking" action="act_hr_timesheet_line_evry1_all_form"/>
+
+        <record id="hr_timesheet_employee_extd_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.employee.extd_form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Timesheets">
+                        <field name="product_id" domain="[('type','=','service')]"/>
+                        <field name="journal_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem id="menu_hr_timesheet_reports" parent="hr.menu_hr_reporting" sequence="5" name="Timesheet"/>
+
+
+    </data>
+</openerp>

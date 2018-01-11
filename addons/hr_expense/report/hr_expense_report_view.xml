@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_hr_expense_report_graph" model="ir.ui.view">
+         <field name="name">hr.expense.report.graph</field>
+         <field name="model">hr.expense.report</field>
+         <field name="arch" type="xml">
+             <graph string="Expenses Analysis" type="pivot" stacked="True">
+                 <field name="employee_id" type="row"/>
+                 <field name="create_date" interval="month" type="col"/>
+                 <field name="price_total" type="measure"/>
+                 <field name="price_average" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_hr_expense_report_search" model="ir.ui.view">
+        <field name="name">hr.expense.report.search</field>
+        <field name="model">hr.expense.report</field>
+        <field name="arch" type="xml">
+            <search string="Expenses Analysis">
+                <filter string="Waiting" domain="[('state', '=' ,'confirm')]" help="Confirm Expenses"/>
+                <filter string="Approved" domain="[('state','=','accepted')]" help="Approved Expenses"/>
+                <filter string="Done" domain="[('state','=', 'done')]" help="Done Expenses"/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="product_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date" string="Creation Date"/>
+                    <field name="date_confirm"/>
+                    <field name="date_valid"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Validation User" name="User" context="{'group_by':'user_id'}"/>
+                    <filter string="Department" context="{'group_by':'department_id'}"/>
+                    <filter string="Product" context="{'group_by':'product_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Create Month" context="{'group_by':'create_date:month'}" help="Creation Date"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hr_expense_report_all" model="ir.actions.act_window">
+        <field name="name">Expenses Analysis</field>
+        <field name="res_model">hr.expense.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="search_view_id" ref="view_hr_expense_report_search"/>
+    </record>
+
+    <menuitem action="action_hr_expense_report_all" id="menu_hr_expense_report_all" parent="hr.menu_hr_reporting" sequence="1"/>
+
+</data>
+</openerp>

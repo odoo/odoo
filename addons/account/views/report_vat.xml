@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_vat">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Tax Statement</h2>
+
+                <div class="row mt32 mb32">
+                    <div class="col-xs-3">
+                        <strong>Chart of Tax:</strong>
+                        <p t-esc="get_account(data)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Fiscal Year:</strong>
+                        <p t-esc="get_fiscalyear(data)"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Periods:</strong>
+                        <p>
+                            Start Period: <span t-esc="get_start_period(data)"/><br/>
+                            End Period: <span t-esc="get_end_period(data)"/>
+                        </p>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Based On:</strong>
+                        <p t-esc="get_basedon(data)"/>
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Tax Name</th>
+                            <th class="text-right">Debit</th>
+                            <th class="text-right">Credit</th>
+                            <th class="text-right">Tax Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="get_lines(data['form']['based_on'], data['form']['company_id'], data['form']['chart_tax_id'])" t-as="taxline">
+                            <t t-if="len(taxline['level']) > 5">
+                                <t t-set="style" t-value="'font-weight:normal;'"/>
+                            </t>
+                            <t t-if="not len(taxline['level']) > 5">
+                                <t t-set="style" t-value="'font-weight:bold;'"/>
+                            </t>
+
+                            <td>
+                                <span t-att-style="style" t-esc="taxline['level']" style="color:white;"/>
+                                <span t-att-style="style" t-if="taxline['code']" t-esc="taxline['code']"/>
+                                <span t-att-style="style" t-esc="taxline['name']"/>
+                            </td>
+                            <td class="text-right"><span t-att-style="style" t-esc="taxline['debit']"/></td>
+                            <td class="text-right"><span t-att-style="style" t-esc="taxline['credit']"/></td>
+                            <td class="text-right">
+                                <span t-att-style="style" t-esc="formatLang(taxline['tax_amount'], currency_obj=res_company.currency_id)"/>
+                            </td>
+                        </tr>        
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

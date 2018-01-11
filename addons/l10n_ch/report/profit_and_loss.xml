@@ -1,0 +1,218 @@
+<openerp>
+  <data noupdate="1">
+    <record id="financial_report_44" model="account.financial.report">
+      <field name="name">COMPTE DE RESULTAT</field>
+      <field name="sequence">44</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_45" model="account.financial.report">
+      <field name="name">Produits net des ventes de biens et de prestations de services</field>
+      <field name="sequence">48</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_46" model="account.financial.report">
+      <field name="name">B&#233;n&#233;fice ou perte de l'exercice</field>
+      <field name="sequence">41</field>
+      <field name="parent_id" ref="financial_report_36"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_47" model="account.financial.report">
+      <field name="name">Actifs &#224; court terme cot&#233;s en bourse</field>
+      <field name="sequence">16</field>
+      <field name="parent_id" ref="financial_report_43"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_48" model="account.financial.report">
+      <field name="name">Charges de mat&#233;riel</field>
+      <field name="sequence">51</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_49" model="account.financial.report">
+      <field name="name">Charges de personnel</field>
+      <field name="sequence">53</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_50" model="account.financial.report">
+      <field name="name">Autres charges d&#8216;exploitation</field>
+      <field name="sequence">55</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_51" model="account.financial.report">
+      <field name="name">Amortissement et corrections de valeur des postes sur immobilisations corporelles</field>
+      <field name="sequence">57</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_52" model="account.financial.report">
+      <field name="name">Produits financiers</field>
+      <field name="sequence">59</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_53" model="account.financial.report">
+      <field name="name">R&#233;sultat hors exploitation</field>
+      <field name="sequence">63</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_54" model="account.financial.report">
+      <field name="name">R&#233;sultat exceptionnel</field>
+      <field name="sequence">64</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_55" model="account.financial.report">
+      <field name="name">Imp&#244;ts directs</field>
+      <field name="sequence">66</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_57" model="account.financial.report">
+      <field name="name">Variation des stocks et de produits finis et semi-finis et variation des prestations de services non factur&#233;s</field>
+      <field name="sequence">49</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_58" model="account.financial.report">
+      <field name="name">= CHIFFRE D&#8217;AFFAIRES SUR VENTES ET PRESTATIONS DE SERVICES</field>
+      <field name="sequence">50</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_59" model="account.financial.report">
+      <field name="name">= RESULTAT BRUT APRES CHARGES DE MATIERES ET MARCHANDISES</field>
+      <field name="sequence">52</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_60" model="account.financial.report">
+      <field name="name">= RESULTAT APRES CHARGES DE PERSONNEL</field>
+      <field name="sequence">54</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_61" model="account.financial.report">
+      <field name="name">= EBITDA</field>
+      <field name="sequence">56</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_62" model="account.financial.report">
+      <field name="name">= EBIT</field>
+      <field name="sequence">58</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_63" model="account.financial.report">
+      <field name="name">Charges financi&#232;res</field>
+      <field name="sequence">60</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_65" model="account.financial.report">
+      <field name="name">= RESULTAT D'EXPLOITATION AVANT IMPOTS (EBT)</field>
+      <field name="sequence">61</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_66" model="account.financial.report">
+      <field name="name">R&#233;sultat des activit&#233;s annexes des exploitations</field>
+      <field name="sequence">62</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_67" model="account.financial.report">
+      <field name="name">= RESULTAT AVANT IMPOTS</field>
+      <field name="sequence">65</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_68" model="account.financial.report">
+      <field name="name">= BENEFICE OU PERTE DE L'EXERCICE</field>
+      <field name="sequence">67</field>
+      <field name="parent_id" ref="financial_report_44"/>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_69" model="account.financial.report">
+      <field name="name">Immobilisations corporelles immeubles</field>
+      <field name="sequence">25</field>
+      <field name="parent_id" ref="financial_report_18"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+  </data>
+</openerp>

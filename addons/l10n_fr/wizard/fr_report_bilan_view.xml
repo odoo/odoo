@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="bilan_report_view" model="ir.ui.view">
+            <field name="name">Bilan Report</field>
+            <field name="model">account.bilan.report</field>
+            <field name="arch" type="xml">
+                <form string="Bilan Report">
+                   <group>
+                        <field name="fiscalyear_id"/>
+                   </group>
+                   <footer>
+                        <button name="print_bilan_report" string="Print" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                   </footer>
+                 </form>
+            </field>
+        </record>
+
+        <record id="action_account_bilan_report" model="ir.actions.act_window">
+            <field name="name">Bilan Report</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.bilan.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="bilan_report_view"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="action_account_bilan_report_values">
+            <field name="model_id" ref="model_account_bilan_report" />
+            <field name="name">Bilan Report</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_bilan_report'))" />
+            <field name="key">action</field>
+            <field name="model">account.move.line</field>
+        </record>
+
+    </data>
+</openerp>

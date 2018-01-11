@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+<data>
+    <template id="certified_partners" name="Certified People">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure"/>
+            <div class="container">
+                <h1>Odoo Certified Experts</h1>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="well well-sm">Filter by Certification:
+                            <a href="/certifications"><span class="badge">All</span></a>
+                            <t t-foreach="types" t-as="t">
+                                <a t-att-href="'/certifications/%s' % slug(t)"><span class="badge" t-field="t.name" /></a>
+                            </t>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead><tr>
+                                    <th>Name</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Score</th>
+                                </tr></thead>
+                                <tbody>
+                                    <tr t-foreach="certifications" t-as="c">
+                                        <td><span t-field="c.partner_id"/></td>
+                                        <td><span t-field="c.certification_date"/></td>
+                                        <td><span t-field="c.type_id.name"/></td>
+                                        <td><t t-if="c.certification_hidden_score == False"><span t-field="c.certification_score"/></t></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div><div class="col-md-3 col-md-offset-1">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Odoo Certifications</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    The Odoo certification program allows companies
+                                    to identify certified professionals and get
+                                    the guarantee that their contractors are
+                                    qualified to offer Odoo services.
+                                </p>
+                                <a href="/page/contactus" class="btn btn-primary">Get Certified</a>
+                            </div>
+                        </div>
+                        <div class="panel panel-default mt16">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Sample Examination</h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    Before trying the certification, you can
+                                    assess your skills with the sample test.
+                                </p>
+                                <a href="/page/contactus" class="btn btn-primary">Try The Test</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure"/>
+        </div>
+    </t>
+</template>
+</data>
+</openerp>

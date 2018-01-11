@@ -1,0 +1,3142 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * crm
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-06-09 09:09+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
+"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: crm
+#: field:crm.lead,meeting_count:0 field:res.partner,meeting_count:0
+msgid "# Meetings"
+msgstr "Reunions"
+
+#. module: crm
+#: field:crm.lead.report,nbr_cases:0 field:crm.opportunity.report,nbr_cases:0
+#: field:crm.phonecall.report,nbr:0
+msgid "# of Cases"
+msgstr "# de casos"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.relate_partner_opportunities
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create an opportunity related to this customer.\n"
+"              </p><p>\n"
+"                Use opportunities to keep track of your sales pipeline, follow\n"
+"                up potential sales and better forecast your future revenues.\n"
+"              </p><p>\n"
+"                You will be able to plan meetings and phone calls from\n"
+"                opportunities, convert them into quotations, attach related\n"
+"                documents, track all discussions, and much more.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Premi per crear una oportunitat relacionada amb aquest client.\n              </p><p>\n                Utilitzi les oportunitats per seguir el flux de les seves vendes, seguir una venda potencial i preveure millor els seus futurs ingressos.\n              </p><p>\n                Podrà planificar reunions i trucades telefòniques des de les oportunitats, convertir-les en ofertes, adjuntar documents relacionats, rastrejar totes les discussions, i molt més.\n              </p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_tracking_medium_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new channel.\n"
+"              </p><p>\n"
+"                Use channels to track the type of source of your leads and opportunities. Channels\n"
+"                are mostly used in reporting to analyse sales performance\n"
+"                related to marketing efforts.\n"
+"              </p><p>\n"
+"                Some examples of channels: company website, phone call\n"
+"                campaign, reseller, banner, etc.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per a definir un nou canal.\n</p><p>\nUtilitzi els canals per gestionar el tipus de font de les seves iniciatives i oportunitats. Els canals s'utilitzen principalment en els informes per analitzar el rendiment de vendes associat als esforços de màrqueting.\n</p><p>\nAlguns exemples de canals: lloc web de la companyia, campanya de trucades, distribuïdors, anuncis, etc.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_segmentation_tree-act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new customer segmentation.\n"
+"              </p><p>\n"
+"                Create specific categories which you can assign to your\n"
+"                contacts to better manage your interactions with them. The\n"
+"                segmentation tool is able to assign categories to contacts\n"
+"                according to criteria you set.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per a definir una nova segmentació de clients.\n</p><p>\nCreï categories específiques que pot assignar als seus contactes per administrar millor les seves interaccions amb ells. L'eina de segmentació és capaç d'assignar categories als contactes d'acord als criteris que estableixi.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_lead_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new sales tag.\n"
+"              </p><p>\n"
+"                Create specific tags that fit your company's activities\n"
+"                to better classify and analyse your leads and opportunities.\n"
+"                Such categories could for instance reflect your product\n"
+"                structure or the different types of sales you do.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per definir una nova etiqueta de vendes.</p><p>\nCreï etiquetes específiques que s'ajustin a les activitats de la seva companyia per classificar i analitzar, millorar les seves iniciatives i oportunitats. Aquestes categories poden reflectir per exemple la seva estructura de productes o els diferents tipus de vendes que fa.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_tracking_source_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new source.\n"
+"              </p><p>\n"
+"                Use channels to track the source of your leads and opportunities. Channels\n"
+"                are mostly used in reporting to analyse sales performance\n"
+"                related to marketing efforts.\n"
+"              </p><p>\n"
+"                Some examples of channels: partner's website, google.com, \n"
+"                email list name, etc.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per definir un nou origen.\n</p><p>\nUtilitzi els canals per veure l'origen de les seves iniciatives i oportunitats. Els canals s'utilitzen principalment en informes per analitzar el rendiment de les vendes relacionades amb els esforços de màrqueting.\n</p><p>\nAlguns exemples de canals: pagines web d'empreses, google.com, llista de correu, etc.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_lead_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to set a new stage in your lead/opportunity pipeline.\n"
+"              </p><p>\n"
+"                Stages will allow salespersons to easily track how a specific\n"
+"                lead or opportunity is positioned in the sales cycle.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per establir una nova etapa al seu flux iniciatives/oportunitat.\n</p><p>\nLes etapes permeten veure fàcilment als comercials com una iniciativa o oportunitat estan posicionades al cicle de vendes.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_phonecall_categ_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new category.\n"
+"          </p><p>\n"
+"            Create specific phone call categories to better define the type of\n"
+"            calls tracked in the system.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per afegir una nova categoria.\n</p><p>\nCreï categories específiques de trucades per definir millor el tipus de trucades registrades al sistema.\n</p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_incoming0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to log the summary of a phone call. \n"
+"          </p><p>\n"
+"            Odoo allows you to log inbound calls on the fly to track the\n"
+"            history of the communication with a customer or to inform another\n"
+"            team member.\n"
+"          </p><p>\n"
+"            In order to follow up on the call, you can trigger a request for\n"
+"            another call, a meeting or an opportunity.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per registrar el resum d'una trucada.\n</p><p>\nOdoo li permet registrar les trucades entrants sobre la marxa per mantenir el històric de comunicació d'un client o informar a un altre membre de l'equip.\n</p><p>\nPer seguir una trucada, pot llançar una petició per a una altra trucada, una reunió o una oportunitat.\n</p>"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_categ_phone_outgoing0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to schedule a call \n"
+"          </p><p>\n"
+"            Odoo allows you to easily define all the calls to be done\n"
+"            by your sales team and follow up based on their summary.\n"
+"          </p><p>  \n"
+"            You can use the import feature to massively import a new list of\n"
+"            prospects to qualify.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\nPremi per planificar una trucada.\n</p><p>\nOdoo li permet definir fàcilment les trucades a ser realitzades pel seu equip de vendes i seguir-les basades al seu resum.\n</p><p>  \nPot utilitzar la característica d'importació per importar massivament una nova llista de prospectes a qualificar.\n</p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
+msgid ""
+"<p>\n"
+"                    Odoo helps you keep track of your sales pipeline to follow\n"
+"                    up potential sales and better forecast your future revenues.\n"
+"                </p><p>\n"
+"                    You will be able to plan meetings and phone calls from\n"
+"                    opportunities, convert them into quotations, attach related\n"
+"                    documents, track all discussions, and much more.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\nOdoo l'ajuda a gestionar el flux de vendes per poder captar vendes potencials i una millor previsió d'ingressos futurs.\n</p><p>\nPodrà també planificar reunions i trucades des de les oportunitats, convertir-les a pressupostos afegir documents relacionats, registrar totes les conversacions i molt més.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_lead
+msgid ""
+"<p>\n"
+"                    Use leads if you need a qualification step before creating an\n"
+"                    opportunity or a customer. It can be a business card you received,\n"
+"                    a contact form filled in your website, or a file of unqualified\n"
+"                    prospects you import, etc.\n"
+"                </p><p>\n"
+"                    Once qualified, the lead can be converted into a business\n"
+"                    opportunity and/or a new customer in your address book.\n"
+"                </p>\n"
+"            "
+msgstr "<p>\nUtilitzi les iniciatives si necessita un pas de qualificació abans de crear una oportunitat o un client. Pot ser una targeta de visita que va rebre, un formulari de contacte emplenat a la seva pagina web, o un arxiu de prospectes sense qualificar importat.\n</p><p>\nUna vegada qualificat, la iniciativa pot convertir-se en una oportunitat de negoci i/o un nou client per la seva llibreta de direccions.\n</p>\n            "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_oppor11
+msgid ""
+"<p>\n"
+"                Odoo helps you keep track of your sales pipeline to follow\n"
+"                up potential sales and better forecast your future revenues.\n"
+"            </p><p>\n"
+"                You will be able to plan meetings and phone calls from\n"
+"                opportunities, convert them into quotations, attach related\n"
+"                documents, track all discussions, and much more.\n"
+"            </p>\n"
+"        "
+msgstr "<p>\nOdoo l'ajuda a gestionar el flux de vendes per captar vendes potencials i una millor previsió d'ingressos futurs.\n</p><p>\nPodrà també planificar reunions i trucades des de les oportunitats, convertir-les a pressupostos, afegir documents relacionats, registrar totes les conversacions i molt més.\n</p>\n        "
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_case_category_act_leads_all
+msgid ""
+"<p>\n"
+"                Use leads if you need a qualification step before creating an\n"
+"                opportunity or a customer. It can be a business card you received,\n"
+"                a contact form filled in your website, or a file of unqualified\n"
+"                prospects you import, etc.\n"
+"            </p><p>\n"
+"                Once qualified, the lead can be converted into a business\n"
+"                opportunity and/or a new customer in your address book.\n"
+"            </p>\n"
+"        "
+msgstr "<p>\nUtilitzi les iniciatives si necessita un pas de qualificació abans de crear una oportunitat o un client. Pot ser una targeta de visita que va rebre, un formulari de contacte emplenat al seu lloc web, o un arxiu de prospectes sense qualificar importat.\n</p><p>\nUn cop qualificat, la iniciativa pot convertir-se en una oportunitat de negoci i/o un nou client per la seva llibreta de direccions.\n</p>\n        "
+
+#. module: crm
+#: model:email.template,body_html:crm.email_template_opportunity_reminder_mail
+msgid ""
+"<p>This opportunity did not have any activity since at least 5 days. Here are some details:</p>\n"
+"<ul>\n"
+"<li>Name: ${object.name}</li>\n"
+"<li>ID: ${object.id}</li>\n"
+"<li>Description: ${object.description}</field></li>\n"
+"</ul>"
+msgstr "<p>Aquesta oportunitat no té activitat des de fa 5 dies. Aquí té alguns detalls:</p>\n<ul>\n<li>Nom: ${object.name}</li>\n<li>ID: ${object.id}</li>\n<li>Descripció: ${object.description}</field></li>\n</ul>"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "A Meeting"
+msgstr "Una reunió"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,exclude_contact:0
+msgid "A user associated to the contact"
+msgstr "Usuari associat al contacte"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Accept Emails From"
+msgstr "Acceptar emails de"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,action:0
+msgid "Action"
+msgstr "Acció"
+
+#. module: crm
+#: field:crm.lead,active:0 field:crm.phonecall,active:0
+#: field:crm.tracking.medium,active:0
+msgid "Active"
+msgstr "Actiu"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Address"
+msgstr "Adreça"
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "After-Sale Services"
+msgstr "Serveis post-venda"
+
+#. module: crm
+#: field:crm.case.section,alias_id:0
+msgid "Alias"
+msgstr "Àlies"
+
+#. module: crm
+#: field:sale.config.settings,alias_domain:0
+msgid "Alias Domain"
+msgstr "Àlies de domini"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:304
+#, python-format
+msgid ""
+"All contacts must have the same email. Only the Administrator can merge "
+"contacts with different emails."
+msgstr "Tots els contactes han de tenir el mateix correu electrònic. Sol l'administrador pot combinar els contactes amb les diferents adreces."
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid ""
+"All emails sent to this address and processed by the mailgateway\n"
+"                                will create a new lead."
+msgstr "Tots els correus electrònics enviats a aquesta direcció i processades per la passarel·la de correus\ncrearà una nova iniciativa."
+
+#. module: crm
+#: help:sale.config.settings,module_crm_helpdesk:0
+msgid ""
+"Allows you to communicate with Customer, process Customer query, and provide better help and support.\n"
+"-This installs the module crm_helpdesk."
+msgstr "Permet comunicar-te amb els clients, processar les seves consultes, i proporcionar-li ajuda i suport.\n-Instal·la el mòdul crm_helpdesk."
+
+#. module: crm
+#: help:sale.config.settings,group_fund_raising:0
+msgid "Allows you to trace and manage your activities for fund raising."
+msgstr "Permetre rastrejar i administrar les seves activitats per recaptació de fons."
+
+#. module: crm
+#: help:sale.config.settings,module_crm_claim:0
+msgid ""
+"Allows you to track your customers/suppliers claims and grievances.\n"
+"-This installs the module crm_claim."
+msgstr "Permet realitzar un seguiment de les reclamacions i queixes dels seus clients/proveïdors.\n-Instal·la el mòdul crm_claim."
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,deduplicate:0
+msgid "Apply deduplication"
+msgstr "Aplicar deduplicació"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Are you sure to execute the automatic merge of your contacts ?"
+msgstr "Està segur d'executar la fusió automàtica dels seus contactes?"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"Are you sure to execute the list of automatic merges of your contacts ?"
+msgstr "Està segur d'executar la llista de fusions automàtiques dels seus contactes?"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,user_id:0
+msgid "Assign To"
+msgstr "Assigna a"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Assign opportunities to"
+msgstr "Assignar oportunitats a "
+
+#. module: crm
+#: field:crm.lead.report,opening_date:0
+#: field:crm.opportunity.report,opening_date:0
+msgid "Assignation Date"
+msgstr "Data d'assignació"
+
+#. module: crm
+#: field:crm.lead,date_open:0
+msgid "Assigned"
+msgstr "Assignat"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_partner_merge
+msgid "Automatic Merge"
+msgstr "Fusió automàtica"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Automatic Merge Wizard"
+msgstr "Assistent de fusió automàtica"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Available for mass mailing"
+msgstr "Disponible per enviament massiu de correu"
+
+#. module: crm
+#: selection:crm.case.stage,type:0
+msgid "Both"
+msgstr "Ambdós"
+
+#. module: crm
+#: field:crm.lead,message_bounce:0
+msgid "Bounce"
+msgstr "Rebot"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_country
+#: model:ir.filters,name:crm.filter_opportunity_country
+msgid "By Country"
+msgstr "Per país"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_sales_team
+msgid "By Sales Team"
+msgstr "Per equip de vendes"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_salesperson
+#: model:ir.filters,name:crm.filter_opportunity_salesperson
+msgid "By Salespersons"
+msgstr "Per Venedors "
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead_report
+msgid "CRM Lead Analysis"
+msgstr "Anàlisis d'iniciatives CRM"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_opportunity_report
+msgid "CRM Opportunity Analysis"
+msgstr "Anàlisis d'oportunitats CRM"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_payment_mode
+msgid "CRM Payment Mode"
+msgstr "Mode de pagament CRM"
+
+#. module: crm
+#: field:crm.phonecall,name:0
+msgid "Call Summary"
+msgstr "Resum de trucades"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,name:0
+msgid "Call summary"
+msgstr "Resum de la trucada"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+#: view:res.partner:crm.view_partners_form_crm1
+msgid "Calls"
+msgstr "Trucades"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Calls Date by Month"
+msgstr "Data de trucades per mes"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,campaign_id:0 field:crm.lead.report,campaign_id:0
+#: field:crm.opportunity.report,campaign_id:0
+#: view:crm.tracking.campaign:crm.crm_tracking_campaign_form
+#: view:crm.tracking.campaign:crm.crm_tracking_campaign_tree
+#: field:crm.tracking.mixin,campaign_id:0
+#: model:ir.model,name:crm.model_crm_tracking_campaign
+msgid "Campaign"
+msgstr "Campanya"
+
+#. module: crm
+#: field:crm.tracking.campaign,name:0
+msgid "Campaign Name"
+msgstr "Nom de la campanya"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_tracking_campaign_act
+#: model:ir.ui.menu,name:crm.menu_crm_tracking_campaign_act
+msgid "Campaigns"
+msgstr "Campanyes"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Cancel"
+msgstr "Cancel·la"
+
+#. module: crm
+#: selection:crm.phonecall,state:0 selection:crm.phonecall.report,state:0
+msgid "Cancelled"
+msgstr "Cancel·lat"
+
+#. module: crm
+#: view:crm.case.categ:crm.crm_case_categ-view
+#: view:crm.case.categ:crm.crm_case_categ_tree-view
+msgid "Case Category"
+msgstr "Categoria del cas"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_section_act_tree
+msgid "Cases by Sales Team"
+msgstr "Casos per equip de vendes"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_case_phonecall-act
+msgid "Categories"
+msgstr "Categories"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Categorization"
+msgstr "Categorizació"
+
+#. module: crm
+#: field:crm.phonecall,categ_id:0 field:crm.phonecall.report,categ_id:0
+#: field:crm.phonecall2phonecall,categ_id:0
+msgid "Category"
+msgstr "Categoria"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_categ
+msgid "Category of Case"
+msgstr "Categoria de cas"
+
+#. module: crm
+#: field:crm.case.stage,on_change:0
+msgid "Change Probability Automatically"
+msgstr "Canviar la probabilitat automàticament"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,medium_id:0 field:crm.lead.report,medium_id:0
+#: field:crm.opportunity.report,medium_id:0
+#: view:crm.tracking.medium:crm.crm_tracking_medium_view_form
+#: field:crm.tracking.mixin,medium_id:0
+#: view:crm.tracking.source:crm.crm_tracking_source_view_form
+msgid "Channel"
+msgstr "Canal"
+
+#. module: crm
+#: field:crm.tracking.medium,name:0
+msgid "Channel Name"
+msgstr "Nom del canal"
+
+#. module: crm
+#: view:crm.tracking.medium:crm.crm_tracking_medium_view_tree
+#: view:crm.tracking.source:crm.crm_tracking_source_view_tree
+#: model:ir.actions.act_window,name:crm.crm_tracking_medium_action
+#: model:ir.model,name:crm.model_crm_tracking_medium
+msgid "Channels"
+msgstr "Canals"
+
+#. module: crm
+#: help:crm.segmentation,exclusif:0
+msgid ""
+"Check if the category is limited to partners that match the segmentation criterions.                        \n"
+"If checked, remove the category from partners that doesn't match segmentation criterions"
+msgstr "Marqueu aquesta opció si la categoria està limitada a empreses que coincideixin amb els criteris de segmentació.\nSi està marcada, elimina la categoria d'aquelles empreses que no coincideixin amb els criteris de segmentació."
+
+#. module: crm
+#: help:crm.segmentation,sales_purchase_active:0
+msgid ""
+"Check if you want to use this tab as part of the segmentation rule. If not "
+"checked, the criteria beneath will be ignored"
+msgstr "Marqueu si voleu utilitzar aquesta pestanya com a part de la regla de segmentació. Si no es marca, els criteris continguts a la pestanya seran ignorats"
+
+#. module: crm
+#: help:crm.case.section,use_opportunities:0
+msgid "Check this box to manage opportunities in this sales team."
+msgstr "Activi aquesta casella per administrar oportunitats amb aquest equip de vendes"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,city:0
+msgid "City"
+msgstr "Ciutat"
+
+#. module: crm
+#: help:crm.lead,categ_ids:0
+msgid ""
+"Classify and analyze your lead/opportunity categories like: Training, "
+"Service"
+msgstr "Classificar i analitzar les seves categories d'iniciatives/oportunitats com: formació, servei..."
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of leads."
+msgstr "Faci clic per veure una anàlisi detallada de les iniciatives"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+msgid "Click to see a detailed analysis of opportunities."
+msgstr "Faci clic per veure una anàlisi detallada de les oportunitats"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Close"
+msgstr "Tanca"
+
+#. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.opportunity.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "Data de tancament"
+
+#. module: crm
+#: field:crm.lead,date_closed:0 field:crm.phonecall,date_closed:0
+msgid "Closed"
+msgstr "Tancat"
+
+#. module: crm
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
+#, python-format
+msgid "Closed/Dead leads cannot be converted into opportunities."
+msgstr "Les iniciatives tancades/mortes no poden convertir-se en oportunitats."
+
+#. module: crm
+#: field:crm.lead,color:0
+msgid "Color Index"
+msgstr "Índex de color"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,company_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,company_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,company_id:0 field:crm.phonecall,company_id:0
+#: field:crm.phonecall.report,company_id:0
+msgid "Company"
+msgstr "Companyia"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Company Name"
+msgstr "Nom d'empresa"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Compute Segmentation"
+msgstr "Calcula la segmentació"
+
+#. module: crm
+#: selection:crm.phonecall,state:0
+msgid "Confirmed"
+msgstr "Confirmat"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor7
+msgid "Consulting"
+msgstr "Consultoria"
+
+#. module: crm
+#: field:crm.phonecall,partner_id:0
+#: field:crm.phonecall2phonecall,contact_name:0
+msgid "Contact"
+msgstr "Contacte"
+
+#. module: crm
+#: field:crm.lead,contact_name:0
+msgid "Contact Name"
+msgstr "Nom del contacte"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,partner_ids:0
+msgid "Contacts"
+msgstr "Contactes"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_segmentation_tree-act
+#: model:ir.ui.menu,name:crm.menu_crm_segmentation-act
+msgid "Contacts Segmentation"
+msgstr "Segmentació de contactes"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Continue Process"
+msgstr "Continua el procés"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_name:0
+msgid "Control Variable"
+msgstr "Control variable"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,name:0
+#: field:crm.lead2opportunity.partner.mass,name:0
+msgid "Conversion Action"
+msgstr "Accions de conversió"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Conversion Options"
+msgstr "Opcions de conversió"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Convert To"
+msgstr "Convertir a"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Convert To Opportunity"
+msgstr "Converteix a oportunitat"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Convert to Opportunities"
+msgstr "Convertir a oportunitats"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+msgid "Convert to Opportunity"
+msgstr "Converteix a oportunitat"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_crm_send_mass_convert
+msgid "Convert to opportunities"
+msgstr "Convertir a oportunitats"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
+#: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity_partner
+msgid "Convert to opportunity"
+msgstr "Convertir a oportunitat"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,country_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,country_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,country_id:0
+msgid "Country"
+msgstr "País"
+
+#. module: crm
+#: field:crm.phonecall.report,create_date:0
+msgid "Create Date"
+msgstr "Data de creació"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+msgid "Create Opportunity"
+msgstr "Crea oportunitat"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Create a new customer"
+msgstr "Crear un nou client"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,create_uid:0
+#: field:base.partner.merge.line,create_uid:0
+#: field:crm.case.categ,create_uid:0 field:crm.case.stage,create_uid:0
+#: field:crm.lead,create_uid:0 field:crm.lead2opportunity.partner,create_uid:0
+#: field:crm.lead2opportunity.partner.mass,create_uid:0
+#: field:crm.merge.opportunity,create_uid:0
+#: field:crm.partner.binding,create_uid:0 field:crm.payment.mode,create_uid:0
+#: field:crm.phonecall,create_uid:0 field:crm.phonecall2phonecall,create_uid:0
+#: field:crm.segmentation,create_uid:0
+#: field:crm.segmentation.line,create_uid:0
+#: field:crm.tracking.campaign,create_uid:0
+#: field:crm.tracking.medium,create_uid:0
+#: field:crm.tracking.source,create_uid:0
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,create_date:0
+#: field:base.partner.merge.line,create_date:0
+#: field:crm.case.categ,create_date:0 field:crm.case.stage,create_date:0
+#: field:crm.lead2opportunity.partner,create_date:0
+#: field:crm.lead2opportunity.partner.mass,create_date:0
+#: field:crm.merge.opportunity,create_date:0
+#: field:crm.partner.binding,create_date:0
+#: field:crm.payment.mode,create_date:0
+#: field:crm.phonecall2phonecall,create_date:0
+#: field:crm.segmentation,create_date:0
+#: field:crm.segmentation.line,create_date:0
+#: field:crm.tracking.campaign,create_date:0
+#: field:crm.tracking.medium,create_date:0
+#: field:crm.tracking.source,create_date:0
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Creation"
+msgstr "Creació"
+
+#. module: crm
+#: field:crm.lead,create_date:0 field:crm.lead.report,create_date:0
+#: field:crm.opportunity.report,create_date:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,create_date:0
+msgid "Creation Date"
+msgstr "Data creació"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Creation Month"
+msgstr "Mes de creació"
+
+#. module: crm
+#: field:crm.segmentation,segmentation_line:0
+msgid "Criteria"
+msgstr "Criteris"
+
+#. module: crm
+#: field:crm.lead,company_currency:0
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,current_line_id:0
+msgid "Current Line"
+msgstr "Línia actual"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:998 view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: field:crm.lead2opportunity.partner,partner_id:0
+#: field:crm.lead2opportunity.partner.mass,partner_id:0
+#: field:crm.partner.binding,partner_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#, python-format
+msgid "Customer"
+msgstr "Client"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1000
+#, python-format
+msgid "Customer Email"
+msgstr "Correu del client"
+
+#. module: crm
+#: field:crm.lead,partner_name:0
+msgid "Customer Name"
+msgstr "Nom del client"
+
+#. module: crm
+#: field:crm.phonecall,date:0 field:crm.phonecall2phonecall,date:0
+msgid "Date"
+msgstr "Data"
+
+#. module: crm
+#: help:crm.lead,message_last_post:0 help:crm.phonecall,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Data de l'últim missatge enviat al registre."
+
+#. module: crm
+#: field:crm.lead,day_open:0
+msgid "Days to Assign"
+msgstr "Dies per assignar"
+
+#. module: crm
+#: field:crm.lead,day_close:0
+msgid "Days to Close"
+msgstr "Dies per al tancament"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead2
+msgid "Dead"
+msgstr "Morta"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.base_partner_merge_automatic_act
+#: model:ir.ui.menu,name:crm.partner_merge_automatic_menu
+msgid "Deduplicate Contacts"
+msgstr "Desduplicar contactes"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Deduplicate the other Contacts"
+msgstr "Desduplicar els altres contactes"
+
+#. module: crm
+#: field:sale.config.settings,alias_prefix:0
+msgid "Default Alias Name for Leads"
+msgstr "Pseudònim per defecte per les iniciatives"
+
+#. module: crm
+#: field:crm.case.stage,case_default:0
+msgid "Default to New Sales Team"
+msgstr "Per defecte a un nou equip de vendes"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_delay_to_close
+msgid "Delay To Close"
+msgstr "Demora per tancar"
+
+#. module: crm
+#: field:crm.lead.report,delay_open:0
+#: field:crm.opportunity.report,delay_open:0
+msgid "Delay to Assign"
+msgstr "Demora per assignar"
+
+#. module: crm
+#: field:crm.lead.report,delay_close:0
+#: field:crm.opportunity.report,delay_close:0
+msgid "Delay to Close"
+msgstr "Temps restant per al tancament"
+
+#. module: crm
+#: field:crm.phonecall.report,delay_close:0
+msgid "Delay to close"
+msgstr "Demora per tancar"
+
+#. module: crm
+#: field:crm.phonecall.report,delay_open:0
+msgid "Delay to open"
+msgstr "Retard d'obertura"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Delete"
+msgstr "Elimina"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Describe the lead..."
+msgstr "Descrigui la iniciativa"
+
+#. module: crm
+#: field:crm.phonecall,description:0 field:crm.segmentation,description:0
+msgid "Description"
+msgstr "Descripció"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Description..."
+msgstr "Descripció..."
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor5
+msgid "Design"
+msgstr "Disseny"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,dst_partner_id:0
+msgid "Destination Contact"
+msgstr "Contacte de desti"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.lead2opportunity.partner.mass,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Do not link to a customer"
+msgstr "No enllaçar un client"
+
+#. module: crm
+#: selection:crm.phonecall.report,state:0
+msgid "Draft"
+msgstr "Esborrany"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_draft_lead
+msgid "Draft Leads"
+msgstr "Iniciatives esborrany"
+
+#. module: crm
+#: field:crm.phonecall,duration:0 field:crm.phonecall.report,duration:0
+msgid "Duration"
+msgstr "Durada"
+
+#. module: crm
+#: help:crm.phonecall,duration:0
+msgid "Duration in minutes and seconds."
+msgstr "Duració en minuts i segons"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Edit..."
+msgstr "Editar..."
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_email:0
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,email_from:0
+#: field:crm.phonecall,email_from:0
+msgid "Email"
+msgstr "Email"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Email Alias"
+msgstr "Àlies de correu electrònic"
+
+#. module: crm
+#: help:crm.lead,email_from:0
+msgid "Email address of the contact"
+msgstr "Adreça de correu electrònic del contacte"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:301
+#: code:addons/crm/base_partner_merge.py:304
+#: code:addons/crm/base_partner_merge.py:316
+#: code:addons/crm/base_partner_merge.py:445
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:434
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Escalate"
+msgstr "Escalat"
+
+#. module: crm
+#: help:crm.lead,date_deadline:0
+msgid "Estimate of the date on which the opportunity will be won."
+msgstr "Data estimada en la qual l'oportunitat serà guanyada."
+
+#. module: crm
+#: model:ir.model,name:crm.model_calendar_event
+msgid "Event"
+msgstr "Esdeveniment"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Exclude contacts having"
+msgstr "Excloure els contactes que tenen"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Excluded Answers :"
+msgstr "Respostes excloses:"
+
+#. module: crm
+#: field:crm.segmentation,exclusif:0
+msgid "Exclusive"
+msgstr "Exclusiu"
+
+#. module: crm
+#: field:crm.segmentation,state:0
+msgid "Execution Status"
+msgstr "Estat execució"
+
+#. module: crm
+#: field:crm.lead.report,date_deadline:0
+#: field:crm.opportunity.report,date_deadline:0
+msgid "Exp. Closing"
+msgstr "Tancament esperat"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,date_deadline:0 help:crm.lead.report,date_deadline:0
+#: help:crm.opportunity.report,date_deadline:0
+msgid "Expected Closing"
+msgstr "Tancament previst"
+
+#. module: crm
+#: field:crm.lead,planned_revenue:0 field:crm.lead.report,probable_revenue:0
+#: field:crm.opportunity.report,expected_revenue:0
+msgid "Expected Revenue"
+msgstr "Ingrès esperat"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+msgid "Expected Revenues"
+msgstr "Ingressos previstos"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing"
+msgstr "Expiració del tancament"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Expiration Closing Month"
+msgstr "Mes de l'expiració del tancament"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Extended Filters"
+msgstr "Filtres estesos"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Extended Filters..."
+msgstr "Filtres estesos..."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Extra Info"
+msgstr "Informació extra"
+
+#. module: crm
+#: field:crm.lead,fax:0
+msgid "Fax"
+msgstr "Fax"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Finished"
+msgstr "Finalitzada"
+
+#. module: crm
+#: field:crm.case.stage,fold:0
+msgid "Folded in Kanban View"
+msgstr "Plegat a la vista de Kanban"
+
+#. module: crm
+#: field:crm.lead,message_follower_ids:0
+#: field:crm.phonecall,message_follower_ids:0
+msgid "Followers"
+msgstr "Seguidors"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:301
+#, python-format
+msgid ""
+"For safety reasons, you cannot merge more than 3 contacts together. You can "
+"re-open the wizard several times if needed."
+msgstr "Per raons de seguretat, no pots unir més de 3 contactes en un. Pot tornar a obrir l'assistent totes les vegades que necessitis."
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,force_assignation:0
+msgid "Force assignation"
+msgstr "Força assignació"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:564
+#, python-format
+msgid "From %s : %s"
+msgstr "De %s : %s"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
+msgid ""
+"From this report, you can analyse the performance of your sales team, based "
+"on their phone calls. You can group or filter the information according to "
+"several criteria and drill down the information, by adding more groups in "
+"the report."
+msgstr "Des d'aquest informe, podeu analitzar el rendiment del seu equip de vendes basant-se en les trucades telefòniques. Podeu agrupar o filtrar la informació d'acord a diversos criteris i aprofundir en la informació afegint més grups a l'informe."
+
+#. module: crm
+#: field:crm.lead,function:0
+msgid "Function"
+msgstr "Funció"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Fund Raising"
+msgstr "Recaudació de fondos"
+
+#. module: crm
+#: field:crm.lead,email_cc:0
+msgid "Global CC"
+msgstr "CC global"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Group By"
+msgstr "Agrupa per"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,number_group:0
+msgid "Group of Contacts"
+msgstr "CC Global"
+
+#. module: crm
+#: model:ir.model,name:crm.model_ir_http
+msgid "HTTP routing"
+msgstr "Ruta HTTP "
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_partner_binding
+msgid "Handle partner binding or generation in CRM wizards."
+msgstr "Assistents CRM per gestionar el llançament o la generació d'empreses."
+
+#. module: crm
+#: selection:crm.phonecall,state:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: selection:crm.phonecall.report,state:0
+msgid "Held"
+msgstr "Retingut"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "High"
+msgstr "Alta"
+
+#. module: crm
+#: help:crm.lead,message_summary:0 help:crm.phonecall,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Manté el resum de la conversa (número de missatges, etc). Aquest resum és en format html  per poder-lo inserir a les vistes kanban."
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,id:0
+#: field:base.partner.merge.line,id:0 field:crm.case.categ,id:0
+#: field:crm.case.stage,id:0 field:crm.lead,id:0 field:crm.lead.report,id:0
+#: field:crm.lead2opportunity.partner,id:0
+#: field:crm.lead2opportunity.partner.mass,id:0
+#: field:crm.merge.opportunity,id:0 field:crm.opportunity.report,id:0
+#: field:crm.partner.binding,id:0 field:crm.payment.mode,id:0
+#: field:crm.phonecall,id:0 field:crm.phonecall.report,id:0
+#: field:crm.phonecall2phonecall,id:0 field:crm.segmentation,id:0
+#: field:crm.segmentation.line,id:0 field:crm.tracking.campaign,id:0
+#: field:crm.tracking.medium,id:0 field:crm.tracking.mixin,id:0
+#: field:crm.tracking.source,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: crm
+#: field:base.partner.merge.line,aggr_ids:0
+msgid "Ids"
+msgstr "ID"
+
+#. module: crm
+#: help:crm.lead,message_unread:0 help:crm.phonecall,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si està marcat hi ha missatges nous pendents."
+
+#. module: crm
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr "Si 'No accepta missatges' està marcat, aquest contacte ha refusat a rebre correus electrònics d'enviaments massius i campanyes de màrqueting. El filtre 'Disponible per enviaments massius' permet a l'usuari filtrar a les empreses quan es realitzin enviaments massius."
+
+#. module: crm
+#: help:crm.lead2opportunity.partner.mass,force_assignation:0
+msgid "If unchecked, this will leave the salesman of duplicated opportunities"
+msgstr "Si no està marcat, mantindrà al venedor de les oportunitats duplicades."
+
+#. module: crm
+#: help:crm.case.stage,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each "
+"sales team. It will not assign this stage to existing teams."
+msgstr "Si marqueu aquest camp, aquesta serà l'etapa predeterminada per a tots els equips de vendes. No assignarà aquesta etapa als equips ja creats."
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_phone1
+msgid "Inbound"
+msgstr "Entrada"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Included Answers :"
+msgstr "Respostes incloses:"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor4
+msgid "Information"
+msgstr "Informació"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Internal Notes"
+msgstr "Notes internes"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_is_company:0
+msgid "Is Company"
+msgstr "Es empresa"
+
+#. module: crm
+#: field:crm.lead,message_is_follower:0
+#: field:crm.phonecall,message_is_follower:0
+msgid "Is a Follower"
+msgstr "És un seguidor"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:291
+#, python-format
+msgid "It's only possible to convert one phonecall at a time."
+msgstr "Només és possible convertir una trucada telefònica cada vegada."
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,exclude_journal_item:0
+msgid "Journal Items associated to the contact"
+msgstr "Assentaments comptables associats al contacte"
+
+#. module: crm
+#: field:crm.lead,date_action_last:0 field:crm.phonecall,date_action_last:0
+msgid "Last Action"
+msgstr "Última acció"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Last Message"
+msgstr "Últim missatge"
+
+#. module: crm
+#: field:crm.lead,message_last_post:0 field:crm.phonecall,message_last_post:0
+msgid "Last Message Date"
+msgstr "Data Últim Missatge"
+
+#. module: crm
+#: field:crm.lead,date_last_stage_update:0
+#: field:crm.lead.report,date_last_stage_update:0
+#: field:crm.opportunity.report,date_last_stage_update:0
+msgid "Last Stage Update"
+msgstr "Última actualització de la fase"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,write_uid:0
+#: field:base.partner.merge.line,write_uid:0 field:crm.case.categ,write_uid:0
+#: field:crm.case.stage,write_uid:0 field:crm.lead,write_uid:0
+#: field:crm.lead2opportunity.partner,write_uid:0
+#: field:crm.lead2opportunity.partner.mass,write_uid:0
+#: field:crm.merge.opportunity,write_uid:0
+#: field:crm.partner.binding,write_uid:0 field:crm.payment.mode,write_uid:0
+#: field:crm.phonecall,write_uid:0 field:crm.phonecall2phonecall,write_uid:0
+#: field:crm.segmentation,write_uid:0 field:crm.segmentation.line,write_uid:0
+#: field:crm.tracking.campaign,write_uid:0
+#: field:crm.tracking.medium,write_uid:0 field:crm.tracking.source,write_uid:0
+msgid "Last Updated by"
+msgstr "Actualitzat per última vegada per"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,write_date:0
+#: field:base.partner.merge.line,write_date:0
+#: field:crm.case.categ,write_date:0 field:crm.case.stage,write_date:0
+#: field:crm.lead2opportunity.partner,write_date:0
+#: field:crm.lead2opportunity.partner.mass,write_date:0
+#: field:crm.merge.opportunity,write_date:0
+#: field:crm.partner.binding,write_date:0 field:crm.payment.mode,write_date:0
+#: field:crm.phonecall,write_date:0 field:crm.phonecall2phonecall,write_date:0
+#: field:crm.segmentation,write_date:0
+#: field:crm.segmentation.line,write_date:0
+#: field:crm.tracking.campaign,write_date:0
+#: field:crm.tracking.medium,write_date:0
+#: field:crm.tracking.source,write_date:0
+msgid "Last Updated on"
+msgstr "Actualitzat per última vegada el dia"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:893 selection:crm.case.stage,type:0
+#: view:crm.lead:crm.crm_case_form_view_oppor selection:crm.lead,type:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
+#, python-format
+msgid "Lead"
+msgstr "Iniciativa"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Lead / Customer"
+msgstr "Iniciativa / Client"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_create
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead
+msgid "Lead Created"
+msgstr "Iniciativa creada"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner
+msgid "Lead To Opportunity Partner"
+msgstr "Iniciativa a Oportunitat"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_create
+msgid "Lead created"
+msgstr "Iniciativa creada"
+
+#. module: crm
+#: field:crm.phonecall,opportunity_id:0 model:ir.model,name:crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Iniciativa/Oportunitat"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_lead_mass_mail
+msgid "Lead/Opportunity Mass Mail"
+msgstr "Envio massiu a iniciatives/oportunitats"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+#: field:crm.case.section,use_leads:0
+#: view:crm.lead:crm.crm_case_tree_view_leads
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_leads_all
+#: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_lead
+#: model:ir.ui.menu,name:crm.menu_crm_leads
+msgid "Leads"
+msgstr "Iniciatives"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:84
+#, python-format
+msgid "Leads / Opportunities"
+msgstr "Iniciatives / Oportunitats"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_graph
+#: view:crm.lead.report:crm.view_report_crm_lead_graph_two
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_graph
+#: model:ir.actions.act_window,name:crm.action_report_crm_lead
+#: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
+#: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
+msgid "Leads Analysis"
+msgstr "Anàlisi d'iniciatives"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead
+#: model:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
+msgid ""
+"Leads Analysis allows you to check different CRM related information like "
+"the treatment delays or number of leads per state. You can sort out your "
+"leads analysis by different groups to get accurate grained analysis."
+msgstr "L'anàlisi d'iniciatives li permet verificar diferent la informació referent a CRM com el tractament de retards o el nombre d'iniciatives per estat. Pot ordenar a les seves iniciatives per diferents grups per tenir una anàlisi."
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Leads Email Alias"
+msgstr "Pseudònim de correu electrònic d'iniciatives"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+msgid "Leads Form"
+msgstr "Formulari d'iniciatives"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_calendar_view_leads
+msgid "Leads Generation"
+msgstr "Generació d'iniciatives"
+
+#. module: crm
+#: field:res.partner,opportunity_ids:0
+msgid "Leads and Opportunities"
+msgstr "Iniciatives i oportunitats"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr "Iniciatives dels EUA"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Leads that are assigned to me"
+msgstr "Iniciatives assignades a mi"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
+msgstr "No incloure en campanyes d'enviament massiu les iniciatives que no van contestar"
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid ""
+"Leads that you selected that have duplicates. If the list is empty, it means"
+" that no duplicates were found"
+msgstr "Les iniciatives que ha seleccionat que estan duplicades. Si la llista està buida, significa que no s'ha trobat duplicats."
+
+#. module: crm
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+msgid "Leads with existing duplicates (for information)"
+msgstr "Iniciatives duplicades (amb propòsit informatiu)"
+
+#. module: crm
+#: field:crm.merge.opportunity,opportunity_ids:0
+msgid "Leads/Opportunities"
+msgstr "Iniciatives / Oportunitats"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,line_ids:0
+msgid "Lines"
+msgstr "Línies"
+
+#. module: crm
+#: help:crm.case.stage,section_ids:0
+msgid ""
+"Link between stages and sales teams. When set, this limitate the current "
+"stage to the selected sales teams."
+msgstr "Relació entre etapes i equips de vendes. Si és definit, limita l'etapa actual a l'equip de vendes actual."
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,action:0
+#: selection:crm.partner.binding,action:0
+msgid "Link to an existing customer"
+msgstr "Enllaç a un client existent"
+
+#. module: crm
+#: help:crm.lead,partner_id:0
+msgid "Linked partner (optional). Usually created when converting the lead."
+msgstr "Empresa associada (opcional). Usualment és creada al convertir la iniciativa."
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Log Call"
+msgstr "Registrar trucada"
+
+#. module: crm
+#: selection:crm.phonecall2phonecall,action:0
+msgid "Log a call"
+msgstr "Registrar una trucada"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_incoming0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone_inbound
+msgid "Logged Calls"
+msgstr "Trucades registrades"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1058
+#, python-format
+msgid "Logged a call for %(date)s. %(description)s"
+msgstr "Registrar una trucada en %(date)s. %(description)s"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_long_term_revenue
+msgid "Long Term Revenue"
+msgstr "Ingressos a llarg termini"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Lost"
+msgstr "Perdut"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "Low"
+msgstr "Baixa"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_mailing
+msgid "Mailing Partner"
+msgstr "Proveïdor de correu"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mailings"
+msgstr "Mailings"
+
+#. module: crm
+#: field:sale.config.settings,module_crm_claim:0
+msgid "Manage Customer Claims"
+msgstr "Gestionar reclamacions de client"
+
+#. module: crm
+#: model:res.groups,name:crm.group_fund_raising
+#: field:sale.config.settings,group_fund_raising:0
+msgid "Manage Fund Raising"
+msgstr "Administrar recaptació de fondos"
+
+#. module: crm
+#: field:sale.config.settings,module_crm_helpdesk:0
+msgid "Manage Helpdesk and Support"
+msgstr "Gestionar incidències i suport"
+
+#. module: crm
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr "Obligatori / Opcional"
+
+#. module: crm
+#: selection:crm.segmentation.line,operator:0
+msgid "Mandatory Expression"
+msgstr "Expressió obligatòria"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_mark_as_lost
+msgid "Mark As Lost"
+msgstr "Establir com perdut"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mark Lost"
+msgstr "Marca com perdut"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Mark Won"
+msgstr "Marca com guanyat"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
+msgid "Mass Lead To Opportunity Partner"
+msgstr "Transformació massiva d'iniciativa a oportunitat"
+
+#. module: crm
+#: field:crm.segmentation,partner_id:0
+msgid "Max Partner ID processed"
+msgstr "Màx ID d'empresa processat"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,maximum_group:0
+msgid "Maximum of Group of Contacts"
+msgstr "Màxim de grups de contactes"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+msgid "Meeting"
+msgstr "Reunió"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1072
+#, python-format
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
+msgstr "Reunió planificada el dia '%s'<br> Assumpte: %s <br> Duració: %s hora(es)"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
+#: model:ir.actions.act_window,name:crm.calendar_event_partner
+#: view:res.partner:crm.crm_lead_partner_kanban_view
+#: view:res.partner:crm.view_partners_form_crm1
+#: field:res.partner,meeting_ids:0
+msgid "Meetings"
+msgstr "Reunions"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Merge"
+msgstr "Combina"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically"
+msgstr "Combinar automàticament"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Automatically all process"
+msgstr "Combinar automàticament tots els processos"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Merge Leads/Opportunities"
+msgstr "Fusionar iniciatives/oportunitats"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge Selection"
+msgstr "Combinar selecció"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_merge_opportunities
+#: model:ir.actions.act_window,name:crm.merge_opportunity_act
+msgid "Merge leads/opportunities"
+msgstr "Fusionar iniciatives/oportunitats"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_merge_opportunity
+msgid "Merge opportunities"
+msgstr "Fusionar oportunitats"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge the following contacts"
+msgstr "Combinar els seguents contactes"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Merge with Manual Check"
+msgstr "Combinar amb la verificació manual"
+
+#. module: crm
+#: help:crm.lead2opportunity.partner.mass,deduplicate:0
+msgid "Merge with existing leads/opportunities of each partner"
+msgstr "Combinar amb iniciatives/oportunitats de cada empresa"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner,name:0
+#: selection:crm.lead2opportunity.partner.mass,name:0
+msgid "Merge with existing opportunities"
+msgstr "Fusionar amb oportunitats existents"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:549
+#, python-format
+msgid "Merged lead"
+msgstr "Iniciativa fusionada"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:543
+#, python-format
+msgid "Merged leads"
+msgstr "Iniciatives fusionades"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:545
+#, python-format
+msgid "Merged opportunities"
+msgstr "Oportunitats fusionades"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:549
+#, python-format
+msgid "Merged opportunity"
+msgstr "Oportunitat fusionada"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:326
+#, python-format
+msgid "Merged with the following partners:"
+msgstr "Combinada amb les següents empreses:"
+
+#. module: crm
+#: field:crm.lead,message_ids:0 field:crm.phonecall,message_ids:0
+msgid "Messages"
+msgstr "Missatges"
+
+#. module: crm
+#: help:crm.lead,message_ids:0 help:crm.phonecall,message_ids:0
+msgid "Messages and communication history"
+msgstr "Historial de missatges i comunicació"
+
+#. module: crm
+#: field:base.partner.merge.line,min_id:0
+msgid "MinID"
+msgstr "MinID"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Misc"
+msgstr "Varis"
+
+#. module: crm
+#: field:crm.lead,mobile:0 field:crm.phonecall,partner_mobile:0
+msgid "Mobile"
+msgstr "Mòbil"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Month"
+msgstr "Mes"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Month of call"
+msgstr "Mes de la trucada"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "My Leads"
+msgstr "Les meves iniciatives"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "My Opportunities"
+msgstr "Les meves oportunitats"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "My Phone Calls"
+msgstr "Les meves trucades"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "My Phonecalls"
+msgstr "Les meves trucades"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "My Sales Team(s)"
+msgstr "El(s) meu(s) equip(s) de vendes"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "My Team"
+msgstr "El meu equip"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_name:0
+#: field:crm.case.categ,name:0 field:crm.payment.mode,name:0
+#: field:crm.segmentation,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead5
+msgid "Negotiation"
+msgstr "Negociació"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead1
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "New"
+msgstr "Nou"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "New Mail"
+msgstr "Nou correu"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_newsletter
+msgid "Newsletter"
+msgstr "Butlletí de notícies"
+
+#. module: crm
+#: field:crm.lead,date_action_next:0 field:crm.lead,title_action:0
+#: field:crm.phonecall,date_action_next:0
+msgid "Next Action"
+msgstr "Següent acció"
+
+#. module: crm
+#: field:crm.lead,date_action:0
+msgid "Next Action Date"
+msgstr "Data de la següent acció"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1013
+#, python-format
+msgid "No Subject"
+msgstr "Sense assumpte"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:770
+#, python-format
+msgid ""
+"No customer name defined. Please fill one of the following fields: Company "
+"Name, Contact Name or Email (\"Name <email@address>\")"
+msgstr "No s'ha definit un nom pel client. Si us plau, completi un dels següents camps: nom de la companyia, nom del contacte o correu electrònic (\"Nom <email@address>\")"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "No salesperson"
+msgstr "Sense comercial"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+#: selection:crm.phonecall,priority:0
+#: selection:crm.phonecall.report,priority:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Not Held"
+msgstr "No ocupat"
+
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Not Running"
+msgstr "No executat"
+
+#. module: crm
+#: field:crm.phonecall2phonecall,note:0
+msgid "Note"
+msgstr "Nota"
+
+#. module: crm
+#: field:crm.lead,description:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: crm
+#: help:crm.lead.report,delay_close:0
+#: help:crm.opportunity.report,delay_close:0
+#: help:crm.phonecall.report,delay_close:0
+msgid "Number of Days to close the case"
+msgstr "Número de dies per tancar el cas"
+
+#. module: crm
+#: help:crm.lead.report,delay_open:0 help:crm.opportunity.report,delay_open:0
+#: help:crm.phonecall.report,delay_open:0
+msgid "Number of Days to open the case"
+msgstr "Número de dies per obrir el cas"
+
+#. module: crm
+#: field:crm.case.categ,object_id:0
+msgid "Object Name"
+msgstr "Nom de l'objecte"
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:316
+#, python-format
+msgid ""
+"Only the destination contact may be linked to existing Journal Items. Please"
+" ask the Administrator if you need to merge several contacts linked to "
+"existing Journal Items."
+msgstr "Solament el contacte de destí pot estar enllaçat amb els apunts comptables. Si us plau, contacti amb l'administrador si necessita enllaçar diversos contactes amb els apunts comptables existents."
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,monthly_open_leads:0
+msgid "Open Leads per Month"
+msgstr "Iniciatives obertes per mes"
+
+#. module: crm
+#: model:ir.actions.client,name:crm.action_client_crm_menu
+msgid "Open Sale Menu"
+msgstr "Obrir menú de vendes "
+
+#. module: crm
+#: field:crm.phonecall,date_open:0
+msgid "Opened"
+msgstr "Obert"
+
+#. module: crm
+#: field:crm.phonecall.report,opening_date:0
+msgid "Opening Date"
+msgstr "Data d'obertura"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_operator:0
+msgid "Operator"
+msgstr "Operador"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,use_opportunities:0
+#: view:crm.lead:crm.crm_case_form_view_oppor
+#: view:crm.lead:crm.crm_case_graph_view_leads
+#: view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: field:crm.lead2opportunity.partner,opportunity_ids:0
+#: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
+#: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
+#: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
+#: model:ir.actions.act_window,name:crm.relate_partner_opportunities
+#: model:ir.ui.menu,name:crm.menu_crm_opportunities
+#: view:res.partner:crm.crm_lead_partner_kanban_view
+#: view:res.partner:crm.view_partners_form_crm1
+msgid "Opportunities"
+msgstr "Oportunitats"
+
+#. module: crm
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "Anàlisi d'oportunitats"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity
+#: model:ir.actions.act_window,help:crm.action_report_crm_opportunity_salesteam
+msgid ""
+"Opportunities Analysis gives you an instant access to your opportunities "
+"with information such as the expected revenue, planned cost, missed "
+"deadlines or the number of interactions per opportunity. This report is "
+"mainly used by the sales manager in order to do the periodic review with the"
+" teams of the sales pipeline."
+msgstr "L'anàlisi d'oportunitats li dóna accés instantani a les seves oportunitats amb informació com l'ingrés previst, cost planejat, dates límit incomplides o el número d'interaccions per oportunitat. Aquest informe l'utilitza principalment el responsable de vendes per fer una revisió periòdica del procés de vendes amb els equips."
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_cohort
+msgid "Opportunities Cohort"
+msgstr "Cohort d'oportunitats"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_opportunities_won_per_team
+msgid "Opportunities Won Per Team"
+msgstr "Oportunitats guanyades per equip"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Opportunities that are assigned to me"
+msgstr "Oportunitats assignades a mi"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:873 field:calendar.event,opportunity_id:0
+#: selection:crm.case.stage,type:0 view:crm.lead:crm.crm_case_tree_view_oppor
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: selection:crm.lead,type:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: selection:crm.lead.report,type:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: selection:crm.opportunity.report,type:0
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+#: field:res.partner,opportunity_count:0
+#, python-format
+msgid "Opportunity"
+msgstr "Oportunitat"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_lost
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_lost
+msgid "Opportunity Lost"
+msgstr "Oportunitat perduda"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
+msgid "Opportunity Stage Changed"
+msgstr "Etapa de l'oportunitat canviada"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_won
+#: model:mail.message.subtype,name:crm.mt_salesteam_lead_won
+msgid "Opportunity Won"
+msgstr "Oportunitat guanyada"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_lost
+msgid "Opportunity lost"
+msgstr "Oportunitat perduda"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_won
+msgid "Opportunity won"
+msgstr "Oportunitat guanyada"
+
+#. module: crm
+#: field:crm.lead,opt_out:0
+msgid "Opt-Out"
+msgstr "No accepta rebre emails"
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Option"
+msgstr "Opcions"
+
+#. module: crm
+#: selection:crm.segmentation.line,operator:0
+msgid "Optional Expression"
+msgstr "Expressió opcional"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Options"
+msgstr "Opcions"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor8
+msgid "Other"
+msgstr "Altres"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Other Call"
+msgstr "Una altra trucada"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_phone2
+msgid "Outbound"
+msgstr "Sortida"
+
+#. module: crm
+#: field:crm.lead.report,delay_expected:0
+#: field:crm.opportunity.report,delay_expected:0
+#: model:ir.filters,name:crm.filter_leads_overpassed_deadline
+msgid "Overpassed Deadline"
+msgstr "Data límit sobrepassada"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_parent_id:0
+msgid "Parent Company"
+msgstr "Empresa matriu"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter field:crm.lead,partner_id:0
+#: field:crm.lead.report,partner_id:0
+#: field:crm.opportunity.report,partner_id:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall.report,partner_id:0
+#: field:crm.phonecall2phonecall,partner_id:0
+#: model:ir.model,name:crm.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: crm
+#: field:crm.segmentation,categ_id:0
+msgid "Partner Category"
+msgstr "Categoria d'empresa"
+
+#. module: crm
+#: field:crm.lead,partner_address_email:0
+msgid "Partner Contact Email"
+msgstr "Correu electrònic del contacte de l'empresa"
+
+#. module: crm
+#: field:crm.lead,partner_address_name:0
+msgid "Partner Contact Name"
+msgstr "Nom del contacte de l'empresa"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+#: model:ir.model,name:crm.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "Segmentació d'empresa"
+
+#. module: crm
+#: view:crm.segmentation.line:crm.crm_segmentation_line-view
+#: view:crm.segmentation.line:crm.crm_segmentation_line_tree-view
+msgid "Partner Segmentation Lines"
+msgstr "Línies de segmentació d'empresa"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation_tree-view
+msgid "Partner Segmentations"
+msgstr "Segmentacions d'empresa"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:301
+#, python-format
+msgid "Partner has been <b>created</b>."
+msgstr "El client ha estat <b>creat</b>."
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Partners"
+msgstr "Empreses"
+
+#. module: crm
+#: field:crm.lead,payment_mode:0
+#: view:crm.payment.mode:crm.view_crm_payment_mode_form
+#: view:crm.payment.mode:crm.view_crm_payment_mode_tree
+#: model:ir.actions.act_window,name:crm.action_crm_payment_mode
+msgid "Payment Mode"
+msgstr "Mode de pagament"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.menu_crm_payment_mode_act
+msgid "Payment Modes"
+msgstr "Formes de pagament"
+
+#. module: crm
+#: selection:crm.phonecall,state:0 selection:crm.phonecall.report,state:0
+msgid "Pending"
+msgstr "Pendent"
+
+#. module: crm
+#: field:crm.lead,phone:0 view:crm.phonecall:crm.crm_case_phone_form_view
+#: field:crm.phonecall,partner_phone:0 field:crm.phonecall2phonecall,phone:0
+msgid "Phone"
+msgstr "Telèfon"
+
+#. module: crm
+#: code:addons/crm/crm_phonecall.py:219
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+#, python-format
+msgid "Phone Call"
+msgstr "Trucada telefònica"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: view:crm.phonecall:crm.crm_case_phone_calendar_view
+#: view:crm.phonecall:crm.crm_case_phone_tree_view
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone
+#: model:ir.ui.menu,name:crm.menu_crm_config_phonecall
+msgid "Phone Calls"
+msgstr "Trucades de telèfon"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.action_report_crm_phonecall
+#: model:ir.ui.menu,name:crm.menu_report_crm_phonecalls_tree
+msgid "Phone Calls Analysis"
+msgstr "Anàlisi de trucades"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_crm_phonecall_phone_call_to_do
+msgid "Phone Calls To Do"
+msgstr "Trucades per fer"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone Calls that are assigned to me"
+msgstr "Trucades que estan assignades a mi"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_graph
+#: model:ir.actions.act_window,name:crm.act_crm_opportunity_crm_phonecall_new
+msgid "Phone calls"
+msgstr "Trucades telefòniques"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall_report
+msgid "Phone calls by user and section"
+msgstr "Trucades telefòniques per usuari i secció"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls that are assigned to one of the sale teams I manage"
+msgstr "Les trucades de telèfon que estan assignades a un dels equips que gestiono"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in closed state"
+msgstr "Trucades amb estat tancat"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in draft and open state"
+msgstr "Trucades amb estat esborrany o obert"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Phone calls which are in pending state"
+msgstr "Trucades amb estat pendent"
+
+#. module: crm
+#: field:calendar.event,phonecall_id:0
+#: model:ir.model,name:crm.model_crm_phonecall
+msgid "Phonecall"
+msgstr "Trucada telefònica"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_phonecall_categ_action
+msgid "Phonecall Categories"
+msgstr "Categories de trucades"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
+msgstr "Trucada telefònica a trucada telefònica"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:res.partner,phonecall_count:0 field:res.partner,phonecall_ids:0
+msgid "Phonecalls"
+msgstr "Trucades telefòniques"
+
+#. module: crm
+#: field:crm.lead,planned_cost:0
+msgid "Planned Costs"
+msgstr "Costos previstos"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Planned Date"
+msgstr "Data de planificació"
+
+#. module: crm
+#: view:crm.case.section:crm.crm_case_section_salesteams_view_kanban
+#: field:crm.case.section,monthly_planned_revenue:0
+msgid "Planned Revenue per Month"
+msgstr "Ingressos previstos per mes"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:643
+#, python-format
+msgid ""
+"Please select more than one element (lead or opportunity) from the list "
+"view."
+msgstr "Si us plau, seleccioni més d'un element (iniciativa o oportunitat) des de la vista llista."
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Pre-Sale Services"
+msgstr "Serveis de prevenda"
+
+#. module: crm
+#: field:crm.lead,priority:0 field:crm.lead.report,priority:0
+#: field:crm.opportunity.report,priority:0 field:crm.phonecall,priority:0
+#: field:crm.phonecall.report,priority:0
+msgid "Priority"
+msgstr "Prioritat"
+
+#. module: crm
+#: field:crm.lead.report,probability:0
+#: field:crm.opportunity.report,probability:0
+msgid "Probability"
+msgstr "Probabilitat"
+
+#. module: crm
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "Probabilitat (%)"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor1
+msgid "Product"
+msgstr "Producte"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Profiling"
+msgstr "Perfils"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Profiling Options"
+msgstr "Opcions de perfils"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead4
+msgid "Proposition"
+msgstr "Proposta"
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Purchase Amount"
+msgstr "Import de compra"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead3
+msgid "Qualification"
+msgstr "Qualificació"
+
+#. module: crm
+#: field:crm.lead,ref:0
+msgid "Reference"
+msgstr "Referència"
+
+#. module: crm
+#: field:crm.lead,ref2:0
+msgid "Reference 2"
+msgstr "Referència 2"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "References"
+msgstr "Referències"
+
+#. module: crm
+#: field:crm.lead,referred:0
+msgid "Referred By"
+msgstr "Referenciat per"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner,action:0
+#: field:crm.lead2opportunity.partner.mass,action:0
+#: field:crm.partner.binding,action:0
+msgid "Related Customer"
+msgstr "Client relacionat"
+
+#. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_reminder_mail
+msgid ""
+"Reminder on Lead: ${object.id} from ${object.partner_id != False and "
+"object.partner_id.name or object.contact_name}"
+msgstr "Recordatori de la iniciativa: ${object.id} de ${object.partner_id != False and object.partner_id.name or object.contact_name}"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_email_reminder_lead
+msgid "Reminder to User"
+msgstr "Recordatori a l'usuari"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_case_stage_form
+#: field:crm.case.stage,requirements:0
+msgid "Requirements"
+msgstr "Requisits"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,user_id:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_leads_revenue_per_lead
+msgid "Revenue Per Lead"
+msgstr "Ingrés per iniciativa"
+
+#. module: crm
+#: field:crm.segmentation.line,name:0
+msgid "Rule Name"
+msgstr "Nom de regla"
+
+#. module: crm
+#: selection:crm.segmentation,state:0
+msgid "Running"
+msgstr "En procés"
+
+#. module: crm
+#: selection:crm.segmentation.line,expr_name:0
+msgid "Sale Amount"
+msgstr "Import de venda"
+
+#. module: crm
+#: view:sale.config.settings:crm.view_sale_config_settings
+msgid "Sale Services"
+msgstr "Servei de venda"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Sales Purchase"
+msgstr "Compra vendes"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_lead_categ_action
+#: model:ir.ui.menu,name:crm.menu_crm_lead_categ
+msgid "Sales Tags"
+msgstr "Etiqueta de venda"
+
+#. module: crm
+#: field:crm.case.categ,section_id:0
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,section_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,section_id:0
+#: field:crm.lead2opportunity.partner,section_id:0
+#: field:crm.lead2opportunity.partner.mass,section_id:0
+#: field:crm.merge.opportunity,section_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,section_id:0
+#: field:crm.payment.mode,section_id:0
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+#: field:crm.phonecall,section_id:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: field:crm.phonecall2phonecall,section_id:0
+#: field:crm.tracking.campaign,section_id:0
+msgid "Sales Team"
+msgstr "Equip de vendes"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_section
+msgid "Sales Teams"
+msgstr "Equips de vendes"
+
+#. module: crm
+#: help:crm.phonecall,section_id:0
+msgid "Sales team to which Case belongs to."
+msgstr "Equip de vendes al qual pertany el cas"
+
+#. module: crm
+#: field:crm.lead2opportunity.partner.mass,user_ids:0
+msgid "Salesmen"
+msgstr "Venedor"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,user_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead2opportunity.partner,user_id:0
+#: field:crm.lead2opportunity.partner.mass,user_id:0
+#: field:crm.merge.opportunity,user_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Salesperson"
+msgstr "Comercial"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "Schedule"
+msgstr "Planificació"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Schedule Call"
+msgstr "Planifica trucada"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Schedule Meeting"
+msgstr "Programa reunió"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_inbound_phone_tree_view
+#: model:ir.actions.act_window,name:crm.phonecall_to_phonecall_act
+msgid "Schedule Other Call"
+msgstr "Planifica una altra trucada"
+
+#. module: crm
+#: selection:crm.phonecall2phonecall,action:0
+msgid "Schedule a call"
+msgstr "Planificar una trucada"
+
+#. module: crm
+#: field:sale.config.settings,group_scheduled_calls:0
+msgid "Schedule calls to manage call center"
+msgstr "Trucades programades per gestionar el centre de trucades"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Schedule/Log"
+msgstr "Planificació/Registre"
+
+#. module: crm
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "Schedule/Log a Call"
+msgstr "Planificar/Registrar una trucada"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_case_categ_phone_outgoing0
+#: model:ir.ui.menu,name:crm.menu_crm_case_phone_outbound
+msgid "Scheduled Calls"
+msgstr "Trucades planificades"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "Scheduled a call for %(date)s. %(description)s"
+msgstr "Planificada una trucada per %(date)s. %(description)s"
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+msgid "Search"
+msgstr "Cerca"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+msgid "Search Leads"
+msgstr "Cerca iniciatives"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Search Opportunities"
+msgstr "Cerca d'oportunitats"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Search Phonecalls"
+msgstr "Cerca trucades"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Search duplicates based on duplicated data in"
+msgstr "Cercar duplicats basats en dades duplicades en"
+
+#. module: crm
+#: model:crm.tracking.source,name:crm.crm_source_search_engine
+msgid "Search engine"
+msgstr "Motor de cerca"
+
+#. module: crm
+#: field:crm.phonecall.report,section_id:0
+msgid "Section"
+msgstr "Secció"
+
+#. module: crm
+#: field:crm.case.stage,section_ids:0
+msgid "Sections"
+msgstr "Seccions"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+#: field:crm.segmentation.line,segmentation_id:0
+#: model:ir.actions.act_window,name:crm.crm_segmentation-act
+msgid "Segmentation"
+msgstr "Segmentació"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Segmentation Description"
+msgstr "Descripció de segmentació"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Segmentation Test"
+msgstr "Prova de segmentació"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_segmentation_line
+msgid "Segmentation line"
+msgstr "Línia de segmentació"
+
+#. module: crm
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+msgid "Select Leads/Opportunities"
+msgstr "Seleccionar iniciatives/oportunitats"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+msgid "Select Stages for this Sales Team"
+msgstr "Seleccioni etapes per aquest equip de vendes"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"Select the list of fields used to search for\n"
+"                            duplicated records. If you select several fields,\n"
+"                            Odoo will propose you to merge only those having\n"
+"                            all these fields in common. (not one of the fields)."
+msgstr "Seleccioni la llista de camps utilitzada per buscar registres duplicats. Si selecciona diversos camps, Odoo li proposarà unir només aquells registres que tinguin tots aquests camps en comú (no un dels camps)."
+
+#. module: crm
+#: selection:base.partner.merge.automatic.wizard,state:0
+msgid "Selection"
+msgstr "Selecció"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "Send Email"
+msgstr "Enviar Correu"
+
+#. module: crm
+#: field:crm.case.stage,sequence:0
+msgid "Sequence"
+msgstr "Seqüència"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor3
+msgid "Services"
+msgstr "Serveis"
+
+#. module: crm
+#: model:ir.actions.server,name:crm.action_set_team_sales_department
+msgid "Set team to Sales Department"
+msgstr "Establir com equip al Departament de vedes"
+
+#. module: crm
+#: help:crm.case.stage,on_change:0
+msgid ""
+"Setting this stage will change the probability automatically on the "
+"opportunity."
+msgstr "Canviant cap aquesta etapa canviarà automàticament la probabilitat d'aquesta oportunitat."
+
+#. module: crm
+#: model:res.groups,name:crm.group_scheduled_calls
+msgid "Show Scheduled Calls Menu"
+msgstr "Mostrar el menú de trucades programades"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Show only lead"
+msgstr "Mostrar només iniciatives"
+
+#. module: crm
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Show only opportunity"
+msgstr "Mostrar només oportunitats"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "Skip these contacts"
+msgstr "Saltar aquests contactes"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor2
+msgid "Software"
+msgstr "Software"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,source_id:0 field:crm.lead.report,source_id:0
+#: field:crm.opportunity.report,source_id:0
+#: field:crm.tracking.mixin,source_id:0
+#: model:ir.actions.act_window,name:crm.crm_tracking_source_action
+#: model:ir.model,name:crm.model_crm_tracking_source
+#: model:ir.ui.menu,name:crm.menu_crm_tracking_source
+msgid "Source"
+msgstr "Text original"
+
+#. module: crm
+#: field:crm.tracking.source,name:0
+msgid "Source Name"
+msgstr "Nom de l'origen"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_case_stage_form
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: field:crm.lead,stage_id:0
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: field:crm.lead.report,stage_id:0
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+#: field:crm.opportunity.report,stage_id:0
+msgid "Stage"
+msgstr "Fase"
+
+#. module: crm
+#: model:mail.message.subtype,name:crm.mt_lead_stage
+msgid "Stage Changed"
+msgstr "Canvi de fase"
+
+#. module: crm
+#: field:crm.case.stage,name:0
+msgid "Stage Name"
+msgstr "Nom de la fase"
+
+#. module: crm
+#: view:crm.case.stage:crm.crm_lead_stage_search
+msgid "Stage Search"
+msgstr "Cerca d'etapa"
+
+#. module: crm
+#: model:mail.message.subtype,description:crm.mt_lead_stage
+msgid "Stage changed"
+msgstr "Canvi de fase"
+
+#. module: crm
+#: model:ir.model,name:crm.model_crm_case_stage
+msgid "Stage of case"
+msgstr "Etapa del cas"
+
+#. module: crm
+#: view:crm.case.section:crm.sales_team_form_view_in_crm
+#: field:crm.case.section,stage_ids:0
+#: view:crm.case.stage:crm.crm_case_stage_tree
+#: model:ir.actions.act_window,name:crm.crm_case_stage_act
+#: model:ir.actions.act_window,name:crm.crm_lead_stage_act
+#: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
+msgid "Stages"
+msgstr "Etapes"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,state:0
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,state_id:0
+msgid "State"
+msgstr "Estat"
+
+#. module: crm
+#: field:crm.phonecall,state:0
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: field:crm.phonecall.report,state:0
+msgid "Status"
+msgstr "Estat"
+
+#. module: crm
+#: view:crm.segmentation:crm.crm_segmentation-view
+msgid "Stop Process"
+msgstr "Atura procés"
+
+#. module: crm
+#: field:crm.lead,street:0
+msgid "Street"
+msgstr "Adreça"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "Street..."
+msgstr "Carrer..."
+
+#. module: crm
+#: field:crm.lead,street2:0
+msgid "Street2"
+msgstr "Carrer2"
+
+#. module: crm
+#: field:crm.lead,name:0
+msgid "Subject"
+msgstr "Assumpte"
+
+#. module: crm
+#: field:crm.lead,probability:0
+msgid "Success Rate (%)"
+msgstr "Taxa d'èxit (%)"
+
+#. module: crm
+#: field:crm.lead,message_summary:0 field:crm.phonecall,message_summary:0
+msgid "Summary"
+msgstr "Resum"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+msgid "Tag"
+msgstr "Etiqueta"
+
+#. module: crm
+#: field:crm.lead,categ_ids:0
+msgid "Tags"
+msgstr "Etiquetes"
+
+#. module: crm
+#: help:crm.case.section,alias_id:0
+msgid ""
+"The email address associated with this team. New emails received will "
+"automatically create new leads assigned to the team."
+msgstr "L'adreça de correu associada a l'equip. Els nous correus rebuts crearan automàticament una nova iniciativa assignada a l'equip."
+
+#. module: crm
+#: help:crm.case.section,use_leads:0
+msgid ""
+"The first contact you get with a potential customer is a lead you qualify "
+"before converting it into a real business opportunity. Check this box to "
+"manage leads in this sales team."
+msgstr "El primer contacte que s'obté com un client potencial és una iniciativa que ha qualificat abans de convertir-la en una oportunitat de negoci. Activi aquesta casella per gestionar iniciatives en aquest equip de vendes."
+
+#. module: crm
+#: help:crm.lead,partner_name:0
+msgid ""
+"The name of the future partner company that will be created while converting"
+" the lead into opportunity"
+msgstr "El nom de la companyia de la futura empresa serà creada en convertir la iniciativa en oportunitat."
+
+#. module: crm
+#: help:crm.segmentation,name:0
+msgid "The name of the segmentation."
+msgstr "El nom de la segmentació."
+
+#. module: crm
+#: help:crm.segmentation,categ_id:0
+msgid ""
+"The partner category that will be added to partners that match the "
+"segmentation criterions after computation."
+msgstr "La categoria d'empreses que serà afegida a les empreses que compleixin els criteris de segmentació després del càlcul."
+
+#. module: crm
+#: sql_constraint:crm.lead:0
+msgid "The probability of closing the deal should be between 0% and 100%!"
+msgstr "La probabilitat de tancar hauria d'estar entre 0% i 100%!"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid ""
+"The selected contacts will be merged together. All\n"
+"                                documents linking to one of these contacts will be\n"
+"                                redirected to the aggregated contact. You can remove\n"
+"                                contacts from this list to avoid merging them."
+msgstr "Els contactes seleccionats seran combinats. Tots els documents enllaçats a un d'aquests contactes seran reassignats al contacte resultant. Pot eliminar contactes des de la llista per evitar fusionar-los."
+
+#. module: crm
+#: help:crm.phonecall,state:0
+msgid ""
+"The status is set to Confirmed, when a case is created.\n"
+"When the call is over, the status is set to Held.\n"
+"If the callis not applicable anymore, the status can be set to Cancelled."
+msgstr "L'estat està establert a Confirmat, quan es crea un cas.\nQuan la trucada finalitza, l'estat passa a ser Retingut.\nSi la trucada deixa de ser aplicable, l'estat passarà a ser Cancel·lat."
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+msgid "There is no more contacts to merge for this request..."
+msgstr "No hi ha més contactes per a fusionar en aquesta petició..."
+
+#. module: crm
+#: help:crm.lead,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr "Aquestes adreces de correu seran afegides al camp CC per a tots els correus entrants i sortints d'aquest registre abans de ser enviats. Separeu les diferents adreces de correu amb una coma."
+
+#. module: crm
+#: help:crm.phonecall,email_from:0
+msgid "These people will receive email."
+msgstr "Aquestes persones rebran un correu electrònic."
+
+#. module: crm
+#: help:sale.config.settings,group_scheduled_calls:0
+msgid "This adds the menu 'Scheduled Calls' under 'Sales / Phone Calls'"
+msgstr "Això afegeix el menú \"Trucades programades\" dins de 'Vendes / Trucades'"
+
+#. module: crm
+#: help:crm.case.stage,type:0
+msgid ""
+"This field is used to distinguish stages related to Leads from stages "
+"related to Opportunities, or to specify stages available for both types."
+msgstr "Aquest camp s'utilitza per a diferenciar etapes relacionades amb iniciatives d'etapes relacionades amb oportunitats, o per especificar etapes disponibles amb ambdós tipus."
+
+#. module: crm
+#: help:crm.lead,campaign_id:0 help:crm.lead.report,campaign_id:0
+#: help:crm.opportunity.report,campaign_id:0
+#: help:crm.tracking.mixin,campaign_id:0
+msgid ""
+"This is a name that helps you keep track of your different campaign efforts "
+"Ex: Fall_Drive, Christmas_Special"
+msgstr "Aquest nom us permet fer un seguiment de les diferents accions de campanya. Per ex: Tardor2015, Especial_Nadal"
+
+#. module: crm
+#: help:crm.lead,medium_id:0 help:crm.lead.report,medium_id:0
+#: help:crm.opportunity.report,medium_id:0 help:crm.tracking.mixin,medium_id:0
+msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
+msgstr "Aquest és el mètode d'enviament. Per exemple: correu, correu electrònic o pancarta"
+
+#. module: crm
+#: help:crm.lead,source_id:0 help:crm.lead.report,source_id:0
+#: help:crm.opportunity.report,source_id:0 help:crm.tracking.mixin,source_id:0
+msgid ""
+"This is the source of the link Ex: Search Engine, another domain, or name of"
+" email list"
+msgstr "Aquest és l'origen de l'enllaç. Per ex: cercador, un altre domini o el nom d'una llista de correu electrònic"
+
+#. module: crm
+#: help:crm.case.stage,probability:0
+msgid ""
+"This percentage depicts the default/average probability of the Case for this"
+" stage to be a success"
+msgstr "Aquest percentatge representa la probabilitat per defecte/ mitjana dels casos d'aquesta etapa sigui un èxit"
+
+#. module: crm
+#: help:crm.case.stage,fold:0
+msgid ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
+msgstr "Aquesta etapa es replega al Kanban quan no té registres per mostrar."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor field:crm.lead,title:0
+msgid "Title"
+msgstr "Títol"
+
+#. module: crm
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "To Do"
+msgstr "Per fer"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:397
+#, python-format
+msgid ""
+"To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n"
+"probability = 0 %, select \"Change Probability Automatically\".\n"
+"Create a specific stage or edit an existing one by editing columns of your opportunity pipe."
+msgstr "Per alleugerir la passarel·la de vendes i agrupar totes les oportunitats perdudes, configuri una de les seves etapes de vendes d'aquesta forma:\nprobabilitat = 0 % i seleccioni \"Canviar automàticament la probabilitat\"\nCreï una etapa especifica o modifiqui l'existent edita'n les columnes del seu flux d'oportunitats."
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:417
+#, python-format
+msgid ""
+"To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n"
+"probability = 100 % and select \"Change Probability Automatically\".\n"
+"Create a specific stage or edit an existing one by editing columns of your opportunity pipe."
+msgstr "Per alleugerir la passarel·la de vendes i agrupar totes les oportunitats guanyades, configuri una de les seves etapes de vendes d'aquesta forma:\nprobabilitat = 100 % i seleccioni \"Canviar automàticament la probabilitat\"\nCreï una etapa especifica o modifiqui l'existent edita'n les columnes del seu flux d'oportunitats."
+
+#. module: crm
+#: view:crm.phonecall.report:crm.view_report_crm_phonecall_filter
+#: selection:crm.phonecall.report,state:0
+msgid "Todo"
+msgstr "Pendents"
+
+#. module: crm
+#: model:ir.ui.menu,name:crm.root_menu
+msgid "Tools"
+msgstr "Eines"
+
+#. module: crm
+#: model:ir.filters,name:crm.filter_opportunity_top_opportunities
+msgid "Top Opportunities"
+msgstr "Top oportunitats"
+
+#. module: crm
+#: field:crm.lead.report,planned_revenue:0
+#: field:crm.opportunity.report,total_revenue:0
+msgid "Total Revenue"
+msgstr "Ingressos totals"
+
+#. module: crm
+#: model:crm.case.categ,name:crm.categ_oppor6
+msgid "Training"
+msgstr "Formació"
+
+#. module: crm
+#: field:crm.case.stage,type:0 field:crm.lead,type:0
+#: field:crm.lead.report,type:0 field:crm.opportunity.report,type:0
+msgid "Type"
+msgstr "Tipus"
+
+#. module: crm
+#: help:crm.lead,type:0 help:crm.lead.report,type:0
+#: help:crm.opportunity.report,type:0
+msgid "Type is used to separate Leads and Opportunities"
+msgstr "El tipus és utilitzat per separar iniciatives i oportunitats"
+
+#. module: crm
+#: view:crm.lead:crm.view_crm_case_leads_filter
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.phonecall:crm.view_crm_case_phonecalls_filter
+msgid "Unassigned"
+msgstr "Sense assignar"
+
+#. module: crm
+#: field:crm.lead,message_unread:0 field:crm.phonecall,message_unread:0
+msgid "Unread Messages"
+msgstr "Missatges pendents de llegir"
+
+#. module: crm
+#: field:crm.lead,write_date:0
+msgid "Update Date"
+msgstr "Data d'actualització"
+
+#. module: crm
+#: field:crm.segmentation,sales_purchase_active:0
+msgid "Use The Sales Purchase Rules"
+msgstr "Utilitza les regles de compra vendes"
+
+#. module: crm
+#: selection:crm.lead2opportunity.partner.mass,action:0
+msgid "Use existing partner or create"
+msgstr "Utilitzar una empresa existent o crear-la"
+
+#. module: crm
+#: help:crm.case.section,resource_calendar_id:0
+msgid "Used to compute open days"
+msgstr "Utilitzat per al càlcul de dies oberts"
+
+#. module: crm
+#: help:crm.case.stage,sequence:0
+msgid "Used to order stages. Lower is better."
+msgstr "Utilitzat per ordenar etapes. Inferior és millor."
+
+#. module: crm
+#: field:crm.lead.report,user_id:0 field:crm.opportunity.report,user_id:0
+#: field:crm.phonecall.report,user_id:0
+msgid "User"
+msgstr "Usuari/a"
+
+#. module: crm
+#: field:crm.lead,user_email:0
+msgid "User Email"
+msgstr "Email de l'usuari"
+
+#. module: crm
+#: field:crm.lead,user_login:0
+msgid "User Login"
+msgstr "Entrada d'usuari"
+
+#. module: crm
+#: field:base.partner.merge.automatic.wizard,group_by_vat:0
+msgid "VAT"
+msgstr "CIF/NIF"
+
+#. module: crm
+#: field:crm.segmentation.line,expr_value:0
+msgid "Value"
+msgstr "Valor"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+msgid "Very High"
+msgstr "Molt alta"
+
+#. module: crm
+#: selection:crm.lead,priority:0 selection:crm.lead.report,priority:0
+#: selection:crm.opportunity.report,priority:0
+msgid "Very Low"
+msgstr "Molt baixa"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:396 code:addons/crm/crm_lead.py:416
+#: code:addons/crm/crm_lead.py:643 code:addons/crm/crm_lead.py:769
+#: code:addons/crm/crm_phonecall.py:291
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:105
+#, python-format
+msgid "Warning!"
+msgstr "Avís!"
+
+#. module: crm
+#: help:crm.lead,section_id:0
+msgid ""
+"When sending mails, the default email address is taken from the sales team."
+msgstr "Quan enviï correus electrònics, la direcció de correus per defecte prové de l'equip de vendes."
+
+#. module: crm
+#: field:base.partner.merge.line,wizard_id:0
+msgid "Wizard"
+msgstr "Assistent"
+
+#. module: crm
+#: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:crm.view_crm_case_opportunities_filter
+#: view:crm.lead.report:crm.view_report_crm_lead_filter
+#: view:crm.opportunity.report:crm.view_report_crm_opportunity_filter
+msgid "Won"
+msgstr "Guanyat"
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Horari de treball"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:434
+#, python-format
+msgid ""
+"You are already at the top level of your sales-team category.\n"
+"Therefore you cannot escalate furthermore."
+msgstr "Està al nivell més alt de la categoria del seu equip de vendes.\nPer tant, no pot escalar més enllà."
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:310
+#, python-format
+msgid "You cannot merge a contact with one of his parent."
+msgstr "No es pot combinar un contacte amb un dels seus pares."
+
+#. module: crm
+#: code:addons/crm/base_partner_merge.py:446
+#, python-format
+msgid "You have to specify a filter for your selection"
+msgstr "Ha d'especificar un filtre per la seva selecció."
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_leads
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "ZIP"
+msgstr "C.P."
+
+#. module: crm
+#: field:crm.lead,zip:0
+msgid "Zip"
+msgstr "Codi Postal"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "at"
+msgstr "a les"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_form_view_oppor
+msgid "e.g. Call for proposal"
+msgstr "p. ex.: Trucada per a proposta"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:971
+#, python-format
+msgid "lead"
+msgstr "iniciativa"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:91
+#, python-format
+msgid "leads"
+msgstr "iniciatives"
+
+#. module: crm
+#: view:crm.phonecall:crm.crm_case_phone_form_view
+msgid "min(s)"
+msgstr "minut(s)"
+
+#. module: crm
+#: view:crm.lead:crm.crm_case_kanban_view_leads
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:969
+#, python-format
+msgid "opportunity"
+msgstr "oportunitat"
+
+#. module: crm
+#: view:base.partner.merge.automatic.wizard:crm.base_partner_merge_automatic_wizard_form
+#: view:crm.lead2opportunity.partner:crm.view_crm_lead2opportunity_partner
+#: view:crm.lead2opportunity.partner.mass:crm.view_crm_lead2opportunity_partner_mass
+#: view:crm.merge.opportunity:crm.merge_opportunity_form
+#: view:crm.phonecall2phonecall:crm.phonecall_to_phonecall_view
+msgid "or"
+msgstr "o"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1069
+#, python-format
+msgid "unknown"
+msgstr "Desconegut"

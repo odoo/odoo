@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates xml:space="preserve">
+    <t t-name="FieldChar.linkedin">
+        <img class="oe_linkedin_img" t-att-src='_s + "/web_linkedin/static/src/img/Linkedin_blue.png"'/>
+        <div class="oe_linkedin_input"/>
+    </t>
+    <t t-name="FieldChar.linkedin_url">
+        <a class="oe_linkedin_url" href="#" target="_blank"><img t-att-src='_s + "/web_linkedin/static/src/img/linkedin-profile.jpeg"'/></a>
+    </t>
+    <t t-name="Linkedin.popup">
+        <div>
+            <h2 style="margin-top:-10px;">People</h2>
+            <div class="oe_linkedin_pop_p"></div>
+            <h2>Companies</h2>
+            <div class="oe_linkedin_pop_c"></div>
+        </div>
+    </t>
+    <t t-name="Linkedin.EntityWidget">
+        <div class="oe_linkedin_entity">
+            <span class="oe_linkedin_thumb">
+                <span>
+                    <img t-att-src='_s + "/web_linkedin/static/src/img/ghost_profile_60x60_v1.png"'/>
+                </span>
+            </span>
+            <h3/>
+            <div class="oe_linkedin_entity_headline" />
+        </div>
+    </t>
+    <t t-name="LinkedIn.DisabledWarning">
+        <div>
+            <img t-att-src='_s + "/web/static/src/img/warning.png"' style="float: left; margin: 5px"/>
+            <p>LinkedIn access was not enabled on this server.</p>
+            <p>Please ask your administrator to configure it in Settings > Configuration > Sales > Social Network Integration.</p>
+            <p>LinkedIn: <t t-raw="error.name"/></p>
+        </div>
+    </t>
+    <t t-name="LinkedIn.loginInformation">
+        <div class="oe_linkedin_authentified">If "<b><t t-raw="firstName"/> <t t-raw="lastName"/></b>" is not your account, <a class="oe_linkedin_logout">please click here to logout</a>.</div>
+    </t>
+    <t t-name="LinkedIn.AdvancedSearch">
+        <t t-raw="title"/>
+        <div class="oe_linkedin_advanced_search">
+            Search by url or keywords : <input name="search"/> <button>Search</button>
+        </div>
+    </t>
+
+</templates>

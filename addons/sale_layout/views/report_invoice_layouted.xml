@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_invoice_layouted" inherit_id="account.report_invoice_document">
+    <xpath expr="//table/tbody[@class='invoice_tbody']" position="replace">
+        <t t-foreach="o.sale_layout_lines(invoice_id=o.id)" t-as="p">
+            <!-- Name of the category -->
+            <t t-call="sale_layout.category_template"/>
+
+            <!-- Lines associated -->
+            <t t-foreach="p['lines']" t-as="l">
+                <tr>
+                    <td><span t-field="l.name"/></td>
+                    <td><span t-field="l.quantity"/>
+                        <span t-field="l.uos_id" groups="product.group_uom"/></td>
+                    <td class="text-right">
+                        <span t-field="l.price_unit"/>
+                    </td>
+                    <td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+                    <td class="text-right">
+                        <span t-esc="', '.join(map(lambda x: x.name, l.invoice_line_tax_id))"/>
+                    </td>
+                    <td class="text-right">
+                        <span t-field="l.price_subtotal" 
+                            t-field-options='{"widget": "monetary", "display_currency": "o.currency_id"}'/>
+                    </td>
+                </tr>
+            </t>
+
+            <!-- Subtotal -->
+            <t t-call="sale_layout.subtotal_template"/>
+
+            <!-- Separator -->
+            <t t-call="sale_layout.separator_template"/>
+
+            <!-- Pagebreak -->
+            <t t-if="'pagebreak' in p['category'] and p['category'].pagebreak is True">
+                <t t-if="p_index &lt; p_size - 1">
+                    <![CDATA[
+                        </tbody>
+                    </table>
+                    <p style="page-break-before:always;"> </p>
+                    <table class="table table-condensed">
+                    ]]>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th groups="product.group_uom">Unit of measure</th>
+                            <th class="text-right">Unit Price</th>
+                            <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
+                            <th class="text-right">Taxes</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <![CDATA[
+                        <tbody>
+                    ]]>
+                </t>
+            </t>
+        </t>
+    </xpath>
+</template>
+</data>
+</openerp>

@@ -1,0 +1,68 @@
+-
+  In order to test the purchase order flow I compute the total of the listed products
+-
+  I check the total untaxed amount of the RFQ is correctly computed
+-
+  !assert {model: purchase.order, id: purchase_order_1, string: The amount of RFQ is not correctly computed}:
+    - round(sum([l.price_subtotal for l in order_line]), 2) == round(amount_untaxed, 2)
+-
+  I confirm the RFQ.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_1}
+-
+  I check the "Approved" status  after confirmed RFQ.
+-
+  !assert {model: purchase.order, id: purchase_order_1}:
+    - state == 'approved'
+-
+  I check that the invoice details which is generated after confirmed RFQ.
+-
+  !python {model: purchase.order}: |
+    purchase_order = self.browse(cr, uid, ref("purchase_order_1"))
+    assert len(purchase_order.invoice_ids) >= 1, "Invoice is not generated more or less than one"
+    for invoice in purchase_order.invoice_ids:
+      assert invoice.state == "draft", "Invoice state should be draft"
+      assert invoice.partner_id.id == purchase_order.partner_id.id, "Supplier is not correspond with purchase order"
+      assert invoice.reference == purchase_order.partner_ref or purchase_order.name,"Invoice reference is not correspond with purchase order"
+      assert invoice.type == 'in_invoice',"Invoice type is not correspond with purchase order"
+      assert invoice.currency_id.id == purchase_order.pricelist_id.currency_id.id ,"Invoice currency is not correspond with purchase order"
+      assert invoice.origin == purchase_order.name,"Invoice origin is not correspond with purchase order"
+      assert invoice.company_id.id == purchase_order.company_id.id ,"Invoice company is not correspond with purchase order"
+      assert invoice.amount_untaxed == purchase_order.amount_untaxed, "Invoice untaxed amount is not correspond with purchase order"
+      assert invoice.amount_tax == purchase_order.amount_tax, "Invoice tax amount is not correspond with purchase order"
+      assert invoice.amount_total == purchase_order.amount_total, "Invoice total amount is not correspond with purchase order"
+      assert len(invoice.invoice_line) == len(purchase_order.order_line), "Lines of Invoice and Purchase Order are not correspond"
+-
+  I check that Reception details after confirmed RFQ.
+-
+  !python {model: purchase.order}: |
+    purchase_order = self.browse(cr, uid, ref("purchase_order_1"))
+    assert len(purchase_order.picking_ids) >= 1, "You should have only one reception order"
+    for picking in purchase_order.picking_ids:
+      assert picking.state == "assigned", "Reception state should be in assigned state"
+      assert picking.partner_id.id == purchase_order.partner_id.id, "Delivery address of reception id is different from order"
+      assert picking.company_id.id == purchase_order.company_id.id, "Company is not correspond with purchase order"
+-
+  Reception is ready for process so now done the reception.
+-
+  !python {model: stock.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_1"), context=context).picking_ids[0]
+    pick_ids.do_transfer()
+-
+  I check that purchase order is shipped.
+-
+  !python {model: purchase.order}: |
+     assert self.browse(cr, uid, ref("purchase_order_1")).shipped == True,"Purchase order should be delivered"
+
+-
+  I Validate Invoice of Purchase Order.
+-
+  !python {model: purchase.order}: |
+    for invoice in self.browse(cr, uid, ref('purchase_order_1'), context=context).invoice_ids:
+      invoice.signal_workflow('invoice_open')
+-
+  I check that purchase order is invoiced.
+-
+  !python {model: purchase.order}: |
+     assert self.browse(cr, uid, ref("purchase_order_1")).invoiced == True,"Purchase Order should be invoiced"
+

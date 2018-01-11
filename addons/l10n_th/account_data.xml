@@ -1,0 +1,653 @@
+<openerp>
+<data>
+
+<!-- ACCOUNT TYPES -->
+
+<record id="acc_type_view" model="account.account.type">
+    <field name="name">View</field>
+    <field name="code">view</field>
+    <field name="close_method">none</field>
+</record>
+
+<record id="acc_type_reconciled" model="account.account.type">
+    <field name="name">Reconciled</field>
+    <field name="code">reconciled</field>
+    <field name="close_method">unreconciled</field>
+</record>
+
+<record id="acc_type_other" model="account.account.type">
+    <field name="name">Other</field>
+    <field name="code">other</field>
+    <field name="close_method">balance</field>
+</record>
+
+<!-- CHART OF ACCOUNTS -->
+
+<record id="a_root" model="account.account.template">
+    <field name="code">0</field>
+    <field name="name">Simple chart of accounts</field>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<!-- 1. ASSETS -->
+
+<record id="a_assets" model="account.account.template">
+    <field name="code">1</field>
+    <field name="name">Assets</field>
+    <field name="parent_id" ref="a_root"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<record id="a_cash" model="account.account.template">
+    <field name="code">1100</field>
+    <field name="name">Cash</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<record id="a_bank" model="account.account.template">
+    <field name="code">1110</field>
+    <field name="name">Cash at Bank</field>
+    <field name="parent_id" ref="a_cash"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_petty" model="account.account.template">
+    <field name="code">1120</field>
+    <field name="name">Petty Cash</field>
+    <field name="parent_id" ref="a_cash"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_recv" model="account.account.template">
+    <field name="code">1200</field>
+    <field name="name">Account Receivable</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">receivable</field>
+    <field name="user_type" ref="acc_type_reconciled"/>
+    <field name="reconcile" eval="True"/>
+</record>
+
+<record id="a_cheque" model="account.account.template">
+    <field name="code">1201</field>
+    <field name="name">Outstanding Cheques</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_reconciled"/>
+    <field name="reconcile" eval="True"/>
+</record>
+
+<record id="a_invent" model="account.account.template">
+    <field name="code">1300</field>
+    <field name="name">Inventory</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_building" model="account.account.template">
+    <field name="code">1410</field>
+    <field name="name">Building</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_building_depr" model="account.account.template">
+    <field name="code">1411</field>
+    <field name="name">Accumulated Depreciation - Building</field>
+    <field name="parent_id" ref="a_building"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_equipment" model="account.account.template">
+    <field name="code">1420</field>
+    <field name="name">Equipment</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_equipment_dept" model="account.account.template">
+    <field name="code">1421</field>
+    <field name="name">Accumulated Depreciation - Equipment</field>
+    <field name="parent_id" ref="a_equipment"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_input_vat" model="account.account.template">
+    <field name="code">1510</field>
+    <field name="name">Input VAT</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_wht_income" model="account.account.template">
+    <field name="code">1520</field>
+    <field name="name">Withholding Income Tax</field>
+    <field name="parent_id" ref="a_assets"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<!-- 2. LIABILITIES -->
+
+<record id="a_liabilities" model="account.account.template">
+    <field name="code">2</field>
+    <field name="name">Liabilities</field>
+    <field name="parent_id" ref="a_root"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<record id="a_pay" model="account.account.template">
+    <field name="code">2101</field>
+    <field name="name">Account Payable</field>
+    <field name="parent_id" ref="a_liabilities"/>
+    <field name="type">payable</field>
+    <field name="user_type" ref="acc_type_reconciled"/>
+    <field name="reconcile" eval="True"/>
+</record>
+
+<record id="a_accr_exp" model="account.account.template">
+    <field name="code">2102</field>
+    <field name="name">Accrued Expenses</field>
+    <field name="parent_id" ref="a_liabilities"/>
+    <field name="type">payable</field>
+    <field name="user_type" ref="acc_type_reconciled"/>
+    <field name="reconcile" eval="True"/>
+</record>
+
+<record id="a_uninvoiced_receipts" model="account.account.template">
+    <field name="code">2103</field>
+    <field name="name">Uninvoiced Receipts</field>
+    <field name="parent_id" ref="a_liabilities"/>
+    <field name="type">payable</field>
+    <field name="user_type" ref="acc_type_reconciled"/>
+    <field name="reconcile" eval="True"/>
+</record>
+
+<record id="a_loan" model="account.account.template">
+    <field name="code">2200</field>
+    <field name="name">Loans</field>
+    <field name="parent_id" ref="a_liabilities"/>
+    <field name="type">payable</field>
+    <field name="user_type" ref="acc_type_reconciled"/>
+    <field name="reconcile" eval="True"/>
+</record>
+
+<record id="a_output_vat" model="account.account.template">
+    <field name="code">2310</field>
+    <field name="name">Output VAT</field>
+    <field name="parent_id" ref="a_liabilities"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_wht" model="account.account.template">
+    <field name="code">2320</field>
+    <field name="name">Withholding Tax</field>
+    <field name="parent_id" ref="a_liabilities"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<!-- 3. EQUITY -->
+
+<record id="a_equity" model="account.account.template">
+    <field name="code">3</field>
+    <field name="name">Equity</field>
+    <field name="parent_id" ref="a_root"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<record id="a_common_stock" model="account.account.template">
+    <field name="code">3100</field>
+    <field name="name">Capital Stock</field>
+    <field name="parent_id" ref="a_equity"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_retained_earnings" model="account.account.template">
+    <field name="code">3200</field>
+    <field name="name">Retained Earnings</field>
+    <field name="parent_id" ref="a_equity"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_dividends" model="account.account.template">
+    <field name="code">3300</field>
+    <field name="name">Dividends</field>
+    <field name="parent_id" ref="a_equity"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_income_summary" model="account.account.template">
+    <field name="code">3400</field>
+    <field name="name">Income Summary</field>
+    <field name="parent_id" ref="a_equity"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<!-- 4. INCOME -->
+
+<record id="a_income" model="account.account.template">
+    <field name="code">4</field>
+    <field name="name">Income</field>
+    <field name="parent_id" ref="a_root"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<record id="a_sales" model="account.account.template">
+    <field name="code">4100</field>
+    <field name="name">Income</field>
+    <field name="parent_id" ref="a_income"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<!-- 5. EXPENSES -->
+
+<record id="a_expenses" model="account.account.template">
+    <field name="code">5</field>
+    <field name="name">Expenses</field>
+    <field name="parent_id" ref="a_root"/>
+    <field name="type">view</field>
+    <field name="user_type" ref="acc_type_view"/>
+</record>
+
+<record id="a_exp_cogs" model="account.account.template">
+    <field name="code">5100</field>
+    <field name="name">Cost of goods sold</field>
+    <field name="parent_id" ref="a_expenses"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_exp_salary" model="account.account.template">
+    <field name="code">5201</field>
+    <field name="name">Salary</field>
+    <field name="parent_id" ref="a_expenses"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_exp_rent" model="account.account.template">
+    <field name="code">5202</field>
+    <field name="name">Rent</field>
+    <field name="parent_id" ref="a_expenses"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_exp_office" model="account.account.template">
+    <field name="code">5203</field>
+    <field name="name">Office Expenses</field>
+    <field name="parent_id" ref="a_expenses"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_exp_interest" model="account.account.template">
+    <field name="code">5300</field>
+    <field name="name">Interest expenses</field>
+    <field name="parent_id" ref="a_expenses"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<record id="a_exp_income_tax" model="account.account.template">
+    <field name="code">5400</field>
+    <field name="name">Income tax expenses</field>
+    <field name="parent_id" ref="a_expenses"/>
+    <field name="type">other</field>
+    <field name="user_type" ref="acc_type_other"/>
+</record>
+
+<!-- CHART OF TAXES -->
+
+<record id="tc_root" model="account.tax.code.template">
+    <field name="name">Thai Chart of Taxes</field>
+    <field name="parent_id" eval="False"/>
+</record>
+
+<!-- TAXABLE AMOUNTS -->
+
+<record id="tc_base" model="account.tax.code.template">
+    <field name="name">Taxable amounts</field>
+    <field name="parent_id" ref="tc_root"/>
+</record>
+
+<!-- VAT -->
+
+<record id="tc_base_vat" model="account.tax.code.template">
+    <field name="name">Value Added Tax</field>
+    <field name="parent_id" eval="tc_base"/>
+</record>
+
+<record id="tc_base_output" model="account.tax.code.template">
+    <field name="name">Output VAT</field>
+    <field name="code">PP30_4</field>
+    <field name="parent_id" ref="tc_base_vat"/>
+</record>
+
+<record id="tc_base_input" model="account.tax.code.template">
+    <field name="name">Input VAT</field>
+    <field name="code">PP30_6</field>
+    <field name="parent_id" ref="tc_base_vat"/>
+</record>
+
+<!-- WITHHOLDING TAX -->
+
+<record id="tc_base_wht" model="account.tax.code.template">
+    <field name="name">Withholding Tax</field>
+    <field name="parent_id" eval="tc_base"/>
+</record>
+
+<record id="tc_base_wht_co" model="account.tax.code.template">
+    <field name="name">Company Withholding Tax</field>
+    <field name="code">PND53_1</field>
+    <field name="parent_id" ref="tc_base_wht"/>
+</record>
+
+<record id="tc_base_wht_pers" model="account.tax.code.template">
+    <field name="name">Personal Withholding Tax</field>
+    <field name="code">PND3_1</field>
+    <field name="parent_id" ref="tc_base_wht"/>
+</record>
+
+<record id="tc_base_wht_co_serv" model="account.tax.code.template">
+    <field name="name">Company Withholding Tax (Service)</field>
+    <field name="code">50_PND53_5_BASE</field>
+    <field name="parent_id" ref="tc_base_wht_co"/>
+</record>
+
+<record id="tc_base_wht_co_other" model="account.tax.code.template">
+    <field name="name">Company Withholding Tax (Other)</field>
+    <field name="code">50_PND53_6_BASE</field>
+    <field name="parent_id" ref="tc_base_wht_co"/>
+</record>
+
+<record id="tc_base_wht_pers_serv" model="account.tax.code.template">
+    <field name="name">Personal Withholding Tax (Service)</field>
+    <field name="code">50_PND3_5_BASE</field>
+    <field name="parent_id" ref="tc_base_wht_pers"/>
+</record>
+
+<record id="tc_base_wht_pers_other" model="account.tax.code.template">
+    <field name="name">Personal Withholding Tax (Other)</field>
+    <field name="code">50_PND53_6_BASE</field>
+    <field name="parent_id" ref="tc_base_wht_pers"/>
+</record>
+
+<!-- TAXES TO BE PAID -->
+
+<!-- VAT -->
+
+<record id="tc_tax" model="account.tax.code.template">
+    <field name="name">Taxes to be paid</field>
+    <field name="parent_id" ref="tc_root"/>
+</record>
+
+<record id="tc_tax_vat" model="account.tax.code.template">
+    <field name="name">Value Added Tax</field>
+    <field name="parent_id" eval="tc_tax"/>
+</record>
+
+<record id="tc_tax_vat_output" model="account.tax.code.template">
+    <field name="name">Output VAT</field>
+    <field name="code">PP30_5</field>
+    <field name="parent_id" ref="tc_tax_vat"/>
+</record>
+
+<record id="tc_tax_vat_input" model="account.tax.code.template">
+    <field name="name">Input VAT</field>
+    <field name="code">PP30_7</field>
+    <field name="parent_id" ref="tc_tax_vat"/>
+    <field name="sign" eval="-1"/>
+</record>
+
+<!-- WITHHOLDING TAX -->
+
+<record id="tc_tax_wht" model="account.tax.code.template">
+    <field name="name">Withholding Tax</field>
+    <field name="parent_id" eval="tc_tax"/>
+</record>
+
+<record id="tc_tax_wht_co" model="account.tax.code.template">
+    <field name="name">Company Withholding Tax</field>
+    <field name="parent_id" eval="tc_tax_wht"/>
+    <field name="code">PND53_2</field>
+</record>
+
+<record id="tc_tax_wht_pers" model="account.tax.code.template">
+    <field name="name">Personal Withholding Tax</field>
+    <field name="parent_id" eval="tc_tax_wht"/>
+    <field name="code">PND3_2</field>
+</record>
+
+<record id="tc_tax_wht_co_serv" model="account.tax.code.template">
+    <field name="name">Company Withholding Tax (Service)</field>
+    <field name="code">50_PND53_5_TAX</field>
+    <field name="parent_id" ref="tc_tax_wht_co"/>
+</record>
+
+<record id="tc_tax_wht_co_other" model="account.tax.code.template">
+    <field name="name">Company Withholding Tax (Other)</field>
+    <field name="code">50_PND53_6_TAX</field>
+    <field name="parent_id" ref="tc_tax_wht_co"/>
+</record>
+
+<record id="tc_tax_wht_pers_serv" model="account.tax.code.template">
+    <field name="name">Personal Withholding Tax (Service)</field>
+    <field name="code">50_PND3_5_TAX</field>
+    <field name="parent_id" ref="tc_tax_wht_pers"/>
+</record>
+
+<record id="tc_tax_wht_pers_other" model="account.tax.code.template">
+    <field name="name">Personal Withholding Tax (Other)</field>
+    <field name="code">50_PND3_6_TAX</field>
+    <field name="parent_id" ref="tc_tax_wht_pers"/>
+</record>
+
+<!-- CHART OF ACCOUNTS/TAXES -->
+
+<record id="chart" model="account.chart.template">
+    <field name="name">Thailand - Chart of Accounts</field>
+    <field name="account_root_id" ref="a_root"/>
+    <field name="tax_code_root_id" ref="tc_root"/>
+    <field name="bank_account_view_id" ref="a_bank"/>
+    <field name="property_account_receivable" ref="a_recv"/>
+    <field name="property_account_payable" ref="a_pay"/>
+    <field name="property_account_expense_categ" ref="a_exp_office"/>
+    <field name="property_account_income_categ" ref="a_sales"/>
+    <field name="property_account_expense" ref="a_exp_office"/>
+    <field name="property_account_income" ref="a_sales"/>
+    <field name="currency_id" ref="base.THB"/>
+</record>
+
+
+<!-- TAXES -->
+
+<record id="tax_input_vat" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Input VAT</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.07"/>
+    <field name="account_collected_id" ref="a_input_vat"/>
+    <field name="account_paid_id" ref="a_input_vat"/>
+    <field name="base_code_id" ref="tc_base_input"/>
+    <field name="tax_code_id" ref="tc_tax_vat_input"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_output_vat" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Output VAT</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.07"/>
+    <field name="account_collected_id" ref="a_output_vat"/>
+    <field name="account_paid_id" ref="a_output_vat"/>
+    <field name="base_code_id" ref="tc_base_output"/>
+    <field name="tax_code_id" ref="tc_tax_vat_output"/>
+    <field name="type_tax_use">sale</field>
+</record>
+
+<record id="tax_wht_co_1" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Company Withholding Tax 1% (Transportation)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.01"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_co_other"/>
+    <field name="tax_code_id" ref="tc_tax_wht_co_other"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_co_2" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Company Withholding Tax 2% (Advertising)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.02"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_co_other"/>
+    <field name="tax_code_id" ref="tc_tax_wht_co_other"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_co_3" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Company Withholding Tax 3% (Service)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.03"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_co_serv"/>
+    <field name="tax_code_id" ref="tc_tax_wht_co_serv"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_co_5" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Company Withholding Tax 5% (Rental)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.05"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_co_other"/>
+    <field name="tax_code_id" ref="tc_tax_wht_co_other"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_pers_1" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Personal Withholding Tax 1% (Transportation)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.01"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_pers_other"/>
+    <field name="tax_code_id" ref="tc_tax_wht_pers_other"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_pers_2" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Personal Withholding Tax 2% (Advertising)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.02"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_pers_other"/>
+    <field name="tax_code_id" ref="tc_tax_wht_pers_other"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_pers_3" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Personal Withholding Tax 3% (Service)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.03"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_pers_serv"/>
+    <field name="tax_code_id" ref="tc_tax_wht_pers_serv"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_pers_5" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Personal Withholding Tax 5% (Rental)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.05"/>
+    <field name="account_collected_id" ref="a_wht"/>
+    <field name="account_paid_id" ref="a_wht"/>
+    <field name="base_code_id" ref="tc_base_wht_pers_other"/>
+    <field name="tax_code_id" ref="tc_tax_wht_pers_other"/>
+    <field name="type_tax_use">purchase</field>
+</record>
+
+<record id="tax_wht_income_1" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Withholding Income Tax 1% (Transportation)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.01"/>
+    <field name="account_collected_id" ref="a_wht_income"/>
+    <field name="account_paid_id" ref="a_wht_income"/>
+    <field name="type_tax_use">sale</field>
+</record>
+
+<record id="tax_wht_income_2" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Withholding Income Tax 2% (Advertising)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.02"/>
+    <field name="account_collected_id" ref="a_wht_income"/>
+    <field name="account_paid_id" ref="a_wht_income"/>
+    <field name="type_tax_use">sale</field>
+</record>
+
+<record id="tax_wht_income_3" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Withholding Income Tax 3% (Service)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.03"/>
+    <field name="account_collected_id" ref="a_wht_income"/>
+    <field name="account_paid_id" ref="a_wht_income"/>
+    <field name="type_tax_use">sale</field>
+</record>
+
+<record id="tax_wht_income_5" model="account.tax.template">
+    <field name="chart_template_id" ref="chart"/>
+    <field name="name">Withholding Income Tax 5% (Rental)</field>
+    <field name="type">percent</field>
+    <field name="amount" eval="0.05"/>
+    <field name="account_collected_id" ref="a_wht_income"/>
+    <field name="account_paid_id" ref="a_wht_income"/>
+    <field name="type_tax_use">sale</field>
+</record>
+</data>
+
+<data noupdate="1">
+        <!-- INSTALL ACTION -->
+        <record id="account.action_wizard_multi_chart_todo" model="ir.actions.todo">
+            <field name="state">open</field>
+        </record>
+</data>
+</openerp><!-- vim: set fdm=marker : -->

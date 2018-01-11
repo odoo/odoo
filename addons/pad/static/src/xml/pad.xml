@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+
+    <t t-name="FieldPad">
+
+        <div class="oe_form_field_text oe_pad">
+            <p class="oe_unconfigured">
+                You must configure the etherpad through the menu Settings > Companies > Companies, in the configuration tab of your company.
+            </p>
+            <t t-if="widget.get('effective_readonly')">
+                <div class="oe_pad_content etherpad_readonly oe_configured">
+                </div>
+            </t>
+            <t t-if="! widget.get('effective_readonly')">
+                <div class="oe_pad_switch_positioner oe_configured">
+                    <span class="fa fa-expand oe_pad_switch"></span>
+                </div>
+                <div class="oe_pad_content oe_editing oe_configured">
+                </div>
+            </t>
+        </div>
+
+
+
+    </t>
+
+</templates>

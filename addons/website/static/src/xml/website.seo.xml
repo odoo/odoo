@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="website.editorbar.menu.promote">
+        <li><a data-action="promote-current-page" href="#"><span title="Promote page on the web">Promote</span></a></li>
+    </t>
+    
+    <t t-name="website.seo_configuration">
+        <div class="modal fade oe_seo_configuration js_seo_configuration" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button title="Close" type="button" class="close" data-dismiss="modal">×</button>
+                        <div class="h2">Promote This Page</div>
+                        <div class="text-muted">
+                            Get this page efficiently referenced in Google to attract more visitors.
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="js_seo_tips" />
+                        <section class="js_seo_keywords_list">
+                            <h3 class="page-header mt16">1. Define Keywords <small>describing your page content</small></h3>
+                            <div class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <label for="seo_page_keywords" class="col-lg-2 control-label">Add keyword:</label>
+                                    <div class="col-lg-3 col-sm-4">
+                                        <div class="input-group">
+                                          <input type="text" name="seo_page_keywords" class="form-control" maxlength="30"/>
+                                          <span class="input-group-btn">
+                                              <button data-action="add" class="btn btn-default" type="button">Add</button>
+                                          </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="text-muted">Most searched topics related to your keywords, ordered by importance:</span>
+                            <!-- filled in JS -->
+                        </section>
+                        <section>
+                            <h3 class="page-header">2. Reference Your Page <small>using above suggested keywords</small></h3>
+                            <div class="form-horizontal mt16" role="form">
+                                <div class="form-group">
+                                    <label for="seo_page_title" class="col-lg-2 control-label">Title</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" name="seo_page_title" class="form-control" maxlength="70" size="70"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="seo_page_description" class="col-lg-2 control-label">Description</label>
+                                    <div class="col-lg-8">
+                                        <textarea name="seo_page_description" class="form-control" rows="3" cols="70" t-att-maxlength="widget.maxDescriptionSize"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <h3 class="page-header">3. Preview <small>how your page will be listed on Google</small></h3>
+                            <div class="js_seo_preview"></div>
+                        </section>
+                        <!--
+                        <section class="js_image_section">
+                            <h3 class="page-header">4. Describe your images</h3>
+                            <div class="row js_seo_image_list">
+                            </div>
+                        </section>
+                        -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" data-action="update" class="btn btn-primary">Save</button>
+                        or
+                        <a data-action="discard" data-dismiss="modal" href="#" >Discard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.seo_suggestion_list">
+        <ul class="list-inline mb0">
+            <!-- filled in JS -->
+        </ul>
+    </t>
+
+    <t t-name="website.seo_list">
+        <div>
+            <!-- filled in JS -->
+        </div>
+    </t>
+
+    <t t-name="website.seo_tip">
+        <div t-attf-class="alert alert-#{ widget.type }">
+            <t t-raw="widget.message"/>
+        </div>
+    </t>
+
+    <t t-name="website.seo_keyword">
+        <dl class="dl-horizontal mt8 mb8">
+            <dt>
+                <span t-attf-title="#{ widget.tooltip() }" t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_keyword" t-att-data-keyword="widget.keyword">
+                    <a href="#" class="oe_remove" data-action="remove-keyword">x</a> <t t-raw="widget.keyword"/>
+                </span>
+            </dt>
+            <dd class="js_seo_keyword_suggestion">
+                <!-- filled in JS -->
+            </dd>
+        </dl>
+    </t>
+
+    <t t-name="website.seo_suggestion">
+        <li class="oe_seo_suggestion">
+            <span t-attf-title="#{ widget.tooltip() }" t-attf-class="oe_seo_keyword #{ widget.highlight() } js_seo_suggestion" t-att-data-keyword="widget.keyword">
+                <t t-raw="widget.keyword"/>
+            </span>
+        </li>
+    </t>
+
+    <t t-name="website.seo_image">
+        <div class="col-sm-6 col-md-3 oe_seo_image_preview">
+            <img t-att-src="widget.src" class="img-rounded thumbnail"/>
+            <input type="text" class="form-control" t-att-src="widget.src" t-att-value="widget.alt" placeholder="Description..."/>
+        </div>
+    </t>
+
+    <t t-name="website.seo_preview">
+        <li class="oe_seo_preview_g">
+            <div class="rc">
+                <span class="altcts"></span>
+                <h3 class="r">
+                    <a t-att-href="url">
+                        <em><t t-esc="widget.title"/></em>
+                    </a>
+                </h3>
+                <div class="s">
+                    <div>
+                        <div class="f kv" style="white-space:nowrap">
+                            <cite><t t-esc="widget.url"/></cite>
+                        </div>
+                        <div class="f slp"></div>
+                        <span class="st"><t t-esc="widget.description"/></span>
+                    </div>
+                </div>
+            </div>
+        </li>
+    </t>
+
+</templates>

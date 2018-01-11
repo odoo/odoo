@@ -1,0 +1,73 @@
+-
+  In order to test account use models wizard in OpenERP I create an account model record
+-
+  !record {model: account.model, id: account_model_mymodelonyears0}:
+    journal_id: account.expenses_journal
+    lines_id:
+      - account_id: account.a_recv
+        credit: 0.0
+        debit: 100.0
+        name: model_line_db
+        sequence: 0.0
+        quantity: 0.0
+        partner_id: base.res_partner_3
+      - account_id: account.a_pay
+        credit: 100.0
+        debit: 0.0
+        name: model_line_cr
+        sequence: 0.0
+        quantity: 0.0
+        partner_id: base.res_partner_3
+    name: My Test Model
+-
+  I create an account use model record
+-
+  !record {model: account.use.model, id: account_use_model_0}:
+    {}
+-
+  I create entries.
+-
+  !python {model: account.use.model}: |
+    self.create_entries(cr, uid, [ref("account_use_model_0")], {"lang": 'en_US', "active_model":
+      "account.model", "active_ids": [ref("account_model_mymodelonyears0")], "tz":
+      False, "active_id": ref("account_model_mymodelonyears0"), })
+    move_obj = self.pool.get('account.move')
+    ids = move_obj.search(cr, uid, [('ref', '=', 'My Test Model')])
+    assert len(ids), "Error:moves not created for model 'My Test Model'"
+-
+  Then I click on the 'Post' button of Journal Entries
+-
+  !python {model: account.move}: |
+    ids = self.search(cr, uid, [('ref', '=', 'My Test Model')])
+    self.button_validate(cr, uid, ids, {})
+    moves = self.browse(cr, uid, ids)[0]
+    assert(moves.state == 'posted'), 'Journal Entries are not in posted state'
+-
+  Then I create Recurring Lines
+-
+  !record {model: account.subscription, id: test_recurring_lines }:
+    name: Test Recurring Lines
+    model_id: account_model_mymodelonyears0
+    period_type: 'day'
+-
+  Then I click on the 'Compute' button of Recurring lines
+-
+  !python {model: account.subscription}: |
+    subscription_line_obj = self.pool.get('account.subscription.line')
+    self.compute(cr, uid, [ref('test_recurring_lines')], {'lang': u'en_US', 'active_model': 'ir.ui.menu',
+      'active_ids': [ref('menu_action_subscription_form')], 'tz': False, 'active_id': ref('menu_action_subscription_form')})
+    subscription_lines = subscription_line_obj.search(cr, uid, [('subscription_id', '=', ref('test_recurring_lines'))])
+    assert subscription_lines, 'Subscription lines has not been created'
+-
+  I provide date in 'Generate Entries' wizard
+-
+  !record {model: account.subscription.generate, id: account_subscription_generate}:
+    date: !eval time.strftime('%Y-%m-%d')
+-
+  Then I generate entries through wizard
+-
+  !python {model: account.subscription.generate}: |
+    res = self.action_generate(cr, uid, [ref('account_subscription_generate')], {'lang': u'en_US', 'active_model': 'ir.ui.menu',
+      'active_ids': [ref('menu_generate_subscription')], 'tz': False, 'active_id': ref('menu_generate_subscription')})
+    assert res, 'Move for subscription lines has not been created'
+

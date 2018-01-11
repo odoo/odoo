@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="False">
+
+    <!-- Chart Template -->
+
+    <!-- this file contains the base (common) data for all kinds
+        of taxes, as well as the chart of accounts sum-up.
+    -->
+
+    <record id="vat_code_chart_root" model="account.tax.code.template">
+        <field name="name">Πίνακες φόρου</field>
+    </record>
+
+    <record id="l10n_gr_chart_template" model="account.chart.template">
+        <field name="name">Πρότυπο Ελληνικού Λογιστικού Σχεδίου</field>
+        <field name="account_root_id" ref="chartgr_0"/>
+        <field name="tax_code_root_id" ref="vat_code_chart_root"/>
+        <field name="bank_account_view_id" ref="chartgr_38_03"/>
+        <field name="property_account_receivable" ref="chartgr_30_00"/>
+        <field name="property_account_payable" ref="chartgr_50_00"/>
+        <field name="property_account_expense_categ" ref="chartgr_64_98"/>
+        <field name="property_account_income_categ" ref="chartgr_71_00"/>
+        <field name="currency_id" ref="base.EUR"/>
+    </record>
+
+
+    <record id="vat_code_balance_net" model="account.tax.code.template">
+        <field name="name">Υπόλοιπο ΦΠΑ </field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+        <field name="code">501-511</field>
+    </record>
+
+    <!-- A few vat codes are here, because they may be reused as roots
+        for other taxes -->
+    <record id="vat_code_ivat337" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Πωλήσεων</field>
+        <field name="info">Το σύνολο του καταβλητέου ΦΠΑ </field>
+        <field name="code">337</field>
+        <field name="parent_id" ref="vat_code_balance_net"/>
+    </record>
+
+    <record id="vat_code_ivat_311" model="account.tax.code.template">
+        <field name="info">Συνολικό εισόδημα</field>
+        <field name="code">311</field>
+        <field name="name">Σύνολο Εκροών</field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+    </record>
+
+    <record id="vat_code_evat_420" model="account.tax.code.template">
+        <field name="code">420</field>
+        <field name="name">ΦΠΑ Αγορών</field>
+        <field name="parent_id" ref="vat_code_balance_net"/>
+    </record>
+    <record id="vat_code_evat_358" model="account.tax.code.template">
+        <field name="code">358</field>
+        <field name="name">Σύνολο φορολ. Εισροών</field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+    </record>
+
+</data>
+</openerp>

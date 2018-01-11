@@ -1,0 +1,171 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_sequence
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 06:45+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move
+msgid "Account Entry"
+msgstr "Проводка по счету"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+#: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
+msgid "Account Sequence Application Configuration"
+msgstr "Настройка нумерации по счету"
+
+#. module: account_sequence
+#: field:account.sequence.installer,company_id:0
+msgid "Company"
+msgstr "Компания"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure"
+msgstr "Настройка"
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "Configure Your Account Sequence Application"
+msgstr "Настройка вашей нумерации по счету"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_uid:0
+msgid "Created by"
+msgstr "Создано"
+
+#. module: account_sequence
+#: field:account.sequence.installer,create_date:0
+msgid "Created on"
+msgstr "Создан"
+
+#. module: account_sequence
+#: field:account.sequence.installer,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_increment:0
+msgid "Increment Number"
+msgstr "Увеличение номера"
+
+#. module: account_sequence
+#: field:account.move,internal_sequence_number:0
+#: field:account.move.line,internal_sequence_number:0
+msgid "Internal Number"
+msgstr "Внутренний номер"
+
+#. module: account_sequence
+#: field:account.journal,internal_sequence_id:0
+msgid "Internal Sequence"
+msgstr "Внутренняя нумерация"
+
+#. module: account_sequence
+#: help:account.move,internal_sequence_number:0
+#: help:account.move.line,internal_sequence_number:0
+msgid "Internal Sequence Number"
+msgstr "Внутренняя нумерация"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_journal
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_sequence
+#: model:ir.model,name:account_sequence.model_account_move_line
+msgid "Journal Items"
+msgstr "Товары из журналы"
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_uid:0
+msgid "Last Updated by"
+msgstr "Последний раз обновлено"
+
+#. module: account_sequence
+#: field:account.sequence.installer,write_date:0
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: account_sequence
+#: field:account.sequence.installer,name:0
+msgid "Name"
+msgstr "Имя"
+
+#. module: account_sequence
+#: field:account.sequence.installer,number_next:0
+msgid "Next Number"
+msgstr "Следующее число"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_next:0
+msgid "Next number of this sequence"
+msgstr "Следующее число в этой нумерации"
+
+#. module: account_sequence
+#: field:account.sequence.installer,padding:0
+msgid "Number padding"
+msgstr "Выравнивание чисел"
+
+#. module: account_sequence
+#: help:account.sequence.installer,padding:0
+msgid ""
+"Odoo will automatically adds some '0' on the left of the 'Next Number' to "
+"get the required padding size."
+msgstr "Odoo автоматически добавляет некоторые «0» слева от 'Следующий номер', чтобы получить требуемый наполняемый размер."
+
+#. module: account_sequence
+#: field:account.sequence.installer,prefix:0
+msgid "Prefix"
+msgstr "Префикс"
+
+#. module: account_sequence
+#: help:account.sequence.installer,prefix:0
+msgid "Prefix value of the record for the sequence"
+msgstr "Префикс для нумерации"
+
+#. module: account_sequence
+#: field:account.sequence.installer,suffix:0
+msgid "Suffix"
+msgstr "Суффикс"
+
+#. module: account_sequence
+#: help:account.sequence.installer,suffix:0
+msgid "Suffix value of the record for the sequence"
+msgstr "Суффикс записи для нумерации"
+
+#. module: account_sequence
+#: help:account.sequence.installer,number_increment:0
+msgid "The next number of the sequence will be incremented by this number"
+msgstr "Следующее число в нумерации будет увеличено на это число"
+
+#. module: account_sequence
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr "Эта последовательность будет использована для внутренней нумерации записей в журнал, связанный с этим журналом."
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "You can enhance the Account Sequence Application by installing ."
+msgstr "Можно улучшить модуль нумерации счетов, установив ."
+
+#. module: account_sequence
+#: view:account.sequence.installer:account_sequence.view_account_sequence_installer
+msgid "title"
+msgstr "заглавие"

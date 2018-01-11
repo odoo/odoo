@@ -1,0 +1,303 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_picking_wave
+# 
+# Translators:
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 08:07+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: stock_picking_wave
+#: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a Picking Wave. \n"
+"              </p><p>\n"
+"                The Goal of the picking waves is to group operations that may \n"
+"                (needs to) be done together in order to increase their efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm).\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari zbirni val. \n              </p><p>\n                Cilj zbirnih valov je združevanje operacij, ki naj bi se izvajale \n                skupaj za dosego boljše učinkovitosti.\n                Koristno bi bilo tudi za dodeljevanje delovnih mest (ena oseba = en val) ali\n                pomoč pri upravljanju s časom operacij (opravila za izvedbo do 13h).\n              </p>\n            "
+
+#. module: stock_picking_wave
+#: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
+msgid "Add pickings to a picking wave"
+msgstr "Dodaj zbirnike v zbirni val"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "Add pickings to wave"
+msgstr "Dodaj zbirnike v val"
+
+#. module: stock_picking_wave
+#: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
+#: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
+msgid "Add to Wave"
+msgstr "Dodaj v val"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "Add to wave"
+msgstr "Dodaj v val"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Cancel"
+msgstr "Preklic"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Cancel picking"
+msgstr "Preklic zbiranja"
+
+#. module: stock_picking_wave
+#: selection:stock.picking.wave,state:0
+msgid "Cancelled"
+msgstr "Preklicano"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Confirm"
+msgstr "Potrdi"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Confirm picking"
+msgstr "Potrdi zbirnik"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,create_uid:0
+#: field:stock.picking.wave,create_uid:0
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,create_date:0
+#: field:stock.picking.wave,create_date:0
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+#: selection:stock.picking.wave,state:0
+msgid "Done"
+msgstr "Opravljeno"
+
+#. module: stock_picking_wave
+#: selection:stock.picking.wave,state:0
+msgid "Draft"
+msgstr "Osnutek"
+
+#. module: stock_picking_wave
+#: model:product.category,name:stock_picking_wave.product_category_dry
+msgid "Dry"
+msgstr "Suho"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:40
+#, python-format
+msgid "Error!"
+msgstr "Napaka!"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Force availability"
+msgstr "Vsili razpoložljivost"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Group By"
+msgstr "Združi po"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,id:0 field:stock.picking.wave,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_picking_wave
+#: model:product.category,name:stock_picking_wave.product_category_icecream
+msgid "Ice Cream"
+msgstr "Sladoled"
+
+#. module: stock_picking_wave
+#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
+msgid "Ice Cream Chocolate"
+msgstr "Čokoladni sladoled"
+
+#. module: stock_picking_wave
+#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
+msgid "Ice Cream Chocolate with stucks"
+msgstr "Čokoladni sladoled na palčicah"
+
+#. module: stock_picking_wave
+#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
+#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
+msgid "Ice Cream Vanilla"
+msgstr "Vaniljev sladoled"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "In Progress"
+msgstr "V teku"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,write_uid:0
+#: field:stock.picking.wave,write_uid:0
+msgid "Last Updated by"
+msgstr "Zadnjič posodobil"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,write_date:0
+#: field:stock.picking.wave,write_date:0
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: stock_picking_wave
+#: help:stock.picking.wave,picking_ids:0
+msgid "List of picking associated to this wave"
+msgstr "Seznam zbirnikov vezanih na ta val"
+
+#. module: stock_picking_wave
+#: help:stock.picking.wave,name:0
+msgid "Name of the picking wave"
+msgstr "Naziv zbirnega vala"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:40
+#, python-format
+msgid "Nothing to print."
+msgstr "Ničesar za izpis."
+
+#. module: stock_picking_wave
+#: help:stock.picking.wave,user_id:0
+msgid "Person responsible for this wave"
+msgstr "Odgovorna oseba za ta val"
+
+#. module: stock_picking_wave
+#: model:ir.model,name:stock_picking_wave.model_stock_picking
+msgid "Picking List"
+msgstr "Zbirnik"
+
+#. module: stock_picking_wave
+#: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
+#: field:stock.picking,wave_id:0 field:stock.picking.to.wave,wave_id:0
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Picking Wave"
+msgstr "Zbirni val"
+
+#. module: stock_picking_wave
+#: field:stock.picking.wave,name:0
+msgid "Picking Wave Name"
+msgstr "Naziv zbirnega vala"
+
+#. module: stock_picking_wave
+#: model:ir.actions.act_window,name:stock_picking_wave.action_picking_wave
+#: model:ir.ui.menu,name:stock_picking_wave.menu_action_picking_wave
+msgid "Picking Waves"
+msgstr "Zbirni valovi"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Picking Waves not finished"
+msgstr "Zbirni valovi niso dokončani"
+
+#. module: stock_picking_wave
+#: help:stock.picking,wave_id:0
+msgid "Picking wave associated to this picking"
+msgstr "Zbirni val vezan na ta zbirnik"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+#: field:stock.picking.wave,picking_ids:0
+msgid "Pickings"
+msgstr "Zbirniki"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Print all pickings"
+msgstr "Izpis vseh zbirnikov"
+
+#. module: stock_picking_wave
+#: field:stock.picking.wave,user_id:0
+msgid "Responsible"
+msgstr "Odgovorni"
+
+#. module: stock_picking_wave
+#: selection:stock.picking.wave,state:0
+msgid "Running"
+msgstr "Se izvaja"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Search Picking Waves"
+msgstr "Iskanje zbirnih valov"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "Select a wave"
+msgstr "Izbira vala"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:57
+#, python-format
+msgid ""
+"Some pickings are still waiting for goods. Please check or force their "
+"availability before setting this wave to done."
+msgstr "Nekateri zbirniki še čakajo na blago. Preverite ali vsilite razpoložljivost preden nastavite ta val kot opravljen."
+
+#. module: stock_picking_wave
+#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
+msgid "Speculoos"
+msgstr "Speculoos piškoti"
+
+#. module: stock_picking_wave
+#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
+msgid "Speculoos - A belgian speciality"
+msgstr "Speculoos piškoti - belgijska specialiteta"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+#: field:stock.picking.wave,state:0
+msgid "State"
+msgstr "Stanje"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_tree
+msgid "Stock Picking Waves"
+msgstr "Zbirni valovi zalog"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "User"
+msgstr "Uporabnik"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:57
+#, python-format
+msgid "Warning"
+msgstr "Opozorilo"
+
+#. module: stock_picking_wave
+#: view:stock.picking:stock_picking_wave.view_stock_picking_wave_search_inherit
+msgid "Wave"
+msgstr "Val"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "or"
+msgstr "ali"

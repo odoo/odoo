@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        
+        <!-- Invoices -->
+        <record id="invoice_1" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="a_recv"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
+        </record>
+        <record id="invoice_1_line_1" model="account.invoice.line">
+            <field name="name">Otpez Laptop without OS</field>
+            <field name="invoice_id" ref="invoice_1"/>
+            <field name="price_unit">642</field>
+            <field name="quantity">4</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <record id="invoice_1_line_2" model="account.invoice.line">
+            <field name="name">Linutop</field>
+            <field name="invoice_id" ref="invoice_1"/>
+            <field name="price_unit">280</field>
+            <field name="quantity">2</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        
+        <record id="invoice_2" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="a_recv"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
+            <field eval="time.strftime('%Y-%m') + '-01'" name="date_invoice"/>
+        </record>
+        <record id="invoice_2_line_1" model="account.invoice.line">
+            <field name="name">8-port Switch</field>
+            <field name="invoice_id" ref="invoice_2"/>
+            <field name="price_unit">50</field>
+            <field name="quantity">3</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <record id="invoice_2_line_2" model="account.invoice.line">
+            <field name="name">30m RJ45 wire</field>
+            <field name="invoice_id" ref="invoice_2"/>
+            <field name="price_unit">25</field>
+            <field name="quantity">20</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="invoice_2"/>
+        
+        <record id="invoice_3" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="a_recv"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
+            <field eval="time.strftime('%Y-%m') + '-08'" name="date_invoice"/>
+        </record>
+        <record id="invoice_3_line_1" model="account.invoice.line">
+            <field name="name">TypeMatrix Dvorak Keyboard</field>
+            <field name="invoice_id" ref="invoice_3"/>
+            <field name="price_unit">90</field>
+            <field name="quantity">5</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <record id="invoice_3_line_2" model="account.invoice.line">
+            <field name="name">Ergonomic Mouse</field>
+            <field name="invoice_id" ref="invoice_3"/>
+            <field name="price_unit">15</field>
+            <field name="quantity">5</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="invoice_3"/>
+        
+        <record id="invoice_4" model="account.invoice">
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="journal_id" ref="account.sales_journal"/>
+            <field name="state">draft</field>
+            <field name="type">out_invoice</field>
+            <field name="account_id" ref="a_recv"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
+            <field eval="time.strftime('%Y-%m') + '-15'" name="date_invoice"/>
+        </record>
+        <record id="invoice_4_line_1" model="account.invoice.line">
+            <field name="name">Desktop Computer Table</field>
+            <field name="invoice_id" ref="invoice_4"/>
+            <field name="price_unit">80</field>
+            <field name="quantity">5</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <record id="invoice_4_line_2" model="account.invoice.line">
+            <field name="name">Desktop Lamp</field>
+            <field name="invoice_id" ref="invoice_4"/>
+            <field name="price_unit">20</field>
+            <field name="quantity">5</field>
+            <field name="account_id" ref="a_sale"/>
+        </record>
+        <workflow action="invoice_open" model="account.invoice" ref="invoice_4"/>
+        
+    </data>
+</openerp>

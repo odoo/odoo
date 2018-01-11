@@ -1,0 +1,927 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data noupdate="1">
+
+    <record id="pcg_bilan" model="l10n.fr.report">
+      <field name="name">Bilan Comptable</field>
+      <field name="code">bilan</field>
+    </record>
+
+    <record id="pcg_cdr" model="l10n.fr.report">
+      <field name="name">Compte de Résultat</field>
+      <field name="code">cdr</field>
+    </record>
+
+    <record id="pcg_bavar1" model="l10n.fr.line">
+      <field name="name">Actif : Capital souscrit - non appelé</field>
+      <field name="definition">{'load':['+:109:S'], 'except':[]}</field>
+      <field name="code">bavar1</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar2" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Frais d'établissement</field>
+      <field name="definition">{'load':['+:201:S'], 'except':[]}</field>
+      <field name="code">bavar2</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar2b" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Frais d'établissement (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2801:S'], 'except':[]}</field>
+      <field name="code">bavar2b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar3" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Frais de recherche et de développement</field>
+      <field name="definition">{'load':['+:203:S'], 'except':[]}</field>
+      <field name="code">bavar3</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar3b" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Frais de recherche et de développement (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2803:S'], 'except':[]}</field>
+      <field name="code">bavar3b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar4" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Concessions, brevets, licences, marques, droits et valeurs similaires</field>
+      <field name="definition">{'load':['+:205:S'], 'except':[]}</field>
+      <field name="code">bavar4</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar4b" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Concessions, brevets, licences, marques, droits et valeurs similaires (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2805:S','+:2905:S'], 'except':[]}</field>
+      <field name="code">bavar4b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar5" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Fonds commercial</field>
+      <field name="definition">{'load':['+:206:S','+:207:S'], 'except':[]}</field>
+      <field name="code">bavar5</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar5b" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Fonds commercial (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2807:S','+:2907:S'], 'except':[]}</field>
+      <field name="code">bavar5b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar6" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Autres</field>
+      <field name="definition">{'load':['+:208:S'], 'except':[]}</field>
+      <field name="code">bavar6</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar6b" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Autres (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2808:S','+:2908:S'], 'except':[]}</field>
+      <field name="code">bavar6b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar7" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Immobilisations incorporelles en cours</field>
+      <field name="definition">{'load':['+:232:S'], 'except':[]}</field>
+      <field name="code">bavar7</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar7b" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Immobilisations incorporelles en cours (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2932:S'], 'except':[]}</field>
+      <field name="code">bavar7b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar8" model="l10n.fr.line">
+      <field name="name">Immobilisations incorporelles : Avances et acomptes</field>
+      <field name="definition">{'load':['+:237:S'], 'except':[]}</field>
+      <field name="code">bavar8</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar9" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Terrains</field>
+      <field name="definition">{'load':['+:211:S','+:212:S'], 'except':[]}</field>
+      <field name="code">bavar9</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar9b" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Terrains (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2811:S','+:2812:S','+:2911:S'], 'except':[]}</field>
+      <field name="code">bavar9b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar10" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Constructions</field>
+      <field name="definition">{'load':['+:213:S','+:214:S'], 'except':[]}</field>
+      <field name="code">bavar10</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar10b" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Constructions (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2813:S','+:2814:S'], 'except':[]}</field>
+      <field name="code">bavar10b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar11" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Installations techniques,matériel et outillage</field>
+      <field name="definition">{'load':['+:215:S'], 'except':[]}</field>
+      <field name="code">bavar11</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar11b" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Installations techniques,matériel et outillage (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2815:S'], 'except':[]}</field>
+      <field name="code">bavar11b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar12" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Autres</field>
+      <field name="definition">{'load':['+:218:S'], 'except':[]}</field>
+      <field name="code">bavar12</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar12b" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Autres (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2818:S','+:282:S'], 'except':[]}</field>
+      <field name="code">bavar12b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar13" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Immobilisations corporelles en cours</field>
+      <field name="definition">{'load':['+:231:S'], 'except':[]}</field>
+      <field name="code">bavar13</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar13b" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Immobilisations corporelles : Immobilisations corporelles en cours (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2931:S'], 'except':[]}</field>
+      <field name="code">bavar13b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar14" model="l10n.fr.line">
+      <field name="name">Immobilisations corporelles : Avances et acomptes</field>
+      <field name="definition">{'load':['+:238:S'], 'except':[]}</field>
+      <field name="code">bavar14</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar15" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Participations</field>
+      <field name="definition">{'load':['+:261:S','+:262:S','+:266:S'], 'except':[]}</field>
+      <field name="code">bavar15</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar15b" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Participations (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2961:S','+:2966:S'], 'except':[]}</field>
+      <field name="code">bavar15b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar16" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Créances rattachées à des participations</field>
+      <field name="definition">{'load':['+:267:S','+:268:S'], 'except':[]}</field>
+      <field name="code">bavar16</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar16b" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Créances rattachées à des participations (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2967:S'], 'except':[]}</field>
+      <field name="code">bavar16b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar17" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Titres immobilisés de l'activité de portefeuille</field>
+      <field name="definition">{'load':['+:273:S'], 'except':[]}</field>
+      <field name="code">bavar17</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar17b" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Titres immobilisés de l'activité de portefeuille (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2973:S'], 'except':[]}</field>
+      <field name="code">bavar17b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar18" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Autres titres immobilisés</field>
+      <field name="definition">{'load':['+:271:S','+:272:S','+:27682:S'], 'except':[]}</field>
+      <field name="code">bavar18</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar18b" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Autres titres immobilisés (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2971:S','+:2972:S'], 'except':[]}</field>
+      <field name="code">bavar18b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar19" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Prêts</field>
+      <field name="definition">{'load':['+:274:S','+:27684:S'], 'except':[]}</field>
+      <field name="code">bavar19</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar19b" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Prêts (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2974:S'], 'except':[]}</field>
+      <field name="code">bavar19b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar20" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Autres</field>
+      <field name="definition">{'load':['+:275:S','+:276:S'], 'except':['27682','27684']}</field>
+      <field name="code">bavar20</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar20b" model="l10n.fr.line">
+      <field name="name">Immobilisations financiéres : Autres (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:2975:S','+:2976:S'], 'except':[]}</field>
+      <field name="code">bavar20b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar21" model="l10n.fr.line">
+      <field name="name">Stock en cours : Matières premières et autres approvisionnements</field>
+      <field name="definition">{'load':['+:31:S','+:32:S'], 'except':[]}</field>
+      <field name="code">bavar21</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar21b" model="l10n.fr.line">
+      <field name="name">Stock en cours : Matières premières et autres approvisionnements (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:391:S','+:392:S'], 'except':[]}</field>
+      <field name="code">bavar21b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar22" model="l10n.fr.line">
+      <field name="name">Stock en cours : En-cours de production [biens et services]</field>
+      <field name="definition">{'load':['+:33:S','+:34:S'], 'except':[]}</field>
+      <field name="code">bavar22</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar22b" model="l10n.fr.line">
+      <field name="name">Stock en cours : En-cours de production [biens et services] (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:393:S','+:394:S'], 'except':[]}</field>
+      <field name="code">bavar22b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar23" model="l10n.fr.line">
+      <field name="name">Stock en cours : Produits intermédiaires et finis</field>
+      <field name="definition">{'load':['+:35:S'], 'except':[]}</field>
+      <field name="code">bavar23</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar23b" model="l10n.fr.line">
+      <field name="name">Stock en cours : Produits intermédiaires et finis (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:395:S'], 'except':[]}</field>
+      <field name="code">bavar23b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar24" model="l10n.fr.line">
+      <field name="name">Stock en cours : Marchandises</field>
+      <field name="definition">{'load':['+:37:S'], 'except':[]}</field>
+      <field name="code">bavar24</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar24b" model="l10n.fr.line">
+      <field name="name">Stock en cours : Marchandises (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:397:S'], 'except':[]}</field>
+      <field name="code">bavar24b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar25" model="l10n.fr.line">
+      <field name="name">Stock en cours : Avances et acomptes versés sur commandes</field>
+      <field name="definition">{'load':['+:4091:S'], 'except':[]}</field>
+      <field name="code">bavar25</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar26" model="l10n.fr.line">
+      <field name="name">Créances : Créances clients et comptes rattachés</field>
+      <field name="definition">{'load':['+:411:S','+:413:S','+:416:S','+:418:S'], 'except':[]}</field>
+      <field name="code">bavar26</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar26b" model="l10n.fr.line">
+      <field name="name">Créances : Créances clients et comptes rattachés (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:491:S'], 'except':[]}</field>
+      <field name="code">bavar26b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar27" model="l10n.fr.line">
+      <field name="name">Créances : Autres</field>
+      <field name="definition">{'load':['+:4096:S','+:4097:S','+:4098:S','+:425:S','+:441:S','+:462:S','+:465:S','+:428:D','+:438:D','+:443:D','+:444:D','+:445:D','+:448:D','+:451:D','+:455:D','+:456:D','+:458:D','+:467:D','+:468:D','+:478:D'], 'except':['4562']}</field>
+      <field name="code">bavar27</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar27b" model="l10n.fr.line">
+      <field name="name">Créances : Autres (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:495:S','+:496:S'], 'except':[]}</field>
+      <field name="code">bavar27b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar28" model="l10n.fr.line">
+      <field name="name">Créances : Capital souscrit - appelé , non versé</field>
+      <field name="definition">{'load':['+:4562:S'], 'except':[]}</field>
+      <field name="code">bavar28</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar29" model="l10n.fr.line">
+      <field name="name">Valeurs mobilières de placement : Actions propres</field>
+      <field name="definition">{'load':['+:502:S'], 'except':[]}</field>
+      <field name="code">bavar29</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar29b" model="l10n.fr.line">
+      <field name="name">Valeurs mobilières de placement : Actions propres (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:5903:S'], 'except':[]}</field>
+      <field name="code">bavar29b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar30" model="l10n.fr.line">
+      <field name="name">Valeurs mobilières de placement : Autres titres</field>
+      <field name="definition">{'load':['+:50:S'], 'except':['502','509']}</field>
+      <field name="code">bavar30</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar30b" model="l10n.fr.line">
+      <field name="name">Valeurs mobilières de placement : Autres titres (Amortissements et dépréciations)</field>
+      <field name="definition">{'load':['+:590:S'], 'except':['5903']}</field>
+      <field name="code">bavar30b</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar31" model="l10n.fr.line">
+      <field name="name">Actif circulant : Instruments de trésorerie</field>
+      <field name="definition">{'load':['+:52:S'], 'except':[]}</field>
+      <field name="code">bavar31</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar32" model="l10n.fr.line">
+      <field name="name">Actif circulant : Disponibilités</field>
+      <field name="definition">{'load':['+:51:D','+:53:S','+:54:S'], 'except':['5181','519']}</field>
+      <field name="code">bavar32</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar33" model="l10n.fr.line">
+      <field name="name">Actif circulant : Charges constatés d'avance</field>
+      <field name="definition">{'load':['+:486:S'], 'except':[]}</field>
+      <field name="code">bavar33</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar34" model="l10n.fr.line">
+      <field name="name">Actif : Charges à répartir sur plusieurs exercices</field>
+      <field name="definition">{'load':['+:481:S'], 'except':[]}</field>
+      <field name="code">bavar34</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar35" model="l10n.fr.line">
+      <field name="name">Actif : Primes de remboursement des emprunts</field>
+      <field name="definition">{'load':['+:169:S'], 'except':[]}</field>
+      <field name="code">bavar35</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bavar36" model="l10n.fr.line">
+      <field name="name">Actif : Écarts de conversion actif</field>
+      <field name="definition">{'load':['+:476:S'], 'except':[]}</field>
+      <field name="code">bavar36</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar1" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Capital [dont versé...]</field>
+      <field name="definition">{'load':['-:101:S','-:108:S'], 'except':[]}</field>
+      <field name="code">bpvar1</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar2" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Primes d'émission, de fusion, d'apport</field>
+      <field name="definition">{'load':['-:104:S'], 'except':[]}</field>
+      <field name="code">bpvar2</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar3" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Écarts de réévaluation</field>
+      <field name="definition">{'load':['-:105:S'], 'except':[]}</field>
+      <field name="code">bpvar3</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar4" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Écart d'équivalence</field>
+      <field name="definition">{'load':['-:107:S'], 'except':[]}</field>
+      <field name="code">bpvar4</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar5" model="l10n.fr.line">
+      <field name="name">Réserves : Réserve légale</field>
+      <field name="definition">{'load':['-:1061:S'], 'except':[]}</field>
+      <field name="code">bpvar5</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar6" model="l10n.fr.line">
+      <field name="name">Réserves : Réserves statutaires ou contractuelles</field>
+      <field name="definition">{'load':['-:1063:S'], 'except':[]}</field>
+      <field name="code">bpvar6</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar7" model="l10n.fr.line">
+      <field name="name">Réserves : Réserves réglementées</field>
+      <field name="definition">{'load':['-:1062:S','-:1064:S'], 'except':[]}</field>
+      <field name="code">bpvar7</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar8" model="l10n.fr.line">
+      <field name="name">Réserves : Autres réserves</field>
+      <field name="definition">{'load':['-:1068:S'], 'except':[]}</field>
+      <field name="code">bpvar8</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar9" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Report à nouveau</field>
+      <field name="definition">{'load':['-:110:S','-:119:S'], 'except':[]}</field>
+      <field name="code">bpvar9</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar10" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Résultat de l'exercice</field>
+      <field name="definition">{'load':['-:7:S','-:6:S'], 'except':[]}</field>
+      <field name="code">bpvar10</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpcheck" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Résultat de l'exercice (Vérification)</field>
+      <field name="definition">{'load':['-:120:S','-:129:S'], 'except':[]}</field>
+      <field name="code">bpcheck</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar11" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Subventions d'investissement</field>
+      <field name="definition">{'load':['-:13:S'], 'except':[]}</field>
+      <field name="code">bpvar11</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar12" model="l10n.fr.line">
+      <field name="name">Capitaux propres : Provisions réglementées</field>
+      <field name="definition">{'load':['-:14:S'], 'except':[]}</field>
+      <field name="code">bpvar12</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar13" model="l10n.fr.line">
+      <field name="name">Provisions : Provisions pour risques</field>
+      <field name="definition">{'load':['-:151:S'], 'except':[]}</field>
+      <field name="code">bpvar13</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar14" model="l10n.fr.line">
+      <field name="name">Provisions : Provisions pour charges</field>
+      <field name="definition">{'load':['-:15:S'], 'except':['151']}</field>
+      <field name="code">bpvar14</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar15" model="l10n.fr.line">
+      <field name="name">Dettes : Emprunts obligataires convertibles</field>
+      <field name="definition">{'load':['-:161:S','-:16881:S'], 'except':[]}</field>
+      <field name="code">bpvar15</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar16" model="l10n.fr.line">
+      <field name="name">Dettes : Autres emprunts obligataires</field>
+      <field name="definition">{'load':['-:163:S','-:16883:S'], 'except':[]}</field>
+      <field name="code">bpvar16</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar17" model="l10n.fr.line">
+      <field name="name">Dettes : Emprunts et dettes auprès des établissements de crédit</field>
+      <field name="definition">{'load':['-:164:S','-:16884:S','-:519:S','-:5181:S','+:512:C','+:514:C','+:517:C'], 'except':[]}</field>
+      <field name="code">bpvar17</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar18" model="l10n.fr.line">
+      <field name="name">Dettes : Emprunts et dettes financières diverses</field>
+      <field name="definition">{'load':['-:165:S','-:166:S','-:1675:S','-:168:S','-:17:S','-:426:S','+:45:C'], 'except':['16881','16883','16884','457']}</field>
+      <field name="code">bpvar18</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar19" model="l10n.fr.line">
+      <field name="name">Dettes : Avances et acomptes reçus sur commandes en cours</field>
+      <field name="definition">{'load':['-:4191:S'], 'except':[]}</field>
+      <field name="code">bpvar19</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar20" model="l10n.fr.line">
+      <field name="name">Dettes : Dettes fournisseurs et comptes rattachés</field>
+      <field name="definition">{'load':['-:401:S','-:403:S','-:4081:S','-:4088:S'], 'except':[]}</field>
+      <field name="code">bpvar20</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar21" model="l10n.fr.line">
+      <field name="name">Dettes : Dettes fiscales et sociales</field>
+      <field name="definition">{'load':['-:421:S','-:422:S','-:424:S','-:427:S','-:4282:S','-:4284:S','-:4286:S','-:43:S','-:442:S','-:4455:S','-:4457:S','-:44584:S','-:44587:S','-:446:S','-:447:S','-:4482:S','-:4486:S','-:457:S','+:443:C','+:444:C'],'except':['4387']}</field>
+      <field name="code">bpvar21</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar22" model="l10n.fr.line">
+      <field name="name">Dettes : Dettes sur immobilisations et comptes rattachés </field>
+      <field name="definition">{'load':['-:269:S','-:279:S','-:404:S','-:405:S','-:4084:S'], 'except':[]}</field>
+      <field name="code">bpvar22</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar23" model="l10n.fr.line">
+      <field name="name">Dettes : Autres dettes</field>
+      <field name="definition">{'load':['-:4196:S','-:4197:S','-:4198:S','-:464:S','+:467:C','-:4686:S','+:478:C','-:509:S'], 'except':[]}</field>
+      <field name="code">bpvar23</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar24" model="l10n.fr.line">
+      <field name="name">Dettes : Instruments de trésorerie</field>
+      <field name="definition">{'load':['-:52:S'], 'except':[]}</field>
+      <field name="code">bpvar24</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar25" model="l10n.fr.line">
+      <field name="name">Dettes : Produits constatés d'avance</field>
+      <field name="definition">{'load':['-:487:S'], 'except':[]}</field>
+      <field name="code">bpvar25</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_bpvar26" model="l10n.fr.line">
+      <field name="name">Passif : Écarts de conversion passif</field>
+      <field name="definition">{'load':['-:477:S'], 'except':[]}</field>
+      <field name="code">bpvar26</field>
+      <field name="report_id" ref="pcg_bilan"/>
+    </record>
+
+    <record id="pcg_cdrc1" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Achats de Marchandises</field>
+      <field name="definition">{'load':['+:607:S','+:6097:S'], 'except':[]}</field>
+      <field name="code">cdrc1</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc2" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Achats de Marchandises, variation des stocks</field>
+      <field name="definition">{'load':['+:6037:S'], 'except':[]}</field>
+      <field name="code">cdrc2</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc3" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Achats de matières premières et autres approvisionnements</field>
+      <field name="definition">{'load':['+:601:S','+:6091:S','+:602:S','+:6092:S','+:6081:S','+:6082:S'], 'except':[]}</field>
+      <field name="code">cdrc3</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc4" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Achats de matières premières et autres approvisionnements, variation des stocks</field>
+      <field name="definition">{'load':['+:6031:S','+:6032:S'], 'except':[]}</field>
+      <field name="code">cdrc4</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc5" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Autres achats et charges externes</field>
+      <field name="definition">{'load':['+:604:S','+:605:S','+:606:S','+:6094:S','+:6095:S','+:6096:S','+:61:S','+:62:S'], 'except':[]}</field>
+      <field name="code">cdrc5</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc6" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Autres achats et charges externes, redevances de crédit-bail mobilier</field>
+      <field name="definition">{'load':['+:6122:S'], 'except':[]}</field>
+      <field name="code">cdrc6</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc7" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Autres achats et charges externes, redevances de crédit-bail mobilier</field>
+      <field name="definition">{'load':['+:6125:S'], 'except':[]}</field>
+      <field name="code">cdrc7</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc8" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Impôts, taxes et versements assimilés</field>
+      <field name="definition">{'load':['+:63:S'], 'except':[]}</field>
+      <field name="code">cdrc8</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc9" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Salaires et traitements</field>
+      <field name="definition">{'load':['+:641:S','+:644:S','+:648:S'], 'except':[]}</field>
+      <field name="code">cdrc9</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc10" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Charges sociales</field>
+      <field name="definition">{'load':['+:645:S','+:646:S','+:647:S'], 'except':[]}</field>
+      <field name="code">cdrc10</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc11" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Dotation aux amortissements et aux dépréciations, sur immobilisations : dotations aux amortissements</field>
+      <field name="definition">{'load':['+:6811:S','+:6812:S'], 'except':[]}</field>
+      <field name="code">cdrc11</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc12" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Dotation aux amortissements et aux dépréciations, sur immobilisations : dotations aux dépréciations</field>
+      <field name="definition">{'load':['+:6816:S'], 'except':[]}</field>
+      <field name="code">cdrc12</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc13" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Dotation aux amortissements et aux dépréciations, sur actif circulant : dotations aux dépréciations</field>
+      <field name="definition">{'load':['+:6817:S'], 'except':[]}</field>
+      <field name="code">cdrc13</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc14" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Dotations aux provisions</field>
+      <field name="definition">{'load':['+:6815:S'], 'except':[]}</field>
+      <field name="code">cdrc14</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc15" model="l10n.fr.line">
+      <field name="name">Charges d'exploitation : Autres charges</field>
+      <field name="definition">{'load':['+:65:S'], 'except':['655']}</field>
+      <field name="code">cdrc15</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc16" model="l10n.fr.line">
+      <field name="name">Charges : Quotes-parts de résultat sur opérations faites en commun</field>
+      <field name="definition">{'load':['+:655:S'], 'except':[]}</field>
+      <field name="code">cdrc16</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc17" model="l10n.fr.line">
+      <field name="name">Charges financières : Dotations aux amortissements, aux dépréciations et aux provisions</field>
+      <field name="definition">{'load':['+:686:S'], 'except':[]}</field>
+      <field name="code">cdrc17</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc18" model="l10n.fr.line">
+      <field name="name">Charges financières : Intérêts et charges assimilées</field>
+      <field name="definition">{'load':['+:66:S'], 'except':['666','667']}</field>
+      <field name="code">cdrc18</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc19" model="l10n.fr.line">
+      <field name="name">Charges financières : Différences négatives de change</field>
+      <field name="definition">{'load':['+:666:S'], 'except':[]}</field>
+      <field name="code">cdrc19</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc20" model="l10n.fr.line">
+      <field name="name">Charges financières : Charges nettes sur cessions de valeurs mobilières de placement</field>
+      <field name="definition">{'load':['+:667:S'], 'except':[]}</field>
+      <field name="code">cdrc20</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc21" model="l10n.fr.line">
+      <field name="name">Charges exceptionnelles : Sur opérations de gestion</field>
+      <field name="definition">{'load':['+:671:S'], 'except':[]}</field>
+      <field name="code">cdrc21</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc22" model="l10n.fr.line">
+      <field name="name">Charges exceptionnelles : Sur opérations en capital</field>
+      <field name="definition">{'load':['+:675:S','+:678:S'], 'except':[]}</field>
+      <field name="code">cdrc22</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc23" model="l10n.fr.line">
+      <field name="name">Charges exceptionnelles : Dotations aux amortissements, aux dépréciations et aux provisions</field>
+      <field name="definition">{'load':['+:687:S'], 'except':[]}</field>
+      <field name="code">cdrc23</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc24" model="l10n.fr.line">
+      <field name="name">Charges : Participation des salariés aux résultats</field>
+      <field name="definition">{'load':['+:691:S'], 'except':[]}</field>
+      <field name="code">cdrc24</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrc25" model="l10n.fr.line">
+      <field name="name">Charges : Impôts sur les bénéfices</field>
+      <field name="definition">{'load':['+:69:S'], 'except':['691']}</field>
+      <field name="code">cdrc25</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp1" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Vente de marchandises</field>
+      <field name="definition">{'load':['-:707:S','-:7097:S'], 'except':[]}</field>
+      <field name="code">cdrp1</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp2" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Production vendue [biens et services]</field>
+      <field name="definition">{'load':['-:701:S','-:702:S','-:703:S','-:704:S','-:705:S','-:706:S','-:7091:S','-:7092:S','-:7093:S','-:7094:S','-:7095:S','-:7096:S','-:708:S'], 'except':[]}</field>
+      <field name="code">cdrp2</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp3" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Production stockée</field>
+      <field name="definition">{'load':['-:713:S'], 'except':[]}</field>
+      <field name="code">cdrp3</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp4" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Production immobilisée</field>
+      <field name="definition">{'load':['-:72:S'], 'except':[]}</field>
+      <field name="code">cdrp4</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp5" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Subventions d'exploitation</field>
+      <field name="definition">{'load':['-:74:S'], 'except':[]}</field>
+      <field name="code">cdrp5</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp6" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Reprises sur provisions, dépréciations (et amortissements) et transferts de charges</field>
+      <field name="definition">{'load':['-:781:S','-:791:S'], 'except':[]}</field>
+      <field name="code">cdrp6</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp7" model="l10n.fr.line">
+      <field name="name">Produits d'exploitation : Autres produits</field>
+      <field name="definition">{'load':['-:75:S'], 'except':['755']}</field>
+      <field name="code">cdrp7</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp8" model="l10n.fr.line">
+      <field name="name">Produits : Quotes-parts de résultat sur opérations faites en commun</field>
+      <field name="definition">{'load':['-:755:S'], 'except':[]}</field>
+      <field name="code">cdrp8</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp9" model="l10n.fr.line">
+      <field name="name">Produits financiers : De participation</field>
+      <field name="definition">{'load':['-:761:S'], 'except':[]}</field>
+      <field name="code">cdrp9</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp10" model="l10n.fr.line">
+      <field name="name">Produits financiers : D'autres valeurs mobilières et créances de l'actif immobilisé</field>
+      <field name="definition">{'load':['-:762:S'], 'except':[]}</field>
+      <field name="code">cdrp10</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp11" model="l10n.fr.line">
+      <field name="name">Produits financiers : Autres intérêts et produits assimilés</field>
+      <field name="definition">{'load':['-:763:S','-:764:S','-:765:S','-:768:S'], 'except':[]}</field>
+      <field name="code">cdrp11</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp12" model="l10n.fr.line">
+      <field name="name">Produits financiers : Reprises sur provisions, dépréciations et transferts de charges</field>
+      <field name="definition">{'load':['-:786:S','-:796:S'], 'except':[]}</field>
+      <field name="code">cdrp12</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp13" model="l10n.fr.line">
+      <field name="name">Produits financiers : Différences positives de change</field>
+      <field name="definition">{'load':['-:766:S'], 'except':[]}</field>
+      <field name="code">cdrp13</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp14" model="l10n.fr.line">
+      <field name="name">Produits financiers : Produits nets sur cessions de valeurs mobilières de placement</field>
+      <field name="definition">{'load':['-:767:S'], 'except':[]}</field>
+      <field name="code">cdrp14</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp15" model="l10n.fr.line">
+      <field name="name">Produits exceptionnels : Sur opérations de gestion</field>
+      <field name="definition">{'load':['-:771:S'], 'except':[]}</field>
+      <field name="code">cdrp15</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp16" model="l10n.fr.line">
+      <field name="name">Produits exceptionnels : Sur opérations en capital</field>
+      <field name="definition">{'load':['-:775:S','-:777:S','-:778:S'], 'except':[]}</field>
+      <field name="code">cdrp16</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+    <record id="pcg_cdrp17" model="l10n.fr.line">
+      <field name="name">Produits exceptionnels : Reprises sur provisions, dépréciations et transferts de charges</field>
+      <field name="definition">{'load':['-:787:S','-:797:S'], 'except':[]}</field>
+      <field name="code">cdrp17</field>
+      <field name="report_id" ref="pcg_cdr"/>
+    </record>
+
+  </data>
+</openerp>
+

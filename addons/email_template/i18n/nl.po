@@ -1,0 +1,610 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * email_template
+# 
+# Translators:
+# Erwin van der Ploeg <erwin@bas-solutions.nl>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-21 12:10+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@bas-solutions.nl>\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:365
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopie)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Add"
+msgstr "Toevoegen"
+
+#. module: email_template
+#: field:email.template,user_signature:0
+#: field:email_template.preview,user_signature:0
+msgid "Add Signature"
+msgstr "Handtekening toevoegen"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Advanced Settings"
+msgstr "Geavanceerde instellingen"
+
+#. module: email_template
+#: field:email.template,model_id:0 field:email_template.preview,model_id:0
+msgid "Applies to"
+msgstr "Heeft betrekking op"
+
+#. module: email_template
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
+msgid "Attachments"
+msgstr "Bijlagen"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Author Signature (mass mail only)"
+msgstr "Handtekening auteur (alleen bulk mailing)"
+
+#. module: email_template
+#: field:email.template,auto_delete:0
+#: field:email_template.preview,auto_delete:0
+msgid "Auto Delete"
+msgstr "Auto-verwijder"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Available for mass mailing"
+msgstr "Beschikbaar voor bulk-mailing"
+
+#. module: email_template
+#: field:email.template,body_html:0 field:email_template.preview,body_html:0
+#: field:ir.actions.server,body_html:0
+msgid "Body"
+msgstr "Berichttekst"
+
+#. module: email_template
+#: help:email.template,email_cc:0 help:email_template.preview,email_cc:0
+msgid "Carbon copy recipients (placeholders may be used here)"
+msgstr "Carbon Copy ontvanger (tijdelijke aanduidingen kan hier worden gebruikt)"
+
+#. module: email_template
+#: field:email.template,email_cc:0 field:email_template.preview,email_cc:0
+msgid "Cc"
+msgstr "Cc"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Choose a template to display its values."
+msgstr "Kies een sjabloon om de waardes weer te geven."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Choose an example"
+msgstr "Kies een voorbeeld"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated carbon copy recipients addresses"
+msgstr "Komma gescheiden adressen van cc ontvangende relaties"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated ids of recipient partners"
+msgstr "Komma gescheiden ids van de ontvangende relaties"
+
+#. module: email_template
+#: help:email.template,partner_to:0 help:email_template.preview,partner_to:0
+msgid ""
+"Comma-separated ids of recipient partners (placeholders may be used here)"
+msgstr "Door komma's gescheiden ids van de ontvanger relaties (tijdelijke aanduidingen kunnen hier worden gebruikt)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Comma-separated recipient addresses"
+msgstr "Komma gescheiden  adressen van de ontvangende"
+
+#. module: email_template
+#: help:email.template,email_to:0 help:email_template.preview,email_to:0
+msgid "Comma-separated recipient addresses (placeholders may be used here)"
+msgstr "Komma-gescheiden ontvanger adressen (tijdelijke aanduidingen kunnen hier worden gebruikt)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Content"
+msgstr "Inhoud"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Context Action"
+msgstr "Context actie"
+
+#. module: email_template
+#: field:email.template,create_uid:0 field:email_template.preview,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: email_template
+#: field:email.template,create_date:0
+#: field:email_template.preview,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: email_template
+#: field:email.template,null_value:0 field:email_template.preview,null_value:0
+msgid "Default Value"
+msgstr "Standaardwaarde"
+
+#. module: email_template
+#: field:email.template,use_default_to:0
+#: field:email_template.preview,use_default_to:0
+msgid "Default recipients"
+msgstr "Standaard ontvangers"
+
+#. module: email_template
+#: help:email.template,use_default_to:0
+#: help:email_template.preview,use_default_to:0
+msgid ""
+"Default recipients of the record:\n"
+"- partner (using id on a partner or the partner_id field) OR\n"
+"- email (using email_from or email field)"
+msgstr "Standaard ontvangers van de gegevens van de:\n- relatie (gebruik makende van de id van de relatie of het partner_id veld) OF\n- e-mail (gebruik makende van het email_from veld)"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Deletion of the action record failed."
+msgstr "Verwijderen van de actieregel is mislukt."
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid ""
+"Display an option on related documents to open a composition wizard with "
+"this template"
+msgstr "Geef een optie op gerelateerde documenten om een ​​samenstelling wizard te openen met dit sjabloon"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Dynamic Placeholder Generator"
+msgstr "Dynamische bladwijze generator"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Email"
+msgstr "E-mail"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Email Configuration"
+msgstr "E-mail instellingen"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Email Preview"
+msgstr "E-mail voorbeeld"
+
+#. module: email_template
+#: field:ir.actions.server,template_id:0
+msgid "Email Template"
+msgstr "E-mail sjabloon"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template_preview
+msgid "Email Template Preview"
+msgstr "E-mail sjabloon voorbeeld"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_email_template
+msgid "Email Templates"
+msgstr "E-mail sjablonen"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "E-mail samenstellen wizard"
+
+#. module: email_template
+#: field:email.template,model_object_field:0
+#: field:email_template.preview,model_object_field:0
+msgid "Field"
+msgstr "Veld"
+
+#. module: email_template
+#: help:email.template,copyvalue:0 help:email_template.preview,copyvalue:0
+msgid ""
+"Final placeholder expression, to be copy-pasted in the desired template "
+"field."
+msgstr "Uiteindelijke tijdelijke aanduiding expressie, om te kopiëren en plakken in het gewenste sjabloon veld."
+
+#. module: email_template
+#: field:email.template,email_from:0 field:email_template.preview,email_from:0
+#: field:ir.actions.server,email_from:0
+msgid "From"
+msgstr "Van"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Group by..."
+msgstr "Groepeer op..."
+
+#. module: email_template
+#: field:email.template,id:0 field:email_template.preview,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: email_template
+#: help:email.template,user_signature:0
+#: help:email_template.preview,user_signature:0
+msgid ""
+"If checked, the user's signature will be appended to the text version of the"
+" message"
+msgstr "Indien aangevinkt, zal de gebruiker zijn handtekening worden toegevoegd aan de tekst-versie van het bericht"
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr "Als de opt-out optie is aangevinkt, dan heeft dit contactpersoon aangegeven geen mail te willen ontvangen van bulk-mailing campagnes. Het filter 'Beschikbaar voor bulk-mailing' kan worden gebruikt om de relaties te filteren bij het maken van een bulk-mailing."
+
+#. module: email_template
+#: field:email.template,lang:0 field:email_template.preview,lang:0
+msgid "Language"
+msgstr "Taal"
+
+#. module: email_template
+#: field:email.template,write_uid:0 field:email_template.preview,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatst aangepast door"
+
+#. module: email_template
+#: field:email.template,write_date:0 field:email_template.preview,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst aangepast op"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "Model"
+msgstr "Model"
+
+#. module: email_template
+#: field:email.template,name:0 field:email_template.preview,name:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: email_template
+#: help:email.template,report_name:0 help:email_template.preview,report_name:0
+msgid ""
+"Name to use for the generated report file (may contain placeholders)\n"
+"The extension can be omitted and will then come from the report type."
+msgstr "Naam te gebruiken voor het gegenereerde rapport  (kan tijdelijke aanduidingen bevatten )\nDe verlenging kan worden weggelaten en zal dan uit het rapporttype worden afgeleid."
+
+#. module: email_template
+#: field:res.partner,opt_out:0
+msgid "Opt-Out"
+msgstr "Opt-Out"
+
+#. module: email_template
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
+msgid ""
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
+msgstr "Optionele voorkeur server voor uitgaande e-mails. Indien niet ingesteld, zal degene met de hoogste prioriteit worden gebruikt."
+
+#. module: email_template
+#: field:email.template,report_template:0
+#: field:email_template.preview,report_template:0
+msgid "Optional report to print and attach"
+msgstr "Optioneel rapport om af te drukken en te koppelen"
+
+#. module: email_template
+#: help:email.template,lang:0 help:email_template.preview,lang:0
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. "
+"${object.partner_id.lang}."
+msgstr "Optionele vertaling (ISO code) welke u kunt selecteren bij het versturen van een e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Normaliter is dit een bladwijzen welke de juiste taal aangeeft. Bijv.: ${object.partner_id.lang}."
+
+#. module: email_template
+#: help:email.template,null_value:0 help:email_template.preview,null_value:0
+msgid "Optional value to use if the target field is empty"
+msgstr "Optioneel veld om te gebruiken als het doel veld leeg is"
+
+#. module: email_template
+#: field:email.template,mail_server_id:0
+#: field:email_template.preview,mail_server_id:0
+msgid "Outgoing Mail Server"
+msgstr "Uitgaande mailserver"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Override author's email"
+msgstr "Overschrijven van auteurs e-mail adres"
+
+#. module: email_template
+#: model:ir.model,name:email_template.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Partners that did not ask not to be included in mass mailing campaigns"
+msgstr "Relaties welke niet hebben aangegeven niet te willen worden opgenomen in de bulk-mail campagne."
+
+#. module: email_template
+#: help:email.template,auto_delete:0 help:email_template.preview,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr "Om ruimte te besparen, verwijder deze e-mail permanent na het versturen"
+
+#. module: email_template
+#: field:email.template,copyvalue:0 field:email_template.preview,copyvalue:0
+msgid "Placeholder Expression"
+msgstr "Tijdelijke aanduiding expressie"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid "Please set the Base Model before setting the action details."
+msgstr "Slel het basis model in voordat u de actie details insteld"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preferred reply address"
+msgstr "Voorkeur antwoord adres"
+
+#. module: email_template
+#: help:email.template,reply_to:0 help:email_template.preview,reply_to:0
+msgid "Preferred response address (placeholders may be used here)"
+msgstr "Voorkeur reactieadres (tijdelijke aanduidingen kan hier worden gebruikt)"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Preview"
+msgstr "Voorbeeld"
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "Preview of"
+msgstr "Voorbeeld van"
+
+#. module: email_template
+#: field:email_template.preview,partner_ids:0
+msgid "Recipients"
+msgstr "Ontvangers"
+
+#. module: email_template
+#: field:email.template,model:0 field:email_template.preview,model:0
+msgid "Related Document Model"
+msgstr "Gerelateerde document model"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove"
+msgstr "Verwijder"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+msgid "Remove the contextual action to use this template on related documents"
+msgstr "Verwijder de contextuele actie om dit sjabloon te gebruiken op documenten"
+
+#. module: email_template
+#: field:email.template,reply_to:0 field:email_template.preview,reply_to:0
+msgid "Reply-To"
+msgstr "Antwoord aan"
+
+#. module: email_template
+#: field:email.template,report_name:0
+#: field:email_template.preview,report_name:0
+msgid "Report Filename"
+msgstr "Bestandsnaam overzicht"
+
+#. module: email_template
+#: help:email.template,body_html:0 help:email_template.preview,body_html:0
+msgid "Rich-text/HTML version of the message (placeholders may be used here)"
+msgstr "Rich-text/HTML versie van het bericht (tijdelijke aanduidingen kan hier worden gebruikt)"
+
+#. module: email_template
+#: view:email.template:email_template.view_email_template_search
+msgid "SMTP Server"
+msgstr "SMTP-server"
+
+#. module: email_template
+#: field:email_template.preview,res_id:0
+msgid "Sample Document"
+msgstr "Voorbeeld document"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as a new template"
+msgstr "Sla op als nieuw sjabloon"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+msgid "Save as new template"
+msgstr "Opslaan als nieuw sjabloon"
+
+#. module: email_template
+#: help:email.template,model_object_field:0
+#: help:email_template.preview,model_object_field:0
+msgid ""
+"Select target field from the related document model.\n"
+"If it is a relationship field you will be able to select a target field at the destination of the relationship."
+msgstr "Selecteer doelveld van het gerelateerde documenten model.\nAls het een relatieveld is dan kunt u een doelveld selecteren op de bestemming van de relatie."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:318
+#, python-format
+msgid "Send Mail (%s)"
+msgstr "Verstuur mail (%s)"
+
+#. module: email_template
+#: help:email.template,email_from:0 help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
+msgstr "Afzenderadres (bladwijzers kunnen hier worden gebruikt). Indien niet ingesteld, zal de standaardwaarde zijn e-mail aliasindien geconfigureerd, van de auteur zijn, of e-mailadres."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid ""
+"Sender email is missing or empty after template rendering. Specify one to "
+"deliver your message"
+msgstr "De verstuurde e-mail ontbreekt of is leeg na het toepassen van het sjabloon. Specificeer een sjabloon om uw bericht af te versturen."
+
+#. module: email_template
+#: field:email.template,ref_ir_value:0
+#: field:email_template.preview,ref_ir_value:0
+msgid "Sidebar Button"
+msgstr "Navigatiekolom knop"
+
+#. module: email_template
+#: field:email.template,ref_ir_act_window:0
+#: field:email_template.preview,ref_ir_act_window:0
+msgid "Sidebar action"
+msgstr "Navigatiekolom actie"
+
+#. module: email_template
+#: help:email.template,ref_ir_act_window:0
+#: help:email_template.preview,ref_ir_act_window:0
+msgid ""
+"Sidebar action to make this template available on records of the related "
+"document model"
+msgstr "Navigatiekolom-actie om dit sjabloon beschikbaar te maken op de regels van het gerelateerde document model"
+
+#. module: email_template
+#: help:email.template,ref_ir_value:0
+#: help:email_template.preview,ref_ir_value:0
+msgid "Sidebar button to open the sidebar action"
+msgstr "Navigatiekolom knop op de navigatiekolom actie te openen"
+
+#. module: email_template
+#: field:email.template,sub_model_object_field:0
+#: field:email_template.preview,sub_model_object_field:0
+msgid "Sub-field"
+msgstr "Sub-veld"
+
+#. module: email_template
+#: field:email.template,sub_object:0 field:email_template.preview,sub_object:0
+msgid "Sub-model"
+msgstr "Sub-model"
+
+#. module: email_template
+#: field:email.template,subject:0 field:email_template.preview,subject:0
+#: field:ir.actions.server,subject:0
+msgid "Subject"
+msgstr "Onderwerp"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: help:email.template,subject:0 help:email_template.preview,subject:0
+msgid "Subject (placeholders may be used here)"
+msgstr "Onderwerp (tijdelijke aanduidingen kan hier worden gebruikt)"
+
+#. module: email_template
+#: view:res.partner:email_template.res_partner_opt_out_search
+msgid "Suppliers"
+msgstr "Leveranciers"
+
+#. module: email_template
+#: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
+msgid "Template Preview"
+msgstr "Sjabloon voorbeeld"
+
+#. module: email_template
+#: view:email.template:email_template.email_template_form
+#: view:email.template:email_template.email_template_tree
+#: view:email.template:email_template.view_email_template_search
+#: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
+#: model:ir.ui.menu,name:email_template.menu_email_templates
+msgid "Templates"
+msgstr "Sjablonen"
+
+#. module: email_template
+#: help:email.template,model_id:0 help:email_template.preview,model_id:0
+msgid "The kind of document with with this template can be used"
+msgstr "Het soort document waarvoor dit sjabloon kan worden gebruikt"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"The values displayed hereunder are informative. When sending the email, the values\n"
+"                                will be taken from the email template."
+msgstr "De waardes hieronder weergegeven zijn informatief. Bij het versturen van een e-mail, worden deze waardes\n                                overgenomen van het e-mail sjabloon."
+
+#. module: email_template
+#: field:email.template,email_to:0 field:email_template.preview,email_to:0
+#: field:ir.actions.server,email_to:0
+msgid "To (Emails)"
+msgstr "Naar (E-mails)"
+
+#. module: email_template
+#: field:email.template,partner_to:0 field:email_template.preview,partner_to:0
+#: field:ir.actions.server,partner_to:0
+msgid "To (Partners)"
+msgstr "Naar (Relaties)"
+
+#. module: email_template
+#: view:mail.compose.message:email_template.email_compose_message_wizard_inherit_form
+#: field:mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Gebruik sjabloon"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:355
+#, python-format
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:551
+#, python-format
+msgid "Warning!"
+msgstr "Waarschuwing!"
+
+#. module: email_template
+#: help:email.template,sub_model_object_field:0
+#: help:email_template.preview,sub_model_object_field:0
+msgid ""
+"When a relationship field is selected as first field, this field lets you "
+"select the target field within the destination document model (sub-model)."
+msgstr "Wanneer een relatie veld is geselecteerd als eerste veld, dan kunt u een doelveld selecteren binnen de bestemming document model (sub-model)."
+
+#. module: email_template
+#: help:email.template,sub_object:0 help:email_template.preview,sub_object:0
+msgid ""
+"When a relationship field is selected as first field, this field shows the "
+"document model the relationship goes to."
+msgstr "Wanneer een relatieveld wordt gekozen als eerste veld, dan toont dit veld het document-model van het relatieveld waar het heen gaat."
+
+#. module: email_template
+#: help:email.template,attachment_ids:0
+#: help:email_template.preview,attachment_ids:0
+msgid ""
+"You may attach files to this template, to be added to all emails created "
+"from this template"
+msgstr "U kunt bestanden toevoegen aan dit sjabloon. Deze worden vervolgens toegevoegd aan alle e-mails op basis van dit sjabloon"
+
+#. module: email_template
+#: view:ir.actions.server:email_template.view_server_action_form_template
+msgid ""
+"Your template does not defined any email_from. Please update your template."
+msgstr "Uw sjabloon bevat geen email_from waarde. U dient u sjabloon aan te passen."
+
+#. module: email_template
+#: view:email_template.preview:email_template.email_template_preview_form
+msgid "record:"
+msgstr "regel:"

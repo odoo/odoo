@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Odoo</title>
+    <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/web/static/src/css/full.css">
+    <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/web/static/src/css/base.css">
+    <script type="text/javascript">
+        function dbchanged() {
+            document.getElementById('dbselector').submit();
+        }
+    </script>
+<body class="oe_single_form">
+
+    <div class="oe_single_form_container modal-content">
+
+        <form class="oe_dbselector_form" id="dbselector" role="form" action="/web" method="get">
+            <div class="oe_single_form_logo">
+                <img src="/web/static/src/img/logo2.png"/>
+            </div>
+
+            <hr/>
+
+            {% if error %}
+                <p class="alert alert-danger">
+                    {{ error }}
+                </p>
+            {% endif %}
+
+            <div class="form-group field-db">
+                <label for="db" class="control-label">Select database</label>
+                {% if databases %}
+                    <select name="db" id="db" class="form-control" required="required" autofocus="autofocus" onchange="dbchanged()">
+                        <option></option>
+                        {% for db in databases %}
+                            <option value="{{ db }}">{{ db }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" name="db" id="db" class="form-control" required="required" autofocus="autofocus"/>
+                {% endif %}
+            </div>
+
+            {% if debug %}
+                <input type="hidden" name="debug" value=""/>
+            {% endif %}
+
+            <noscript>
+                <hr/>
+                <input type="submit" value="Continue" class="btn btn-primary pull-right"/>
+            </noscript>
+
+            <div class="oe_single_form_footer">
+                <a class="oe_login_manage_db" href="/web/database/manager{% if debug %}?debug{% endif %}">Manage Databases</a> |
+                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
+            </div>
+        </form>
+
+    </div>
+
+</body>
+</html>

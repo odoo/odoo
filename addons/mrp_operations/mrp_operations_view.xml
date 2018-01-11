@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    <record id="mrp_production_form_inherit_view" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='workcenter_lines']/form//field[@name='name']" position="before">
+                <header colspan="8">
+                    <button name="button_start_working" string="Start" states="draft" icon="gtk-media-play" help="Start Working"/>
+                    <button name="button_cancel" string="Cancel Order" states="draft,startworking" icon="gtk-stop" help="Cancel Order"/>
+                    <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert" help="Set to Draft"/>
+                    <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause" help="Resume Work Order"/>
+                    <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause" help="Pause Work Order"/>
+                    <button name="button_done" string="Finished" states="startworking" icon="terp-check" help="Finish Order"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_form_inherit_view2" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit2</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+           <xpath expr="//field[@name='workcenter_lines']/tree/field[@name='hour']" position="after">
+                <field name="state"/>
+                <button name="button_draft" string="Set Draft" states="cancel" icon="gtk-convert"/>
+                <button name="button_start_working" string="Start" states="draft" icon="gtk-media-play"/>
+                <button name="button_resume" string="Resume" states="pause" icon="gtk-media-pause"/>
+                <button name="button_pause" string="Pending" states="startworking" icon="gtk-media-pause"/>
+                <button name="button_done" string="Finished" states="startworking" icon="terp-check"/>
+           </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
+        <field name="name">mrp.production.workcenter.line.tree</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <tree string="Work Orders" colors="gray:state in ('done','cancel');black:state in ('draft','startworking') and date_planned&gt;=current_date;red:date_planned&lt;current_date and state in ('draft', 'confirmed', 'ready')">
+                <field name="production_id"/>
+                <field name="date_planned"/>
+                <field name="product"/>
+                <field name="qty"/>
+                <field name="uom"/>
+                <field name="name"/>
+                <field name="workcenter_id" widget="selection"/>
+                <field name="cycle"/>
+                <field name="hour" widget="float_time"/>
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
+        <field name="name">mrp.production.workcenter.line.form</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <form string="Production Workcenter">
+            <header>
+                <button name="button_start_working" string="Start" states="draft" class="oe_highlight"/>
+                <button name="button_resume" string="Resume" states="pause" class="oe_highlight"/>
+                <button name="button_done" string="Finished" states="startworking" class="oe_highlight"/>
+                <button name="button_pause" string="Pending" states="startworking"/>
+                <button name="button_draft" string="Set Draft" states="cancel"/>
+                <button name="button_cancel" string="Cancel" states="draft,startworking"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,startworking"/>
+            </header>
+            <sheet string="Work Orders">
+                <group col="4">
+                    <field colspan="2" name="name"/>
+                    <field name="workcenter_id"/>
+                    <field name="production_id" on_change="onchange_production_id(production_id)"/>
+                    <field name="production_state"/>
+                    <field name="sequence"/>
+                </group>
+                <notebook>
+                <page string="Information">
+                    <group>
+                        <group string="Planned Date">
+                            <field name="date_planned"/>
+                            <field name="date_planned_end"/>
+                        </group>
+
+                        <group string="Duration">
+                            <field name="cycle"/>
+                            <field name="hour" widget="float_time"/>
+                        </group>
+                        <group string="Actual Production Date" >
+                            <field name="date_start" readonly="1"/>
+                            <field name="date_finished" readonly="1"/>
+                            <field name="delay" widget="float_time"/>
+                        </group>
+                        <group string="Product to Produce">
+                            <field name="product"/>
+                            <field name="qty"/>
+                            <field name="uom" widget="selection"/>
+                        </group>
+                    </group>
+                </page>
+                </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_mrp_production_workcenter_form_view_filter" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.select</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Work Orders">
+                <field name="name" string="Work Orders"/>
+                <field name="date_planned"/>
+                <field name="state"/>
+                <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]"/>
+                <filter icon="terp-check" string="In Progress" name="Current" domain="[('state','=','startworking')]"/>
+                <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pause')]"/>
+                <separator/>
+                <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
+                    help="Production started late"/>
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Work Center" icon="terp-go-home" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                    <filter string="Production" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'production_id'}"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Scheduled Month" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}" help="Scheduled Date by Month"/>
+                </group>
+             </search>
+        </field>
+    </record>
+
+    <record id="workcenter_line_calendar" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.calendar</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="arch" type="xml">
+            <calendar color="product" date_stop="date_finished" date_start="date_start" string="Operations">
+                <field name="workcenter_id"/>
+                <field name="production_id"/>
+            </calendar>
+        </field>
+    </record>
+
+
+    <record id="workcenter_line_gantt" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.gantt</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="arch" type="xml">
+            <gantt date_delay="hour" date_start="date_planned" string="Operations" default_group_by="production_id">
+            </gantt>
+        </field>
+    </record>
+
+
+    <!-- Action for All Operations   -->
+
+    <record model="ir.actions.act_window" id="mrp_production_wc_action_form">
+        <field name="name">Work Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,gantt,calendar,graph</field>
+        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new work order. 
+          </p><p>
+            Work Orders is the list of operations to be performed for each
+            manufacturing order. Once you start the first work order of a
+            manufacturing order, the manufacturing order is automatically
+            marked as started. Once you finish the latest operation of a
+            manufacturing order, the MO is automatically done and the related
+            products are produced.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_production_wc_action_planning">
+        <field name="name">Work Orders Planning</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
+        <field name="view_mode">gantt,tree,form,graph,calendar</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to start a new work order.
+          </p><p>
+            To manufacture or assemble products, and use raw materials and
+            finished products you must also handle manufacturing operations.
+            Manufacturing operations are often called Work Orders. The various
+            operations will have different impacts on the costs of
+            manufacturing and planning depending on the available workload.
+          </p>
+        </field>
+    </record>
+
+
+    <record id="workcenter_line_resource_gantt" model="ir.ui.view">
+        <field name="name">mrp.production.workcenter.line.resource.gantt</field>
+        <field name="model">mrp.production.workcenter.line</field>
+        <field name="arch" type="xml">
+            <gantt date_delay="hour" date_start="date_planned" default_group_by="workcenter_id">
+            </gantt>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_production_wc_resource_planning">
+        <field name="name">Work Centers</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="domain">[('production_state','in',('ready','confirmed','in_production'))]</field>
+        <field name="view_mode">gantt,tree,form,calendar,graph</field>
+        <field name="view_id" ref="workcenter_line_resource_gantt"/>
+    </record>
+
+    <!-- Action for Confirm Operations   -->
+
+    <record model="ir.actions.act_window" id="mrp_production_wc_confirm_action">
+        <field name="name">Confirmed Work Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph,gantt,calendar</field>
+        <field name="domain">[('production_state','=','ready')]</field>
+        <field name="filter" eval="True"/>
+    </record>
+
+    <!-- Action for Draft Operations   -->
+
+    <record model="ir.actions.act_window" id="mrp_production_wc_draft_action">
+        <field name="name">Future Work Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.workcenter.line</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form,graph</field>
+        <field name="domain">[('state','=','draft')]</field>
+        <field name="filter" eval="True"/>
+    </record>
+
+    <record model="ir.values" id="mrp_production_wc_action_open">
+        <field name="key2" eval="'tree_but_open'"/>
+        <field name="model" eval="'mrp.production.workcenter.line'"/>
+        <field name="name">Work Orders</field>
+        <field name="value" eval="'ir.actions.act_window,'+str(mrp_production_wc_action_form)"/>
+    </record>
+
+    <menuitem name="Work Orders" parent="mrp.menu_mrp_manufacturing"
+        id="menu_mrp_production_wc_order"
+        action="mrp_production_wc_action_form"
+        sequence="2"/>
+    <menuitem name="Work Orders By Resource" parent="mrp.menu_mrp_planning"
+        id="menu_mrp_production_wc_action_planning"
+        action="mrp_production_wc_action_planning"
+        sequence="2"
+        icon="STOCK_INDENT"/>
+   <!-- <menuitem parent="mrp.menu_mrp_planning"
+        id="menu_mrp_production_wc_resource_planning"
+        action="mrp_production_wc_resource_planning"
+        icon="STOCK_INDENT"/>-->
+
+    <!-- Operation codes -->
+
+    <record model="ir.ui.view" id="mrp_production_code_tree_view">
+        <field name="name">mrp.production.code.tree</field>
+        <field name="model">mrp_operations.operation.code</field>
+        <field name="arch" type="xml">
+            <tree string="Production Operation Code">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="start_stop"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="mrp_production_code_form_view">
+        <field name="name">mrp.production.code.form</field>
+        <field name="model">mrp_operations.operation.code</field>
+        <field name="arch" type="xml">
+            <form string="Production Operation Code">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="start_stop"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp_production_code_action">
+        <field name="name">Operation Codes</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp_operations.operation.code</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="mrp_production_code_tree_view"/>
+    </record>
+
+    <!-- Operations -->
+
+    <record model="ir.ui.view" id="mrp_production_operation_tree_view">
+        <field name="name">mrp.production.operation.tree</field>
+        <field name="model">mrp_operations.operation</field>
+        <field name="arch" type="xml">
+            <tree string="Production Operation" editable="top">
+                <field name="production_id"/>
+                <field name="workcenter_id"/>
+                <field name="code_id"/>
+                <field name="date_start"/>
+                <field name="date_finished"/>
+                <field name="order_date"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="graph_in_hrs_workcenter" model="ir.ui.view">
+            <field name="name">graph.in.hrs.workcenter</field>
+            <field name="model">mrp.production.workcenter.line</field>
+            <field name="arch" type="xml">
+                <graph string="Hours by Work Center" type="bar">
+                     <field name="hour" type="measure"/>
+                     <field name="workcenter_id" type="row"/>
+                </graph>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="mrp_production_operation_action">
+        <field name="name">Operations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp_operations.operation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,calendar,form</field>
+        <field name="view_id" ref="mrp_production_operation_tree_view"/>
+    </record>
+    <record id="mrp_production_reorder_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.allow_reorder.form</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <field name="date_finished" position="after">
+                <field name="allow_reorder"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="operation_calendar_view">
+            <field name="name">mrp.perations.calendar</field>
+            <field name="model">mrp_operations.operation</field>
+            <field name="priority" eval="2"/>
+            <field name="arch" type="xml">
+                <calendar string="Calendar View" date_start="order_date" color="workcenter_id">
+                    <field name="date_start"/>
+                    <field name="date_finished"/>
+                </calendar>
+            </field>
+    </record>
+
+</data>
+</openerp>

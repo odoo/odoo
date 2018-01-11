@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <record model="note.stage" id="note_stage_00">
+      <field name="name">New</field>
+      <field name="sequence" eval="0"/>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_01">
+      <field name="name">Today</field>
+      <field name="sequence">1</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_02">
+      <field name="name">This Week</field>
+      <field name="sequence">2</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_03">
+      <field name="name">Later</field>
+      <field name="sequence">3</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+    <record model="note.stage" id="note_stage_04">
+      <field name="name">Notes</field>
+      <field name="sequence">4</field>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
+  </data>
+</openerp>

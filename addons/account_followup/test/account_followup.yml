@@ -1,0 +1,25 @@
+-
+  In order to test account follow-up module in OpenERP, I change the state of invoice to "open".
+-
+  !record {model: account.invoice, id: account.demo_invoice_0}:
+    check_total: 14.0
+    date_invoice: !eval "'%s-06-2' %(datetime.now().year)"
+    invoice_line:
+      - account_id : account.a_sale
+        name: 'Test PC'
+        quantity: 1.0
+    journal_id: account.bank_journal
+    partner_id: base.res_partner_12
+    reference_type: none    
+-   
+  !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
+-
+  I create a follow-up.
+-
+  !record {model: account_followup.print, id: account_followup_print_0}:
+    {}
+- 
+  I will process follow-ups
+- 
+  !python {model: account_followup.print}:  |
+    self.do_process(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),})

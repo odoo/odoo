@@ -1,0 +1,315 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sales_team
+# 
+# Translators:
+# Mustafa Rawi <mustafa@cubexco.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-09-08 10:56+0000\n"
+"Last-Translator: Mustafa Rawi <mustafa@cubexco.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: sales_team
+#: model:ir.actions.act_window,help:sales_team.crm_case_section_act
+#: model:ir.actions.act_window,help:sales_team.crm_case_section_salesteams_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click here to define a new sales team.\n"
+"                </p><p>\n"
+"                    Use sales team to organize your different salespersons or\n"
+"                    departments into separate teams. Each team will work in\n"
+"                    its own list of opportunities.\n"
+"                </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nانقر لإنشاء فريق مبيعات جديد.\n</p><p>\nاستخدم فرق المبيعات لتنظيم موظفي المبيعات لديك، أو\nالإدارات المختلفة في فرق منفصلة. كل فريق سيعمل على\nقائمته الخاصة من فرص البيع.\n</p>"
+
+#. module: sales_team
+#: field:crm.case.section,active:0
+msgid "Active"
+msgstr "نشِط"
+
+#. module: sales_team
+#: help:sale.config.settings,group_multi_salesteams:0
+msgid "Allows you to use Sales Teams to manage your leads and opportunities."
+msgstr "يسمح لك باستخدام فرق المبيعات عند إدارة العملاء المرشحين وفرص البيع."
+
+#. module: sales_team
+#: field:crm.case.section,child_ids:0
+msgid "Child Teams"
+msgstr "الفرق الفرعية"
+
+#. module: sales_team
+#: field:crm.case.section,code:0
+msgid "Code"
+msgstr "الرمز"
+
+#. module: sales_team
+#: field:crm.case.section,color:0
+msgid "Color Index"
+msgstr "اللون"
+
+#. module: sales_team
+#: field:crm.case.section,create_uid:0
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: sales_team
+#: field:crm.case.section,create_date:0
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: sales_team
+#: help:crm.case.section,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "تاريخ آخر رسالة في هذا السجل"
+
+#. module: sales_team
+#: field:res.users,default_section_id:0
+msgid "Default Sales Team"
+msgstr "فريق المبيعات الافتراضي"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
+msgid "Delete"
+msgstr "حذف"
+
+#. module: sales_team
+#: field:crm.case.section,note:0
+msgid "Description"
+msgstr "الوصف"
+
+#. module: sales_team
+#: model:crm.case.section,name:sales_team.section_sales_department
+msgid "Direct Sales"
+msgstr "المبيعات المباشرة"
+
+#. module: sales_team
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive Sales team."
+msgstr "خطأ ! لا يمكنك انشاء فرق مبيعات متداخلة"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_view_form
+msgid ""
+"Follow this salesteam to automatically track the events associated to users "
+"of this team."
+msgstr "تابع هذا الفريق لتصلك تنبيهات بكافة الأنشطة المقترنة بأعضاءه."
+
+#. module: sales_team
+#: field:crm.case.section,message_follower_ids:0
+msgid "Followers"
+msgstr "المتابعون"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+msgid "Group By..."
+msgstr "تجميع حسب..."
+
+#. module: sales_team
+#: help:crm.case.section,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "يحتفظ بسجل المحادثات (عدد الرسائل، ...). هذا الملخص معروض بصيغة HTML لتتمكن من إدراجه في واجهات Kanban."
+
+#. module: sales_team
+#: field:crm.case.section,id:0
+msgid "ID"
+msgstr "المعرف"
+
+#. module: sales_team
+#: help:crm.case.section,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "إذا حددت الاختيار، فستتطلب الرسائل الجديدة انتباهك."
+
+#. module: sales_team
+#: help:crm.case.section,active:0
+msgid ""
+"If the active field is set to true, it will allow you to hide the sales team"
+" without removing it."
+msgstr "إذا ألغيت تحديد حقل نشط، سيمكنك إخفاء الفريق دون أن تحذفه."
+
+#. module: sales_team
+#: model:crm.case.section,name:sales_team.crm_case_section_1
+msgid "Indirect Sales"
+msgstr "المبيعات غير المباشرة"
+
+#. module: sales_team
+#: field:crm.case.section,message_is_follower:0
+msgid "Is a Follower"
+msgstr "متابع"
+
+#. module: sales_team
+#: field:crm.case.section,message_last_post:0
+msgid "Last Message Date"
+msgstr "تاريخ آخر رسالة"
+
+#. module: sales_team
+#: field:crm.case.section,write_uid:0
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: sales_team
+#: field:crm.case.section,write_date:0
+msgid "Last Updated on"
+msgstr "آخر تحديث فى"
+
+#. module: sales_team
+#: view:sale.config.settings:sales_team.view_sale_config_settings
+msgid "Manage Sales Teams"
+msgstr "إدارة فرق المبيعات"
+
+#. module: sales_team
+#: model:crm.case.section,name:sales_team.crm_case_section_2
+msgid "Marketing"
+msgstr "التسويق"
+
+#. module: sales_team
+#: field:crm.case.section,message_ids:0
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: sales_team
+#: help:crm.case.section,message_ids:0
+msgid "Messages and communication history"
+msgstr "الرسائل و سجل التواصل"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+msgid "My Salesteams"
+msgstr "فريقي"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_view_form
+msgid "Notes"
+msgstr "ملاحظات"
+
+#. module: sales_team
+#: field:sale.config.settings,group_multi_salesteams:0
+msgid "Organize Sales activities into multiple Sales Teams"
+msgstr "نظم أنشطة المبيعات بين عدة فرق مبيعات"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+msgid "Parent Sales Teams"
+msgstr "فريق المبيعات الأصل"
+
+#. module: sales_team
+#: field:crm.case.section,parent_id:0
+msgid "Parent Team"
+msgstr "الفريق الأصل"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_partner
+msgid "Partner"
+msgstr "الشريك"
+
+#. module: sales_team
+#: field:crm.case.section,change_responsible:0
+msgid "Reassign Escalated"
+msgstr "إسناد عند التصعيد"
+
+#. module: sales_team
+#: field:crm.case.section,reply_to:0
+msgid "Reply-To"
+msgstr "رد على"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_view_form
+#: view:crm.case.section:sales_team.crm_case_section_view_tree
+#: field:crm.case.section,name:0 field:res.partner,section_id:0
+msgid "Sales Team"
+msgstr "فريق المبيعات"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.crm_case_section_act
+#: model:ir.actions.act_window,name:sales_team.crm_case_section_salesteams_act
+#: model:ir.model,name:sales_team.model_crm_case_section
+#: model:ir.ui.menu,name:sales_team.menu_sales_team_act
+#: view:sale.config.settings:sales_team.view_sale_config_settings
+msgid "Sales Teams"
+msgstr "فرق المبيعات"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_view_kanban
+msgid "Sales Teams Settings"
+msgstr "إعدادات فرق المبيعات"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_view_form
+msgid "Sales team"
+msgstr "فريق المبيعات"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_view_form
+msgid "Salesteam"
+msgstr "فريق المبيعات"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+msgid "Salesteams Search"
+msgstr "بحث فرق المبيعات"
+
+#. module: sales_team
+#: field:crm.case.section,message_summary:0
+msgid "Summary"
+msgstr "الملخّص"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_salesteams_search
+#: field:crm.case.section,user_id:0
+msgid "Team Leader"
+msgstr "قائد المجموعة"
+
+#. module: sales_team
+#: view:crm.case.section:sales_team.crm_case_section_view_form
+#: field:crm.case.section,member_ids:0
+msgid "Team Members"
+msgstr "اعضاء الفريق"
+
+#. module: sales_team
+#: sql_constraint:crm.case.section:0
+msgid "The code of the sales team must be unique !"
+msgstr "الترميز لفريق المبيعات يجب أن يكون فريداً !"
+
+#. module: sales_team
+#: help:crm.case.section,reply_to:0
+msgid ""
+"The email address put in the 'Reply-To' of all emails sent by Odoo about "
+"cases in this sales team"
+msgstr "عنوان البريد في حقل \"الرد إلى\" سيتم إدراجه في كافة الرسائل الصادرة من أودو إلى الحالات التي يشرف عليها هذا الفريق."
+
+#. module: sales_team
+#: field:crm.case.section,message_unread:0
+msgid "Unread Messages"
+msgstr "رسائل غير مقروءة"
+
+#. module: sales_team
+#: model:ir.model,name:sales_team.model_res_users
+msgid "Users"
+msgstr "المستخدمون"
+
+#. module: sales_team
+#: help:crm.case.section,change_responsible:0
+msgid ""
+"When escalating to this team override the salesman with the team leader."
+msgstr "عند التصعيد إلى هذا الفريق، استبدل مسئول المبيعات بقائد الفريق."
+
+#. module: sales_team
+#: field:crm.case.section,working_hours:0
+msgid "Working Hours"
+msgstr "ساعات العمل"
+
+#. module: sales_team
+#: field:crm.case.section,complete_name:0
+msgid "unknown"
+msgstr "غير معروف"

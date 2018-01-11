@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_tax_chart" model="ir.ui.view">
+            <field name="name">account.tax.chart.form</field>
+            <field name="model">account.tax.chart</field>
+            <field name="arch" type="xml">
+                <form string="Account tax charts">
+                    <group>
+                        <label for="period_id"/>
+                        <div>
+                            <field name="period_id" class="oe_inline"/>
+                            <label string="(If you do not select a specific period, all open periods will be selected)" class="oe_inline"/>
+                        </div>
+                        <field name="target_move"/>
+	                </group>
+                    <footer>
+                        <button string="Open Charts" name="account_tax_chart_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_tax_chart" model="ir.actions.act_window">
+            <field name="name">Chart of Taxes</field>
+            <field name="res_model">account.tax.chart</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="view_id" ref="view_account_tax_chart"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            icon="STOCK_INDENT"
+            action="action_account_tax_chart"
+            id="menu_action_tax_code_tree"
+            parent="menu_finance_charts"
+            groups="group_account_user,group_account_manager"
+            sequence="12"/>
+
+    </data>
+</openerp>

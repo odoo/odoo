@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="ir.rule" id="procurement_rule">
+            <field name="name">procurement multi-company</field>
+            <field name="model_id" search="[('model','=','procurement.order')]" model="ir.model"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+        </record>
+
+     <record model="ir.rule" id="product_pulled_flow_comp_rule">
+        <field name="name">product_pulled_flow multi-company</field>
+        <field name="model_id" ref="model_procurement_rule"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    </data>
+</openerp>

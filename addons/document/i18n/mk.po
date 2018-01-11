@@ -1,0 +1,784 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * document
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:05+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: document
+#: field:report.document.file,nbr:0 field:report.document.user,nbr:0
+msgid "# of Files"
+msgstr "# од полиња"
+
+#. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:19
+#, python-format
+msgid "%s (%s)"
+msgstr "%s (%s)"
+
+#. module: document
+#: code:addons/document/document.py:117 code:addons/document/document.py:307
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копија)"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Кликнете за да креирате нов документ. \n          </p><p>\n            Складот за документи ви дава пристап до сите прилози, како\n            прошти, проектни документи, фактури и.т.н.\n          </p>\n        "
+
+#. module: document
+#: help:document.directory.dctx,expr:0
+msgid ""
+"A python expression used to evaluate the field.\n"
+"You can use 'dir_id' for current dir, 'res_id', 'res_model' as a reference to the current record, in dynamic folders"
+msgstr "Python израза кој се користи за да се евалуира полето.\nМожете да употребите 'dir_id' за тековен dir, 'res_id', 'res_model' како референца за тековен запис, во динамични папки"
+
+#. module: document
+#: field:document.directory.content.type,active:0
+msgid "Active"
+msgstr "Активно"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Датотеки на сите корисници"
+
+#. module: document
+#: view:report.document.user:document.view_report_document_user_search
+msgid "All users files"
+msgstr "Датотеки на сите корисници"
+
+#. module: document
+#: help:document.directory,ressource_id:0
+msgid ""
+"Along with Parent Model, this ID attaches this folder to a specific record "
+"of Parent Model."
+msgstr "Заедно со главниот модел, ова ID ја прикачува оваа папка на одреден запис на главниот модел."
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "April"
+msgstr "Април"
+
+#. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:7
+#, python-format
+msgid "Attachment(s)"
+msgstr "Прилог(зи)"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_tree
+msgid "Attachments"
+msgstr "Прилози"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "August"
+msgstr "Август"
+
+#. module: document
+#: help:document.directory.content,include_name:0
+msgid ""
+"Check this field if you want that the name of the file to contain the record name.\n"
+"If set, the directory will have to be a resource one."
+msgstr "Означете го ова поле доколку сакате името на датотеката да го содржи името на записот.\nДоколку е подесено, директориумот ќе треба да биде ресурс."
+
+#. module: document
+#: help:document.directory,ressource_tree:0
+msgid ""
+"Check this if you want to use the same tree structure as the object selected"
+" in the system."
+msgstr "Означете го ова доколку сакате да употребите иста структура на дрвото како селектираниот објект во системот."
+
+#. module: document
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Деца"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+#: model:ir.actions.act_window,name:document.action_config_auto_directory
+msgid "Configure Directories"
+msgstr "Конфигурирај директориуми"
+
+#. module: document
+#: field:document.directory.content,name:0
+msgid "Content Name"
+msgstr "Име на содржина"
+
+#. module: document
+#: field:document.directory.content.type,name:0
+msgid "Content Type"
+msgstr "Тип на содржина"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Contents"
+msgstr "Содржини"
+
+#. module: document
+#: field:document.directory,dctx_ids:0
+msgid "Context fields"
+msgstr "Полиња за контекст"
+
+#. module: document
+#: field:document.configuration,create_uid:0
+#: field:document.directory.content,create_uid:0
+#: field:document.directory.content.type,create_uid:0
+#: field:document.directory.dctx,create_uid:0
+#: field:document.storage,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: document
+#: field:document.configuration,create_date:0
+#: field:document.directory.content,create_date:0
+#: field:document.directory.content.type,create_date:0
+#: field:document.directory.dctx,create_date:0
+#: field:document.storage,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: document
+#: field:document.directory,create_uid:0
+msgid "Creator"
+msgstr "Креатор"
+
+#. module: document
+#: field:document.directory,create_date:0
+#: field:report.document.user,create_date:0
+msgid "Date Created"
+msgstr "Креирање на датум"
+
+#. module: document
+#: field:document.directory,write_date:0
+msgid "Date Modified"
+msgstr "Изменет датум"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "December"
+msgstr "Декември"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Define words in the context, for all child directories and files"
+msgstr "Дефинирај зборови во контекстот, за сите директориуми и датотеки дете"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Definition"
+msgstr "Дефиниција"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+#: view:document.directory:document.view_document_directory_tree
+#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: model:ir.ui.menu,name:document.menu_document_directories
+msgid "Directories"
+msgstr "Директориуми"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_document_directory_tree
+#: model:ir.ui.menu,name:document.menu_document_directories_tree
+msgid "Directories' Structure"
+msgstr "Структура на директориум"
+
+#. module: document
+#: field:document.directory.content,directory_id:0
+#: field:document.directory.dctx,dir_id:0
+#: model:ir.actions.act_window,name:document.action_document_file_directory_form
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,parent_id:0
+#: model:ir.model,name:document.model_document_directory
+#: field:report.document.user,directory:0
+msgid "Directory"
+msgstr "Директориум"
+
+#. module: document
+#: model:ir.model,name:document.model_document_configuration
+msgid "Directory Configuration"
+msgstr "Конфигурација на директориум"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content
+msgid "Directory Content"
+msgstr "Содржина на директориум"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Тип на содржина на директориум"
+
+#. module: document
+#: model:ir.model,name:document.model_document_directory_dctx
+msgid "Directory Dynamic Context"
+msgstr "Динамичен контекст на директориум"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+#: field:report.document.user,type:0
+msgid "Directory Type"
+msgstr "Тип на директориум"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Директориумот не може да биде родител сам на себе!"
+
+#. module: document
+#: code:addons/document/document.py:347
+#, python-format
+msgid "Directory name contains special characters!"
+msgstr "Името на директориумот содржи специјални карактери!"
+
+#. module: document
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
+#, python-format
+msgid "Directory name must be unique!"
+msgstr "Името на директориумот мора да биде уникатно!"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Document Directory"
+msgstr "Директориум на документ"
+
+#. module: document
+#: model:ir.ui.menu,name:document.menu_document_management_configuration
+msgid "Document Management"
+msgstr "Управување со документи"
+
+#. module: document
+#: field:document.directory.content,extension:0
+msgid "Document Type"
+msgstr "Тип документ"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_document_file_form
+msgid "Documents"
+msgstr "Документи"
+
+#. module: document
+#: field:document.directory,domain:0
+msgid "Domain"
+msgstr "Домен"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Dynamic context"
+msgstr "Динамичен контекст"
+
+#. module: document
+#: help:document.directory,type:0
+msgid ""
+"Each directory can either have the type Static or be linked to another "
+"resource. A static directory, as with Operating Systems, is the classic "
+"directory that can contain a set of files. The directories linked to systems"
+" resources automatically possess sub-directories for each of resource types "
+"defined in the parent directory."
+msgstr "Секој директориум може да биде или од статичен тип или пак да биде поврзан со друг ресурс. Статичен директориум, како кај оперативните системи, е класичен директориум кој може да содржи сет на датотеки. Директориумите поврзани со системски ресурси автоматски поседуваат под-директориум за секој тип на ресурс дефиниран во главниот директориум."
+
+#. module: document
+#: code:addons/document/document.py:573
+#, python-format
+msgid "Error at doc write!"
+msgstr "Грешка при запишување на документ!"
+
+#. module: document
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr "Грешка! Не може да креирате рекурсивни директориуми."
+
+#. module: document
+#: field:document.directory.dctx,expr:0
+msgid "Expression"
+msgstr "Израз"
+
+#. module: document
+#: field:document.directory.content.type,code:0
+msgid "Extension"
+msgstr "Проширување"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "February"
+msgstr "Февруари"
+
+#. module: document
+#: field:document.directory.dctx,field:0
+msgid "Field"
+msgstr "Поле"
+
+#. module: document
+#: help:document.directory,resource_field:0
+msgid ""
+"Field to be used as name on resource directories. If empty, the \"name\" "
+"will be used."
+msgstr "Не може да се искористи како име на директориум со ресурс. Ако е празно „името“ ке биде употребено."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Fields"
+msgstr "Полиња"
+
+#. module: document
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Име на датотека"
+
+#. module: document
+#: field:report.document.file,file_size:0
+#: field:report.document.user,file_size:0
+msgid "File Size"
+msgstr "Големина на датотеката"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_size_month
+#: view:report.document.file:document.view_size_month
+#: view:report.document.file:document.view_size_month_tree
+msgid "File Size by Month"
+msgstr "Големина на датотека по месец"
+
+#. module: document
+#: field:document.directory,file_ids:0
+#: view:report.document.user:document.view_document_user_form
+#: view:report.document.user:document.view_document_user_tree
+msgid "Files"
+msgstr "Датотеки"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_graph
+#: view:report.document.user:document.view_files_by_month_tree
+msgid "Files by Month"
+msgstr "Датотеки по месец"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:document.view_files_by_user_graph
+msgid "Files by User"
+msgstr "Датотеки по корисник"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_file
+msgid "Files details by Directory"
+msgstr "Детали за датотеки по директориум"
+
+#. module: document
+#: model:ir.model,name:document.model_report_document_user
+msgid "Files details by Users"
+msgstr "Детали за датотеки по корисници"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "Filter on my documents"
+msgstr "Филтер на моите документи"
+
+#. module: document
+#: field:document.directory,resource_find_all:0
+msgid "Find all resources"
+msgstr "Пронајди ги сите ресурси"
+
+#. module: document
+#: selection:document.directory,type:0
+msgid "Folders per resource"
+msgstr "Папки по ресурс"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "For each entry here, virtual files will appear in this folder."
+msgstr "За секој внес овде, во оваа папка ќе се појавата виртуелни датотеки."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Generated Files"
+msgstr "Генерирани полиња"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Group By"
+msgstr "Групирање според"
+
+#. module: document
+#: field:document.directory,group_ids:0
+msgid "Groups"
+msgstr "Групи"
+
+#. module: document
+#: field:document.configuration,id:0 field:document.directory,id:0
+#: field:document.directory.content,id:0
+#: field:document.directory.content.type,id:0
+#: field:document.directory.dctx,id:0 field:document.storage,id:0
+#: field:report.document.file,id:0 field:report.document.user,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: document
+#: help:document.directory,resource_find_all:0
+msgid ""
+"If true, all attachments that match this resource will  be located. If "
+"false, only ones that have this as parent."
+msgstr "Доколку е точно, сите прилози кои се совпаѓаат со овој ресурс ќе бидат лоцирани. Доколку е грешка, само оние кои го имаат ова како родител."
+
+#. module: document
+#: help:document.directory,ressource_parent_type_id:0
+msgid ""
+"If you put an object here, this directory template will appear bellow all of"
+" these objects. Such directories are \"attached\" to the specific model or "
+"record, just like attachments. Don't put a parent directory if you select a "
+"parent model."
+msgstr "Доколку го ставите објектот овде, овој урнек на директориум ќе се појавува по секо од овие објекти, Таквите директориуми се \"прикачени\" на одреден модел или запис, како прилози. Не ставајте директориум родител доколку селектирате модел родител."
+
+#. module: document
+#: field:document.directory.content,include_name:0
+msgid "Include Record Name"
+msgstr "Вклучи име на запис"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+#: field:ir.attachment,index_content:0
+msgid "Indexed Content"
+msgstr "Индексирана содржина"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "January"
+msgstr "Јануари"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "July"
+msgstr "Јули"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "June"
+msgstr "Јуни"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "Knowledge Application Configuration"
+msgstr "Конфигурација за апликација на знаење"
+
+#. module: document
+#: field:document.directory,write_uid:0
+msgid "Last Modification User"
+msgstr "Корисник на последна измена"
+
+#. module: document
+#: field:document.configuration,write_uid:0
+#: field:document.directory.content,write_uid:0
+#: field:document.directory.content.type,write_uid:0
+#: field:document.directory.dctx,write_uid:0
+#: field:document.storage,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: document
+#: field:document.configuration,write_date:0
+#: field:document.directory.content,write_date:0
+#: field:document.directory.content.type,write_date:0
+#: field:document.directory.dctx,write_date:0
+#: field:document.storage,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "March"
+msgstr "Март"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "May"
+msgstr "Мај"
+
+#. module: document
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Mime-тип"
+
+#. module: document
+#: field:ir.actions.report.xml,model_id:0
+msgid "Model Id"
+msgstr "ID на модел"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+msgid "Modification"
+msgstr "Измена"
+
+#. module: document
+#: field:report.document.user,change_date:0
+msgid "Modified Date"
+msgstr "Изменет датум"
+
+#. module: document
+#: field:report.document.file,month:0 field:report.document.user,month:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit0
+msgid "My Document(s)"
+msgstr "Мој документ(и)"
+
+#. module: document
+#: field:document.directory,name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Име на поле"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "November"
+msgstr "Ноември"
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "October"
+msgstr "Октомври"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"Odoo's Document Management System supports mapping virtual folders with "
+"documents. The virtual folder of a document can be used to manage the files "
+"attached to the document, or to print and download any report. This tool "
+"will create directories automatically according to modules installed."
+msgstr "Системот за менаџмент на документи на Odoo подржува мапирање на виртуални папки со документи. Виртуалната папка на документ може да се искористи за да се менаџира со датотеките прикачени на документот или да се испечати и симне било кој извештај. Оваа алатка автоматски ќе креира директориуми според инсталираните модули."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid ""
+"Only members of these groups will have access to this directory and its "
+"files."
+msgstr "Само членовите на овие групи ќе имаат пристап до овој директориум и неговите датотеки."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,user_id:0
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,user_id:0 field:report.document.user,user_id:0
+msgid "Owner"
+msgstr "Сопственик"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "PDF Report"
+msgstr "PDF Извештај"
+
+#. module: document
+#: field:document.directory,parent_id:0
+msgid "Parent Directory"
+msgstr "Директориум Родител"
+
+#. module: document
+#: field:document.directory,ressource_parent_type_id:0
+msgid "Parent Model"
+msgstr "Модел Родител"
+
+#. module: document
+#: view:ir.attachment:document.view_attach_filter_inherit2
+#: field:ir.attachment,partner_id:0
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: document
+#: field:document.directory.content,prefix:0
+msgid "Prefix"
+msgstr "Префикс"
+
+#. module: document
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Поврзани документи"
+
+#. module: document
+#: field:document.directory.content,report_id:0
+msgid "Report"
+msgstr "Извештај"
+
+#. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "ID на ресурс"
+
+#. module: document
+#: field:document.directory,ressource_type_id:0
+msgid "Resource model"
+msgstr "Модел на ресурс"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Resources"
+msgstr "Ресурси"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Search Document Directory"
+msgstr "Пребарај директориум на документ"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Security"
+msgstr "Безбедност"
+
+#. module: document
+#: help:document.directory,ressource_type_id:0
+msgid ""
+"Select an object here and there will be one folder per record of that "
+"resource."
+msgstr "Изберете објект и ќе се добие по еден директориум за секој запис на тој ресурс."
+
+#. module: document
+#: selection:report.document.user,month:0
+msgid "September"
+msgstr "Септември"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid "Seq."
+msgstr "Секвенца"
+
+#. module: document
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Секвенца"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+msgid "Static"
+msgstr "Статичко"
+
+#. module: document
+#: selection:document.directory,type:0
+msgid "Static Directory"
+msgstr "Статичен директориум"
+
+#. module: document
+#: model:ir.model,name:document.model_document_storage
+msgid "Storage Media"
+msgstr "Медиум за складирање"
+
+#. module: document
+#: field:document.directory.content,suffix:0
+msgid "Suffix"
+msgstr "Суфикс"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Името на директориумот мора да биде уникатно !"
+
+#. module: document
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr "Името на датотеката мора да биде уникатно во директориумот !"
+
+#. module: document
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr "Име на полето."
+
+#. module: document
+#: view:document.directory:document.view_document_directory_form
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr "Овие групи, не се применуваат на директориумите деца, кои мора да си дефинираат свои сопствени групи."
+
+#. module: document
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Структура на дрво"
+
+#. module: document
+#: view:document.directory:document.view_document_directory_filter
+#: field:document.directory,type:0
+msgid "Type"
+msgstr "Тип"
+
+#. module: document
+#: help:document.directory,domain:0
+msgid ""
+"Use a domain if you want to apply an automatic filter on visible resources."
+msgstr "Употребете домен доколку сакате да примените автоматски филтер на видливи ресурси."
+
+#. module: document
+#: view:report.document.user:document.view_report_document_user_search
+msgid "Users File"
+msgstr "Датотека на корисник"
+
+#. module: document
+#: code:addons/document/document.py:337 code:addons/document/document.py:342
+#: code:addons/document/document.py:347
+#, python-format
+msgid "ValidateError"
+msgstr "ПотврдиГрешка"
+
+#. module: document
+#: field:document.directory,content_ids:0
+msgid "Virtual Files"
+msgstr "Виртуелни полиња"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid ""
+"When executing this wizard, it will configure your directories automatically"
+" according to modules installed."
+msgstr "Кога го користите овој волшебник, тој ќе ги конфигурира автоматски вашите директориуми според инсталираните модули."
+
+#. module: document
+#: field:report.document.user,name:0
+msgid "Year"
+msgstr "Година"
+
+#. module: document
+#: view:ir.attachment:document.view_document_file_form
+msgid "on"
+msgstr "на"
+
+#. module: document
+#: view:document.configuration:document.view_auto_config_form
+msgid "res_config_contents"
+msgstr "res_config_contents"
+
+#. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr "непознато"

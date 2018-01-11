@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Those properties are in a noupdate section in the stock module -->
+        <!-- No need to create them if they have been deleted               -->
+        <record id="stock.property_stock_account_input_categ" model="ir.property" forcecreate="False">
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_account_input_categ')]"/>
+            <field eval="'account.account,'+str(ref('chart2141_en'))" model="account.account" name="value"/>
+            <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
+        </record>
+        <record id="stock.property_stock_account_output_categ" model="ir.property" forcecreate="False">
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_account_output_categ')]"/>
+            <field eval="'account.account,'+str(ref('chart1145_en'))" model="account.account" name="value"/>
+            <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
+        </record>
+    </data>
+    <data>
+
+    <!-- Chart template -->
+    <record id="ca_en_chart_template_en" model="account.chart.template">
+        <field name="name">Canada - Chart of Accounts for english-speaking provinces</field>
+        <field name="account_root_id" ref="chart0_en"/>
+        <field name="tax_code_root_id" ref="vat_code_tax_en"/>
+        <field name="bank_account_view_id" ref="chart111_en"/>
+        <field name="property_account_receivable" ref="chart1151_en"/>
+        <field name="property_account_payable" ref="chart2111_en"/>
+        <field name="property_account_income_categ" ref="chart411_en"/>
+        <field name="property_account_expense_categ" ref="chart5111_en"/>
+        <field name="currency_id" ref="base.CAD"/>
+    </record>
+
+    <record id="property_stock_valuation_account_id_en" model="ir.property">
+        <field name="name">property_stock_valuation_account_id</field>
+        <field name="fields_id" search="[('model','=','product.category'),('name','=','property_stock_valuation_account_id')]"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field eval="'account.account,'+str(ref('chart1141_en'))" model="account.account" name="value"/>
+        <field eval="'product.category,'+str(ref('product.product_category_all'))" model="product.category" name="res_id"/>
+    </record>
+
+    </data>
+</openerp>

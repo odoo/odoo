@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<openerp>
+<data noupdate="1">
+
+    <record id="type_view" model="account.account.type">
+        <field name="name">Vista</field>
+        <field name="code">view</field>
+        <field name="report_type">none</field>
+        <field name="close_method">none</field>
+    </record>
+    
+    <record id="type_equity" model="account.account.type">
+        <field name="name">Capital</field>
+        <field name="code">equity</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+    <record id="type_asset" model="account.account.type">
+        <field name="name">Activos</field>
+        <field name="code">asset</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+    <record id="type_stock" model="account.account.type">
+        <field name="name">Existencias</field>
+        <field name="code">stock</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+    <record id="type_third" model="account.account.type">
+        <field name="name">Terceros</field>
+        <field name="code">third</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record id="type_third_rec" model="account.account.type">
+        <field name="name">Terceros A Cobrar</field>
+        <field name="code">third-rec</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record id="type_third_pay" model="account.account.type">
+        <field name="name">Terceros A Pagar</field>
+        <field name="code">third-pay</field>
+        <field name="report_type">liability</field>
+        <field name="close_method">unreconciled</field>
+    </record>    
+    
+    <record id="type_tax" model="account.account.type">
+        <field name="name">Impuestos</field>
+        <field name="code">tax</field>
+        <field name="close_method">balance</field>
+    </record>
+
+    <record id="type_tax_in" model="account.account.type">
+        <field name="name">Impuestos Cobrados</field>
+        <field name="code">tax-in</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+    <record id="type_tax_out" model="account.account.type">
+        <field name="name">Impuestos Pagados</field>
+        <field name="code">tax-out</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+    <record id="type_financial" model="account.account.type">
+        <field name="name">Financieros</field>
+        <field name="code">financial</field>
+        <field name="report_type">none</field>
+        <field name="close_method">balance</field>
+    </record>
+    
+    <record id="type_expense" model="account.account.type">
+        <field name="name">Gastos</field>
+        <field name="code">expense</field>
+        <field name="report_type">expense</field>
+        <field name="close_method">none</field>
+    </record>
+    
+    <record id="type_income" model="account.account.type">
+        <field name="name">Ingresos</field>
+        <field name="code">income</field>
+        <field name="report_type">income</field>
+        <field name="close_method">none</field>
+    </record>
+    
+    <record id="type_liability" model="account.account.type">
+        <field name="name">Obligaciones</field>
+        <field name="code">liability</field>
+        <field name="report_type">asset</field>
+        <field name="close_method">unreconciled</field>
+    </record>
+
+    <record id="type_other" model="account.account.type">
+        <field name="name">Otros</field>
+        <field name="code">other</field>
+        <field name="report_type">none</field>
+        <field name="close_method">none</field>
+    </record>
+</data>
+</openerp>
+

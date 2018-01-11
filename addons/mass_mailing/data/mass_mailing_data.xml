@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_marketing_menu" model="ir.actions.client">
+            <field name="name">Open Marketing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.marketing_menu')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_marketing_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Group to manage campaigns -->
+        <record id="group_mass_mailing_campaign" model="res.groups">
+            <field name="name">Manage Mass Mailing Campaigns</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <!-- Default stages of mass mailing campaigns -->
+        <record id="campaign_stage_1" model="mail.mass_mailing.stage">
+            <field name="name">Schedule</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="campaign_stage_2" model="mail.mass_mailing.stage">
+            <field name="name">Design</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="campaign_stage_3" model="mail.mass_mailing.stage">
+            <field name="name">Sent</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Create mailing lists -->
+        <record id="mass_mail_list_1" model="mail.mass_mailing.list">
+            <field name="name">Newsletter</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- Supplier write check view -->
+
+        <record model="ir.ui.view" id="view_vendor_payment_check_form">
+            <field name="name">account.voucher.payment.check.form</field>
+            <field name="model">account.voucher</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_payment_form" />
+            <field name="arch" type="xml">
+                <field name="amount" position="after">
+                    <newline/>
+                    <field name="allow_check" invisible="1"/>
+                    <field name="amount_in_word" attrs="{'invisible':[('allow_check','!=',True)]}" nolabel="1" colspan="6"/>
+                    <newline/>
+                </field>
+                <field name="number" position="replace">
+                    <field name="number" attrs="{'readonly':[('allow_check','!=',True)]}" />
+                </field>
+                <button name="proforma_voucher" position="after">
+                    <button name="print_check" icon="gtk-print" string="Print Check" type="object" attrs="{'invisible':['|',('allow_check','!=',True),('state','!=','posted') ]}" class="oe_highlight"/>
+                </button>
+            </field>
+        </record>
+
+        <record id="action_write_check" model="ir.actions.act_window">
+            <field name="name">Write Checks</field>
+            <field name="res_model">account.voucher</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="domain">[('journal_id.type', '=', 'bank'), ('type','=','payment'), ('journal_id.allow_check_writing','=',True)]</field>
+            <field name="context">{'type':'payment','write_check':True}</field>
+            <field name="search_view_id" ref="account_voucher.view_voucher_filter"/>
+            <field name="target">current</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new check. 
+              </p><p>
+                The check payment form allows you to track the payment you do
+                to your suppliers using checks. When you select a supplier, the
+                payment method and an amount for the payment, Odoo will
+                propose to reconcile your payment with the open supplier
+                invoices or bills.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_write_check_form" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_vendor_payment_check_form"/>
+            <field name="act_window_id" ref="action_write_check"/>
+        </record>
+
+        <record id="action_write_check_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_write_check"/>
+        </record>
+
+        <menuitem action="action_write_check" icon="STOCK_JUSTIFY_FILL" sequence="12"
+            id="menu_action_write_check"  parent="account.menu_finance_payables"/>
+    </data>
+</openerp>

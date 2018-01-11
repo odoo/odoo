@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<openerp>
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        
+        <record id="email_template_goal_reminder" model="email.template">
+            <field name="name">Reminder for Goal Update</field>
+            <field name="body_html"><![CDATA[
+    <header>
+        <strong>Reminder ${object.name}</strong>
+    </header>
+    
+    <p>You have not updated your progress for the goal ${object.definition_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
+            ]]></field>
+        </record>
+        
+        <record id="simple_report_template" model="email.template">
+            <field name="name">Simple Challenge Report Progress</field>
+            <field name="body_html"><![CDATA[
+<header>
+    <strong>${object.name}</strong>
+</header>
+<p class="oe_grey">The following message contains the current progress for the challenge ${object.name}</p>
+
+% if object.visibility_mode == 'personal':
+    <table width="100%" border="1">
+    <tr>
+        <th>Goal</th>
+        <th>Target</th>
+        <th>Current</th>
+        <th>Completeness</th>
+    </tr>
+    % for line in ctx["challenge_lines"]:
+        <tr
+            % if line['completeness'] >= 100:
+                style="font-weight:bold;"
+            % endif
+            >
+            <td>${line['name']}</td>
+            <td>${line['target']}
+            % if line['suffix']:
+                ${line['suffix']}
+            % endif
+            </td>
+            <td>${line['current']}
+            % if line['suffix']:
+                ${line['suffix']}
+            % endif
+            </td>
+            <td>${line['completeness']} %</td>
+        </tr>
+    % endfor
+    </table>
+% else:
+    % for line in ctx["challenge_lines"]:
+        <table width="100%" border="1">
+            <tr>
+                <th colspan="4">${line['name']}</th>
+            </tr>
+            <tr>
+                <th>#</th>
+                <th>Person</th>
+                <th>Completeness</th>
+                <th>Current</th>
+            </tr>
+            % for goal in line['goals']:
+                <tr
+                    % if goal.completeness >= 100:
+                        style="font-weight:bold;"
+                    % endif
+                    >
+                    <td>${goal['rank']}</td>
+                    <td>${goal['name']}</td>
+                    <td>${goal['completeness']}%</td>
+                    <td>${goal['current']}/${line['target']}
+                    % if line['suffix']:
+                        ${line['suffix']}
+                    % endif
+                    </td>
+                </tr>
+            % endfor
+        </table>
+
+        <br/><br/>
+
+    % endfor
+% endif
+            ]]></field>
+        </record>
+
+        <!-- goal definitions -->
+        <record model="gamification.goal.definition" id="definition_base_timezone">
+            <field name="name">Set your Timezone</field>
+            <field name="description">Configure your profile and specify your timezone</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
+            <field name="action_id" eval="ref('base.action_res_users_my')" />
+            <field name="res_id_field">user.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_company_data">
+            <field name="name">Set your Company Data</field>
+            <field name="description">Write some information about your company (specify at least a name)</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
+            <field name="condition">lower</field>
+            <field name="action_id" eval="ref('base.action_res_company_form')" />
+            <field name="res_id_field">user.company_id.id</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_company_logo">
+            <field name="name">Set your Company Logo</field>
+            <field name="computation_mode">count</field>
+            <field name="display_mode">boolean</field>
+            <field name="model_id" eval="ref('base.model_res_company')" />
+            <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
+            <field name="action_id" eval="ref('base.action_res_company_form')" />
+            <field name="res_id_field">user.company_id.id</field>
+        </record>
+
+        <record id="action_new_simplified_res_users" model="ir.actions.act_window">
+            <field name="name">Create User</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.users</field>
+            <field name="view_type">form</field>
+            <field name="target">current</field>
+            <field name="view_id" ref="base.view_users_simple_form"/>
+            <field name="context">{'default_groups_ref': ['base.group_user']}</field>
+            <field name="help">Create and manage users that will connect to the system. Users can be deactivated should there be a period of time during which they will/should not connect to the system. You can assign them groups in order to give them specific access to the applications they need to use in the system.</field>
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_base_invite">
+            <field name="name">Invite new Users</field>
+            <field name="description">Create at least another user</field>
+            <field name="display_mode">boolean</field>
+            <field name="computation_mode">count</field>
+            <field name="model_id" eval="ref('base.model_res_users')" />
+            <field name="domain">[('id', '!=', user.id)]</field>
+            <field name="action_id" eval="ref('action_new_simplified_res_users')" />
+        </record>
+
+        <record model="gamification.goal.definition" id="definition_nbr_following">
+            <field name="name">Mail Group Following</field>
+            <field name="description">Follow mail groups to receive news</field>
+            <field name="computation_mode">python</field>
+            <field name="compute_code">result = pool.get('mail.followers').search(cr, uid, [('res_model', '=', 'mail.group'), ('partner_id', '=', object.user_id.partner_id.id)], count=True, context=context)</field>
+            <field name="action_id" eval="ref('mail.action_view_groups')" />
+        </record>
+
+
+        <!-- challenges -->
+        <record model="gamification.challenge" id="challenge_base_discover">
+            <field name="name">Complete your Profile</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_user'))]" />
+            <field name="state">inprogress</field>
+            <field name="category">other</field>
+        </record>
+
+        <record model="gamification.challenge" id="challenge_base_configure">
+            <field name="name">Setup your Company</field>
+            <field name="period">once</field>
+            <field name="visibility_mode">personal</field>
+            <field name="report_message_frequency">never</field>
+            <field name="user_domain" eval="[('groups_id', '=', ref('base.group_erp_manager'))]" />
+            <field name="state">inprogress</field>
+            <field name="category">other</field>
+        </record>
+
+        <!-- lines -->
+        <record model="gamification.challenge.line" id="line_base_discover1">
+            <field name="definition_id" eval="ref('definition_base_timezone')" />
+            <field name="target_goal">1</field>
+            <field name="challenge_id" eval="ref('challenge_base_discover')" />
+        </record>
+
+        <record model="gamification.challenge.line" id="line_base_admin2">
+            <field name="definition_id" eval="ref('definition_base_company_logo')" />
+            <field name="target_goal">1</field>
+            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+        </record>
+        <record model="gamification.challenge.line" id="line_base_admin1">
+            <field name="definition_id" eval="ref('definition_base_company_data')" />
+            <field name="target_goal">0</field>
+            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+        </record>
+        <record model="gamification.challenge.line" id="line_base_admin3">
+            <field name="definition_id" eval="ref('definition_base_invite')" />
+            <field name="target_goal">1</field>
+            <field name="challenge_id" eval="ref('challenge_base_configure')" />
+        </record>
+    </data>
+
+</openerp>

@@ -1,0 +1,1929 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * fleet
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:09+0000\n"
+"PO-Revision-Date: 2017-05-26 15:28+0000\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:387
+#, python-format
+msgid "%s %s has been added to the fleet!"
+msgstr "%s %s on lisätty kalustoon!"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:663
+#, python-format
+msgid "%s contract(s) need(s) to be renewed and/or closed!"
+msgstr "%s sopimu(s)/(kset) pitää uusia ja/tai sulkea!"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new brand.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi uuuden merkin.\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new contract.\n"
+"              </p><p>\n"
+"                Manage all your contracts (leasing, insurances, etc.) with\n"
+"                their related services, costs. Odoo will automatically warn\n"
+"                you when some contracts have to be renewed.\n"
+"              </p><p>\n"
+"                Each contract (e.g.: leasing) may include several services\n"
+"                (reparation, insurances, periodic maintenance).\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_costs_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new cost.\n"
+"              </p><p>\n"
+"                Odoo helps you managing the costs for your different\n"
+"                vehicles. Costs are created automatically from services,\n"
+"                contracts (fixed or recurring) and fuel logs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new fuel log.\n"
+"              </p><p>\n"
+"                Here you can add refuelling entries for all vehicles.  You can\n"
+"                also filter logs of a particular vehicle using the search\n"
+"                field.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new model.\n"
+"              </p><p>\n"
+"                You can define several models (e.g. A3, A4) for each brand (Audi).\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nKlikkaa luodaksesi uuden mallin\n</p><p>\nVoit luoda useita malleja (esim. A3, A4), jokaiselle merkille (Audi).\n</p>"
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new odometer log.\n"
+"              </p>\n"
+"              <p>\n"
+"                Here you can add various odometer entries for all vehicles.\n"
+"                You can also show odometer value for a particular vehicle using\n"
+"                the search field.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_services_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new service entry.\n"
+"              </p><p>\n"
+"                Odoo helps you keeping track of all the services done\n"
+"                on your vehicle. Services can be of many type: occasional\n"
+"                repair, fixed maintenance, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new type of service.\n"
+"              </p><p>\n"
+"                Each service can used in contracts, as a standalone service or both.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new vehicle.\n"
+"              </p><p>\n"
+"                You will be able to manage your fleet by keeping track of the\n"
+"                contracts, services, fixed and recurring costs, odometers and\n"
+"                fuel logs associated to each vehicle.\n"
+"            </p><p>\n"
+"                Odoo will warn you when services or contract have to be\n"
+"                renewed.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_state_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a vehicule status.\n"
+"              </p><p>\n"
+"                You can customize available status to track the evolution of\n"
+"                each vehicule. Example: Active, Being Repaired, Sold.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs
+#: model:ir.actions.act_window,help:fleet.action_fleet_reporting_costs_non_effective
+msgid ""
+"<p>\n"
+"          Odoo helps you managing the costs for your different vehicles\n"
+"          Costs are generally created from services and contract and appears here.\n"
+"        </p>\n"
+"        <p>\n"
+"          Thanks to the different filters, Odoo can only print the effective\n"
+"          costs, sort them by type and by vehicle.\n"
+"        </p>\n"
+"      "
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_1
+msgid "A/C Compressor Replacement"
+msgstr "Ilmastoinnin kompressorin vaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_2
+msgid "A/C Condenser Replacement"
+msgstr "Ilmastoinnin lauhduttimen vaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_3
+msgid "A/C Diagnosis"
+msgstr "Ilmastoinnin diagnoosi"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_4
+msgid "A/C Evaporator Replacement"
+msgstr "Ilmastoinnin haihduttimen vaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_5
+msgid "A/C Recharge"
+msgstr "Ilmastoinnin lataus"
+
+#. module: fleet
+#: field:fleet.vehicle,acquisition_date:0
+msgid "Acquisition Date"
+msgstr "Hankintapäivä"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_tree
+msgid "Activation Cost"
+msgstr "Aktivoinnin hinta"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Additional Details"
+msgstr "Lisätiedot"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "Additional Properties"
+msgstr "Asetukset"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_6
+msgid "Air Filter Replacement"
+msgstr "Ilmansuodattimen vaihto"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+msgid "All vehicles"
+msgstr "Kaikki ajoneuvot"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_7
+msgid "Alternator Replacement"
+msgstr "Vaihtovirtageneraattorin vaihto"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_amount:0
+#: field:fleet.vehicle.log.fuel,cost_amount:0
+#: field:fleet.vehicle.log.services,cost_amount:0
+msgid "Amount"
+msgstr "Summa"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_9
+msgid "Assistance"
+msgstr "Tuki"
+
+#. module: fleet
+#: selection:fleet.vehicle,transmission:0
+msgid "Automatic"
+msgstr "Automaattinen"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,auto_generated:0
+msgid "Automatically Generated"
+msgstr "Automaattisesti luotu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_8
+msgid "Ball Joint Replacement"
+msgstr "Pallonivelen vaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_9
+msgid "Battery Inspection"
+msgstr "Akun tarkastus"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_10
+msgid "Battery Replacement"
+msgstr "Akun vaihto"
+
+#. module: fleet
+#: selection:fleet.service.type,category:0
+msgid "Both"
+msgstr "Molemmat"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_11
+msgid "Brake Caliper Replacement"
+msgstr "Jarrusatulan vaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_12
+msgid "Brake Inspection"
+msgstr "Jarrujen tarkastus"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_13
+msgid "Brake Pad(s) Replacement"
+msgstr "Jarrupalan (palojen) vaihto"
+
+#. module: fleet
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
+msgid "Brand"
+msgstr "Merkki"
+
+#. module: fleet
+#: field:fleet.vehicle.model.brand,name:0
+msgid "Brand Name"
+msgstr "Merkin nimi"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_model_brand
+msgid "Brand model of the vehicle"
+msgstr "Ajoneuvomerkin malli"
+
+#. module: fleet
+#: help:fleet.vehicle.model,brand_id:0
+msgid "Brand of the vehicle"
+msgstr "Ajoneuvon merkki"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_break
+msgid "Break"
+msgstr "Jarru"
+
+#. module: fleet
+#: field:fleet.vehicle,co2:0
+msgid "CO2 Emissions"
+msgstr "CO2-päästöt"
+
+#. module: fleet
+#: help:fleet.vehicle,co2:0
+msgid "CO2 emissions of the vehicle"
+msgstr "Ajoneuvon CO2-päästöt"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_1
+msgid "Calculation Benefit In Kind"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,car_value:0
+msgid "Car Value"
+msgstr "Auton arvo"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_14
+msgid "Car Wash"
+msgstr "Autopesu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_15
+msgid "Catalytic Converter Replacement"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.service.type,category:0
+msgid "Category"
+msgstr "Ryhmä"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,cost_type:0
+msgid "Category of the cost"
+msgstr "Kulun kategoria"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_16
+msgid "Charging System Diagnosis"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,vin_sn:0
+msgid "Chassis Number"
+msgstr "Alustan numero"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,state:0
+msgid "Choose wheter the contract is still valid or not"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.service.type,category:0
+msgid "Choose wheter the service refer to contracts, vehicle services or both"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,color:0
+msgid "Color"
+msgstr "Väri"
+
+#. module: fleet
+#: help:fleet.vehicle,color:0
+msgid "Color of the vehicle"
+msgstr "Ajoneuvon väri"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
+msgid "Compact"
+msgstr "Kompakti"
+
+#. module: fleet
+#: field:fleet.vehicle,company_id:0
+msgid "Company"
+msgstr "Yritys"
+
+#. module: fleet
+#: model:ir.ui.menu,name:fleet.fleet_configuration
+msgid "Configuration"
+msgstr "Asetukset"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_contract_state
+msgid "Contains the different possible status of a leasing contract"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.service.type,category:0
+#: field:fleet.vehicle.cost,contract_id:0
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Contract"
+msgstr "Työsopimus"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_graph
+msgid "Contract Costs Per Month"
+msgstr "Kuukausittaiset sopimuskulut"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,expiration_date:0
+msgid "Contract Expiration Date"
+msgstr "Sopimuksen päättymispäivä"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,ins_ref:0
+msgid "Contract Reference"
+msgstr "Sopimuksen viite"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,start_date:0
+msgid "Contract Start Date"
+msgstr "Sopimuksen alkamispäivä"
+
+#. module: fleet
+#: field:fleet.contract.state,name:0
+msgid "Contract Status"
+msgstr "Sopimuksen tila"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,contract_id:0
+msgid "Contract attached to this cost"
+msgstr "Tähän kuluun liittyvä sopimus"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Contract details"
+msgstr "Sopimuksen tiedot"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
+msgid "Contract information on a vehicle"
+msgstr "Ajoneuvoon liittyvät sopimustiedot"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_tree
+msgid "Contract logs"
+msgstr "Sopimuksen lokit"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,purchaser_id:0
+msgid "Contractor"
+msgstr "Sopimuksen tekijä"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,contract_count:0 field:fleet.vehicle,log_contracts:0
+msgid "Contracts"
+msgstr "Sopimukset"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_convertible
+msgid "Convertible"
+msgstr "Avoauto"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_id:0
+#: field:fleet.vehicle.log.fuel,cost_id:0
+#: field:fleet.vehicle.log.services,cost_id:0
+msgid "Cost"
+msgstr "Kustannus"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_form
+msgid "Cost Details"
+msgstr "Kulujen yksityiskohdat"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Cost Subtype"
+msgstr "Kulun alatyyppi"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Cost Type"
+msgstr "Kulun tyyppi"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_cost
+msgid "Cost related to a vehicle"
+msgstr "Ajoneuvoon liittyvät kulut"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Cost that is paid only once at the creation of the contract"
+msgstr "Kulu joka maksetaan vain kerran sopimusta luodessa"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,cost_subtype_id:0
+msgid "Cost type purchased with this cost"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,cost_count:0
+msgid "Costs"
+msgstr "Kulut"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs
+#: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
+msgid "Costs Analysis"
+msgstr "Kuluanalyysi"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_graph
+msgid "Costs Per Month"
+msgstr "Kulut kuukausittain"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,cost_generated:0
+msgid ""
+"Costs paid at regular intervals, depending on the cost frequency. If the "
+"cost frequency is set to unique, the cost will be logged at the start date"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid ""
+"Create a new contract automatically with all the same informations except "
+"for the date that will start at the end of current contract"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.contract.state,create_uid:0
+#: field:fleet.service.type,create_uid:0 field:fleet.vehicle,create_uid:0
+#: field:fleet.vehicle.cost,create_uid:0
+#: field:fleet.vehicle.log.contract,create_uid:0
+#: field:fleet.vehicle.log.fuel,create_uid:0
+#: field:fleet.vehicle.log.services,create_uid:0
+#: field:fleet.vehicle.model,create_uid:0
+#: field:fleet.vehicle.model.brand,create_uid:0
+#: field:fleet.vehicle.odometer,create_uid:0
+#: field:fleet.vehicle.state,create_uid:0 field:fleet.vehicle.tag,create_uid:0
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: fleet
+#: field:fleet.contract.state,create_date:0
+#: field:fleet.service.type,create_date:0 field:fleet.vehicle,create_date:0
+#: field:fleet.vehicle.cost,create_date:0
+#: field:fleet.vehicle.log.contract,create_date:0
+#: field:fleet.vehicle.log.fuel,create_date:0
+#: field:fleet.vehicle.log.services,create_date:0
+#: field:fleet.vehicle.model,create_date:0
+#: field:fleet.vehicle.model.brand,create_date:0
+#: field:fleet.vehicle.odometer,create_date:0
+#: field:fleet.vehicle.state,create_date:0
+#: field:fleet.vehicle.tag,create_date:0
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: fleet
+#: help:fleet.vehicle,state_id:0
+msgid "Current state of the vehicle"
+msgstr "Ajoneuvon nykyinen tila"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Daily"
+msgstr "Päivittäin"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,date:0 field:fleet.vehicle.odometer,date:0
+msgid "Date"
+msgstr "Päivämäärä"
+
+#. module: fleet
+#: help:fleet.vehicle,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Viimeisen viestin päivämäärä"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,date:0
+msgid "Date when the cost has been executed"
+msgstr "Päivämäärä jolloin kulu on tapahtunut"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,start_date:0
+msgid "Date when the coverage of the contract begins"
+msgstr "Päivämäärä jolloin sopimuksen voimassaolo alkaa"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,expiration_date:0
+msgid ""
+"Date when the coverage of the contract expirates (by default, one year after"
+" begin date)"
+msgstr "Päivä jolloin sopimuksen voimassaolo päättyy (oletuksena vuosi alkupäivästä)"
+
+#. module: fleet
+#: help:fleet.vehicle,acquisition_date:0
+msgid "Date when the vehicle has been bought"
+msgstr "Päivä jolloin ajoneuvo on ostettu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_2
+msgid "Depreciation and Interests"
+msgstr "Arvon aleneminen ja korot"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Diesel"
+msgstr "Diesel"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_17
+msgid "Door Window Motor/Regulator Replacement"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,doors:0
+msgid "Doors Number"
+msgstr "Ovien lukumäärä"
+
+#. module: fleet
+#: field:fleet.vehicle,driver_id:0
+msgid "Driver"
+msgstr "Kuljettaja"
+
+#. module: fleet
+#: help:fleet.vehicle,driver_id:0
+msgid "Driver of the vehicle"
+msgstr "Ajoneuvon kuljettaja"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:404
+#, python-format
+msgid "Driver: from '%s' to '%s'"
+msgstr "Kuljettaja: kohteesta '%s' kohteeseen '%s'"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Effective Costs"
+msgstr "Käytännön kulut"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Electric"
+msgstr "Sähkö"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_17
+msgid "Emissions"
+msgstr "Päästöt"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_leasing
+msgid "Employee Car"
+msgstr "Työntekijän auto"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:47
+#, python-format
+msgid "Emptying the odometer value of a vehicle is not allowed."
+msgstr "Matkamittarin nollaus ajoneuvossa ei ole sallittu."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_18
+msgid "Engine Belt Inspection"
+msgstr "Laturin hihnan tarkistus"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_19
+msgid "Engine Coolant Replacement"
+msgstr "Moottorin jäähdytysnesteen vaihto"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "Engine Options"
+msgstr "Moottorivaihtoehdot"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_20
+msgid "Engine/Drive Belt(s) Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_13
+msgid "Entry into service tax"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_21
+msgid "Exhaust Manifold Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:ir.module.category,name:fleet.module_fleet_category
+#: model:ir.ui.menu,name:fleet.menu_fleet_reporting
+#: model:ir.ui.menu,name:fleet.menu_root
+msgid "Fleet"
+msgstr "Kalusto"
+
+#. module: fleet
+#: field:fleet.vehicle,message_follower_ids:0
+msgid "Followers"
+msgstr "Seuraajat"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,cost_type:0
+msgid "For internal purpose only"
+msgstr "Vain sisäiseen käyttöön"
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Frequency of the recuring cost"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Fuel"
+msgstr "Polttoaine"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_graph
+msgid "Fuel Costs Per Month"
+msgstr "Kuukausittaiset polttoainekulut"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_22
+msgid "Fuel Injector Replacement"
+msgstr "Polttoaineen suuttimen vaihto"
+
+#. module: fleet
+#: field:fleet.vehicle,fuel_logs_count:0 field:fleet.vehicle,log_fuel:0
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_tree
+msgid "Fuel Logs"
+msgstr "Polttoaineloki"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_23
+msgid "Fuel Pump Replacement"
+msgstr "Polttoainepumpun vaihto"
+
+#. module: fleet
+#: field:fleet.vehicle,fuel_type:0
+msgid "Fuel Type"
+msgstr "Polttoaineen tyyppi"
+
+#. module: fleet
+#: help:fleet.vehicle,fuel_type:0
+msgid "Fuel Used by the vehicle"
+msgstr "Ajoneuvon käyttämä polttoaine"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_log_fuel
+msgid "Fuel log for vehicles"
+msgstr "Ajoneuvojen polttoaineloki"
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Gasoline"
+msgstr "Bensiini"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "General Properties"
+msgstr "Yleiset ominaisuudet"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,generated_cost_ids:0
+msgid "Generated Costs"
+msgstr "Luodut kulut"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Generated Recurring Costs"
+msgstr "Luodut toistuvaiskulut"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
+msgid "Group By"
+msgstr "Ryhmittele"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+msgid "Has Alert(s)"
+msgstr "On hälytys (hälytyksiä)"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_overdue:0
+msgid "Has Contracts Overdued"
+msgstr "On myöhässä olevia sopimuksia"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_due_soon:0
+msgid "Has Contracts to renew"
+msgstr "On uusittavia sopimuksia"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_24
+msgid "Head Gasket(s) Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_25
+msgid "Heater Blower Motor Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_26
+msgid "Heater Control Valve Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_27
+msgid "Heater Core Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_28
+msgid "Heater Hose Replacement"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Sisältää viestien yhteenvedon (viestien määrän,...). Tämä yhteenveto on valmiiksi  html-muodossa, jotta se voidaan viedä kanban näkymään."
+
+#. module: fleet
+#: field:fleet.vehicle,horsepower:0
+msgid "Horsepower"
+msgstr "Hevosvoima"
+
+#. module: fleet
+#: field:fleet.vehicle,horsepower_tax:0
+msgid "Horsepower Taxation"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle,fuel_type:0
+msgid "Hybrid"
+msgstr "Hybridi"
+
+#. module: fleet
+#: field:fleet.contract.state,id:0 field:fleet.service.type,id:0
+#: field:fleet.vehicle,id:0 field:fleet.vehicle.cost,id:0
+#: field:fleet.vehicle.log.contract,id:0 field:fleet.vehicle.log.fuel,id:0
+#: field:fleet.vehicle.log.services,id:0 field:fleet.vehicle.model,id:0
+#: field:fleet.vehicle.model.brand,id:0 field:fleet.vehicle.odometer,id:0
+#: field:fleet.vehicle.state,id:0 field:fleet.vehicle.tag,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: fleet
+#: help:fleet.vehicle,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_29
+msgid "Ignition Coil Replacement"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "In Progress"
+msgstr "Käsittelyssä"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,cost_ids:0
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Included Services"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Indicative Cost"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Indicative Costs"
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.action_fleet_reporting_costs_non_effective
+#: model:ir.ui.menu,name:fleet.menu_fleet_reporting_indicative_costs
+msgid "Indicative Costs Analysis"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: field:fleet.vehicle.log.contract,sum_cost:0
+msgid "Indicative Costs Total"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_30
+msgid "Intake Manifold Gasket Replacement"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Invoice Date"
+msgstr "Laskun päivämäärä"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,inv_ref:0
+#: field:fleet.vehicle.log.services,inv_ref:0
+msgid "Invoice Reference"
+msgstr "Laskuviite"
+
+#. module: fleet
+#: field:fleet.vehicle,message_is_follower:0
+msgid "Is a Follower"
+msgstr "on seuraaja"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_junior
+msgid "Junior"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle,odometer_unit:0
+msgid "Kilometers"
+msgstr "Kilometrit"
+
+#. module: fleet
+#: field:fleet.vehicle,message_last_post:0
+msgid "Last Message Date"
+msgstr "Viimeinen viestipvm"
+
+#. module: fleet
+#: field:fleet.vehicle,odometer:0
+msgid "Last Odometer"
+msgstr "Viimeisin matkamittari"
+
+#. module: fleet
+#: field:fleet.contract.state,write_uid:0 field:fleet.service.type,write_uid:0
+#: field:fleet.vehicle,write_uid:0 field:fleet.vehicle.cost,write_uid:0
+#: field:fleet.vehicle.log.contract,write_uid:0
+#: field:fleet.vehicle.log.fuel,write_uid:0
+#: field:fleet.vehicle.log.services,write_uid:0
+#: field:fleet.vehicle.model,write_uid:0
+#: field:fleet.vehicle.model.brand,write_uid:0
+#: field:fleet.vehicle.odometer,write_uid:0
+#: field:fleet.vehicle.state,write_uid:0 field:fleet.vehicle.tag,write_uid:0
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: fleet
+#: field:fleet.contract.state,write_date:0
+#: field:fleet.service.type,write_date:0 field:fleet.vehicle,write_date:0
+#: field:fleet.vehicle.cost,write_date:0
+#: field:fleet.vehicle.log.contract,write_date:0
+#: field:fleet.vehicle.log.fuel,write_date:0
+#: field:fleet.vehicle.log.services,write_date:0
+#: field:fleet.vehicle.model,write_date:0
+#: field:fleet.vehicle.model.brand,write_date:0
+#: field:fleet.vehicle.odometer,write_date:0
+#: field:fleet.vehicle.state,write_date:0 field:fleet.vehicle.tag,write_date:0
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_leasing
+msgid "Leasing"
+msgstr "Paikka"
+
+#. module: fleet
+#: field:fleet.vehicle,license_plate:0
+msgid "License Plate"
+msgstr "Rekisterikilpi"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:411
+#, python-format
+msgid "License Plate: from '%s' to '%s'"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle,license_plate:0
+msgid "License plate number of the vehicle (ie: plate number for a car)"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,liter:0
+msgid "Liter"
+msgstr "Litra"
+
+#. module: fleet
+#: field:fleet.vehicle,location:0
+msgid "Location"
+msgstr "Paikka"
+
+#. module: fleet
+#: help:fleet.vehicle,location:0
+msgid "Location of the vehicle (garage, ...)"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,image:0 field:fleet.vehicle.model,image:0
+#: field:fleet.vehicle.model.brand,image:0
+msgid "Logo"
+msgstr "Logo"
+
+#. module: fleet
+#: field:fleet.vehicle,image_medium:0 field:fleet.vehicle.model,image_medium:0
+msgid "Logo (medium)"
+msgstr "Logo (keskikokoinen)"
+
+#. module: fleet
+#: field:fleet.vehicle,image_small:0 field:fleet.vehicle.model,image_small:0
+msgid "Logo (small)"
+msgstr "Logo (pieni)"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_11
+msgid "Management Fee"
+msgstr "Hallinnointimaksu"
+
+#. module: fleet
+#: model:res.groups,name:fleet.group_fleet_manager
+msgid "Manager"
+msgstr "Päällikkö"
+
+#. module: fleet
+#: selection:fleet.vehicle,transmission:0
+msgid "Manual"
+msgstr "Manuaalinen"
+
+#. module: fleet
+#: help:fleet.vehicle.model.brand,image_medium:0
+msgid ""
+"Medium-sized logo of the brand. It is automatically resized as a 128x128px "
+"image, with aspect ratio preserved. Use this field in form views or some "
+"kanban views."
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.model.brand,image_medium:0
+msgid "Medium-sized photo"
+msgstr "Keskikokoinen kuva"
+
+#. module: fleet
+#: field:fleet.vehicle,message_ids:0
+msgid "Messages"
+msgstr "Viestit"
+
+#. module: fleet
+#: help:fleet.vehicle,message_ids:0
+msgid "Messages and communication history"
+msgstr "Viesti- ja kommunikointihistoria"
+
+#. module: fleet
+#: selection:fleet.vehicle,odometer_unit:0
+msgid "Miles"
+msgstr "Mailia"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: field:fleet.vehicle,model_id:0
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
+msgid "Model"
+msgstr "Malli"
+
+#. module: fleet
+#: field:fleet.vehicle.model,brand_id:0
+#: view:fleet.vehicle.model.brand:fleet.fleet_vehicle_model_brand_form
+#: view:fleet.vehicle.model.brand:fleet.fleet_vehicle_model_brand_tree
+msgid "Model Brand"
+msgstr "Malli"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
+msgid "Model brand of Vehicle"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.model,modelname:0
+msgid "Model name"
+msgstr "Malli"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_model
+msgid "Model of a vehicle"
+msgstr "Ajoneuvon malli"
+
+#. module: fleet
+#: help:fleet.vehicle,model_id:0
+msgid "Model of the vehicle"
+msgstr "Ajoneuvon malli"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:400
+#, python-format
+msgid "Model: from '%s' to '%s'"
+msgstr "Malli: kohteesta '%s' kohteeseen '%s'"
+
+#. module: fleet
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_tree
+msgid "Models"
+msgstr "Mallit"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Month"
+msgstr "Kuukausi"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Monthly"
+msgstr "Kerran kuukaudessa"
+
+#. module: fleet
+#: field:fleet.service.type,name:0 field:fleet.vehicle,name:0
+#: field:fleet.vehicle.cost,name:0 field:fleet.vehicle.log.contract,name:0
+#: field:fleet.vehicle.model,name:0 field:fleet.vehicle.odometer,name:0
+#: field:fleet.vehicle.state,name:0 field:fleet.vehicle.tag,name:0
+msgid "Name"
+msgstr "Nimi"
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_name:0
+msgid "Name of contract to renew soon"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "No"
+msgstr "Ei"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:399 code:addons/fleet/fleet.py:403
+#: code:addons/fleet/fleet.py:407 code:addons/fleet/fleet.py:410
+#, python-format
+msgid "None"
+msgstr "Ei mitään"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: field:fleet.vehicle.log.fuel,notes:0
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+#: field:fleet.vehicle.log.services,notes:0
+msgid "Notes"
+msgstr "Muistiinpanot"
+
+#. module: fleet
+#: help:fleet.vehicle,doors:0
+msgid "Number of doors of the vehicle"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle,seats:0
+msgid "Number of seats of the vehicle"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,odometer_count:0 field:fleet.vehicle.cost,odometer_id:0
+msgid "Odometer"
+msgstr "Matkamittari"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Odometer Details"
+msgstr "Matkamittarin tiedot"
+
+#. module: fleet
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_form
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_tree
+msgid "Odometer Logs"
+msgstr "Matkamittarin lokit"
+
+#. module: fleet
+#: field:fleet.vehicle,odometer_unit:0
+msgid "Odometer Unit"
+msgstr "Matkamittarn yksikkö"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,odometer:0 field:fleet.vehicle.odometer,value:0
+msgid "Odometer Value"
+msgstr "Matkamittarin arvo"
+
+#. module: fleet
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_graph
+msgid "Odometer Values Per Vehicle"
+msgstr "Matkamittarin arvot ajoneuvoittain"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Odometer details"
+msgstr "Matkamittarin tiedot"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr "Matkamittarin ajoneuvokohtainen loki"
+
+#. module: fleet
+#: help:fleet.vehicle,odometer:0 help:fleet.vehicle.cost,odometer:0
+#: help:fleet.vehicle.cost,odometer_id:0
+msgid "Odometer measure of the vehicle at the moment of this log"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_31
+msgid "Oil Change"
+msgstr "Öljynvaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_32
+msgid "Oil Pump Replacement"
+msgstr "Öljypumpun vaihto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_omnium
+msgid "Omnium"
+msgstr ""
+
+#. module: fleet
+#: model:ir.actions.client,name:fleet.action_fleet_menu
+msgid "Open Fleet Menu"
+msgstr ""
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:47
+#, python-format
+msgid "Operation not allowed!"
+msgstr "Toiminto ei ole sallittu!"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_16
+msgid "Options"
+msgstr "Asetukset"
+
+#. module: fleet
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Other"
+msgstr "Muu"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_33
+msgid "Other Maintenance"
+msgstr "Muu huolto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_34
+msgid "Oxygen Sensor Replacement"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: field:fleet.vehicle.cost,parent_id:0
+msgid "Parent"
+msgstr "Ylätaso"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,parent_id:0
+msgid "Parent cost to this current cost"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,purchaser_id:0
+msgid "Person to which the contract is signed for"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,power:0
+msgid "Power"
+msgstr "Voima"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_35
+msgid "Power Steering Hose Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_36
+msgid "Power Steering Pump Replacement"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle,power:0
+msgid "Power in kW of the vehicle"
+msgstr "Ajoneuvon teho kilowatteina"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_tree
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Price"
+msgstr "Hinta"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,price_per_liter:0
+msgid "Price Per Liter"
+msgstr "Litrahinta"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_purchased
+msgid "Purchased"
+msgstr "Ostettu"
+
+#. module: fleet
+#: field:fleet.vehicle.log.fuel,purchaser_id:0
+#: field:fleet.vehicle.log.services,purchaser_id:0
+msgid "Purchaser"
+msgstr "Ostaja"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_37
+msgid "Radiator Repair"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_generated:0
+msgid "Recurring Cost Amount"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Recurring Cost Frequency"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_refueling
+msgid "Refueling"
+msgstr "Tankkaus"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+msgid "Refueling Details"
+msgstr "Tankkauksen tiedot"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:734
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: model:ir.actions.act_window,name:fleet.act_renew_contract
+#, python-format
+msgid "Renew Contract"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_12
+msgid "Rent (Excluding VAT)"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_8
+msgid "Repair and maintenance"
+msgstr "Korjaus ja huolto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_contract_repairing
+msgid "Repairing"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_10
+msgid "Replacement Vehicle"
+msgstr "Korvaava ajoneuvo"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_15
+msgid "Residual value (Excluding VAT)"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_19
+msgid "Residual value in %"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_38
+msgid "Resurface Rotors"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_39
+msgid "Rotate Tires"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_40
+msgid "Rotor Replacement"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,seats:0
+msgid "Seats Number"
+msgstr "Istuinten paikka"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_sedan
+msgid "Sedan"
+msgstr "Sedan"
+
+#. module: fleet
+#: model:fleet.vehicle.tag,name:fleet.vehicle_tag_senior
+msgid "Senior"
+msgstr "Vanhempi"
+
+#. module: fleet
+#: field:fleet.vehicle.state,sequence:0
+msgid "Sequence"
+msgstr "Järjestysluku"
+
+#. module: fleet
+#: selection:fleet.service.type,category:0
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Service"
+msgstr "Palvelu"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Service Type"
+msgstr "Palvelun tyyppi"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
+msgid "Service Types"
+msgstr "Palvelutyypit"
+
+#. module: fleet
+#: view:fleet.service.type:fleet.fleet_vehicle_service_types_tree
+msgid "Service types"
+msgstr "Palvelutyypit"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: field:fleet.vehicle,service_count:0
+#: selection:fleet.vehicle.cost,cost_type:0
+msgid "Services"
+msgstr "Palvelut"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_graph
+msgid "Services Costs Per Month"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Services Details"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,log_services:0
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_search
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_tree
+msgid "Services Logs"
+msgstr ""
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Set Contract In Progress"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.model.brand,image_small:0
+msgid "Smal-sized photo"
+msgstr "Pieni kuva"
+
+#. module: fleet
+#: help:fleet.vehicle.model.brand,image_small:0
+msgid ""
+"Small-sized photo of the brand. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is"
+" required."
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_6
+msgid "Snow tires"
+msgstr "Talvirenkaat"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_41
+msgid "Spark Plug Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_42
+msgid "Starter Replacement"
+msgstr "Käynnistimen vaihto"
+
+#. module: fleet
+#: field:fleet.vehicle,state_id:0
+#: view:fleet.vehicle.state:fleet.fleet_vehicle_state_tree
+msgid "State"
+msgstr "Valtio"
+
+#. module: fleet
+#: sql_constraint:fleet.vehicle.state:0
+msgid "State name already exists"
+msgstr "Tilan nimi on jo olemassa"
+
+#. module: fleet
+#: code:addons/fleet/fleet.py:408
+#, python-format
+msgid "State: from '%s' to '%s'"
+msgstr "Tila: kohteesta '%s' kohteeseen '%s'"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: field:fleet.vehicle.log.contract,state:0
+msgid "Status"
+msgstr "Tila"
+
+#. module: fleet
+#: field:fleet.vehicle,message_summary:0
+msgid "Summary"
+msgstr "Yhteenveto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_5
+#: model:fleet.service.type,name:fleet.type_service_service_7
+msgid "Summer tires"
+msgstr "Kesärenkaat"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,insurer_id:0
+#: field:fleet.vehicle.log.fuel,vendor_id:0
+#: field:fleet.vehicle.log.services,vendor_id:0
+msgid "Supplier"
+msgstr "Toimittaja"
+
+#. module: fleet
+#: field:fleet.vehicle,tag_ids:0
+msgid "Tags"
+msgstr "Tunnisteet"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_3
+msgid "Tax roll"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Terminate Contract"
+msgstr "Päätä sopimus"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "Terminated"
+msgstr "Päätetty"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+#: field:fleet.vehicle.log.contract,notes:0
+msgid "Terms and Conditions"
+msgstr "Toimitusehdot"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_43
+msgid "Thermostat Replacement"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle.model.brand,image:0
+msgid ""
+"This field holds the image used as logo for the brand, limited to "
+"1024x1024px."
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_44
+msgid "Tie Rod End Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_45
+msgid "Tire Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_46
+msgid "Tire Service"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,state:0
+msgid "To Close"
+msgstr "Suljetaan"
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_tree
+msgid "Total"
+msgstr "Yhteensä"
+
+#. module: fleet
+#: field:fleet.vehicle.cost,amount:0
+msgid "Total Price"
+msgstr "Loppusumma"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_14
+msgid "Total expenses (Excluding VAT)"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,contract_renewal_total:0
+msgid "Total of contracts due or overdue minus one"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_service_18
+msgid "Touring Assistance"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,transmission:0
+msgid "Transmission"
+msgstr "Vaihteisto"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_47
+msgid "Transmission Filter Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_48
+msgid "Transmission Fluid Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_49
+msgid "Transmission Replacement"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle,transmission:0
+msgid "Transmission Used by the vehicle"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.cost,cost_subtype_id:0
+msgid "Type"
+msgstr "Tyyppi"
+
+#. module: fleet
+#: model:ir.model,name:fleet.model_fleet_service_type
+msgid "Type of services available on a vehicle"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle,vin_sn:0
+msgid "Unique number written on the vehicle motor (VIN/SN number)"
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle.cost,odometer_unit:0
+#: field:fleet.vehicle.odometer,unit:0
+msgid "Unit"
+msgstr "Yksikkö"
+
+#. module: fleet
+#: help:fleet.vehicle,odometer_unit:0
+msgid "Unit of the odometer "
+msgstr ""
+
+#. module: fleet
+#: field:fleet.vehicle,message_unread:0
+msgid "Unread Messages"
+msgstr "Lukemattomia viestejä"
+
+#. module: fleet
+#: help:fleet.vehicle.state,sequence:0
+msgid "Used to order the note stages"
+msgstr "Käytetään järjestämään muistiinpanon vaiheet"
+
+#. module: fleet
+#: model:res.groups,name:fleet.group_fleet_user
+msgid "User"
+msgstr "Käyttäjä"
+
+#. module: fleet
+#: help:fleet.vehicle,car_value:0
+msgid "Value of the bought vehicle"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+#: view:fleet.vehicle:fleet.fleet_vehicle_search
+#: view:fleet.vehicle:fleet.fleet_vehicle_tree
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: field:fleet.vehicle.cost,vehicle_id:0
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
+#: field:fleet.vehicle.odometer,vehicle_id:0
+msgid "Vehicle"
+msgstr "Ajoneuvo"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_cost_tree
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_costs_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_costs_menu
+msgid "Vehicle Costs"
+msgstr "Ajoneuvokulut"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Vehicle Costs by Month"
+msgstr "Ajoneuvokulut kuukausittain"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+msgid "Vehicle Details"
+msgstr "Ajoneuvon tiedot"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_model_menu
+msgid "Vehicle Model"
+msgstr "Ajoneuvon malli"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_state_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_state_menu
+msgid "Vehicle Status"
+msgstr "Ajoneuvon tila"
+
+#. module: fleet
+#: help:fleet.vehicle.cost,vehicle_id:0
+msgid "Vehicle concerned by this log"
+msgstr "Tähän lokiin liittyvä ajoneuvo"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_form
+msgid "Vehicle costs"
+msgstr "Ajoneuvon kulut"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_menu
+#: model:ir.ui.menu,name:fleet.fleet_vehicles
+msgid "Vehicles"
+msgstr "Ajoneuvot"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_contract_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_log_contract_menu
+msgid "Vehicles Contracts"
+msgstr "Ajoneuvojen sopimukset"
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_search
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_fuel_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_log_fuel_menu
+msgid "Vehicles Fuel Logs"
+msgstr "Ajoneuvojen polttoainelokit"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
+msgid "Vehicles Odometer"
+msgstr "Ajoneuvojen matkamittari"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_log_services_act
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_log_services_menu
+msgid "Vehicles Services Logs"
+msgstr "Ajoneuvojen huoltoloki"
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_effective_costs_report
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_indicative_costs_report
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_search
+msgid "Vehicles costs"
+msgstr "Ajoneuvojen kulut"
+
+#. module: fleet
+#: view:fleet.vehicle.odometer:fleet.fleet_vehicle_odometer_search
+msgid "Vehicles odometers"
+msgstr "Ajoneuvojen matkamittarit"
+
+#. module: fleet
+#: view:fleet.vehicle.model:fleet.fleet_vehicle_model_form
+#: field:fleet.vehicle.model,vendors:0
+msgid "Vendors"
+msgstr "Toimittajat"
+
+#. module: fleet
+#: field:fleet.vehicle.log.contract,days_left:0
+msgid "Warning Date"
+msgstr "Varoituksen päivä"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_50
+msgid "Water Pump Replacement"
+msgstr ""
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Weekly"
+msgstr "Viikottainen"
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_51
+msgid "Wheel Alignment"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_52
+msgid "Wheel Bearing Replacement"
+msgstr ""
+
+#. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_53
+msgid "Windshield Wiper(s) Replacement"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "Write here all other information relative to this contract"
+msgstr ""
+
+#. module: fleet
+#: help:fleet.vehicle.log.contract,notes:0
+msgid "Write here all supplementary informations relative to this contract"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.fuel:fleet.fleet_vehicle_log_fuel_form
+msgid "Write here any other information"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.log.services:fleet.fleet_vehicle_log_services_form
+msgid "Write here any other information related to the service completed."
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle.cost:fleet.fleet_vehicle_costs_search
+msgid "Year"
+msgstr "Vuosi"
+
+#. module: fleet
+#: selection:fleet.vehicle.log.contract,cost_frequency:0
+msgid "Yearly"
+msgstr "Vuosittainen"
+
+#. module: fleet
+#: view:fleet.vehicle.log.contract:fleet.fleet_vehicle_log_contract_form
+msgid "amount"
+msgstr "määrä"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_kanban
+msgid "and"
+msgstr "ja"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "g/km"
+msgstr "g/km"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_kanban
+msgid "other(s)"
+msgstr "muu(t)"
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show all the costs for this vehicle"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the contract for this vehicle"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the fuel logs for this vehicle"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the odometer logs for this vehicle"
+msgstr ""
+
+#. module: fleet
+#: view:fleet.vehicle:fleet.fleet_vehicle_form
+msgid "show the services logs for this vehicle"
+msgstr ""

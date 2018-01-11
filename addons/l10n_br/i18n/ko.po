@@ -1,0 +1,170 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_br
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2015-07-17 07:28+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: l10n_br
+#: field:account.tax,tax_discount:0 field:account.tax.code,tax_discount:0
+#: field:account.tax.code.template,tax_discount:0
+#: field:account.tax.template,tax_discount:0
+msgid "Discount this Tax in Prince"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_form
+#: model:ir.model,name:l10n_br.model_l10n_br_account_cst
+#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst
+#: view:l10n_br_account.cst:0
+msgid "Tax Situation Code"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.despesa
+msgid "Despesas"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_code
+#: field:l10n_br_account.cst,tax_code_id:0
+msgid "Tax Code"
+msgstr "세금 코드"
+
+#. module: l10n_br
+#: help:account.tax.code,domain:0 help:account.tax.code.template,domain:0
+msgid ""
+"This field is only used if you develop your own module allowing developers "
+"to create specific taxes in a custom domain."
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.resultado
+msgid "Resultado"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_template
+msgid "account.tax.template"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.passivo
+msgid "Passivo"
+msgstr ""
+
+#. module: l10n_br
+#: field:l10n_br_account.cst,name:0 field:l10n_br_account.cst.template,name:0
+msgid "Description"
+msgstr "설명"
+
+#. module: l10n_br
+#: constraint:account.tax.code:0
+msgid ""
+"Error!\n"
+"You cannot create recursive accounts."
+msgstr "에러!\n재귀적인 계정을 생성할 수 없습니다."
+
+#. module: l10n_br
+#: field:account.tax,amount_mva:0 field:account.tax.template,amount_mva:0
+msgid "MVA Percent"
+msgstr ""
+
+#. module: l10n_br
+#: help:account.tax.template,amount_mva:0
+#: help:account.tax.template,base_reduction:0
+msgid "For taxes of type percentage, enter % ratio between 0-1."
+msgstr "세금 퍼센트는 0-1 사이의 비율로 입력합니다."
+
+#. module: l10n_br
+#: field:account.tax,base_reduction:0
+#: field:account.tax.template,base_reduction:0
+msgid "Redution"
+msgstr ""
+
+#. module: l10n_br
+#: sql_constraint:account.tax:0
+msgid "Tax Name must be unique per company!"
+msgstr "세금명은 회사별로 유일해야 합니다!"
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax
+msgid "account.tax"
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.receita
+msgid "Receita"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.actions.act_window,name:l10n_br.action_l10n_br_cst_template_form
+#: model:ir.model,name:l10n_br.model_l10n_br_account_cst_template
+#: model:ir.ui.menu,name:l10n_br.menu_action_l10n_br_cst_template
+#: view:l10n_br_account.cst.template:0
+msgid "Tax Situation Code Template"
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"
+
+#. module: l10n_br
+#: model:ir.actions.todo,note:l10n_br.config_call_account_template_brazilian_localization
+msgid ""
+"Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
+"    This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
+msgstr ""
+
+#. module: l10n_br
+#: constraint:account.tax.code.template:0
+msgid ""
+"Error!\n"
+"You cannot create recursive Tax Codes."
+msgstr "에러!\n세금 코드를 재귀적으로 생성할 수  없습니다."
+
+#. module: l10n_br
+#: help:account.tax,tax_discount:0 help:account.tax.code,tax_discount:0
+#: help:account.tax.code.template,tax_discount:0
+#: help:account.tax.template,tax_discount:0
+msgid "Mark it for (ICMS, PIS e etc.)."
+msgstr ""
+
+#. module: l10n_br
+#: model:account.account.type,name:l10n_br.ativo
+msgid "Ativo"
+msgstr ""
+
+#. module: l10n_br
+#: field:account.tax.code,domain:0 field:account.tax.code.template,domain:0
+msgid "Domain"
+msgstr "도메인"
+
+#. module: l10n_br
+#: field:l10n_br_account.cst,code:0 field:l10n_br_account.cst.template,code:0
+msgid "Code"
+msgstr "코드"
+
+#. module: l10n_br
+#: help:account.tax,amount_mva:0 help:account.tax,base_reduction:0
+msgid "Um percentual decimal em % entre 0-1."
+msgstr ""
+
+#. module: l10n_br
+#: model:ir.model,name:l10n_br.model_account_tax_code_template
+#: field:l10n_br_account.cst.template,tax_code_template_id:0
+msgid "Tax Code Template"
+msgstr "세금 코드 서식"

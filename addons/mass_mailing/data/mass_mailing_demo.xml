@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="mass_mail_attach_1" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">SampleDoc.doc</field>
+            <field name="name">SampleDoc.doc</field>
+        </record>
+
+        <!-- Create mailing lists -->
+        <record id="mass_mail_list_2" model="mail.mass_mailing.list">
+            <field name="name">Imported Contacts</field>
+        </record>
+
+        <!-- Create Contacts -->
+        <record id="mass_mail_contact_1" model="mail.mass_mailing.contact">
+            <field name="name">Aristide Antario</field>
+            <field name="email">aa@example.com</field>
+            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
+        </record>
+        <record id="mass_mail_contact_2" model="mail.mass_mailing.contact">
+            <field name="name">Beverly Bridge</field>
+            <field name="email">bb@example.com</field>
+            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
+        </record>
+        <record id="mass_mail_contact_3" model="mail.mass_mailing.contact">
+            <field name="name">Carol Cartridge</field>
+            <field name="email">cc@example.com</field>
+            <field name="list_id" ref="mass_mailing.mass_mail_list_2"/>
+            <field name="opt_out" eval="True"/>
+        </record>
+
+        <!-- Demo newsletter template -->
+       <!--Email template -->
+        <record id="newsletter_template" model="email.template">
+            <field name="name">Newsletter</field>
+            <field name="subject">Newsletter</field>
+            <field name="model_id" ref="mass_mailing.model_mail_mass_mailing_contact"/>
+            <field name="use_default_to" eval="True"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[<div data-snippet-id="big-picture" style="padding:0px; margin:0px">
+<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+    <tbody>
+        <tr>
+            <td style="width:600px" valign="top">
+            <h2 style="text-align: center; padding:0px 5px">A Punchy Headline</h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:600px" valign="top"><img src="/website/static/src/img/big_picture.png" style="display:block;border:none;min-height:250px;margin:0 auto;" width="500"></td>
+        </tr>
+        <tr>
+            <td style="width:600px" valign="top">
+            <p style="text-align: center; overflow:hidden"></p>
+
+            <h3 style="text-align: center; padding:0px 5px">A Small Subtitle for ${object.name}</h3>
+
+            <p></p>
+
+            <p style="text-align: center; overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div data-snippet-id="three-columns" style="padding:0px; margin:0px">
+<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+    <tbody>
+        <tr>
+            <td style="width:300px" valign="top"><img src="/website/static/src/img/desert_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
+            <td style="width:300px" valign="top"><img src="/website/static/src/img/deers_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
+        </tr>
+        <tr>
+            <td style="width:300px" valign="top">
+            <h3 style="text-align: center; padding:0px 5px">Feature One</h3>
+
+            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+            <td style="width:300px" valign="top">
+            <h3 style="text-align: center; padding:0px 5px">Feature Two</h3>
+
+            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>]]></field>
+        </record>
+
+        <!-- Create campaign and mailings -->
+        <record id="mass_mail_category_1" model="mail.mass_mailing.category">
+            <field name="name">Marketing</field>
+        </record>
+        <record id="mass_mail_campaign_1" model="mail.mass_mailing.campaign">
+            <field name="name">Newsletter</field>
+            <field name="stage_id" ref="mass_mailing.campaign_stage_1"/>
+            <field name="user_id" eval="ref('base.user_root')"/>
+            <field name="category_ids" eval="[(6,0,[ref('mass_mailing.mass_mail_category_1')])]"/>
+        </record>
+
+        <record id="mass_mail_1" model="mail.mass_mailing">
+            <field name="name">First Newsletter</field>
+            <field name="state">done</field>
+            <field name="sent_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
+            <field name="mailing_model">res.partner</field>
+            <field name="mailing_domain">[('customer', '=', True)]</field>
+            <field name="reply_to_mode">email</field>
+            <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
+            <field name="body_html"><![CDATA[<div data-snippet-id="big-picture" style="padding:0px; margin:0px">
+<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+    <tbody>
+        <tr>
+            <td style="width:600px" valign="top">
+            <h2 style="text-align: center; padding:0px 5px">A Punchy Headline</h2>
+            </td>
+        </tr>
+        <tr>
+            <td style="width:600px" valign="top"><img src="/website/static/src/img/big_picture.png" style="display:block;border:none;min-height:250px;margin:0 auto;" width="500"></td>
+        </tr>
+        <tr>
+            <td style="width:600px" valign="top">
+            <p style="text-align: center; overflow:hidden"></p>
+
+            <h3 style="text-align: center; padding:0px 5px">A Small Subtitle for ${object.name}</h3>
+
+            <p></p>
+
+            <p style="text-align: center; overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+<div data-snippet-id="three-columns" style="padding:0px; margin:0px">
+<table cellpadding="0" cellspacing="0" style="margin:10px 0px 0px;vertical-align:top;padding:0px;font-family:arial;font-size:12px;color:rgb(51,51,51)">
+    <tbody>
+        <tr>
+            <td style="width:300px" valign="top"><img src="/website/static/src/img/desert_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
+            <td style="width:300px" valign="top"><img src="/website/static/src/img/deers_thumb.jpg" style="display:block;border:none;min-height:50px" width="275"></td>
+        </tr>
+        <tr>
+            <td style="width:300px" valign="top">
+            <h3 style="text-align: center; padding:0px 5px">Feature One</h3>
+
+            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+            <td style="width:300px" valign="top">
+            <h3 style="text-align: center; padding:0px 5px">Feature Two</h3>
+
+            <p style="overflow:hidden">Choose a vibrant image and write an inspiring paragraph about it. It does not have to be long, but it should reinforce your image.</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>]]></field>
+            <field name="attachment_ids" eval="[(4, ref('mass_mail_attach_1'))]"/>
+        </record>
+        <record id="mass_mail_2" model="mail.mass_mailing">
+            <field name="name">Second Newsletter</field>
+            <field name="state">test</field>
+            <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
+            <field name="mailing_model">res.partner</field>
+            <field name="mailing_domain">[('customer', '=', True)]</field>
+            <field name="reply_to_mode">email</field>
+            <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
+        </record>
+
+        <record id="mass_mail_email_1" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111000@OpenERP.com</field>
+            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="replied" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_2" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111001@OpenERP.com</field>
+            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="replied" eval="(DateTime.today() - relativedelta(days=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_3" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111002@OpenERP.com</field>
+            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="opened" eval="(DateTime.today() - relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_4" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111003@OpenERP.com</field>
+            <field name="exception" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <record id="mass_mail_email_5" model="mail.mail.statistics">
+            <field name="mass_mailing_id" eval="ref('mass_mail_1')"/>
+            <field name="message_id">1111004@OpenERP.com</field>
+            <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+    </data>
+</openerp>

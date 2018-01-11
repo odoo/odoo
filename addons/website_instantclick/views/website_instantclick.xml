@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="website_instantclick assets"  groups="base.group_public">
+            <xpath expr="/t" position="inside">
+                <script type="text/javascript" src="/website_instantclick/static/lib/instantclick/instantclick.js" data-no-instant=""></script>
+            </xpath>
+        </template>
+
+        <template id="instant_click_init" inherit_id="website.layout" name="Instant Click Init" groups="base.group_public">
+            <xpath expr="//body" position="inside">
+                <script data-no-instant="">
+                    InstantClick.init();
+                </script>
+            </xpath>
+        </template>
+     </data>
+</openerp>

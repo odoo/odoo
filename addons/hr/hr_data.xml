@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Employee Directory application installed!</field>
+            <field name="body"><![CDATA[<p>Manage your human resources with Odoo: employees and their hierarchy, HR departments and job positions.</p>
+<p>More HR features are available via extra applications: Recruitment Process (manage job positions and recruitment), Timesheet Validation (record timesheets and attendance),
+Leave Management (keep track of employee leaves), Expense Management (manage employee expenses), Employee Appraisals (organize employee surveys, where employees evaluate their subordinates or their manager).</p>]]></field>
+        </record>
+
+        <record id="employee" model="hr.employee">
+            <field name="name">Administrator</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="image" type="base64" file="hr/static/img/employee-image.png"/>
+        </record>
+
+    </data>
+</openerp>

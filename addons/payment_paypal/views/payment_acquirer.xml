@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="acquirer_form_paypal" model="ir.ui.view">
+            <field name="name">acquirer.form.paypal</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'paypal')]}">
+                        <group>
+                            <group>
+                                <field name="paypal_email_account"/>
+                                <field name="paypal_seller_account"/>
+                                <field name="paypal_use_ipn"/>
+                                <field name="paypal_api_enabled"
+                                    invisible="1"/> <!-- WIP in saas-3 -->
+                                <field name="paypal_api_username"
+                                    invisible="1"/> <!-- WIP in saas-3 -->
+                                <field name="paypal_api_password"
+                                    invisible="1"/> <!-- WIP in saas-3 -->
+                            </group>
+                        </group>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="transaction_form_paypal" model="ir.ui.view">
+            <field name="name">acquirer.transaction.form.paypal</field>
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//notebook' position='inside'>
+                    <page string="Paypal TX Details">
+                        <group>
+                            <field name="paypal_txn_id"/>
+                            <field name="paypal_txn_type"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

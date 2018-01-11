@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
+        </record>
+
+        <workflow action="purchase_confirm" model="purchase.order" ref="purchase_order_2"/>
+        <workflow action="purchase_confirm" model="purchase.order" ref="purchase_order_6"/>
+
+        <record id="stock.res_company_1" model="res.company">
+            <field eval="1.0" name="po_lead"/>
+        </record>
+
+        <record id="product.product_product_consultant" model="product.product">
+            <field eval="False" name="purchase_ok"/>
+        </record>
+
+        <record id="product.product_product_48" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_36" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_28" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_46" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_23" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+
+        <record id="product.product_product_20" model="product.product">
+            <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
+        </record>
+    </data>
+</openerp>
+

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Top menu item -->
+        <menuitem name="Invoicing"
+            id="menu_finance"
+            groups="group_account_user,group_account_manager,group_account_invoice"
+            sequence="50"/>
+
+        <menuitem id="menu_finance_receivables" name="Customers" parent="menu_finance" sequence="2"/>
+        <menuitem id="menu_finance_payables" name="Suppliers" parent="menu_finance" sequence="3"/>
+        <menuitem id="menu_finance_bank_and_cash" name="Bank and Cash" parent="menu_finance" sequence="4"
+            groups="group_account_user,group_account_manager"/>
+        <menuitem id="menu_finance_periodical_processing" name="Periodic Processing" parent="menu_finance" sequence="13" groups="group_account_user,group_account_manager"/>
+        <!-- This menu is used in account_code module -->
+        <menuitem id="menu_account_pp_statements" name="Statements" parent="menu_finance_periodical_processing" sequence="12"/>
+        <menuitem id="periodical_processing_journal_entries_validation" name="Draft Entries" parent="menu_finance_periodical_processing"/>
+        <menuitem id="periodical_processing_reconciliation" name="Reconciliation" parent="menu_finance_periodical_processing"/>
+        <menuitem id="periodical_processing_invoicing" name="Invoicing" parent="menu_finance_periodical_processing"/>
+        <menuitem id="menu_finance_charts" name="Charts" parent="menu_finance" groups="account.group_account_user" sequence="6"/>
+        <menuitem id="menu_finance_reporting" name="Accounting" parent="base.menu_reporting" sequence="35"/>
+        <menuitem id="menu_finance_reporting_budgets" name="Budgets" parent="menu_finance_reporting" groups="group_account_user"/>
+        <menuitem id="menu_finance_reports" name="Reporting" parent="menu_finance" sequence="14" groups="group_account_user,group_account_manager"/>
+        <menuitem id="menu_finance_legal_statement" name="Legal Reports" parent="menu_finance_reports"/>
+        <menuitem id="menu_finance_management_belgian_reports" name="Belgian Reports" parent="menu_finance_reporting"/>
+        <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="group_account_manager"/>
+        <menuitem id="menu_finance_accounting" name="Financial Accounting" parent="menu_finance_configuration" sequence="1"/>
+        <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="40"/>
+        <menuitem id="menu_analytic" parent="menu_analytic_accounting" name="Accounts" groups="analytic.group_analytic_accounting"/>
+        <menuitem id="menu_journals" sequence="15" name="Journals" parent="menu_finance_configuration" groups="group_account_manager"/>
+        <menuitem id="menu_configuration_misc" name="Miscellaneous" parent="menu_finance_configuration" sequence="55"/>
+        <menuitem id="base.menu_action_currency_form" name="Currencies" parent="menu_configuration_misc" sequence="20" groups="base.group_no_one"/>
+        <menuitem id="menu_finance_generic_reporting" name="Generic Reporting" parent="menu_finance_reports" sequence="100"/>
+        <menuitem id="menu_finance_entries" name="Journal Entries" parent="menu_finance" sequence="5" groups="group_account_user,group_account_manager"/>
+        <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_configuration" sequence="30" />
+
+        <menuitem id="account.menu_finance_recurrent_entries" name="Recurring Entries"
+            parent="menu_finance_periodical_processing" sequence="15"/>
+
+        <menuitem id="menu_account_end_year_treatments"
+            name="End of Period" parent="menu_finance_periodical_processing"
+            sequence="25"/>
+        <menuitem id="menu_finance_periodical_processing_billing" name="Billing" parent="menu_finance_periodical_processing" sequence="35"/>
+
+        <menuitem id="next_id_22" name="Partners" parent="menu_finance_generic_reporting" sequence="1"/>
+        <menuitem id="menu_multi_currency" name="Multi-Currencies" parent="menu_finance_generic_reporting" sequence="10" groups="base.group_multi_currency"/>
+        <menuitem
+            parent="account.menu_finance_legal_statement"
+            id="final_accounting_reports"
+            name="Accounting Reports"/>
+
+        <menuitem
+            parent="account.menu_finance_legal_statement"
+            id="menu_journals_report"
+            groups="group_account_user,group_account_manager"
+            name="Journals"/>
+
+    </data>
+</openerp>
+

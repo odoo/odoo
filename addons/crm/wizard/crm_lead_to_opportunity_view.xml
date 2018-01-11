@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_crm_lead2opportunity_partner" model="ir.ui.view">
+            <field name="name">crm.lead2opportunity.partner.form</field>
+            <field name="model">crm.lead2opportunity.partner</field>
+            <field name="arch" type="xml">
+                <form string="Convert to Opportunity">
+                    <group name="name">
+                        <field name="name" class="oe_inline"/>
+                    </group>
+                    <group string="Assign opportunities to">
+                        <field name="user_id" class="oe_inline" on_change="on_change_user(user_id, section_id, context)"/>
+                        <field name="section_id" class="oe_inline" groups="base.group_multi_salesteams"/>
+                    </group>
+                    <group string="Opportunities">
+                        <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}" nolabel="1">
+                            <tree>
+                                <field name="create_date"/>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="contact_name"/>
+                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="email_from"/>
+                                <field name="phone"/>
+                                <field name="stage_id"/>
+                                <field name="user_id"/>
+                                <field name="section_id" groups="base.group_multi_salesteams"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group name="action" attrs="{'invisible': [('name', '!=', 'convert')]}">
+                        <field name="action" on_change="onchange_action(action, context)" class="oe_inline"/>
+                        <field name="partner_id"
+                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                            class="oe_inline"/>
+                    </group>
+                    <footer>
+                        <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_crm_lead2opportunity_partner_mass" model="ir.ui.view">
+            <field name="name">crm.lead2opportunity.partner.mass.form</field>
+            <field name="model">crm.lead2opportunity.partner.mass</field>
+            <field name="arch" type="xml">
+                <form string="Convert to Opportunity">
+                    <separator string="Conversion Options"/>
+                    <group>
+                        <field name="action" class="oe_inline" on_change="on_change_action(action)"/>
+                        <field name="deduplicate" class="oe_inline" on_change="on_change_deduplicate(deduplicate, context)"/>
+                    </group>
+                    <group string="Assign opportunities to">
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
+                        <field name="user_ids" widget="many2many_tags"/>
+                        <!-- Uncomment me in trunk -->
+                        <!-- <field name="force_assignation" /> -->
+                    </group>
+                    <label for="opportunity_ids" string="Leads with existing duplicates (for information)" help="Leads that you selected that have duplicates. If the list is empty, it means that no duplicates were found" attrs="{'invisible': [('deduplicate', '=', False)]}"/>
+                    <group attrs="{'invisible': [('deduplicate', '=', False)]}">
+                        <field name="opportunity_ids" colspan="4" nolabel="1" readonly="1">
+                            <tree create="false" delete="false">
+                                <field name="create_date"/>
+                                <field name="name"/>
+                                <field name="type"/>
+                                <field name="contact_name"/>
+                                <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                                <field name="email_from"/>
+                                <field name="phone"/>
+                                <field name="stage_id"/>
+                                <field name="user_id"/>
+                                <field name="section_id" groups="base.group_multi_salesteams"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="mass_convert" string="Convert to Opportunities" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_crm_lead2opportunity_partner" model="ir.actions.act_window">
+            <field name="name">Convert to opportunity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">crm.lead2opportunity.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_crm_lead2opportunity_partner"/>
+            <field name="target">new</field>
+        </record>
+
+        <act_window id="action_crm_send_mass_convert"
+            multi="True"
+            key2="client_action_multi" name="Convert to opportunities"
+            res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
+            view_mode="form" target="new" view_type="form"
+            context="{'mass_convert' : True}"
+            view_id="view_crm_lead2opportunity_partner_mass"
+            groups="base.group_sale_salesman"
+        />
+
+    </data>
+</openerp>

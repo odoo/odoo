@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_iban
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 06:51+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Italian (http://www.transifex.com/odoo/odoo-8/language/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
+msgstr "\nDefinire il codice BIC/Swift sul conto IBAN al fine di emettere pagamenti validi."
+
+#. module: base_iban
+#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
+msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Conti Bancari"
+
+#. module: base_iban
+#: field:res.partner.bank,iban:0
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: model:res.partner.bank.type,name:base_iban.bank_iban
+msgid "IBAN Account"
+msgstr "Codice di conto IBAN"
+
+#. module: base_iban
+#: help:res.partner.bank,iban:0
+msgid "International Bank Account Number"
+msgstr "IBAN"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:138
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like"
+" this %s"
+msgstr "L'IBAN non sembra essere corretto. Dovrebbe essere simile a %s"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:142
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "L'IBAN non è valido, dovrebbe includere il codice nazione"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:141
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr "Questo IBAN non ha passato la validazione, si prega di verificare"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
+msgstr "bank_bic"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
+msgid "country_id"
+msgstr "country_id"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
+msgid "zip"
+msgstr "CAP"

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="account.report_overdue_document">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <div class="row">
+                <div class="col-xs-5 col-xs-offset-7">
+                    <span t-field="o.name"/><br/>
+                    <span t-raw="addresses[o.id].replace('\n\n', '\n').replace('\n', '&lt;br&gt;')"/>
+                     <span t-field="o.vat"/>
+                 </div>
+            </div>
+
+            <p>
+                Document: Customer account statement<br/>
+                Date: <span t-esc="formatLang(time.strftime('%Y-%m-%d'), date=True)"/><br/>
+                Customer ref: <span t-field="o.ref"/>
+            </p>
+
+            <p t-if="getLines(o)">
+                <t t-foreach="message(o, res_company)" t-as="messageline">
+                    <p t-esc="messageline"/>
+                </t>
+            </p>
+
+            <table class="table table-condensed" t-if="getLines(o)">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th class="text-center">Ref</th>
+                        <th class="text-center">Maturity Date</th>
+                        <th class="text-right">Due</th>
+                        <th class="text-right">Paid</th>
+                        <th class="text-right">Maturity</th>
+                        <th class="text-center">Li.</th>
+                    </tr>
+                </thead>
+                <tr t-foreach="getLines(o)" t-as="line">
+                    <td>
+                        <span t-field="line.date"/>
+                    </td>
+                    <td>
+                        <span t-field="line.name"/>
+                    </td>
+                    <td>
+                        <span t-field="line.ref"/>
+                    </td>
+                    <td>
+                        <span t-field="line.date_maturity"/>
+                    </td>
+                    <td class="text-right">
+                        <t t-if="line.account_id.type == 'receivable'">
+                            <span t-esc="formatLang(line.debit)"/>
+                        </t>
+                        <t t-if="line.account_id.type == 'payable'">
+                            <span t-esc="formatLang(line['credit'] * -1)"/>
+                        </t>
+                    </td>
+                    <td class="text-right">
+                        <t t-if="line.account_id.type == 'receivable'">
+                            <span t-esc="formatLang(line.credit)"/>
+                        </t>
+                        <t t-if="line.account_id.type == 'payable'">
+                            <span t-esc="formatLang(line.debit * -1)"/>
+                        </t>
+                    </td>
+                    <td class="text-right">
+                        <t t-if="time.strftime('%Y-%m-%d') &gt; line['date_maturity']">
+                            <span t-esc="formatLang(line.debit - line.credit, currency_obj=res_company.currency_id)"/>
+                        </t>
+                    </td>
+                    <td>
+                        <span t-if="line.blocked">x</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td><strong>Sub-Total :</strong></td>
+                    <td class="text-right"><span t-esc="formatLang(due[o.id])"/></td>
+                    <td class="text-right"><span t-esc="formatLang(paid[o.id])"/></td>
+                    <td class="text-right"><span t-esc="formatLang(mat[o.id])"/></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td><strong>Balance :</strong></td>
+                    <td class="text-right">
+                        <span t-esc="formatLang(due[o.id] - paid[o.id], currency_obj=res_company.currency_id)"/>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <p t-if="getLines(o)">
+                Total amount due:
+                <span t-esc="formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0)), currency_obj=res_company.currency_id)"/>
+            </p>
+
+            <p t-if="not getLines(o)">
+                <strong>There is nothing due with this customer.</strong>
+            </p>
+        </div>
+    </t>
+</template>
+
+<template id="report_overdue">
+    <t t-call="report.html_container">
+        <t t-foreach="doc_ids" t-as="doc_id">
+            <t t-raw="translate_doc(doc_id, doc_model, 'lang', 'account.report_overdue_document')"/>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

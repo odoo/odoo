@@ -1,0 +1,232 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_oauth
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-08-14 05:51+0000\n"
+"Last-Translator: choijaeho <hwangtog@gmail.com>\n"
+"Language-Team: Korean (http://www.transifex.com/odoo/odoo-8/language/ko/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ko\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "- Ceate a new project"
+msgstr "- 새 프로젝트 만들기"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "- Create an oauth client_id"
+msgstr "- oauth client_id 만들기"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid ""
+"- Edit settings and set both Authorized Redirect URIs and Authorized "
+"JavaScript Origins to your hostname."
+msgstr "- 설정을 편집하고 인증된 Redirect URI와 인증된 JavaScript 원본을 호스트이름에 설정하십시오."
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "- Go to Api Access"
+msgstr "- Api 접근으로 이동"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "- Go to the"
+msgstr "- 다음으로 이동"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:100
+#, python-format
+msgid "Access Denied"
+msgstr "접근이 거부됨"
+
+#. module: auth_oauth
+#: field:base.config.settings,auth_oauth_facebook_enabled:0
+msgid "Allow users to sign in with Facebook"
+msgstr "페이스북으로 로그온할 수 있도록 합니다"
+
+#. module: auth_oauth
+#: field:base.config.settings,auth_oauth_google_enabled:0
+msgid "Allow users to sign in with Google"
+msgstr "구글로 로그온할 수 있도록 합니다"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,enabled:0
+msgid "Allowed"
+msgstr "허용함"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,auth_endpoint:0
+msgid "Authentication URL"
+msgstr "인증 URL"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,body:0
+msgid "Body"
+msgstr "본문"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,css_class:0
+msgid "CSS class"
+msgstr "CSS 클래스"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,client_id:0
+#: field:base.config.settings,auth_oauth_facebook_client_id:0
+#: field:base.config.settings,auth_oauth_google_client_id:0
+msgid "Client ID"
+msgstr "클라이언트 ID"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,create_uid:0
+msgid "Created by"
+msgstr "작성자"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,create_date:0
+msgid "Created on"
+msgstr "작성일"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,data_endpoint:0
+msgid "Data URL"
+msgstr "데이터 URL"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "Google APIs console"
+msgstr "구글 API 콘솔"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,write_uid:0
+msgid "Last Updated by"
+msgstr "최근 갱신한 사람"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,write_date:0
+msgid "Last Updated on"
+msgstr "최근 갱신 날짜"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "Now copy paste the client_id here:"
+msgstr "이제 이곳에 client_id 를 복사해서 붙여넣기 하세요:"
+
+#. module: auth_oauth
+#: field:res.users,oauth_access_token:0
+msgid "OAuth Access Token"
+msgstr "OAuth 접근 토큰"
+
+#. module: auth_oauth
+#: field:res.users,oauth_provider_id:0
+msgid "OAuth Provider"
+msgstr "OAuth 공급자"
+
+#. module: auth_oauth
+#: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+msgid "OAuth Providers"
+msgstr "OAuth 공급자"
+
+#. module: auth_oauth
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr "OAuth UID는 공급자마다 유일해야 합니다"
+
+#. module: auth_oauth
+#: field:res.users,oauth_uid:0
+msgid "OAuth User ID"
+msgstr "OAuth 사용자 ID"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_auth_oauth_provider
+msgid "OAuth2 provider"
+msgstr "OAuth2 공급자"
+
+#. module: auth_oauth
+#: view:res.users:auth_oauth.view_users_form
+msgid "Oauth"
+msgstr "Oauth"
+
+#. module: auth_oauth
+#: help:res.users,oauth_uid:0
+msgid "Oauth Provider user_id"
+msgstr "Oauth 공급자 user_id"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,name:0
+msgid "Provider name"
+msgstr "공급자명"
+
+#. module: auth_oauth
+#: model:ir.actions.act_window,name:auth_oauth.action_oauth_provider
+msgid "Providers"
+msgstr "공급자"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,scope:0
+msgid "Scope"
+msgstr "범위"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:98
+#, python-format
+msgid "Sign up is not allowed on this database."
+msgstr "이 데이터베이스가 가입을 허용하지 않습니다."
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid ""
+"To setup the signin process with Google, first you have to perform the "
+"following steps:"
+msgstr "Google을 통한 가입 과정을 설정하려면, 먼저 다음 단계를 수행해야 합니다:"
+
+#. module: auth_oauth
+#: model:ir.model,name:auth_oauth.model_res_users
+msgid "Users"
+msgstr "사용자"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,validation_endpoint:0
+msgid "Validation URL"
+msgstr "검증 URL"
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:102
+#, python-format
+msgid ""
+"You do not have access to this database or your invitation has expired. "
+"Please ask for an invitation and be sure to follow the link in your "
+"invitation email."
+msgstr "이 데이터베이스에 접근할 수 없거나 초청장이 만료됐습니다. 초청장을 요청해주시고 초청 이메일의 링크를 클릭해주세요."
+
+#. module: auth_oauth
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_form
+#: view:auth.oauth.provider:auth_oauth.view_oauth_provider_list
+msgid "arch"
+msgstr "arch"
+
+#. module: auth_oauth
+#: view:base.config.settings:auth_oauth.view_general_configuration
+msgid "e.g. 1234-xyz.apps.googleusercontent.com"
+msgstr "예) 1234-xyz.apps.googleusercontent.com"
+
+#. module: auth_oauth
+#: field:auth.oauth.provider,sequence:0
+msgid "unknown"
+msgstr "알 수 없음"

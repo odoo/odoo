@@ -1,0 +1,114 @@
+-
+  In order to test hr_timesheet_sheet module in OpenERP,
+  I create Timesheet and check validation process done by manager.
+-
+  I set TimeSheet allowed difference for company
+-
+  !record {model: res.company, id: base.main_company}:
+    timesheet_max_difference: 1.00
+-
+  I assign this product(Service on Timesheet) and journal(Timesheet Journal) to employee "Gilles Gravie"
+-
+  !record {model: hr.employee, id: hr.employee_qdp, view: False}:
+    product_id: product.product_product_consultant
+    journal_id: hr_timesheet.analytic_journal
+-
+  I create a timesheet for employee "Gilles Gravie".
+-
+  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
+    date_from: !eval time.strftime('%Y-%m-01')
+    name: Gilles Gravie
+    state: new
+    user_id: base.user_demo
+    employee_id: 'hr.employee_qdp'
+-
+  Gilles "Sign In" at around 9am.
+-
+  !record {model: hr.attendance, id: hr_attendance_1}:
+    action: sign_in
+    employee_id: 'hr.employee_qdp'
+    name: !eval datetime.now().strftime('%Y-%m-%d 09:12:37')
+-
+  I test that Gilles in signed in
+-
+  !assert {model: hr.employee, id: hr.employee_qdp}:
+    - state == 'present'
+-
+  At the time of logout, I create attendance and perform "Sign Out".
+-
+  !record {model: hr.attendance, id: hr_attendance_2}:
+    action: sign_out
+    employee_id: 'hr.employee_qdp'
+    name: !eval datetime.now().strftime('%Y-%m-%d 17:30:00')
+-
+  I create Timesheet Entry for time spend on today work.
+-
+  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
+    timesheet_ids:
+      - account_id: account.analytic_agrolait
+        date: !eval time.strftime('%Y-%m-%d')
+        name: 'Develop yaml for hr module'
+        user_id: base.user_demo
+        unit_amount: 6.00
+        amount: -90.00
+        product_id: product.product_product_consultant
+        general_account_id: account.a_expense
+        journal_id: hr_timesheet.analytic_journal
+-
+  I confirm my Timesheet at end of period by click on "Confirm" button,
+  if the difference between Timesheet hour and attendance hour is more than 1 hour it will give message.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+    uid = ref('base.user_root')
+    from openerp import netsvc
+    from openerp.osv import osv
+    try:
+        self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"active_ids":
+          [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")],"active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
+          })
+        assert False, "The validation of the timesheet was unexpectedly accepted despite the 2:30 hours of difference"
+    except osv.except_osv:
+        pass
+-
+  I Modified the timesheet record and make the difference less than 1 hour.
+-
+  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
+    timesheet_ids:
+      - account_id: account.analytic_agrolait
+        date: !eval time.strftime('%Y-%m-%d')
+        name: 'Develop yaml for hr module'
+        unit_amount: 2.00
+        user_id: base.user_demo
+        amount: -90.00
+        product_id: product.product_product_consultant
+        general_account_id: account.a_expense
+        journal_id: hr_timesheet.analytic_journal
+-
+  I set an allowed difference of 1 hour
+-
+  !record {model: res.company, id: base.main_company}:
+    timesheet_max_difference: 1.00
+-
+  I try again to confirm the timesheet after modification.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+        uid = ref('base.user_root')
+        self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"active_ids":
+          [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")],"active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
+          })
+-
+  This time timesheet confirmed successfully.
+  I check that state is "Confirmed".
+-
+  !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
+    - state == 'confirm'
+-
+  The manager will accept This request by click on "Accept" button.
+-
+  !python {model: hr_timesheet_sheet.sheet}: |
+    self.write(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {'state': 'done'})
+-
+  I check that state is "Done".
+-
+  !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
+    - state == 'done'

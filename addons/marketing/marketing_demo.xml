@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data> 
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('marketing.group_marketing_user'))]" name="groups_id"/>
+        </record>
+    </data>
+</openerp>

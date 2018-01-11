@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="portal_claim_rule" model="ir.rule">
+            <field name="name">Portal Personal Claims</field>
+            <field ref="crm_claim.model_crm_claim" name="model_id"/>
+            <field name="domain_force">['|', ('message_follower_ids','in', [user.partner_id.id]), ('partner_id','=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="1" name="perm_create"/>
+        </record>
+    </data>
+</openerp>

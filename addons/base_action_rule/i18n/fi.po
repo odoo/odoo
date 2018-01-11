@@ -1,0 +1,365 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_action_rule
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-08-23 17:40+0000\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>\n"
+"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-8/language/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to setup a new automated action rule. \n"
+"              </p><p>\n"
+"                Use automated actions to automatically trigger actions for\n"
+"                various screens. Example: a lead created by a specific user may\n"
+"                be automatically set to a specific sales team, or an\n"
+"                opportunity which still has status pending after 14 days might\n"
+"                trigger an automatic reminder email.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+#: view:base.action.rule:base_action_rule.view_base_action_rule_tree
+msgid "Action Rule"
+msgstr "Toimintosääntö"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule
+msgid "Action Rules"
+msgstr "Toimintosäännöt"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Actions"
+msgstr "Toiminnot"
+
+#. module: base_action_rule
+#: field:base.action.rule,active:0 field:base.action.rule.lead.test,active:0
+msgid "Active"
+msgstr "Aktiivinen"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_followers:0
+msgid "Add Followers"
+msgstr "Lisää seuraajat"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
+#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+msgid "Automated Actions"
+msgstr "Automatisoidut Toiminnot"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "Based on Timed Condition"
+msgstr "Perustuu ajastettuun ehtoon"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_pre_id:0
+msgid "Before Update Filter"
+msgstr "Ennen päivityssuodatin"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Cancelled"
+msgstr "Peruttu"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Closed"
+msgstr "Suljettu"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Conditions"
+msgstr "Ehdot"
+
+#. module: base_action_rule
+#: field:base.action.rule,create_date:0
+msgid "Create Date"
+msgstr "Luontipäivä"
+
+#. module: base_action_rule
+#: field:base.action.rule,create_uid:0
+#: field:base.action.rule.lead.test,create_uid:0
+msgid "Created by"
+msgstr "Luonut"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,create_date:0
+msgid "Created on"
+msgstr "Luotu"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Days"
+msgstr "Päivät"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Delay After Trigger Date"
+msgstr "Viive liipaisupäivän jälkeen"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_range:0
+msgid ""
+"Delay after the trigger date.You can put a negative number if you need a "
+"delay before thetrigger date, like sending a reminder 15 minutes before a "
+"meeting."
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range:0
+msgid "Delay after trigger date"
+msgstr "Viive ajastetun päivämäärän jälkeen"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range_type:0
+msgid "Delay type"
+msgstr "Viivästyksen tyyppi"
+
+#. module: base_action_rule
+#: help:base.action.rule,server_action_ids:0
+msgid "Examples: email reminders, call object service, etc."
+msgstr "Esim. sähköpostimuistutukset, soittopalvelut, jne."
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Fields to Change"
+msgstr "Muutettavat kentät"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_id:0
+msgid "Filter"
+msgstr "Suodin"
+
+#. module: base_action_rule
+#: help:base.action.rule,sequence:0
+msgid "Gives the sequence order when displaying a list of rules."
+msgstr "Antaa järjestyksen sääntölistaa näytettäessä."
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid ""
+"Go to your \"Related Document Model\" page and set the filter parameters in "
+"the \"Search\" view (Example of filter based on Leads/Opportunities: "
+"Creation Date \"is equal to\" 01/01/2012)"
+msgstr ""
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Hours"
+msgstr "Tunnit"
+
+#. module: base_action_rule
+#: field:base.action.rule,id:0 field:base.action.rule.lead.test,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_id:0
+msgid ""
+"If present, this condition must be satisfied before executing the action "
+"rule."
+msgstr "Jos käytössä, niin tämän ehdon pitää täyttyä ennenkuin sääntö voidaan suorittaa."
+
+#. module: base_action_rule
+#: help:base.action.rule,filter_pre_id:0
+msgid ""
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Jos käytössä, niin tämän ehdon pitää täyttyä ennen tietueen päivitystä."
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "In Progress"
+msgstr "Käsittelyssä"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "In order to create a new filter:"
+msgstr "Luodaksesi uuden suodattimen:"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid ""
+"In this same \"Search\" view, select the menu \"Save Current Filter\", enter"
+" the name (Ex: Create the 01/01/2012) and add the option \"Share with all "
+"users\""
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,date_action_last:0
+msgid "Last Action"
+msgstr "Viimeisin tapahtuma"
+
+#. module: base_action_rule
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Viimeisin suoritus"
+
+#. module: base_action_rule
+#: field:base.action.rule,write_uid:0
+#: field:base.action.rule.lead.test,write_uid:0
+msgid "Last Updated by"
+msgstr "Viimeksi päivittänyt"
+
+#. module: base_action_rule
+#: field:base.action.rule,write_date:0
+#: field:base.action.rule.lead.test,write_date:0
+msgid "Last Updated on"
+msgstr "Viimeksi päivitetty"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Minutes"
+msgstr "Minuutit"
+
+#. module: base_action_rule
+#: field:base.action.rule,model:0
+msgid "Model"
+msgstr "Malli"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Kuukaudet"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "New"
+msgstr "Uusi"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "On Creation"
+msgstr "Luonnin yhteydessä"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "On Creation & Update"
+msgstr "Luonnin ja päivityksen yhteydessä"
+
+#. module: base_action_rule
+#: selection:base.action.rule,kind:0
+msgid "On Update"
+msgstr "Päivityksen yhteydessä"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,partner_id:0
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: base_action_rule
+#: selection:base.action.rule.lead.test,state:0
+msgid "Pending"
+msgstr "Odottava"
+
+#. module: base_action_rule
+#: field:base.action.rule,model_id:0
+msgid "Related Document Model"
+msgstr "Liittyvä dokumenttimalli"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,user_id:0
+msgid "Responsible"
+msgstr "Vastuuhenkilö"
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "Säännön nimi"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid ""
+"Select when the action must be run, and add filters and/or timing "
+"conditions."
+msgstr "Valitse milloin toimenpide pitää suorittaa ja lisää suodattimia ja/tai ajoituksia"
+
+#. module: base_action_rule
+#: field:base.action.rule,sequence:0
+msgid "Sequence"
+msgstr "Sekvenssi"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+#: field:base.action.rule,server_action_ids:0
+msgid "Server Actions"
+msgstr "Palvelintoiminnot"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "Server actions to run"
+msgstr "Palvelimen ajettavat tehtävät"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible"
+msgstr "Aseta vastuuhenkilö"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,state:0
+msgid "Status"
+msgstr "Tila"
+
+#. module: base_action_rule
+#: field:base.action.rule.lead.test,name:0
+msgid "Subject"
+msgstr "Aihe"
+
+#. module: base_action_rule
+#: view:base.action.rule:base_action_rule.view_base_action_rule_form
+msgid "The filter must therefore be available in this page."
+msgstr "Suodatin pitää tästä syystä olla saataville tällä sivulla."
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_id:0
+msgid "Trigger Date"
+msgstr "Liipaisupäivämäärä"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_calendar_id:0
+msgid "Use Calendar"
+msgstr "Käytä kalenteria"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_calendar_id:0
+msgid ""
+"When calculating a day-based timed condition, it is possible to use a "
+"calendar to compute the date based on working days."
+msgstr ""
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_id:0
+msgid ""
+"When should the condition be triggered. If present, will be checked by the "
+"scheduler. If empty, will be checked at creation and update."
+msgstr "Milloin ehto käynnistyy. Jos valittuna, niin ajoitusjärjestelijä tarkistaa. Jos tyhjä, niin tarkistetaan luonnin ja päivityksen yhteydessä."
+
+#. module: base_action_rule
+#: field:base.action.rule,kind:0
+msgid "When to Run"
+msgstr "Milloin ajetaan"
+
+#. module: base_action_rule
+#: help:base.action.rule,active:0
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr "Kun tätä ei ole valittu, sääntö on piilotettu ja sitä ei suoriteta"

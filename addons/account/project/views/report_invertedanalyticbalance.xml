@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_invertedanalyticbalance">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Inverted Analytic Balance - <span t-esc="res_company.currency_id.name"/></h2>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Account Name</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                            <th>Balance</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td></td>
+                            <td><strong t-esc="formatLang(sum_debit(docs, data['form']['date1'], data['form']['date2']))"/></td>
+                            <td><strong t-esc="formatLang(sum_credit(docs, data['form']['date1'], data['form']['date2']))"/></td>
+                            <td>
+                                <strong t-esc="formatLang(sum_balance(docs, data['form']['date1'], data['form']['date2']), currency_obj=res_company.currency_id)"/>
+                            </td>
+                            <td><strong><span t-esc="formatLang(sum_quantity(docs, data['form']['date1'], data['form']['date2']))"/></strong></td>
+                        </tr>
+                        <t t-foreach="lines_g(docs, data['form']['date1'], data['form']['date2'])" t-as="move_g">
+                            <tr>
+                                <td>
+                                    <strong t-esc="move_g['code']"/>
+                                </td>
+                                <td>
+                                    <strong t-esc="move_g['name']"/>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <span t-esc="formatLang(move_g['debit'])"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <span t-esc="formatLang(move_g['credit'])"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <span t-esc="formatLang(move_g['balance'], currency_obj = res_company.currency_id)"/>
+                                    </strong>
+                                </td>
+                                <td class="text-right">
+                                    <strong>
+                                        <span t-esc="formatLang(move_g['quantity'])"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                            <t t-foreach="lines_a(docs, move_g['id'], data['form']['date1'], data['form']['date2'])" t-as="move_a">
+                                <tr>
+                                    <td>
+                                        <span t-esc="move_a['code']"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="move_a['complete_name']"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(move_a['debit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(move_a['credit'])"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(move_a['balance'], currency_obj = res_company.currency_id)"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(move_a['quantity'])"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table> 
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

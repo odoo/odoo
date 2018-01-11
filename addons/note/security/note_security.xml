@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="1">
+
+    <record id="group_note_fancy" model="res.groups">
+        <field name="name">Notes / Fancy mode</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_note_fancy'))]"/>
+    </record>
+</data>
+</openerp>

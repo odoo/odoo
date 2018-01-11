@@ -1,0 +1,165 @@
+ /* 
+ This is a hack for IE9 ...
+ Attrs : width and height are not take in consideration
+ */
+.openerp svg:not(:root) {
+    overflow: visible;    
+}
+
+.graph_pivot_mode {
+    position:initial;
+}
+
+.graph_chart_mode {
+    position:relative;
+}
+
+.graph_main_content td {
+    font-size: 12px;
+    margin: 45px;
+    border-collapse: collapse;
+    vertical-align: middle;
+    border-bottom: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: right;
+    color: black;
+}
+
+.graph_main_content td:first-child {
+  background-color: rgb(240, 238, 238);
+}
+
+.graph_main_content table {
+  margin-top: 10px;
+}
+
+.graph_measure_selection .oe_selected {
+  padding-left: 0;
+}
+
+.graph_measure_selection .oe_selected:before {
+  content: "\f00c";
+  width: 20px;
+  display: inline-block;
+  font-family: FontAwesome;
+}
+
+.graph_measure_selection li {
+  margin-left: 5px;
+}
+
+.graph_main_content th {
+    font-size: 13px;
+    font-weight: normal;
+    padding: 10px 8px;
+    vertical-align: top;
+    color: black;
+}
+
+.graph_main_content tbody td{
+  border: 1px solid #b8b8b8;
+}
+
+.graph_main_content tbody {
+  border-top: 1px solid black;
+}
+
+.graph_main_content thead {
+  background-color: rgb(240, 238, 238);
+  border: 1px solid #b8b8b8;
+}
+
+.graph_main_content thead th {
+  border-left: 1px solid #b8b8b8;
+}
+
+div.graph_widget {
+  padding:10px;
+}
+
+.oe_dashboard div.graph_widget {
+  padding:0;
+}
+
+td.graph_border {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.graph_main_content table:not(.heatmap) tr:hover td:not(:first-child)
+{
+  background-color: rgb(245, 245, 245);
+}
+
+span.field-selection {
+	display: none;
+	padding: 0;
+}
+
+.web_graph_click:hover {
+    cursor: pointer;
+}
+
+.graph_widget .dropdown-menu {
+  font-size: 13px; 
+  padding: 4px 0;
+  background: #e8e8e8 !important;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  font-color: !important black;
+  text-shadow: none;
+  background-color: #e8e8e8;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+
+.graph_widget .dropdown-menu li a, .graph_widget .dropdown-menu li a:hover, .graph_widget .dropdown-menu li a:focus {
+  color: black;
+  text-decoration: none;
+}
+
+th.measure_row {
+  color: black;
+  font-size: 12px;
+  padding:0px 5px 0px 5px ;
+  margin:0;
+}
+
+
+.graph-dropdown-submenu {
+    position: relative;
+}
+
+.graph-dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.graph-dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.graph-dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.graph-dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+

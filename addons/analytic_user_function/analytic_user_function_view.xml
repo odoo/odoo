@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+        <!-- analytic_user_funct_grid views -->
+        <record model="ir.ui.view" id="analytic_user_funct_grid_tree">
+            <field name="name">analytic_user_funct_grid.tree</field>
+            <field name="model">analytic.user.funct.grid</field>
+            <field name="arch" type="xml">
+                <tree string="Invoicing Data" editable="bottom">
+                    <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman']}"/>
+                    <field name="product_id" on_change="onchange_user_product_id(user_id, product_id)" domain="[('type','=','service')]"/>
+                    <field name="price"/>
+                    <field name="uom_id" groups="product.group_uom"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="analytic_user_funct_grid_form">
+            <field name="name">analytic_user_funct_grid.form</field>
+            <field name="model">analytic.user.funct.grid</field>
+            <field name="arch" type="xml">
+                <form string="Invoicing Data">
+                    <group>
+                        <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman']}"/>
+                        <field name="product_id" domain="[('type','=','service')]" on_change="onchange_user_product_id(user_id, product_id)"/>
+                        <field name="price"/>
+                        <field name="uom_id" groups="product.group_uom"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- account.analytic.account inherited view -->
+        <record model="ir.ui.view" id="view_account_analytic_account_form_inherit">
+            <field name="name">account.analytic.account.form</field>
+            <field name="model">account.analytic.account</field>
+            <field eval="60" name="priority"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <separator name="description" position="before">
+                    <div name="user_function_price" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                        <separator string="Invoice Price Rate per User"/>
+                        <p class="oe_grey oe_edit_only">
+                            Define a specific service (e.g. Senior Consultant)
+                            and price for some users to use these data instead
+                            of the default values when invoicing the customer.
+                        </p>
+                        <p class="oe_grey oe_edit_only">
+                            Odoo will recursively search on parent accounts
+                            to check if specific conditions are defined for a
+                            specific user. This allows to set invoicing
+                            conditions for a group of contracts.
+                        </p>
+                        <field name="user_product_ids"/>
+                    </div>
+                </separator>
+            </field>
+        </record>
+
+        <!-- hr_timesheet_sheet.sheet inherited view -->
+        <record model="ir.ui.view" id="hr_timesheet_sheet_form_inherit">
+            <field name="name">hr.timesheet.sheet.form.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="priority" eval="18"/>
+            <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- hr_timesheet_sheet.sheet inherited view -->
+        <record model="ir.ui.view" id="hr_timesheet_sheet_form_inherit1">
+            <field name="name">hr.timesheet.sheet.form.form</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="priority" eval="19"/>
+            <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='timesheet_ids']/form/field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close')]</attribute> 
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
+                    <attribute name="context">{'default_use_timesheets': 1}</attribute> 
+                </xpath>
+            </field>
+        </record>
+
+        <!-- hr.analytic.timesheet inherited views -->
+        <record model="ir.ui.view" id="hr_timesheet_line_form_inherit">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close')]</attribute>
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_timesheet_line_form_inherit_2">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id"  required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_timesheet_line_tree_inherit">
+            <field name="name">hr.analytic.timesheet.tree</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='account_id']" position="attributes">
+                    <attribute name="domain">[('type','=','normal'),('state', '&lt;&gt;', 'close')]</attribute>
+                    <attribute name="on_change">on_change_account_id(account_id, user_id, unit_amount)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="hr_timesheet_line_tree_inherit_2">
+            <field name="name">hr.analytic.timesheet.tree</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='user_id']" position="replace">
+                    <field name="user_id"  required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)" context="{'default_groups_ref': ['base.group_user']}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

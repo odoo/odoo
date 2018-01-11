@@ -1,0 +1,24 @@
+-
+  I set a new sale team (with Marketing at parent) giving access rights of salesman.
+-
+  !context
+    uid: 'crm_res_users_salesmanager'
+-
+  !python {model: crm.lead}: |
+    section_id = self.pool.get('crm.case.section').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("sales_team.crm_case_section_2")})
+    self.write(cr, uid, [ref("crm_case_1")], {'section_id': section_id})
+-
+  Salesman check unqualified lead .
+-
+  !assert {model: crm.lead, id: crm.crm_case_1, string: Lead is in new stage}:
+    - stage_id.sequence == 1
+-
+  Salesman escalate the lead to parent team.
+-
+  !python {model: crm.lead}: |
+    self.case_escalate(cr, uid, [ref("crm_case_1")])
+-
+  Salesman check the lead is correctly escalated to the parent team.
+-
+  !assert {model: crm.lead, id: crm.crm_case_1, string: Escalate lead to parent team}:
+    - section_id.name == "Marketing"

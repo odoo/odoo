@@ -1,0 +1,268 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_test
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Henri Cornuau <hcornuau@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 06:46+0000\n"
+"Last-Translator: Fabien Pinckaers <fp@openerp.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_test
+#: model:ir.actions.act_window,help:account_test.action_accounting_assert
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create Accounting Test.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_no_content_create\">\n                Cliquer pour créer un test (Comptabilité).\n              </p>\n            "
+
+#. module: account_test
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+#: model:ir.ui.menu,name:account_test.menu_action_license
+msgid "Accounting Tests"
+msgstr "Tests (Comptabilité)"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Accouting tests on"
+msgstr "Comptabilité - Tests en cours"
+
+#. module: account_test
+#: field:accounting.assert.test,active:0
+msgid "Active"
+msgstr "Actif"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr "Vérifier si les pièces comptables sont équilibrées et ont la même date et période."
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_02
+msgid ""
+"Check if the balance of the new opened fiscal year matches with last year's "
+"balance"
+msgstr "Vérifier si le solde du dernier exercice comptable ouvert correspond au solde de l'exercice précédent"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_04
+msgid "Check if the totally reconciled movements are balanced"
+msgstr "Vérifier si les pièces complètement réconciliées sont en équilibre."
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+msgid ""
+"Check on bank statement that the Closing Balance = Starting Balance + sum of"
+" statement lines"
+msgstr "Vérifie sur le relevé bancaire que le solde de fermeture = solde d'ouverture + somme des lignes de transaction"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_08
+msgid "Check that general accounts and partners on account moves are active"
+msgstr "Vérifier que les comptes généraux et comptes clients utilisés dans les pièces comptables sont activés."
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr "Vérifier que les factures payées/lettrées ne sont pas en statut \"Ouverte\""
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+msgid ""
+"Check that reconciled account moves, that define Payable and Receivable "
+"accounts, are belonging to reconciled invoices"
+msgstr "Vérifie que les mouvement de comptes rapprochés, qui définissent comptes créditeurs et débiteurs, appartiennent à des factures rapprochées"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+msgid ""
+"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
+" Payable and Receivable Accounts"
+msgstr "Vérifie que les factures de Ventes/Achats rapprochées ont des écritures rapprochées pour les comptes créditeurs et débiteurs"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06_1
+msgid "Check that there's no move for any account with « View » account type"
+msgstr "Vérifie qu'il n'y a aucun mouvement compte de type «Vue» "
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr "Vérifier le solde : Débit total = Crédit total"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Code Help"
+msgstr "Aide"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid ""
+"Code should always set a variable named `result` with the result of your test, that can be a list or\n"
+"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"try to translate and print what is inside `result`.\n"
+"\n"
+"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
+"what order you want to print `result`'s content.\n"
+"\n"
+"Should you need them, you can also use the following variables into your code:\n"
+"    * cr: cursor to the database\n"
+"    * uid: ID of the current user\n"
+"\n"
+"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
+"\n"
+"Example: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
+msgstr "Le code devrait définir une variable nommée 'result' avec pour valeur le résultat de votre test, et de type liste ou\ndictionnaire. Si 'result' est une liste vide, alors le test fut réussi. Autrement il essaiera\nde traduire et d'imprimer le contenu de 'result'.\n\nSi le 'result' de votre test est un dictionnaire, vous pouvez définir une variable nommée 'column_order' pour indiquer\ndans quel ordre vous voulez imprimer le contenu de 'result'.\n\nEn cas de besoin, vous pouvez aussi utiliser les variables suivantes dans votre code:\n    * cr: curseur de base de données\n    * uid: ID de l'utilisateur actuel\n\nDans tous les cas, le code doit être des déclarations python correctes avec une indentation correcte (si besoin).\n\nExemple: \n    sql = '''SELECT id, name, ref, date\n             FROM account_move_line \n             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n          '''\n    cr.execute(sql)\n    result = cr.dictfetchall()"
+
+#. module: account_test
+#: field:accounting.assert.test,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: account_test
+#: field:accounting.assert.test,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Description"
+msgstr "Description"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Description:"
+msgstr "Description:"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Expression"
+msgstr "Expression"
+
+#. module: account_test
+#: field:accounting.assert.test,id:0
+#: field:report.account_test.report_accounttest,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_test
+#: field:accounting.assert.test,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière modification par"
+
+#. module: account_test
+#: field:accounting.assert.test,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: account_test
+#: view:website:account_test.report_accounttest
+msgid "Name:"
+msgstr "Nom :"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+msgid "Python Code"
+msgstr "Code Python"
+
+#. module: account_test
+#: field:accounting.assert.test,code_exec:0
+msgid "Python code"
+msgstr "Source python"
+
+#. module: account_test
+#: field:accounting.assert.test,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_01
+msgid "Test 1: General balance"
+msgstr "Test 1: Solde global"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_02
+msgid "Test 2: Opening a fiscal year"
+msgstr "Test 2: Ouverture d'un exercice"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_03
+msgid "Test 3: Movement lines"
+msgstr "Test 3 : Lignes de mouvements"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_04
+msgid "Test 4: Totally reconciled mouvements"
+msgstr "Test 4 : Mouvements totalement rapprochés"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05
+msgid ""
+"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr "Test 5.1 : Lignes comptables de crédit et de débit des factures rapprochées"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05_2
+msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
+msgstr "Test 5.2 : Factures rapprochées et comptes Débiteurs/Créditeurs"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06
+msgid "Test 6 : Invoices status"
+msgstr "Test 6 : Statut des factures"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06_1
+msgid "Test 7: « View  » account type"
+msgstr "Test 7: Compte de type « Vue  »"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_07
+msgid "Test 8 : Closing balance on bank statements"
+msgstr "Test 8 : Solde de fermeture des relevés bancaires"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_08
+msgid "Test 9 : Accounts and partners on account moves"
+msgstr "Test 9 : Comptes et partenaires dans les mouvements de compte"
+
+#. module: account_test
+#: field:accounting.assert.test,desc:0
+msgid "Test Description"
+msgstr "Description du test"
+
+#. module: account_test
+#: field:accounting.assert.test,name:0
+msgid "Test Name"
+msgstr "Nom du test"
+
+#. module: account_test
+#: view:accounting.assert.test:account_test.account_assert_form
+#: view:accounting.assert.test:account_test.account_assert_tree
+msgid "Tests"
+msgstr "Tests"
+
+#. module: account_test
+#: code:addons/account_test/report/account_test_report.py:78
+#, python-format
+msgid "The test was passed successfully"
+msgstr "Le test a été effectué avec succès."

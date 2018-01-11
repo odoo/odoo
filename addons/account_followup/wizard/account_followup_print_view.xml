@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <record id="view_account_followup_print" model="ir.ui.view">
+            <field name="name">account.followup.print.form</field>
+            <field name="model">account_followup.print</field>
+            <field name="arch" type="xml">
+            <form string="Send follow-ups">
+                <group col="4">
+                    <field name="followup_id" groups="base.group_multi_company"/>
+                    <field name="date" groups="base.group_no_one"/>
+                </group>
+                	<p class ="oe_grey">
+                        This action will send follow-up emails, print the letters and
+                        set the manual actions per customer, according to the follow-up levels defined. 
+                    </p>
+                    <footer>
+                        <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+            </form>
+           </field>
+        </record>
+
+        <record id="action_account_followup_print" model="ir.actions.act_window">
+            <field name="name">Send Follow-Ups</field>
+            <field name="res_model">account_followup.print</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_account_followup_print"
+                  id="account_followup_print_menu"
+                  parent="menu_finance_followup"
+                  name = "Send Letters and Emails"
+                  groups = "account.group_account_user"
+                  sequence="2"/>
+
+        <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
+            <field name="name">account_followup.stat.by.partner.search</field>
+            <field name="model">account_followup.stat.by.partner</field>
+            <field name="arch" type="xml">
+                <search string="Partner to Remind">
+                    <field name="date_followup"/>
+                    <filter string="Balance > 0" domain="[('balance','&gt;',0)]" icon="terp-dolar" name="balance_positive"/>
+                    <field name="partner_id"/>
+                    <field name="max_followup_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+
+           <record id="account_followup_stat_by_partner_tree" model="ir.ui.view">
+            <field name="name">account_followup.stat.by.partner.tree</field>
+            <field name="model">account_followup.stat.by.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Partner to Remind">
+                   <field name="partner_id"/>
+                   <field name="balance"/>
+                   <field name="max_followup_id"/>
+                   <field name="date_followup"/>
+                   <field name="date_move_last"/>
+                   <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+           </record>
+
+           <record id="view_account_followup_sending_results" model="ir.ui.view">
+            <field name="name">account_followup.sending.results.form</field>
+            <field name="model">account_followup.sending.results</field>
+            <field name="arch" type="xml">
+            <form string="Summary of actions">
+                <header>
+                    <field name="description" widget="html" class="oe_view_only"/>
+                </header>
+                <footer>
+                    <field name="needprinting" invisible="1"/>
+                    <div attrs="{'invisible':[('needprinting','=', False)]}">
+                        <button name="do_report" string="Download Letters" type="object" class="oe_highlight"/>
+                    </div>
+                    <div attrs="{'invisible':[('needprinting','!=', False)]}">
+                        <button name="do_done" string="Close" type="object" class="oe_highlight"/>
+                    </div>
+                </footer>
+            </form>
+            </field>
+        </record>
+    </data>
+</openerp>

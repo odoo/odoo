@@ -1,0 +1,25 @@
+<openerp>
+    <data>
+        <template id="report_shipping2" inherit_id="stock.report_picking">
+            <xpath expr="//div[@name='partner_header']" position="after">
+                <div name="invoice_partner" t-if="o.picking_type_id.code == 'outgoing' and o.sale_id and o.sale_id.partner_invoice_id">
+                    Will be invoiced to:
+                    <div t-field="o.sale_id.partner_invoice_id" 
+                     t-field-options='{"widget": "contact", "fields": ["address", "name", "phone", "fax"], "no_marker": true}'/>
+                </div>
+            </xpath>
+            <xpath expr="//th[@name='td_sched_date_h']" position="after">
+                <th t-if="o.picking_type_id.code == 'outgoing'"><strong>Carrier</strong></th>
+                <th><strong>Weight</strong></th>
+            </xpath>
+            <xpath expr="//td[@name='td_sched_date']" position="after">
+                <td t-if="o.picking_type_id.code == 'outgoing'">
+                    <span t-field="o.carrier_id"/>
+                </td>
+                <td>
+                    <span t-field="o.weight"/>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</openerp>

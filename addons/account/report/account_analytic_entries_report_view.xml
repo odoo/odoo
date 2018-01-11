@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_analytic_entries_report_search" model="ir.ui.view">
+        <field name="name">analytic.entries.report.search</field>
+        <field name="model">analytic.entries.report</field>
+        <field name="arch" type="xml">
+            <search string="Analytic Entries Analysis">
+                <field name="date"/>
+                <filter string="My Entries" domain="[('user_id','=',uid)]" help="My Entries"/>
+                <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="product_id" />
+                <field name="user_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Account" name="Account" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="General Account" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Journal" context="{'group_by':'journal_id'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Month" name="Month" context="{'group_by':'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record id="view_account_analytic_entries_search" model="ir.ui.view">
+         <field name="name">account.analytic.entries.graph</field>
+         <field name="model">analytic.entries.report</field>
+         <field name="arch" type="xml">
+             <graph string="Analytic Entries Analysis" type="pivot">
+                <field name="account_id" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="nbr" type="measure"/>
+                <field name="unit_amount" type="measure"/>
+                <field name="amount" type="measure"/>
+             </graph>
+         </field>
+    </record>
+    <record id="action_analytic_entries_report" model="ir.actions.act_window">
+        <field name="name">Analytic Entries Analysis</field>
+        <field name="res_model">analytic.entries.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="search_view_id" ref="view_analytic_entries_report_search"/>
+        <field name="context">{'group_by_no_leaf':1, 'search_default_Account':1, 'group_by':[]}</field>
+        <field name="help">From this view, have an analysis of your different analytic entries following the analytic account you defined matching your business need. Use the tool search to analyse information about analytic entries generated in the system.</field>
+    </record>
+
+    <menuitem action="action_analytic_entries_report"
+        id="menu_action_analytic_entries_report"
+        groups="analytic.group_analytic_accounting"
+        parent="account.menu_finance_reporting" sequence="4"/>
+
+</data>
+</openerp>

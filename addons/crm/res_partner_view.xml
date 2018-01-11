@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- open meetings related to given partner -->
+        <record id="calendar_event_partner" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="src_model">res.partner</field>
+            <field name="res_model">calendar.event</field>
+            <field name="view_mode">calendar,tree,form,gantt</field>
+            <field name="context">{'default_partner_ids': [active_id]}</field>
+        </record>
+
+        <!-- open opportunities related to given partner -->
+        <record model="ir.actions.act_window" id="relate_partner_opportunities">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="context">{
+                'search_default_partner_id': active_id,
+                'stage_type': 'opportunity', 
+                'default_type': 'opportunity'
+            }</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an opportunity related to this customer.
+              </p><p>
+                Use opportunities to keep track of your sales pipeline, follow
+                up potential sales and better forecast your future revenues.
+              </p><p>
+                You will be able to plan meetings and phone calls from
+                opportunities, convert them into quotations, attach related
+                documents, track all discussions, and much more.
+              </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_kanban">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+
+        <!-- Partner kanban view inherte -->
+        <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
+            <field name="name">res.partner.kanban.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <field name="mobile" position="after">
+                    <field name="opportunity_count"/>
+                    <field name="meeting_count"/>
+                </field>
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0">
+                        <t t-esc="record.opportunity_count.value"/> Opportunities
+                    </a>
+                    <a name="%(calendar_event_partner)d" type="action" t-if="record.meeting_count.value>0">
+                        <t t-esc="record.meeting_count.value"/> Meetings
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add section_id (SalesTeam) and contextual button on partner form view -->
+        <record id="view_partners_form_crm1" model="ir.ui.view">
+            <field name="name">view.res.partner.form.crm.inherited1</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="user_id" position="after">
+                        <field name="section_id" completion="1" groups="base.group_multi_salesteams"/>
+                    </field>
+                    <xpath expr="//div[@name='buttons']" position="inside">
+                        <button class="oe_inline oe_stat_button" type="action"
+                            attrs="{'invisible': [('customer', '=', False)]}"
+                            name="%(crm.crm_case_category_act_oppor11)d"
+                            icon="fa-star"
+                            context="{'search_default_partner_id': active_id}">
+                            <field string="Opportunities" name="opportunity_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_inline oe_stat_button" type="object"
+                            name="schedule_meeting"
+                            icon="fa-calendar"
+                            context="{'partner_id': active_id}">
+                            <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                        </button>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- second view due to access rights required to compute phonecall_count -->
+        <record id="view_partners_form_crm_calls" model="ir.ui.view">
+            <field name="name">view.res.partner.form.crm.inherited.calls</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="groups_id" eval="[(4, ref('base.group_sale_manager')), (4, ref('base.group_partner_manager'))]"/>
+            <field eval="18" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//div[@name='buttons']" position="inside">
+                        <button class="oe_inline oe_stat_button" type="action"
+                            name="%(crm.crm_case_categ_phone_incoming0)d" 
+                            icon="fa-phone"
+                            context="{'search_default_partner_id': active_id, 'default_duration': 1.0}">
+                            <field string="Calls" name="phonecall_count" widget="statinfo"/>
+                        </button>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
+

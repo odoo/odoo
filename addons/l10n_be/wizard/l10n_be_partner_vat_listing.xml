@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data>
+    <record id="l10n_be.view_partner_vat_listing" model="ir.ui.view">
+      <field name="name">Partner VAT Listing</field>
+      <field name="model">partner.vat</field>
+      <field name="arch" type="xml">
+        <form string="Partner VAT Listing">
+          <p class="oe_grey">
+              This wizard will create an XML file for VAT details and total invoiced amounts per partner.
+          </p>
+          <group>
+            <field name="year"/>
+            <field name="limit_amount"/>
+          </group>
+          <footer>
+            <button name="get_partner" string="View Customers" type="object"  class="oe_highlight"  />
+            or 
+            <button string="Cancel" class="oe_link" special="cancel" />
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="l10n_be.action_partner_vat_listing" model="ir.actions.act_window">
+      <field name="name">Partner VAT Listing</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">partner.vat</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="l10n_be.view_partner_vat_listing"/>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem name="Annual Listing Of VAT-Subjected Customers" parent="l10n_be.menu_finance_belgian_statement" action="l10n_be.action_partner_vat_listing" id="l10n_be.partner_vat_listing"/>
+
+    <record id="l10n_be.view_vat_listing" model="ir.ui.view">
+      <field name="name">Vat Listing</field>
+      <field name="model">partner.vat.list</field>
+      <field name="arch" type="xml">
+        <form string="Annual Listing of VAT-Subjected Customers">
+          <group col="4">
+              <notebook colspan="4">
+                <page string="Customer List">
+                  <separator string="Customers" colspan="4"/>
+                  <field name="partner_ids" colspan="4" nolabel="1" default_focus="1" height="300" width="500" readonly="1"/>
+                </page>
+                <page string="Comments">
+                  <separator string="Free Comments to be Added to the Declaration" colspan="4"/>
+                  <field name="comments" colspan="4" nolabel="1"/>
+                </page>
+              </notebook>
+              <separator colspan="4"/>
+              <group colspan="4">
+                <button colspan="2" name="create_xml" string="Create XML" type="object" icon="gtk-execute"/>
+                <button colspan="2" name="print_vatlist" string="Print" type="object"  icon="gtk-print"/>
+              </group>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record id="l10n_be.view_vat_listing_result" model="ir.ui.view">
+      <field name="name">VAT List - XML File Created</field>
+      <field name="model">partner.vat.list</field>
+      <field name="priority" eval="1"/>
+      <field name="arch" type="xml">
+        <form string="XML File has been Created.">
+            <header>
+                <button name="print_vatlist" string="Print" type="object" class="oe_highlight"  />
+                or 
+                <button string="Cancel" class="oe_link" special="cancel" />
+            </header>
+            <separator string="XML File has been Created." colspan="4"/>
+            <label string="Save the File with '.xml' extension." colspan="4" nolabel="1"/>
+            <field name="name"/><newline/>
+            <field name="file_save"/>
+        </form>
+      </field>
+    </record>
+
+    <!-- osv_memory for vat listing of clients -->
+    <record id="l10n_be.view_vat_listing_form" model="ir.ui.view">
+      <field name="name">step.vat.listing</field>
+      <field name="model">vat.listing.clients</field>
+      <field name="arch" type="xml">
+        <form string="VAT listing">
+          <group col="4">
+            <field name="name"/>
+            <field name="vat"/>
+            <field name="turnover"/>
+            <field name="vat_amount"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record id="l10n_be.view_vat_listing_tree" model="ir.ui.view">
+      <field name="name">step.vat.listing</field>
+      <field name="model">vat.listing.clients</field>
+      <field name="arch" type="xml">
+        <tree string="VAT listing">
+          <field name="name"/>
+          <field name="vat"/>
+          <field name="turnover"/>
+          <field name="vat_amount"/>
+        </tree>
+      </field>
+    </record>
+
+  </data>
+</openerp>

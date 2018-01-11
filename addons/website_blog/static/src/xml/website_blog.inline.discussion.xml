@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.blog_discussion.comment">
+        <li class="media">
+            <div class="pull-left">
+                <img class="media-object img-circle" t-att-src="res.author_image" style="width: 30px;"/>
+            </div>
+            <div t-attf-class="pull-right btn-group js_publish_management #{res.website_published and 'css_published' or 'css_unpublished'} #{res.publish ? '' : 'hidden'}" data-object="mail.message" t-att-data-id="res.id">
+                <button class="btn btn-danger btn-xs js_publish_btn">Not Published</button>
+                <button class="btn btn-success btn-xs js_publish_btn">Published</button>
+            </div>
+            <div class="media-body discussion_scroll_post">
+                <div t-esc='res.body'/>
+                <small class="text-muted">
+                    by
+                    <span t-esc='res.author_name'/>
+                </small>
+            </div>
+        </li>
+    </t>
+    <t t-name="website.blog_discussion.popover">
+        <div class="mycontent hidden">
+            <input name="discussion" t-att-value="identifier" type="hidden"/>
+            <input name="blog_post_id" t-att-value="options.post_id" type="hidden"/>
+            <div id="inline_comment">
+                <textarea class="mb8 form-control" rows="2" id="inline_comment" placeholder="Write a comment..."/>
+            </div>
+            <div id="author_name">
+                <input id="author_name" name="user_name" t-attf-class="form-control #{options.public_user ? '' : 'hidden'}" placeholder="Your name..."/>
+            </div>
+            <div id="author_email">
+                <input id="author_email" name="user_email" t-attf-class="mt8 mb8 form-control #{options.public_user ? '' : 'hidden'}" placeholder="Your Email..."/>
+            </div>
+            <button id='comment_post' class="btn btn-primary btn-xs mb8">Post</button>
+            <div class="discussion_history"/>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_hr_timesheet_report_graph" model="ir.ui.view">
+            <field name="name">hr.timesheet.report.graph</field>
+            <field name="model">hr.timesheet.report</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet" type="pivot">
+                    <field name="user_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="quantity" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+
+        <record id="view_hr_timesheet_report_search" model="ir.ui.view">
+            <field name="name">hr.timesheet.report.search</field>
+            <field name="model">hr.timesheet.report</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet">
+                    <field name="account_id"/>
+                    <field name="user_id"/>
+                    <filter string="This Month" name="month" domain="[('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;=',time.strftime('%Y-%m-01'))]" help="month"/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="general_account_id"/>
+                        <field name="product_id"/>
+                        <field name="journal_id"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="date"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="User" name="group_user_id" context="{'group_by':'user_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <separator/>
+                        <filter string="Month" context="{'group_by':'date:month'}" help="Group by month of date"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_report_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet Analysis</field>
+            <field name="res_model">hr.timesheet.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+        </record>
+
+        <menuitem action="action_hr_timesheet_report_stat_all"  id="menu_hr_timesheet_report_all"
+            parent="hr.menu_hr_reporting" groups="base.group_hr_manager" sequence="3"/>
+
+    </data>
+</openerp>

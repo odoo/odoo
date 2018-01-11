@@ -1,0 +1,95 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="hr.employee_mit" model="hr.employee">
+            <field name="address_home_id" ref="base.res_partner_address_5"/>
+        </record>
+
+        <record id="car_travel" model="product.product">
+            <field name="list_price">0.32</field>
+            <field name="type">service</field>
+            <field name="name">Car Travel Expenses</field>
+            <field name="default_code">CarTRA</field>
+            <field name="uom_id" ref="product.product_uom_km"/>
+            <field name="uom_po_id" ref="product.product_uom_km"/>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="hr_expense_ok" eval="True" />
+            <field name="image" type="base64" file="hr_expense/static/img/car_travel-image.jpg"/>
+        </record>
+
+        <record id="air_ticket" model="product.product">
+            <field name="list_price">700.0</field>
+            <field name="standard_price">700.0</field>
+            <field name="type">service</field>
+            <field name="name">Air Ticket</field>
+            <field name="default_code">AT</field>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="hr_expense_ok" eval="True" />
+            <field name="image" type="base64" file="hr_expense/static/img/air_ticket-image.jpg"/>
+        </record>
+
+        <record id="hotel_rent" model="product.product">
+            <field name="list_price">400.0</field>
+            <field name="type">service</field>
+            <field name="name">Hotel Accommodation</field>
+            <field name="default_code">HA0</field>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="hr_expense_ok" eval="True" />
+            <field name="image" type="base64" file="hr_expense/static/img/hotel_rent-image.jpg"/>
+        </record>
+        <record id="expenses0" model="hr.expense.expense">
+            <field name="name">Expenses</field>
+            <field name="date" eval="time.strftime('%Y-08-25')"/>
+        </record>
+        <record id="expenses_line0" model="hr.expense.line">
+            <field name="name">Travel Expenses</field>
+            <field name="date_value" eval="time.strftime('%Y-08-10')"/>
+            <field name="analytic_account" ref="account.analytic_consultancy"/>
+            <field name="expense_id" ref="expenses0"/>
+            <field eval="200.0" name="unit_amount"/>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field eval="1.0" name="unit_quantity"/>
+        </record>
+
+        <record id="sep_expenses" model="hr.expense.expense">
+            <field name="employee_id" ref="hr.employee_mit"/>
+            <field name="name">September Expenses</field>
+            <field name="date" eval="time.strftime('%Y-09-28')"/>
+        </record>
+
+        <record id="travel_by_air_sep" model="hr.expense.line">
+            <field name="name">Travel by Air</field>
+            <field name="date_value" eval="time.strftime('%Y-09-03')"/>
+            <field name="analytic_account" ref="account.analytic_consultancy"/>
+            <field name="product_id" ref="air_ticket"/>
+            <field name="expense_id" ref="sep_expenses"/>
+            <field eval="700.0" name="unit_amount"/>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field eval="1.0" name="unit_quantity"/>
+        </record>
+
+        <record id="hotel_bill_sep" model="hr.expense.line">
+            <field name="name">Hotel Expenses - Thymbra</field>
+            <field name="date_value" eval="time.strftime('%Y-09-20')"/>
+            <field name="analytic_account" ref="account.analytic_nebula"/>
+            <field name="product_id" ref="hotel_rent"/>
+            <field name="expense_id" ref="sep_expenses"/>
+            <field eval="400.0" name="unit_amount"/>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field eval="5.0" name="unit_quantity"/>
+        </record>
+
+        <record id="car_travel_sep" model="hr.expense.line">
+                <field name="name">Bruxelles - Paris</field>
+                <field name="date_value" eval="time.strftime('%Y-09-15')"/>
+                <field name="analytic_account" ref="account.analytic_nebula"/>
+                <field name="product_id" ref="car_travel"/>
+                <field name="expense_id" ref="sep_expenses"/>
+                <field eval="0.30" name="unit_amount"/>
+                <field name="uom_id" ref="product.product_uom_km"/>
+                <field eval="622.0" name="unit_quantity"/>
+        </record>
+
+    </data>
+</openerp>

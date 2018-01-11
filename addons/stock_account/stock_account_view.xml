@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_inventory_form_inherit" model="ir.ui.view">
+            <field name="name">stock.inventory.form.inherit</field>
+            <field name="model">stock.inventory</field>
+            <field name="inherit_id" ref="stock.view_inventory_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="period_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_location_form_inherit" model="ir.ui.view">
+            <field name="name">stock.location.form.inherit</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='localization']" position="after">
+                    <group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
+                        <field name="valuation_in_account_id"/>
+                        <field name="valuation_out_account_id"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_picking_inherit_tree2" model="ir.ui.view">
+            <field name="name">stock.picking.tree.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='backorder_id']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_picking_inherit_form2" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='do_unreserve']" position="after">
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" attrs="{'invisible': ['|',('state','&lt;&gt;','done'),('invoice_state','&lt;&gt;','2binvoiced')]}" type="action" class="oe_highlight" groups="base.group_user"/>
+                </xpath>
+                <field name="move_lines" position="attributes">
+                    <attribute name="context">{'default_invoice_state': invoice_state, 'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id,'default_picking_id': active_id}</attribute>
+                </field>
+                <xpath expr="//field[@name='move_type']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">stock.move.form.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_type_id']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_procurement_rule_form_stockaccount_inherit">
+            <field name="name">stock.procurement.rule.inherit.form</field>
+            <field name="model">procurement.rule</field>
+            <field name="inherit_id" ref="stock.view_procurement_rule_form_stock_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_type_id']" position="after">
+                    <field name="invoice_state"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_pusht_rule_form_stockaccount_inherit">
+            <field name="name">stock.location.path.inherit.form</field>
+            <field name="model">stock.location.path</field>
+            <field name="inherit_id" ref="stock.stock_location_path_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='picking_type_id']" position="after">
+                    <field name="invoice_state"/>
+                </xpath>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_move_picking_from_stockaccount_inherit">
+            <field name="name">stock.move.form.invoice_state</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_expected']" position="after">
+                    <field name="invoice_state" groups="account.group_account_invoice"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

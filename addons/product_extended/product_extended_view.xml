@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="product_product_ext_form_view2">
+            <field name="name">product_extended.product.form.view</field>
+            <field name="model">product.template</field>
+            <field name="priority">3</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <field name="standard_price" position="after">
+                    <button name="%(action_view_compute_price_wizard)d" string="Recompute price from BoM"
+                            type="action" attrs="{'invisible': [('cost_method', '!=', 'standard')]}"
+                             groups="stock_account.group_inventory_valuation"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+

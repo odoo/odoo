@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <menuitem
+            name='Payments'
+            id='root_payment_menu'
+            parent='base.menu_administration'/>
+
+        <record id="acquirer_form" model="ir.ui.view">
+            <field name="name">payment.acquirer.form</field>
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <form string="Payment Acquirer">
+                    <sheet>
+                        <group name="acquirer_base">
+                            <group>
+                                <field name="name"/>
+                                <field name="provider"/>
+                                <field name="company_id"/>
+                                <field name="website_published"/>
+                                <field name="environment"/>
+                                <field name="validation"/>
+                            </group>
+                            <group>
+                                <field name="fees_active"/>
+                                <field name="fees_dom_fixed"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_dom_var"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_int_fixed"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                                <field name="fees_int_var"
+                                    attrs="{'invisible': [('fees_active', '=', False)]}"/>
+                            </group>
+                        </group>
+                        <group name="acquirer_display">
+                            <field name="pre_msg"/>
+                            <field name="post_msg"/>
+                            <label for="view_template_id"/>
+                            <div>
+                                <field name="view_template_id" nolabel="1"/>
+                                <div>
+                                    This template renders the acquirer button with all necessary values.
+                                    It is be rendered with qWeb with the following evaluation context:
+                                    <ul>
+                                        <li>tx_url: transaction URL to post the form</li>
+                                        <li>acquirer: payment.acquirer browse record</li>
+                                        <li>user: current user browse record</li>
+                                        <li>reference: the transaction reference number</li>
+                                        <li>currency: the transaction currency browse record</li>
+                                        <li>amount: the transaction amount, a float</li>
+                                        <li>partner: the buyer partner browse record, not necessarily set</li>
+                                        <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
+                                        <li>tx_values: transaction values</li>
+                                        <li>context: the current context dictionary</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="acquirer_list" model="ir.ui.view">
+            <field name="name">payment.acquirer.list</field>
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Acquirers">
+                    <field name="name"/>
+                    <field name="provider"/>
+                    <field name="website_published"/>
+                    <field name="environment"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="acquirer_search" model="ir.ui.view">
+            <field name="name">payment.acquirer.search</field>
+            <field name="model">payment.acquirer</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="provider"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Provider" name="provider" domain="[]" context="{'group_by': 'provider'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payment_acquirer" model="ir.actions.act_window">
+            <field name="name">Payment Acquirers</field>
+            <field name="res_model">payment.acquirer</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+        <menuitem
+            action='action_payment_acquirer'
+            id='payment_acquirer_menu'
+            parent='root_payment_menu'
+            sequence='10' />
+
+        <record id="transaction_form" model="ir.ui.view">
+            <field name="name">payment.transaction.form</field>
+            <field name="model">payment.transaction</field>
+            <field name="arch" type="xml">
+                <form string="Payment Transactions">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="reference"/>
+                                <field name="amount"/>
+                                <field name="date_create"/>
+                                <field name="fees"/>
+                                <field name="currency_id"/>
+                                <field name="partner_id"/>
+                                <field name="partner_reference"/>
+                            </group>
+                            <group>
+                                <field name="acquirer_id"/>
+                                <field name="acquirer_reference"/>
+                                <field name="date_validate"/>
+                                <field name="state"/>
+                                <field name="state_message"/>
+                            </group>
+                            <group>
+                                <field name="partner_name"/>
+                                <field name="partner_address"/>
+                                <field name="partner_email"/>
+                                <field name="partner_lang"/>
+                                <field name="partner_zip"/>
+                                <field name="partner_city"/>
+                                <field name="partner_country_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="transaction_list" model="ir.ui.view">
+            <field name="name">payment.transaction.list</field>
+            <field name="model">payment.transaction</field>
+            <field name="arch" type="xml">
+                <tree string="Payment Transactions">
+                    <field name="reference"/>
+                    <field name="acquirer_id"/>
+                    <field name="partner_id"/>
+                    <field name="partner_name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="transaction" model="ir.ui.view">
+            <field name="name">payment.transaction.search</field>
+            <field name="model">payment.transaction</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="reference"/>
+                    <field name="acquirer_id"/>
+                    <field name="partner_id"/>
+                    <field name="partner_name"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_payment_transaction" model="ir.actions.act_window">
+            <field name="name">Payment Transactions</field>
+            <field name="res_model">payment.transaction</field>
+            <field name='view_type'>form</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+
+        <menuitem
+            action='action_payment_transaction'
+            id='payment_transaction_menu'
+            parent='root_payment_menu'
+            sequence='20' />
+
+    </data>
+</openerp>

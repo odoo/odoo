@@ -1,0 +1,215 @@
+<openerp>
+    <data>
+    <!-- lead views-->
+        <record model="ir.ui.view" id="crm_lead_portal_tree">
+            <field name="name">partner lead</field>
+            <field name="model">crm.lead</field>
+            <field name="priority" eval="32"/>
+            <field name="arch" type="xml">
+            <tree string="Leads" colors="red:stage_id and stage_id[1]=='Disinterested';black:stage_id and stage_id[1]=='Interested'">
+              <field name="date_deadline" invisible="1"/>
+              <field name="create_date"/>
+              <field name="name" string="Subject"/>
+              <field name="contact_name"/>
+              <field name="country_id" invisible="context.get('invisible_country', True)" />
+              <field name="email_from"/>
+              <field name="phone"/>
+              <field name="stage_id" invisible="1"/>
+              <field name="campaign_id" invisible="1"/>
+              <field name="referred" invisible="1"/>
+              <field name="medium_id" invisible="1"/>
+              <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
+
+              <button string="I'm interested" name="case_interested" icon="gtk-index" type="object"/>
+              <button string="I'm not interested" name="case_disinterested" icon="gtk-close" type="object"/>
+            </tree>
+            </field>
+        </record>
+        <record model= "ir.ui.view" id="crm_lead_portal_form">
+            <field name="name">crm_portal_form</field>
+            <field name="model">crm.lead</field>
+            <field name="priority" eval="32"/>
+            <field name="arch" type="xml">
+              <form string="Leads">
+                <header>
+                  <button string="I'm interested" name="case_interested" icon="gtk-index" type="object"/>
+                  <button string="I'm not interested" name="case_disinterested" icon="gtk-close" type="object"/>
+                </header>
+                <sheet>
+                  <group>
+                    <group>
+                      <field name="partner_name" string="Partner Name" readonly="1"/>
+                      <field name="title" widget="selection" readonly="1"/>
+                      <field name="contact_name" readonly="1"/>
+                      <field name="function" readonly="1"/>
+                      <field name="email_from" readonly="1"/>
+                      <field name="phone" readonly="1"/>
+                      <field name="fax" readonly="1"/>
+                      <field name="mobile" readonly="1"/>
+                    </group>
+                    <group>
+                      <field name="street" readonly="1"/>
+                      <field name="street2" readonly="1"/>
+                      <field name="zip" readonly="1"/>
+                      <field name="city" readonly="1"/>
+                      <field name="country_id" readonly="1"/>
+                      <field name="state_id" readonly="1"/>
+                    </group>
+                    <label for="description" colspan="2"/>
+                    <field name="description" nolabel="1" colspan="2"/>
+                  </group>
+                </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread" readonly="1"/>
+                </div>
+              </form>
+            </field>
+        </record>
+        <!-- opportunity views-->
+        <record model="ir.ui.view" id="crm_opportunity_portal_tree">
+            <field name="name">partner lead</field>
+            <field name="model">crm.lead</field>
+            <field name="priority" eval="32"/>
+            <field name="arch" type="xml">
+               <tree string="Leads">
+                   <field name="date_deadline" invisible="1"/>
+                   <field name="create_date" groups="base.group_no_one"/>
+                   <field name="name" string="Opportunity"/>
+                   <field name="partner_id" string="Customer"/>
+                   <field name="country_id" invisible="context.get('invisible_country', True)" />
+                   <field name="date_action"/>
+                   <field name="title_action" />
+                   <field name="medium_id" invisible="1"/>
+                   <field name="campaign_id" invisible="1"/>
+                   <field name="planned_revenue" sum="Expected Revenues"/>
+                   <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
+                   <field name="section_id" groups="base.group_multi_salesteams" invisible="context.get('invisible_section', True)" />
+                   <field name="priority" invisible="1"/>
+               </tree>
+            </field>
+        </record>
+        <record model= "ir.ui.view" id="crm_opportunity_portal_form">
+            <field name="name">crm_portal_form</field>
+            <field name="model">crm.lead</field>
+            <field name="priority" eval="32"/>
+            <field name="arch" type="xml">
+              <form string="Leads">
+                <sheet>
+                <group>
+                    <field name="name"  required="1" string="Opportunity"/>
+                    <field name="planned_revenue" readonly="1"/>
+                    <field name="probability" readonly="1"/>
+                    <field name="date_deadline"/>
+                    <newline/>
+                    <field name="date_action" readonly="1"/>
+                    <field name="title_action" readonly="1"/>
+                    <field name="priority" string="Priority" readonly="1"/>
+                    <newline/>
+                    <field name="type" invisible="1" readonly="1"/>
+                </group>
+                <notebook colspan="4">
+                <page string="Opportunity">
+                    <group col="2">
+                      <separator string="Contact" colspan="2"/>
+                      <group col="2">
+                          <field name="partner_id" select="1"
+                            string="Customer"
+                            colspan="2" readonly="1"/>
+                          <field name="partner_name" string="Customer Name" readonly="1"/>
+                          <field domain="[('domain', '=', 'contact')]" name="title" widget="selection" readonly="1"/>
+                          <field name="function" readonly="1"/>
+                          <field name="street" readonly="1"/>
+                          <field name="street2" readonly="1"/>
+                      </group>
+                      <group col="2">
+                         <field name="zip" readonly="1"/>
+                         <field name="city" readonly="1"/>
+                         <field name="country_id" readonly="1"/>
+                         <field name="state_id" readonly="1"/>
+                         <field name="phone" readonly="1"/>
+                      </group>
+                    </group>
+                    <group col="2">
+                      <group col="2">
+                         <separator string="Communication" colspan="2"/>
+                         <field name="email_from" readonly="1"/>
+                         <field name="phone" readonly="1"/>
+                         <field name="fax" readonly="1"/>
+                         <field name="mobile" readonly="1"/>
+                      </group>
+                      <group col="2">
+                         <separator string="Categorization" colspan="2"/>
+                        <field name="campaign_id" readonly="1"/>
+                        <field name="medium_id" readonly="1"/>
+                      </group>
+                    </group>
+                    <separator string="Details" />
+                    <field name="description" nolabel="1" colspan="4"/>
+                </page>
+                </notebook>
+              </sheet>
+              <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread" readonly="1"/>
+              </div>
+              </form>
+            </field>
+        </record>
+
+
+    <!-- leads -->
+
+       <record id="action_portal_leads" model="ir.actions.act_window">
+          <field name="name">Leads</field>
+          <field name="res_model">crm.lead</field>
+          <field name="view_mode">tree,form</field>
+          <field name="view_id" ref="crm_lead_portal_tree"/>
+          <field name="domain">[('type','like','lead')]</field>
+      </record>
+
+      <record id="action_portal_lead_tree" model="ir.actions.act_window.view">
+          <field name="sequence" eval="0"/>
+          <field name="view_mode">tree</field>
+          <field name="view_id" ref="crm_lead_portal_tree"/>
+          <field name="act_window_id" ref="action_portal_leads"/>
+      </record>
+      
+      <record id="action_portal_lead_form" model="ir.actions.act_window.view">
+          <field name="sequence" eval="1"/>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="crm_lead_portal_form"/>
+          <field name="act_window_id" ref="action_portal_leads"/>
+      </record>
+      
+    <!-- opportunities -->
+      
+      <record id="action_portal_opportunities" model="ir.actions.act_window">
+          <field name="name">Opportunities</field>
+          <field name="res_model">crm.lead</field>
+          <field name="view_mode">tree,form</field>
+          <field name="view_id" ref="crm_opportunity_portal_tree"/>
+          <field name="domain">[('type','like','opportunity')]</field>
+      </record>
+
+      <record id="action_portal_opportunities_tree" model="ir.actions.act_window.view">
+          <field name="sequence" eval="0"/>
+          <field name="view_mode">tree</field>
+          <field name="view_id" ref="crm_opportunity_portal_tree"/>
+          <field name="act_window_id" ref="action_portal_opportunities"/>
+      </record>
+      
+      <record id="action_portal_opportunities_form" model="ir.actions.act_window.view">
+          <field name="sequence" eval="1"/>
+          <field name="view_mode">form</field>
+          <field name="view_id" ref="crm_opportunity_portal_form"/>
+          <field name="act_window_id" ref="action_portal_opportunities"/>
+      </record>
+
+      <!--menus-->
+      <menuitem name="Leads &amp; Opportunities" id="portal_leads" parent="portal.portal_menu" sequence="25"/>
+      <menuitem action="action_portal_leads" sequence="0" id="openerp_portal_menu_sales_leads_current" parent="portal_leads"/>
+      <menuitem action="action_portal_opportunities" sequence="1" id="openerp_portal_menu_sales_leads_current1" parent="portal_leads"/>
+
+    </data>
+</openerp>

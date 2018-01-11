@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="act_double_wait" model="workflow.activity">
+            <field name="wkf_id" ref="purchase.purchase_order"/>
+            <field name="name">WaitForApproval</field>
+            <field name="kind">dummy</field>
+        </record>
+
+        <record id="act_double_check" model="workflow.activity">
+            <field name="wkf_id" ref="purchase.purchase_order"/>
+            <field name="name">CheckForApproval</field>
+            <field name="split_mode">OR</field>
+            <field name="kind">dummy</field>
+        </record>
+
+        <record id="trans_double_check_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_double_check"/>
+            <field name="act_to" ref="purchase.act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+        </record>
+
+         <record id="trans_confirmed_double_check" model="workflow.transition">
+            <field name="act_from" ref="purchase.act_confirmed"/>
+            <field name="act_to" ref="act_double_check"/>
+        </record>
+        
+        <record id="trans_confirmed_double_gt" model="workflow.transition">
+            <field name="act_from" ref="act_double_check"/>
+            <field name="act_to" ref="act_double_wait"/>
+            <field name="signal">purchase_approve</field>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
+        </record>
+
+        <record id="trans_confirmed_double_lt" model="workflow.transition">
+            <field name="act_from" ref="act_double_check"/>
+            <field name="act_to" ref="act_double_wait"/>
+        </record>
+
+        <record id="trans_double_app_conf" model="workflow.transition">
+            <field name="act_from" ref="act_double_wait"/>
+            <field name="act_to" ref="purchase.act_router"/>
+        </record>
+
+    </data>
+    <data noupdate="1">
+        <record id="trans_confirmed_double_gt" model="workflow.transition">
+            <field name="condition">amount_untaxed &gt;= 5000</field>
+        </record>
+        <record id="trans_confirmed_double_lt" model="workflow.transition">
+            <field name="condition">amount_untaxed &lt; 5000</field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="view_board_create" model="ir.ui.view">
+        <field name="name">board.create.form</field>
+        <field name="model">board.create</field>
+        <field name="arch" type="xml">
+            <form string="Create New Dashboard">
+                <group colspan="4">
+                    <field name="name"/>
+                    <field name="menu_parent_id"/>
+                </group>
+                <footer>
+                    <button string="Create" name="board_create" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+           </form>
+        </field>
+    </record>
+
+    <record id="action_board_create" model="ir.actions.act_window">
+        <field name="name">Create Board</field>
+        <field name="res_model">board.create</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+       <field name="view_id" ref="view_board_create"/>
+       <field name="target">new</field>
+    </record>
+    
+    <menuitem action="action_board_create"
+        id="menu_board_create" parent="base.menu_reporting_config"
+        groups="base.group_no_one"
+        sequence="2"/>
+</data>
+</openerp>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+        <template id="assets_backend" name="account assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/account/static/src/css/account_move_reconciliation.css"/>
+                <link rel="stylesheet" href="/account/static/src/css/account_move_line_quickadd.css"/>
+                <link rel="stylesheet" href="/account/static/src/css/account_bank_and_cash.css"/>
+                <link rel="stylesheet" href="/account/static/src/css/account_bank_statement_reconciliation.css"/>
+                <script type="text/javascript" src="/account/static/src/js/account_widgets.js"></script>
+                <script type="text/javascript" src="/account/static/src/js/account_move_line_quickadd.js"></script>
+                <script type="text/javascript" src="/account/static/src/js/account_tour_bank_statement_reconciliation.js"></script>
+            </xpath>
+        </template>
+    </data>
+</openerp>

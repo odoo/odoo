@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_l10nvatintraprint">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                <h2>Partner VAT Intra</h2>
+
+                <div class="row mt32 mb32">
+                    <div class="col-xs-3">
+                        <strong>Company Name:</strong>
+                        <p t-esc="data['form']['company_name']"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Vat Number:</strong>
+                        <p t-esc="data['form']['company_vat']"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Partners without VAT:</strong>
+                        <p t-esc="data['form']['partner_wo_vat'] or '-'"/>
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Partner Name</th>
+                            <th>Partner VAT</th>
+                            <th>Code (Tax Code)</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="data['form']['clientlist']" t-as="l">
+                            <td><span t-esc="l['partner_name']"/></td>
+                            <td><span t-esc="l['vat']"/></td>
+                            <td><span t-esc="l['code']"/></td>
+                            <td><span t-esc="formatLang(l['amount'], currency_obj=res_company.currency_id)"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Total: <span t-esc="formatLang(data['form']['amountsum'], currency_obj=res_company.currency_id)"/></p>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

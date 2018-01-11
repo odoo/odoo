@@ -1,0 +1,77 @@
+-
+  During a lead to opp conversion, salesmen should be assigned to leads following the round-robin method.  Start by creating 4 salesmen (A to D) and 6 leads (1 to 6).
+-
+  !record {model: res.users, id: test_res_user_01}:
+    name: 'Test user A'
+    login: 'tua@example.com'
+-
+  !record {model: res.users, id: test_res_user_02}:
+    name: 'Test user B'
+    login: 'tub@example.com'
+-
+  !record {model: res.users, id: test_res_user_03}:
+    name: 'Test user C'
+    login: 'tuc@example.com'
+-
+  !record {model: res.users, id: test_res_user_04}:
+    name: 'Test user D'
+    login: 'tud@example.com'
+-
+  Salesman also creates lead so giving access rights of salesman.
+-
+  !context
+    uid: 'crm_res_users_salesman'
+-
+  !record {model: crm.lead, id: test_crm_lead_01}:
+    type: 'lead'
+    name: 'Test lead 1'
+    email_from: 'Raoul Grosbedon <raoul@grosbedon.fr>'
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_lead_02}:
+    type: 'lead'
+    name: 'Test lead 2'
+    email_from: 'Raoul Grosbedon <raoul@grosbedon.fr>'
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_lead_03}:
+    type: 'lead'
+    name: 'Test lead 3'
+    email_from: 'Raoul Grosbedon <raoul@grosbedon.fr>'
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_lead_04}:
+    type: 'lead'
+    name: 'Test lead 4'
+    contact_name: 'Fabrice Lepoilu'
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_lead_05}:
+    type: 'lead'
+    name: 'Test lead 5'
+    contact_name: 'Fabrice Lepoilu'
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_lead_06}:
+    type: 'lead'
+    name: 'Test lead 6'
+    partner_name: 'Agrolait SuperSeed SA'
+    stage_id: stage_lead1
+-
+  Salesman create a mass convert wizard and convert all the leads.
+-
+  !python {model: crm.lead2opportunity.partner.mass}: |
+    context.update({'active_model': 'crm.lead', 'active_ids': [ref("test_crm_lead_01"), ref("test_crm_lead_02"), ref("test_crm_lead_03"), ref("test_crm_lead_04"), ref("test_crm_lead_05"), ref("test_crm_lead_06")], 'active_id': ref("test_crm_lead_01")})
+    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')])], 'section_id': ref('sales_team.section_sales_department'), 'deduplicate': False, 'force_assignation': True}, context=context)
+    self.mass_convert(cr, uid, [id], context=context)
+-
+  The leads should now be opps with a salesman and a salesteam.  Also, salesmen should have been assigned following a round-robin method.
+-
+  !python {model: crm.lead}: |
+    opps = self.browse(cr, uid, [ref("test_crm_lead_01"), ref("test_crm_lead_02"), ref("test_crm_lead_03"), ref("test_crm_lead_04"), ref("test_crm_lead_05"), ref("test_crm_lead_06")], context)
+    salesmen_ids = [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')]
+    i = 0
+    for opp in opps:
+      assert opp.type == 'opportunity', 'Type mismatch: this should be an opp, not a lead'
+      assert opp.user_id.id == salesmen_ids[i], 'Salesman mismatch: expected salesman %r, got %r' % (salesmen_ids[i], opp.user_id.id)
+      i = i+1 if (i < len(salesmen_ids) - 1) else 0

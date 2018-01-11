@@ -1,0 +1,125 @@
+-
+  In order to test the sale_mrp module in OpenERP, I start by creating a new product 'Slider Mobile'
+-
+  I define product category Mobile Products Sellable.
+-
+  !record {model: product.category, id: product_category_allproductssellable0}:
+    name: Mobile Products Sellable
+-
+  I define product category Mobile Services.
+-
+  !record {model: product.category, id: product_category_16}:
+    name: Mobile Services
+-
+  I define product template for Slider Mobile.
+-
+  !record {model: product.template, id: product_template_slidermobile0}:
+    categ_id: product_category_allproductssellable0
+    list_price: 200.0
+    mes_type: fixed
+    name: Slider Mobile
+    standard_price: 189.0
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+-
+  I define a product Slider Mobile
+-
+  !record {model: product.product, id:  product_product_slidermobile0}:
+    categ_id: product_category_allproductssellable0
+    list_price: 200.0
+    mes_type: fixed
+    name: Slider Mobile
+    seller_delay: '1'
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 5.0
+    standard_price: 189.0
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+- 
+  I add the routes manufacture and mto to the product
+- 
+  !python {model: product.product}: |
+    route_warehouse0_manufacture = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).manufacture_pull_id.route_id.id 
+    route_warehouse0_mto = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).mto_pull_id.route_id.id 
+    self.write(cr, uid, ref('product_product_slidermobile0'), { 'route_ids': [(6, 0, [route_warehouse0_mto,route_warehouse0_manufacture])]}, context=context)
+-
+  I create a Bill of Material record for Slider Mobile
+-
+  !record {model: mrp.bom, id: mrp_bom_slidermobile0}:
+    company_id: base.main_company
+    name: Slider Mobile
+    product_efficiency: 1.0
+    product_tmpl_id: product_product_slidermobile0_product_template
+    product_id: product_product_slidermobile0
+    product_qty: 1.0
+    product_uom: product.product_uom_unit
+    sequence: 0.0
+    type: normal
+-
+  I create a sale order for product Slider mobile
+-
+  !record {model: sale.order, id: sale_order_so0}:
+    client_order_ref: ref1
+    date_order: !eval time.strftime('%Y-%m-%d')
+    name: Test_SO001
+    order_line:
+      - name: Slider Mobile
+        price_unit: 200
+        product_uom: product.product_uom_unit
+        product_uom_qty: 500.0
+        state: draft
+        delay: 7.0
+        product_id: product_product_slidermobile0
+        product_uos_qty: 500.0
+    order_policy: manual
+    partner_id: base.res_partner_4
+    partner_invoice_id: base.res_partner_address_7
+    partner_shipping_id: base.res_partner_address_7
+    picking_policy: direct
+    pricelist_id: product.list0
+-
+  I confirm the sale order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so0}
+-
+  I verify that a procurement has been generated for sale order
+-
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    proc_ids = self.search(cr, uid, [('origin','=',so.name)])
+    assert proc_ids, 'No Procurements!'
+-
+  Then I click on the "Run Procurement" button
+-
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    proc_ids = self.search(cr, uid, [('origin','like',so.name)])
+    self.run(cr, uid, proc_ids)
+-
+  I verify that a procurement state is "running"
+-
+  !python {model: procurement.order}: |
+    sale_order_obj = self.pool.get('sale.order')
+    so = sale_order_obj.browse(cr, uid, ref("sale_order_so0"))
+    proc_ids = self.search(cr, uid, [('origin','like',so.name)])
+    # Check that all procurement are running
+    for procu in self.browse(cr,uid,proc_ids,context=context):        
+        assert procu.state == u'running', 'Procurement with id %d should be with a state "running" but is with a state : %s!' %(procu.id,procu.state)
+-
+  I verify that a manufacturing order has been generated, and that its name and reference are correct
+-
+  !python {model: sale.order}: |
+    mnf_obj = self.pool.get('mrp.production')
+    so = self.browse(cr, uid, ref("sale_order_so0"))
+    mnf_id = mnf_obj.search(cr, uid, [('origin','like',so.name)])
+    assert mnf_id, 'Manufacturing order has not been generated'
+    mo = mnf_obj.browse(cr, uid, mnf_id)[0]
+    assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.name)
+    assert mo.sale_ref == so.client_order_ref, 'Wrong Sale Reference for the Manufacturing Order'

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_decimal_precision_form">
+            <field name="name">Decimal Precision</field>
+            <field name="model">decimal.precision</field>
+            <field name="arch" type="xml">
+                <form string="Decimal Precision">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="digits"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_decimal_precision_tree">
+            <field name="name">Decimal Precision List</field>
+            <field name="model">decimal.precision</field>
+            <field name="arch" type="xml">
+                <tree string="Decimal Precision">
+                    <field name="name"/>
+                    <field name="digits"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_decimal_precision_form">
+                <field name="name">Decimal Accuracy</field>
+                <field name="res_model">decimal.precision</field>
+        </record>
+        <menuitem
+            parent="base.next_id_9"
+            id="menu_decimal_precision_form"
+            action="action_decimal_precision_form"/>
+
+    </data>
+</openerp>
+
+

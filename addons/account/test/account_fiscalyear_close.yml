@@ -1,0 +1,79 @@
+-
+  In order to test Generate Fiscalyear Opening Entries wizard of OpenERP I first create a fiscalyear to which the entries will move
+-
+  !record {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0}:
+    code: !eval "'FY%s'% (datetime.now().year+1)"
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year-1)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year-1)"
+    name: !eval "'Fiscal Year %s' %(datetime.now().year-1)"
+-
+  I generate periods for the new fiscalyear
+-
+  !python {model: account.fiscalyear}: |
+    self.create_period(cr, uid, [ref("account_fiscalyear_fiscalyear0")])
+-
+  I create a new account invoice in the created fiscalyear
+-
+  !record {model: account.invoice, id: account_invoice_current1}:
+    partner_id: base.res_partner_2
+    date_invoice: !eval "'%s-01-02' %(datetime.now().year-1)"
+    invoice_line:
+      - partner_id: base.res_partner_2
+        quantity: 1.0
+        price_unit: 15.00
+        name: Bying stuff
+-
+  I validate the invoice
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account.account_invoice_current1}
+-
+  I made modification in journal so it can move entries
+-
+  !record {model: account.journal, id: account.close_journal}:
+    name: End of Year
+    code: NEW
+    type: situation
+    analytic_journal_id: sit
+    default_debit_account_id: cash
+    default_credit_account_id: cash
+    company_id: base.main_company
+    centralisation: 1
+-
+  I call the Generate Fiscalyear Opening Entries wizard
+-
+  !record {model: account.fiscalyear.close, id: account_fiscalyear_close_0}:
+    fy2_id: account.data_fiscalyear
+    fy_id: account_fiscalyear_fiscalyear0
+    journal_id: account.close_journal
+    period_id: account.period_1
+    report_name: End of Fiscal Year Entry
+-
+  I clicked on create Button
+-
+  !python {model: account.fiscalyear.close}: |
+    self.data_save(cr, uid, [ref("account_fiscalyear_close_0")], {"lang": 'en_US',
+      "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_wizard_fy_close")],
+      "tz": False, "active_id": ref("account.menu_wizard_fy_close"), })
+-
+  I close the previous fiscalyear
+-
+  !record {model: account.fiscalyear.close.state, id: account_fiscalyear_close_state_0}:
+    fy_id: account_fiscalyear_fiscalyear0
+-
+  I clicked on Close States Button to close fiscalyear
+-
+  !python {model: account.fiscalyear.close.state}: |
+    self.data_save(cr, uid, [ref("account_fiscalyear_close_state_0")], {"lang": 'en_US',
+      "active_model": "ir.ui.menu", "active_ids": [ref("account.menu_wizard_fy_close_state")],
+      "tz": False, "active_id": ref("account.menu_wizard_fy_close_state"), })
+-
+  I check that the fiscalyear state is now "Done"
+-
+  !assert {model: account.fiscalyear, id: account_fiscalyear_fiscalyear0, string: Fiscal Year is in Done state}:
+    - state == 'done'
+-
+  I check that the past accounts are taken into account in partner credit
+-
+  !assert {model: res.partner, id: base.res_partner_2, string: Total Receivable does not takes unreconciled moves of previous years}:
+    - credit == 1040.0

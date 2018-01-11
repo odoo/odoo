@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="account_payment_populate_statement_view" model="ir.ui.view">
+             <field name="name">Payment Populate statement</field>
+             <field name="model">account.payment.populate.statement</field>
+             <field name="arch" type="xml">
+                <form string="Populate Statement:">
+                    <group>
+                        <field name="lines" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="populate_statement" string="Ok" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+             </field>
+        </record>
+
+        <record id="action_account_populate_statement_confirm" model="ir.actions.act_window">
+             <field name="name">Payment Populate statement</field>
+             <field name="res_model">account.payment.populate.statement</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_payment_populate_statement_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+       </record>
+
+        <record id="action_account_payment_populate_statement" model="ir.actions.act_window">
+             <field name="name">Payment Populate statement</field>
+             <field name="res_model">account.payment.populate.statement</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_payment_populate_statement_view"/>
+             <field name="context">{'record_id':active_id}</field>
+             <field name="target">new</field>
+       </record>
+
+    </data>
+</openerp>

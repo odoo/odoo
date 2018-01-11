@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <record id="view_evaluation_report_graph" model="ir.ui.view">
+            <field name="name">hr.evaluation.report.graph</field>
+            <field name="model">hr.evaluation.report</field>
+            <field name="arch" type="xml">
+            <graph string="Appraisal Analysis" type="pivot" stacked="True">
+                 <field name="employee_id" type="row"/>
+                 <field name="create_date" interval="month" type="col"/>
+                 <field name="nbr" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="view_evaluation_report_search" model="ir.ui.view">
+        <field name="name">hr.evaluation.report.search</field>
+        <field name="model">hr.evaluation.report</field>
+        <field name="arch" type="xml">
+            <search string="Appraisal Analysis">
+                <filter string="In Progress" domain="[('state', '=' ,'wait')]" help = "In progress Evaluations"/>
+                <filter string="Final Validation" domain="[('state','=','progress')]" help = "Final Validation Evaluations"/>
+                <filter string="Done" domain="[('state','=','done')]"/>
+                <field name="employee_id"/>
+                <field name="plan_id"/>
+                <group expand="0" string="Extended Filters...">
+                    <field name="rating"/>
+                    <field name="deadline"/>
+                    <field name="state"/>
+                    <field name="create_date"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Employee" name="employee" context="{'group_by':'employee_id'}"/>
+                    <filter string="Plan" context="{'group_by':'plan_id'}"/>
+                    <filter string="Appreciation" context="{'group_by':'rating'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <separator/>
+                    <filter string="Month" context="{'group_by':'create_date:month'}" help="Creation Month"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_evaluation_report_all" model="ir.actions.act_window">
+        <field name="name">Appraisal Analysis</field>
+        <field name="res_model">hr.evaluation.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_employee':1,'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="search_view_id" ref="view_evaluation_report_search"/>
+    </record>
+
+    <menuitem action="action_evaluation_report_all" id="menu_evaluation_report_all" parent="hr.menu_hr_reporting" sequence="2" groups="base.group_hr_manager"/>
+
+    </data>
+</openerp>

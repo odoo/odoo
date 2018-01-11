@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="many2manyattendee">
+        <t t-set="i" t-value="0"/>
+            <t t-foreach="elements" t-as="el">
+                <span class="oe_tag no-wrap" t-att-data-index="i">
+                    <a t-attf-class="oe_invitation #{el[2]}"/>
+                    <t t-esc="el[1]"/>
+                </span>
+            <t t-set="i" t-value="i + 1"/>
+        </t>
+    </t>
+    <t t-name='notify_title'>
+        <span  t-attf-class="link2event eid_#{id}">
+            <t t-esc="title"/>
+        </span> 
+    </t>
+    <t t-name='notify_footer'>
+        <br/><br/>
+        <button class='link2showed oe_highlight oe_form oe_button '><span>OK</span></button> 
+        <button class='link2event '>Details</button>
+        <button class='link2recall '>Snooze</button> 
+    </t>
+    <t t-name='m2mattendee_tag'>
+        <div class="text-tag">
+            <div class="text-button">
+                <a class="oe_invitation custom-edit"/>
+                <span class="text-label"/>
+                <a class="text-remove"/>
+            </div>
+        </div>         
+    </t>
+    
+    <t t-name="invitation_view">
+        <div class='invitation_block well' style='width:50%; margin:auto; margin-top : 30px;'>
+            <div class="oe_right" style="margin-left:0px"><b><t t-esc="invitation['current_attendee'].cn"/> (<t t-esc="invitation['current_attendee'].email"/>)</b></div>
+            <div class="oe_left">
+                <img class="cal_inline cal_image" src='/web/binary/company_logo' />
+            </div>
+            <div>               
+                <div class="invitation_block cal_meeting">
+                    <h2 class="cal_inline">Calendar Invitation</h2>                                
+                    <t t-if="invitation['current_attendee'].state != 'needsAction'">
+                        <a t-attf-class="attendee_#{invitation['current_attendee'].state}">
+                            <b t-if="invitation['current_attendee'].state == 'accepted'">Yes I'm going.</b>
+                            <b t-if="invitation['current_attendee'].state == 'declined'">No I'm not going.</b>
+                        </a>                        
+                    </t>
+                    <br/><br/>
+                    <div class="cal_meeting"><t t-esc="invitation['meeting'].event"/></div>
+                    <br/>
+                    <table class="">
+                        <tr>
+                            <td class="cal_lable">When</td>
+                            <td> <t t-esc="invitation['meeting'].when"/></td>
+                        </tr>
+                        <tr>
+                            <td class="cal_lable">Where</td>
+                            <td> <t t-esc="invitation['meeting'].where or '-'"/></td>
+                        </tr>
+                        <tr>
+                            <td class="cal_lable">Who</td>
+                            <td>
+                                <t t-foreach="invitation['attendee']" t-as="att">
+                                    <br/>
+                                    <span class="cal_status"><a t-attf-class="oe_invitation #{att.status}"/><t t-esc="att.name"/></span>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+                    <br/>
+                </div>
+            </div>
+        </div>
+     </t>
+
+    <t t-extend="CalendarView.sidebar.responsible">
+        <t t-jquery="span[t-attf-class*='color_filter']" t-operation="after">
+            <t t-if="(filters_value.value != -1) &amp;&amp; (filters_value.is_remove != false)">
+                <span class="oe_remove_follower oe_e hidden" title="Remove this favorite from the list" t-att-data-id="filters_value.value">X</span>
+           </t>
+        </t>
+    </t>
+
+</template>

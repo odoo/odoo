@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        
+        <!--  Produce -->
+        
+        <record id="view_mrp_product_produce_wizard" model="ir.ui.view">
+            <field name="name">MRP Product Produce</field>
+            <field name="model">mrp.product.produce</field>
+            <field name="arch" type="xml">
+                <form string="Produce">
+                    <group string="Produce">
+                        <field name="mode"/>
+                        <field name="product_qty" colspan="2" on_change="on_change_qty(product_qty, consume_lines, context)"/>
+                        <field name="product_id" invisible="1"/>
+                        <field name="track_production" invisible="1"/>
+                        <field name="lot_id" domain="[('product_id', '=', product_id)]"
+                                    context="{'default_product_id':product_id}"
+                                    attrs="{'required': [('track_production', '=', True), ('mode', '=', 'consume_produce')]}"
+                                    groups="stock.group_production_lot"/>
+                    </group>
+                    <group string="To Consume">
+                        <field name="consume_lines" nolabel="1">
+                            <tree string="Consume Lines" editable="top">
+                                <field name="product_id"/>
+                                <field name="product_qty"/>
+                                <field name="lot_id" domain="[('product_id', '=', product_id)]"
+                                    context="{'default_product_id':product_id}"
+                                    groups="stock.group_production_lot"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="do_produce" type="object" string="Confirm" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_mrp_product_produce" model="ir.actions.act_window">
+            <field name="name">Produce</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.product.produce</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>    
+        
+        
+    </data>
+</openerp>    

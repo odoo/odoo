@@ -1,0 +1,189 @@
+-
+    Exercise ir_rule.py code (and indirectly expression.py).
+-
+    Create an ir_rule for the Employee group (called base.group_user)
+    with an blank domain.
+-
+    !record {model: ir.rule, id: test_rule}:
+        model_id: base.model_res_partner
+        domain_force: False
+        name: test_rule
+        groups:
+            - base.group_user
+        perm_unlink: 1
+        perm_write: 1
+        perm_read: 1
+        perm_create: 1
+-
+    Read as demo user the partners (one blank domain).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Domain is not empty.
+-
+    !record {model: ir.rule, id: test_rule}:
+        model_id: base.model_res_partner
+        domain_force: "[(1,'=',1)]"
+-
+    Read as demo user the partners (one 1=1 domain).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Domain is an empty list.
+-
+    !record {model: ir.rule, id: test_rule}:
+        model_id: base.model_res_partner
+        domain_force: "[]"
+-
+    Read as demo user the partners (one [] domain).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Create another ir_rule for the Employee group (to test rules from
+    multiple groups).
+-
+    !record {model: ir.rule, id: test_rule2}:
+        model_id: base.model_res_partner
+        domain_force: False
+        name: test_rule2
+        groups:
+            - base.group_user
+        perm_unlink: 1
+        perm_write: 1
+        perm_read: 1
+        perm_create: 1
+-
+    Read as demo user the partners (blank and [] domains).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Domain is not empty.
+-
+    !record {model: ir.rule, id: test_rule}:
+        model_id: base.model_res_partner
+        domain_force: "[(1,'=',1)]"
+-
+    Read as demo user the partners (1=1 and blank domain).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Domain is not empty.
+-
+    !record {model: ir.rule, id: test_rule2}:
+        model_id: base.model_res_partner
+        domain_force: "[(1,'=',1)]"
+-
+    Read as demo user the partners (two 1=1 domains).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Create another ir_rule for the Employee group (to test rules from
+    multiple groups).
+-
+    !record {model: ir.rule, id: test_rule3}:
+        model_id: base.model_res_partner
+        domain_force: False
+        name: test_rule3
+        groups:
+            - base.group_user
+        perm_unlink: 1
+        perm_write: 1
+        perm_read: 1
+        perm_create: 1
+-
+    Read as demo user the partners.
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Domain is not empty.
+-
+    !record {model: ir.rule, id: test_rule3}:
+        model_id: base.model_res_partner
+        domain_force: "[(1,'=',1)]"
+-
+    Read as demo user the partners (three 1=1 domains).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Modify the global rule on res_company which triggers a recursive check
+    of the rules on company.
+-
+    !record {model: ir.rule, id: res_company_rule}:
+        domain_force: "[('id','child_of',[user.company_id.id])]"
+-
+    Read as demo user the partners (exercising the global company rule).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Modify the ir_rule for employee to have a rule that fordids
+    seeing any record.
+    We use a domain with implicit AND operator for later tests
+    on normalization.
+-
+    !record {model: ir.rule, id: test_rule2}:
+        domain_force: "[('id','=',False),('name','=',False)]"
+-
+    Check that demo user still sees partners, because group-rules are OR'ed.
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."
+-
+    Create a new group with demo user in it, and a complex rule.
+    Demo should still see partners.
+-
+    !record {model: res.groups, id: test_group}:
+        name: Test Group
+        users:
+            - base.user_demo
+-
+    Add the rule to the new group, with a domain containing an implicit AND operator,
+    which is more tricky because it will have to be normalized before combining it.
+-
+    !record {model: ir.rule, id: test_rule3}:
+        model_id: base.model_res_partner
+        domain_force: "[('name', '!=', False),('id', '!=', False)]"
+        name: test_rule4
+        groups:
+            - test_group
+        perm_unlink: 1
+        perm_write: 1
+        perm_read: 1
+        perm_create: 1
+-
+    Read the partners again as demo user, which should give results.
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see partners even with the combined rules."
+-
+    Delete global domains (to combine only group domains).
+-
+    !python {model: ir.rule}: |
+        ids = self.search(cr, uid, [('groups','=',False)])
+        assert ids, "Demo user should see some partner."
+        self.unlink(cr, uid, ids)
+-
+    Read as demo user the partners (several group domains, no global domain).
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, ref('base.user_demo'), [])
+        assert ids, "Demo user should see some partner."

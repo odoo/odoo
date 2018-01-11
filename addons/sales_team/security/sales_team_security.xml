@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <record id="base.group_mono_salesteams" model="res.groups">
+            <field name="name">Do Not Use Sales Teams</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('base.group_mono_salesteams'))]"/>
+        </record>
+
+        <record id="base.group_multi_salesteams" model="res.groups">
+            <field name="name">Manage Sales Teams</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+    </data>
+</openerp>

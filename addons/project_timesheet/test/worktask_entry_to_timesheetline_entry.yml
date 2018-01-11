@@ -1,0 +1,79 @@
+-
+  Create a user 'HR Manager'
+-
+  !record {model: res.users, id: res_users_hrmanager0, view: False}:
+    company_id: base.main_company
+    name: HR Manager
+    login: hr
+    groups_id:
+      - base.group_hr_manager
+-
+  Create a product with type service used to specify employees designation
+-
+  !record {model: product.product, id: product_product_hrmanger0}:
+    categ_id: product.product_category_6
+    mes_type: fixed
+    name: HR Manager
+    standard_price: 1.0
+    type: service
+    uom_id: product.product_uom_hour
+    uom_po_id: product.product_uom_hour
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+-
+  Create an analytic journal for employees timesheet
+-
+  !record {model: account.analytic.journal, id: account_analytic_journal_hrtimesheet0}:
+    company_id: base.main_company
+    name: HR Timesheet
+    type: general
+-
+  Create an employee 'HR Manager' for user 'HR Manager'
+-
+  !record {model: hr.employee, id: hr_employee_hrmanager0}:
+    name: HR Manager
+    user_id: res_users_hrmanager0
+    product_id: product_product_hrmanger0
+    journal_id: account_analytic_journal_hrtimesheet0
+-
+  Create a timesheet sheet for HR manager
+-
+  !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0}:
+    date_from: !eval "'%s-05-01' %(datetime.now().year)"
+    date_to: !eval "'%s-05-31' %(datetime.now().year)"
+    name: Sheet for hr manager
+    state: new
+    user_id: res_users_hrmanager0
+    employee_id : 'hr_employee_hrmanager0'
+-
+  Create a project 'Timesheet Management'
+-
+  !record {model: project.project, id: project_project_timesheetmanagement0}:
+    company_id: base.main_company
+    name: Timesheet Management
+-
+  Create a task 'Get all timesheet records'
+-
+  !record {model: project.task, id: project_task_getalltimesheetrecords0}:
+    date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
+    name: Get all timesheet records
+    planned_hours: 20.0
+    project_id: project_project_timesheetmanagement0
+    remaining_hours: 20.0
+    user_id: res_users_hrmanager0
+-
+  Make a work task entry 'Get work calendar of all employees' of 10 hours done by HR manager
+-
+  !record {model: project.task, id: project_task_getalltimesheetrecords0}:
+    work_ids:
+      - date: !eval time.strftime('%Y-05-%d %H:%M:%S')
+        hours: 10.0
+        name: Get work calendar of all employees
+        user_id: res_users_hrmanager0
+-
+  Check for timesheet_ids in HR manager's timesheet
+-
+  !assert {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0, string: After hr manager's work task, length of timesheet line of current timesheet must be greater then 1}:
+    - len(timesheet_ids) > 0

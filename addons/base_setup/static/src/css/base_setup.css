@@ -1,0 +1,24 @@
+/* Remove bold from labels in config wizards */
+.oe_form_configuration .oe_form_group td:last-child .oe_form_label_help,
+.oe_form_configuration .oe_form_group td:last-child .oe_form_label {
+    font-weight: normal;
+}
+
+/* Separate .eo_link elements from the rest of the label's text */
+.oe_form_configuration .oe_form_group td:last-child .oe_link,
+.oe_form_configuration .oe_form_group td:last-child .oe_separate-from-text {
+    position: relative;
+    left: 2em;
+}
+.oe_form_configuration .oe_form_group td:last-child .oe_link:before,
+.oe_form_configuration .oe_form_group td:last-child .oe_separate-from-text:before {
+    content:"—";
+    padding-right: 1em;
+    color: grey;
+
+    /* Prevent the pseudo element's content to behave like its parent element */
+    position: absolute;
+    right: 100%;
+    bottom: 0; /* Parent element's height can vary */
+    pointer-events: none;
+}

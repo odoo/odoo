@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_centraljournal">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.internal_layout">
+                <div class="page">
+                    <h2>Centralized Journal</h2>
+
+                    <div class="row mt32">
+                        <div class="col-xs-3">
+                            <strong>Chart of Accounts:</strong>
+                            <p t-esc="get_account(data)"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Fiscal Year:</strong>
+                            <p t-esc="get_fiscalyear(data)"/>
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Journals:</strong>
+                            <p t-field="o.journal_id" />
+                        </div>
+                        <div class="col-xs-3">
+                            <strong>Filter By:</strong>
+                            <p>
+                                <span t-if="data['form']['filter'] == 'filter_no'">Not filtered</span>
+                                <span t-if="data['form']['filter'] == 'filter_period'">Filtered by period</span>
+                                <span t-if="data['form']['filter'] == 'filter_date'">Filtered by date</span>
+                                <p t-if="data['form']['filter'] == 'filter_period'">
+                                Start Period: <span t-esc="get_start_period(data)"/><br/>
+                                End Period: <span t-esc="get_end_period(data)"/>
+                                </p>
+                                <p t-if="data['form']['filter'] == 'filter_date'">
+                                Date from : <span t-esc="formatLang(get_start_date(data), date=True)"/><br />
+                                Date to : <span t-esc="formatLang(get_end_date(data), date=True)"/>
+                                </p>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mb32">
+                        <div class="col-xs-3">
+                            <strong>Target Moves:</strong>
+                            <p t-esc="get_target_move(data)"/>
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>A/C No.</th>
+                                <th>Account Name</th>
+                                <th class="text-right">Debit</th>
+                                <th class="text-right">Credit</th>
+                                <th class="text-right">Balance</th>
+                                <th t-if="display_currency(data)" class="text-right">Currency</th>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Total:</th>
+                                <th class="text-right">
+                                    <span t-esc="sum_debit(o.period_id.id, o.journal_id.id)"></span>
+                                </th>
+                                <th class="text-right">
+                                    <span t-esc="sum_credit(o.period_id.id, o.journal_id.id)"></span>
+                                </th>
+                                <th class="text-right">
+                                    <span t-esc="formatLang(sum_credit(o.period_id.id, o.journal_id.id) - sum_debit(o.period_id.id, o.journal_id.id), currency_obj=res_company.currency_id)" class="text-right"></span>
+                                </th>
+                                <th t-if="display_currency(data)"/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="lines(o.period_id.id, o.journal_id.id)" t-as="line">
+                                <td><span t-esc="line['code']"/></td>
+                                <td><span t-esc="line['name']"/></td>
+                                <td class="text-right"><span t-esc="line['debit']"/></td>
+                                <td class="text-right"><span t-esc="line['credit']"/></td>
+                                <td class="text-right"><span t-esc="formatLang(line['credit'] - line['debit'], currency_obj=res_company.currency_id)"/></td>
+                                <td t-if="display_currency(data)" class="text-right">
+                                    <span t-esc="line['amount_currency'] if line['amount_currency'] != 0 else ''"/>
+                                    <span t-esc="line['currency_code']"/>
+                                </td>
+                            </tr>
+                        </tbody>                    
+                    </table>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

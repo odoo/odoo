@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="mailing_list_subscribe" inherit_id="website.snippets" name="Subscribe to Newsletter">
+
+    <xpath expr="//div[@id='snippet_content']" position="inside">
+        <div>
+            <div class="oe_snippet_thumbnail">
+                <img class="oe_snippet_thumbnail_img" src="/mass_mailing/static/src/img/blocks/button_newsletter.png"/>
+                <span class="oe_snippet_thumbnail_title">Newsletter</span>
+            </div>
+
+            <div class="oe_snippet_body input-group js_subscribe"
+                      data-list-id="0">
+                <input
+                      type="email"
+                      name="email"
+                      class="js_subscribe_email form-control"
+                      placeholder="your email..."/>
+                <span class="input-group-btn">
+                    <a href="#" class="btn btn-primary js_subscribe_btn">Subscribe</a>
+                    <a href="#" class="btn btn-success js_subscribed_btn hidden" disabled="disabled">Thanks</a>
+                </span>
+                <div class="alert alert-success hidden">Thanks for your subscription!</div>
+            </div>
+
+        </div>
+    </xpath>
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-snippet-option-id='mailing_list_subscribe'
+            data-selector=".js_subscribe"
+            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+           >
+            <li>
+                <a href="#" class="button js_mailing_list">Change Newsletter</a>
+            </li>
+        </div>
+    </xpath>
+
+</template>
+
+</data>
+</openerp>

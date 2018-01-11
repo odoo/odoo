@@ -1,0 +1,1363 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- Partners with EAN13s -->
+        <record id='base.res_partner_1'  model='res.partner'> <field name='ean13'>0420100000005</field> </record>
+        <record id='base.res_partner_2'  model='res.partner'> <field name='ean13'>0420200000004</field> </record>
+        <record id='base.res_partner_3'  model='res.partner'> <field name='ean13'>0420300000003</field> </record>
+        <record id='base.res_partner_4'  model='res.partner'> <field name='ean13'>0420400000002</field> </record>
+        <record id='base.res_partner_5'  model='res.partner'> <field name='ean13'>0420500000001</field> </record>
+        <record id='base.res_partner_6'  model='res.partner'> <field name='ean13'>0420600000000</field> </record>
+        <record id='base.res_partner_7'  model='res.partner'> <field name='ean13'>0420700000009</field> </record>
+        <record id='base.res_partner_8'  model='res.partner'> <field name='ean13'>0420800000008</field> </record>
+        <record id='base.res_partner_9'  model='res.partner'> <field name='ean13'>0420900000007</field> </record>
+        <record id='base.res_partner_10' model='res.partner'> <field name='ean13'>0421000000003</field> </record>
+        <record id='base.res_partner_11' model='res.partner'> <field name='ean13'>0421100000002</field> </record>
+        <record id='base.res_partner_12' model='res.partner'> <field name='ean13'>0421200000001</field> </record>
+        <record id='base.res_partner_13' model='res.partner'> <field name='ean13'>0421300000000</field> </record>
+        <record id='base.res_partner_14' model='res.partner'> <field name='ean13'>0421400000009</field> </record>
+        <record id='base.res_partner_15' model='res.partner'> <field name='ean13'>0421500000008</field> </record>
+        <record id='base.res_partner_16' model='res.partner'> <field name='ean13'>0421600000007</field> </record>
+        <record id='base.res_partner_17' model='res.partner'> <field name='ean13'>0421700000006</field> </record>
+        <record id='base.res_partner_18' model='res.partner'> <field name='ean13'>0421800000005</field> </record>
+        <record id='base.res_partner_19' model='res.partner'> <field name='ean13'>0421900000004</field> </record>
+        <record id='base.res_partner_20' model='res.partner'> <field name='ean13'>0422000000000</field> </record>
+        <record id='base.res_partner_21' model='res.partner'> <field name='ean13'>0422100000009</field> </record>
+
+        <record id="base.user_root" model="res.users">
+            <field name="ean13">0410100000006</field>
+        </record>
+        <record id="account.cash_journal" model="account.journal">
+            <field eval="True" name="journal_user"/>
+        </record>
+        <record id="base.user_root" model="res.users">
+            <field name="ean13">0410100000006</field>
+            <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
+        </record>
+
+        <record model="pos.config" id="pos_config_main">
+            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal'), ref('account.check_journal')])]" />
+        </record>
+
+        <!-- Resource: pos.category -->
+
+        <record id="computers" model="pos.category">
+          <field name="name">Computers</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/computer.png"/>
+        </record>
+
+        <record id="beverage" model="pos.category">
+          <field name="name">Beverages</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/beverage-image.jpg"/>
+        </record>
+
+        <record id="water" model="pos.category">
+          <field name="parent_id" ref="beverage"/>
+          <field name="name">Water</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/water-image.jpg"/>
+        </record>
+        <record id="plain_water" model="pos.category">
+          <field name="parent_id" ref="water"/>
+          <field name="name">Plain Water</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/plain_water-image.jpg"/>
+        </record>
+        <record id="sparkling_water" model="pos.category">
+          <field name="parent_id" ref="water"/>
+          <field name="name">Sparkling Water</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/sparkling_water-image.jpg"/>
+        </record>
+        <record id="soda" model="pos.category">
+          <field name="parent_id" ref="beverage"/>
+          <field name="name">Soda</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/soda-image.jpg"/>
+        </record>
+        <record id="coke" model="pos.category">
+            <field name="parent_id" ref="soda"/>
+            <field name="name">Coke</field>
+            <field name="image" type="base64" file="point_of_sale/static/img/coke-image.jpg"/>
+        </record>
+        <record id="soda_orange" model="pos.category">
+            <field name="parent_id" ref="soda"/>
+            <field name="name">Orange</field>
+            <field name="image" type="base64" file="point_of_sale/static/img/soda_orange-image.jpg"/>
+        </record>
+        <record id="beers" model="pos.category">
+          <field name="parent_id" ref="beverage"/>
+          <field name="name">Beers</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/beers-image.jpg"/>
+        </record>
+        <record id="pils" model="pos.category">
+            <field name="parent_id" ref="beers"/>
+            <field name="name">Pils</field>
+            <field name="image" type="base64" file="point_of_sale/static/img/pils-image.jpg"/>
+        </record>
+        <record id="fruity_beers" model="pos.category">
+            <field name="parent_id" ref="beers"/>
+            <field name="name">Fruity Beers</field>
+            <field name="image" type="base64" file="point_of_sale/static/img/fruity_beers-image.jpg"/>
+        </record>
+        <record id="special_beers" model="pos.category">
+            <field name="parent_id" ref="beers"/>
+            <field name="name">Special Beers</field>
+            <field name="image" type="base64" file="point_of_sale/static/img/special_beers-image.jpg"/>
+        </record>
+        <record id="food" model="pos.category">
+          <field name="name">Food</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/food-image.jpg"/>
+        </record>
+        <record id="partner_services" model="pos.category">
+          <field name="name">Partner Services</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/services.jpg"/>
+        </record>
+        <record id="pizza" model="pos.category">
+          <field name="parent_id" ref="food"/>
+          <field name="name">Pizza</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/pizza-image.jpg"/>
+        </record>
+        <record id="ice_cream" model="pos.category">
+          <field name="parent_id" ref="food"/>
+          <field name="name">Ice Cream</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/ice_cream-image.jpg"/>
+        </record>
+        <record id="chips" model="pos.category">
+          <field name="parent_id" ref="food"/>
+          <field name="name">Chips</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/chips-image.jpg"/>
+        </record>
+        <record id="fruits" model="pos.category">
+          <field name="name">Fresh Fruits</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/fruits-image.jpg"/>
+        </record>
+        <record id="oranges" model="pos.category">
+          <field name="parent_id" ref="fruits"/>
+          <field name="name">Oranges</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/oranges-image.jpg"/>
+        </record>
+        <record id="pomme" model="pos.category">
+          <field name="parent_id" ref="fruits"/>
+          <field name="name">Apples</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme-image.jpg"/>
+        </record>
+        <record id="autres_agrumes" model="pos.category">
+          <field name="parent_id" ref="fruits"/>
+          <field name="name">Other Citrus</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/autres_agrumes-image.jpg"/>
+        </record>
+        <record id="poire" model="pos.category">
+          <field name="parent_id" ref="fruits"/>
+          <field name="name">Pears</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/poire-image.jpg"/>
+        </record>
+        <record id="rouges_noyau_fruits" model="pos.category">
+          <field name="parent_id" ref="fruits"/>
+          <field name="name">Berries</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/rouges_noyau_fruits-image.jpg"/>
+        </record>
+        <record id="raisins" model="pos.category">
+          <field name="parent_id" ref="fruits"/>
+          <field name="name">Grapes</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/raisins-image.jpg"/>
+        </record>
+        <record id="legumes" model="pos.category">
+          <field name="name">Fresh vegetables</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/legumes-image.jpg"/>
+        </record>
+        <record id="pommes_de_terre" model="pos.category">
+          <field name="parent_id" ref="legumes"/>
+          <field name="name">Potatoes</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/pommes_de_terre-image.jpg"/>
+        </record>
+        <record id="legumes_racine" model="pos.category">
+          <field name="parent_id" ref="legumes"/>
+          <field name="name">Root vegetables</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/legumes_racine-image.jpg"/>
+        </record>
+        <record id="tomates" model="pos.category">
+          <field name="parent_id" ref="legumes"/>
+          <field name="name">Tomatos</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/tomates-image.jpg"/>
+        </record>
+        <record id="oignons_ail_echalotes" model="pos.category">
+          <field name="parent_id" ref="legumes"/>
+          <field name="name">Onions / Garlic / Shallots</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/oignons_ail_echalotes-image.jpg"/>
+        </record>
+        <record id="autres_legumes_frais" model="pos.category">
+          <field name="parent_id" ref="legumes"/>
+          <field name="name">Other fresh vegetables</field>
+          <field name="image" type="base64" file="point_of_sale/static/img/autres_legumes_frais-image.jpg"/>
+        </record>
+
+
+        <!-- Resource: product.product -->
+        <record id="boni_orange" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.98</field>
+          <field name="name">Boni Oranges</field>
+          <field name="to_weight">True</field>
+          <field name="ean13">2100002000003</field>
+          <field name="pos_categ_id" ref="oranges"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/boni_orange-image.jpg"/>
+        </record>
+        <record id="papillon_orange" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.83</field>
+          <field name="name">Orange Butterfly</field>
+          <field name="pos_categ_id" ref="oranges"/>
+          <field name="to_weight">True</field>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/papillon_orange-image.jpg"/>
+        </record>
+
+        <record id="citron" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.98</field>
+          <field name="name">Lemon</field>
+          <field name="ean13">2301000000006</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_agrumes"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/citron-image.jpg"/>
+        </record>
+        <record id="limon" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.19</field>
+          <field name="name">Stringers</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_agrumes"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/limon-image.jpg"/>
+        </record>
+        <record id="pamplemousse_rouge_pamplemousse" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.98</field>
+          <field name="name">Red grapefruit</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_agrumes"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pamplemousse_rouge_pamplemousse-image.jpg"/>
+        </record>
+
+        <record id="pomme_granny_smith" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.09</field>
+          <field name="name">Granny Smith apples</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="pomme"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_granny_smith-image.jpg"/>
+        </record>
+        <record id="pomme_jonagold" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.10</field>
+          <field name="name">Jonagold apples</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="pomme"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_jonagold-image.jpg"/>
+        </record>
+        <record id="pomme_golden_perlim" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.69</field>
+          <field name="name">Golden Apples Perlim</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="pomme"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_golden_perlim-image.jpg"/>
+        </record>
+
+        <record id="poire_conference" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.70</field>
+          <field name="name">Conference pears</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="poire"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poire_conference-image.jpg"/>
+        </record>
+
+        <record id="nectarine" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">5.70</field>
+          <field name="name">Peach</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="rouges_noyau_fruits"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/nectarine-image.jpg"/>
+        </record>
+        <record id="peche" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">5.10</field>
+          <field name="name">Peaches</field>
+          <field name="to_weight">True</field>
+          <field name="ean13">2300001000008</field>
+          <field name="pos_categ_id" ref="rouges_noyau_fruits"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/peche-image.jpg"/>
+        </record>
+
+        <record id="raisins_noir" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">4.80</field>
+          <field name="name">Black Grapes</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="raisins"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/raisins_noir-image.jpg"/>
+        </record>
+
+        <record id="pomme_de_terre" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.39</field>
+          <field name="name">Potatoes</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="pommes_de_terre"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/pomme_de_terre-image.jpg"/>
+        </record>
+
+        <record id="chicon_flandria_extra" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.20</field>
+          <field name="name">Extra Flandria chicory</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="legumes_racine"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/chicon_flandria_extra-image.jpg"/>
+        </record>
+        <record id="carotte" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.90</field>
+          <field name="name">Carrots</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="legumes_racine"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/carotte-image.jpg"/>
+        </record>
+        <record id="fenouil_fenouil" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.10</field>
+          <field name="name">Fennel</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="legumes_racine"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/fenouil_fenouil-image.jpg"/>
+        </record>
+
+        <record id="tomate_en_grappe" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.90</field>
+          <field name="name">In Cluster Tomatoes</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="tomates"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/tomate_en_grappe-image.jpg"/>
+        </record>
+
+        <record id="Onions" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.28</field>
+          <field name="name">Onions</field>
+          <field name="to_weight">True</field>
+          <field name="ean13">2100001000004</field>
+          <field name="pos_categ_id" ref="oignons_ail_echalotes"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/Onions-image.jpg"/>
+        </record>
+
+        <record id="poivron_rouges" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.10</field>
+          <field name="name">Red Pepper</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_legumes_frais"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poivron_rouges-image.jpg"/>
+        </record>
+        <record id="poivron_verts" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.00</field>
+          <field name="name">Green Peppers</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_legumes_frais"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poivron_verts-image.jpg"/>
+        </record>
+        <record id="poivron_jaunes" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.70</field>
+          <field name="name">Yellow Peppers</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_legumes_frais"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poivron_jaunes-image.jpg"/>
+        </record>
+        <record id="poireaux_poireaux" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.29</field>
+          <field name="name">Leeks</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_legumes_frais"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/poireaux_poireaux-image.jpg"/>
+        </record>
+        <record id="courgette" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.20</field>
+          <field name="name">Zucchini</field>
+          <field name="to_weight">True</field>
+          <field name="pos_categ_id" ref="autres_legumes_frais"/>
+          <field name="uom_id" ref="product.product_uom_kgm" />
+          <field name="uom_po_id" ref="product.product_uom_kgm" />
+          <field name="image" type="base64" file="point_of_sale/static/img/courgette-image.jpg"/>
+        </record>
+
+        <record id="coca_regular_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.49</field>
+          <field name="name">Coca-Cola Regular 1L</field>
+          <field name="ean13">5449000054227</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_regular_1l-image.jpg"/>
+        </record>
+        <record id="coca_regular_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.38</field>
+          <field name="name">Coca-Cola Regular 2L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_regular_2l-image.jpg"/>
+        </record>
+        <record id="coca_regular_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.97</field>
+          <field name="name">Coca-Cola Regular 50cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_regular_50cl-image.jpg"/>
+        </record>
+        <record id="coca_regular_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.51</field>
+          <field name="name">Coca-Cola Regular 33cl</field>
+          <field name="ean13">5449000000996</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_regular_33cl-image.jpg"/>
+        </record>
+
+        <record id="coca_light_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.49</field>
+          <field name="name">Coca-Cola Light 1L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_1l-image.jpg"/>
+        </record>
+        <record id="coca_light_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.38</field>
+          <field name="name">Coca-Cola Light 2L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_2l-image.jpg"/>
+        </record>
+        <record id="coca_light_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.97</field>
+          <field name="name">Coca-Cola Light 50cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_50cl-image.jpg"/>
+        </record>
+        <record id="coca_light_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.51</field>
+          <field name="name">Coca-Cola Light 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_33cl-image.jpg"/>
+        </record>
+        <record id="coca_light_decaf_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.53</field>
+          <field name="name">Coca-Cola Light 33cl Decaf</field> 
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_decaf_33cl-image.jpg"/>
+        </record>
+
+        <record id="coca_zero_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.49</field>
+          <field name="name">Coca-Cola Zero 1L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_zero_1l-image.jpg"/>
+        </record>
+        <record id="coca_zero_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.38</field>
+          <field name="name">Coca-Cola Zero 2L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_zero_2l-image.jpg"/>
+        </record>
+        <record id="coca_zero_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.97</field>
+          <field name="name">Coca-Cola Zero 50cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_zero_50cl-image.jpg"/>
+        </record>
+        <record id="coca_zero_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.51</field>
+          <field name="name">Coca-Cola Zero 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_zero_33cl-image.jpg"/>
+        </record>
+        <record id="coca_zero_decaf_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.67</field>
+          <field name="name">Coca-Cola Zero Decaf 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_zero_decaf_33cl-image.jpg"/>
+        </record>
+
+        <record id="coca_light_lemon_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.83</field>
+          <field name="name">Coca-Cola Light Lemon 2L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_lemon_2l-image.jpg"/>
+        </record>
+        <record id="coca_light_lemon_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.16</field>
+          <field name="name">Coca-Cola Light Lemon 50cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_lemon_50cl-image.jpg"/>
+        </record>
+        <record id="coca_light_lemon_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.53</field>
+          <field name="name">Coca-Cola Light Lemon 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/coca_light_lemon_33cl-image.jpg"/>
+        </record>
+
+        <record id="pepsi_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.70</field>
+          <field name="name">Pepsi 2L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pepsi_2l-image.jpg"/>
+        </record>
+        <record id="pepsi_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.43</field>
+          <field name="name">Pepsi 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pepsi_33cl-image.jpg"/>
+        </record>
+        <record id="pepsi_max_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.71</field>
+          <field name="name">Pepsi Max 2L</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pepsi_max_2l-image.jpg"/>
+        </record>
+        <record id="pepsi_max_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.40</field>
+          <field name="name">Pepsi Max 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pepsi_max_33cl-image.jpg"/>
+        </record>
+        <record id="pepsi_max_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.61</field>
+          <field name="name">Pepsi Max 50cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pepsi_max_50cl-image.jpg"/>
+        </record>
+        <record id="pepsi_max_lemon_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.40</field>
+          <field name="name">Pepsi Max Cool Lemon 33cl</field>
+          <field name="pos_categ_id" ref="coke"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/pepsi_max_lemon_33cl-image.jpg"/>
+        </record>
+
+        <record id="spa_et_fruit_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.75</field>
+          <field name="name">Spa Fruit and Orange 50cl</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_et_fruit_50cl-image.jpg"/>
+        </record>
+        <record id="orangina_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.72</field>
+          <field name="name">Orangina 33cl</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/orangina_33cl-image.jpg"/>
+        </record>
+        <record id="orangina_1,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.42</field>
+          <field name="name">Orangina 1.5L</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/orangina_1,5l-image.jpg"/>
+        </record>
+        <record id="fanta_orange_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.98</field>
+          <field name="name">Fanta Orange 50cl</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/fanta_orange_50cl-image.jpg"/>
+        </record>
+        <record id="fanta_orange_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.28</field>
+          <field name="name">Fanta Orange 2L</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/fanta_orange_2l-image.jpg"/>
+        </record>
+        <record id="fanta_orange_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.51</field>
+          <field name="name">Fanta Orange 33cl</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/fanta_orange_33cl-image.jpg"/>
+        </record>
+        <record id="fanta_orange_25cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.84</field>
+          <field name="name">Fanta Orange 25cl</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/fanta_orange_25cl-image.jpg"/>
+        </record>
+        <record id="fanta_zero_orange_1,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.08</field>
+          <field name="name">Fanta Orange Zero 1.5L</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/fanta_zero_orange_1,5l-image.jpg"/>
+        </record>
+        <record id="fanta_zero_orange_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.53</field>
+          <field name="name">Fanta Zero Orange 33cl</field>
+          <field name="pos_categ_id" ref="soda_orange"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/fanta_zero_orange_33cl-image.jpg"/>
+        </record>
+
+        <record id="evian_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.52</field>
+          <field name="name">Evian 50cl</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/evian_50cl-image.jpg"/>
+        </record>
+        <record id="evian_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.70</field>
+          <field name="name">Evian 1L</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/evian_1l-image.jpg"/>
+        </record>
+        <record id="evian_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.26</field>
+          <field name="name">2L Evian</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/evian_2l-image.jpg"/>
+        </record>
+        <record id="spa_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.40</field>
+          <field name="name">Spa Reine 33cl</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_33cl-image.jpg"/>
+        </record>
+        <record id="spa_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.46</field>
+          <field name="name">Spa Reine 50cl</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_50cl-image.jpg"/>
+        </record>
+        <record id="spa_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.65</field>
+          <field name="name">Spa Reine 1L</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_1l-image.jpg"/>
+        </record>
+        <record id="spa_2l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.30</field>
+          <field name="name">Spa Reine 2L</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_2l-image.jpg"/>
+        </record>
+        <record id="chaudfontaine_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.34</field>
+          <field name="name">Chaudfontaine 33cl</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_33cl-image.jpg"/>
+        </record>
+        <record id="chaudfontaine_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.44</field>
+          <field name="ean13">5449000111715</field>
+          <field name="name">Chaudfontaine 50cl</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_50cl-image.jpg"/>
+        </record>
+        <record id="chaudfontaine_1,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.86</field>
+          <field name="name">Chaudfontaine 1.5l</field>
+          <field name="pos_categ_id" ref="plain_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_1,5l-image.jpg"/>
+        </record>
+
+        <record id="spa_gazeuse_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.38</field>
+          <field name="name">Spa Barisart 33cl</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_gazeuse_33cl-image.jpg"/>
+        </record>
+        <record id="spa_gazeuse_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.49</field>
+          <field name="name">Spa Barisart 50cl</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_gazeuse_50cl-image.jpg"/>
+        </record>
+        <record id="spa_gazeuse_1,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.00</field>
+          <field name="name">Spa Barisart 1.5l</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/spa_gazeuse_1,5l-image.jpg"/>
+        </record>
+        <record id="chaudfontaine_petillante_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.41</field>
+          <field name="name">Chaudfontaine Petillante 33cl</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_petillante_33cl-image.jpg"/>
+        </record>
+        <record id="chaudfontaine_petillante_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.57</field>
+          <field name="name">Chaudfontaine Petillante 50cl</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_petillante_50cl-image.jpg"/>
+        </record>
+        <record id="chaudfontaine_petillante_1,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.98</field>
+          <field name="name">Chaudfontaine Petillante 1.5l</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chaudfontaine_petillante_1,5l-image.jpg"/>
+        </record>
+        <record id="perrier_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.71</field>
+          <field name="name">50cl Perrier</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/perrier_50cl-image.jpg"/>
+        </record>
+        <record id="perrier_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.96</field>
+          <field name="name">Perrier 1L</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/perrier_1l-image.jpg"/>
+        </record>
+        <record id="san_pellegrino_1l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.98</field>
+          <field name="name">San Pellegrino 1L</field>
+          <field name="pos_categ_id" ref="sparkling_water"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/san_pellegrino_1l-image.jpg"/>
+        </record>
+
+        <record id="stella_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.19</field>
+          <field name="name">Stella Artois 50cl</field>
+          <field name="pos_categ_id" ref="pils"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/stella_50cl-image.jpg"/>
+        </record>
+        <record id="stella_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.82</field>
+          <field name="name">Stella Artois 33cl</field>
+          <field name="pos_categ_id" ref="pils"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/stella_33cl-image.jpg"/>
+        </record>
+        <record id="maes_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.95</field>
+          <field name="name">Maes 50cl</field>
+          <field name="pos_categ_id" ref="pils"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/maes_50cl-image.jpg"/>
+        </record>
+        <record id="maes_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.77</field>
+          <field name="name">Maes 33cl</field>
+          <field name="pos_categ_id" ref="pils"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/maes_33cl-image.jpg"/>
+        </record>
+        <record id="jupiler_50cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.97</field>
+          <field name="name">Jupiler 50cl</field>
+          <field name="pos_categ_id" ref="pils"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/jupiler_50cl-image.jpg"/>
+        </record>
+        <record id="jupiler_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.77</field>
+          <field name="ean13">5410228142027</field>
+          <field name="name">Jupiler 33cl</field>
+          <field name="pos_categ_id" ref="pils"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/jupiler_33cl-image.jpg"/>
+        </record>
+
+        <record id="boon_framboise_37,5cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.53</field>
+          <field name="name">Boon Framboise 37.5cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/boon_framboise_37,5cl-image.jpg"/>
+        </record>
+        <record id="timmermans_geuze_37,5cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.54</field>
+          <field name="name">Timmermans Geuze 37.5cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/timmermans_geuze_37,5cl-image.jpg"/>
+        </record>
+        <record id="timmermans_kriek_37,5cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.7</field>
+          <field name="name">Timmermans Kriek 37.5cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/timmermans_kriek_37,5cl-image.jpg"/>
+        </record>
+        <record id="timmermans_faro_37,5cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.56</field>
+          <field name="name">Timmermans Faro 37.5cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/timmermans_faro_37,5cl-image.jpg"/>
+        </record>
+        <record id="lindemans_pecheresse_37,,5cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.94</field>
+          <field name="name">Lindemans sinful 37.5cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lindemans_pecheresse_37,,5cl-image.jpg"/>
+        </record>
+        <record id="lindemans_kriek_37,5cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.51</field>
+          <field name="name">Lindemans Kriek 37.5cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lindemans_kriek_37,5cl-image.jpg"/>
+        </record>
+        <record id="grisette_cerise_25cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.04</field>
+          <field name="name">Grisette Cherry 25cl</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/grisette_cerise_25cl-image.jpg"/>
+        </record>
+        <record id="belle_vue_kriek_25cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.83</field>
+          <field name="name">Belle-Vue Kriek 25cl</field>
+          <field name='ean13'>5410228193449</field>
+          <field name="pos_categ_id" ref="fruity_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/belle_vue_kriek_25cl-image.jpg"/>
+        </record>
+
+        <record id="leffe_brune_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.00</field>
+          <field name="name">Leffe Brune 33cl</field>
+          <field name='ean13'>5410228142164</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/leffe_brune_33cl-image.jpg"/>
+        </record>
+        <record id="leffe_blonde_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.00</field>
+          <field name="name">Leffe Blonde 33cl</field>
+          <field name='ean13'>5410228142218</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/leffe_blonde_33cl-image.jpg"/>
+        </record>
+        <record id="leffe_9_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.16</field>
+          <field name="name">Leffe Brune "9" 33cl</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/leffe_9_33cl-image.jpg"/>
+        </record>
+        <record id="orval_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.59</field>
+          <field name="name">Orval 33cl</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/orval_33cl-image.jpg"/>
+        </record>
+        <record id="rochefort_8_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.75</field>
+          <field name="name">Rochefort "8" 33cl</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/rochefort_8_33cl-image.jpg"/>
+        </record>
+        <record id="chimay_bleu_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.46</field>
+          <field name="name">Chimay Bleu 33cl</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chimay_bleu_33cl-image.jpg"/>
+        </record>
+        <record id="chimay_bleu_75cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3.57</field>
+          <field name="name">Chimay Bleu 75cl</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chimay_bleu_75cl-image.jpg"/>
+        </record>
+        <record id="chimay_rouge_33cl" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.02</field>
+          <field name="name">Chimay Red 33cl</field>
+          <field name="pos_categ_id" ref="special_beers"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/chimay_rouge_33cl-image.jpg"/>
+        </record>
+
+        <record id="oetker_mozzarella" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Mozzarella</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_mozzarella-image.jpg"/>
+        </record>
+        <record id="oetker_bolognese" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Bolognese</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_bolognese-image.jpg"/>
+        </record>
+        <record id="oetker_funghi" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Funghi</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_funghi-image.jpg"/>
+        </record>
+        <record id="oetker_hawaii" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Hawaii</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_hawaii-image.jpg"/>
+        </record>
+        <record id="oetker_pollo" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Pollo</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_pollo-image.jpg"/>
+        </record>
+        <record id="oetker_prosciutto" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Prosciutto</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_prosciutto-image.jpg"/>
+        </record>
+        <record id="oetker_4formaggi" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Quattro Formaggi</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_4formaggi-image.jpg"/>
+        </record>
+        <record id="oetker_speciale" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Speciale</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_speciale-image.jpg"/>
+        </record>
+        <record id="oetker_spinaci" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Spinaci</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_spinaci-image.jpg"/>
+        </record>
+        <record id="oetker_tonno" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Tonno</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_tonno-image.jpg"/>
+        </record>
+        <record id="oetker_vegetale" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.86</field>
+          <field name="name">Dr. Oetker Ristorante Vegetable</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_vegetale-image.jpg"/>
+        </record>
+        <record id="oetker_margherita" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">2.67</field>
+          <field name="name">Dr. Oetker La Margherita</field>
+          <field name="pos_categ_id" ref="pizza"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/oetker_margherita-image.jpg"/>
+        </record>
+
+        <record id="croky_paprika_45g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.33</field>
+          <field name="name">Croky Paprika 45g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/croky_paprika_45g-image.jpg"/>
+        </record>
+        <record id="croky_naturel_45g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.39</field>
+          <field name="name">Croky Natural 45g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/croky_naturel_45g-image.jpg"/>
+        </record>
+        <record id="croky_bolognaise_250g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.78</field>
+          <field name="name">Croky Bolognese 250g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/croky_bolognaise_250g-image.jpg"/>
+        </record>
+        <record id="lays_pickles_250g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.48</field>
+          <field name="name">250g Lays Pickels</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_pickles_250g-image.jpg"/>
+        </record>
+        <record id="lays_ketchup_250g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.48</field>
+          <field name="name">Lays Ketchup 250g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_ketchup_250g-image.jpg"/>
+        </record>
+        <record id="lays_poivre_sel_oven_150g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.58</field>
+          <field name="name">Lays Salt and Pepper Oven Baked 150g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_poivre_sel_oven_150g-image.jpg"/>
+        </record>
+
+        <record id="lays_paprika_oven_150g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.54</field>
+          <field name="name">Oven Baked Lays Paprika 150g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_paprika_oven_150g-image.jpg"/>
+        </record>
+        <record id="lays_paprika_300g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.55</field>
+          <field name="name">Lays Paprika XXL 300g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_paprika_300g-image.jpg"/>
+        </record>
+        <record id="lays_paprika_170g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.48</field>
+          <field name="name">Lays Light Paprika 170g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_paprika_170g-image.jpg"/>
+        </record>
+        <record id="lays_light_paprika_170g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.48</field>
+          <field name="name">Lays Light Paprika 170g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_light_paprika_170g-image.jpg"/>
+        </record>
+        <record id="lays_paprika_45g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.39</field>
+          <field name="name">Lays Paprika 45g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_paprika_45g-image.jpg"/>
+        </record>
+
+        <record id="lays_naturel_oven_150g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.54</field>
+          <field name="name">Oven Baked Lays Natural 150g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_naturel_oven_150g-image.jpg"/>
+        </record>
+        <record id="lays_naturel_300g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.55</field>
+          <field name="name">Lays Natural XXL 300g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_naturel_300g-image.jpg"/>
+        </record>
+        <record id="lays_naturel_170g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.48</field>
+          <field name="name">Lays Natural Light 170g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_naturel_170g-image.jpg"/>
+        </record>
+        <record id="lays_light_naturel_170g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">1.48</field>
+          <field name="name">Lays Natural Light 170g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_light_naturel_170g-image.jpg"/>
+        </record>
+        <record id="lays_naturel_45g" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">0.39</field>
+          <field name="name">Lays Natural 45g</field>
+          <field name="pos_categ_id" ref="chips"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/lays_naturel_45g-image.jpg"/>
+        </record>
+
+        <record id="ijsboerke_chocolat_2,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.60</field>
+          <field name="name">IJsboerke Chocolat 2.5L</field>
+          <field name="pos_categ_id" ref="ice_cream"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/ijsboerke_chocolat_2,5l-image.jpg"/>
+        </record>
+        <record id="ijsboerke_moka_2,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.60</field>
+          <field name="name">IJsboerke Mocha 2.5L</field>
+          <field name="pos_categ_id" ref="ice_cream"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/ijsboerke_moka_2,5l-image.jpg"/>
+        </record>
+        <record id="ijsboerke_vanille_2,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.40</field>
+          <field name="name">IJsboerke Vanilla 2.5L</field>
+          <field name="pos_categ_id" ref="ice_cream"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/ijsboerke_vanille_2,5l-image.jpg"/>
+        </record>
+        <record id="ijsboerke_stracciatella_2,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">8.40</field>
+          <field name="name">IJsboerke Stracciatella 2.5L</field>
+          <field name="pos_categ_id" ref="ice_cream"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/ijsboerke_stracciatella_2,5l-image.jpg"/>
+        </record>
+        <record id="ijsboerke_dame_blanche_2,5l" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">7.60</field>
+          <field name="name">IJsboerke 2.5L White Lady</field>
+          <field name="pos_categ_id" ref="ice_cream"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/ijsboerke_dame_blanche_2,5l-image.jpg"/>
+        </record>
+
+        <record id="partner_product_1" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">850.00</field>
+          <field name="name">Odoo Start Workshop</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/openbig.jpg"/>
+        </record>
+
+        <record id="partner_product_2" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Odoo Consulting</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/bhc.jpg"/>
+        </record>
+
+        <record id="partner_product_3" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Eezee-It</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/eezee-it.png"/>
+        </record>
+
+        <record id="partner_product_4" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Ekomurz.nl</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/ekomurz.gif"/>
+        </record>
+
+        <record id="partner_product_5" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Acsone.eu</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/acsone.png"/>
+        </record>
+
+        <record id="partner_product_6" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Vauxoo.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/vauxoo.png"/>
+        </record>
+
+        <record id="partner_product_7" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">Datalp.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/datalp.jpg"/>
+        </record>
+
+        <record id="partner_product_8" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">camptocamp.com</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/camptocamp.png"/>
+        </record>
+
+        <record id="partner_product_9" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">999.99</field>
+          <field name="name">EGGS-solutions.fr</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/eggs-solutions.jpg"/>
+        </record>
+
+        <record id="partner_product_10" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">3500.00</field>
+          <field name="name">Odoo primary scoping &amp; analysis package (£900, £450, £30)</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+
+        <record id="partner_product_11" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">900.00</field>
+          <field name="name">3rd party system analysis</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+
+        <record id="partner_product_12" model="product.product">
+          <field name="available_in_pos">True</field>
+          <field name="list_price">30.00</field>
+          <field name="name">Odoo enterprise agreement</field>
+          <field name="type">service</field>
+          <field name="pos_categ_id" ref="partner_services"/>
+          <field name="image" type="base64" file="point_of_sale/static/img/partners/opusvl.png"/>
+        </record>
+
+        
+        <!-- The electronic products shouldn't be present in the point of sale for the demo -->
+
+        <record id="product.product_product_1" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_2" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_3" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_4" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_5" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_6" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_7" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_8" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_9" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_10" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_11" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_12" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_13" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_14" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_15" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_16" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_17" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_18" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_19" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_20" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_21" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_22" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_23" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_24" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_25" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_26" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_27" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_28" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_29" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_30" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_31" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_32" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_33" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_34" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_35" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_36" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_37" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_38" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_39" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_40" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_41" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_42" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_43" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_44" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_45" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_46" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_47" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+        <record id="product.product_product_48" model="product.product"> <field name="available_in_pos" eval="False"/> </record>
+
+    </data>
+</openerp>

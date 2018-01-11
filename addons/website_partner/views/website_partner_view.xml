@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="partner_page" name="Partner Page">
+  <t t-call="website.layout">
+    <div id="wrap">
+      <div class="oe_structure"/>
+      <div class="container">
+        <div class="row">
+          <t t-call="website_partner.partner_detail"></t>
+        </div>
+      </div>
+      <div class="oe_structure"/>
+    </div>
+  </t>
+</template> 
+
+<template id="partner_detail" name="Partner Details">
+    <t t-call="website.publish_management">
+        <t t-set="object" t-value="partner"/>
+        <t t-set="publish_edit" t-value="True"/>
+    </t>
+    <h1 class="col-md-12 text-center" id="partner_name" t-field="partner.display_name"/>
+    <div class="col-md-4">
+        <div t-field="partner.image" t-field-options='{"widget": "image", "class": "center-block mb16"}'/>
+        <address class="well">
+             <div t-field="partner.self" t-field-options='{
+                 "widget": "contact",
+                 "fields": ["address", "website", "phone", "fax", "email"]
+             }'/>
+        </address>
+        <t t-raw="left_column or ''"/>
+    </div>
+    <div class="col-md-8 mt32">
+        <t t-if="partner">
+            <div t-field="partner.website_description"/>
+            <t groups="base.group_website_publisher">
+                <h2 class="css_non_editable_mode_hidden">Short Description for List View</h2>
+                <div class="css_non_editable_mode_hidden" t-field="partner.website_short_description"/>
+            </t>
+        </t>
+        <t t-raw="right_column or ''"/>
+    </div>
+</template>
+</data>
+</openerp>

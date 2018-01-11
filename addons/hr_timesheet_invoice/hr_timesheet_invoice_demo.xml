@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="timesheet_invoice_factor2" model="hr_timesheet_invoice.factor">
+            <field name="name">50%</field>
+            <field name="customer_name">50% Discount</field>
+            <field name="factor">50.0</field>
+        </record>
+        <record id="timesheet_invoice_factor3" model="hr_timesheet_invoice.factor">
+            <field name="name">Free of charge</field>
+            <field name="customer_name">Offered developments</field>
+            <field name="factor">100.0</field>
+        </record>
+        <record id="account.analytic_spark" model="account.analytic.account">
+            <field name="to_invoice" ref="timesheet_invoice_factor1"/>
+        </record>
+        <record id="account.analytic_nebula" model="account.analytic.account">
+            <field name="to_invoice" ref="timesheet_invoice_factor1"/>
+        </record>
+        <record id="account.analytic_partners_camp_to_camp" model="account.analytic.account">
+            <field name="to_invoice" ref="timesheet_invoice_factor1"/>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,2755 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <!--
+        Cuentas que sólo están en el PGC completo:
+            (111), (1110), (1111), (1143), (115), (133), (134), (1340), (1341),
+                (135), (136), (140), (146), (147), (1765), (1768), (178), (189);
+            (204), (2550), (2553), (257);
+            (466);
+            (501), (5091), (5296), (5297), (553), (5530), (5531), (5532),
+                (5533), (5593), (5598), (569), (58), (580), (581), (582),
+                (583), (584), (585), (586), (587), (588), (589),
+                (599), (5990), (5991), (5992), (5993), (5994);
+            (643), (644), (645), (644), (6440), (6442), (645), (6450), (6457),
+                (6630), (6631), (6632), (6633);
+            (7630), (7631), (7632), (7633), (767), (774), (7950), (7956), (7957);
+            (8);
+            (9);
+
+        Cuentas que tienen un nombre distinto en el plan de asociaciones:
+            (100), (103), (104), (1040), (1044), (12), (130);
+            (240), (249);
+            (490);
+            (65), (671), (691), (694);
+            (791), (794);
+
+        (2013-10-07)
+        Pedro M. Baeza - pedro.baeza@serviciosbaeza.com
+        Serv. Tecnol. Avanzados - http://www.serviciosbaeza.com
+        Refactorización general
+
+    -->
+
+    <data noupdate="0">
+
+        <record id="pgc_full_100" model="account.account.template">
+            <field name="code">100</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_10"/>
+            <field name="type">view</field>
+            <field name="name">Capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_100_child" model="account.account.template">
+            <field name="code">100</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_100"/>
+            <field name="type">other</field>
+            <field name="name">Capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_103" model="account.account.template">
+            <field name="code">103</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_10"/>
+            <field name="type">view</field>
+            <field name="name">Socios por desembolsos no exigidos</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1030" model="account.account.template">
+            <field name="code">1030</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_103"/>
+            <field name="type">view</field>
+            <field name="name">Socios por desembolsos no exigidos, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1030_child" model="account.account.template">
+            <field name="code">1030</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1030"/>
+            <field name="type">other</field>
+            <field name="name">Socios por desembolsos no exigidos, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1034" model="account.account.template">
+            <field name="code">1034</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_103"/>
+            <field name="type">view</field>
+            <field name="name">Socios por desembolsos no exigidos, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1034_child" model="account.account.template">
+            <field name="code">1034</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1034"/>
+            <field name="type">other</field>
+            <field name="name">Socios por desembolsos no exigidos, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_104" model="account.account.template">
+            <field name="code">104</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_10"/>
+            <field name="type">view</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1040" model="account.account.template">
+            <field name="code">1040</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_104"/>
+            <field name="type">view</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1040_child" model="account.account.template">
+            <field name="code">1040</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1040"/>
+            <field name="type">other</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital social</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1044" model="account.account.template">
+            <field name="code">1044</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_104"/>
+            <field name="type">view</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1044_child" model="account.account.template">
+            <field name="code">1044</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1044"/>
+            <field name="type">other</field>
+            <field name="name">Socios por aportaciones no dinerarias pendientes, capital pendiente de inscripción</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_111" model="account.account.template">
+            <field name="code">111</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_11"/>
+            <field name="type">view</field>
+            <field name="name">Otros Instrumentos de patrimonio neto</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1110" model="account.account.template">
+            <field name="code">1110</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_111"/>
+            <field name="type">view</field>
+            <field name="name">Patrimonio neto por emision de instrumentos financieros compuestos</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1110_child" model="account.account.template">
+            <field name="code">1110</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1110"/>
+            <field name="type">other</field>
+            <field name="name">Patrimonio neto por emision de instrumentos financieros compuestos</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1111" model="account.account.template">
+            <field name="code">1111</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_111"/>
+            <field name="type">view</field>
+            <field name="name">Resto de instrumentos de patrimonio neto</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1111_child" model="account.account.template">
+            <field name="code">111100</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1111"/>
+            <field name="type">other</field>
+            <field name="name">Resto de instrumentos de patrimonio neto</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1143" model="account.account.template">
+            <field name="code">1143</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_114"/>
+            <field name="type">view</field>
+            <field name="name">Reserva por fondo de comercio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1143_child" model="account.account.template">
+            <field name="code">1143</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1143"/>
+            <field name="type">other</field>
+            <field name="name">Reserva por fondo de comercio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_115" model="account.account.template">
+            <field name="code">115</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_11"/>
+            <field name="type">view</field>
+            <field name="name">Reservas por pérdidas y ganancias actuariales y otros ajustes</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_115_child" model="account.account.template">
+            <field name="code">115</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_115"/>
+            <field name="type">other</field>
+            <field name="name">Reservas por pérdidas y ganancias actuariales y otros ajustes</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_12" model="account.account.template">
+            <field name="code">12</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_1"/>
+            <field name="type">view</field>
+            <field name="name">Resultados pendientes de aplicación</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_120" model="account.account.template">
+            <field name="code">120</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_12"/>
+            <field name="type">view</field>
+            <field name="name">Remanente</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_120_child" model="account.account.template">
+            <field name="code">120</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_120"/>
+            <field name="type">other</field>
+            <field name="name">Remanente</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_121" model="account.account.template">
+            <field name="code">121</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_12"/>
+            <field name="type">view</field>
+            <field name="name">Resultados negativos de ejercicios anteriores</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_121_child" model="account.account.template">
+            <field name="code">121</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_121"/>
+            <field name="type">other</field>
+            <field name="name">Resultados negativos de ejercicios anteriores</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_129" model="account.account.template">
+            <field name="code">129</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_12"/>
+            <field name="type">view</field>
+            <field name="name">Resultado del ejercicio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_129_child" model="account.account.template">
+            <field name="code">129</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_129"/>
+            <field name="type">other</field>
+            <field name="name">Resultado del ejercicio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_130_child" model="account.account.template">
+            <field name="code">130</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_130"/>
+            <field name="type">other</field>
+            <field name="name">Subvenciones oficiales de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_132_child" model="account.account.template">
+            <field name="code">132</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_132"/>
+            <field name="type">other</field>
+            <field name="name">Otras subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_133" model="account.account.template">
+            <field name="code">133</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_13"/>
+            <field name="type">view</field>
+            <field name="name">Ajustes por valoración en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_133_child" model="account.account.template">
+            <field name="code">133</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_133"/>
+            <field name="type">other</field>
+            <field name="name">Ajustes por valoración en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_134" model="account.account.template">
+            <field name="code">134</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_13"/>
+            <field name="type">view</field>
+            <field name="name">Operaciones de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1340" model="account.account.template">
+            <field name="code">1340</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_134"/>
+            <field name="type">view</field>
+            <field name="name">Cobertura de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1340_child" model="account.account.template">
+            <field name="code">1340</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1340"/>
+            <field name="type">other</field>
+            <field name="name">Cobertura de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1341" model="account.account.template">
+            <field name="code">1341</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_134"/>
+            <field name="type">view</field>
+            <field name="name">Cobertura de una inversión neta en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1341_child" model="account.account.template">
+            <field name="code">1341</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_1341"/>
+            <field name="type">other</field>
+            <field name="name">Cobertura de una inversión neta en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_135" model="account.account.template">
+            <field name="code">135</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_13"/>
+            <field name="type">view</field>
+            <field name="name">Diferencias de conversión</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_135_child" model="account.account.template">
+            <field name="code">135</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_135"/>
+            <field name="type">other</field>
+            <field name="name">Diferencias de conversión</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_136" model="account.account.template">
+            <field name="code">136</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_13"/>
+            <field name="type">view</field>
+            <field name="name">Ajustes por valoración de activos no corrientes y grupos enajenables de elementos, mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_136_child" model="account.account.template">
+            <field name="code">136</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_136"/>
+            <field name="type">other</field>
+            <field name="name">Ajustes por valoración de activos no corrientes y grupos enajenables de elementos, mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_140" model="account.account.template">
+            <field name="code">140</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_14"/>
+            <field name="type">view</field>
+            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_140_child" model="account.account.template">
+            <field name="code">140</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_140"/>
+            <field name="type">other</field>
+            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_146" model="account.account.template">
+            <field name="code">146</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_14"/>
+            <field name="type">view</field>
+            <field name="name">Provisión para reestructuraciones</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_146_child" model="account.account.template">
+            <field name="code">146</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_146"/>
+            <field name="type">other</field>
+            <field name="name">Provisión para reestructuraciones</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_147" model="account.account.template">
+            <field name="code">147</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_14"/>
+            <field name="type">view</field>
+            <field name="name">Provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_147_child" model="account.account.template">
+            <field name="code">147</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_147"/>
+            <field name="type">other</field>
+            <field name="name">Provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1765" model="account.account.template">
+            <field name="code">1765</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_176"/>
+            <field name="type">view</field>
+            <field name="name">Pasivos por derivados financieros, carter de negociación</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1765_child" model="account.account.template">
+            <field name="code">1765</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_1765"/>
+            <field name="type">other</field>
+            <field name="name">Pasivos por derivados financieros, carter de negociación</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1768" model="account.account.template">
+            <field name="code">1768</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_176"/>
+            <field name="type">view</field>
+            <field name="name">Pasivos por derivados financieros, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_1768_child" model="account.account.template">
+            <field name="code">1768</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_1768"/>
+            <field name="type">other</field>
+            <field name="name">Pasivos por derivados financieros, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_178" model="account.account.template">
+            <field name="code">178</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_17"/>
+            <field name="type">view</field>
+            <field name="name">Obligaciones y bonos convertibles</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_178_child" model="account.account.template">
+            <field name="code">178</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_178"/>
+            <field name="type">other</field>
+            <field name="name">Obligaciones y bonos convertibles</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_189" model="account.account.template">
+            <field name="code">189</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_18"/>
+            <field name="type">view</field>
+            <field name="name">Garantías financieras</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_189_child" model="account.account.template">
+            <field name="code">189</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_189"/>
+            <field name="type">other</field>
+            <field name="name">Garantías financieras</field>
+            <field name="user_type" ref="l10n_es.account_type_capital"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_204" model="account.account.template">
+            <field name="code">204</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_20"/>
+            <field name="type">view</field>
+            <field name="name">Fondo de comercio</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_204_child" model="account.account.template">
+            <field name="code">204</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_204"/>
+            <field name="type">other</field>
+            <field name="name">Fondo de comercio</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_240" model="account.account.template">
+            <field name="code">240</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_24"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2403" model="account.account.template">
+            <field name="code">2403</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_240"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2403_child" model="account.account.template">
+            <field name="code">2403</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2403"/>
+            <field name="type">other</field>
+            <field name="name">Participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2404" model="account.account.template">
+            <field name="code">2404</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_240"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2404_child" model="account.account.template">
+            <field name="code">2404</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2404"/>
+            <field name="type">other</field>
+            <field name="name">Participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2405" model="account.account.template">
+            <field name="code">2405</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_240"/>
+            <field name="type">view</field>
+            <field name="name">Participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2405_child" model="account.account.template">
+            <field name="code">2405</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2405"/>
+            <field name="type">other</field>
+            <field name="name">Participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_249" model="account.account.template">
+            <field name="code">249</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_24"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2493" model="account.account.template">
+            <field name="code">2493</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_249"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2493_child" model="account.account.template">
+            <field name="code">2493</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2493"/>
+            <field name="type">other</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2494" model="account.account.template">
+            <field name="code">2494</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_249"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2494_child" model="account.account.template">
+            <field name="code">2494</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2494"/>
+            <field name="type">other</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2495" model="account.account.template">
+            <field name="code">2495</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_249"/>
+            <field name="type">view</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2495_child" model="account.account.template">
+            <field name="code">2495</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2495"/>
+            <field name="type">other</field>
+            <field name="name">Desembolsos pendientes sobre participaciones en otras partes vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2550" model="account.account.template">
+            <field name="code">2550</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_255"/>
+            <field name="type">view</field>
+            <field name="name">Activos por derivados financieros, cartera de negociación</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2550_child" model="account.account.template">
+            <field name="code">2550</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2550"/>
+            <field name="type">other</field>
+            <field name="name">Activos por derivados financieros, cartera de negociación</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2553" model="account.account.template">
+            <field name="code">2553</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_255"/>
+            <field name="type">view</field>
+            <field name="name">Activos por derivados financieros, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_2553_child" model="account.account.template">
+            <field name="code">2553</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_2553"/>
+            <field name="type">other</field>
+            <field name="name">Activos por derivados financieros, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_257" model="account.account.template">
+            <field name="code">257</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_25"/>
+            <field name="type">view</field>
+            <field name="name">Derechos de reembolso derivados de contratos de seguro relativos a retribuciones al personal</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_257_child" model="account.account.template">
+            <field name="code">257</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_257"/>
+            <field name="type">other</field>
+            <field name="name">Derechos de reembolso derivados de contratos de seguro relativos a retribuciones al personal</field>
+            <field name="user_type" ref="l10n_es.account_type_inmo"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_466" model="account.account.template">
+            <field name="code">466</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_46"/>
+            <field name="type">view</field>
+            <field name="name">Remuneraciones mediante sistemas de aportación definida pendientes de pago</field>
+            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_466_child" model="account.account.template">
+            <field name="code">466</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_466"/>
+            <field name="type">other</field>
+            <field name="name">Remuneraciones mediante sistemas de aportación definida pendientes de pago</field>
+            <field name="user_type" ref="account.data_account_type_payable"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_490" model="account.account.template">
+            <field name="code">490</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_49"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="l10n_es.account_type_terceros"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_490_child" model="account.account.template">
+            <field name="code">490</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_490"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="l10n_es.account_type_terceros"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_501" model="account.account.template">
+            <field name="code">501</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_50"/>
+            <field name="type">view</field>
+            <field name="name">Obligaciones y bonos convertibles a corto plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_501_child" model="account.account.template">
+            <field name="code">501</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_501"/>
+            <field name="type">other</field>
+            <field name="name">Obligaciones y bonos convertibles a corto plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5091" model="account.account.template">
+            <field name="code">5091</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_509"/>
+            <field name="type">view</field>
+            <field name="name">Obligaciones y bonos convertibles amortizados</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5091_child" model="account.account.template">
+            <field name="code">5091</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_5091"/>
+            <field name="type">other</field>
+            <field name="name">Obligaciones y bonos convertibles amortizados</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5296" model="account.account.template">
+            <field name="code">5296</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_529"/>
+            <field name="type">view</field>
+            <field name="name">Provisión a corto plazo para reestructuraciones de patrimonio</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5296_child" model="account.account.template">
+            <field name="code">5296</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_5296"/>
+            <field name="type">other</field>
+            <field name="name">Provisión a corto plazo para reestructuraciones de patrimonio</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5297" model="account.account.template">
+            <field name="code">5297</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_529"/>
+            <field name="type">view</field>
+            <field name="name">Provisión a corto plazo por transacciones con pagos basados en instrumentos</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5297_child" model="account.account.template">
+            <field name="code">5297</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_full_5297"/>
+            <field name="type">other</field>
+            <field name="name">Provisión a corto plazo por transacciones con pagos basados en instrumentos</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_551" model="account.account.template">
+            <field name="code">551</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_55"/>
+            <field name="type">view</field>
+            <field name="name">Cuenta corriente con socios y administradores</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_551_child" model="account.account.template">
+            <field name="code">551</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_551"/>
+            <field name="type">other</field>
+            <field name="name">Cuenta corriente con socios y administradores</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_553" model="account.account.template">
+            <field name="code">553</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_55"/>
+            <field name="type">view</field>
+            <field name="name">Cuentas corrientes en fusiones y escisiones</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5530" model="account.account.template">
+            <field name="code">5530</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_553"/>
+            <field name="type">view</field>
+            <field name="name">Socios de sociedad disuelta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5530_child" model="account.account.template">
+            <field name="code">5530</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5530"/>
+            <field name="type">other</field>
+            <field name="name">Socios de sociedad disuelta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5531" model="account.account.template">
+            <field name="code">5531</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_553"/>
+            <field name="type">view</field>
+            <field name="name">Socios, cuenta de fusión</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5531_child" model="account.account.template">
+            <field name="code">5531</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5531"/>
+            <field name="type">other</field>
+            <field name="name">Socios, cuenta de fusión</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5532" model="account.account.template">
+            <field name="code">5532</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_553"/>
+            <field name="type">view</field>
+            <field name="name">Socios de sociedad escindida</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5532_child" model="account.account.template">
+            <field name="code">5532</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5532"/>
+            <field name="type">other</field>
+            <field name="name">Socios de sociedad escindida</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5533" model="account.account.template">
+            <field name="code">5533</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_553"/>
+            <field name="type">view</field>
+            <field name="name">Socios, cuenta de escisión</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5533_child" model="account.account.template">
+            <field name="code">5533</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5533"/>
+            <field name="type">other</field>
+            <field name="name">Socios, cuenta de escisión</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5593" model="account.account.template">
+            <field name="code">5593</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_559"/>
+            <field name="type">view</field>
+            <field name="name">Activos por derivados financieros a corto plazo, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5593_child" model="account.account.template">
+            <field name="code">5593</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5593"/>
+            <field name="type">other</field>
+            <field name="name">Activos por derivados financieros a corto plazo, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5598" model="account.account.template">
+            <field name="code">5598</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_559"/>
+            <field name="type">view</field>
+            <field name="name">Pasivos por derivados financieros a corto plazo, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5598_child" model="account.account.template">
+            <field name="code">5598</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5598"/>
+            <field name="type">other</field>
+            <field name="name">Pasivos por derivados financieros a corto plazo, instrumentos de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_569" model="account.account.template">
+            <field name="code">569</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_56"/>
+            <field name="type">view</field>
+            <field name="name">Garantías financieras a corto plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_569_child" model="account.account.template">
+            <field name="code">569</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_569"/>
+            <field name="type">other</field>
+            <field name="name">Garantías financieras a corto plazo</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_58" model="account.account.template">
+            <field name="code">58</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_5"/>
+            <field name="type">view</field>
+            <field name="name">Activos no corrientes mantenidos para la venta y activos y pasivos asociados</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_580" model="account.account.template">
+            <field name="code">580</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Inmovilizado</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_580_child" model="account.account.template">
+            <field name="code">580</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_580"/>
+            <field name="type">other</field>
+            <field name="name">Inmovilizado</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_581" model="account.account.template">
+            <field name="code">581</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Inversiones con personas y entidades vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_581_child" model="account.account.template">
+            <field name="code">581</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_581"/>
+            <field name="type">other</field>
+            <field name="name">Inversiones con personas y entidades vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_582" model="account.account.template">
+            <field name="code">582</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Inversiones financieras</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_582_child" model="account.account.template">
+            <field name="code">582</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_582"/>
+            <field name="type">other</field>
+            <field name="name">Inversiones financieras</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_583" model="account.account.template">
+            <field name="code">583</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Existencias, deudores comerciales y otras cuentas a cobrar</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_583_child" model="account.account.template">
+            <field name="code">583</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_583"/>
+            <field name="type">other</field>
+            <field name="name">Existencias, deudores comerciales y otras cuentas a cobrar</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_584" model="account.account.template">
+            <field name="code">584</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Otros activos</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_584_child" model="account.account.template">
+            <field name="code">584</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_584"/>
+            <field name="type">other</field>
+            <field name="name">Otros activos</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_585" model="account.account.template">
+            <field name="code">585</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Provisiones</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_585_child" model="account.account.template">
+            <field name="code">585</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_585"/>
+            <field name="type">other</field>
+            <field name="name">Provisiones</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_586" model="account.account.template">
+            <field name="code">586</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Deudas con características especiales</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_586_child" model="account.account.template">
+            <field name="code">586</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_586"/>
+            <field name="type">other</field>
+            <field name="name">Deudas con características especiales</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_587" model="account.account.template">
+            <field name="code">587</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Deudas con personas y entidades vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_587_child" model="account.account.template">
+            <field name="code">587</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_587"/>
+            <field name="type">other</field>
+            <field name="name">Deudas con personas y entidades vinculadas</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_588" model="account.account.template">
+            <field name="code">588</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Acreedores comerciales y otras cuentas a pagar</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_588_child" model="account.account.template">
+            <field name="code">588</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_588"/>
+            <field name="type">other</field>
+            <field name="name">Acreedores comerciales y otras cuentas a pagar</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_589" model="account.account.template">
+            <field name="code">589</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_58"/>
+            <field name="type">view</field>
+            <field name="name">Otros pasivos</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_589_child" model="account.account.template">
+            <field name="code">589</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_589"/>
+            <field name="type">other</field>
+            <field name="name">Otros pasivos</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_599" model="account.account.template">
+            <field name="code">599</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_59"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de activos no corrientes mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5990" model="account.account.template">
+            <field name="code">5990</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_599"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de inmovilizado no corriente mantenido para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5990_child" model="account.account.template">
+            <field name="code">5990</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5990"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de inmovilizado no corriente mantenido para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5991" model="account.account.template">
+            <field name="code">5991</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_599"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de inversiones y entidades vinculadas no corrientes mantenidas para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5991_child" model="account.account.template">
+            <field name="code">5991</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5991"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de inversiones y entidades vinculadas no corrientes mantenidas para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5992" model="account.account.template">
+            <field name="code">5992</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_599"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de inversiones financieras no corrientes mantenidas para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5992_child" model="account.account.template">
+            <field name="code">5992</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5992"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de inversiones financieras no corrientes mantenidas para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5993" model="account.account.template">
+            <field name="code">5993</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_599"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de existencias, deudores comerciales y otras cuentas a cobrar integrados en un grupo enajenable mantenido para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5993_child" model="account.account.template">
+            <field name="code">5993</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5993"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de existencias, deudores comerciales y otras cuentas a cobrar integrados en un grupo enajenable mantenido para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5994" model="account.account.template">
+            <field name="code">5994</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_599"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de valor de otros activos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_5994_child" model="account.account.template">
+            <field name="code">5994</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_5994"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de valor de otros activos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_financieras"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_643" model="account.account.template">
+            <field name="code">643</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_64"/>
+            <field name="type">view</field>
+            <field name="name">Retribuciones mediante sistemas de aportación definida</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_643_child" model="account.account.template">
+            <field name="code">643</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_643"/>
+            <field name="type">other</field>
+            <field name="name">Retribuciones mediante sistemas de aportación definida</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_644" model="account.account.template">
+            <field name="code">644</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_64"/>
+            <field name="type">view</field>
+            <field name="name">Retribuciones mediante sistemas de prestación definida</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6440" model="account.account.template">
+            <field name="code">6440</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_644"/>
+            <field name="type">view</field>
+            <field name="name">Contribuciones anuales</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6440_child" model="account.account.template">
+            <field name="code">6440</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6440"/>
+            <field name="type">other</field>
+            <field name="name">Contribuciones anuales</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6442" model="account.account.template">
+            <field name="code">6442</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_644"/>
+            <field name="type">view</field>
+            <field name="name">Otros costes</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6442_child" model="account.account.template">
+            <field name="code">6442</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6442"/>
+            <field name="type">other</field>
+            <field name="name">Otros costes</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_645" model="account.account.template">
+            <field name="code">645</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_64"/>
+            <field name="type">view</field>
+            <field name="name">Retribuciones al personal mediante instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6450" model="account.account.template">
+            <field name="code">6450</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_645"/>
+            <field name="type">view</field>
+            <field name="name">Retribuciones al personal liquidados con instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6450_child" model="account.account.template">
+            <field name="code">6450</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6450"/>
+            <field name="type">other</field>
+            <field name="name">Retribuciones al personal liquidados con instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6457" model="account.account.template">
+            <field name="code">6457</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_645"/>
+            <field name="type">view</field>
+            <field name="name">Retribuciones al personal liquidados en efectivo basado en instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6457_child" model="account.account.template">
+            <field name="code">6457</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6457"/>
+            <field name="type">other</field>
+            <field name="name">Retribuciones al personal liquidados en efectivo basado en instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_65" model="account.account.template">
+            <field name="code">65</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_6"/>
+            <field name="type">view</field>
+            <field name="name">Otros gastos de gestión</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_650" model="account.account.template">
+            <field name="code">650</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_65"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas de créditos comerciales incobrables</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_650_child" model="account.account.template">
+            <field name="code">650</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_650"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas de créditos comerciales incobrables</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_651" model="account.account.template">
+            <field name="code">651</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_65"/>
+            <field name="type">view</field>
+            <field name="name">Resultados de operaciones en común</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6510" model="account.account.template">
+            <field name="code">6510</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_651"/>
+            <field name="type">view</field>
+            <field name="name">Beneficio transferido (gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6510_child" model="account.account.template">
+            <field name="code">6510</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6510"/>
+            <field name="type">other</field>
+            <field name="name">Beneficio transferido (gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6511" model="account.account.template">
+            <field name="code">6511</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_651"/>
+            <field name="type">view</field>
+            <field name="name">Pérdida soportada (partícipe o asociado no gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6511_child" model="account.account.template">
+            <field name="code">6511</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6511"/>
+            <field name="type">other</field>
+            <field name="name">Pérdida soportada (partícipe o asociado no gestor)</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_659" model="account.account.template">
+            <field name="code">659</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_65"/>
+            <field name="type">view</field>
+            <field name="name">Otras pérdidas en gestión corriente</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_659_child" model="account.account.template">
+            <field name="code">659</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_659"/>
+            <field name="type">other</field>
+            <field name="name">Otras pérdidas en gestión corriente</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6630" model="account.account.template">
+            <field name="code">6630</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_663"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas de cartera de negociación</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6630_child" model="account.account.template">
+            <field name="code">6630</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6630"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas de cartera de negociación</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6631" model="account.account.template">
+            <field name="code">6631</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_663"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas de designados por la empresa</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6631_child" model="account.account.template">
+            <field name="code">6631</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6631"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas de designados por la empresa</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6632" model="account.account.template">
+            <field name="code">6632</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_663"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas de disponibles para la venta</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6632_child" model="account.account.template">
+            <field name="code">6632</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6632"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas de disponibles para la venta</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6633" model="account.account.template">
+            <field name="code">6633</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_663"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas de instrumentos de cobertura</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_6633_child" model="account.account.template">
+            <field name="code">6633</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_6633"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas de instrumentos de cobertura</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_671" model="account.account.template">
+            <field name="code">671</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_67"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas procedentes del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_671_child" model="account.account.template">
+            <field name="code">671</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_671"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas procedentes del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_691" model="account.account.template">
+            <field name="code">691</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_69"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas por deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_691_child" model="account.account.template">
+            <field name="code">691</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_691"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_694" model="account.account.template">
+            <field name="code">694</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_69"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas por deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_694_child" model="account.account.template">
+            <field name="code">694</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_694"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7630" model="account.account.template">
+            <field name="code">7630</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_763"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios de cartera de negociación</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7630_child" model="account.account.template">
+            <field name="code">7630</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7630"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios de cartera de negociación</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7631" model="account.account.template">
+            <field name="code">7631</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_763"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios de designados por la empresa</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7631_child" model="account.account.template">
+            <field name="code">7631</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7631"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios de designados por la empresa</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7632" model="account.account.template">
+            <field name="code">7632</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_763"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios de disponibles para la venta</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7632_child" model="account.account.template">
+            <field name="code">7632</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7632"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios de disponibles para la venta</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7633" model="account.account.template">
+            <field name="code">7633</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_763"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios de instrumentos de cobertura</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7633_child" model="account.account.template">
+            <field name="code">7633</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7633"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios de instrumentos de cobertura</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_767" model="account.account.template">
+            <field name="code">767</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_76"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos de activos afectos y de derechos de reembolso relativos a retribuciones a largo plazo</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_767_child" model="account.account.template">
+            <field name="code">767</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_767"/>
+            <field name="type">other</field>
+            <field name="name">Ingresos de activos afectos y de derechos de reembolso relativos a retribuciones a largo plazo</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_774" model="account.account.template">
+            <field name="code">774</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_77"/>
+            <field name="type">view</field>
+            <field name="name">Diferencia negativa en combinaciones de negocios</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_774_child" model="account.account.template">
+            <field name="code">774</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_774"/>
+            <field name="type">other</field>
+            <field name="name">Diferencia negativa en combinaciones de negocios</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_791" model="account.account.template">
+            <field name="code">791</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_79"/>
+            <field name="type">view</field>
+            <field name="name">Reversión del deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_791_child" model="account.account.template">
+            <field name="code">791</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_791"/>
+            <field name="type">other</field>
+            <field name="name">Reversión del deterioro del inmovilizado material</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_794" model="account.account.template">
+            <field name="code">794</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_79"/>
+            <field name="type">view</field>
+            <field name="name">Reversión del deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_794_child" model="account.account.template">
+            <field name="code">794</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_794"/>
+            <field name="type">other</field>
+            <field name="name">Reversión del deterioro de créditos por operaciones comerciales</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7950" model="account.account.template">
+            <field name="code">7950</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_795"/>
+            <field name="type">view</field>
+            <field name="name">Exceso de provisión por retribuciones al personal</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7950_child" model="account.account.template">
+            <field name="code">7950</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7950"/>
+            <field name="type">other</field>
+            <field name="name">Exceso de provisión por retribuciones al personal</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7956" model="account.account.template">
+            <field name="code">7956</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_795"/>
+            <field name="type">view</field>
+            <field name="name">Exceso de provisión para reestructuraciones</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7956_child" model="account.account.template">
+            <field name="code">7956</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7956"/>
+            <field name="type">other</field>
+            <field name="name">Exceso de provisión para reestructuraciones</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7957" model="account.account.template">
+            <field name="code">7957</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_795"/>
+            <field name="type">view</field>
+            <field name="name">Exceso de provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_7957_child" model="account.account.template">
+            <field name="code">7957</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_7957"/>
+            <field name="type">other</field>
+            <field name="name">Exceso de provisión por transacciones con pagos basados en instrumentos de patrimonio</field>
+            <field name="user_type" ref="account.data_account_type_income"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_8" model="account.account.template">
+            <field name="code">8</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_0"/>
+            <field name="type">view</field>
+            <field name="name">Gastos imputados al patrimonio neto</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_80" model="account.account.template">
+            <field name="code">80</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Gastos financieros por valoración de activos y pasivos</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_800" model="account.account.template">
+            <field name="code">800</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_80"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_800_child" model="account.account.template">
+            <field name="code">800</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_800"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_802" model="account.account.template">
+            <field name="code">802</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_80"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de beneficios en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_802_child" model="account.account.template">
+            <field name="code">802</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_802"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de beneficios en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_81" model="account.account.template">
+            <field name="code">81</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Gastos en operaciones de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_810" model="account.account.template">
+            <field name="code">810</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_81"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_810_child" model="account.account.template">
+            <field name="code">810</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_810"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_811" model="account.account.template">
+            <field name="code">811</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_81"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_811_child" model="account.account.template">
+            <field name="code">811</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_811"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_812" model="account.account.template">
+            <field name="code">812</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_81"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de beneficios por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_812_child" model="account.account.template">
+            <field name="code">812</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_812"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de beneficios por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_813" model="account.account.template">
+            <field name="code">813</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_81"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de beneficios por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_813_child" model="account.account.template">
+            <field name="code">813</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_813"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de beneficios por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_82" model="account.account.template">
+            <field name="code">82</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Gastos por diferencias de conversión</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_820" model="account.account.template">
+            <field name="code">820</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_82"/>
+            <field name="type">view</field>
+            <field name="name">Diferencias de conversión negativas</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_820_child" model="account.account.template">
+            <field name="code">820</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_820"/>
+            <field name="type">other</field>
+            <field name="name">Diferencias de conversión negativas</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_821" model="account.account.template">
+            <field name="code">821</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_82"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de diferencias de conversión positivas</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_821_child" model="account.account.template">
+            <field name="code">821</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_821"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de diferencias de conversión positivas</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_83" model="account.account.template">
+            <field name="code">83</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Impuesto sobre beneficios</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_830" model="account.account.template">
+            <field name="code">830</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Impuesto sobre beneficios</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_8300" model="account.account.template">
+            <field name="code">8300</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_830"/>
+            <field name="type">view</field>
+            <field name="name">Impuesto corriente</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_8300_child" model="account.account.template">
+            <field name="code">8300</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8300"/>
+            <field name="type">other</field>
+            <field name="name">Impuesto corriente</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_8301" model="account.account.template">
+            <field name="code">8301</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_830"/>
+            <field name="type">view</field>
+            <field name="name">Impuesto diferido</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_8301_child" model="account.account.template">
+            <field name="code">8301</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8301"/>
+            <field name="type">other</field>
+            <field name="name">Impuesto diferido</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_833" model="account.account.template">
+            <field name="code">833</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Ajustes negativos en la imposición sobre beneficios</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_833_child" model="account.account.template">
+            <field name="code">833</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_833"/>
+            <field name="type">other</field>
+            <field name="name">Ajustes negativos en la imposición sobre beneficios</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_834" model="account.account.template">
+            <field name="code">834</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos fiscales por diferencias permanentes</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_834_child" model="account.account.template">
+            <field name="code">834</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_834"/>
+            <field name="type">other</field>
+            <field name="name">Ingresos fiscales por diferencias permanentes</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_835" model="account.account.template">
+            <field name="code">835</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos fiscales por deducciones y bonificaciones</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_835_child" model="account.account.template">
+            <field name="code">835</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_835"/>
+            <field name="type">other</field>
+            <field name="name">Ingresos fiscales por deducciones y bonificaciones</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_836" model="account.account.template">
+            <field name="code">836</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de diferencias permanentes</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_836_child" model="account.account.template">
+            <field name="code">836</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_836"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de diferencias permanentes</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_837" model="account.account.template">
+            <field name="code">837</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de deducciones y bonificaciones</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_837_child" model="account.account.template">
+            <field name="code">837</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_837"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de deducciones y bonificaciones</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_838" model="account.account.template">
+            <field name="code">838</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_83"/>
+            <field name="type">view</field>
+            <field name="name">Ajustes positivos en la imposición sobre beneficios</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_838_child" model="account.account.template">
+            <field name="code">838</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_838"/>
+            <field name="type">other</field>
+            <field name="name">Ajustes positivos en la imposición sobre beneficios</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_84" model="account.account.template">
+            <field name="code">84</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Transferencias de subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_840" model="account.account.template">
+            <field name="code">840</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_84"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de subvenciones oficiales de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_840_child" model="account.account.template">
+            <field name="code">840</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_840"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de subvenciones oficiales de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_841" model="account.account.template">
+            <field name="code">841</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_84"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de donaciones y legados de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_841_child" model="account.account.template">
+            <field name="code">841</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_841"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de donaciones y legados de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_842" model="account.account.template">
+            <field name="code">842</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_84"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de otras subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_842_child" model="account.account.template">
+            <field name="code">842</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_842"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de otras subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_85" model="account.account.template">
+            <field name="code">85</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Gastos por pérdidas actuariales y ajustes en los activos por retribuciones a largo plazo de prestación definida</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_850" model="account.account.template">
+            <field name="code">850</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_85"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas actuariales</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_850_child" model="account.account.template">
+            <field name="code">850</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_850"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas actuariales</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_851" model="account.account.template">
+            <field name="code">851</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_85"/>
+            <field name="type">view</field>
+            <field name="name">Ajustes negativos en activos por retribuciones a largo plazo de prestación definida</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_851_child" model="account.account.template">
+            <field name="code">851</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_851"/>
+            <field name="type">other</field>
+            <field name="name">Ajustes negativos en activos por retribuciones a largo plazo de prestación definida</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_86" model="account.account.template">
+            <field name="code">86</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Gastos por activos no corrientes en venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_860" model="account.account.template">
+            <field name="code">860</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_86"/>
+            <field name="type">view</field>
+            <field name="name">Pérdidas en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_860_child" model="account.account.template">
+            <field name="code">860</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_860"/>
+            <field name="type">other</field>
+            <field name="name">Pérdidas en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_862" model="account.account.template">
+            <field name="code">862</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_86"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de beneficios en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_862_child" model="account.account.template">
+            <field name="code">862</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_862"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de beneficios en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_89" model="account.account.template">
+            <field name="code">89</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_8"/>
+            <field name="type">view</field>
+            <field name="name">Gastos de participaciones en empresas del grupo o asociadas con ajustes valorativos positivos previos</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_891" model="account.account.template">
+            <field name="code">891</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_89"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de participaciones en el patrimonio, empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_891_child" model="account.account.template">
+            <field name="code">891</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_891"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de participaciones en el patrimonio, empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_892" model="account.account.template">
+            <field name="code">892</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_89"/>
+            <field name="type">view</field>
+            <field name="name">Deterioro de participaciones en el patrimonio, empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_892_child" model="account.account.template">
+            <field name="code">892</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_892"/>
+            <field name="type">other</field>
+            <field name="name">Deterioro de participaciones en el patrimonio, empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_gastos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_9" model="account.account.template">
+            <field name="code">9</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_0"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos imputados al patrimonio neto</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_90" model="account.account.template">
+            <field name="code">90</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos financieros por valoración de activos y pasivos</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_900" model="account.account.template">
+            <field name="code">900</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_90"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_900_child" model="account.account.template">
+            <field name="code">900</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_900"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_902" model="account.account.template">
+            <field name="code">902</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_90"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de pérdidas en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_902_child" model="account.account.template">
+            <field name="code">902</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_902"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de pérdidas en activos financieros disponibles para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_91" model="account.account.template">
+            <field name="code">91</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos en operaciones de cobertura</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_910" model="account.account.template">
+            <field name="code">910</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_91"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_910_child" model="account.account.template">
+            <field name="code">910</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_910"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_911" model="account.account.template">
+            <field name="code">911</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_91"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_911_child" model="account.account.template">
+            <field name="code">911</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_911"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_912" model="account.account.template">
+            <field name="code">912</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_91"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de pérdidas por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_912_child" model="account.account.template">
+            <field name="code">912</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_912"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de pérdidas por coberturas de flujos de efectivo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_913" model="account.account.template">
+            <field name="code">913</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_91"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de pérdidas por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_913_child" model="account.account.template">
+            <field name="code">913</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_913"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de pérdidas por coberturas de inversiones netas en un negocio en el extranjero</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_92" model="account.account.template">
+            <field name="code">92</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos por diferencias de conversión</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_920" model="account.account.template">
+            <field name="code">920</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_92"/>
+            <field name="type">view</field>
+            <field name="name">Diferencias de conversión positivas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_920_child" model="account.account.template">
+            <field name="code">920</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_920"/>
+            <field name="type">other</field>
+            <field name="name">Diferencias de conversión positivas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_921" model="account.account.template">
+            <field name="code">921</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_92"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de diferencias de conversión negativas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_921_child" model="account.account.template">
+            <field name="code">921</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_921"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de diferencias de conversión negativas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_94" model="account.account.template">
+            <field name="code">94</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos por subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_940" model="account.account.template">
+            <field name="code">940</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_94"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos de subvenciones oficiales de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_940_child" model="account.account.template">
+            <field name="code">940</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_940"/>
+            <field name="type">other</field>
+            <field name="name">Ingresos de subvenciones oficiales de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_941" model="account.account.template">
+            <field name="code">941</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_94"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos de donaciones y legados de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_941_child" model="account.account.template">
+            <field name="code">941</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_941"/>
+            <field name="type">other</field>
+            <field name="name">Ingresos de donaciones y legados de capital</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_942" model="account.account.template">
+            <field name="code">942</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_94"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos de otras subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_942_child" model="account.account.template">
+            <field name="code">942</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_942"/>
+            <field name="type">other</field>
+            <field name="name">Ingresos de otras subvenciones, donaciones y legados</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_95" model="account.account.template">
+            <field name="code">95</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos por ganancias actuariales y ajustes en los activos por retribuciones a largo plazo de prestación definida</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_950" model="account.account.template">
+            <field name="code">950</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_95"/>
+            <field name="type">view</field>
+            <field name="name">Ganancias actuariales</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_950_child" model="account.account.template">
+            <field name="code">950</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_950"/>
+            <field name="type">other</field>
+            <field name="name">Ganancias actuariales</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_951" model="account.account.template">
+            <field name="code">951</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_95"/>
+            <field name="type">view</field>
+            <field name="name">Ajustes positivos en activos por retribuciones a largo plazo de prestación definida</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_951_child" model="account.account.template">
+            <field name="code">951</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_951"/>
+            <field name="type">other</field>
+            <field name="name">Ajustes positivos en activos por retribuciones a largo plazo de prestación definida</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_96" model="account.account.template">
+            <field name="code">96</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos por activos no corrientes en venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_960" model="account.account.template">
+            <field name="code">960</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_96"/>
+            <field name="type">view</field>
+            <field name="name">Beneficios en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_960_child" model="account.account.template">
+            <field name="code">960</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_960"/>
+            <field name="type">other</field>
+            <field name="name">Beneficios en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_962" model="account.account.template">
+            <field name="code">962</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_96"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia de pérdidas en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_962_child" model="account.account.template">
+            <field name="code">962</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_962"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia de pérdidas en activos no corrientes y grupos enajenables de elementos mantenidos para la venta</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_99" model="account.account.template">
+            <field name="code">99</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_9"/>
+            <field name="type">view</field>
+            <field name="name">Ingresos de participaciones en empresas del grupo o asociadas con ajustes valorativos negativos previos</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_991" model="account.account.template">
+            <field name="code">991</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_99"/>
+            <field name="type">view</field>
+            <field name="name">Recuperación de ajustes valorativos negativos previos, empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_991_child" model="account.account.template">
+            <field name="code">991</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_991"/>
+            <field name="type">other</field>
+            <field name="name">Recuperación de ajustes valorativos negativos previos, empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_992" model="account.account.template">
+            <field name="code">992</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_99"/>
+            <field name="type">view</field>
+            <field name="name">Recuperación de ajustes valorativos negativos previos, empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_992_child" model="account.account.template">
+            <field name="code">992</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_992"/>
+            <field name="type">other</field>
+            <field name="name">Recuperación de ajustes valorativos negativos previos, empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_993" model="account.account.template">
+            <field name="code">993</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_99"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia por deterioro de ajustes valorativos negativos previos, empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_993_child" model="account.account.template">
+            <field name="code">993</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_993"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia por deterioro de ajustes valorativos negativos previos, empresas del grupo</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_994" model="account.account.template">
+            <field name="code">994</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_99"/>
+            <field name="type">view</field>
+            <field name="name">Transferencia por deterioro de ajustes valorativos negativos previos, empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+        <record id="pgc_full_994_child" model="account.account.template">
+            <field name="code">994</field>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="pgc_full_994"/>
+            <field name="type">other</field>
+            <field name="name">Transferencia por deterioro de ajustes valorativos negativos previos, empresas asociadas</field>
+            <field name="user_type" ref="l10n_es.account_type_ingresos_neto"/>
+            <field name="chart_template_id" ref="l10n_es.account_chart_template_full"/>
+        </record>
+    </data>
+</openerp>

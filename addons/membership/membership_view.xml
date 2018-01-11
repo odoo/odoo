@@ -1,0 +1,276 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- MEMBERSHIP -->
+
+        <!-- MEMBERSHIP/MEMBERSHIP PRODUCTS -->
+
+        <record model="ir.ui.view" id="membership_product_search_form_view">
+            <field name="name">membership.product.search.form</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <search string="Membership Products">
+                    <field name="name" string="Membership Product"/>
+                    <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',0)]"/>
+                    <field name="categ_id" operator="child_of"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='From Month' icon="terp-go-month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="membership_products_tree">
+            <field name="name">Membership products</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <tree string="Membership products">
+                    <field name="name"/>
+                    <field name="membership_date_from"/>
+                    <field name="membership_date_to"/>
+                    <field name="list_price" string="Membership Fee"/>
+                    <field name="categ_id" invisible="1"/>
+                    <field name="uom_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="membership_products_form">
+            <field name="name">Membership Products</field>
+            <field name="model">product.template</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <form string="Membership products">
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="default_code"/>
+                                <field name="categ_id"/>
+                                <field name="membership" invisible="1"/>
+                                <field name="company_id"
+                                    groups="base.group_multi_company"
+                                    widget="selection"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <label for="membership_date_from" string="Membership Duration"/>
+                                <div>
+                                    <field name="membership_date_from" required="1" class="oe_inline"/> -
+                                    <field name="membership_date_to" required="1" class="oe_inline"/>
+                                </div>
+                                <field name="list_price" string="Membership Fee"/>
+                                <field
+                                    name="property_account_income"
+                                    domain="[('type', '!=', 'view')]"/>
+                                <field name="taxes_id" widget="many2many_tags" string="Taxes"/>
+                            </group>
+                        </group>
+                        <label for="description"/>
+                        <field colspan="4" name="description" placeholder="Add a description..."/>
+                        <label for="description_sale"/>
+                        <field colspan="4" name="description_sale" placeholder="This note will be displayed on quotations..."/>
+                    </sheet>
+                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_template_form_view">
+            <field name="name">Membership Products</field>
+            <field name="model">product.template</field>
+            <field name="priority">6</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="membership" readonly="0" attrs="{'invisible': [('type', '!=', 'service')]}"/>
+                </field>
+                <field name="description" position="before">
+                    <group attrs="{'invisible':[('membership','=',False)]}">
+                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership_products">
+            <field name="name">Membership Products</field>
+            <field name="res_model">product.template</field>
+            <field name="domain">[('membership','=',True), ('type', '=', 'service')]</field>
+            <field name="context">{'membership':True, 'type':'service', 'default_membership': True, 'default_type': 'service'}</field>
+            <field name="search_view_id" ref="membership_product_search_form_view"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_product_view_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="membership_products_tree"/>
+            <field name="act_window_id" ref="action_membership_products"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_product_view_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="membership_products_form"/>
+            <field name="act_window_id" ref="action_membership_products"/>
+        </record>
+
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="10"/>
+        <menuitem name="Members" id="menu_membership" sequence="0" parent="base.menu_association"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_association"
+            parent="base.menu_association" sequence="30"/>
+
+
+        <menuitem name="Membership Products"
+                  parent="base.menu_marketing_config_association"
+                  id="menu_membership_products"
+                  action="action_membership_products"
+                  sequence="1"/>
+
+
+        <!-- MEMBERSHIP/CURRENT MEMBERS -->
+
+        <record model="ir.ui.view" id="membership_members_tree">
+            <field name="name">Members</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree string="Members">
+                    <field name="name"/>
+                    <field name="membership_state"/>
+                    <field name="associate_member" attrs="{'invisible':[('membership_state', '!=', 'none')]}"/>
+                    <field name="membership_start"/>
+                    <field name="membership_stop"/>
+                    <field name="user_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_res_partner_member_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <search string="Membership Partners">
+                    <field name="name"
+                       filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
+                    <field name="membership_start" invisible="1"/>
+                    <field name="membership_stop" string="End Membership Date"/>
+                    <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
+                    <separator/>
+                    <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
+                    <separator/>
+                    <filter icon="terp-personal" name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
+                    <filter icon="terp-personal" name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
+                    <group expand="0" string="Group By" colspan="10" col="8">
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}"/>
+                        <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
+                        <filter string=" Membership State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'membership_state'}"/>
+                        <filter string="Start Month" help="Starting Month Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_start'}"/>
+                        <filter string="End Month" help="Ending Month Of Membership" icon="terp-go-month" domain="[]" context="{'group_by':'membership_stop'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_membership_members">
+            <field name="name">Members</field>
+            <field name="res_model">res.partner</field>
+            <field name="search_view_id" ref="view_res_partner_member_filter"/>
+            <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="membership_members_tree"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_members_view_form">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
+         <record model="ir.actions.act_window.view" id="action_membership_members_view_kanban">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_membership_members"/>
+        </record>
+
+        <menuitem name="Members" parent="menu_membership" id="menu_members" sequence="2" action="action_membership_members"/>
+
+        <!-- PARTNERS -->
+
+        <record model="ir.ui.view" id="view_partner_tree">
+            <field name="name">res.partner.tree.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="category_id" position="after"/>
+                    <field name="membership_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_partner_form">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Membership">
+                        <group>
+                            <group>
+                                <field name="free_member"/>
+                                <label for="membership_state"/>
+                                <div>
+                                    <field name="membership_state"/>
+                                    <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership" 
+                                        attrs="{'invisible':[('free_member','=',True)]}" class="oe_link"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="associate_member" attrs="{'invisible':[('free_member','=',True)]}"/>
+                                <field name="membership_start" attrs="{'invisible':[('membership_start','=',False)]}"/>
+                                <field name="membership_stop" attrs="{'invisible':[('membership_stop','=',False)]}"/>
+                                <field name="membership_cancel" attrs="{'invisible':[('membership_cancel','=',False)]}"/>
+                            </group>
+                        </group>
+                        <field name="member_lines" nolabel="1" colspan="4" readonly="1">
+                            <tree string="Memberships">
+                                <field name="date"/>
+                                <field name="membership_id"/>
+                                <field name="member_price"/>
+                                <field name="account_invoice_id"/>
+                                <field name="state"/>
+                            </tree>
+                            <form string="Memberships">
+                                <field name="date"/>
+                                <field name="member_price"/>
+                                <field name="membership_id"/>
+                                <field name="account_invoice_id" context="{'form_view_ref': 'account.invoice_form'}"/>
+                                <field name="state" colspan="4"/>
+                            </form>
+                        </field>
+
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <!-- MEMBERSHIP/REPORTING -->
+        <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
+
+    </data>
+</openerp>

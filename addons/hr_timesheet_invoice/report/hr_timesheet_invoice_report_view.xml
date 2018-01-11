@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <menuitem
+            id="hr.menu_hr_reporting"
+            name="Human Resources"
+            parent="base.menu_reporting"
+            sequence="40" />
+
+        <record id="view_timesheet_line_graph" model="ir.ui.view">
+            <field name="name">report.timesheet.line.graph</field>
+            <field name="model">report.timesheet.line</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet Line" type="bar">
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="quantity" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_line_tree" model="ir.ui.view">
+            <field name="name">report.timesheet.line.tree</field>
+            <field name="model">report.timesheet.line</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet Line">
+                    <field name="date" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="quantity" sum="Quantity"/>
+                    <field name="cost" sum="Cost"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                    <field name="product_id" invisible="1"/>
+                    <field name="invoice_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_timesheet_line_search" model="ir.ui.view">
+            <field name="name">report.timesheet.line.search</field>
+            <field name="model">report.timesheet.line</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet by user">
+                    <filter icon="terp-personal" string="Non Assigned timesheets to users" help="Non Assigned timesheets to users" domain="[('user_id','=',False)]"/>
+                    <field name="user_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="product_id"/>
+                    <group expand="0" string="Extended Filters...">
+                        <field name="date"/>
+                        <field name="invoice_id"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
+                        <filter string="Account" icon="terp-folder-orange" context="{'group_by':'account_id'}"/>
+                        <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                        <filter string="Invoice" icon="terp-dolar" context="{'group_by':'invoice_id'}"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'name'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_timesheet_line_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet Line</field>
+            <field name="res_model">report.timesheet.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{'search_default_month':1,'search_default_User':1,'search_default_user_id':uid,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="search_view_id" ref="view_timesheet_line_search"/>
+        </record>
+
+
+        <!-- Statistics report on timesheet by user -->
+
+        <record id="view_timesheet_user_graph" model="ir.ui.view">
+            <field name="name">report_timesheet.user.graph</field>
+            <field name="model">report_timesheet.user</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet by user" type="bar">
+                    <field name="name"/>
+                    <field name="quantity" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_user_form" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.user.form</field>
+            <field name="model">report_timesheet.user</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by user">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="user_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_timesheet_user_tree" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.user.tree</field>
+            <field name="model">report_timesheet.user</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet by user">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
+                    <field name="quantity"/>
+                    <field name="cost"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_timesheet_account_date_graph_account" model="ir.ui.view">
+            <field name="name">report_timesheet.account.date.graph</field>
+            <field name="model">report_timesheet.account.date</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Daily timesheet per account" type="bar">
+                    <field name="name"/>
+                    <field name="quantity" operator="+"/>
+                    <field group="True" name="account_id"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_user_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.user.search</field>
+            <field name="model">report_timesheet.user</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet by user">
+                    <field name="name" string="Timesheet by users"/>
+                    <field name="month"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_timesheet_user_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet by User</field>
+            <field name="res_model">report_timesheet.user</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="search_view_id" ref="view_timesheet_user_search"/>
+        </record>
+
+        <!-- Statistics report on timesheets to invoice -->
+
+        <record id="view_timesheet_invoice_graph" model="ir.ui.view">
+            <field name="name">report_timesheet.invoice.graph</field>
+            <field name="model">report_timesheet.invoice</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet by invoice">
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="amount_invoice" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_invoice_form" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.invoice.form</field>
+            <field name="model">report_timesheet.invoice</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by invoice">
+                    <group col="4">
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="manager_id"/>
+                        <field name="user_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_timesheet_invoice_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.invoice.search</field>
+            <field name="model">report_timesheet.invoice</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet by invoice">
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="manager_id"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_timesheet_invoice_tree" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.invoice.tree</field>
+            <field name="model">report_timesheet.invoice</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheets to invoice">
+                    <field name="user_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="manager_id"/>
+                    <field name="quantity"/>
+                    <field name="amount_invoice"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_timesheet_invoice_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet by Invoice</field>
+            <field name="res_model">report_timesheet.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="search_view_id" ref="view_timesheet_invoice_search"/>
+        </record>
+
+        <!-- Statistics report on daily timesheets per account -->
+
+        <record id="view_timesheet_account_date_tree" model="ir.ui.view">
+            <field name="name">report_timesheet.account.date.tree</field>
+            <field name="model">report_timesheet.account.date</field>
+            <field name="arch" type="xml">
+                <tree string="Daily timesheet per account">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
+                    <field name="quantity"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_timesheet_account_date_graph" model="ir.ui.view">
+            <field name="name">report_timesheet.account.date.graph</field>
+            <field name="model">report_timesheet.account.date</field>
+            <field name="arch" type="xml">
+                <graph string="Daily timesheet per account">
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="quantity" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_account_date_form" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.account.date.form</field>
+            <field name="model">report_timesheet.account.date</field>
+            <field name="arch" type="xml">
+                <form string="Daily timesheet by account">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="user_id"/>
+                        <field name="quantity"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_timesheet_account_date_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.account.date.search</field>
+            <field name="model">report_timesheet.account.date</field>
+            <field name="arch" type="xml">
+                <search string="Daily timesheet by account">
+                    <field name="name" string="Timesheet by account"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_timesheet_account_date_stat_all" model="ir.actions.act_window">
+            <field name="name">Daily Timesheet by Account</field>
+            <field name="res_model">report_timesheet.account.date</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="search_view_id" ref="view_timesheet_account_date_search"/>
+        </record>
+
+        <!-- Statistics report on timesheets per account -->
+
+        <record id="view_timesheet_account_tree" model="ir.ui.view">
+            <field name="name">report_timesheet.account.tree</field>
+            <field name="model">report_timesheet.account</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet per account">
+                    <field name="name"/>
+                    <field name="month" />
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
+                    <field name="quantity"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_timesheet_account_graph" model="ir.ui.view">
+            <field name="name">report_timesheet.account.graph</field>
+            <field name="model">report_timesheet.account</field>
+            <field name="arch" type="xml">
+                <graph string="Timesheet per account">
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="quantity" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_timesheet_account_form" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.account.form</field>
+            <field name="model">report_timesheet.account</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by account">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="month"/>
+                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                        <field name="user_id"/>
+                        <field name="quantity"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_timesheet_account_search" model="ir.ui.view">
+            <field name="name">report_timesheet.timesheet.account.search</field>
+            <field name="model">report_timesheet.account</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet by account">
+                    <field name="name" string="Timesheet by account"/>
+                    <field name="month"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_timesheet_account_stat_all" model="ir.actions.act_window">
+            <field name="name">Timesheet by Account</field>
+            <field name="res_model">report_timesheet.account</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_timesheet_account_search"/>
+        </record>
+
+        <act_window
+        context="{'search_default_user_id': [active_id]}"
+        id="act_res_users_2_report_timesheet_user"
+        name="Timesheets per day"
+        res_model="report_timesheet.user"
+        src_model="res.users"/>
+
+
+        <act_window
+        context="{'search_default_user_id': [active_id]}"
+        id="act_res_users_2_report_timehsheet_account"
+        name="Timesheets per account"
+        res_model="report_timesheet.account"
+        src_model="res.users"/>
+
+        <act_window
+            context="{'search_default_manager_id': [active_id]}"
+            id="act_res_users_2_report_timesheet_invoice"
+            name="Costs to invoice"
+            res_model="report_timesheet.invoice"
+            src_model="res.users"/>
+
+
+    </data>
+</openerp>

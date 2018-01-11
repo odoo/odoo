@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <!-- make Employee users Survey users -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('base.group_survey_user'))]"/>
+    </record>
+
+    <record id="survey.menu_surveys" model="ir.ui.menu">
+        <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
+    </record>
+    <record id="survey.menu_surveys_configuration" model="ir.ui.menu">
+        <field eval="[(4,ref('base.group_hr_manager'))]" name="groups_id"/>
+    </record>
+
+</data>
+<data noupdate="1">
+
+    <record id="hr_evaluation_plan_comp_rule" model="ir.rule">
+        <field name="name">Evaluation Plan multi company rule</field>
+        <field name="model_id" ref="model_hr_evaluation_plan"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    
+    <record id="hr_evaluation_plan_phase_comp_rule" model="ir.rule">
+        <field name="name">Evaluation Plan Phase multi company rule</field>
+        <field name="model_id" ref="model_hr_evaluation_plan_phase"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="hr_employee_interview" model="ir.rule">
+        <field name="name">Employee Interview</field>
+        <field ref="model_hr_evaluation_interview" name="model_id"/>
+        <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
+        <field eval="False" name="global"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    
+    <record id="hr_employee_interview_hr" model="ir.rule">
+        <field name="name">Employee Interview - HR</field>
+        <field ref="model_hr_evaluation_interview" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field eval="False" name="global"/>
+        <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
+    </record>
+    
+    </data>
+</openerp>

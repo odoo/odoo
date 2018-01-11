@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_inventory_tree" model="ir.ui.view">
+            <field name="name">multi_company.default.tree</field>
+            <field name="model">multi_company.default</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Multi Company">
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="object_id"/>
+                    <field name="field_id"/>
+                    <field name="expression" />
+                    <field name="sequence"/>
+                    <field name="company_dest_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_inventory_form" model="ir.ui.view">
+            <field name="name">multi_company.default.form</field>
+            <field name="model">multi_company.default</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Multi Company">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="object_id"/>
+                            <field name="field_id" domain="[('model_id','=',object_id)]"/>
+                            <field name="expression"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_inventory_search" model="ir.ui.view">
+            <field name="name">multi_company.default.search</field>
+            <field name="model">multi_company.default</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Multi Company">
+                    <field name="name" string="Multi Company"/>
+                    <field name="company_id"/>
+                    <field name="company_dest_id"/>
+                    <field name="object_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_inventory_form" model="ir.actions.act_window">
+            <field name="name">Company Defaults</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">multi_company.default</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_inventory_search"/>
+        </record>
+
+        <menuitem id="base.menu_action_inventory_form" 
+            action="action_inventory_form"
+            parent="base.menu_ir_property"/>
+    </data>
+</openerp>
+

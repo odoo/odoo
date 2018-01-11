@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="assets_editor" inherit_id="website.assets_frontend" name="Event Sale">
+  <xpath expr="." position="inside">
+    <script type="text/javascript" src="/website_event_sale/static/src/js/website.tour.event_sale.js"></script>
+  </xpath>
+</template>
+
+<template id="index" inherit_id="website_event.index" name="Event's Ticket">
+    <xpath expr="//li[@t-foreach='event_ids']/div/h4" position="before">
+        <t t-if="event.state in ['draft', 'confirm'] and event.event_ticket_ids">
+            <span t-if="not event.seats_available and event.seats_max" class="label label-danger pull-right">Sold Out</span>
+            <span t-if="event.seats_available and event.seats_available &lt;= ((event.seats_max or 0) / 4)" class="label pull-right label-info">
+                Only <t t-esc="event.seats_available"/> Remaining
+            </span>
+        </t>
+    </xpath>
+</template>
+
+<template id="event_description_full" inherit_id="website_event.event_description_full" customize_show="True" name="Event's Ticket form">
+    <xpath expr="//div[@t-field='event.description']" position="before">
+        <form t-attf-action="/event/cart/update?event_id=#{ event.id }" method="post" t-if="event.event_ticket_ids">
+            <table itemprop="offers" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Ticket Type</th>
+                        <th style="min-width: 100px">Sales End</th>
+                        <th style="min-width: 100px">Price</th>
+                        <th></th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="event.event_ticket_ids" t-as="ticket">
+                      <tr itemscope="itemscope" itemtype="http://data-vocabulary.org/Offer" t-if="not ticket.is_expired">
+                        <td itemscope="itemscope" itemtype="http://data-vocabulary.org/Product">                  
+                            <div itemprop="name" t-field="ticket.name"/>
+                            <div><small itemprop="description" t-field="ticket.product_id.description_sale"/></div>
+                        </td>
+                        <td><span itemprop="priceValidUntil" t-field="ticket.deadline"/></td>
+                        <td>
+                            <t t-if="ticket.price or editable">
+                              <t t-if="(ticket.price-ticket.price_reduce) &gt; 1">
+                                <del class="text-danger" style="white-space: nowrap;" t-field="ticket.price" t-field-options='{
+                                  "widget": "monetary",
+                                  "from_currency": "website.currency_id",
+                                  "display_currency": "user_id.partner_id.property_product_pricelist.currency_id"
+                                }'/>&amp;nbsp;
+                              </t>
+                              <span t-field="ticket.price_reduce" t-field-options='{
+                                   "widget": "monetary",
+                                   "display_currency": "website.pricelist_id.currency_id"
+                              }'/>
+                              <span itemprop="price" style="display:none;" t-esc="ticket.price"/>
+                              <span itemprop="priceCurrency" style="display:none;" t-esc="website.pricelist_id.currency_id.name"/>
+                            </t>
+                            <t t-if="not ticket.price and not editable">
+                                <span>Free</span>
+                            </t>
+                        </td>
+                        <td>
+                            <span t-if="ticket.seats_max and ((ticket.seats_reserved or 0)*100 / ticket.seats_max)&gt;75" class="text-muted">
+                                <t t-esc="ticket.seats_max - ticket.seats_reserved"/> <span>left</span>
+                            </span>
+                        </td>
+                        <td>
+                            <select t-if="ticket.seats_available or not ticket.seats_max" t-attf-name="ticket-#{ ticket.id }" class="form-control">
+                                <t t-foreach="range(0, min((ticket.seats_available or 9) + 1, 10))" t-as="nb"><option t-esc="nb"/></t>
+                            </select>
+                            <span t-if="not ticket.seats_available and ticket.seats_max">Sold Out</span>
+                        </td>
+                      </tr>
+                    </t>
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary btn-lg pull-right" t-if="event.seats_available or not event.seats_max">Order Now</button>
+            <div class="clearfix"/>
+            <hr/>
+        </form>
+    </xpath>
+</template>
+
+</data>
+</openerp>

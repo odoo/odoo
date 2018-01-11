@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="adyen_acquirer_button">
+            <form t-if="acquirer.adyen_merchant_account" t-att-action="tx_url" method="post" target="_self">
+                <input type="hidden" name="merchantReference" t-att-value="tx_values['merchantReference']"/>
+                <input type="hidden" name="paymentAmount" t-att-value="tx_values['paymentAmount'] or '0.0'"/>
+                <input type="hidden" name="currencyCode" t-att-value="tx_values['currencyCode']"/>
+                <input type="hidden" name="shipBeforeDate" t-att-value="tx_values['shipBeforeDate']"/>
+                <input type="hidden" name="skinCode" t-att-value="tx_values['skinCode']"/>
+                <input type="hidden" name="merchantAccount" t-att-value="tx_values['merchantAccount']"/>
+                <input type="hidden" name="shopperLocale" t-att-value="tx_values['shopperLocale']"/>
+                <input type="hidden" name="sessionValidity" t-att-value="tx_values['sessionValidity']"/>
+                <input type="hidden" name="merchantSig" t-att-value="tx_values['merchantSig']"/>
+                <!-- URLs -->
+                <input t-if="tx_values.get('resURL')" type='hidden' name='resURL'
+                    t-att-value="tx_values.get('resURL')"/>
+                <!-- custom -->
+                <input t-if="tx_values.get('merchantReturnData')" type='hidden' name='merchantReturnData'
+                    t-att-value="tx_values.get('merchantReturnData')"/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_adyen/static/src/img/adyen_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

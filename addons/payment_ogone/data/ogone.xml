@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="payment_acquirer_ogone" model="payment.acquirer">
+            <field name="name">Credit Card</field>
+            <field name="provider">ogone</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="ogone_acquirer_button"/>
+            <field name="environment">test</field>
+            <field name="pre_msg"><![CDATA[
+<p>You will be redirected to the Ogone website after clicking on the payment button.</p>]]></field>
+            <field name='ogone_pspid'>dummy</field>
+            <field name='ogone_userid'>dummy</field>
+            <field name='ogone_password'>dummy</field>
+            <field name="ogone_shakey_in">dummy</field>
+            <field name="ogone_shakey_out">dummy</field>
+        </record>
+
+    </data>
+</openerp>

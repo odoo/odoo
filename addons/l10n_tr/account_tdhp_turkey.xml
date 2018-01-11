@@ -1,0 +1,2564 @@
+<?xml version="1.0" encoding="utf-8"?> <openerp>
+    <data>
+        <!-- Chart template of l10n_tr -->
+            <!-- Account template definition -->
+        <record id="tr0" model="account.account.template">
+             <field name="name">Tek Düzen Hesap Planı</field>
+             <field name="code">0</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+        </record>
+
+        <record id="tr1" model="account.account.template">
+             <field name="name">Dönen Varlıklar</field>
+             <field name="code">1</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr10" model="account.account.template">
+             <field name="name">Hazır Değerler</field>
+             <field name="code">10</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr100" model="account.account.template">
+             <field name="name">Kasa</field>
+             <field name="code">100</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_cash"/>
+             <field name="parent_id" ref="tr10"/>
+        </record>
+
+        <record id="tr101" model="account.account.template">
+             <field name="name">Alınan Çekler</field>
+             <field name="code">101</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_check"/>
+             <field name="parent_id" ref="tr10"/>
+        </record>
+
+        <record id="tr102" model="account.account.template">
+             <field name="name">Bankalar</field>
+             <field name="code">102</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_bank"/>
+             <field name="parent_id" ref="tr10"/>
+        </record>
+
+        <record id="tr103" model="account.account.template">
+             <field name="name">Verilen Çekler ve Ödeme Emirleri(-)</field>
+             <field name="code">103</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_liability"/>
+             <field name="parent_id" ref="tr10"/>
+        </record>
+
+        <record id="tr108" model="account.account.template">
+             <field name="name">Diğer Hazır Değerler</field>
+             <field name="code">108</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr10"/>
+        </record>
+
+        <record id="tr11" model="account.account.template">
+             <field name="name">Menkul Kıymetler</field>
+             <field name="code">11</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr110" model="account.account.template">
+             <field name="name">Hisse Senetleri</field>
+             <field name="code">110</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr11"/>
+        </record>
+
+        <record id="tr111" model="account.account.template">
+             <field name="name">Özel Kesim Tahvil Senet Ve Bonoları</field>
+             <field name="code">111</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr11"/>
+        </record>
+
+        <record id="tr112" model="account.account.template">
+             <field name="name">Kamu Kesimi Tahvil, Senet ve Bonoları</field>
+             <field name="code">112</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr11"/>
+        </record>
+
+        <record id="tr118" model="account.account.template">
+             <field name="name">Diğer Menkul Kıymetler</field>
+             <field name="code">118</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr11"/>
+        </record>
+
+        <record id="tr119" model="account.account.template">
+             <field name="name">Menkul Kıymetler Değer Düşüklüğü Karşılığı(-)</field>
+             <field name="code">119</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr11"/>
+        </record>
+
+        <record id="tr12" model="account.account.template">
+             <field name="name">Ticari Alacaklar</field>
+             <field name="code">12</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr120" model="account.account.template">
+             <field name="name">Alıcılar</field>
+             <field name="code">120</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr121" model="account.account.template">
+             <field name="name">Alacak Senetleri</field>
+             <field name="code">121</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr122" model="account.account.template">
+             <field name="name">Alacak Senetleri Reeskontu(-)</field>
+             <field name="code">122</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr124" model="account.account.template">
+             <field name="name">Kazanılmamış Finansal Kiralama Faiz Gelirleri(-)</field>
+             <field name="code">124</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr126" model="account.account.template">
+             <field name="name">Verilen Depozito ve Teminatlar</field>
+             <field name="code">126</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr127" model="account.account.template">
+             <field name="name">Diğer Ticari Alacaklar</field>
+             <field name="code">127</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr128" model="account.account.template">
+             <field name="name">Şüpheli Ticari Alacaklar</field>
+             <field name="code">128</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr129" model="account.account.template">
+             <field name="name">Şüpheli Ticari Alacaklar Karşılığı</field>
+             <field name="code">129</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr12"/>
+        </record>
+
+        <record id="tr13" model="account.account.template">
+             <field name="name">Diğer Alacaklar</field>
+             <field name="code">13</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr131" model="account.account.template">
+             <field name="name">Ortaklardan Alacaklar</field>
+             <field name="code">131</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr132" model="account.account.template">
+             <field name="name">İştiraklerden Alacaklar</field>
+             <field name="code">132</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr133" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklardan Alacaklar</field>
+             <field name="code">133</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr135" model="account.account.template">
+             <field name="name">Personelden Alacaklar</field>
+             <field name="code">135</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr136" model="account.account.template">
+             <field name="name">Diğer Çeşitli Alacaklar</field>
+             <field name="code">136</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr137" model="account.account.template">
+             <field name="name">Diğer Alacak Senetleri Reeskontu(-)</field>
+             <field name="code">137</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr138" model="account.account.template">
+             <field name="name">Şüpheli Diğer Alacaklar</field>
+             <field name="code">138</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr139" model="account.account.template">
+             <field name="name">Şüpheli Diğer Alacaklar Karşılığı(-)</field>
+             <field name="code">139</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr13"/>
+        </record>
+
+        <record id="tr15" model="account.account.template">
+             <field name="name">Stoklar</field>
+             <field name="code">15</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr150" model="account.account.template">
+             <field name="name">İlk Madde Malzeme</field>
+             <field name="code">150</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr15"/>
+        </record>
+
+        <record id="tr151" model="account.account.template">
+             <field name="name">Yarı Mamuller</field>
+             <field name="code">151</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr15"/>
+        </record>
+
+        <record id="tr152" model="account.account.template">
+             <field name="name">Mamuller</field>
+             <field name="code">152</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr15"/>
+        </record>
+
+        <record id="tr153" model="account.account.template">
+             <field name="name">Ticari Mallar</field>
+             <field name="code">153</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr15"/>
+        </record>
+
+        <record id="tr158" model="account.account.template">
+             <field name="name">Stok Değer Düşüklüğü Karşılığı(-)</field>
+             <field name="code">158</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr15"/>
+        </record>
+
+        <record id="tr159" model="account.account.template">
+             <field name="name">Verilen Sipariş Avansları</field>
+             <field name="code">159</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr15"/>
+        </record>
+
+        <record id="tr17" model="account.account.template">
+             <field name="name">Yıllara Yaygın İnşaat ve Onarım Maliyetleri</field>
+             <field name="code">17</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr170" model="account.account.template">
+             <field name="name">Yıllara Yaygın İnşaat Ve Onarım Maliyetleri</field>
+             <field name="code">170</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr17"/>
+        </record>
+
+        <record id="tr179" model="account.account.template">
+             <field name="name">Taşeronlara Verilen Avanslar</field>
+             <field name="code">179</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr17"/>
+        </record>
+
+        <record id="tr18" model="account.account.template">
+             <field name="name">Gelecek Aylara Ait Giderler ve Gelir Tahakkukları</field>
+             <field name="code">18</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr180" model="account.account.template">
+             <field name="name">Gelecek Aylara Ait Giderler</field>
+             <field name="code">180</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr18"/>
+        </record>
+
+        <record id="tr181" model="account.account.template">
+             <field name="name">Gelir Tahakkukları</field>
+             <field name="code">181</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr18"/>
+        </record>
+
+        <record id="tr19" model="account.account.template">
+             <field name="name">Diğer Dönen Varlıklar</field>
+             <field name="code">19</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr1"/>
+        </record>
+
+        <record id="tr190" model="account.account.template">
+             <field name="name">Devreden KDV</field>
+             <field name="code">190</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr191" model="account.account.template">
+             <field name="name">İndirilecek KDV</field>
+             <field name="code">191</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr192" model="account.account.template">
+             <field name="name">Diğer KDV</field>
+             <field name="code">192</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr193" model="account.account.template">
+             <field name="name">Peşin Ödenen Vergiler Ve Fonlar</field>
+             <field name="code">193</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr195" model="account.account.template">
+             <field name="name">İş Avansları</field>
+             <field name="code">195</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr196" model="account.account.template">
+             <field name="name">Personel Avansları</field>
+             <field name="code">196</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr197" model="account.account.template">
+             <field name="name">Sayım Ve Tesellüm Noksanları</field>
+             <field name="code">197</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr198" model="account.account.template">
+             <field name="name">Diğer Çeşitli Dönen Varlıklar</field>
+             <field name="code">198</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr199" model="account.account.template">
+             <field name="name">Diğer Dönen Varlıklar Karşılığı(-)</field>
+             <field name="code">199</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr19"/>
+        </record>
+
+        <record id="tr2" model="account.account.template">
+             <field name="name">Duran Varlıklar</field>
+             <field name="code">2</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr22" model="account.account.template">
+             <field name="name">Ticari Alacaklar</field>
+             <field name="code">22</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr220" model="account.account.template">
+             <field name="name">Alıcılar</field>
+             <field name="code">220</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr22"/>
+        </record>
+
+        <record id="tr221" model="account.account.template">
+             <field name="name">Alacak Senetleri</field>
+             <field name="code">221</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr22"/>
+        </record>
+
+        <record id="tr222" model="account.account.template">
+             <field name="name">Alacak Senetleri Reeskontu(-)</field>
+             <field name="code">222</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr22"/>
+        </record>
+
+        <record id="tr224" model="account.account.template">
+             <field name="name">Kazaqnılmamış Finansal Kiralama Faiz Gelirleri(-)</field>
+             <field name="code">224</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr22"/>
+        </record>
+
+        <record id="tr226" model="account.account.template">
+             <field name="name">Verilen Depozito Ve Teminatlar</field>
+             <field name="code">226</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr22"/>
+        </record>
+
+        <record id="tr229" model="account.account.template">
+             <field name="name">Şüpheli Ticari Alacaklar Karşılığı(-)</field>
+             <field name="code">229</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr22"/>
+        </record>
+
+        <record id="tr23" model="account.account.template">
+             <field name="name">Diğer Alacaklar</field>
+             <field name="code">23</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr231" model="account.account.template">
+             <field name="name">Ortaklardan Alacaklar</field>
+             <field name="code">231</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr232" model="account.account.template">
+             <field name="name">İştiraklerden Alacaklar</field>
+             <field name="code">232</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr233" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklardan Alacaklar</field>
+             <field name="code">233</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr235" model="account.account.template">
+             <field name="name">Personelden Alacaklar</field>
+             <field name="code">235</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr236" model="account.account.template">
+             <field name="name">Diğer Çeşitli Alacaklar</field>
+             <field name="code">236</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr237" model="account.account.template">
+             <field name="name">Diğer Alacak Senetleri Reeskontu(-)</field>
+             <field name="code">237</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr239" model="account.account.template">
+             <field name="name">Şüpheli Diğer Alacaklar Karşılığı(-)</field>
+             <field name="code">239</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr23"/>
+        </record>
+
+        <record id="tr24" model="account.account.template">
+             <field name="name">Mali Duran Varlıklar</field>
+             <field name="code">24</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr240" model="account.account.template">
+             <field name="name">Bağlı Menkul Kıymetler</field>
+             <field name="code">240</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr241" model="account.account.template">
+             <field name="name">Bağlı Menkul Kıymetler Değer Düşüklüğü Karşılığı(-)</field>
+             <field name="code">241</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr242" model="account.account.template">
+             <field name="name">İştirakler</field>
+             <field name="code">242</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr243" model="account.account.template">
+             <field name="name">İştiraklere Sermaye Taahhütleri(-)</field>
+             <field name="code">243</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr244" model="account.account.template">
+             <field name="name">İştirakler Sermaye Payları Değer Düşüklüğü Karşılığı(-)</field>
+             <field name="code">244</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr245" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklar</field>
+             <field name="code">245</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr246" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklara Sermaye Taahhütleri(-)</field>
+             <field name="code">246</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr247" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklar Sermaye Payları Değer Düşüklüğü Karşılığı(-)</field>
+             <field name="code">247</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr248" model="account.account.template">
+             <field name="name">Diğer Mali Duran Varlıklar</field>
+             <field name="code">248</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr249" model="account.account.template">
+             <field name="name">Diğer Mali Duran Varlıklar Karşılığı(-)</field>
+             <field name="code">249</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr24"/>
+        </record>
+
+        <record id="tr25" model="account.account.template">
+             <field name="name">Maddi Duran Varlıklar</field>
+             <field name="code">25</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr250" model="account.account.template">
+             <field name="name">Arazi Ve Arsalar</field>
+             <field name="code">250</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr251" model="account.account.template">
+             <field name="name">Yer Altı Ve Yer Üstü Düzenleri</field>
+             <field name="code">251</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr252" model="account.account.template">
+             <field name="name">Binalar</field>
+             <field name="code">252</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr253" model="account.account.template">
+             <field name="name">Tesis, Makine Ve Cihazlar</field>
+             <field name="code">253</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr254" model="account.account.template">
+             <field name="name">Taşıtlar</field>
+             <field name="code">254</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr255" model="account.account.template">
+             <field name="name">Demirbaşlar</field>
+             <field name="code">255</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr256" model="account.account.template">
+             <field name="name">Diğer Maddi Duran Varlıklar</field>
+             <field name="code">256</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr257" model="account.account.template">
+             <field name="name">Birikmiş Amortismanlar(-)</field>
+             <field name="code">257</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr258" model="account.account.template">
+             <field name="name">Yapılmakta Olan Yatırımlar</field>
+             <field name="code">258</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr259" model="account.account.template">
+             <field name="name">Verilen Avanslar</field>
+             <field name="code">259</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr25"/>
+        </record>
+
+        <record id="tr26" model="account.account.template">
+             <field name="name">Maddi Olmayan Duran Varlıklar</field>
+             <field name="code">26</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr260" model="account.account.template">
+             <field name="name">Haklar</field>
+             <field name="code">260</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr261" model="account.account.template">
+             <field name="name">Şerefiye</field>
+             <field name="code">261</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr262" model="account.account.template">
+             <field name="name">Kuruluş Ve Örgütlenme Giderleri</field>
+             <field name="code">262</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr263" model="account.account.template">
+             <field name="name">Araştırma Ve Geliştirme Giderleri</field>
+             <field name="code">263</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr264" model="account.account.template">
+             <field name="name">Özel Maliyetler</field>
+             <field name="code">264</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr267" model="account.account.template">
+             <field name="name">Diğer Maddi Olmayan Duran Varlıklar</field>
+             <field name="code">267</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr268" model="account.account.template">
+             <field name="name">Birikmiş Amortismanlar(-)</field>
+             <field name="code">268</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr269" model="account.account.template">
+             <field name="name">Verilen Avanslar</field>
+             <field name="code">269</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr26"/>
+        </record>
+
+        <record id="tr27" model="account.account.template">
+             <field name="name">Özel Tükenmeye Tabi Varlıklar</field>
+             <field name="code">27</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr271" model="account.account.template">
+             <field name="name">Arama Giderleri</field>
+             <field name="code">271</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr27"/>
+        </record>
+
+        <record id="tr272" model="account.account.template">
+             <field name="name">Hazırlık Ve Geliştirme Giderleri</field>
+             <field name="code">272</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr27"/>
+        </record>
+
+        <record id="tr277" model="account.account.template">
+             <field name="name">Diğer Özel Tükenmeye Tabi Varlıklar</field>
+             <field name="code">277</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr27"/>
+        </record>
+
+        <record id="tr278" model="account.account.template">
+             <field name="name">Birikmiş Tükenme Payları(-)</field>
+             <field name="code">278</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr27"/>
+        </record>
+
+        <record id="tr279" model="account.account.template">
+             <field name="name">Verilen Avanslar</field>
+             <field name="code">279</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr27"/>
+        </record>
+
+        <record id="tr28" model="account.account.template">
+             <field name="name">Gelecek Yıllara Ait Giderler ve Gelir Tahakkukları</field>
+             <field name="code">28</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr280" model="account.account.template">
+             <field name="name">Gelecek Yıllara Ait Giderler</field>
+             <field name="code">280</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr28"/>
+        </record>
+
+        <record id="tr281" model="account.account.template">
+             <field name="name">Gelir Tahakkukları</field>
+             <field name="code">281</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr28"/>
+        </record>
+
+        <record id="tr29" model="account.account.template">
+             <field name="name">Diğer Duran Varlıklar</field>
+             <field name="code">29</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr2"/>
+        </record>
+
+        <record id="tr291" model="account.account.template">
+             <field name="name">Gelecek Yıllarda İndirilecek KDV</field>
+             <field name="code">291</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr292" model="account.account.template">
+             <field name="name">Diğer KDV</field>
+             <field name="code">292</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr293" model="account.account.template">
+             <field name="name">Gelecek Yıllar İhtiyacı Stoklar</field>
+             <field name="code">293</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr294" model="account.account.template">
+             <field name="name">Elden Çıkarılacak Stoklar Ve Maddi Duran Varlıklar</field>
+             <field name="code">294</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr295" model="account.account.template">
+             <field name="name">Peşin Ödenen Vergi Ve Fonlar</field>
+             <field name="code">295</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr297" model="account.account.template">
+             <field name="name">Diğer Çeşitli Duran Varlıklar</field>
+             <field name="code">297</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr298" model="account.account.template">
+             <field name="name">Stok Değer Düşüklüğü Karşılığı(-)</field>
+             <field name="code">298</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr299" model="account.account.template">
+             <field name="name">Birikmiş Amortismanlar(-)</field>
+             <field name="code">299</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr29"/>
+        </record>
+
+        <record id="tr3" model="account.account.template">
+             <field name="name">Kısa Vadeli Yabancı Kaynaklar</field>
+             <field name="code">3</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr30" model="account.account.template">
+             <field name="name">Mali Borçlar</field>
+             <field name="code">30</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr300" model="account.account.template">
+             <field name="name">Banka Kredileri</field>
+             <field name="code">300</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr301" model="account.account.template">
+             <field name="name">Finansal Kiralama İşlemlerinden Borçlar</field>
+             <field name="code">301</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr302" model="account.account.template">
+             <field name="name">Ertelenmiş Finansal Kiralama Borçlanma Maliyetleri(-)</field>
+             <field name="code">302</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr303" model="account.account.template">
+             <field name="name">Uzun Vadeli Kredilerin Anapara Taksitleri Ve Faizleri</field>
+             <field name="code">303</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr304" model="account.account.template">
+             <field name="name">Tahvil Anapara Borç, Taksit Ve Faizleri</field>
+             <field name="code">304</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr305" model="account.account.template">
+             <field name="name">Çıkarılan Bonolar Ve Senetler</field>
+             <field name="code">305</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr306" model="account.account.template">
+             <field name="name">Çıkarılmış Diğer Menkul Kıymetler</field>
+             <field name="code">306</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr308" model="account.account.template">
+             <field name="name">Menkul Kıymetler İhraç Farkı(-)</field>
+             <field name="code">308</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr309" model="account.account.template">
+             <field name="name">Diğer Mali Borçlar</field>
+             <field name="code">309</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr30"/>
+        </record>
+
+        <record id="tr32" model="account.account.template">
+             <field name="name">Ticari Borçlar</field>
+             <field name="code">32</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr320" model="account.account.template">
+             <field name="name">Satıcılar</field>
+             <field name="code">320</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr32"/>
+        </record>
+
+        <record id="tr321" model="account.account.template">
+             <field name="name">Borç Senetleri</field>
+             <field name="code">321</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr32"/>
+        </record>
+
+        <record id="tr322" model="account.account.template">
+             <field name="name">Borç Senetleri Reeskontu(-)</field>
+             <field name="code">322</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr32"/>
+        </record>
+
+        <record id="tr326" model="account.account.template">
+             <field name="name">Alınan Depozito Ve Teminatlar</field>
+             <field name="code">326</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr32"/>
+        </record>
+
+        <record id="tr329" model="account.account.template">
+             <field name="name">Diğer Ticari Borçlar</field>
+             <field name="code">329</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr32"/>
+        </record>
+
+        <record id="tr33" model="account.account.template">
+             <field name="name">Diğer Borçlar</field>
+             <field name="code">33</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr331" model="account.account.template">
+             <field name="name">Ortaklara Borçlar</field>
+             <field name="code">331</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr33"/>
+        </record>
+
+        <record id="tr332" model="account.account.template">
+             <field name="name">İştiraklere Borçlar</field>
+             <field name="code">332</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr33"/>
+        </record>
+
+        <record id="tr333" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklara Borçlar</field>
+             <field name="code">333</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr33"/>
+        </record>
+
+        <record id="tr335" model="account.account.template">
+             <field name="name">Personele Borçlar</field>
+             <field name="code">335</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr33"/>
+        </record>
+
+        <record id="tr336" model="account.account.template">
+             <field name="name">Diğer Çeşitli Borçlar</field>
+             <field name="code">336</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr33"/>
+        </record>
+
+        <record id="tr337" model="account.account.template">
+             <field name="name">Diğer Borç Senetleri Reeskontu(-)</field>
+             <field name="code">337</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr33"/>
+        </record>
+
+        <record id="tr34" model="account.account.template">
+             <field name="name">Alınan Avanslar</field>
+             <field name="code">34</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr340" model="account.account.template">
+             <field name="name">Alınan Sipariş Avansları</field>
+             <field name="code">340</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr34"/>
+        </record>
+
+        <record id="tr349" model="account.account.template">
+             <field name="name">Alınan Diğer Avanslar</field>
+             <field name="code">349</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr34"/>
+        </record>
+
+        <record id="tr35" model="account.account.template">
+             <field name="name">Yıllara Yaygın İnşaat Ve Onarım Hakedişleri</field>
+             <field name="code">35</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr350" model="account.account.template">
+             <field name="name">350 Yıllara Yaygın İnşaat Ve Onarım Hakedişleri Bedelleri</field>
+             <field name="code">350</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr35"/>
+        </record>
+
+        <record id="tr36" model="account.account.template">
+             <field name="name">Ödenecek Vergi ve Diğer Yükümlülükler</field>
+             <field name="code">36</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr360" model="account.account.template">
+             <field name="name">Ödenecek Vergi Ve Fonlar</field>
+             <field name="code">360</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr36"/>
+        </record>
+
+        <record id="tr361" model="account.account.template">
+             <field name="name">Ödenecek Sosyal Güvenlük Kesintileri</field>
+             <field name="code">361</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr36"/>
+        </record>
+
+        <record id="tr368" model="account.account.template">
+             <field name="name">Vadesi Geçmiş, Ertelenmiş Veya Taksitlendirilmiş Vergi Ve Diğer Yükümlülükler</field>
+             <field name="code">368</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr36"/>
+        </record>
+
+        <record id="tr369" model="account.account.template">
+             <field name="name">Ödenecek Diğer Yükümlülükler</field>
+             <field name="code">369</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr36"/>
+        </record>
+
+        <record id="tr37" model="account.account.template">
+             <field name="name">Borç ve Gider Karşılıkları</field>
+             <field name="code">37</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr370" model="account.account.template">
+             <field name="name">Dönem Kârı Vergi Ve Diğer Yasal Yükümlülük Karşılıkları</field>
+             <field name="code">370</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr37"/>
+        </record>
+
+        <record id="tr371" model="account.account.template">
+             <field name="name">Dönem Kârının Peşin Ödenen Vergi Ve Diğer Yükümlülükler(-)</field>
+             <field name="code">371</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr37"/>
+        </record>
+
+        <record id="tr372" model="account.account.template">
+             <field name="name">Kıdem Tazminatı Karşılığı</field>
+             <field name="code">372</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_liability"/>
+             <field name="parent_id" ref="tr37"/>
+        </record>
+
+        <record id="tr373" model="account.account.template">
+             <field name="name">Maliyet Giderleri Karşılığı</field>
+             <field name="code">373</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_expense"/>
+             <field name="parent_id" ref="tr37"/>
+        </record>
+
+        <record id="tr379" model="account.account.template">
+             <field name="name">Diğer Borç Ve Gider Karşılıkları</field>
+             <field name="code">379</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr37"/>
+        </record>
+
+        <record id="tr38" model="account.account.template">
+             <field name="name">Gelecek Aylara Ait Gelirler Ve Gider Tahakkukları</field>
+             <field name="code">38</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_income"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr380" model="account.account.template">
+             <field name="name">Gelecek Aylara Ait Gelirler</field>
+             <field name="code">380</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_income"/>
+             <field name="parent_id" ref="tr38"/>
+        </record>
+
+        <record id="tr381" model="account.account.template">
+             <field name="name">Gider Tahakkukları</field>
+             <field name="code">381</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr38"/>
+        </record>
+
+        <record id="tr39" model="account.account.template">
+             <field name="name">Diğer Kısa Vadeli Yabancı Kaynaklar</field>
+             <field name="code">39</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr3"/>
+        </record>
+
+        <record id="tr391" model="account.account.template">
+             <field name="name">Hesaplanan KDV</field>
+             <field name="code">391</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr39"/>
+        </record>
+
+        <record id="tr392" model="account.account.template">
+             <field name="name">Diğer KDV</field>
+             <field name="code">392</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_tax"/>
+             <field name="parent_id" ref="tr39"/>
+        </record>
+
+        <record id="tr393" model="account.account.template">
+             <field name="name">Merkez Ve Şubeler Cari Hesabı</field>
+             <field name="code">393</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr39"/>
+        </record>
+
+        <record id="tr397" model="account.account.template">
+             <field name="name">Sayım Ve Tesellüm Fazlaları</field>
+             <field name="code">397</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr39"/>
+        </record>
+
+        <record id="tr399" model="account.account.template">
+             <field name="name">Diğer Çeşitli Yabancı Kaynaklar</field>
+             <field name="code">399</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr39"/>
+        </record>
+
+        <record id="tr4" model="account.account.template">
+             <field name="name">Uzun Vadeli Yabancı Kaynaklar</field>
+             <field name="code">4</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr40" model="account.account.template">
+             <field name="name">Mali Borçlar</field>
+             <field name="code">40</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr400" model="account.account.template">
+             <field name="name">Banka Kredileri</field>
+             <field name="code">400</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr401" model="account.account.template">
+             <field name="name">Finansal Kiralama İşlemlerinden Borçlar</field>
+             <field name="code">401</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr402" model="account.account.template">
+             <field name="name">Ertelenmiş Finansal Kiralama Borçlanma Maliyetleri(-)</field>
+             <field name="code">402</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr405" model="account.account.template">
+             <field name="name">Çıkarılmış Tahviller</field>
+             <field name="code">405</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr407" model="account.account.template">
+             <field name="name">Çıkarılmış Diğer Menkul Kıymetler</field>
+             <field name="code">407</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr408" model="account.account.template">
+             <field name="name">Menkul Kıymetler İhraç Farkı(-)</field>
+             <field name="code">408</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr409" model="account.account.template">
+             <field name="name">Diğer Mali Borçlar</field>
+             <field name="code">409</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr40"/>
+        </record>
+
+        <record id="tr42" model="account.account.template">
+             <field name="name">Ticari Borçlar</field>
+             <field name="code">42</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr420" model="account.account.template">
+             <field name="name">Satıcılar</field>
+             <field name="code">420</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr42"/>
+        </record>
+
+        <record id="tr421" model="account.account.template">
+             <field name="name">Borç Senetleri</field>
+             <field name="code">421</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr42"/>
+        </record>
+
+        <record id="tr422" model="account.account.template">
+             <field name="name">Borç Senetleri Reeskontu(-)</field>
+             <field name="code">422</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr42"/>
+        </record>
+
+        <record id="tr426" model="account.account.template">
+             <field name="name">Alınan Depozito Ve Teminatlar</field>
+             <field name="code">426</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr42"/>
+        </record>
+
+        <record id="tr429" model="account.account.template">
+             <field name="name">Diğer Ticari Borçlar</field>
+             <field name="code">429</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr42"/>
+        </record>
+
+        <record id="tr43" model="account.account.template">
+             <field name="name">Diğer Borçlar</field>
+             <field name="code">43</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr431" model="account.account.template">
+             <field name="name">Ortaklara Borçlar</field>
+             <field name="code">431</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr43"/>
+        </record>
+
+        <record id="tr432" model="account.account.template">
+             <field name="name">İştiraklere Borçlar</field>
+             <field name="code">432</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr43"/>
+        </record>
+
+        <record id="tr433" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklara Borçlar</field>
+             <field name="code">433</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr43"/>
+        </record>
+
+        <record id="tr436" model="account.account.template">
+             <field name="name">Diğer Çeşitli Borçlar</field>
+             <field name="code">436</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr43"/>
+        </record>
+
+        <record id="tr437" model="account.account.template">
+             <field name="name">Diğer Borç Senetleri Reeskontu(-)</field>
+             <field name="code">437</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr43"/>
+        </record>
+
+        <record id="tr438" model="account.account.template">
+             <field name="name">Kamuya Olan Ertelenmiş Veya Taksitlendirilmiş Borçlar</field>
+             <field name="code">438</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr43"/>
+        </record>
+
+        <record id="tr44" model="account.account.template">
+             <field name="name">Alınan Avanslar</field>
+             <field name="code">44</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr440" model="account.account.template">
+             <field name="name">Alınan Sipariş Avansları</field>
+             <field name="code">440</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr44"/>
+        </record>
+
+        <record id="tr449" model="account.account.template">
+             <field name="name">Alınan Diğer Avanslar</field>
+             <field name="code">449</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr44"/>
+        </record>
+
+        <record id="tr47" model="account.account.template">
+             <field name="name">Borç Ve Gider Karşılıkları</field>
+             <field name="code">47</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr472" model="account.account.template">
+             <field name="name">Kıdem Tazminatı Karşılığı</field>
+             <field name="code">472</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_liability"/>
+             <field name="parent_id" ref="tr47"/>
+        </record>
+
+        <record id="tr479" model="account.account.template">
+             <field name="name">Diğer Borç Ve Gider Karşılıkları</field>
+             <field name="code">479</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr47"/>
+        </record>
+
+        <record id="tr48" model="account.account.template">
+             <field name="name">Gelecek Yıllara Ait Gelirler Ve Gider Tahakkukları</field>
+             <field name="code">48</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr480" model="account.account.template">
+             <field name="name">Gelecek Yıllara Ait Gelirler</field>
+             <field name="code">480</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr48"/>
+        </record>
+
+        <record id="tr481" model="account.account.template">
+             <field name="name">Gider Tahakkukları</field>
+             <field name="code">481</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr48"/>
+        </record>
+
+        <record id="tr49" model="account.account.template">
+             <field name="name">Diğer Uzun Vadeli Yabancı Kaynaklar</field>
+             <field name="code">49</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr4"/>
+        </record>
+
+        <record id="tr492" model="account.account.template">
+             <field name="name">Gelecek Yıllara Ertelenmiş Veya Terkin Edilecek KDV</field>
+             <field name="code">492</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr49"/>
+        </record>
+
+        <record id="tr493" model="account.account.template">
+             <field name="name">Tesise Katılma Payları</field>
+             <field name="code">493</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr49"/>
+        </record>
+
+        <record id="tr499" model="account.account.template">
+             <field name="name">Diğer Çeşitli Uzun Vadeli Yabancı Kaynaklar</field>
+             <field name="code">499</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr49"/>
+        </record>
+
+        <record id="tr5" model="account.account.template">
+             <field name="name">Öz Kaynaklar</field>
+             <field name="code">5</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr50" model="account.account.template">
+             <field name="name">Ödenmiş Sermaye</field>
+             <field name="code">50</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr5"/>
+        </record>
+
+        <record id="tr500" model="account.account.template">
+             <field name="name">Sermaye</field>
+             <field name="code">500</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr50"/>
+        </record>
+
+        <record id="tr501" model="account.account.template">
+             <field name="name">Ödenmiş Sermaye(-)</field>
+             <field name="code">501</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_payable"/>
+             <field name="parent_id" ref="tr50"/>
+        </record>
+
+        <record id="tr52" model="account.account.template">
+             <field name="name">Sermaye Yedekleri</field>
+             <field name="code">52</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr5"/>
+        </record>
+
+        <record id="tr520" model="account.account.template">
+             <field name="name">Hisse Senetleri İhraç Primleri</field>
+             <field name="code">520</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr52"/>
+        </record>
+
+        <record id="tr521" model="account.account.template">
+             <field name="name">Hisse Senedi İptal Kârları</field>
+             <field name="code">521</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr52"/>
+        </record>
+
+        <record id="tr522" model="account.account.template">
+             <field name="name">Maddi Duran Varlık Yeniden Değerlenme Artışları</field>
+             <field name="code">522</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr52"/>
+        </record>
+
+        <record id="tr523" model="account.account.template">
+             <field name="name">İştirakler Yeniden Değerleme Artışları</field>
+             <field name="code">523</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr52"/>
+        </record>
+
+        <record id="tr524" model="account.account.template">
+             <field name="name">Maliyet Artışları Fonu</field>
+             <field name="code">524</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr52"/>
+        </record>
+
+        <record id="tr529" model="account.account.template">
+             <field name="name">Diğer Sermaye Yedekleri</field>
+             <field name="code">529</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr52"/>
+        </record>
+
+        <record id="tr54" model="account.account.template">
+             <field name="name">Kâr Yedekleri</field>
+             <field name="code">54</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr5"/>
+        </record>
+
+        <record id="tr540" model="account.account.template">
+             <field name="name">Yasal Yedekler</field>
+             <field name="code">540</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr54"/>
+        </record>
+
+        <record id="tr541" model="account.account.template">
+             <field name="name">Statü Yedekleri</field>
+             <field name="code">541</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr54"/>
+        </record>
+
+        <record id="tr542" model="account.account.template">
+             <field name="name">Olağanüstü Yedekler</field>
+             <field name="code">542</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr54"/>
+        </record>
+
+        <record id="tr548" model="account.account.template">
+             <field name="name">Diğer Kâr Yedekleri</field>
+             <field name="code">548</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr54"/>
+        </record>
+
+        <record id="tr549" model="account.account.template">
+             <field name="name">Özel Fonlar</field>
+             <field name="code">549</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr54"/>
+        </record>
+
+        <record id="tr57" model="account.account.template">
+             <field name="name">Geçmiş Yıllar Kârları</field>
+             <field name="code">57</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr5"/>
+        </record>
+
+        <record id="tr570" model="account.account.template">
+             <field name="name">Geçmiş Yıllar Kârları</field>
+             <field name="code">570</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr57"/>
+        </record>
+
+        <record id="tr58" model="account.account.template">
+             <field name="name">Geçmiş Yıllar Zararları(-)</field>
+             <field name="code">58</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr5"/>
+        </record>
+
+        <record id="tr580" model="account.account.template">
+             <field name="name">Geçmiş Yıllar Zararları(-)</field>
+             <field name="code">580</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr58"/>
+        </record>
+
+        <record id="tr59" model="account.account.template">
+             <field name="name">Dönem Net Kârı (Zararı)</field>
+             <field name="code">59</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr5"/>
+        </record>
+
+        <record id="tr590" model="account.account.template">
+             <field name="name">Dönem Net Kârı</field>
+             <field name="code">590</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr59"/>
+        </record>
+
+        <record id="tr591" model="account.account.template">
+             <field name="name">Dönem Net Zararı(-)</field>
+             <field name="code">591</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_asset"/>
+             <field name="parent_id" ref="tr59"/>
+        </record>
+
+        <record id="tr6" model="account.account.template">
+             <field name="name">Gelir Tablosu Hesapları</field>
+             <field name="code">6</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr60" model="account.account.template">
+             <field name="name">Brüt Satışlar</field>
+             <field name="code">60</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr600" model="account.account.template">
+             <field name="name">Yurt İçi Satışlar</field>
+             <field name="code">600</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr60"/>
+        </record>
+
+        <record id="tr601" model="account.account.template">
+             <field name="name">Yurt Dışı Satışlar</field>
+             <field name="code">601</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr60"/>
+        </record>
+
+        <record id="tr602" model="account.account.template">
+             <field name="name">Diğer Gelirler</field>
+             <field name="code">602</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr60"/>
+        </record>
+
+        <record id="tr61" model="account.account.template">
+             <field name="name">Satış İndirimleri (-)</field>
+             <field name="code">61</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr610" model="account.account.template">
+             <field name="name">Satıştan İadeler(-)</field>
+             <field name="code">610</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr61"/>
+        </record>
+
+        <record id="tr611" model="account.account.template">
+             <field name="name">Satış İndirimleri(-)</field>
+             <field name="code">611</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr61"/>
+        </record>
+
+        <record id="tr612" model="account.account.template">
+             <field name="name">Diğer İndirimler</field>
+             <field name="code">612</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr61"/>
+        </record>
+
+        <record id="tr62" model="account.account.template">
+             <field name="name">Satışların Maliyeti(-)</field>
+             <field name="code">62</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr620" model="account.account.template">
+             <field name="name">Satılan Mamuller Maliyeti(-)</field>
+             <field name="code">620</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr62"/>
+        </record>
+
+        <record id="tr621" model="account.account.template">
+             <field name="name">Satılan Ticari Mallar Maliyeti(-)</field>
+             <field name="code">621</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr62"/>
+        </record>
+
+        <record id="tr622" model="account.account.template">
+             <field name="name">Satılan Hizmet Maliyeti(-)</field>
+             <field name="code">622</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr62"/>
+        </record>
+
+        <record id="tr623" model="account.account.template">
+             <field name="name">Diğer Satışların Maliyeti(-)</field>
+             <field name="code">623</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr62"/>
+        </record>
+
+        <record id="tr63" model="account.account.template">
+             <field name="name">Faaliyet Giderleri(-)</field>
+             <field name="code">63</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr630" model="account.account.template">
+             <field name="name">Araştırma Ve Geliştirme Giderleri(-)</field>
+             <field name="code">630</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr63"/>
+        </record>
+
+        <record id="tr631" model="account.account.template">
+             <field name="name">Pazarlama Satış Ve Dağıtım Giderleri(-)</field>
+             <field name="code">631</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr63"/>
+        </record>
+
+        <record id="tr632" model="account.account.template">
+             <field name="name">Genel Yönetim Giderleri(-)</field>
+             <field name="code">632</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr63"/>
+        </record>
+
+        <record id="tr64" model="account.account.template">
+             <field name="name">Diğer Faaliyetlerden Oluşan Gelir ve Kârlar</field>
+             <field name="code">64</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr640" model="account.account.template">
+             <field name="name">İştiraklerden Temettü Gelirleri</field>
+             <field name="code">640</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr641" model="account.account.template">
+             <field name="name">Bağlı Ortaklıklardan Temettü Gelirleri</field>
+             <field name="code">641</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr642" model="account.account.template">
+             <field name="name">Faiz Gelirleri</field>
+             <field name="code">642</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr643" model="account.account.template">
+             <field name="name">Komisyon Gelirleri</field>
+             <field name="code">643</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr644" model="account.account.template">
+             <field name="name">Konusu Kalmayan Karşılıklar</field>
+             <field name="code">644</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr645" model="account.account.template">
+             <field name="name">Menkul Kıymet Satış Kârları</field>
+             <field name="code">645</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr646" model="account.account.template">
+             <field name="name">Kambiyo Kârları</field>
+             <field name="code">646</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr647" model="account.account.template">
+             <field name="name">Reeskont Faiz Gelirleri</field>
+             <field name="code">647</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr648" model="account.account.template">
+             <field name="name">Enflasyon Düzeltme Kârları</field>
+             <field name="code">648</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr649" model="account.account.template">
+             <field name="name">Diğer Olağan Gelir Ve Kârlar</field>
+             <field name="code">649</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr64"/>
+        </record>
+
+        <record id="tr65" model="account.account.template">
+             <field name="name">Diğer Faaliyetlerden Oluşan Gider ve Zararlar (-)</field>
+             <field name="code">65</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr653" model="account.account.template">
+             <field name="name">Komisyon Giderleri(-)</field>
+             <field name="code">653</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr654" model="account.account.template">
+             <field name="name">Karşılık Giderleri(-)</field>
+             <field name="code">654</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr655" model="account.account.template">
+             <field name="name">Menkul Kıymet Satış Zararları(-)</field>
+             <field name="code">655</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr656" model="account.account.template">
+             <field name="name">Kambiyo Zararları(-)</field>
+             <field name="code">656</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr657" model="account.account.template">
+             <field name="name">Reeskont Faiz Giderleri(-)</field>
+             <field name="code">657</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr658" model="account.account.template">
+             <field name="name">Enflasyon Düzeltmesi Zararları(-)</field>
+             <field name="code">658</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr659" model="account.account.template">
+             <field name="name">Diğer Olağan Gider Ve Zararlar(-)</field>
+             <field name="code">659</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr65"/>
+        </record>
+
+        <record id="tr66" model="account.account.template">
+             <field name="name">Finansman Giderleri</field>
+             <field name="code">66</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr660" model="account.account.template">
+             <field name="name">Kısa Vadeli Borçlanma Giderleri(-)</field>
+             <field name="code">660</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr66"/>
+        </record>
+
+        <record id="tr661" model="account.account.template">
+             <field name="name">Uzun Vadeli Borçlanma Giderleri(-)</field>
+             <field name="code">661</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr66"/>
+        </record>
+
+        <record id="tr67" model="account.account.template">
+             <field name="name">Olağan Dışı Gelir Ve Kârlar</field>
+             <field name="code">67</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr671" model="account.account.template">
+             <field name="name">Önceki Dönem Gelir Ve Kârları</field>
+             <field name="code">671</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr67"/>
+        </record>
+
+        <record id="tr679" model="account.account.template">
+             <field name="name">Diğer Olağan Dışı Gelir Ve Kârlar</field>
+             <field name="code">679</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr67"/>
+        </record>
+
+        <record id="tr68" model="account.account.template">
+             <field name="name">Olağan Dışı Gider Ve Zaralar(-)</field>
+             <field name="code">68</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr680" model="account.account.template">
+             <field name="name">Çalışmayan Kısım Gider Ve Zararları(-)</field>
+             <field name="code">680</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr68"/>
+        </record>
+
+        <record id="tr681" model="account.account.template">
+             <field name="name">Önceki Dönem Gider Ve Zararları(-)</field>
+             <field name="code">681</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr68"/>
+        </record>
+
+        <record id="tr689" model="account.account.template">
+             <field name="name">Diğer Olağan Dışı Gider Ve Zararlar(-)</field>
+             <field name="code">689</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr68"/>
+        </record>
+
+        <record id="tr69" model="account.account.template">
+             <field name="name">Dönem Net Kârı Ve Zararı</field>
+             <field name="code">69</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr6"/>
+        </record>
+
+        <record id="tr690" model="account.account.template">
+             <field name="name">Dönem Kârı Veya Zararı</field>
+             <field name="code">690</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr69"/>
+        </record>
+
+        <record id="tr691" model="account.account.template">
+             <field name="name">Dönem Kârı Vergi Ve Diğer Yasal Yükümlülük Karşılıkları(-)</field>
+             <field name="code">691</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr69"/>
+        </record>
+
+        <record id="tr692" model="account.account.template">
+             <field name="name">Dönem Net Kârı Veya Zararı</field>
+             <field name="code">692</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr69"/>
+        </record>
+
+        <record id="tr697" model="account.account.template">
+             <field name="name">Yıllara Yaygın İnşaat Ve Enflasyon Düzeltme Hesabı</field>
+             <field name="code">697</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr69"/>
+        </record>
+
+        <record id="tr698" model="account.account.template">
+             <field name="name">Enflasyon Düzeltme Hesabı</field>
+             <field name="code">698</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr69"/>
+        </record>
+
+        <record id="tr7" model="account.account.template">
+             <field name="name">Maliyet Hesapları</field>
+             <field name="code">7</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr70" model="account.account.template">
+             <field name="name">Maliyet Muhasebesi Bağlantı Hesapları</field>
+             <field name="code">70</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr700" model="account.account.template">
+             <field name="name">Maliyet Muhasebesi Bağlantı Hesabı</field>
+             <field name="code">700</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr70"/>
+        </record>
+
+        <record id="tr701" model="account.account.template">
+             <field name="name">Maliyet Muhasebesi Yansıtma Hesabı</field>
+             <field name="code">701</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr70"/>
+        </record>
+
+        <record id="tr71" model="account.account.template">
+             <field name="name">Direkt İlk Madde Ve Malzeme Giderleri</field>
+             <field name="code">71</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr710" model="account.account.template">
+             <field name="name">Direk İlk Madde Ve Malzeme Giderleri Hesabı</field>
+             <field name="code">710</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr71"/>
+        </record>
+
+        <record id="tr711" model="account.account.template">
+             <field name="name">Direkt İlk Madde Ve Malzeme Yansıtma Hesabı</field>
+             <field name="code">711</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr71"/>
+        </record>
+
+        <record id="tr712" model="account.account.template">
+             <field name="name">Direkt İlk Madde Ve Malzeme Fiyat Farkı</field>
+             <field name="code">712</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr71"/>
+        </record>
+
+        <record id="tr713" model="account.account.template">
+             <field name="name">Direkt İlk Madde Ve Malzeme Miktar Farkı</field>
+             <field name="code">713</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr71"/>
+        </record>
+
+        <record id="tr72" model="account.account.template">
+             <field name="name">Direkt İşçilik Giderleri</field>
+             <field name="code">72</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr720" model="account.account.template">
+             <field name="name">Direkt İşçilik Giderleri</field>
+             <field name="code">720</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr72"/>
+        </record>
+
+        <record id="tr721" model="account.account.template">
+             <field name="name">Direkt İşçilik Giderleri Yansıtma Hesabı</field>
+             <field name="code">721</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr72"/>
+        </record>
+
+        <record id="tr722" model="account.account.template">
+             <field name="name">Direkt İşçilik Ücret Farkları</field>
+             <field name="code">722</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr72"/>
+        </record>
+
+        <record id="tr723" model="account.account.template">
+             <field name="name">Direkt İşçilik Süre Farkları</field>
+             <field name="code">723</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr72"/>
+        </record>
+
+        <record id="tr73" model="account.account.template">
+             <field name="name">Genel Üretim Giderleri</field>
+             <field name="code">73</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr730" model="account.account.template">
+             <field name="name">Genel Üretim Giderleri</field>
+             <field name="code">730</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr73"/>
+        </record>
+
+        <record id="tr731" model="account.account.template">
+             <field name="name">Genel Üretim Giderleri Yansıtma Hesabı</field>
+             <field name="code">731</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr73"/>
+        </record>
+
+        <record id="tr732" model="account.account.template">
+             <field name="name">Genel Üretim Giderleri Bütçe Farkları</field>
+             <field name="code">732</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr73"/>
+        </record>
+
+        <record id="tr733" model="account.account.template">
+             <field name="name">Genel Üretim Giderleri Verimlilik Giderleri</field>
+             <field name="code">733</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr73"/>
+        </record>
+
+        <record id="tr734" model="account.account.template">
+             <field name="name">Genel Üretim Giderleri Kapasite Farkları</field>
+             <field name="code">734</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr73"/>
+        </record>
+
+        <record id="tr74" model="account.account.template">
+             <field name="name">Hizmet Üretim Maliyeti</field>
+             <field name="code">74</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr740" model="account.account.template">
+             <field name="name">Hizmet Üretim Maliyeti</field>
+             <field name="code">740</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr74"/>
+        </record>
+
+        <record id="tr741" model="account.account.template">
+             <field name="name">Hizmet Üretim Maliyeti Yansıtma Hesabı</field>
+             <field name="code">741</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr74"/>
+        </record>
+
+        <record id="tr742" model="account.account.template">
+             <field name="name">Hizmet Üretim Maliyeti Fark Hesapları</field>
+             <field name="code">742</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr74"/>
+        </record>
+
+        <record id="tr75" model="account.account.template">
+             <field name="name">Araştırma Ve Geliştirme Giderleri</field>
+             <field name="code">75</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr76" model="account.account.template">
+             <field name="name">Pazarlama, Satış Ve Dağıtım Giderleri</field>
+             <field name="code">76</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr760" model="account.account.template">
+             <field name="name">Atraştırma Ve Geliştirme Giderleri</field>
+             <field name="code">760</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr76"/>
+        </record>
+
+        <record id="tr761" model="account.account.template">
+             <field name="name">Pazarlama Satış Ve Dagıtım Giderleri Yansıtma Hesabı</field>
+             <field name="code">761</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr76"/>
+        </record>
+
+        <record id="tr762" model="account.account.template">
+             <field name="name">Pazarlama Satış Ve Dağıtım Giderleri Fark Hesabı</field>
+             <field name="code">762</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr76"/>
+        </record>
+
+        <record id="tr77" model="account.account.template">
+             <field name="name">Genel Yönetim Giderleri</field>
+             <field name="code">77</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr770" model="account.account.template">
+             <field name="name">Genel Yönetim Giderleri</field>
+             <field name="code">770</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr77"/>
+        </record>
+
+        <record id="tr771" model="account.account.template">
+             <field name="name">Genel Yönetim Giderleri Yansıtma Hesabı</field>
+             <field name="code">771</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr77"/>
+        </record>
+
+        <record id="tr772" model="account.account.template">
+             <field name="name">Genel Yönetim Gider Farkları Hesabı</field>
+             <field name="code">772</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr77"/>
+        </record>
+
+        <record id="tr78" model="account.account.template">
+             <field name="name">Finansman Giderleri</field>
+             <field name="code">78</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr7"/>
+        </record>
+
+        <record id="tr780" model="account.account.template">
+             <field name="name">Finansman Giderleri</field>
+             <field name="code">780</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr78"/>
+        </record>
+
+        <record id="tr781" model="account.account.template">
+             <field name="name">Finansman Giderleri Yansıtma Hesabı</field>
+             <field name="code">781</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr78"/>
+        </record>
+
+        <record id="tr782" model="account.account.template">
+             <field name="name">Finansman Giderleri Fark Hesabı</field>
+             <field name="code">782</field>
+             <field name="type">other</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr78"/>
+        </record>
+
+        <record id="tr8" model="account.account.template">
+             <field name="name">Serbest Hesaplar</field>
+             <field name="code">8</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+
+        <record id="tr9" model="account.account.template">
+             <field name="name">Nazım Hesaplar</field>
+             <field name="code">9</field>
+             <field name="type">view</field>
+             <field name="user_type" ref="tr_view"/>
+             <field name="parent_id" ref="tr0"/>
+        </record>
+    </data>
+ </openerp>

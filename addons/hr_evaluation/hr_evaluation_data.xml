@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="state">open</field>
+        </record>
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Employee Appraisals application installed!</field>
+            <field name="body"><![CDATA[<p>Manage employee reviews: you can define an appraisal campaign with several steps, with specific evaluation surveys according to hierarchy levels. Evaluations filled by employees may be exported as pdf files.</p>]]></field>
+        </record>
+
+
+        <record id="hr_evaluation_plan_managersevaluationplan0" model="hr_evaluation.plan">
+            <field eval="1" name="active"/>
+            <field eval="6" name="month_next"/>
+            <field name="name">Manager's Appraisal Plan</field>
+            <field eval="3" name="month_first"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+
+        <record id="hr_evaluation_plan_phase_sendtoemployee0" model="hr_evaluation.plan.phase">
+            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+            <field name="name">Send to Employee</field>
+            <field eval="0" name="send_anonymous_manager"/>
+            <field eval="1" name="sequence"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="action">self</field>
+            <field eval="0" name="send_anonymous_employee"/>
+            <field eval="0" name="send_answer_employee"/>
+            <field name="survey_id" ref="appraisal_form"/>
+            <field eval="0" name="send_answer_manager"/>
+            <field eval="0" name="wait"/>
+        </record>
+
+
+        <record id="hr.employee" model="hr.employee">
+            <field name="evaluation_plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
+        </record>
+
+
+        <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
+           <field name="name">Run Employee Appraisal</field>
+           <field eval="True" name="active" />
+           <field name="user_id" ref="base.user_root" />
+           <field name="interval_number">1</field>
+           <field name="interval_type">days</field>
+           <field name="numbercall">-1</field>
+           <field eval="'hr.employee'" name="model" />
+           <field eval="'run_employee_evaluation'" name="function" />
+           <field eval="'(False,)'" name="args" />
+        </record>
+     </data>
+
+</openerp>

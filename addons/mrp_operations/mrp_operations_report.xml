@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <report
+            id="report_wc_barcode"
+            string="Work Centers Barcode"
+            model="mrp.workcenter"
+            name="mrp.wc.barcode"
+            rml="mrp_operations/report/mrp_wc_barcode.rml"
+            header="False" />
+
+        <report
+            id="report_code_barcode"
+            string="Start/Stop Barcode"
+            model="mrp_operations.operation.code"
+            name="mrp.code.barcode"
+            rml="mrp_operations/report/mrp_code_barcode.rml"
+            header="False"/>
+
+    </data>
+</openerp>

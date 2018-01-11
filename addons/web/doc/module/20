@@ -1,0 +1,64 @@
+Index: web_example/static/src/js/first_module.js
+===================================================================
+--- web_example.orig/static/src/js/first_module.js
++++ web_example/static/src/js/first_module.js
+@@ -11,20 +11,36 @@ openerp.web_example = function (instance
+             this._super.apply(this, arguments);
+             this._start = null;
+             this._watch = null;
++            this.model = new instance.web.Model('web_example.stopwatch');
++        },
++        start: function () {
++            var display = this.display_record.bind(this);
++            return this.model.query()
++                .filter([['user_id', '=', instance.session.uid]])
++                .all().done(function (records) {
++                    _(records).each(display);
++                });
+         },
+         current: function () {
+             // Subtracting javascript dates returns the difference in milliseconds
+             return new Date() - this._start;
+         },
+-        update_counter: function (time) {
++        display_record: function (record) {
++            $('<li>')
++                .text(this.format_time(record.time))
++                .appendTo(this.$('.oe_web_example_saved'));
++        },
++        format_time: function (time) {
+             var h, m, s;
+             s = time / 1000;
+             m = Math.floor(s / 60);
+             s -= 60*m;
+             h = Math.floor(m / 60);
+             m -= 60*h;
+-            this.$('.oe_web_example_timer').text(
+-                _.str.sprintf("%02d:%02d:%02d", h, m, s));
++            return _.str.sprintf("%02d:%02d:%02d", h, m, s);
++        },
++        update_counter: function (time) {
++            this.$('.oe_web_example_timer').text(this.format_time(time));
+         },
+         watch_start: function () {
+             this.$el.addClass('oe_web_example_started')
+@@ -45,7 +61,7 @@ openerp.web_example = function (instance
+             this._start = this._watch = null;
+             this.$el.removeClass('oe_web_example_started')
+                     .addClass('oe_web_example_stopped');
+-            new instance.web.Model('web_example.stopwatch').call('create', [{
++            this.model.call('create', [{
+                 user_id: instance.session.uid,
+                 time: time,
+             }]);
+Index: web_example/static/src/xml/web_example.xml
+===================================================================
+--- web_example.orig/static/src/xml/web_example.xml
++++ web_example/static/src/xml/web_example.xml
+@@ -7,5 +7,6 @@
+     <p class="oe_web_example_stop">
+         <button type="button">Stop</button>
+     </p>
++    <ol class="oe_web_example_saved"></ol>
+ </div>
+ </templates>

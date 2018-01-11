@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+        datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <rng:define name="any">
+        <rng:element>
+            <rng:anyName/>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:attribute>
+                        <rng:anyName/>
+                    </rng:attribute>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="value">
+        <rng:element name="value">
+            <rng:optional><rng:attribute name="model" /></rng:optional>
+            <rng:choice>
+                <rng:attribute name="search" />
+                <rng:attribute name="eval" />
+                <rng:group>
+                    <rng:optional><rng:attribute name="type" /></rng:optional>
+                    <rng:choice>
+                        <rng:attribute name="file" />
+                        <rng:text/>
+                    </rng:choice>
+                </rng:group>
+            </rng:choice>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="function">
+        <rng:element name="function">
+            <rng:attribute name="model" />
+            <rng:attribute name="name" />
+            <!-- doesn't look like it has any use? -->
+            <rng:optional><rng:attribute name="id" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:optional>
+                <rng:choice>
+                    <rng:attribute name="eval" />
+                    <rng:oneOrMore>
+                        <rng:choice>
+                            <rng:ref name="value" />
+                            <rng:ref name="function" />
+                        </rng:choice>
+                    </rng:oneOrMore>
+                </rng:choice>
+            </rng:optional>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="workflow">
+        <rng:element name="workflow">
+            <rng:attribute name="model" />
+            <rng:attribute name="action"/>
+            <rng:optional><rng:attribute name="uid"/></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:choice>
+                <rng:attribute name="ref" />
+                <rng:ref name="value"/>
+            </rng:choice>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="report">
+        <rng:element name="report">
+            <rng:optional><rng:attribute name="id"/></rng:optional>
+            <rng:attribute name="string"/>
+            <rng:attribute name="model"/>
+            <rng:attribute name="name"/>
+            <rng:optional><rng:attribute name="report_type"/></rng:optional>
+            <rng:optional><rng:attribute name="multi"/></rng:optional>
+            <rng:optional><rng:attribute name="menu"/></rng:optional>
+            <rng:optional><rng:attribute name="keyword"/></rng:optional>
+            <rng:optional><rng:attribute name="rml"/></rng:optional><!-- pending deprecation after v6.0 -->
+            <rng:optional><rng:attribute name="file"/></rng:optional>
+            <rng:optional><rng:attribute name="sxw"/></rng:optional>
+            <rng:optional><rng:attribute name="xml"/></rng:optional>
+            <rng:optional><rng:attribute name="xsl"/></rng:optional>
+            <rng:optional><rng:attribute name="parser"/></rng:optional>
+            <rng:optional> <rng:attribute name="auto" /> </rng:optional>
+            <rng:optional> <rng:attribute name="header" /> </rng:optional>
+            <rng:optional> <rng:attribute name="webkit_header" /> </rng:optional>
+            <rng:optional> <rng:attribute name="attachment" /> </rng:optional>
+            <rng:optional> <rng:attribute name="attachment_use" /> </rng:optional>
+            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
+            <!-- `Usage` may help identify the best report for a certain task,
+                 for example usage="default" for reports that are attached by
+                 default in EDI exports -->
+            <rng:optional><rng:attribute name="usage"/></rng:optional>
+            <rng:empty />
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="field">
+        <rng:element name="field">
+            <rng:attribute name="name" />
+            <rng:choice>
+                <rng:group>
+                    <rng:attribute name="type">
+                        <rng:choice>
+                            <rng:value>base64</rng:value>
+                            <rng:value>char</rng:value>
+                            <rng:value>file</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
+                    <rng:choice>
+                        <rng:group>
+                            <rng:attribute name="file"/>
+                            <rng:empty/>
+                        </rng:group>
+                        <rng:text/>
+                    </rng:choice>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type"><rng:value>int</rng:value></rng:attribute>
+                    <rng:choice>
+                        <rng:data type="int"/>
+                        <rng:value>None</rng:value>
+                    </rng:choice>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type"><rng:value>float</rng:value></rng:attribute>
+                    <rng:data type="float"/>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type">
+                        <rng:choice>
+                            <rng:value>list</rng:value>
+                            <rng:value>tuple</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
+                    <rng:oneOrMore><rng:ref name="value"/></rng:oneOrMore>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type">
+                        <rng:choice>
+                            <rng:value>html</rng:value>
+                            <rng:value>xml</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
+                    <rng:oneOrMore>
+                        <rng:ref name="any"/>
+                    </rng:oneOrMore>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="ref"/>
+                    <rng:empty/>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="eval"/>
+                    <rng:optional><rng:attribute name="model"/></rng:optional>
+                    <rng:empty/>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="search"/>
+                    <rng:optional><rng:attribute name="model"/></rng:optional>
+                    <rng:optional><rng:attribute name="use"/></rng:optional>
+                    <rng:empty/>
+                </rng:group>
+                <rng:text/>
+            </rng:choice>
+        </rng:element>
+    </rng:define>
+
+
+    <rng:define name="record">
+        <rng:element name="record">
+            <rng:optional>
+                <rng:attribute name="id" />
+                <rng:optional>
+                    <rng:attribute name="forcecreate" />
+                </rng:optional>
+            </rng:optional>
+            <rng:attribute name="model" />
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:zeroOrMore>
+                <rng:ref name="field" />
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="template">
+        <rng:element name="template">
+            <rng:optional><rng:attribute name="id"/></rng:optional>
+            <rng:optional><rng:attribute name="t-name"/></rng:optional>
+            <rng:optional><rng:attribute name="name"/></rng:optional>
+            <rng:optional><rng:attribute name="forcecreate"/></rng:optional>
+            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:optional><rng:attribute name="priority"/></rng:optional>
+            <rng:choice>
+                <rng:group>
+                    <rng:optional>
+                        <rng:attribute name="inherit_id"/>
+                        <rng:optional>
+                            <rng:attribute name="primary">
+                                <rng:value>True</rng:value>
+                            </rng:attribute>
+                        </rng:optional>
+                    </rng:optional>
+                    <rng:optional><rng:attribute name="groups"/></rng:optional>
+                    <rng:optional><rng:attribute name="active"></rng:attribute></rng:optional>
+                    <rng:optional><rng:attribute name="customize_show"></rng:attribute></rng:optional>
+                </rng:group>
+                <rng:optional>
+                    <rng:attribute name="page"><rng:value>True</rng:value></rng:attribute>
+                </rng:optional>
+            </rng:choice>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="delete">
+        <rng:element name="delete">
+            <rng:attribute name="model" />
+            <rng:choice>
+                <rng:attribute name="id" />
+                <rng:attribute name="search" />
+            </rng:choice>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="menuitem">
+        <rng:element name="menuitem">
+            <!-- TODO: id should probably be mandatory -->
+            <rng:optional> <rng:attribute name="id" /></rng:optional>
+            <rng:optional> <rng:attribute name="name"/></rng:optional>
+            <rng:optional> <rng:attribute name="parent"/> </rng:optional>
+            <rng:optional> <rng:attribute name="action"/> </rng:optional>
+            <rng:optional> <rng:attribute name="sequence"/> </rng:optional>
+            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
+            <!-- TODO: remove icon stuff -->
+            <rng:optional> <rng:attribute name="icon"/> </rng:optional>
+            <rng:optional> <rng:attribute name="web_icon"/> </rng:optional>
+            <rng:optional> <rng:attribute name="web_icon_hover"/> </rng:optional>
+            <!-- string doesn't seem used anywhere -->
+            <rng:optional> <rng:attribute name="string"/> </rng:optional>
+            <rng:empty />
+        </rng:element>
+    </rng:define>
+
+    <!-- TODO: remove these, useless -->
+
+    <rng:define name="assert">
+        <rng:element name="assert">
+            <rng:attribute name="model" />
+            <rng:optional><rng:attribute name="search" /></rng:optional>
+            <rng:optional><rng:attribute name="count" /></rng:optional>
+            <rng:optional><rng:attribute name="string" /></rng:optional>
+            <rng:optional><rng:attribute name="id" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:optional><rng:attribute name="severity" /></rng:optional>
+            <rng:zeroOrMore>
+                <rng:element name="test">
+                    <rng:attribute name="expr"/>
+                    <rng:choice>
+                        <rng:text />
+                        <rng:empty />
+                    </rng:choice>
+                </rng:element>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="ir_set">
+        <rng:element name="ir_set">
+            <rng:oneOrMore>
+                <rng:ref name="field" />
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="url">
+        <rng:element name="url">
+            <rng:attribute name="id" />
+            <rng:attribute name="name" />
+            <rng:attribute name="url" />
+            <rng:optional><rng:attribute name="target" /></rng:optional>
+            <rng:empty />
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="act_window">
+        <rng:element name="act_window">
+            <rng:attribute name="id" />
+            <rng:attribute name="name" />
+            <rng:attribute name="res_model" />
+            <rng:optional><rng:attribute name="domain" /> </rng:optional>
+            <rng:optional><rng:attribute name="src_model" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:optional> <rng:attribute name="view_id"/> </rng:optional>
+            <rng:optional> <rng:attribute name="view_type"/> </rng:optional>
+            <rng:optional> <rng:attribute name="view_mode"/> </rng:optional>
+            <rng:optional> <rng:attribute name="multi"/> </rng:optional>
+            <rng:optional> <rng:attribute name="target"/> </rng:optional>
+            <rng:optional> <rng:attribute name="key2"/> </rng:optional>
+            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
+            <rng:optional> <rng:attribute name="limit"/> </rng:optional>
+            <rng:optional> <rng:attribute name="usage"/> </rng:optional>
+            <rng:optional> <rng:attribute name="auto_refresh"/> </rng:optional>
+            <rng:empty />
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="data">
+        <rng:element name="data">
+            <rng:optional><rng:attribute name="noupdate" /></rng:optional>
+            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:text/>
+                    <rng:ref name="menuitem" />
+                    <rng:ref name="record" />
+                    <rng:ref name="template" />
+                    <rng:ref name="delete" />
+                    <rng:ref name="act_window" />
+                    <rng:ref name="url" />
+                    <rng:ref name="assert" />
+                    <rng:ref name="report" />
+                    <rng:ref name="workflow" />
+                    <rng:ref name="function" />
+                    <rng:ref name="ir_set" />
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:start>
+        <rng:element name="openerp">
+            <rng:oneOrMore>
+                <rng:ref name="data" />
+            </rng:oneOrMore>
+        </rng:element>
+    </rng:start>
+</rng:grammar>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="membership_product_product_public" model="ir.rule">
+        <field name="name">Product membership: Public</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="domain_force">[('website_published', '=', True), ('product_variant_ids.membership', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    <record id="membership_membership_line_public" model="ir.rule">
+        <field name="name">Membership line: Public</field>
+        <field name="model_id" ref="membership.model_membership_membership_line"/>
+        <field name="domain_force">[('partner.website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+</data>
+</openerp>

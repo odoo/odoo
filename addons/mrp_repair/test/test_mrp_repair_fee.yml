@@ -1,0 +1,23 @@
+-
+  Testing total amount update function
+-
+  I check the total amount of mrp_repair_rmrp1 is 100
+-
+  !assert {model: mrp.repair, id: mrp_repair_rmrp1, string=amount_total should be 100}:
+    - amount_total == 100
+-
+  I add a new fee line
+-
+  !record {model: mrp.repair, id: mrp_repair_rmrp1}:
+    fees_lines:
+      - name: 'Assembly Service Cost'
+        product_id: product.product_assembly
+        product_uom_qty: 1.0
+        product_uom: product.product_uom_hour
+        price_unit: 12.0
+        to_invoice: True
+-
+  I check the total amount of mrp_repair_rmrp1 is now 112
+-
+  !assert {model: mrp.repair, id: mrp_repair_rmrp1, string=amount_total should be 112}:
+    - amount_total == 112

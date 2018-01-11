@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="message_rule_1" model="ir.rule">
+            <field name="name">Can only read messages that you sent or messages sent to you</field>
+            <field name="model_id" ref="model_im_chat_message"/>
+            <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="domain_force">[('to_id.user_ids', 'in', [user.id])]</field>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="users_rule_1" model="ir.rule">
+            <field name="name">Can only modify your session</field>
+            <field name="model_id" ref="model_im_chat_session"/>
+            <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="domain_force">[('user_ids', 'in', [user.id])]</field>
+            <field name="perm_unlink" eval="0"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+
+        <record id="session_relation_rule_1" model="ir.rule">
+            <field name="name">Can only modify your own session relations</field>
+            <field name="model_id" ref="model_im_chat_conversation_state"/>
+            <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="domain_force">[('user_id', '=', user.id)]</field>
+            <field name="perm_unlink" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_create" eval="1"/>
+        </record>
+    </data>
+</openerp>

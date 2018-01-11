@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="payment_acquirer_transfer" model="payment.acquirer">
+            <field name="name">Wire Transfer</field>
+            <field name="provider">transfer</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="transfer_acquirer_button"/>
+            <field name="validation">manual</field>
+            <field name="environment">test</field>
+            <field name="website_published" eval="True"/>
+            <field name="pre_msg"><![CDATA[
+<p>Transfer information will be provided after choosing the payment mode.</p>]]>
+            </field>
+        </record>
+
+    </data>
+</openerp>

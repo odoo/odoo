@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <group name="account_property" position="after">
+                        <group name="account_stock_property" string="Account Stock Properties" colspan="2">
+                            <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_journal"/>
+                        </group>
+                    </group>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="replace">
+                    <field name="cost_method" groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}"/>
+                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                    <div groups="base.group_user">
+                        <field name="standard_price" attrs="{'readonly':['&amp;', ('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
+                        <button name="%(action_view_change_standard_price)d" string="- update"
+                            type="action" attrs="{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                            class="oe_link" groups="stock_account.group_inventory_valuation"/>
+                    </div>
+                </field>
+                <xpath expr="//group[@name='properties']" position="before">
+                    <group groups="stock_account.group_inventory_valuation" attrs="{'invisible': [('type','=','service')]}">
+                        <separator string="Inventory Valuation" attrs="{'invisible':[('type', 'in', ('service', 'consu'))]}" colspan="4"/>
+                        <group colspan="2" col="2">
+                            <field name="valuation" attrs="{'invisible':[('type', 'in', ('service', 'consu'))]}"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
+                    </group>
+                    <newline/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</openerp>

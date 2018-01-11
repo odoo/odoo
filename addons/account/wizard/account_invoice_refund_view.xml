@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_invoice_refund" model="ir.ui.view">
+            <field name="name">account.invoice.refund.form</field>
+            <field name="model">account.invoice.refund</field>
+            <field name="arch" type="xml">
+                <form string="Credit Note">
+                    <group>
+                         <group colspan="2">
+                             <label for="filter_refund"/>
+                             <div>
+                                 <field name="filter_refund" class="oe_inline"/>
+                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','refund')]}" class="oe_grey">
+                                    You will be able to edit and validate this
+                                    credit note directly or keep it draft,
+                                    waiting for the document to be issued by
+                                    your supplier/customer.
+                                 </p>
+                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','cancel')]}" class="oe_grey">
+                                    Use this option if you want to cancel an invoice you should not
+                                    have issued. The credit note will be created, validated and reconciled
+                                    with the invoice. You will not be able to modify the credit note.
+                                 </p>
+                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','modify')]}" class="oe_grey">
+                                    Use this option if you want to cancel an invoice and create a new
+                                    one. The credit note will be created, validated and reconciled
+                                    with the current invoice. A new, draft, invoice will be created 
+                                    so that you can edit it.
+                                 </p>
+                             </div>
+                         </group>
+                         <group>
+                             <field name="description"/>
+                             <field name="journal_id" widget='selection'/>
+                         </group><group>
+                             <field name="date"/>
+                             <field name="period"/>
+                         </group>
+                    </group>
+                    <footer>
+                        <button string='Create Refund' name="invoice_refund" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_invoice_refund" model="ir.actions.act_window">
+            <field name="name">Refund Invoice</field>
+            <field name="res_model">account.invoice.refund</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_invoice_refund"/>
+           <field name="target">new</field>
+        </record>
+
+
+    </data>
+</openerp>

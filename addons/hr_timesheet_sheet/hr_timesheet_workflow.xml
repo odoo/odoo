@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Workflow definition -->
+
+        <record id="wkf_timesheet" model="workflow">
+            <field name="name">hr_timesheet_sheet.sheet</field>
+            <field name="osv">hr_timesheet_sheet.sheet</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="act_new" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_timesheet"/>
+            <field name="name">new</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'new'})</field>
+            <field name="flow_start">True</field>
+        </record>
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_timesheet"/>
+            <field name="name">draft</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'draft'})</field>
+        </record>
+        <record id="act_confirm" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_timesheet"/>
+            <field name="name">confirm</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'confirm'})</field>
+        </record>
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_timesheet"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'done'})</field>
+            <field name="flow_stop">True</field>
+        </record>
+
+        <record id="t0" model="workflow.transition">
+            <field name="act_from" ref="act_new"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="group_id" ref="base.group_user"/>
+        </record>
+        <record id="t1" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_confirm"/>
+            <field name="signal">confirm</field>
+            <field name="group_id" ref="base.group_user"/>
+        </record>
+        <record id="t2" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+        <record id="t3" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="signal">cancel</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+    </data>
+</openerp>

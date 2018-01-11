@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <!--  Add payment options to sale.order and invoice forms -->
+        <record model="ir.ui.view" id="payment_paypal_option_config">
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='payment_acquirer']" position="inside">
+                    <button name='%(payment.action_payment_acquirer)d' type="action"
+                        string="Configure payment acquiring methods" class="oe_link"/>
+                </xpath>
+            </field>
+        </record>
+ 
+    </data>
+</openerp>

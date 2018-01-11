@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Production -->
+
+        <record id="wkf_prod" model="workflow">
+            <field name="name">mrp.production.basic</field>
+            <field name="osv">mrp.production</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="prod_act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_prod"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record>
+        <record id="prod_act_confirmed" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_prod"/>
+            <field name="name">confirmed</field>
+            <field name="kind">function</field>
+            <field name="action">action_confirm()</field>
+        </record>
+        <record id="prod_act_ready" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_prod"/>
+            <field name="name">ready</field>
+            <field name="kind">function</field>
+            <field name="action">action_ready()</field>
+        </record>
+        <record id="prod_act_in_production" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_prod"/>
+            <field name="name">in_production</field>
+            <field name="kind">function</field>
+            <field name="action">action_in_production()</field>
+        </record>
+        <record id="prod_act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_prod"/>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">action_production_end()</field>
+            <field name="name">done</field>
+        </record>
+        <record id="prod_act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_prod"/>
+            <field name="flow_stop">True</field>
+            <field name="name">cancel</field>
+            <field name="kind">function</field>
+            <field name="action">action_cancel()</field>
+        </record>
+
+        <record id="prod_trans_draft_picking" model="workflow.transition">
+            <field name="act_from" ref="prod_act_draft"/>
+            <field name="act_to" ref="prod_act_confirmed"/>
+            <field name="signal">button_confirm</field>
+            <field name="condition">True</field>
+        </record>
+        <record id="prod_trans_picking_ready" model="workflow.transition">
+            <field name="act_from" ref="prod_act_confirmed"/>
+            <field name="act_to" ref="prod_act_ready"/>
+            <field name="signal">moves_ready</field>
+            <field name="trigger_model" eval="False"/> <!-- Force empty -->
+            <field name="trigger_expr_id" eval="False"/> <!-- Force empty -->
+            <field name="condition">True</field> <!-- Force default -->
+        </record>
+        <record id="prod_trans_ready_in_production" model="workflow.transition">
+            <field name="act_from" ref="prod_act_ready"/>
+            <field name="act_to" ref="prod_act_in_production"/>
+            <field name="signal">button_produce</field>
+        </record>
+        <record id="prod_trans_in_production_done" model="workflow.transition">
+            <field name="act_from" ref="prod_act_in_production"/>
+            <field name="act_to" ref="prod_act_done"/>
+            <field name="signal">button_produce_done</field>
+            <field name="condition">test_production_done()</field>
+        </record>
+        <record id="prod_trans_ready_cancel" model="workflow.transition">
+            <field name="act_from" ref="prod_act_ready"/>
+            <field name="act_to" ref="prod_act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        <record id="prod_trans_in_production_cancel" model="workflow.transition">
+            <field name="act_from" ref="prod_act_in_production"/>
+            <field name="act_to" ref="prod_act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        <record id="prod_trans_draft_cancel" model="workflow.transition">
+            <field name="act_from" ref="prod_act_draft"/>
+            <field name="act_to" ref="prod_act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+        <record id="prod_trans_confirmed_cancel" model="workflow.transition">
+            <field name="act_from" ref="prod_act_confirmed"/>
+            <field name="act_to" ref="prod_act_cancel"/>
+            <field name="signal">button_cancel</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,10 @@
+-
+  In order to test the PDF reports defined on Account Payment, I print a Payment Order report.
+-
+  !python {model: payment.order}: |
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('payment_order_1')], 'account_payment.report_paymentorder', {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'account_payment-payment_order_report.'+format), 'wb+').write(data)

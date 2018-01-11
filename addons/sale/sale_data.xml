@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_sale_menu" model="ir.actions.client">
+            <field name="name">Open Sale Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_base_partner')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_sale_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Requests Links -->
+        <record id="req_link_sale_order" model="res.request.link">
+            <field name="name">Sales Order</field>
+            <field name="object">sale.order</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Sales Management application installed!</field>
+            <field name="body"><![CDATA[<p>This application lets you create and send quotations and process your sales orders; from delivery to invoicing.</p>
+<p>If you need to manage your sales pipeline (leads, opportunities, phonecalls), the <i>CRM</i> application may be useful. Use the Settings menu to install it.</p>]]></field>
+        </record>
+
+        <!-- Sale-related subtypes for messaging / Chatter -->
+        <record id="mt_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation sent</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Quotation sent</field>
+        </record>
+        <record id="mt_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="res_model">sale.order</field>
+            <field name="default" eval="False"/>
+            <field name="description">Quotation confirmed</field>
+        </record>
+
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_order_sent" model="mail.message.subtype">
+            <field name="name">Quotation Send</field>
+            <field name="sequence">20</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('sale.mt_order_sent')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+        <record id="mt_salesteam_order_confirmed" model="mail.message.subtype">
+            <field name="name">Sales Order Confirmed</field>
+            <field name="sequence">21</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="parent_id" eval="ref('sale.mt_order_confirmed')"/>
+            <field name="relation_field">section_id</field>
+        </record>
+
+    </data>
+</openerp>

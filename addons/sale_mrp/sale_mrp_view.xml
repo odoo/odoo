@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_mrp_production_form" model="ir.ui.view">
+            <field name="name">mrp.production.form</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="sale_ref"/>
+                </xpath>
+                <xpath expr="//field[@name='sale_ref']" position="after">
+                    <field name="sale_name"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_mrp" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock.mrp</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+               <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='address_allotment_id']" position="after">
+                   <field name="property_ids" widget="many2many_tags"
+                        groups="sale.group_mrp_properties"/>
+               </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

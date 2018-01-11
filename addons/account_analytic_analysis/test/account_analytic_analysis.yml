@@ -1,0 +1,45 @@
+-
+  In order to test Contract Recurrent Invoice I create a new Contract Template 
+-
+  !record {model: account.analytic.account, id: contract_template}:
+    name: Maintenance of Servers
+    company_id: base.main_company
+    partner_id: base.main_partner
+    type: template
+    recurring_invoices : 1
+    recurring_interval : 1
+    recurring_invoice_line_ids:
+      - quantity: 2.0
+        price_unit: 75.0
+        name: Database Administration
+        product_id: product.product_product_consultant
+        uom_id: product.product_uom_hour
+-
+  I create a contract based on this template
+-
+  !record {model: account.analytic.account, id: contract_main}:
+    partner_id: base.main_partner
+    template_id: account_analytic_analysis.contract_template
+    type: contract
+-
+  I check that the contract inherited from data of the template
+-
+  !python {model: account.analytic.account}: |
+    contract = self.browse(cr, uid, ref('account_analytic_analysis.contract_main'))
+    template = self.browse(cr, uid, ref('account_analytic_analysis.contract_template'))
+    assert template.recurring_interval == contract.recurring_interval, "The recurring interval of the contract does not match with the contract template"
+    assert template.recurring_invoices == contract.recurring_invoices, "Invoice method of contract does not match with the contract template"
+-
+  I generate all invoices from contracts having recurring invoicing
+-
+  !python {model: account.analytic.account}: |
+    self.recurring_create_invoice(cr, uid, [])
+-
+  I test the generated invoice
+-
+  !python {model: account.invoice}: |
+    aid = ref('account_analytic_analysis.contract_main')
+    ids = self.search(cr, uid, [('invoice_line.account_analytic_id','=',aid)], context=context)
+    assert len(ids)>=1, 'No invoice created for the contract'
+    for invoice in self.browse(cr, uid, ids,context=context):
+        assert invoice.amount_untaxed == 150.0, "The invoice total is different than 150!"

@@ -1,0 +1,17 @@
+
+.openerp .oe_gantt {
+    min-height: 500px;
+}
+
+.openerp .oe_gantt .oe_gantt_button_create {
+    position: absolute;
+    top: 5px;
+}
+@media print {
+    .oe_gantt button {
+        display: none;
+    }
+    .oe_gantt > table > tbody > tr > td > div > div {
+        overflow: hidden !important;
+    }
+}

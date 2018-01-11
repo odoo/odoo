@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record model="ir.ui.view" id="product_pricelist_view">
+        <field name="name">product.pricelist.website.form</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <field name="active" position="after">
+                <field name="code"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_template_form_view">
+        <field name="name">product.template.product.website.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <!-- add state field in header -->
+            <group name="website_and_pos" position="inside">
+                <group name="website" string="Website">
+                    <field name="website_url" invisible="1"/>
+                    <field name="public_categ_ids" widget="many2many_tags"/>
+                    <field name="website_published" class="pull-right" widget="website_button"/>
+                    <field name="alternative_product_ids" widget="many2many_tags"/>
+                    <field name="accessory_product_ids" widget="many2many_tags"/>
+                    <field name="website_style_ids" widget="many2many_tags"/>
+                    <field name="website_sequence"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <!-- Product attribute -->
+
+    <record id="variants_template_tree_view" model="ir.ui.view">
+        <field name="name">variants.template.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.variants_template_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="color"/>
+            </field>
+        </field>
+    </record>
+    <record id="variants_tree_view" model="ir.ui.view">
+        <field name="name">variants.template.tree</field>
+        <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.variants_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="color"/>
+            </field>
+        </field>
+    </record>
+    <record id="attribute_tree_view" model="ir.ui.view">
+        <field name="name">product.attribute.tree.type</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view"></field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="type"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product Public Categories -->
+    <record id="product_public_category_form_view" model="ir.ui.view">
+        <field name="name">product.public.category.form</field>
+        <field name="model">product.public.category</field>
+        <field name="arch" type="xml">
+            <form string="Public Categories">
+                <sheet>
+                    <field name="image_medium" widget='image' class="oe_avatar oe_right"/>
+                    <div class="oe_left">
+                        <group>
+                            <field name="name"/>
+                            <field name="parent_id"/>
+                            <field name="sequence"/>
+                        </group>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="product_public_category_tree_view" model="ir.ui.view">
+        <field name="name">product.public.category.tree</field>
+        <field name="model">product.public.category</field>
+        <field name="field_parent" eval="False"/>
+        <field name="arch" type="xml">
+            <tree string="Product Product Categories">
+                <field name="sequence" invisible="1"/>
+                <field name="complete_name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="product_public_category_action" model="ir.actions.act_window">
+        <field name="name">Public Product Categories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.public.category</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to define a new category.
+          </p><p>
+            Categories are used to browse your products through the
+            touchscreen interface.
+          </p><p>
+            If you put a photo on the category, the layout of the
+            touchscreen interface will automatically. We suggest not to put
+            a photo on categories for small (1024x768) screens.
+          </p>
+        </field>
+    </record>
+    <menuitem action="product_public_category_action" id="menu_product_public_category" parent="product.prod_config_main" sequence="10" />
+    <!-- END -->
+
+ </data>
+
+</openerp>

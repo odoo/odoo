@@ -1,0 +1,62 @@
+-
+  Create a user as 'HR Recruitment Officer'
+-
+  !record {model: res.users, id: res_users_hr_recruitment_officer, view: False}:
+    company_id: base.main_company
+    name: HR Recruitment Officer
+    login: hrro
+    email: hrofcr@yourcompany.com
+-
+  I added groups for HR Recruitment Officer.
+-
+  !record {model: res.users, id: res_users_hr_recruitment_officer}:
+    groups_id:
+      - base.group_hr_user
+-
+  In Order to test process of Recruitment so giving HR officer's rights,
+-
+  !context
+    uid: 'res_users_hr_recruitment_officer'
+-
+  An applicant is interested in the job position. So he sends a resume by email.
+-
+  !python {model: mail.thread}: |
+    request_file = open(openerp.modules.module.get_module_resource('hr_recruitment','test', 'resume.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'hr.applicant', request_message)
+-
+  After getting the mail, I check the details of the new applicant.
+-
+  !python {model: hr.applicant}: |
+    applicant_ids = self.search(cr, uid, [('email_from','=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')])
+    assert applicant_ids, "Applicant is not created after getting the mail"
+    applicant = self.browse(cr, uid, applicant_ids[0], context=context)
+    resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.pdf'),('res_model','=',self._name),('res_id','=',applicant.id)])
+    assert applicant.name == "Application for the post of Jr.application Programmer.", "Applicant name does not match."
+    assert applicant.stage_id.id == ref('hr_recruitment.stage_job1'), "Stage should be 'Initial qualification' and is '%s'." % (applicant.stage_id.name)
+    assert applicant.stage_id.sequence == 1, "Applicant stage sequence should be 1."
+    assert len(resume_ids), "Resume is not attached."
+-
+  I assign the Job position to the applicant
+-
+  !python {model: hr.applicant}: |
+    self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_developer')})
+-
+  I schedule meeting with applicant for interview.
+-
+  !python {model: hr.applicant}: |
+     self.action_makeMeeting(cr, uid, [ref('hr_case_programmer')])
+-
+  I print Applicant fill up the interview quetion
+-
+  !python {model: hr.applicant}: |
+    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+    self.action_print_survey(cr, uid, [ref('hr_case_programmer')])
+-
+  Now hired employee want to be a partner of company.
+-
+  !record {model: hr.recruitment.partner.create, id: hr_recruitment_partner_id1 }:
+-
+  !python {model: hr.recruitment.partner.create}: |
+    context.update({'active_model': 'hr.applicant', 'active_ids': [ref("hr_recruitment.hr_case_programmer")], 'active_id': ref("hr_recruitment.hr_case_programmer")})
+    self.make_order(cr, uid, [ref("hr_recruitment_partner_id1")], context=context)

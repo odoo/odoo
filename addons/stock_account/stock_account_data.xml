@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="stock_journal_sequence" model="ir.sequence">
+            <field name="name">stock journal sequence</field>
+            <field eval="3" name="padding"/>
+            <field name="prefix">STJ/%(year)s/</field>
+        </record>
+        <record forcecreate="1" id="stock_journal" model="account.journal">
+            <field name="name">Stock Journal</field>
+            <field name="code">STJ</field>
+            <field name="type">general</field>
+            <field name="sequence_id" ref="stock_journal_sequence"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record forcecreate="True" id="default_cost_method" model="ir.property">
+            <field name="name">Cost Method Property</field>
+            <field name="fields_id" search="[('model', '=', 'product.template'), ('name', '=', 'cost_method')]"/>
+            <field name="value">standard</field>
+            <field name="type">selection</field>
+        </record>
+        <record forcecreate="True" id="default_valuation" model="ir.property">
+            <field name="name">Valuation Property</field>
+            <field name="fields_id" search="[('model', '=', 'product.template'), ('name', '=', 'valuation')]"/>
+            <field name="value">manual_periodic</field>
+            <field name="type">selection</field>
+        </record>
+
+    </data>
+</openerp>

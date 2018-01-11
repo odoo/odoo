@@ -1,0 +1,22 @@
+-
+  I configure automatically if the country is set on the company, mainly for online offers.
+-
+  !python {model: account.installer}: |
+    modules = self.pool.get('ir.module.module')
+    wizards = self.pool.get('ir.actions.todo')
+    wiz = wizards.browse(cr, uid, ref('account.account_configuration_installer_todo'))
+    part = self.pool.get('res.partner').browse(cr, uid, ref('base.main_partner'))
+    # if we know the country and the wizard has not yet been executed, we do it
+    if (part.country_id.id) and (part.country_id.code) and (wiz.state=='open'):
+        mod = 'l10n_'+part.country_id.code.lower()
+        ids = modules.search(cr, uid, [ ('name','=',mod) ], context=context)
+        if ids:
+            wizards.write(cr, uid, [ref('account.account_configuration_installer_todo')], {
+                'state': 'done'
+            })
+            wiz_id = self.create(cr, uid, {
+                'charts': mod
+            })
+            self.execute_simple(cr, uid, [wiz_id])
+            modules.state_update(cr, uid, ids,
+                'to install', ['uninstalled'], context=context)

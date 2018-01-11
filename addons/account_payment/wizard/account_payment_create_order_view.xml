@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_create_payment_order" model="ir.ui.view">
+            <field name="name">payment.order.create.form</field>
+            <field name="model">payment.order.create</field>
+            <field name="arch" type="xml">
+            <form string="Search Payment lines">
+                <group>
+                    <field name="duedate" />
+                </group>
+                <footer>
+                    <button name="search_entries" string="Search" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="view_create_payment_order_lines" model="ir.ui.view">
+            <field name="name">payment.order.create.form</field>
+            <field name="model">payment.order.create</field>
+            <field name="arch" type="xml">
+                <form string="Search Payment lines">
+                    <group string="Entries">
+                        <field name="entries"/>
+                    </group>
+                    <footer>
+                        <button name="create_payment" string="_Add to payment order" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_create_payment_order" model="ir.actions.act_window">
+            <field name="name">Populate Payment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">payment.order.create</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_create_payment_order"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

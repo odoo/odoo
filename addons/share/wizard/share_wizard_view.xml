@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="share_step0_form" model="ir.ui.view">
+            <field name="name">share.step0.form</field>
+            <field name="model">share.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Sharing: preparation">
+                    <separator
+                        string="Please select the action that opens the screen containing the data you want to share."/>
+                    <group>
+                        <field name="action_id"/>
+                        <label colspan="2"
+                            string="Optionally, you may specify an additional domain restriction that will be applied to the shared data."/>
+                        <field name="domain"/>
+                    </group>
+                    <footer>
+                        <button name="go_step_1" string="Next" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="share_step1_form" model="ir.ui.view">
+            <field name="name">share.step1.form</field>
+            <field name="model">share.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Configuration">
+                    <group>
+                        <field name="user_type" invisible="1"/>
+                        <field name="invite" invisible="1"/>
+                    </group>
+                    <group>
+                        <group colspan="4" name="emails_group" attrs="{'invisible':['|', ('user_type', '!=', 'emails'), ('invite', '=', True)]}"
+                            string="Share with these People (one email per line)">
+                            <field nolabel="1" name="new_users" attrs="{'required':[('user_type','=','emails'), ('invite', '!=', True)]}"/>
+                        </group>
+                        <group colspan="4" name="email_lines" attrs="{'invisible':['|', ('invite', '!=', True), ('user_type', '!=', 'emails')]}"
+                            string="Share with these People (one email per line)">
+                            <field name="email_1"/>
+                            <field name="email_2"/>
+                            <field name="email_3"/>
+                        </group>
+                        <group colspan="4" attrs="{'invisible':[('user_type', '=', 'embedded')]}"
+                            string="Include an Optional Personal Message">
+                            <field name="message" colspan="2" nolabel="1"/>
+                        </group>
+                        <group attrs="{'invisible':[('invite', '=', True)]}" string="Sharing Options">
+                            <field name="name"/>
+                            <field name="access_mode"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="go_step_2" string="Share" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="share_step2_form" model="ir.ui.view">
+            <field name="name">share.step2.form</field>
+            <field name="model">share.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Access granted!">
+                    <group attrs="{'invisible':[('user_type','=','embedded')]}"
+                        string="An email notification with instructions has been sent to the following people:">
+                        <field name="result_line_ids" nolabel="1" mode="tree">
+                            <tree string="Summary">
+                                <field name="login"/>
+                            </tree>
+                            <form string="Access info">
+                                <group>
+                                    <field name="login"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                    <group colspan="4" col="1" attrs="{'invisible':[('user_type','!=','embedded')]}">
+                        <group string="Use this link">
+                            <field name="embed_url"/>
+                        </group>
+                        <group string="Or insert the following code where you want to embed your documents">
+                            <field name="embed_code"/>
+                        </group>
+                        <group string="Embedded code options">
+                            <field name="embed_option_title" on_change="onchange_embed_options(embed_option_title, embed_option_search)"/>
+                            <field name="embed_option_search" on_change="onchange_embed_options(embed_option_title, embed_option_search)"
+                                attrs="{'invisible':[('access_mode','=','readonly')]}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <field name="user_type" invisible="1"/>
+                        <field name="access_mode" invisible="1"/>
+                        <button string="Close" class="oe_highlight" special="cancel" />
+                    </footer>
+
+                </form>
+            </field>
+        </record>
+
+        <!--  action for manual launch from menuitem. context may contain:
+                    - 'action_id' (id of action)
+                    - 'domain' (string expression for full domain to apply as sent to server, 
+                               with dynamic data like 'uid' replaced by actual value (i.e. after eval)!)
+         -->
+        <record id="action_share_wizard" model="ir.actions.act_window">
+            <field name="name">Share Wizard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">share.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="share_step0_form"/>
+            <field name="target">new</field>
+        </record>
+
+        <!--  action for direct launch from client widget with context providing:
+                    - 'action_id' (id of action)
+                    - 'domain' (string expression for full domain to apply as sent to server, 
+                               with dynamic data like 'uid' replaced by actual value (i.e. after eval)!)
+         -->
+        <record id="action_share_wizard_step1" model="ir.actions.act_window">
+            <field name="name">Share your documents</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">share.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="share_step1_form"/>
+            <field name="target">new</field>
+            <field name="context">False</field>
+        </record>
+
+    </data>
+</openerp>

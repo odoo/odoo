@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+<!--                      Partner                        -->
+        <record id="res_partner_oerp_editor" model="res.partner">
+            <field name="name">Odoo Editor</field>
+            <field name="street">Plot No 61- Sector 8</field>
+            <field name="city">Faridabad (Delhi- NCR)</field>
+            <field name="zip">121006</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="email">openerp.editor@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
+        </record>
+        <record id="res_partner_oerp_us" model="res.partner">
+            <field name="name">Odoo US</field>
+            <field name="street">2035 N. Evergreen Terrace</field>
+            <field name="street2">Arlington Heights</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="email">openerp.us@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
+        </record>
+        <record id="res_partner_oerp_in" model="res.partner">
+            <field name="name">Odoo IN</field>
+            <field name="street">Top Floor, Mehta Mahal,15</field>
+            <field name="street2">Matthew Road, Opera House</field>
+            <field name="city">Mumbai 27</field>
+            <field name="zip">400004</field>
+            <field name="country_id" ref="base.in"/>
+            <field name="email">openerp.in@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
+        </record>
+        <record id="res_partner_oerp_be" model="res.partner">
+            <field name="name">Odoo BE</field>
+            <field name="street">Avenue de l'Artisanat 2</field>
+            <field name="city">Braine-l'Alleud</field>
+            <field name="zip">1420</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="email">openerp.be@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
+        </record>
+        <record id="res_partner_odoo" model="res.partner">
+            <field name="name">Odoo</field>
+            <field name="street">RM#25-502, 126, Yijiang Road</field>
+            <field name="street2">Pudong</field>
+            <field name="city">Shanghai</field>
+            <field name="zip">201</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="email">odoo@yourcompany.example.com</field>
+            <field name="is_company" eval="1" />
+        </record>
+
+<!--                      Company                        -->
+        <record id="res_company_oerp_editor" model="res.company">
+            <field name="partner_id" ref="res_partner_oerp_editor"/>
+            <field name="parent_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="name">Odoo Editor</field>
+        </record>
+        <record id="res_company_oerp_us" model="res.company">
+            <field name="partner_id" ref="res_partner_oerp_us"/>
+            <field name="parent_id" ref="res_company_oerp_editor"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="name">Odoo US</field>
+        </record>
+        <record id="res_company_oerp_be" model="res.company">
+            <field name="partner_id" ref="res_partner_oerp_be"/>
+            <field name="parent_id" ref="res_company_oerp_editor"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="name">Odoo BE</field>
+        </record>
+        <record id="res_company_oerp_in" model="res.company">
+            <field name="partner_id" ref="res_partner_oerp_in"/>
+            <field name="parent_id" ref="res_company_oerp_editor"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="name">Odoo IN</field>
+        </record>
+        <record id="res_company_odoo" model="res.company">
+            <field name="partner_id" ref="res_partner_odoo"/>
+            <field name="parent_id" ref="base.main_company"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="name">Odoo</field>
+        </record>
+
+<!--                      User                        -->
+
+        <record id="base.user_root" model="res.users">
+            <field name="company_ids" eval="[(4, ref('res_company_oerp_editor')),(4, ref('res_company_oerp_us')),(4, ref('res_company_oerp_be'))]"/>
+        </record>
+        <record id="base.user_demo" model="res.users">
+            <field name="company_ids" eval="[(4, ref('res_company_oerp_us')),(4, ref('res_company_oerp_be')),(4, ref('res_company_odoo'))]"/>
+        </record>
+
+        <!--
+    Resource: product.product
+    -->
+
+        <record id="Odoo1" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Odoo Offers</field>
+        </record>
+        <record id="product_product_odoo1" model="product.product">
+            <field name="default_code">ODOO</field>
+            <field name="list_price">35.0</field>
+            <field name="standard_price">10.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="name">Odoo Offer</field>
+            <field name="categ_id" ref="Odoo1"/>
+        <field name="company_id" ref="res_company_odoo"/>
+        </record>
+
+        <!--
+    Resource: sale.order
+    -->
+
+        <record id="sale.sale_order_1" model="sale.order">
+        <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="sale.sale_order_2" model="sale.order">
+        <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="sale.sale_order_3" model="sale.order">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="sale.sale_order_4" model="sale.order">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="sale.sale_order_5" model="sale.order">
+        <field name="company_id" ref="base.main_company"/>
+        </record>
+
+
+<!-- Journals -->
+<!--Journals for Odoo IN-->
+         <record id="sales_journal_multi_in" model="account.journal">
+            <field name="name">Sales Journal - (Odoo IN)</field>
+            <field name="code">SAJ-Odoo IN</field>
+            <field name="type">sale</field>
+            <field name="sequence_id" ref="account.sequence_sale_journal"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="refund_sales_journal_multi_in" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (Odoo IN)</field>
+            <field name="code">SCNJ-Odoo IN</field>
+            <field name="type">sale_refund</field>
+            <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="expenses_journal_multi_in" model="account.journal">
+            <field name="name">Expenses Journal - (Odoo IN)</field>
+            <field name="code">EXJ-Odoo IN</field>
+            <field name="type">purchase</field>
+            <field name="sequence_id" ref="account.sequence_purchase_journal"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        
+        <record id="refund_expenses_journal_multi_in" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (Odoo IN)</field>
+            <field name="code">ECNJ-Odoo IN</field>
+            <field name="type">purchase_refund</field>
+            <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="bank_journal_multi_in" model="account.journal">
+            <field name="name">Bank Journal - (Odoo IN)</field>
+            <field name="code">BNK-Odoo IN</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="check_journal_multi_in" model="account.journal">
+            <field name="name">Checks Journal - (Odoo IN)</field>
+            <field name="code">CHK-Odoo IN</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_check_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+        <record id="cash_journal_multi_in" model="account.journal">
+            <field name="name">Cash Journal - (Odoo IN)</field>
+            <field name="code">CSH-Odoo IN</field>
+            <field name="type">cash</field>
+            <field name="sequence_id" ref="account.sequence_cash_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+
+<!-- Journals for Odoo US-->
+        <record id="sales_journal_multi_us" model="account.journal">
+            <field name="name">Sales Journal - (Odoo US)</field>
+            <field name="code">SAJ-Odoo US</field>
+            <field name="type">sale</field>
+            <field name="sequence_id" ref="account.sequence_sale_journal"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="refund_sales_journal_multi_us" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (Odoo US)</field>
+            <field name="code">SCNJ-Odoo US</field>
+            <field name="type">sale_refund</field>
+            <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="expenses_journal_multi_us" model="account.journal">
+            <field name="name">Expenses Journal - (Odoo US)</field>
+            <field name="code">EXJ-Odoo US</field>
+            <field name="type">purchase</field>
+            <field name="sequence_id" ref="account.sequence_purchase_journal"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="refund_expenses_journal_multi_us" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (Odoo US)</field>
+            <field name="code">ECNJ-Odoo US</field>
+            <field name="type">purchase_refund</field>
+            <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="bank_journal_multi_us" model="account.journal">
+            <field name="name">Bank Journal - (Odoo US)</field>
+            <field name="code">BNK-Odoo US</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="check_journal_multi_us" model="account.journal">
+            <field name="name">Checks Journal - (Odoo US)</field>
+            <field name="code">CHK-Odoo US</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_check_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+        <record id="cash_journal_multi_us" model="account.journal">
+            <field name="name">Cash Journal - (Odoo US)</field>
+            <field name="code">CSH-Odoo US</field>
+            <field name="type">cash</field>
+            <field name="sequence_id" ref="account.sequence_cash_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+<!-- Journals for Odoo BE-->
+
+        <record id="sales_journal_multi_be" model="account.journal">
+            <field name="name">Sales Journal - (Odoo BE)</field>
+            <field name="code">SAJ-Odoo BE</field>
+            <field name="type">sale</field>
+            <field name="sequence_id" ref="account.sequence_sale_journal"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="refund_sales_journal_multi_be" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (Odoo BE)</field>
+            <field name="code">SCNJ-Odoo BE</field>
+            <field name="type">sale_refund</field>
+            <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="expenses_journal_multi_be" model="account.journal">
+            <field name="name">Expenses Journal - (Odoo BE)</field>
+            <field name="code">EXJ-Odoo BE</field>
+            <field name="type">purchase</field>
+            <field name="sequence_id" ref="account.sequence_purchase_journal"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="refund_expenses_journal_multi_be" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (Odoo BE)</field>
+            <field name="code">ECNJ-Odoo BE</field>
+            <field name="type">purchase_refund</field>
+            <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="analytic_journal_id" ref="account.exp"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="bank_journal_multi_be" model="account.journal">
+            <field name="name">Bank Journal - (Odoo BE)</field>
+            <field name="code">BNK-Odoo BE</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_bank_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="check_journal_multi_be" model="account.journal">
+            <field name="name">Checks Journal - (Odoo BE)</field>
+            <field name="code">CHK-Odoo BE</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="account.sequence_check_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+        <record id="cash_journal_multi_be" model="account.journal">
+            <field name="name">Cash Journal - (Odoo BE)</field>
+            <field name="code">CSH-Odoo BE</field>
+            <field name="type">cash</field>
+            <field name="sequence_id" ref="account.sequence_cash_journal"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
+            <field name="analytic_journal_id" ref="account.sit"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+
+<!--        Project        -->
+
+        <record id="project.project_project_2" model="project.project">
+        <field name="company_id" ref="res_company_oerp_be"/>
+        <field name="currency_id" ref="base.EUR"/>
+        </record>
+
+        <!-- due to the ways the new API works we need to unset the company (automatically setted
+             to the default conpany during module install) before changing the currency to avoid
+             missmatch against currently set company currency and new one
+         -->
+        <record id="project.project_project_3" model="project.project">
+          <field name="company_id" eval="False"/>
+        </record>
+        <record id="project.project_project_3" model="project.project">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="project.project_project_4" model="project.project">
+        <field name="company_id" ref="res_company_oerp_be"/>
+        <field name="currency_id" ref="base.EUR"/>
+        </record>
+        <record id="project.project_project_5" model="project.project">
+        <field name="company_id" ref="res_company_oerp_in"/>
+        <field name="currency_id" ref="base.EUR"/>
+        </record>
+
+        <record id="project.project_task_19" model="project.task">
+        <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="project.project_task_20" model="project.task">
+        <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_21" model="project.task">
+        <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_22" model="project.task">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_23" model="project.task">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_24" model="project.task">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="project.project_task_25" model="project.task">
+        <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="project.project_task_26" model="project.task">
+            <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+
+
+        <!--
+        Resource: res.partner
+        -->
+
+        <record id="base.res_partner_1" model="res.partner">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_2" model="res.partner">
+                    <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+                   <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_16" model="res.partner">
+                  <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_17" model="res.partner">
+                   <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+                <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_18" model="res.partner">
+        <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_2" model="res.partner">
+        <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_3" model="res.partner">
+                    <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="base.res_partner_4" model="res.partner">
+                <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_5" model="res.partner">
+                   <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_6" model="res.partner">
+                   <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_19" model="res.partner">
+                  <field name="company_id" ref="res_company_oerp_us"/>
+        </record>
+        <record id="base.res_partner_8" model="res.partner">
+                   <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_9" model="res.partner">
+                  <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_10" model="res.partner">
+               <field name="company_id" ref="res_company_oerp_in"/>
+        </record>
+        <record id="base.res_partner_11" model="res.partner">
+                   <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_14" model="res.partner">
+                  <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_15" model="res.partner">
+                 <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+        <record id="base.res_partner_21" model="res.partner">
+                 <field name="company_id" ref="res_company_oerp_be"/>
+        </record>
+    </data>
+  <data noupdate="1">
+    <record id="multi_company_default_productopenerpus0" model="multi_company.default">
+      <field name="name">Product Odoo US</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_us"/>
+      <field name="object_id" ref="product.model_product_template"/>
+      <field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_productopenerpbe0" model="multi_company.default">
+      <field name="name">Product Odoo BE</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_be"/>
+      <field name="object_id" ref="product.model_product_template"/>
+      <field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_productopenerpin0" model="multi_company.default">
+      <field name="name">Product Odoo IN</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_in"/>
+      <field name="object_id" ref="product.model_product_template"/>
+      <field name="company_dest_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_partneropenerpeditor0" model="multi_company.default">
+      <field name="name">Partner Odoo Editor</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_oerp_editor"/>
+      <field name="object_id" ref="base.model_res_partner"/>
+      <field name="company_dest_id" ref="base.main_company"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+  <data noupdate="1">
+    <record id="multi_company_default_partnerodoo0" model="multi_company.default">
+      <field name="name">Partner Odoo</field>
+      <field eval="1" name="sequence"/>
+      <field name="company_id" ref="multi_company.res_company_odoo"/>
+      <field name="object_id" ref="base.model_res_partner"/>
+      <field name="company_dest_id" ref="base.main_company"/>
+      <field name="expression">True</field>
+    </record>
+  </data>
+
+</openerp>
+

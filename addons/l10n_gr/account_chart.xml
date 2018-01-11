@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data noupdate="False">
+
+        <!-- Account Templates-->
+        <record id="chartgr_0" model="account.account.template">
+            <field name="code">0</field>
+            <field name="name">Γενικό Λογιστικό Σχέδιο</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+        </record>
+
+        
+        <!-- <record id="account.property_account_expense_categ" model="ir.property">
+            <field eval="'account.account,'+str(a_expense)" name="value"/>
+        </record> -->
+        
+
+    </data>
+</openerp>

@@ -1,0 +1,43 @@
+- In order to test the invoice numbering, I create a sequence for out invoices.
+- !record {model: ir.sequence, id: seq_out_invoice_test}:
+    name: Account Invoice Out for the demonstration Fiscal Year # XXX indicate the name of the fiscal year
+    code: account.invoice.out_invoice
+    padding: 3
+    prefix: FY-
+    suffix: -TEST
+    number_next: 42
+
+- I link the new sequence to the demo sequence and the demo fiscal years.
+- !record {model: account.sequence.fiscalyear, id: seq_out_invoice_test_fy}:
+    sequence_id: seq_out_invoice_test
+    sequence_main_id: seq_out_invoice
+    fiscalyear_id: data_fiscalyear
+
+- I create a draft customer invoice in a period of the demo fiscal year
+- !record {model: account.invoice, id: invoice_seq_test}:
+    account_id: account.a_recv
+    company_id: base.main_company
+    currency_id: base.EUR
+    invoice_line:
+      - account_id: account.a_sale
+        name: '[PC-DEM] PC on Demand'
+        price_unit: 900.0
+        quantity: 10.0
+        product_id: product.product_product_5
+        uos_id: product.product_uom_unit
+    journal_id: account.sales_journal
+    partner_id: base.res_partner_3
+    reference_type: none
+    period_id: period_1
+    
+- I create the invoice, as I clicked on the "Create" button
+- !workflow {model: account.invoice, action: invoice_open, ref: invoice_seq_test}
+
+- I check that the invoice state is "Open"
+- !assert {model: account.invoice, id: invoice_seq_test}:
+    - state == 'open'
+    
+- I check that the invoice got the right number using our sequence
+  # This used to fail because of bug #602188
+- !assert {model: account.invoice, id: invoice_seq_test}:
+    - number == 'FY-042-TEST'

@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data noupdate="1">
+    <record id="financial_report_9" model="account.financial.report">
+      <field name="name">BILAN</field>
+      <field name="sequence">10</field>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_10" model="account.financial.report">
+      <field name="name">ACTIF</field>
+      <field name="sequence">13</field>
+      <field name="parent_id" ref="financial_report_9"/>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_43" model="account.financial.report">
+      <field name="name">ACTIF CIRCULANTS</field>
+      <field name="sequence">14</field>
+      <field name="parent_id" ref="financial_report_10"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_11" model="account.financial.report">
+      <field name="name">PASSIF</field>
+      <field name="sequence">28</field>
+      <field name="parent_id" ref="financial_report_9"/>
+      <field name="style_overwrite" eval="2"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_flat</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_13" model="account.financial.report">
+      <field name="name">Tr&#233;sorerie</field>
+      <field name="sequence">15</field>
+      <field name="parent_id" ref="financial_report_43"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_14" model="account.financial.report">
+      <field name="name">Cr&#233;ances r&#233;sultant de livraisons et prestations</field>
+      <field name="sequence">17</field>
+      <field name="parent_id" ref="financial_report_43"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_15" model="account.financial.report">
+      <field name="name">Autres cr&#233;ances &#224; court terme</field>
+      <field name="sequence">18</field>
+      <field name="parent_id" ref="financial_report_43"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_16" model="account.financial.report">
+      <field name="name">Stocks et prestations non factur&#233;es</field>
+      <field name="sequence">19</field>
+      <field name="parent_id" ref="financial_report_43"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_17" model="account.financial.report">
+      <field name="name">Actifs de r&#233;gularisation (transitoires)</field>
+      <field name="sequence">20</field>
+      <field name="parent_id" ref="financial_report_43"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_18" model="account.financial.report">
+      <field name="name">ACTIF IMMOBILISES</field>
+      <field name="sequence">21</field>
+      <field name="parent_id" ref="financial_report_10"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">detail_with_hierarchy</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_19" model="account.financial.report">
+      <field name="name">Immobilisations financi&#232;res</field>
+      <field name="sequence">22</field>
+      <field name="parent_id" ref="financial_report_18"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_20" model="account.financial.report">
+      <field name="name">Participations</field>
+      <field name="sequence">23</field>
+      <field name="parent_id" ref="financial_report_18"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_21" model="account.financial.report">
+      <field name="name">Immobilisations corporelles meubles</field>
+      <field name="sequence">24</field>
+      <field name="parent_id" ref="financial_report_18"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_22" model="account.financial.report">
+      <field name="name">Immobilisation incorporelles</field>
+      <field name="sequence">26</field>
+      <field name="parent_id" ref="financial_report_18"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_23" model="account.financial.report">
+      <field name="name">Capital non vers&#233; : capital social, capital de fondation</field>
+      <field name="sequence">27</field>
+      <field name="parent_id" ref="financial_report_18"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_24" model="account.financial.report">
+      <field name="name">DETTES  A COURT TERME</field>
+      <field name="sequence">29</field>
+      <field name="parent_id" ref="financial_report_11"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_25" model="account.financial.report">
+      <field name="name">Dettes &#224; court terme r&#233;sultant d&#8217;achats et de prestations de services</field>
+      <field name="sequence">30</field>
+      <field name="parent_id" ref="financial_report_24"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_26" model="account.financial.report">
+      <field name="name">Dettes &#224; court terme r&#233;mun&#233;r&#233;s</field>
+      <field name="sequence">31</field>
+      <field name="parent_id" ref="financial_report_24"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_27" model="account.financial.report">
+      <field name="name">Autres dettes &#224; court terme</field>
+      <field name="sequence">32</field>
+      <field name="parent_id" ref="financial_report_24"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_29" model="account.financial.report">
+      <field name="name">Passifs de r&#233;gularisation (transitoires) et provisions &#224; court terme</field>
+      <field name="sequence">33</field>
+      <field name="parent_id" ref="financial_report_24"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_30" model="account.financial.report">
+      <field name="name">DETTES A LONG TERME</field>
+      <field name="sequence">34</field>
+      <field name="parent_id" ref="financial_report_11"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_31" model="account.financial.report">
+      <field name="name">Dettes &#224; long terme r&#233;mun&#233;r&#233;es</field>
+      <field name="sequence">35</field>
+      <field name="parent_id" ref="financial_report_30"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_33" model="account.financial.report">
+      <field name="name">Provisions &#224; long termes et provisions l&#233;gales</field>
+      <field name="sequence">37</field>
+      <field name="parent_id" ref="financial_report_30"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_36" model="account.financial.report">
+      <field name="name">CAPITAUX PROPRES</field>
+      <field name="sequence">38</field>
+      <field name="parent_id" ref="financial_report_11"/>
+      <field name="style_overwrite" eval="3"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">sum</field>
+    </record>
+    <record id="financial_report_37" model="account.financial.report">
+      <field name="name">Autres dettes &#224; long terme</field>
+      <field name="sequence">36</field>
+      <field name="parent_id" ref="financial_report_30"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_38" model="account.financial.report">
+      <field name="name">Capital social</field>
+      <field name="sequence">39</field>
+      <field name="parent_id" ref="financial_report_36"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+    <record id="financial_report_39" model="account.financial.report">
+      <field name="name">R&#233;serves / b&#233;n&#233;fices et pertes report&#233;s</field>
+      <field name="sequence">40</field>
+      <field name="parent_id" ref="financial_report_36"/>
+      <field name="style_overwrite" eval="4"/>
+      <field name="sign" eval="1"/>
+      <field name="display_detail">no_detail</field>
+      <field name="type">accounts</field>
+    </record>
+  </data>
+</openerp>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="account.tax.code.template" id="vat_code_tax">
+            <field name="name">Estructura de IVA</field>
+        </record>
+        <!-- IVAS -->
+            <record model="account.tax.code.template" id="vat_code_balance_net">
+                <field name="name">Saldo de IVA</field>
+                <field name="parent_id" ref="vat_code_tax"/>
+            </record>
+            <!-- Compras, pagado, soportado, saliente -->
+                <record model="account.tax.code.template" id="vat_code_paid">
+                    <field name="name">IVA Compras - pagado</field>
+                    <field name="parent_id" ref="vat_code_balance_net"/>
+                </record>
+                    <record model="account.tax.code.template" id="vat_code_paid_22">
+                        <field name="name">IVA Compras 22%</field>
+                        <field name="parent_id" ref="vat_code_paid"/>
+                    </record>
+                    <record model="account.tax.code.template" id="vat_code_paid_10">
+                        <field name="name">IVA Compras 10%</field>
+                        <field name="parent_id" ref="vat_code_paid"/>
+                    </record>
+                    <record model="account.tax.code.template" id="vat_code_pur_exempt">
+                        <field name="name">Compras Exento IVA </field>
+                        <field name="parent_id" ref="vat_code_paid"/>
+                        <field name="notprintable" eval="True"/>
+                    </record>
+                    
+            <!-- Ventas, cobrado, recibido, entrante -->
+                <record model="account.tax.code.template" id="vat_code_received">
+                    <field name="name">IVA Ventas - percibido</field>
+                    <field name="parent_id" ref="vat_code_balance_net"/>
+                </record>
+                    <record model="account.tax.code.template" id="vat_code_received_22">
+                        <field name="name">IVA Ventas 22%</field>
+                        <field name="parent_id" ref="vat_code_received"/>
+                    </record>
+                    <record model="account.tax.code.template" id="vat_code_received_10">
+                        <field name="name">IVA Ventas 10%</field>
+                        <field name="parent_id" ref="vat_code_received"/>
+                    </record>
+                    <record model="account.tax.code.template" id="vat_code_sale_exempt">
+                        <field name="name">Ventas Exento IVA</field>
+                        <field name="parent_id" ref="vat_code_received"/>
+                        <field name="notprintable" eval="True"/>
+                    </record>
+
+        <!-- BASE  IMPONIBLES  -->
+            <record model="account.tax.code.template" id="vat_code_base_net">
+                <field name="name">Base Imponible</field>
+                <field name="parent_id" ref="vat_code_tax"/>
+            </record>
+            <!-- Bases Iva Comprado, pagado, soportado, saliente -->
+                <record model="account.tax.code.template" id="vat_code_base_pur">
+                    <field name="name">Base Imponible Compras</field>
+                    <field name="parent_id" ref="vat_code_base_net"/>
+                </record>
+                        <record model="account.tax.code.template" id="vat_code_base_pur_22">
+                            <field name="name">Base Compras 22%</field>
+                            <field name="parent_id" ref="vat_code_base_pur"/>
+                        </record>
+                        <record model="account.tax.code.template" id="vat_code_base_pur_10">
+                            <field name="name">Base Compras 10%</field>
+                            <field name="parent_id" ref="vat_code_base_pur"/>
+                        </record>
+                        <record model="account.tax.code.template" id="vat_code_base_pur_0">
+                            <field name="name">Base Compras 0%</field>
+                            <field name="parent_id" ref="vat_code_base_pur"/>
+                        </record>
+            <!-- Bases Iva Vendido, cobrado, recibido, entrante -->
+                <record model="account.tax.code.template" id="vat_code_base_sale">
+                    <field name="name">Base Imponible Ventas</field>
+                    <field name="parent_id" ref="vat_code_base_net"/>
+                </record>
+                        <record model="account.tax.code.template" id="vat_code_base_sale_22">
+                            <field name="name">Base Ventas 22%</field>
+                            <field name="parent_id" ref="vat_code_base_sale"/>
+                        </record>
+                        <record model="account.tax.code.template" id="vat_code_base_sale_10">
+                            <field name="name">Base Ventas 10%</field>
+                            <field name="parent_id" ref="vat_code_base_sale"/>
+                        </record>
+                        <record model="account.tax.code.template" id="vat_code_base_sale_0">
+                            <field name="name">Base Ventas 0%</field>
+                            <field name="parent_id" ref="vat_code_base_sale"/>
+                        </record>
+                        
+    </data>    
+</openerp>

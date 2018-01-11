@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Account Moves-->
+        <record id="validate_account_move_view" model="ir.ui.view">
+            <field name="name">Post Journal Entries</field>
+            <field name="model">validate.account.move</field>
+            <field name="arch" type="xml">
+                <form string="Post Journal Entries">
+                    <group>
+                        <field name="journal_ids"/>
+                        <field name="period_ids"/>
+                    </group>
+                    <footer>
+                        <button string="Approve" name="validate_move" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_validate_account_move" model="ir.actions.act_window">
+            <field name="name">Post Journal Entries</field>
+            <field name="res_model">validate.account.move</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="validate_account_move_view"/>
+            <field name="target">new</field>
+            <field name="help">The validation of journal entries process is also called 'ledger posting' and is the process of transferring debit and credit amounts from a journal of original entry to a ledger book.</field>
+        </record>
+
+        <menuitem
+            name="Post Journal Entries"
+            parent="periodical_processing_journal_entries_validation"
+            action="action_validate_account_move"
+            id="menu_validate_account_moves"
+           />
+
+        <!--Account Move lines-->
+        <record id="validate_account_move_line_view" model="ir.ui.view">
+            <field name="name">Post Journal Entries</field>
+            <field name="model">validate.account.move.lines</field>
+            <field name="arch" type="xml">
+                <form string="Post Journal Entries">
+                    <separator string="Post Journal Entries"/>
+                    <label string="All selected journal entries will be validated and posted. It means you won't be able to modify their accounting fields anymore."/>
+                    <footer>
+                        <button string="Approve" name="validate_move_lines" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_validate_account_move_line" model="ir.actions.act_window">
+            <field name="name">Post Journal Entries</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">validate.account.move.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="validate_account_move_line_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will validate all journal entries of a particular journal and period. Once journal entries are validated, you can not update them anymore.</field>
+        </record>
+
+        <record model="ir.values" id="validate_account_move_line_values">
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field name="name">Post Journal Entries</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_validate_account_move_line'))" />
+            <field name="key">action</field>
+            <field name="model">account.move.line</field>
+        </record>
+
+    </data>
+</openerp>

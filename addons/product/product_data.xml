@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--
+    Resource: product.uom.categ
+    -->
+        <record id="product_category_all" model="product.category">
+            <field name="name">All</field>
+        </record>
+        <record id="product_category_1" model="product.category">
+            <field name="parent_id" ref="product_category_all"/>
+            <field name="name">Saleable</field>
+        </record>
+        
+        <record id="product_uom_categ_unit" model="product.uom.categ">
+            <field name="name">Unit</field>
+        </record>
+        <record id="product_uom_categ_kgm" model="product.uom.categ">
+            <field name="name">Weight</field>
+        </record>
+        <record id="uom_categ_wtime" model="product.uom.categ">
+            <field name="name">Working Time</field>
+        </record>
+        <record id="uom_categ_length" model="product.uom.categ">
+            <field name="name">Length / Distance</field>
+        </record>
+        <record id="product_uom_categ_vol" model="product.uom.categ">
+            <field name="name">Volume</field>
+        </record>
+
+        <!--
+             Precisions
+        -->
+
+        <record forcecreate="True" id="decimal_price" model="decimal.precision">
+            <field name="name">Product Price</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_discount" model="decimal.precision">
+            <field name="name">Discount</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_account" model="decimal.precision">
+            <field name="name">Account</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_stock_weight" model="decimal.precision">
+            <field name="name">Stock Weight</field>
+            <field name="digits">2</field>
+        </record>
+        <record forcecreate="True" id="decimal_product_uom" model="decimal.precision">
+            <field name="name">Product Unit of Measure</field>
+            <field name="digits" eval="3"/>
+        </record>
+        <record forcecreate="True" id="decimal_product_uos" model="decimal.precision">
+            <field name="name">Product UoS</field>
+            <field name="digits" eval="3"/>
+        </record>
+
+        <!--
+            Resource: product.uom
+        -->
+        <record id="product_uom_unit" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_unit"/>
+            <field name="name">Unit(s)</field>
+            <field name="factor" eval="1.0"/>
+            <field name="rounding" eval="0.001"/>
+        </record>
+       <record id="product_uom_dozen" model="product.uom">
+            <field name="category_id" ref="product.product_uom_categ_unit"/>
+            <field name="name">Dozen(s)</field>
+            <field name="factor_inv" eval="12"/>
+            <field name="uom_type">bigger</field>
+        </record>
+        <record id="product_uom_kgm" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="name">kg</field>
+            <field name="factor" eval="1"/>
+            <field name="rounding" eval="0.001"/>
+        </record>
+        <record id="product_uom_gram" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="name">g</field>
+            <field name="factor" eval="1000"/>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_hour" model="product.uom">
+            <field name="name">Hour(s)</field>
+            <field eval="uom_categ_wtime" name="category_id"/>
+            <field name="factor" eval="8.0"/>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_day" model="product.uom">
+            <field name="name">Day(s)</field>
+            <field eval="uom_categ_wtime" name="category_id"/>
+            <field name="factor" eval="1.0"/>
+        </record>
+        <record id="product_uom_ton" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <!-- 'tonne' is the most common spelling in english-speaking countries,
+                 the alternative is 'metric ton' in the US, abbreviated as 'mt' -->
+            <field name="name">t</field>
+            <field name="factor_inv" eval="1000"/>
+            <field name="uom_type">bigger</field>
+        </record>
+        <record id="product_uom_meter" model="product.uom">
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="name">m</field>
+            <field name="factor" eval="1.0"/>
+        </record>
+        <record id="product_uom_km" model="product.uom">
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="name">km</field>
+            <field name="factor_inv" eval="1000"/>
+            <field name="uom_type">bigger</field>
+        </record>
+        <record id="product_uom_cm" model="product.uom">
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="name">cm</field>
+            <field name="factor" eval="100"/>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_litre" model="product.uom">
+            <field name="name">Liter(s)</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">1.0</field>
+        </record>
+
+        <!--Americanization of units of measure-->
+        <record id="product_uom_lb" model="product.uom">
+            <field name="name">lb(s)</field>
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="factor">2.20462</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_oz" model="product.uom">
+            <field name="name">oz(s)</field>
+            <field name="category_id" ref="product_uom_categ_kgm"/>
+            <field name="factor">35.274</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_inch" model="product.uom">
+            <field name="name">inch(es)</field>
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="factor">39.3701</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_foot" model="product.uom">
+            <field name="name">foot(ft)</field>
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="factor">3.28084</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_mile" model="product.uom">
+            <field name="name">mile(s)</field>
+            <field name="category_id" ref="uom_categ_length"/>
+            <field name="factor_inv" eval="1609.34"/>
+            <field name="uom_type">bigger</field>
+        </record>
+        <record id="product_uom_floz" model="product.uom">
+            <field name="name">fl oz</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">33.814</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_qt" model="product.uom">
+            <field name="name">qt</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">1.05669</field>
+            <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_gal" model="product.uom">
+            <field name="name">gal(s)</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor_inv" eval="3.78541"/>
+            <field name="uom_type">bigger</field>
+        </record>
+
+        <!--
+... to here, it should be in product_demo but we cant just move it
+there yet otherwise people who have installed the server (even with the without-demo
+parameter) will see those record just disappear.
+-->
+
+        <!--
+    Request link
+    -->
+        <record id="req_link_product" model="res.request.link">
+            <field name="name">Product</field>
+            <field name="object">product.product</field>
+        </record>
+
+        <!--
+    Resource: product.price.type
+    -->
+        <record id="list_price" model="product.price.type">
+            <field name="name">Public Price</field>
+            <field name="field">list_price</field>
+        </record>
+        <record id="standard_price" model="product.price.type">
+            <field name="name">Cost Price</field>
+            <field name="field">standard_price</field>
+        </record>
+
+
+
+
+        <!--
+    Price list type
+    -->
+        <record id="pricelist_type_sale" model="product.pricelist.type">
+            <field name="name">Sale Pricelist</field>
+            <field name="key">sale</field>
+        </record>
+
+
+        <!--
+    Price list
+    -->
+        <record id="list0" model="product.pricelist">
+            <field name="name">Public Pricelist</field>
+            <field name="type">sale</field>
+        </record>
+        <record id="ver0" model="product.pricelist.version">
+            <field name="pricelist_id" ref="list0"/>
+            <field name="name">Default Public Pricelist Version</field>
+        </record>
+        <record id="item0" model="product.pricelist.item">
+            <field name="price_version_id" ref="ver0"/>
+            <field name="base" ref="list_price"/>
+            <field name="sequence">1000</field>
+            <field name="name">Default Public Pricelist Line</field>
+        </record>
+
+        <!--
+        Property
+        -->
+        <record forcecreate="True" id="property_product_pricelist" model="ir.property">
+            <field name="name">property_product_pricelist</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_product_pricelist')]"/>
+            <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
+        </record>
+
+
+        <!--
+        Product
+        -->
+        <record id="product_product_consultant" model="product.product">
+            <field name="list_price">75.0</field>
+            <field name="standard_price">30.0</field>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="name">Service</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="type">service</field>
+            <field name="sale_ok" eval="False"/>
+        </record>
+    </data>
+</openerp>

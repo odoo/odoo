@@ -1,0 +1,434 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * analytic
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2016-01-02 22:27+0000\n"
+"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
+"Language-Team: Greek (http://www.transifex.com/odoo/odoo-8/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:278
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (αντίγραφο)"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "Ιεραρχία Λογαριασμών"
+
+#. module: analytic
+#: field:account.analytic.account,manager_id:0
+msgid "Account Manager"
+msgstr "Υπεύθυνος Λογαριασμού"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "Όνομα λογαριασμού/σύμβασης"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Ποσό"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+#: selection:account.analytic.account,type:0
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Λογαριασμος Αναλυτικής"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "Αναλυτική Λογιστική"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "Εγγραφές Αναλυτικής"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Γραμμή Αναλυτικής"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Analytic View"
+msgstr "Αναλυτική Προβολή"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "Υπόλοιπο"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr "Υπολογίστηκε πολλαπλασιάζοντας τη νποσότητα επί την τιμή που προκύπτει από την τιμή κόστους του πίνακα Προϊόντων. Πάντα εκφράζεται στο κύριο νόμισμα της εταιρείας."
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "Ακυρώθηκε"
+
+#. module: analytic
+#: field:account.analytic.account,child_ids:0
+msgid "Child Accounts"
+msgstr "Θυγατρικοί Λογαριασμοί"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Closed"
+msgstr "Κλεισμένα"
+
+#. module: analytic
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "Εταιρία"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
+msgstr "Ολοκληρωμένη Σύμβαση"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Contract Information"
+msgstr "Πληροφορίες Σύμβασης"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr "Ανοικτή Σύμβαση"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr "Κλειστή Σύμβαση"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr "Ανοικτή σύμβαση"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "Συμβόλαιο ή Έργο"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr "Σύμβαση σε εκκρεμότητα"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr "Σύμβαση προς Ανανέωση"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:238
+#, python-format
+msgid "Contract: "
+msgstr "Σύμβαση:"
+
+#. module: analytic
+#: field:account.analytic.line,create_date:0
+msgid "Create Date"
+msgstr "Δημιουργία Ημερομηνίας"
+
+#. module: analytic
+#: field:account.analytic.account,create_uid:0
+#: field:account.analytic.line,create_uid:0
+msgid "Created by"
+msgstr "Δημιουργήθηκε από"
+
+#. module: analytic
+#: field:account.analytic.account,create_date:0
+msgid "Created on"
+msgstr "Δημιουργήθηκε στις"
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "Πίστωση"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "Νόμισμα"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Customer"
+msgstr "Πελάτης"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#. module: analytic
+#: help:account.analytic.account,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Ημερομηνία του τελευταίου μηνύματος "
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "Χρεωστική"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "Περιγραφή"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "End Date"
+msgstr "Ημερομηνία Λήξης"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid "Error!"
+msgstr "Σφάλμα!"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr "Σφάλμα! Δεν μπορείτε να χρησιμοποιείτε διαδοχικούς αναλυτικούς λογαριασμούς."
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Expiration Date"
+msgstr "Ημερομηνία Λήξης"
+
+#. module: analytic
+#: field:account.analytic.account,message_follower_ids:0
+msgid "Followers"
+msgstr "Ακόλουθοι"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr "Πλήρες Όνομα"
+
+#. module: analytic
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Κρατά την συνολική σύνοψη (αριθμός των μυνημάτων, ...). Αυτή η σύνοψη είναι κατ' ευθείαν σε html format για να μπορεί να ενσωματωθεί σε εμφανίσεις kanban."
+
+#. module: analytic
+#: field:account.analytic.account,id:0 field:account.analytic.line,id:0
+msgid "ID"
+msgstr "Κωδικός"
+
+#. module: analytic
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."
+msgstr "Εάν επιλέξετε τον Τύπο Προβολή, σημαίνει ότι δεν θα μπορείτε να δημιουργήσετε ημερολογιακές εγγραφές χρησιμοποιώντας αυτόν τον λογαριασμό.\nΟ τύπος 'Αναλυτικός λογαριασμός' χρησιμοποιείται για συνηθισμένους λογαριασμούς τους οποίους θέλετε να χρησιμοποιείτε μόνο στη λογιστική.\nΕάν επιλέξετε Σύμβαση ή Έργο, σας δίνεται η δυνατότητα να διαχειριστείτε την εγκυρότητα και τις επιλογές τιμολόγησης αυτού του λογαριασμού.\nΟ ειδικός τύπος 'Πρότυπο Σύμβασης' σας επιτρέπει να καθορίσετε ένα πρότυπο με προεπιλεγμένα δεδομένα το οποίο μπορείτε να σώσετε εύκολα. "
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's currency. \n"
+"You can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."
+msgstr "Εάν ορίσετε μια εταιρία, το επιλεγμένο νόμισμα πρέπει να είναι το ίδιο με το νόμισμά της. \nΜπορείτε να αφαιρέσετε τα περιουσιακά στοιχεία και κατά συνέπεια να αλλάξετε το νόμισμα, μόνο στον αναλυτικό λογαριασμό του τύπου 'προβολή'. Αυτό μπορεί να είναι ιδιαίτερα χρήσιμο, για παράδειγμα, για την ενοποίηση αρκετών καταστάσεων επιχειρήσεων με διαφορετικό νόμισμα."
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "In Progress"
+msgstr "Σε Εξέλιξη"
+
+#. module: analytic
+#: field:account.analytic.account,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Είναι Ακόλουθος"
+
+#. module: analytic
+#: field:account.analytic.account,message_last_post:0
+msgid "Last Message Date"
+msgstr "Τελευταία ημερομηνία μηνύματος"
+
+#. module: analytic
+#: field:account.analytic.account,write_uid:0
+#: field:account.analytic.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Τελευταία Ενημέρωση από"
+
+#. module: analytic
+#: field:account.analytic.account,write_date:0
+#: field:account.analytic.line,write_date:0
+msgid "Last Updated on"
+msgstr "Τελευταία Ενημέρωση στις"
+
+#. module: analytic
+#: field:account.analytic.account,message_ids:0
+msgid "Messages"
+msgstr "Μηνύματα"
+
+#. module: analytic
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Μηνύματα και ιστορικό επικοινωνίας"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "Νέα"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid ""
+"Once the end date of the contract is\n"
+"                                        passed or the maximum number of service\n"
+"                                        units (e.g. support contract) is\n"
+"                                        reached, the account manager is notified \n"
+"                                        by email to renew the contract with the\n"
+"                                        customer."
+msgstr "Μόλις η ημερομηνία λήξης της σύμβασης\n                                        παρέλθει ή το μέγιστο πλήθος μονάδων\n                                        υπηρεσίας (π.χ. συμβόλαιο υποστήριξης)\n                                        εξαντληθεί, ενημερώνεται ο διαχειριστής του\n                                        λογαριασμού μέσω e-mail για ανανέωση της\n                                        σύμβασης με τον πελάτη."
+
+#. module: analytic
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Γονικός Λογαριασμός Αναλυτικής"
+
+#. module: analytic
+#: field:account.analytic.account,quantity_max:0
+msgid "Prepaid Service Units"
+msgstr "Μονάδες Προπληρωμένων Υπηρεσιών"
+
+#. module: analytic
+#: field:account.analytic.account,user_id:0
+msgid "Project Manager"
+msgstr "Διαχειριστής Έργου"
+
+#. module: analytic
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Ποσότητα"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:272
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr "Μη επιτρεπτή η άμεση δημιουργία λογαριασμού."
+
+#. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Reference"
+msgstr "Παραπομπή"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Renewal"
+msgstr "Ανανέωση"
+
+#. module: analytic
+#: help:account.analytic.account,quantity_max:0
+msgid ""
+"Sets the higher limit of time to work on the contract, based on the "
+"timesheet. (for instance, number of hours in a limited support contract.)"
+msgstr "Ρυθμίζει το ανώτατο χρονικό όριο για εργασία στη σύμβαση, με βάση το χρονοδιάγραμμα. (για παράδειγμα, πλήθος ωρών σε μία σύμβαση με περιορισμένη υποστήριξη.)"
+
+#. module: analytic
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "Καθορίζει την επιμετρούμενη ποσότητα"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Start Date"
+msgstr "Ημερομηνία Έναρξης"
+
+#. module: analytic
+#: field:account.analytic.account,state:0
+msgid "Status"
+msgstr "Κατάσταση"
+
+#. module: analytic
+#: field:account.analytic.account,message_summary:0
+msgid "Summary"
+msgstr "Περίληψη"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Πρότυπο"
+
+#. module: analytic
+#: field:account.analytic.account,template_id:0
+#: selection:account.analytic.account,type:0
+msgid "Template of Contract"
+msgstr "Πρότυπο Σύμβασης"
+
+#. module: analytic
+#: view:account.analytic.account:analytic.view_account_analytic_account_form
+msgid "Terms and Conditions"
+msgstr "Όροι και Προϋποθέσεις"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "To Renew"
+msgstr "Προς Ανανέωση"
+
+#. module: analytic
+#: field:account.analytic.account,type:0
+msgid "Type of Account"
+msgstr "Είδος Λογαριασμού"
+
+#. module: analytic
+#: field:account.analytic.account,message_unread:0
+msgid "Unread Messages"
+msgstr "Αδιάβαστα Μηνύματα"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "Χρήστης"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:272
+#, python-format
+msgid "Warning"
+msgstr "Προσοχή"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr "Δεν μπορείτε να δημιουργήσετε αναλυτική γραμμή για την προβολή λογαριασμού."

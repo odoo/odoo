@@ -1,0 +1,78 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_incoterms_all,stock.incoterms all,model_stock_incoterms,,1,0,0,0
+access_stock_incoterms_manager,stock.incoterms manager,model_stock_incoterms,stock.group_stock_manager,1,1,1,1
+access_stock_warehouse_manager,stock.warehouse.manager,model_stock_warehouse,stock.group_stock_manager,1,1,1,1
+access_stock_warehouse_user,stock.warehouse.user,model_stock_warehouse,base.group_user,1,0,0,0
+access_stock_location__partner_manager,stock.location.partner.manager,model_stock_location,base.group_partner_manager,1,0,0,0
+access_stock_location_manager,stock.location.manager,model_stock_location,stock.group_stock_manager,1,1,1,1
+access_stock_location_user,stock.location.user,model_stock_location,base.group_user,1,0,0,0
+access_stock_picking_user,stock.picking user,model_stock_picking,stock.group_stock_user,1,1,1,1
+access_stock_picking_manager,stock.picking manager,model_stock_picking,stock.group_stock_manager,1,1,1,1
+access_stock_picking_type_all,stock.picking.type all users,model_stock_picking_type,base.group_user,1,0,0,0
+access_stock_picking_type_user,stock.picking.type user,model_stock_picking_type,stock.group_stock_user,1,0,0,0
+access_stock_picking_type_manager,stock.picking.type manager,model_stock_picking_type,stock.group_stock_manager,1,1,1,1
+access_stock_production_lot_manager,stock.production.lot manager,model_stock_production_lot,stock.group_stock_manager,1,0,0,0
+access_stock_production_lot_user,stock.production.lot user,model_stock_production_lot,stock.group_stock_user,1,1,1,1
+access_stock_move_manager,stock.move manager,model_stock_move,stock.group_stock_manager,1,1,1,1
+access_stock_move_user,stock.move user,model_stock_move,stock.group_stock_user,1,1,1,0
+access_stock_inventory_user,stock.inventory user,model_stock_inventory,stock.group_stock_user,1,1,1,0
+access_stock_inventory_manager,stock.inventory manager,model_stock_inventory,stock.group_stock_manager,1,1,1,1
+access_stock_inventory_line_user,stock.inventory.line user,model_stock_inventory_line,stock.group_stock_user,1,1,1,0
+access_stock_inventory_line_manager,stock.inventory.line manager,model_stock_inventory_line,stock.group_stock_manager,1,1,1,1
+access_stock_location_sale_manager,stock.location sale manager,model_stock_location,base.group_sale_manager,1,0,0,0
+access_stock_location_stock_manager,stock.location stock manager,model_stock_location,stock.group_stock_manager,1,0,0,0
+access_stock_lines_date_user,report.stock.lines.date user,model_report_stock_lines_date,stock.group_stock_user,1,0,0,0
+access_stock_lines_date_manager,report.stock.lines.date manager,model_report_stock_lines_date,stock.group_stock_manager,1,1,1,1
+access_product_product_stock_user,product_product_stock_user,product.model_product_product,stock.group_stock_user,1,1,0,0
+access_product_template_stock_user,product.template stock user,product.model_product_template,stock.group_stock_user,1,1,0,0
+access_product_uom_categ_stock_manager,product.uom.categ stock_manager,product.model_product_uom_categ,stock.group_stock_manager,1,1,1,1
+access_product_uom_stock_manager,product.uom stock_manager,product.model_product_uom,stock.group_stock_manager,1,1,1,1
+access_product_ul_stock_manager,product.ul stock_manager,product.model_product_ul,stock.group_stock_manager,1,1,1,1
+access_product_category_stock_manager,product.category stock_manager,product.model_product_category,stock.group_stock_manager,1,1,1,1
+access_product_template_stock_manager,product.template stock_manager,product.model_product_template,stock.group_stock_manager,1,1,1,1
+access_product_product_stock_manager,product.product stock_manager,product.model_product_product,stock.group_stock_manager,1,1,1,1
+access_product_packaging_stock_manager,product.packaging stock_manager,product.model_product_packaging,stock.group_stock_manager,1,1,1,1
+access_product_supplierinfo_stock_manager,product.supplierinfo stock_manager,product.model_product_supplierinfo,stock.group_stock_manager,1,1,1,1
+access_pricelist_partnerinfo_stock_manager,pricelist.partnerinfo stock_manager,product.model_pricelist_partnerinfo,stock.group_stock_manager,1,1,1,1
+access_product_price_type_stock_manager,product.price.type stock_manager,product.model_product_price_type,stock.group_stock_manager,1,1,1,1
+access_product_pricelist_type_stock_manager,product.pricelist.type stock_manager,product.model_product_pricelist_type,stock.group_stock_manager,1,1,1,1
+access_product_pricelist_stock_manager,product.pricelist stock_manager,product.model_product_pricelist,stock.group_stock_manager,1,1,1,1
+access_ir_property_group_stock_manager,ir_property group_stock_manager,base.model_ir_property,stock.group_stock_manager,1,1,1,1
+access_product_group_res_partner_stock_manager,res_partner group_stock_manager,base.model_res_partner,stock.group_stock_manager,1,1,1,0
+access_product_pricelist_version_stock_manager,product.pricelist.version stock_manager,product.model_product_pricelist_version,stock.group_stock_manager,1,1,1,1
+access_product_pricelist_item_stock_manager,product.pricelist.item stock_manager,product.model_product_pricelist_item,stock.group_stock_manager,1,1,1,1
+access_board_stock_user,board.board user,board.model_board_board,stock.group_stock_user,1,1,0,0
+access_stock_warehouse_orderpoint,stock.warehouse.orderpoint,model_stock_warehouse_orderpoint,stock.group_stock_user,1,0,0,0
+access_stock_warehouse_orderpoint_system,stock.warehouse.orderpoint system,model_stock_warehouse_orderpoint,stock.group_stock_manager,1,1,1,1
+access_stock_quant_manager,stock.quant manager,model_stock_quant,stock.group_stock_manager,1,0,0,0
+access_stock_quant_user,stock.quant user,model_stock_quant,stock.group_stock_user,1,0,0,0
+access_stock_quant_all,stock.quant all users,model_stock_quant,base.group_user,1,0,0,0
+access_stock_quant_package_all,stock.quant.package all users,model_stock_quant_package,base.group_user,1,0,0,0
+access_stock_quant_package_stock_manager,stock.quant.package stock manager,model_stock_quant_package,stock.group_stock_manager,1,1,1,1
+access_stock_quant_package_stock_user,stock.quant.package stock user,model_stock_quant_package,stock.group_stock_user,1,1,1,1
+access_procurement_rule_user,procurement_rule user,model_procurement_rule,stock.group_stock_user,1,0,0,0
+access_procurement_rule_manager,procurement_rule manager,model_procurement_rule,stock.group_stock_manager,1,1,1,1
+access_procurement_rule_salemanager,procurement_rule salemanager,model_procurement_rule,base.group_sale_manager,1,1,1,1
+access_procurement_rule_stock_manager,procurement_rule stock manager,model_procurement_rule,stock.group_stock_manager,1,1,1,1
+access_stock_location_path_user,stock location path user,model_stock_location_path,stock.group_stock_user,1,0,0,0
+access_stock_location_path_internal_user,stock location path internal user,model_stock_location_path,base.group_user,1,0,0,0
+access_stock_location_path_sale_manager,stock.location.path partner salemanager,model_stock_location_path,base.group_sale_manager,1,1,1,1
+access_stock_location_path_stock_user,stock.location.path stock user,model_stock_location_path,stock.group_stock_user,1,1,1,1
+access_stock_location_path,stock.location.path,model_stock_location_path,base.group_sale_salesman,1,0,0,0
+access_stock_location_route_stock_manager,stock.location.route,model_stock_location_route,stock.group_stock_manager,1,1,1,1
+access_stock_location_route,stock.location.route,model_stock_location_route,base.group_user,1,0,0,0
+access_procurement_rule,procurement.rule.flow,model_procurement_rule,base.group_sale_salesman,1,0,0,0
+access_procurement_rule_internal,procurement.rule.flow internal,model_procurement_rule,base.group_user,1,0,0,0
+access_stock_pack_operation_manager,stock.pack.operation manager,model_stock_pack_operation,stock.group_stock_manager,1,1,1,1
+access_stock_pack_operation_user,stock.pack.operation user,model_stock_pack_operation,stock.group_stock_user,1,1,1,1
+access_stock_pack_operation_all,stock.pack.operation all users,model_stock_pack_operation,base.group_user,1,0,0,0
+access_product_putaway_all,product.putaway all users,model_product_putaway,base.group_user,1,0,0,0
+access_product_putaway_manager,product.putaway all managers,model_product_putaway,stock.group_stock_manager,1,1,1,1
+access_stock_removal_all,product.removal all users,model_product_removal,base.group_user,1,0,0,0
+access_stock_fixed_putaway_strat,stock_fixed_putaway_strat managers,model_stock_fixed_putaway_strat,stock.group_stock_manager,1,1,1,1
+access_stock_fixed_putaway_user,stock_fixed_putaway_strat user,model_stock_fixed_putaway_strat,stock.group_stock_user,1,0,0,0
+access_stock_move_operation_link_manager,stock.move.operation.link manager,model_stock_move_operation_link,stock.group_stock_manager,1,1,1,1
+access_stock_move_operation_link_user,stock.move.operation.link user,model_stock_move_operation_link,stock.group_stock_user,1,1,1,1
+access_stock_move_operation_link_all,stock.move.operation.link all users,model_stock_move_operation_link,base.group_user,1,0,0,0
+access_product_price_history_stock_user,prices.history stock user,product.model_product_price_history,stock.group_stock_user,1,0,1,0
+access_product_price_history_stock_manager,prices.history stock manager,product.model_product_price_history,stock.group_stock_manager,1,1,1,1

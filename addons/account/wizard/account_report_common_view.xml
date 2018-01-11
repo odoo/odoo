@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_common_report_view" model="ir.ui.view">
+            <field name="name">Common Report</field>
+            <field name="model">account.common.report</field>
+            <field name="arch" type="xml">
+            <form string="Report Options">
+                <label string=""/>  <!-- binding for inherited views -->
+                <group col="4">
+                   <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
+                   <field name="company_id" invisible="1"/>
+                   <field name="fiscalyear_id" domain="[('company_id','=',company_id)]"/>
+                   <field name="target_move"/>
+                </group>
+                <notebook tabpos="up" colspan="4">
+                    <page string="Filters" name="filters">
+                        <group>
+                            <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
+                        </group>
+                        <group string="Dates"  attrs="{'invisible':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}">
+                            <field name="date_from" />
+                            <field name="date_to" />
+                        </group>
+                        <group string="Periods" attrs="{'invisible':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}">
+                            <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]"/>
+                            <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]"/>
+                        </group>
+                    </page>
+                    <page string="Journals" name="journal_ids">
+                        <field name="journal_ids"/>
+                    </page>
+                </notebook>
+                <footer>
+                    <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                    or 
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_common_menu" model="ir.actions.act_window">
+            <field name="name">Common Report</field>
+            <field name="res_model">account.common.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_common_report_view"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

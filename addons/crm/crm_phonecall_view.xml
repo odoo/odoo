@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+
+    <!-- Phonecall Categories Form View  -->
+    <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
+        <field name="name">Phonecall Categories</field>
+        <field name="res_model">crm.case.categ</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
+        <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
+        <field name="context" eval="{'object_id': ref('model_crm_phonecall')}"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new category.
+          </p><p>
+            Create specific phone call categories to better define the type of
+            calls tracked in the system.
+          </p>
+        </field>
+    </record>
+
+    <menuitem action="crm_phonecall_categ_action" name="Categories"
+        id="menu_crm_case_phonecall-act" parent="menu_crm_config_phonecall" groups="base.group_no_one"/>
+
+    <!-- Phonecalls Tree View -->
+    <record model="ir.ui.view" id="crm_case_phone_tree_view">
+        <field name="name">CRM - Phone Calls Tree</field>
+        <field name="model">crm.phonecall</field>
+        <field name="arch" type="xml">
+            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <button string="Meeting"
+                    states="open,pending"
+                    name="action_make_meeting"
+                    icon="gtk-redo"
+                    type="object"/>
+                <button string="Convert to Opportunity"
+                    type="object"
+                    name="action_button_convert2opportunity"
+                    states="open,pending"
+                    icon="gtk-index"
+                    attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                <field name="partner_phone"/>
+                <field name="user_id"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="create_date" invisible="1"/>
+                <field name="opportunity_id" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Phonecalls Form View -->
+    <record model="ir.ui.view" id="crm_case_phone_form_view">
+        <field name="name">CRM - Phone Call Form</field>
+        <field name="model">crm.phonecall</field>
+        <field name="arch" type="xml">
+            <form string="Phone Call">
+                <header>
+                    <field name="state" nolabel="1" widget="statusbar" clickable="True"/>
+                </header>
+                <sheet string="Phone Call">
+                    <div class="oe_right oe_button_box">
+                        <button class="oe_inline oe_stat_button" type="object" name="action_button_convert2opportunity" 
+                            icon="fa-star" attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"
+                            help="Convert To Opportunity">
+                            <div>Convert To<br/>Opportunity</div>
+                        </button>
+
+                        <button class="oe_inline oe_stat_button" type="action" 
+                            name="%(phonecall_to_phonecall_act)d" icon="fa-phone">
+                            <div>Schedule<br/>Other Call</div>
+                        </button>
+                        <button class="oe_inline oe_stat_button" name="action_make_meeting" type="object" icon="fa-calendar fa-fw">
+                            <div>Schedule<br/>A Meeting</div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <div class="oe_edit_only">
+                            <label for="name"/>
+                        </div>
+                        <h1><field name="name" required="1"/></h1>
+                        <div class="oe_edit_only">
+                            <label for="partner_phone" string="Phone"/>
+                        </div>
+                        <h2><field name="partner_phone"/></h2>
+                    </div>
+
+                    <group col="4">
+                        <field name="date"/>
+                        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                        <label for="duration"/>
+                        <div>
+                        	<field name="duration" widget="float_time" class="oe_inline" style="vertical-align:baseline"/> <b> min(s)</b>
+                        </div>
+                        <field name="section_id" colspan="1" widget="selection"
+                                groups="base.group_multi_salesteams"/>
+                        <field name="partner_id" on_change="on_change_partner_id(partner_id)"/>
+                        <field name="categ_id" widget="selection"
+                            domain="[('object_id.model', '=', 'crm.phonecall')]"/>
+                        <field name="partner_mobile"/>
+                        <field name="priority" widget="priority"/>
+                        <field name="opportunity_id" on_change="on_change_opportunity(opportunity_id)" context="{'opportunity_id': opportunity_id}"/>
+                    </group>
+                    <field name="description" placeholder="Description..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!--Logged Phonecalls Tree View -->
+    <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
+        <field name="name">CRM - Logged Phone Calls Tree</field>
+        <field name="model">crm.phonecall</field>
+        <field name="arch" type="xml">
+            <tree string="Phone Calls" editable="top">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="partner_id"
+                    on_change="on_change_partner_id(partner_id)"/>
+                <field name="partner_phone"
+                    invisible="1"/>
+                <field name="partner_mobile"
+                    invisible="1"/>
+                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads']}"/>
+                <field name="categ_id" widget="selection"
+                    domain="[('object_id.model', '=', 'crm.phonecall')]"
+                    invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="create_date" invisible="1"/>
+                <field name="opportunity_id" invisible="1" on_change="on_change_opportunity(opportunity_id)"/>
+                <button string="Schedule Other Call"
+                    icon="terp-call-start"
+                    name="%(phonecall_to_phonecall_act)d"
+                    type="action"/>
+                <button string="Meeting"
+                     icon="gtk-redo"
+                     name="action_make_meeting" type="object"/>
+                <button string="Convert to Opportunity"
+                    name="action_button_convert2opportunity"
+                    states="open,pending"
+                    icon="gtk-index"
+                    type="object" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Phonecalls Calendar View -->
+    <record model="ir.ui.view" id="crm_case_phone_calendar_view">
+        <field name="name">CRM - Phone Calls Calendar</field>
+        <field name="model">crm.phonecall</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar string="Phone Calls" date_start="date" color="user_id" date_delay="duration">
+                <field name="name"/>
+                <field name="partner_id"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Phonecalls Search View  -->
+    <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
+        <field name="name">CRM - Phone Calls Search</field>
+        <field name="model">crm.phonecall</field>
+        <field name="arch" type="xml">
+            <search string="Search Phonecalls">
+                <field name="name" string="Phonecalls"/>
+                <field name="date"/>
+                <field name="state"/>
+                <filter string="My Phonecalls" domain="[('user_id', '=', uid)]"/>
+                <filter string="My Team" domain="[('section_id.user_id', '=', uid)]"/>
+                <filter string="Unassigned" domain="[('user_id','=',False)]"/>
+                <separator/>
+                <filter string="To Do" name="current" domain="[('state','in',('open','pending'))]"/>
+                <separator/>
+                <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <separator/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="user_id"/>
+                <field name="opportunity_id"/>
+                <field name="section_id" string="Sales Team"
+                        groups="base.group_multi_salesteams"/>
+                <group expand="0" string="Group By">
+                    <filter string="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Creation" help="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Month" domain="[]" context="{'group_by':'date'}" help="Calls Date by Month"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    </data>
+</openerp>

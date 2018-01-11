@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="view_auto_config_form" model="ir.ui.view">
+        <field name="name">Auto Configure Directories</field>
+        <field name="model">document.configuration</field>
+        <field name="inherit_id" ref="base.res_config_view_base"/>
+        <field name="arch" type="xml">
+          <data>
+            <form position="attributes">
+                <attribute name="string">Knowledge Application Configuration</attribute>
+            </form>
+            <group string="res_config_contents" position="replace">
+                <separator string="Configure Directories"/>
+                <p>Odoo's Document Management System supports mapping virtual folders with documents. The virtual folder of a document can be used to manage the files attached to the document, or to print and download any report. This tool will create directories automatically according to modules installed.</p>
+                <p>When executing this wizard, it will configure your directories automatically according to modules installed.</p>
+            </group>
+          </data>
+        </field>
+    </record>
+
+    <record id="action_config_auto_directory" model="ir.actions.act_window">
+        <field name="name">Configure Directories</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">document.configuration</field>
+        <field name="view_id" ref="view_auto_config_form"/>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.actions.todo" id="config_auto_directory">
+        <field name="action_id" ref="action_config_auto_directory"/>
+        <field name="type">automatic</field>
+    </record>
+  </data>
+</openerp>

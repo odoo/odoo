@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- This will set the unit of measure used in projects and tasks.-->
+        <record id="base.main_company" model="res.company">
+            <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
+        </record>
+
+        <!-- Requests Links -->
+        <record id="req_link_project" model="res.request.link">
+            <field name="name">Project</field>
+            <field name="object">project.project</field>
+        </record>
+
+        <record id="req_link_task" model="res.request.link">
+            <field name="name">Project task</field>
+            <field name="object">project.task</field>
+        </record>
+
+        <!-- Resource: project.project -->
+        <record id="all_projects_account" model="account.analytic.account">
+            <field name="name">Projects</field>
+            <field name="code">PP001</field>
+            <field name="type">view</field>
+        </record>
+        <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
+
+        <!-- Task Stages -->
+
+        <record id="project_tt_analysis" model="project.task.type">
+            <field name="sequence">1</field>
+            <field name="name">Analysis</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_specification" model="project.task.type">
+            <field name="sequence">10</field>
+            <field name="name">Specification</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_design" model="project.task.type">
+            <field name="sequence">11</field>
+            <field name="name">Design</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_development" model="project.task.type">
+            <field name="sequence">12</field>
+            <field name="name">Development</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_testing" model="project.task.type">
+            <field name="sequence">13</field>
+            <field name="name">Testing</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_merge" model="project.task.type">
+            <field name="sequence">14</field>
+            <field name="name">Merge</field>
+            <field name="case_default" eval="False"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="project_tt_deployment" model="project.task.type">
+            <field name="sequence">20</field>
+            <field name="name">Done</field>
+            <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="project_tt_cancel" model="project.task.type">
+            <field name="sequence">30</field>
+            <field name="name">Cancelled</field>
+            <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+    </data>
+
+    <data>
+        <!-- Task-related subtypes for messaging / Chatter -->
+        <record id="mt_task_new" model="mail.message.subtype">
+            <field name="name">Task Created</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="hidden" eval="True"/>
+            <field name="description">Task created</field>
+        </record>
+        <record id="mt_task_assigned" model="mail.message.subtype">
+            <field name="name">Task Assigned</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Task Assigned</field>
+        </record>
+        <record id="mt_task_blocked" model="mail.message.subtype">
+            <field name="name">Task Blocked</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Task blocked</field>
+        </record>
+        <record id="mt_task_ready" model="mail.message.subtype">
+            <field name="name">Task Ready for Next Stage</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Task Ready for Next Stage</field>
+        </record>
+        <record id="mt_task_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
+            <field name="description">Stage changed</field>
+        </record>
+        <!-- Project-related subtypes for messaging / Chatter -->
+        <record id="mt_project_task_new" model="mail.message.subtype">
+            <field name="name">Task Created</field>
+            <field name="sequence">10</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_task_new')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_assigned" model="mail.message.subtype">
+            <field name="name">Task Assigned</field>
+            <field name="sequence">11</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_task_assigned')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_blocked" model="mail.message.subtype">
+            <field name="name">Task Blocked</field>
+            <field name="sequence">12</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_task_blocked')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+        <record id="mt_project_task_stage" model="mail.message.subtype">
+            <field name="name">Task Stage Changed</field>
+            <field name="sequence">13</field>
+            <field name="res_model">project.project</field>
+            <field name="parent_id" eval="ref('mt_task_stage')"/>
+            <field name="relation_field">project_id</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Project Management application installed!</field>
+            <field name="body"><![CDATA[<p>Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.</p>
+<p>You can manage todo lists on tasks by installing the <i>Todo Lists</i> application, supporting the Getting Things Done (GTD) methodology.</p>
+<p>You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</p>]]></field>
+        </record>
+    </data>
+</openerp>

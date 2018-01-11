@@ -1,0 +1,83 @@
+# HG changeset patch
+# Parent 85a8d7317b9e13480f39ad739955442d15144451
+# Parent  16fcdc4c6462a7872636f3c19550c16879af5281
+
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -1,5 +1,6 @@
+ # -*- coding: utf-8 -*-
+ 
++from datetime import timedelta
+ from openerp import models, fields, api, exceptions
+ 
+ class Course(models.Model):
+@@ -55,6 +56,8 @@ class Session(models.Model):
+     attendee_ids = fields.Many2many('res.partner', string="Attendees")
+ 
+     taken_seats = fields.Float(string="Taken seats", compute='_taken_seats')
++    end_date = fields.Date(string="End Date", store=True,
++        compute='_get_end_date', inverse='_set_end_date')
+ 
+     @api.depends('seats', 'attendee_ids')
+     def _taken_seats(self):
+@@ -81,6 +84,30 @@ class Session(models.Model):
+                 },
+             }
+ 
++    @api.depends('start_date', 'duration')
++    def _get_end_date(self):
++        for r in self:
++            if not (r.start_date and r.duration):
++                r.end_date = r.start_date
++                continue
++
++            # Add duration to start_date, but: Monday + 5 days = Saturday, so
++            # subtract one second to get on Friday instead
++            start = fields.Datetime.from_string(r.start_date)
++            duration = timedelta(days=r.duration, seconds=-1)
++            r.end_date = start + duration
++
++    def _set_end_date(self):
++        for r in self:
++            if not (r.start_date and r.end_date):
++                continue
++
++            # Compute the difference between dates, but: Friday - Monday = 4 days,
++            # so add one day to get 5 days instead
++            start_date = fields.Datetime.from_string(r.start_date)
++            end_date = fields.Datetime.from_string(r.end_date)
++            r.duration = (end_date - start_date).days + 1
++
+     @api.constrains('instructor_id', 'attendee_ids')
+     def _check_instructor_not_in_attendees(self):
+         for r in self:
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -125,11 +125,24 @@
+             </field>
+         </record>
+ 
++        <!-- calendar view -->
++        <record model="ir.ui.view" id="session_calendar_view">
++            <field name="name">session.calendar</field>
++            <field name="model">openacademy.session</field>
++            <field name="arch" type="xml">
++                <calendar string="Session Calendar" date_start="start_date"
++                          date_stop="end_date"
++                          color="instructor_id">
++                    <field name="name"/>
++                </calendar>
++            </field>
++        </record>
++
+         <record model="ir.actions.act_window" id="session_list_action">
+             <field name="name">Sessions</field>
+             <field name="res_model">openacademy.session</field>
+             <field name="view_type">form</field>
+-            <field name="view_mode">tree,form</field>
++            <field name="view_mode">tree,form,calendar</field>
+         </record>
+ 
+         <menuitem id="session_menu" name="Sessions"

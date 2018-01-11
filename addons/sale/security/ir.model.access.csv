@@ -1,0 +1,43 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_order,sale.order,model_sale_order,base.group_sale_salesman,1,1,1,0
+access_sale_order_line,sale.order.line,model_sale_order_line,base.group_sale_salesman,1,1,1,1
+access_sale_order_line_accountant,sale.order.line accountant,model_sale_order_line,account.group_account_user,1,1,0,0
+access_account_invoice_tax_salesman,account_invoice_tax salesman,account.model_account_invoice_tax,base.group_sale_salesman,1,1,1,0
+access_account_invoice_salesman,account_invoice salesman,account.model_account_invoice,base.group_sale_salesman,1,1,1,0
+access_account_invoice_manager,account_invoice manager,account.model_account_invoice,base.group_sale_manager,1,1,1,1
+access_account_invoice_line_salesman,account_invoice.line salesman,account.model_account_invoice_line,base.group_sale_salesman,1,1,1,0
+access_account_payment_term_salesman,account_payment_term salesman,account.model_account_payment_term,base.group_sale_salesman,1,0,0,0
+access_account_analytic_account_salesman,account_analytic_account salesman,analytic.model_account_analytic_account,base.group_sale_salesman,1,1,1,0
+access_sale_order_manager,sale.order.manager,model_sale_order,base.group_sale_manager,1,1,1,1
+access_sale_order_accountant,sale.order.accountant,model_sale_order,account.group_account_user,1,1,0,0
+access_sale_report_salesman,sale.report,model_sale_report,base.group_sale_salesman,1,1,1,0
+access_sale_report_manager,sale.report,model_sale_report,base.group_sale_manager,1,1,1,1
+access_ir_property_sales,ir.property.sales,base.model_ir_property,base.group_sale_salesman,1,1,1,1
+access_sale_account_journal,account.journal sale order.user,account.model_account_journal,base.group_sale_salesman,1,0,0,0
+access_res_partner_sale_user,res.partner.sale.user,base.model_res_partner,base.group_sale_salesman,1,0,0,0
+access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,base.group_sale_manager,1,1,1,0
+access_product_template_sale_user,product.template sale use,product.model_product_template,base.group_sale_salesman,1,0,0,0
+access_product_product_sale_user,product.product sale use,product.model_product_product,base.group_sale_salesman,1,0,0,0
+access_account_fiscalyear_user,account.fiscalyear.user,account.model_account_fiscalyear,base.group_sale_salesman,1,0,0,0
+access_account_tax_user,account.tax.user,account.model_account_tax,base.group_sale_salesman,1,0,0,0
+access_ir_attachment_sales,ir.attachment.sales,base.model_ir_attachment,base.group_sale_salesman,1,1,1,0
+access_ir_attachment_manager,ir.attachment.manager,base.model_ir_attachment,base.group_sale_manager,1,1,1,1
+access_res_partner_bank_type_user,res.partner.bank.type.user,base.model_res_partner_bank_type,base.group_sale_salesman,1,0,0,0
+access_res_partner_bank_type_field_user,res.partner.bank.type.field.user,base.model_res_partner_bank_type_field,base.group_sale_salesman,1,0,0,0
+access_product_uom_user,product.uom.user,product.model_product_uom,base.group_sale_salesman,1,0,0,0
+access_product_pricelist_sale_user,product.pricelist.sale.user,product.model_product_pricelist,base.group_sale_salesman,1,0,0,0
+access_account_account_salesman,account_account salesman,account.model_account_account,base.group_sale_salesman,1,0,0,0
+access_product_uom_categ_sale_manager,product.uom.categ salemanager,product.model_product_uom_categ,base.group_sale_manager,1,1,1,1
+access_product_uom_sale_manager,product.uom salemanager,product.model_product_uom,base.group_sale_manager,1,1,1,1
+access_product_ul_sale_manager,product.ul salemanager,product.model_product_ul,base.group_sale_manager,1,1,1,1
+access_product_category_sale_manager,product.category salemanager,product.model_product_category,base.group_sale_manager,1,1,1,1
+access_product_supplierinfo_user,product.supplierinfo.user,product.model_product_supplierinfo,base.group_sale_salesman,1,0,0,0
+access_product_supplierinfo_sale_manager,product.supplierinfo salemanager,product.model_product_supplierinfo,base.group_sale_manager,1,1,1,1
+access_pricelist_partnerinfo_sale_manager,pricelist.partnerinfo salemanager,product.model_pricelist_partnerinfo,base.group_sale_manager,1,1,1,1
+access_product_price_type_sale_manager,product.price.type salemanager,product.model_product_price_type,base.group_sale_manager,1,1,1,1
+access_product_pricelist_type_sale_manager,product.pricelist.type salemanager,product.model_product_pricelist_type,base.group_sale_manager,1,1,1,1
+access_product_pricelist_sale_manager,product.pricelist salemanager,product.model_product_pricelist,base.group_sale_manager,1,1,1,1
+access_product_group_res_partner_sale_manager,res_partner group_sale_manager,base.model_res_partner,base.group_sale_manager,1,1,1,0
+access_product_pricelist_version_sale_manager,product.pricelist.version sale_manager,product.model_product_pricelist_version,base.group_sale_manager,1,1,1,1
+access_account_invoice_report_salesman,account.invoice.report salesman,account.model_account_invoice_report,base.group_sale_salesman,1,0,0,0
+access_account_move_line_salesman,account.move.line invoice,account.model_account_move_line,base.group_sale_salesman,1,0,0,0

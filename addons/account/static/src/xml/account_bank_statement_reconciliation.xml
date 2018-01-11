@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="bank_statement_nothing_to_reconcile">
+        <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
+            <div class="oe_view_nocontent"><p>
+                <b>Good Job!</b> Bank statements are fully reconciled.</p>
+                <p>This page displays all the bank transactions that are to be reconciled and provides with a neat interface to do so.</p>
+            </div>
+        </div></div>
+    </t>
+
+    <t t-name="bank_statement_reconciliation">
+        <div class="oe_form_sheetbg"><div class="oe_form_sheet oe_form_sheet_width">
+            <t t-if="single_statement">
+                <h1 class="statement_name">
+                    <span><t t-esc="title"/></span>
+                    <table class="change_statement_name_container oe_form"><tr>
+                        <td><input class="change_statement_name_field" type="text"/></td>
+                        <td><button class="change_statement_name_button oe_highlight">OK</button></td>
+                    </tr></table>
+                </h1>
+            </t>
+            <t t-if="!single_statement">
+                <h1><t t-esc="title"/></h1>
+            </t>
+            <div class="progress progress-striped">
+            	<div class="progress-text"><span class="valuenow">0</span> / <span class="valuemax"><t t-esc="total_lines"/></span></div>
+            	<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" t-att-aria-valuemax="total_lines" style="width: 0%;">
+            	</div>
+            </div>
+            <div class="oe_clear"></div>
+            <div class="reconciliation_lines_container"></div>
+            <div class="show_more_container"><button class="show_more">Show more... (<span class="num_items_remaining"></span> remaining)</button></div>
+            <p class='protip'>Tip : Hit ctrl-enter to reconcile all balanced items.</p>
+        </div></div>
+    </t>
+
+    <t t-name="bank_statement_reconciliation_done_message">
+        <div class='done_message'>
+            <h2><t t-raw="title" /></h2>
+            <p>It took you <strong><t t-esc="time_taken" /></strong> to reconcile <strong><t t-esc="transactions_done" /> transactions.<br/></strong> That's on average <t t-esc="sec_per_item" /> seconds per transaction.</p>
+            <t t-if="done_with_ctrl_enter !== 0">
+                <p>You validated <t t-esc="done_with_ctrl_enter" /> reconciliations with the ctrl-enter shortcut.</p>
+            </t>
+            <p class='achievements'>
+                <t t-foreach="achievements" t-as="achievement">
+                    <i class='fa fa-certificate achievement' t-att-data-title='achievement.title' t-att-data-content='achievement.desc'><i t-att-class="'fa '+achievement.icon"></i></i>
+                </t>
+            </p>
+            <p class="action_buttons">
+                <t t-if="single_statement or multiple_statements">
+                    <button class="button_back_to_statement">Back to statements list</button>
+                    <button class="button_close_statement">Close the statement<t t-if="multiple_statements">s</t></button>
+                </t>
+            </p>
+        </div>
+    </t>
+
+    <t t-name="bank_statement_reconciliation_line">
+        <table t-att-data-mode="mode">
+            <tr>
+                <td>
+                    <table class="accounting_view">
+                        <caption>
+                            <button class="button_ok"></button>
+                            <span class="tip_reconciliation_not_balanced">You must balance the reconciliation</span>
+                            <span t-if="! line.has_no_partner" class="partner_name">
+                                <t t-esc="line.partner_name"/>
+                                <span class="change_partner glyphicon glyphicon-pencil"></span>
+                            </span>
+                            <div class="change_partner_container oe_form"></div>
+                        </caption>
+                        <tbody class="tbody_initial_line">
+                            <tr class="initial_line">
+                                <td class="cell_action"><span class="toggle_match glyphicon glyphicon-cog"></span></td>
+                                <td class="cell_account_code"><t t-esc="line.account_code"/></td>
+                                <td class="cell_due_date"><t t-esc="line.date"/></td>
+                                <td class="cell_label">
+                                    <t t-if="line.name" t-esc="line.name"/>
+                                    <t t-if="line.ref"> : <t t-esc="line.ref" /></t>
+                                    <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td>
+                                <td class="cell_debit"><t t-if="line.amount &gt; 0">
+                                      <t t-esc="line.amount_str"/></t></td>
+                                <td class="cell_credit"><t t-if="line.amount &lt; 0">
+                                      <t t-esc="line.amount_str"/></t></td>
+                                <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+                            </tr>
+                        </tbody>
+                        <tbody class="tbody_matched_lines"></tbody>
+                        <tbody class="tbody_created_lines"></tbody>
+                        <tbody class="tbody_open_balance"></tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="action_pane match">
+                        <div class="match_controls">
+                            <input type="text" class="filter" placeholder="Filter" value="" />
+                            <span class="pager_control_right pull-right glyphicon glyphicon-chevron-right"></span>
+                            <span class="pager_control_left pull-right glyphicon glyphicon-chevron-left"></span>
+                        </div>
+                        <table></table>
+                    </div>
+
+                    <div class="action_pane create">
+                        <!-- NB : I use a .quick_add:empty selector. whitespace characters being a node, there shall be none -->
+                        <div class="quick_add btn-group btn-group-sm"><t t-foreach="presets" t-as="preset"><button type='button' class='btn btn-default preset' t-att-data-presetid="preset.id"><t t-esc="preset.name"/></button></t></div>
+                        <div class="oe_form create_form">
+                            <!-- here come some form_create_field -->
+                            <table class="create_field add_line_container"><tr><td><a href="javascript:void(0)" class="add_line">New</a></td></tr></table>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </t>
+
+    <t t-name="filter_no_match">
+        <tr><td style='text-align: center;'>No result matching '<t t-esc="filter_str" />'</td></tr>
+    </t>
+
+    <t t-name="form_create_field">
+        <table t-att-class='"create_field create_"+id'><tr>
+            <th><t t-esc="label"/></th>
+            <td class="create_account_container" t-att-class='"create_"+id+"_container"'></td>
+        </tr></table>
+    </t>
+
+    <t t-name="bank_statement_reconciliation_line_details">
+        <table class='details'>
+            <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
+            <tr t-if="line.partner_name"><td>Partner</td><td><t t-esc="line.partner_name"/></td></tr>
+            <tr t-if="line.ref"><td>Transaction</td><td><t t-esc="line.ref"/></td></tr>
+            <tr><td>Description</td><td><t t-esc="line.name"/></td></tr>
+            <tr><td>Amount</td><td><t t-esc="line.amount_str"/><t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t></td></tr>
+            <tr><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
+            <tr t-if="line.note"><td>Note</td><td><t t-esc="line.note"/></td></tr>
+        </table>
+    </t>
+
+    <t t-name="bank_statement_reconciliation_move_line">
+        <tr class="mv_line" t-att-data-lineid="line.id" t-att-data-selected="selected">
+            <td class="cell_action"><span class="glyphicon glyphicon-add-remove"></span></td>
+            <td class="cell_account_code" t-if="line.account_code"><t t-esc="line.account_code"/></td>
+            <td class="cell_due_date"><t t-esc="line.q_due_date"/></td>
+            <td class="cell_label js_qlabel"><t t-esc="line.q_label"/></td>
+            <td class="cell_debit"><t t-if="line.debit !== 0"><t t-if="line.propose_partial_reconcile" t-call="icon_do_partial_reconciliation"></t><t t-if="line.partial_reconcile" t-call="icon_undo_partial_reconciliation"></t><t t-esc="line.debit_str"/></t></td>
+            <td class="cell_credit"><t t-if="line.credit !== 0"><t t-if="line.propose_partial_reconcile"><t t-call="icon_do_partial_reconciliation" /></t><t t-if="line.partial_reconcile"><t t-call="icon_undo_partial_reconciliation" /></t><t t-esc="line.credit_str"/></t></td>
+            <td class="cell_info_popover"><span class="line_info_button glyphicon glyphicon-info-sign" t-att-data-content="line.q_popover"></span></td>
+        </tr>
+    </t>
+
+    <t t-name="icon_do_partial_reconciliation"><i class="do_partial_reconcile_button fa fa-exclamation-triangle" data-content="Click to register a partial payment and keep the invoice open. Otherwise it does a full reconciliation."></i></t>
+
+    <t t-name="icon_undo_partial_reconciliation"><i class="undo_partial_reconcile_button fa fa-exclamation-triangle" data-content="Undo the partial reconciliation."></i></t>
+
+    <t t-name="bank_statement_reconciliation_move_line_details">
+        <table class='details'>
+            <tr t-if="line.account_code"><td>Account</td><td><t t-esc="line.account_code"/> <t t-esc="line.account_name"/></td></tr>
+            <tr><td>Journal</td><td><t t-esc="line.journal_name"/></td></tr>
+            <tr><td>Period</td><td><t t-esc="line.period_name"/></td></tr>
+            <tr><td>Date</td><td><t t-esc="line.date"/></td></tr>
+            <tr><td>Due Date</td><td><t t-esc="line.q_due_date"/></td></tr>
+            <t t-if="line.is_partially_reconciled">
+                <tr><td>Total</td><td>
+                    <t t-esc="line.total_amount_str"/><t t-if="line.total_amount_currency_str"> (<t t-esc="line.total_amount_currency_str"/>)</t>
+                </td></tr>
+            </t>
+            <tr><td><t t-if="line.is_partially_reconciled">Residual</t><t t-if="! line.is_partially_reconciled">Amount</t></td><td>
+                <t t-if="line.debit !== 0" t-esc="line.debit_str"/><t t-if="line.credit !== 0" t-esc="line.credit_str"/>
+                <t t-if="line.amount_currency_str"> (<t t-esc="line.amount_currency_str"/>)</t>
+            </td></tr>
+        </table>
+    </t>
+
+    <t t-name="bank_statement_reconciliation_created_line">
+        <tr class="created_line" t-att-data-lineid="line.id">
+            <td class="cell_action"><t t-if="! line.no_remove_action"><span class="glyphicon glyphicon-remove"></span></t></td>
+            <td class="cell_account_code"><t t-esc="line.account_num"/></td>
+            <td class="cell_due_date"></td>
+            <td class="cell_label"><t t-esc="line.label"/></td>
+            <td class="cell_debit"><t t-if="line.amount &lt; 0"><t t-esc="line.amount_str"/></t></td>
+            <td class="cell_credit"><t t-if="line.amount &gt; 0"><t t-esc="line.amount_str"/></t></td>
+            <td class="cell_info_popover"></td>
+        </tr>
+    </t>
+
+    <t t-name="bank_statement_reconciliation_line_open_balance">
+        <tr class="line_open_balance">
+            <td class="cell_action"><span class="toggle_create glyphicon glyphicon-play"></span></td>
+            <td class="cell_account_code"><t t-esc="account_code"/></td>
+            <td class="cell_due_date"></td>
+            <td class="cell_label">Open balance</td>
+            <td class="cell_debit"><t t-esc="debit"/></td>
+            <td class="cell_credit"><t t-esc="credit"/></td>
+            <td class="cell_info_popover"></td>
+        </tr>
+    </t>
+</templates>

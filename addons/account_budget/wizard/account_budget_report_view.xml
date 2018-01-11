@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+      <record id="account_budget_report_view" model="ir.ui.view">
+        <field name="name">account.budget.report.form</field>
+        <field name="model">account.budget.report</field>
+        <field name="arch" type="xml">
+          <form string="Select Dates Period">
+              <group string="Print Budgets" col="4">
+                  <field name="date_from"/>
+                  <field name="date_to"/>
+              </group>
+              <footer>
+                  <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                  or
+                  <button string="Cancel" class="oe_link" special="cancel"/>
+              </footer>
+          </form>
+        </field>
+      </record>
+
+    <record id="action_account_budget_report" model="ir.actions.act_window">
+      <field name="name">Budgets</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">account.budget.report</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="account_budget_report_view"/>
+      <field name="target">new</field>
+    </record>
+
+    <record model="ir.values" id="account_budget_report_values">
+      <field name="model_id" ref="account_budget.model_account_budget_post" />
+      <field name="name">Budgets</field>
+      <field name="key2">client_print_multi</field>
+      <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_budget_report'))" />
+      <field name="key">action</field>
+      <field name="model">account.budget.post</field>
+    </record>
+
+  </data>
+</openerp>

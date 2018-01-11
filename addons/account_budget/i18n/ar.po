@@ -1,0 +1,506 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_budget
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-09-12 22:29+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new budget.\n"
+"              </p><p>\n"
+"                A budget is a forecast of your company's income and/or expenses\n"
+"                expected for a period in the future. A budget is defined on some\n"
+"                financial accounts and/or analytic accounts (that may represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue per\n"
+"                analytic account and monitor its evolution based on the actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
+msgstr "<pفئة=\"oe_عرض_أى محتوى_إنشاء\">\nانقر لإنشاء ميزانية جديدة .\n</p><p>\nالموازنة هي توقعات الدخل الخاصة بالشركة و / أو النفقات \nالمتوقعة لفترة في المستقبل. يتم تعريف الموازنة على بعض \nالحسابات المالية و / أو الحسابات التحليلية (التي قد تمثل \nالمشاريع والإدارات وفئات المنتجات، الخ)\n</p><p>\nمن خلال تعقب أين يذهب المال الخاص بك، فإنك من المحتمل أن تكون أقل \nعرضة للإسراف في النفقات، وأكثر عرضة لتلبية \nأهدافك المالية. توقعات الموازنة لتفاصيل الإيرادات المتوقعة لكل \nحساب تحليلي ورصد تطورها استنادا إلى الأرقام الفعلية \nالمحققة خلال تلك الفترة\n</p>\n            "
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
+msgid "Account Budget  crossvered summary report"
+msgstr "تقرير ملخص لميزانية الحساب"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_crossvered_report
+msgid "Account Budget crossvered report"
+msgstr "تقرير crossvered"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_account_budget_analytic
+#: model:ir.model,name:account_budget.model_account_budget_report
+msgid "Account Budget report for analytic account"
+msgstr "تقرير حساب الميزانية لحساب تحليلي"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: field:account.budget.post,account_ids:0
+msgid "Accounts"
+msgstr "حسابات"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Analysis from"
+msgstr "نموذج تحليلى"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Analysis from:"
+msgstr "تحليل من:"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,analytic_account_id:0
+#: model:ir.model,name:account_budget.model_account_analytic_account
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Analytic Account"
+msgstr "حساب تحليلي"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Analytic Budget"
+msgstr "ميزانية تحليلية"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Approve"
+msgstr "تصديق"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_tree
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: field:crossovered.budget.lines,crossovered_budget_id:0
+#: model:ir.actions.report.xml,name:account_budget.action_report_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Budget"
+msgstr "الميزانية"
+
+#. module: account_budget
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+msgid "Budget Line"
+msgstr "خط الميزانية"
+
+#. module: account_budget
+#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+#: field:account.analytic.account,crossovered_budget_line:0
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: field:account.budget.post,crossovered_budget_line:0
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget,crossovered_budget_line:0
+#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_form
+#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_search
+#: view:crossovered.budget.lines:account_budget.view_crossovered_budget_line_tree
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budget Lines"
+msgstr "خطوط الميزانية"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Budget:"
+msgstr "الميزانية:"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:account.budget.post:account_budget.view_budget_post_search
+#: view:account.budget.post:account_budget.view_budget_post_tree
+#: field:crossovered.budget.lines,general_budget_id:0
+#: model:ir.model,name:account_budget.model_account_budget_post
+msgid "Budgetary Position"
+msgstr "مركز الميزانية"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "مراكز الميزاينة"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_report
+#: model:ir.actions.report.xml,name:account_budget.action_report_analytic_account_budget
+#: model:ir.actions.report.xml,name:account_budget.action_report_crossovered_budget
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+#: model:ir.ui.menu,name:account_budget.menu_action_account_budget_post_tree
+#: model:ir.ui.menu,name:account_budget.next_id_31
+#: model:ir.ui.menu,name:account_budget.next_id_pos
+msgid "Budgets"
+msgstr "الميزانيات"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Cancel Budget"
+msgstr "إلغاء الميزانية"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Cancelled"
+msgstr "ملغي"
+
+#. module: account_budget
+#: field:account.budget.post,code:0 field:crossovered.budget,code:0
+msgid "Code"
+msgstr "الشفرة"
+
+#. module: account_budget
+#: field:account.budget.post,company_id:0
+#: field:crossovered.budget,company_id:0
+#: field:crossovered.budget.lines,company_id:0
+msgid "Company"
+msgstr "شركة"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Confirm"
+msgstr "تأكيد"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Confirmed"
+msgstr "مؤكد"
+
+#. module: account_budget
+#: field:account.budget.analytic,create_uid:0
+#: field:account.budget.crossvered.report,create_uid:0
+#: field:account.budget.crossvered.summary.report,create_uid:0
+#: field:account.budget.post,create_uid:0
+#: field:account.budget.report,create_uid:0
+#: field:crossovered.budget,create_uid:0
+#: field:crossovered.budget.lines,create_uid:0
+msgid "Created by"
+msgstr "أُنشئ بواسطة"
+
+#. module: account_budget
+#: field:account.budget.analytic,create_date:0
+#: field:account.budget.crossvered.report,create_date:0
+#: field:account.budget.crossvered.summary.report,create_date:0
+#: field:account.budget.post,create_date:0
+#: field:account.budget.report,create_date:0
+#: field:crossovered.budget,create_date:0
+#: field:crossovered.budget.lines,create_date:0
+msgid "Created on"
+msgstr "ُُُأٌنشأ في"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+msgid "Currency"
+msgstr "العملة"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Currency:"
+msgstr "العملة:"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Description"
+msgstr "الوصف"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: selection:crossovered.budget,state:0
+msgid "Done"
+msgstr "تم"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+#: selection:crossovered.budget,state:0
+msgid "Draft"
+msgstr "مسودة"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+msgid "Draft Budgets"
+msgstr "ميزانيات مؤقتة"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Duration"
+msgstr "المدة"
+
+#. module: account_budget
+#: field:crossovered.budget,date_to:0 field:crossovered.budget.lines,date_to:0
+msgid "End Date"
+msgstr "تاريخ الإنتهاء"
+
+#. module: account_budget
+#: field:account.budget.analytic,date_to:0
+#: field:account.budget.crossvered.report,date_to:0
+#: field:account.budget.crossvered.summary.report,date_to:0
+#: field:account.budget.report,date_to:0
+msgid "End of period"
+msgstr "نهاية الفترة"
+
+#. module: account_budget
+#: code:addons/account_budget/account_budget.py:124
+#, python-format
+msgid "Error!"
+msgstr "خطأ!"
+
+#. module: account_budget
+#: field:account.budget.analytic,id:0
+#: field:account.budget.crossvered.report,id:0
+#: field:account.budget.crossvered.summary.report,id:0
+#: field:account.budget.post,id:0 field:account.budget.report,id:0
+#: field:crossovered.budget,id:0 field:crossovered.budget.lines,id:0
+#: field:report.account_budget.report_analyticaccountbudget,id:0
+#: field:report.account_budget.report_budget,id:0
+#: field:report.account_budget.report_crossoveredbudget,id:0
+msgid "ID"
+msgstr "الهوية"
+
+#. module: account_budget
+#: field:account.budget.analytic,write_uid:0
+#: field:account.budget.crossvered.report,write_uid:0
+#: field:account.budget.crossvered.summary.report,write_uid:0
+#: field:account.budget.post,write_uid:0
+#: field:account.budget.report,write_uid:0
+#: field:crossovered.budget,write_uid:0
+#: field:crossovered.budget.lines,write_uid:0
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: account_budget
+#: field:account.budget.analytic,write_date:0
+#: field:account.budget.crossvered.report,write_date:0
+#: field:account.budget.crossvered.summary.report,write_date:0
+#: field:account.budget.post,write_date:0
+#: field:account.budget.report,write_date:0
+#: field:crossovered.budget,write_date:0
+#: field:crossovered.budget.lines,write_date:0
+msgid "Last Updated on"
+msgstr "آخر تحديث فى"
+
+#. module: account_budget
+#: field:account.budget.post,name:0 field:crossovered.budget,name:0
+msgid "Name"
+msgstr "الاسم"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,paid_date:0
+msgid "Paid Date"
+msgstr "تاريخ الدفع"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Perc(%)"
+msgstr "النسبة المئوية(%)"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,percentage:0
+msgid "Percentage"
+msgstr "النسبة"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget.lines,planned_amount:0
+#: view:website:account_budget.report_budget
+msgid "Planned Amount"
+msgstr "المبلغ المخطط"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Planned Amt"
+msgstr "الكمية المخططة"
+
+#. module: account_budget
+#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget.lines,practical_amount:0
+#: view:website:account_budget.report_budget
+msgid "Practical Amount"
+msgstr "الكمية العملية"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Practical Amt"
+msgstr "الكمية العملية"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "Print"
+msgstr "طباعة"
+
+#. module: account_budget
+#: view:account.budget.report:account_budget.account_budget_report_view
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_analytic
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_report
+msgid "Print Budgets"
+msgstr "طباعة الميزانيات"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
+msgid "Print Summary"
+msgstr "طباعة الملخص"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+msgid "Printed at:"
+msgstr "مطبوع فى:"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+msgid "Reset to Draft"
+msgstr "أعادته للمسودة"
+
+#. module: account_budget
+#: field:crossovered.budget,creating_user_id:0
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "Select Dates Period"
+msgstr "أختر تواريخ المدة"
+
+#. module: account_budget
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "تاريخ البدء"
+
+#. module: account_budget
+#: field:account.budget.analytic,date_from:0
+#: field:account.budget.crossvered.report,date_from:0
+#: field:account.budget.crossvered.summary.report,date_from:0
+#: field:account.budget.report,date_from:0
+msgid "Start of period"
+msgstr "بداية الفترة"
+
+#. module: account_budget
+#: field:crossovered.budget,state:0
+msgid "Status"
+msgstr "الحالة"
+
+#. module: account_budget
+#: code:addons/account_budget/account_budget.py:124
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "الميزانية '%s' ليس لديها حسابات!"
+
+#. module: account_budget
+#: view:account.budget.post:account_budget.view_budget_post_form
+#: view:crossovered.budget:account_budget.crossovered_budget_view_form
+#: field:crossovered.budget.lines,theoritical_amount:0
+#: view:website:account_budget.report_budget
+msgid "Theoretical Amount"
+msgstr "الكمية النظرية"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Theoretical Amt"
+msgstr "الكمية النظرية"
+
+#. module: account_budget
+#: view:account.analytic.account:account_budget.view_account_analytic_account_form_inherit_budget
+msgid "Theoritical Amount"
+msgstr "الكمية النظرية"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+msgid "This wizard is used to print budget"
+msgstr "يستخدم هذا المعالج لطباعة الميزانية"
+
+#. module: account_budget
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+msgid "This wizard is used to print summary of budgets"
+msgstr "يستخدم هذا المعالج لطباعة ملخص الميزانيات"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+msgid "To Approve"
+msgstr "للموافقة"
+
+#. module: account_budget
+#: view:crossovered.budget:account_budget.view_crossovered_budget_search
+msgid "To Approve Budgets"
+msgstr "للموافقة علي الميزانية"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "Total:"
+msgstr "المجموع:"
+
+#. module: account_budget
+#: field:crossovered.budget,validating_user_id:0
+msgid "Validate User"
+msgstr "تصديق المستخدم"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Validated"
+msgstr "تمت الموافقة"
+
+#. module: account_budget
+#: view:website:account_budget.report_budget
+msgid "at"
+msgstr "في"
+
+#. module: account_budget
+#: view:account.budget.analytic:account_budget.account_budget_analytic_view
+#: view:account.budget.crossvered.report:account_budget.account_budget_crossvered_report_view
+#: view:account.budget.crossvered.summary.report:account_budget.account_budget_crossvered_summary_report_view
+#: view:account.budget.report:account_budget.account_budget_report_view
+msgid "or"
+msgstr "أو"
+
+#. module: account_budget
+#: view:website:account_budget.report_analyticaccountbudget
+#: view:website:account_budget.report_budget
+#: view:website:account_budget.report_crossoveredbudget
+msgid "to"
+msgstr "إلى"

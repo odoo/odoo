@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="event_sale_product_template_form">
+             <field name="model">product.template</field>
+             <field name="inherit_id" ref="product.product_template_form_view" />
+             <field name="arch" type="xml">
+                <div name="options" position="inside">
+                    <div>
+                        <field name="event_ok" on_change="onchange_event_ok(type, event_ok, context)"/>
+                        <label for="event_ok"/>
+                    </div>
+                </div>
+                <field name='type' position="after">
+                    <field name="event_type_id" attrs="{'invisible': [('event_ok', '=', False)]}"/>
+                </field>
+             </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_registration_ticket_search">
+            <field name="name">event.registration.ticket.search</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_registration_search" />
+            <field name="arch" type="xml">
+                <filter name="group_event" position="after">
+                    <filter string="Ticket Type" domain="[]" context="{'group_by':'event_ticket_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_registration_ticket_tree">
+            <field name="name">event.registration.ticket.tree</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_tree" />
+            <field name="arch" type="xml">
+                <field name="event_id" position="after">
+                    <field name="event_ticket_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_event_registration_ticket_form">
+            <field name="name">event.registration.ticket.form</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_form" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="event_order_line">
+             <field name="name">event.sale.order</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form" />
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="event_id" domain="['|', ('type','=', False),('type', '=', event_type_id)]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
+                    <field name="event_ticket_id" domain="[('event_id', '=', event_id), ('seats_available', '>', 0)]" attrs="{'invisible': [('event_id', '=', False)]}"
+                        on_change="onchange_event_ticket_id(event_ticket_id, context)"/>
+                    <field name="event_type_id" invisible="1"/>
+                    <field name="event_ok" invisible="1"/>
+                </xpath>
+             </field>
+        </record>
+        
+        <!-- the presence of 'event user' makes the order lines non-editable -->
+        <record id="sale.view_order_form_editable_list" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
+        </record>        
+        
+        <record id="view_event_form" model="ir.ui.view">
+            <field name="name">view_event_form</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook" position="inside">
+                        <page string="Ticket Types">
+                            <field name="event_ticket_ids" context="{'default_name': name}">
+                                <tree string="Payments" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="product_id" on_change='onchange_product_id(product_id)'/>
+                                    <field name="deadline"/>
+                                    <field name="price"/>
+                                    <field name="seats_max"/>
+                                    <field name="seats_reserved"/>
+                                    <field name="seats_unconfirmed"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                    <field name="nb_register" position="after">
+                        <field name="event_ticket_id" domain="[('event_id', '=', context.get('event_id'))]"/>
+                    </field>
+               </data>
+            </field>
+        </record>
+
+        <!-- Edit badge report form -->
+        <record id="view_event_form" model="ir.ui.view">
+            <field name="name">view_event_form</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook" position="inside">
+                        <page string="Ticket Types">
+                            <field name="event_ticket_ids" context="{'default_name': name}">
+                                <tree string="Payments" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="product_id" on_change='onchange_product_id(product_id)'/>
+                                    <field name="deadline"/>
+                                    <field name="price"/>
+                                    <field name="seats_max"/>
+                                    <field name="seats_reserved"/>
+                                    <field name="seats_unconfirmed"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </xpath>
+                    <field name="nb_register" position="after">
+                        <field name="event_ticket_id" domain="[('event_id', '=', context.get('event_id'))]"/>
+                    </field>
+                     <xpath expr="//notebook" position="inside">
+                        <page string="Badge">
+                            <label for="badge_back" class="oe_edit_only">Badge (Back)</label>
+                            <field name="badge_back" nolabel="1" placeholder="Event badge_back..."/>
+                            <hr/>
+                            <label for="badge_innerleft" class="oe_edit_only">Badge (Inner Left)</label>
+                            <field name="badge_innerleft" nolabel="1" placeholder="Event badge_innerleft..."/>
+                            <hr/>
+                            <label for="badge_innerright" class="oe_edit_only">Badge (Inner Right)</label>
+                            <field name="badge_innerright" nolabel="1" placeholder="Event badge_innerright..."/>
+                        </page>
+                    </xpath>
+               </data>
+            </field>
+        </record>
+    </data>
+</openerp>

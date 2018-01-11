@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_currency_search" model="ir.ui.view">
+            <field name="name">res.currency.search</field>
+            <field name="model">res.currency</field>
+            <field name="arch" type="xml">
+                <search string="Currencies">
+                    <field name="name" string="Currency"/>
+                    <field name="active"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_currency_tree" model="ir.ui.view">
+            <field name="name">res.currency.tree</field>
+            <field name="model">res.currency</field>
+            <field name="arch" type="xml">
+                <tree string="Currencies">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                     <field name="rate_ids" invisible="1"/>
+                    <field name="date"/>
+                    <field name="rate_silent"/>
+                    <field name="rounding"/>
+                    <field name="accuracy"/>
+                    <field name="position"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_currency_form" model="ir.ui.view">
+            <field name="name">res.currency.form</field>
+            <field name="model">res.currency</field>
+            <field name="arch" type="xml">
+                <form string="Currency">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="rate_silent"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+
+                    <group>
+                        <group string="Price Accuracy">
+                            <field name="rounding"/>
+                            <field name="accuracy"/>
+                        </group>
+
+                        <group string="Display">
+                            <field name="symbol"/>
+                            <field name="position"/>
+                        </group>
+
+                        <group string="Miscellaneous">
+                            <field name="base"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+
+                    <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}">
+                        <tree string="Rates" editable="bottom">
+                            <field name="name"/>
+                            <field name="rate"/>
+                        </tree>
+                    </field>
+                </form>
+            </field>
+        </record>
+        <record id="action_currency_form" model="ir.actions.act_window">
+            <field name="name">Currencies</field>
+            <field name="res_model">res.currency</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_currency_search"/>
+        </record>
+
+        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
+
+    </data>
+</openerp>

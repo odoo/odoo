@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <!-- Groups placeholder in sidebar -->
+    <t t-extend="mail.wall.sidebar">
+        <t t-jquery=".oe_mail_wall_sidebar" t-operation="append">
+            <div class="oe_suggestions_groups"></div>
+        </t>
+    </t>
+
+
+    <!-- Suggested groups -->
+    <div t-name="mail.suggestions.groups" class="oe_sidebar_suggestion oe_suggestion_group">
+        <div class="oe_suggest_title">
+            <a class="oe_suggestion_remove oe_suggestion_group oe_e">X</a>
+            <h2>Suggested Groups</h2>
+        </div>
+        <div class="oe_suggest_items">
+            <t t-foreach="widget.groups" t-as="result">
+                <div class="oe_suggested_item">
+                    <div class="oe_suggested_item_image">
+                        <a t-attf-href="#model=mail.group&amp;id=#{result.id}">
+                            <img t-att-src="result.image" t-att-alt="result.name"/>
+                        </a>
+                    </div>
+                    <div class="oe_suggested_item_content">
+                        <a class="oe_suggestion_item_name" t-attf-href="#model=mail.group&amp;id=#{result.id}"><t t-esc="result.name"/></a>
+                        <a class="oe_suggestion_remove_item oe_suggestion_group oe_e" t-att-id="result.id">X</a>
+                        <br/>
+                        <button t-att-id="result.id" class="oe_suggestion_join">Join Group</button>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+
+
+</template>

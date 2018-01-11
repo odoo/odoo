@@ -1,0 +1,32 @@
+-
+  Now I test for Invoice Method 'Before Repair' with giving the access rights of mrp user.
+-
+  !context
+    uid: 'res_mrp_repair_user'
+-
+  I confirm Repair order for Invoice Method 'Before Repair'.
+-
+  !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rmrp2}
+-
+  I change Repair order state to 'Ready'.
+-
+  !python {model: mrp.repair}: |
+    self.action_repair_ready(cr, uid, [ref('mrp_repair_rmrp2')], context=None)
+-
+  I click on "Create Invoice" button of this wizard to make invoice.
+-
+  !workflow {model: mrp.repair, action: action_invoice_create, ref: mrp_repair_rmrp2}
+-
+  I check that invoice is created for this Repair order.
+-
+  !python {model: mrp.repair}: |
+     repair_id = self.browse(cr, uid, [ref('mrp_repair_rmrp2')], context=context)[0]
+     assert repair_id.invoice_id.id, "No invoice exists for this repair order."
+-
+  I start the Repairing process by clicking on "Start Repair" button.
+-
+  !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rmrp2}
+-
+  Repairing process for this product is in Done state and I end this process by clicking on "End Repair" button for Invoice Method 'Before Repair'.
+-
+  !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rmrp2}

@@ -1,0 +1,23 @@
+# HG changeset patch
+# Parent 91c0cc5b319e7bf240d359817b8bd044769a4f5c
+# Parent  0a9ec16d98785205f25868bc23485569a1444cf3
+
+diff --git a/academy/__openerp__.py b/academy/__openerp__.py
+--- a/academy/__openerp__.py
++++ b/academy/__openerp__.py
+@@ -24,7 +24,7 @@
+ 
+     # always loaded
+     'data': [
+-        # 'security/ir.model.access.csv',
++        'security/ir.model.access.csv',
+         'templates.xml',
+     ],
+     # only loaded in demonstration mode
+diff --git a/academy/security/ir.model.access.csv b/academy/security/ir.model.access.csv
+--- a/academy/security/ir.model.access.csv
++++ b/academy/security/ir.model.access.csv
+@@ -1,2 +1,2 @@
+ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+-access_academy_academy,academy.academy,model_academy_academy,,1,0,0,0
++access_academy_teachers,access_academy_teachers,model_academy_teachers,,1,0,0,0

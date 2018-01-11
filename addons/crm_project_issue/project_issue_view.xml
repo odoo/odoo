@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+<data>
+
+    <!-- action of converting, via wizard -->
+    <record model="ir.actions.act_window" id="convert_lead2projectissue_wizard_action" >
+        <field name="name">Convert to Issue</field>
+        <field name="res_model">crm.lead2projectissue.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- view of the Wizard Form --> 
+    <record model="ir.ui.view" id="view_crm_lead2projectissue_wizard" >
+        <field name="name">crm.lead2projectissue.wizard.form</field>
+        <field name="model">crm.lead2projectissue.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Convert to Issue">
+                <group>
+                    <field name="project_id"/>
+                </group>
+                <footer>
+                    <button type="object" name="action_lead_to_project_issue" string="Create Issue" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- inherit view of Lead Form : adding the "convert to issue" button -->
+    <record model="ir.ui.view" id="crm_case_form_view_leads_project_issue">
+        <field name="name">CRM - Leads Form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" type="action" name="%(convert_lead2projectissue_wizard_action)d" icon="fa-bug"  
+                        help="Convert to Issue">
+                        <div>Convert To<br/>Issue</div>
+                    </button>
+            </xpath>
+        </field>
+    </record>
+
+</data>
+</openerp>

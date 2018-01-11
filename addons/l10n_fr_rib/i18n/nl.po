@@ -1,0 +1,130 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_fr_rib
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2015-07-17 07:29+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: l10n_fr_rib
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
+msgstr "\nDefinieer een BIC/Swift code voor banksoort IBAN rekeningen om geldige betalingen te maken"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type,name:l10n_fr_rib.bank_rib
+msgid "RIB and optional IBAN"
+msgstr "RIB en optioneel IBAN"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,rib_acc_number:0
+msgid "RIB account number"
+msgstr "RIB rekeningnummer"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,bank_code:0
+msgid "Bank Code"
+msgstr "Bank code"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:54
+#, python-format
+msgid "The RIB key %s does not correspond to the other codes: %s %s %s."
+msgstr "De RIB sleutel %s komt niet overeen met de andere codes: %s %s %s."
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_office_field
+msgid "office"
+msgstr "kantoor"
+
+#. module: l10n_fr_rib
+#: field:res.bank,rib_code:0
+msgid "RIB Bank Code"
+msgstr "RIB Bank Code"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "The IBAN %s is not valid."
+msgstr "De IBAN %s is niet geldig."
+
+#. module: l10n_fr_rib
+#: model:ir.model,name:l10n_fr_rib.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankrekeningen"
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,office:0
+msgid "Office Code"
+msgstr "Kantoorcode"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bic_field
+msgid "bank_bic"
+msgstr "bank_bic"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_bank_code_field
+msgid "bank_code"
+msgstr "bank_code"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_key_field
+msgid "key"
+msgstr "sleutel"
+
+#. module: l10n_fr_rib
+#: code:addons/l10n_fr_rib/bank.py:53 code:addons/l10n_fr_rib/bank.py:58
+#, python-format
+msgid "Error!"
+msgstr "Fout!"
+
+#. module: l10n_fr_rib
+#: help:res.partner.bank,key:0
+msgid ""
+"The key is a number allowing to check the correctness of the other codes."
+msgstr "De sleutel is een nummer waarmee de geldigheid van de andere codes gecontroleerd kunnen worden."
+
+#. module: l10n_fr_rib
+#: field:res.partner.bank,key:0
+msgid "Key"
+msgstr "Sleutel"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_rib_acc_number_field
+msgid "rib_acc_number"
+msgstr "rib_acc_number"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type,format_layout:l10n_fr_rib.bank_rib
+msgid "%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s"
+msgstr "%(bank_name)s: %(bank_code)s %(office)s %(rib_acc_number)s %(key)s"
+
+#. module: l10n_fr_rib
+#: constraint:res.partner.bank:0
+msgid "The RIB and/or IBAN is not valid"
+msgstr "De RIB en/of IBAN is niet geldig"
+
+#. module: l10n_fr_rib
+#: model:ir.model,name:l10n_fr_rib.model_res_bank
+msgid "Bank"
+msgstr "Bank"
+
+#. module: l10n_fr_rib
+#: model:res.partner.bank.type.field,name:l10n_fr_rib.rib_acc_number_field
+msgid "acc_number"
+msgstr "acc_number"

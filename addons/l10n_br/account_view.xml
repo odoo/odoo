@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+
+		<!-- include domain field in account.tax.code and account.tax.code.template from -->
+		<record model="ir.ui.view" id="view_l10n_br_accout_tax_code_form">
+			<field name="name">l10n_br_account.tax.code.form</field>
+			<field name="model">account.tax.code</field>
+			<field name="inherit_id" ref="account.view_tax_code_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="parent_id">
+					<field name="domain"/>
+					<field name="tax_discount" />
+			    </field>
+			</field>
+		</record>
+		
+		<record model="ir.ui.view" id="view_l10n_br_accout_tax_code_template_form">
+			<field name="name">l10n_br_account.tax.code.template.form</field>
+			<field name="model">account.tax.code.template</field>
+			<field name="inherit_id" ref="account.view_tax_code_template_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="parent_id">
+					<field name="domain"/>
+					<field name="tax_discount" />
+			    </field>
+			</field>
+		</record>
+
+		<!-- Include fields created in account.tax and account.tax.template form views -->
+		<record model="ir.ui.view" id="view_l10n_br_account_tax_template_form">
+			<field name="name">l10n_br_account.tax.template.form</field>
+			<field name="model">account.tax.template</field>
+			<field name="inherit_id" ref="account.view_account_tax_template_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="price_include">
+					<field name="tax_discount"/>
+			    </field>
+	    		<field name="tax_code_id" position="replace" >
+					<field name="tax_code_id" on_change="onchange_tax_code_id(tax_code_id)" />
+			    </field>
+				<field position="after" name="tax_discount">
+					<field name="base_reduction"/>
+					<field name="amount_mva"/>
+			    </field>
+			</field>
+		</record>
+
+		<record model="ir.ui.view" id="view_l10n_br_account_tax_form">
+			<field name="name">l10n_br_account.tax.form</field>
+			<field name="model">account.tax</field>
+			<field name="inherit_id" ref="account.view_tax_form"/>
+			<field name="arch" type="xml">
+				<field position="after" name="price_include">
+					<field name="tax_discount"/>
+			    </field>
+   				<field name="tax_code_id" position="replace" >
+					<field name="tax_code_id" on_change="onchange_tax_code_id(tax_code_id)" />
+			    </field>
+			    <field position="after" name="tax_discount">
+					<field name="base_reduction"/>
+					<field name="amount_mva"/>
+			    </field>
+			</field>
+		</record>
+
+	</data>
+</openerp>
+

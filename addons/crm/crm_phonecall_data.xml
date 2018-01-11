@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+    <!--
+    Phonecall Categories
+    -->
+    <record model="crm.case.categ" id="categ_phone1">
+        <field name="name">Inbound</field>
+        <field name="section_id" ref="sales_team.section_sales_department"/>
+        <field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>
+
+    </record>
+    <record model="crm.case.categ" id="categ_phone2">
+        <field name="name">Outbound</field>
+        <field name="section_id" ref="sales_team.section_sales_department"/>
+        <field name="object_id" search="[('model','=','crm.phonecall')]" model="ir.model"/>
+    </record>
+
+</data>
+</openerp>

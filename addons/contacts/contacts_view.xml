@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<openerp>
+  <data>
+
+
+    <record id="action_contacts" model="ir.actions.act_window">
+        <field name="name">Contacts</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="base.view_res_partner_filter"/>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a contact in your address book.
+          </p><p>
+            Odoo helps you easily track all activities related to
+            a customer; discussions, history of business opportunities,
+            documents, etc.
+          </p>
+        </field>
+    </record>
+
+    <record id="action_contacts_view_kanban" model="ir.actions.act_window.view">
+        <field eval="0" name="sequence"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="act_window_id" ref="action_contacts"/>
+    </record>
+    <record id="action_contacts_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="base.view_partner_tree"/>
+        <field name="act_window_id" ref="action_contacts"/>
+    </record>
+    <record id="action_contacts_view_form" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="base.view_partner_form"/>
+        <field name="act_window_id" ref="action_contacts"/>
+    </record>
+    
+    <menuitem name="Contacts" 
+        id="menu_contacts" 
+        parent="mail.mail_my_stuff" 
+        sequence="11" 
+        action="action_contacts"
+        groups="base.group_user,base.group_partner_manager"/>
+
+  </data>
+</openerp>
+
+

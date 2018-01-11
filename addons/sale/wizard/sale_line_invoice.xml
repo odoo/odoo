@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sale_order_line_make_invoice" model="ir.ui.view">
+            <field name="name">Sales OrderLine Make Invoice</field>
+            <field name="model">sale.order.line.make.invoice</field>
+            <field name="arch" type="xml">
+             <form string="Create invoices">
+                <p class="oe_grey">
+                    All items in these order lines will be invoiced. You can also invoice a percentage of the sales order
+                    or a fixed price (for advances) directly from the sales order form if you prefer.
+                </p>
+                <footer>
+                    <button name="make_invoices" string="Create &amp; View Invoice" type="object"
+                        context="{'open_invoices': True}" class="oe_highlight"/>
+                    <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_view_sale_order_line_make_invoice" model="ir.actions.act_window">
+            <field name="name">Create Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order.line.make.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_sale_order_line_make_invoice"/>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="sale_order_line_make_invoice">
+            <field name="model_id" ref="sale.model_sale_order_line" />
+            <field name="name">Make Invoices</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_view_sale_order_line_make_invoice'))" />
+            <field name="key">action</field>
+            <field name="model">sale.order.line</field>
+        </record>
+    </data>
+</openerp>

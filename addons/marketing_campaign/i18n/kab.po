@@ -1,0 +1,1107 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * marketing_campaign
+# 
+# Translators:
+# Belkacem Mohammed <belkacem77@gmail.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-18 18:18+0000\n"
+"Last-Translator: Belkacem Mohammed <belkacem77@gmail.com>\n"
+"Language-Team: Kabyle (http://www.transifex.com/odoo/odoo-8/language/kab/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: kab\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,count:0
+msgid "# of Actions"
+msgstr "Amḍan n tigawin"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a marketing campaign.\n"
+"          </p><p>\n"
+"            Odoo's marketing campaign allows you to automate communication\n"
+"            to your prospects. You can define a segment (set of conditions) on\n"
+"            your leads and partners to fullfil the campaign.\n"
+"          </p><p>\n"
+"            A campaign can have many activities like sending an email, printing\n"
+"            a letter, assigning to a team, etc. These activities are triggered\n"
+"            from specific situations; contact form, 10 days after first\n"
+"            contact, if a lead is not closed yet, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,server_action_id:0
+msgid "Action"
+msgstr "Tigawt"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: field:marketing.campaign,activity_ids:0
+#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_tree
+msgid "Activities"
+msgstr "Irmuden"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: field:campaign.analysis,activity_id:0
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: field:marketing.campaign.workitem,activity_id:0
+msgid "Activity"
+msgstr "Armud"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:501
+#, python-format
+msgid "After %(interval_nbr)d %(interval_type)s"
+msgstr "Deffir %(interval_nbr)d %(interval_type)s"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "All"
+msgstr "Akkw"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "All records (no duplicates)"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,signal:0
+msgid ""
+"An activity with a signal can be called programmatically. Be careful, the "
+"workitem is always created when a signal is sent"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "April"
+msgstr "Yebrir"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "August"
+msgstr "Ɣuct"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Automatic"
+msgstr "Awurman"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:500
+#, python-format
+msgid "Automatic transition"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid ""
+"By activating this option, workitems that aren't executed because the "
+"condition is not met are marked as cancelled instead of being deleted."
+msgstr ""
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: field:campaign.analysis,campaign_id:0
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: field:marketing.campaign.activity,campaign_id:0
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: field:marketing.campaign.segment,campaign_id:0
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: field:marketing.campaign.workitem,campaign_id:0
+msgid "Campaign"
+msgstr "Amzizzel"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
+msgid "Campaign Activity"
+msgstr "Armud n umzizzel"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: model:ir.actions.act_window,name:marketing_campaign.action_campaign_analysis_all
+#: model:ir.model,name:marketing_campaign.model_campaign_analysis
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
+msgid "Campaign Analysis"
+msgstr "Asefrek n umzizzel"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_diagram
+msgid "Campaign Editor"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
+msgid "Campaign Follow-up"
+msgstr "Amzizzel n tulsa"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
+msgid "Campaign Segment"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
+msgid "Campaign Transition"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
+msgid "Campaign Workitem"
+msgstr "Tawuri n umzizzel"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_form
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_tree
+msgid "Campaigns"
+msgstr "Imzizzlen"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Cancel"
+msgstr "Sefsex"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+msgid "Cancel Campaign"
+msgstr "Sefsex Amzizzel"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Cancel Segment"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+msgid "Cancel Workitem"
+msgstr "Sefsex Tawuri "
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0 selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Cancelled"
+msgstr "Ifsax"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,object_id:0
+msgid "Choose the resource on which you want this campaign to be run"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Close"
+msgstr "Mdel"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,condition:0
+msgid "Condition"
+msgstr "Tawtilt"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:502
+#: selection:marketing.campaign.transition,trigger:0
+#, python-format
+msgid "Cosmetic"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
+#: field:campaign.analysis,total_cost:0
+msgid "Cost"
+msgstr "Tasqamt"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,country_id:0
+msgid "Country"
+msgstr "Tamurt"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,create_uid:0
+#: field:marketing.campaign.activity,create_uid:0
+#: field:marketing.campaign.segment,create_uid:0
+#: field:marketing.campaign.transition,create_uid:0
+#: field:marketing.campaign.workitem,create_uid:0
+msgid "Created by"
+msgstr "Yerna-t"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,create_date:0
+#: field:marketing.campaign.activity,create_date:0
+#: field:marketing.campaign.segment,create_date:0
+#: field:marketing.campaign.transition,create_date:0
+#: field:marketing.campaign.workitem,create_date:0
+msgid "Created on"
+msgstr "Yerna di"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "Custom Action"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:campaign.analysis,date:0
+msgid "Date"
+msgstr "Azemz"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,sync_last_date:0
+msgid ""
+"Date on which this segment was synchronized last time (automatically or "
+"manually)"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_done:0
+msgid "Date this segment was last closed or cancelled."
+msgstr ""
+
+#. module: marketing_campaign
+#: field:campaign.analysis,day:0
+msgid "Day"
+msgstr "Ass"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Day(s)"
+msgstr "Ass(Ussan)"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "December"
+msgstr "Bujember"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,sync_mode:0
+msgid ""
+"Determines an additional criterion to add to the filter when selecting new "
+"records to inject in the campaign. \"No duplicates\" prevents selecting "
+"records which have already entered the campaign previously.If the campaign "
+"has a \"unique field\" set, \"no duplicates\" will also prevent selecting "
+"records which have the same value for the unique field as other records that"
+" already entered the campaign."
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,report_directory_id:0
+msgid "Directory"
+msgstr "Akaram"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid "Don't Delete Workitems"
+msgstr "Ur ţekkes ara Tawuri "
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "Done"
+msgstr "Immed"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Draft"
+msgstr "Arewway"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "Email"
+msgstr "Imayl"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:774
+#, python-format
+msgid "Email Preview"
+msgstr "Sken Imayl"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,email_template_id:0
+msgid "Email Template"
+msgstr "Tneɣruft n Imayl"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_email_template
+msgid "Email Templates"
+msgstr "Tineɣrufin n Imayl"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,date_done:0
+msgid "End Date"
+msgstr "Azemz n tagara"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:111
+#: code:addons/marketing_campaign/marketing_campaign.py:123
+#: code:addons/marketing_campaign/marketing_campaign.py:133
+#, python-format
+msgid "Error"
+msgstr "Tuccaḍa"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+#: field:marketing.campaign.workitem,error_msg:0
+msgid "Error Message"
+msgstr "Izen n tuccḍa"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: selection:marketing.campaign.workitem,state:0
+msgid "Exception"
+msgstr "Ugur"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+msgid "Exceptions"
+msgstr "Uguren"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.workitem,date:0
+msgid "Execution Date"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Execution Month"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "February"
+msgstr "Furar"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,ir_filter_id:0
+msgid "Filter"
+msgstr "Imzizdeg"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,ir_filter_id:0
+msgid ""
+"Filter to select the matching resource records that belong to this segment. "
+"New filters can be created and saved using the advanced search on the list "
+"view of the Resource. If no filter is set, all records are selected without "
+"filtering. The synchronization mode may also add a criterion to the filter."
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign,fixed_cost:0
+msgid "Fixed Cost"
+msgstr "Tasqamt tusbiṭ"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,fixed_cost:0
+msgid ""
+"Fixed cost for running this campaign. You may also specify variable cost and"
+" revenue on each campaign activity. Cost and Revenue statistics are included"
+" in Campaign Reporting."
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+msgid "Follow-Up"
+msgstr "Tulsa"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Group By"
+msgstr "Sdukel s"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_1
+msgid "Hello, you will receive your welcome pack via email shortly."
+msgstr ""
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"Hi, we are delighted to let you know that you have entered the select circle"
+" of our Gold Partners"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"Hi, we are delighted to welcome you among our Silver Partners as of today!"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Hour(s)"
+msgstr "Asrag"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.transition,trigger:0
+msgid "How is the destination workitem triggered"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:campaign.analysis,id:0 field:marketing.campaign,id:0
+#: field:marketing.campaign.activity,id:0
+#: field:marketing.campaign.segment,id:0
+#: field:marketing.campaign.transition,id:0
+#: field:marketing.campaign.workitem,id:0
+msgid "ID"
+msgstr "Asulay"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.workitem,date:0
+msgid "If date is not set, this workitem has to be run manually"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign,unique_field_id:0
+msgid ""
+"If set, this field will help segments that work in \"no duplicates\" mode to"
+" avoid selecting similar records twice. Similar records are records that "
+"have the same value for this unique field. For example by choosing the "
+"\"email_from\" field for CRM Leads you would prevent sending the same "
+"campaign to the same email address again. If not set, the \"no duplicates\" "
+"segments will only avoid selecting the same record again if it entered the "
+"campaign previously. Only easily comparable fields like textfields, "
+"integers, selections or single relationships may be used."
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+msgid "Incoming Transitions"
+msgstr "Isuka inekcam"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_run:0
+msgid "Initial start date of this segment."
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,interval_type:0
+msgid "Interval Unit"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,interval_nbr:0
+msgid "Interval Value"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "January"
+msgstr "Yennayer"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "July"
+msgstr "Yulyu"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "June"
+msgstr "Yunyu"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,sync_last_date:0
+msgid "Last Synchronization"
+msgstr "Amtawi aneggaru"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,write_uid:0
+#: field:marketing.campaign.activity,write_uid:0
+#: field:marketing.campaign.segment,write_uid:0
+#: field:marketing.campaign.transition,write_uid:0
+#: field:marketing.campaign.workitem,write_uid:0
+msgid "Last Updated by"
+msgstr "Aleqqem aneggaru sɣuṛ"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,write_date:0
+#: field:marketing.campaign.activity,write_date:0
+#: field:marketing.campaign.segment,write_date:0
+#: field:marketing.campaign.transition,write_date:0
+#: field:marketing.campaign.workitem,write_date:0
+msgid "Last Updated on"
+msgstr "Aleqqem aneggaru di"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,date_run:0
+msgid "Launch Date"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Launch Month"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+msgid "Manual Mode"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "March"
+msgstr "Meɣres"
+
+#. module: marketing_campaign
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+msgid "Marketing Campaign"
+msgstr "Amzizzel n telzuzit"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Marketing Campaign Activities"
+msgstr "Irmuden n umzizzel n telzuzit"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+msgid "Marketing Campaign Activity"
+msgstr "Armud n yemzizzel n telzuzit"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Marketing Campaign Segment"
+msgstr "Aqzuzem n umzizzel n telzuzit"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+msgid "Marketing Campaign Statistics"
+msgstr "Tidaddanin n umzizzel n telzuzit"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_tree
+#: view:campaign.analysis:marketing_campaign.view_report_campaign_analysis_graph
+msgid "Marketing Reports"
+msgstr "Assaɣen n telzuzit"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "May"
+msgstr "Maggu"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: field:marketing.campaign,mode:0
+msgid "Mode"
+msgstr "Tarrayt"
+
+#. module: marketing_campaign
+#: constraint:marketing.campaign.segment:0
+msgid "Model of filter must be same as resource model of Campaign "
+msgstr ""
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: field:campaign.analysis,month:0
+msgid "Month"
+msgstr "Aggur"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Month(s)"
+msgstr "Igguren"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,name:0 field:marketing.campaign.activity,name:0
+#: field:marketing.campaign.segment,name:0
+#: field:marketing.campaign.transition,name:0
+msgid "Name"
+msgstr "Isem"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,state:0
+#: selection:marketing.campaign.segment,state:0
+msgid "New"
+msgstr "Amaynut"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Newly Created"
+msgstr "Yerna melmi kan"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Newly Modified"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+#: field:marketing.campaign.activity,to_ids:0
+msgid "Next Activities"
+msgstr "Irmuden d iteddun"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,activity_to_id:0
+msgid "Next Activity"
+msgstr "Armud d iteddun"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,date_next_sync:0
+msgid "Next Synchronization"
+msgstr "Amtawi d iteddun"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.segment,date_next_sync:0
+msgid "Next time the synchronization job is scheduled to run automatically"
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:800
+#, python-format
+msgid "No preview"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "November"
+msgstr "Number"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,object_id:0
+msgid "Object"
+msgstr "Taɣawsa"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "October"
+msgstr "Tuber"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "Only records created after last sync"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.segment,sync_mode:0
+msgid "Only records modified after last sync (no duplicates)"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
+msgid "Open Marketing Menu"
+msgstr "Lli umuɣ n telzuzit"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:189
+#, python-format
+msgid "Operation not supported"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+msgid "Outgoing Transitions"
+msgstr "Isuka Uffiɣen"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,partner_id:0
+#: field:marketing.campaign.workitem,partner_id:0
+msgid "Partner"
+msgstr "Amendid"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,partner_field_id:0
+msgid "Partner Field"
+msgstr "Urti n Umendid"
+
+#. module: marketing_campaign
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Imendiden"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Preview"
+msgstr "Timeẓriwt"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.activity:marketing_campaign.view_marketing_campaign_activity_form
+#: field:marketing.campaign.activity,from_ids:0
+msgid "Previous Activities"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,activity_from_id:0
+msgid "Previous Activity"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_tree
+msgid "Process"
+msgstr "Traiter"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,condition:0
+msgid ""
+"Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled.The expression may use the following [browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,report_id:0
+#: selection:marketing.campaign.activity,type:0
+msgid "Report"
+msgstr "Assaɣ"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_form
+msgid "Reset"
+msgstr "Wennez"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,res_id:0
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: field:marketing.campaign,object_id:0
+#: field:marketing.campaign.segment,object_id:0
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: field:marketing.campaign.workitem,object_id:0
+msgid "Resource"
+msgstr "Taɣbalut"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
+msgstr "Asulay n teɣbalut"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.workitem,res_name:0
+msgid "Resource Name"
+msgstr "Isem n teɣbalut"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,revenue:0
+#: field:marketing.campaign.activity,revenue:0
+msgid "Revenue"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Run"
+msgstr "Selkem"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: selection:marketing.campaign,state:0
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: selection:marketing.campaign.segment,state:0
+msgid "Running"
+msgstr "Amiran"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: field:campaign.analysis,segment_id:0
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: field:marketing.campaign.workitem,segment_id:0
+msgid "Segment"
+msgstr "Aqzuzem"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: field:marketing.campaign,segment_ids:0
+#: field:marketing.campaign,segments_count:0
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_tree
+msgid "Segments"
+msgstr "Iqzuzam"
+
+#. module: marketing_campaign
+#: selection:campaign.analysis,month:0
+msgid "September"
+msgstr "Ctember"
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,variable_cost:0
+msgid ""
+"Set a variable cost if you consider that every campaign item that has "
+"reached this point has entailed a certain cost. You can get cost statistics "
+"in the Reporting section"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,revenue:0
+msgid ""
+"Set an expected revenue if you consider that every campaign item that has "
+"reached this point has generated a certain revenue. You can get revenue "
+"statistics in the Reporting section"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Set to Draft"
+msgstr "Rrit d arewway"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,signal:0
+msgid "Signal"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,start:0
+msgid "Start"
+msgstr "Bdu"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_form
+msgid "Statistics"
+msgstr "Tiddadanin"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: field:campaign.analysis,state:0
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+#: field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+#: field:marketing.campaign.segment,state:0
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: field:marketing.campaign.workitem,state:0
+msgid "Status"
+msgstr "Addad"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Sync mode: all records"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Sync mode: only records created after last sync"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_search
+msgid "Sync mode: only records updated after last sync"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.segment,sync_mode:0
+msgid "Synchronization mode"
+msgstr "Askar n umtawi"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.segment:marketing_campaign.view_marketing_campaign_segment_form
+msgid "Synchronize Manually"
+msgstr "Mtawi s ufus"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,mode:0
+msgid ""
+"Test - It creates and process all the activities directly (without waiting for the delay on transitions) but does not send emails or produce reports.\n"
+"Test in Realtime - It creates and processes all the activities directly but does not send emails or produce reports.\n"
+"With Manual Confirmation - the campaigns runs normally, but the user has to validate all workitem manually.\n"
+"Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Test Directly"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign:marketing_campaign.view_marketing_campaign_search
+msgid "Test Mode"
+msgstr "Askar n Ukayad"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "Test in Realtime"
+msgstr ""
+
+#. module: marketing_campaign
+#: constraint:marketing.campaign.transition:0
+msgid "The To/From Activity of transition must be of the same Campaign "
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,server_action_id:0
+msgid "The action to perform when this activity is activated"
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:133
+#, python-format
+msgid "The campaign cannot be marked as done before all segments are closed."
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:123
+#, python-format
+msgid ""
+"The campaign cannot be started. It does not have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:111
+#, python-format
+msgid "The campaign cannot be started. There are no activities in it."
+msgstr ""
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:800
+#, python-format
+msgid "The current step for this item has no email or report to preview."
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,email_template_id:0
+msgid "The email to send when this activity is activated"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign,partner_field_id:0
+msgid ""
+"The generated workitems will be linked to the partner related to the record."
+" If the record is the partner itself leave this field empty. This is useful "
+"for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
+"views."
+msgstr ""
+
+#. module: marketing_campaign
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,report_id:0
+msgid "The report to generate when this activity is activated"
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,type:0
+msgid ""
+"The type of action to execute when an item enters this activity, such as:\n"
+"   - Email: send an email using a predefined email template\n"
+"   - Report: print an existing Report defined on the resource item and save it into a specific directory\n"
+"   - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record\n"
+"  "
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,start:0
+msgid "This activity is launched when the campaign starts."
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,report_directory_id:0
+msgid "This folder is used to store the generated reports"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,trigger:0
+msgid "Time"
+msgstr "Akud"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:marketing_campaign.view_campaign_analysis_search
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:marketing_campaign.view_marketing_campaign_workitem_search
+#: selection:marketing.campaign.workitem,state:0
+msgid "To Do"
+msgstr "Ad imag"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.transition,trigger:0
+msgid "Trigger"
+msgstr ""
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,type:0
+msgid "Type"
+msgstr "Tawsit"
+
+#. module: marketing_campaign
+#: field:marketing.campaign,unique_field_id:0
+msgid "Unique Field"
+msgstr "Urti asuf"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,variable_cost:0
+msgid "Variable Cost"
+msgstr "Tasqamt tanmeskilt"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the Odoo Partner Channel!"
+msgstr ""
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "With Manual Confirmation"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+msgid "Workitems"
+msgstr "Tiwuriwin"
+
+#. module: marketing_campaign
+#: field:campaign.analysis,year:0
+msgid "Year"
+msgstr "Aseggawas"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.transition,interval_type:0
+msgid "Year(s)"
+msgstr "Asseggwas(i-sen)"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:189
+#, python-format
+msgid "You cannot duplicate a campaign, Not supported yet."
+msgstr ""

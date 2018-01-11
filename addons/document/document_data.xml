@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+    <record model="document.directory" id="dir_root">
+        <field name="name">Documents</field>
+        <field name="user_id" eval="False"/>
+        <field name="ressource_id">0</field>
+    </record>
+
+    <record model="document.directory" id="dir_my_folder">
+        <field name="name">Admin Folder</field>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="ressource_id">0</field>
+    </record>
+</data>
+
+<data noupdate="1">
+    <record model="document.directory.content.type" id="pdf">
+        <field name="code">.pdf</field>
+        <field name="name">PDF Report</field>
+        <field name="mimetype">application/pdf</field>
+    </record>
+
+    <record model="document.directory" id="dir_partner">
+        <field name="name">Partners</field>
+        <field name="type">ressource</field>
+        <field name="ressource_type_id" search="[('model','=','res.partner')]" />
+        <field name="user_id" eval="False"/>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="ressource_id">0</field>
+    </record>
+
+    <record model="document.directory" id="dir_personnal_folder">
+        <field name="name">Personal Folders</field>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="type">ressource</field>
+        <field name="user_id" eval="False"/>
+        <field name="ressource_type_id" ref="base.model_res_users" />
+        <field name="ressource_id">0</field>
+    </record>
+    <record model="document.directory" id="dir_product">
+        <field name="name">Products</field>
+        <field name="user_id" eval="False"/>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="ressource_id">0</field>
+
+    </record>
+
+    <record model="document.directory" id="dir_sale_order">
+        <field name="name">Sales Order</field>
+        <field name="user_id" eval="False"/>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="ressource_id">0</field>
+
+    </record>
+
+    <record model="document.directory" id="dir_sale_order_all">
+        <field name="name">All Sales Order</field>
+        <field name="user_id" eval="False"/>
+        <field name="parent_id" ref="dir_sale_order"/>
+        <field name="ressource_id">0</field>
+
+    </record>
+
+    <record model="document.directory" id="dir_sale_order_quote">
+        <field name="name">Quotations</field>
+        <field name="user_id" eval="False"/>
+        <field name="parent_id" ref="dir_sale_order"/>
+        <field name="ressource_id">0</field>
+
+    </record>
+
+    <record model="document.directory" id="dir_project">
+        <field name="name">Projects</field>
+        <field name="user_id" eval="False"/>
+        <field name="parent_id" ref="dir_root"/>
+        <field name="ressource_id">0</field>
+    </record>
+
+</data>
+</openerp>

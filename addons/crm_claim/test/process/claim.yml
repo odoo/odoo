@@ -1,0 +1,29 @@
+-
+  Customer requests a claim after the sale of our product. He sends claim request by email.
+-
+  Mail script will be fetched him request from mail server. so I process that mail after read EML file 
+-
+  !python {model: mail.thread}: |
+    request_file = open(openerp.modules.module.get_module_resource('crm_claim','test', 'customer_claim.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'crm.claim', request_message)
+-
+  After getting the mail, I check details of new claim of that customer.
+-
+  !python {model: crm.claim}: |
+    from openerp import tools
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    assert claim_ids and len(claim_ids), "Claim is not created after getting request"
+    claim = self.browse(cr, uid, claim_ids[0], context=context)
+    assert claim.name == tools.ustr("demande de règlement de votre produit."), "Subject does not match"
+-
+  I open customer claim.
+-
+  !python {model: crm.claim}: |
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+-
+  I check Claim Details after open.
+-
+  !python {model: crm.claim}: |
+    claim_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    claim = self.browse(cr, uid, claim_ids[0])

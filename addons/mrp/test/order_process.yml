@@ -1,0 +1,211 @@
+-
+    MRP user can doing all process related to Production Order, so let's check data with giving the access rights of user.
+-
+  !context
+    uid: 'res_users_mrp_user'
+-
+  I compute the production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
+    order.action_compute(context=context)
+-
+  I check production lines after compute.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
+    assert len(order.product_lines) == 5, "Production lines are not generated proper."
+-
+  Now I check workcenter lines.
+-
+  !python {model: mrp.production}: |
+    from openerp.tools import float_compare
+    def assert_equals(value1, value2, msg, float_compare=float_compare):
+        assert float_compare(value1, value2, precision_digits=2) == 0, msg
+    order = self.browse(cr, uid, ref("mrp_production_test1"), context=context)
+    assert len(order.workcenter_lines), "Workcenter lines are not generated proper."
+-
+  I confirm the Production Order.
+-
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_test1}
+  
+-
+  I check details of Produce Move of Production Order to trace Final Product.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    assert order.state == 'confirmed', "Production order should be confirmed."
+    assert order.move_created_ids, "Trace Record is not created for Final Product."
+    move = order.move_created_ids[0]
+    source_location_id = order.product_id.property_stock_production.id
+    assert move.date == order.date_planned, "Planned date is not correspond."
+    assert move.product_id.id == order.product_id.id, "Product does not correspond."
+    assert move.product_uom.id == order.product_uom.id, "UOM does not correspond."
+    assert move.product_qty == order.product_qty, "Qty does not correspond."
+    assert move.product_uos_qty == order.product_uos and order.product_uos_qty or order.product_qty, "UOS qty does not correspond."
+    if order.product_uos:
+        assert move.product_uos.id == order.product_uos.id, "UOS does not correspond."
+    assert move.location_id.id == source_location_id, "Source Location does not correspond."
+    assert move.location_dest_id.id == order.location_dest_id.id, "Destination Location does not correspond."
+    routing_loc = None
+    if order.bom_id.routing_id and order.bom_id.routing_id.location_id:
+        routing_loc = order.bom_id.routing_id.location_id.id
+    date_planned = order.date_planned
+    for move_line in order.move_lines:
+        for order_line in order.product_lines:
+          if move_line.product_id.type not in ('product', 'consu'):
+            continue
+          if move_line.product_id.id == order_line.product_id.id:
+            assert move_line.date == date_planned, "Planned date does not correspond in 'To consume line'."
+            assert move_line.product_qty == order_line.product_qty, "Qty does not correspond in 'To consume line'."
+            assert move_line.product_uom.id == order_line.product_uom.id, "UOM does not correspond in 'To consume line'."
+            assert move_line.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty is not correspond in 'To consume line'."
+            if order_line.product_uos:
+              assert move_line.product_uos.id == order_line.product_uos.id, "UOS is not correspond in 'To consume line'."
+            assert move_line.location_id.id == routing_loc or order.location_src_id.id, "Source location is not correspond in 'To consume line'."
+            assert move_line.location_dest_id.id == source_location_id, "Destination Location is not correspond in 'To consume line'."
+-
+  I consume raw materials and put one material in scrap location due to waste it.
+-
+  !python {model: mrp.production}: |
+    scrap_location_ids = self.pool.get('stock.location').search(cr, uid, [('scrap_location','=',True)])
+    scrap_location_id = scrap_location_ids[0]
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    for move in order.move_lines:
+        if move.product_id.id == ref("product.product_product_6"):
+            move.action_scrap(5.0, scrap_location_id)
+-
+  I check procurements have been generated for every consume line
+- 
+  !python {model: procurement.order}: |
+    order = self.pool.get("mrp.production").browse(cr, uid, ref("mrp_production_test1"))
+    move_line_ids = [x.id for x in order.move_lines]
+    procurements = self.search(cr, uid, [('move_dest_id', 'in', move_line_ids)])
+    for proc in self.browse(cr, uid, procurements):
+      for order_line in order.product_lines:
+        date_planned = order.date_planned
+        if proc.product_id.type not in ('product', 'consu'):
+          continue
+        if proc.product_id.id == order_line.product_id.id:
+          assert proc.date_planned == date_planned, "Planned date does not correspond"
+          assert proc.product_qty == order_line.product_qty, "Qty does not correspond"
+          assert proc.location_id.id == order.location_src_id.id, "Input location and procurement location do not correspond"
+          assert proc.product_uom.id == order_line.product_uom.id, "UOM does not correspond in procurement."
+          assert proc.product_uos_qty == order_line.product_uos and order_line.product_uos_qty or order_line.product_qty, "UOS qty does not correspond in procurement."
+          # procurement state should be `confirmed` at this stage, except if procurement_jit is installed, in which
+          # case it could already be in `running` or `exception` state (not enough stock)
+          expected_states = ('confirmed', 'running', 'exception')
+          assert proc.state in expected_states, 'Procurement state is `%s` for %s, expected one of %s' % \
+              (proc.state, proc.product_id.name, expected_states)
+          if order_line.product_uos:
+            assert proc.product_uos.id == order_line.product_uos.id, "UOS is not correspond in procurement."
+-
+  I change production qty with 3 PC Assemble SC349.
+-
+  !python {model: change.production.qty}: |
+    context.update({'active_id': ref('mrp_production_test1')})
+-
+  !record {model: change.production.qty, id: mrp_production_qty}:
+    product_qty: 3.0
+-
+  !python {model: change.production.qty}: |
+    self.change_prod_qty(cr, uid, [ref("mrp_production_qty")], context=context)
+-
+  I check qty after changed in production order.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    assert order.product_qty == 3, "Qty is not changed in order."
+    move = order.move_created_ids[0]
+    assert move.product_qty == order.product_qty, "Qty is not changed in move line."
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  The production order is Waiting Goods, will force production which should set consume lines as available
+-
+  !python {model: mrp.production}: |
+    self.force_production(cr, uid, [ref("mrp_production_test1")])
+-
+  I check that production order in ready state after forcing production.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    assert order.state == 'ready', 'Production order should be in Ready State.'
+-
+  Now I start production.
+-
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_test1}
+-
+  I check that production order in production state after start production.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    assert order.state == 'in_production', 'Production order should be in production State.'
+-
+  I produce product.
+-
+  !python {model: mrp.product.produce}: |
+    context.update({'active_id': ref('mrp_production_test1')})
+-
+  !record {model: mrp.product.produce, id: mrp_product_produce1}:
+    mode: 'consume_produce'
+-
+  !python {model: mrp.product.produce}: |
+    qty = self.browse(cr, uid, ref('mrp_product_produce1')).product_qty
+    lines = self.on_change_qty(cr, uid, [ref('mrp_product_produce1')], qty, [], context=context)
+    self.write(cr, uid, [ref('mrp_product_produce1')], lines['value'], context=context)
+    self.do_produce(cr, uid, [ref('mrp_product_produce1')], context=context)
+-
+  I check production order after produced.
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    assert order.state == 'done', "Production order should be closed."
+-
+  I check Total Costs at End of Production as a manager.
+-
+  !context
+    uid: 'res_users_mrp_manager'
+-
+  !python {model: mrp.production}: |
+    order = self.browse(cr, uid, ref("mrp_production_test1"))
+    account_analytic_line = self.pool.get('account.analytic.line')
+    def rounding(f, r):
+        import math
+        if not r:
+            return f
+        return math.ceil(f / r) * r
+
+    for wc_line in order.workcenter_lines:
+        wc = wc_line.workcenter_id
+        accounts = [wc.costs_hour_account_id, wc.costs_cycle_account_id]
+        cost_per_cyle = wc_line.cycle * wc.costs_cycle
+        cost_per_hours = wc_line.hour * wc.costs_hour
+        if accounts and wc.costs_journal_id and wc.costs_general_account_id and (cost_per_cyle or cost_per_hours):
+            line_ids = account_analytic_line.search(cr, uid, [('name','ilike',wc_line.name)])
+            assert line_ids, 'Costs lines are not generated.'
+            for line in account_analytic_line.browse(cr, uid, line_ids, context=context):
+                if wc.costs_hour_account_id and line.account_id.id == wc.costs_hour_account_id.id:
+                    assert rounding(line.unit_amount, 3) == rounding(wc_line.hour, 3), "Cost Unit Amount is not correspond."
+                    assert rounding(line.amount, 3) == rounding(cost_per_hours, 3), "Cost amount is not correspond."
+                elif wc.costs_cycle_account_id and line.account_id.id == wc.costs_cycle_account_id.id:
+                    assert rounding(line.unit_amount, 3) == rounding(wc_line.cycle, 3), "Cost Unit Amount is not correspond."
+                    assert rounding(line.amount, 3) == rounding(cost_per_cyle, 3), "Cost Amount is not correspond."
+                else:
+                    raise AssertionError('unknown cost line: %s' % line)
+                assert line.general_account_id.id == wc.costs_general_account_id.id, "General Account is not correspond."
+                assert line.journal_id.id == wc.costs_journal_id.id, "Account Journal is not correspond."
+                assert line.product_id.id == wc.product_id.id, "Product does not correspond."
+                assert line.product_uom_id.id == wc.product_id.uom_id.id, "UOM does not correspond."
+-
+  I print "Work Center Load Report".
+-
+  !python {model: mrp.workcenter}: |
+    ctx = context.copy()
+    ctx.update({'model': 'mrp.workcenter','active_ids': [ref('mrp_workcenter_0'),ref('mrp_workcenter_1')]})
+    data_dict = {'time_unit': 'day', 'measure_unit': 'hours'}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_mrp_workcenter_load_wizard',wiz_data=data_dict, context=ctx, our_module='mrp')

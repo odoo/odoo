@@ -1,0 +1,264 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_signup
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# krnkris, 2015
+# Martin Trigaux, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-12-16 13:15+0000\n"
+"PO-Revision-Date: 2016-12-09 08:25+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_signup
+#: model:email.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to \"${object.company_id.name}\" in order to get access to your documents in Odoo.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr "\n                \n                    <p>\n                        ${object.name},\n                    </p>\n                    <p>\n                        Meghívást kapott egy tartalomhoz a \"${object.company_id.name}\" adataiban, hogy hozzáférhessen az Odoo rendszeren belüli dokumentumaihoz.\n                    </p>\n                    <p>\n                        A meghívás elfogadásához, kattintson a következő hivatkozásra:\n                    </p>\n                    <ul>\n                        <li><a href=\"${object.signup_url}\">Meghívás elfogadása ide \"${object.company_id.name}\"</a></li>\n                    </ul>\n                    <p>\n                        Köszönjük,\n                    </p>\n                    <pre>\n--\n${object.company_id.name or ''}\n${object.company_id.email or ''}\n${object.company_id.phone or ''}\n                    </pre>\n                \n            "
+
+#. module: auth_signup
+#: model:email.template,body_html:auth_signup.reset_password_email
+msgid ""
+"\n"
+"<p>A password reset was requested for the Odoo account linked to this email.</p>\n"
+"\n"
+"<p>You may change your password by following <a href=\"${object.signup_url}\">this link</a>.</p>\n"
+"\n"
+"<p>Note: If you do not expect this, you can safely ignore this email.</p>"
+msgstr "\n<p>Egy jelszó visszaállítás szükséges az email-ben elküldött Odoo rendszer fiókhoz.</p>\n\n<p>Megváltoztathatja a jelszavát erre <a href=\"${object.signup_url}\">a hivatkozásra kattintva</a>.</p>\n\n<p>Megjegyzés: Ha ez az üzenet váratlanul érte, biztonsággal figyelmen kívül hagyhatja ezt az email-t.</p>"
+
+#. module: auth_signup
+#: model:email.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on Odoo"
+msgstr "${object.company_id.name} meghívás az Odoo rendszer tartalmához"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid ""
+"A password reset has been requested for this user. An email containing the "
+"following link has been sent:"
+msgstr "Ez a felhasználó igényel egy jelszó visszaállítást. A következő elérési úttal/linkkel küldtünk egy e-mail-t:"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr "Aktiválva"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_uninvited:0
+msgid "Allow external users to sign up"
+msgstr "Külső felhasználók bejelentkezésének engedéjezése"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:78
+#, python-format
+msgid "An email has been sent with credentials to reset your password"
+msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid ""
+"An invitation email containing the following subscription link has been "
+"sent:"
+msgstr "Egy meghívás e-mail-t küldtünk a következő feliratkozási linkkel:"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:58
+#, python-format
+msgid "Another user is already registered using this email address."
+msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:130
+#, python-format
+msgid "Authentification Failed."
+msgstr "A hitelesítés sikertelen."
+
+#. module: auth_signup
+#: view:website:auth_signup.reset_password view:website:auth_signup.signup
+msgid "Back to Login"
+msgstr "Vissza a bejelentkezéshez"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:294
+#, python-format
+msgid "Cannot send email: user has no email address."
+msgstr "Nem küldhető e-mail: a felhasználónak nincs e-mail címe."
+
+#. module: auth_signup
+#: view:website:auth_signup.fields
+msgid "Confirm Password"
+msgstr "Jelszó megerõsítése"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:61
+#, python-format
+msgid "Could not create a new account."
+msgstr "Nem tudta létrehozni a fiókot."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:84
+#, python-format
+msgid "Could not reset your password"
+msgstr "Nem lehetett visszaállítani a jelszaát"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_reset_password:0
+msgid "Enable password reset from Login page"
+msgstr "Jelszóváltoztató engedélyezése a belépési oldalról"
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_uninvited:0
+msgid "If unchecked, only invited users may sign up."
+msgstr "He nincs bejelölve, vsak maghívott felhasználók jelentkezhetnek be."
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:109
+#, python-format
+msgid "Invalid signup token"
+msgstr "Érvénytelen regisztrációs token"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr "Sohe nem kapcsolódott"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: auth_signup
+#: view:website:auth_signup.fields
+msgid "Password"
+msgstr "Jelszó"
+
+#. module: auth_signup
+#: model:email.template,subject:auth_signup.reset_password_email
+msgid "Password reset"
+msgstr "Jelszó visszaállítás"
+
+#. module: auth_signup
+#: view:website:web.login
+msgid "Reset Password"
+msgstr "Jelszó visszaállítása"
+
+#. module: auth_signup
+#: view:website:auth_signup.reset_password
+msgid "Reset password"
+msgstr "Jelszó visszaállítása"
+
+#. module: auth_signup
+#: code:addons/auth_signup/res_users.py:267
+#, python-format
+msgid "Reset password: invalid username or email"
+msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid "Send Reset Password Instructions"
+msgstr "Jelszó visszaállítási utasítások elküldése"
+
+#. module: auth_signup
+#: view:res.users:auth_signup.res_users_form_view
+msgid "Send an Invitation Email"
+msgstr "Egy meghívó email küldése"
+
+#. module: auth_signup
+#: view:website:auth_signup.signup view:website:web.login
+msgid "Sign up"
+msgstr "Regisztrál"
+
+#. module: auth_signup
+#: field:res.partner,signup_expiration:0
+msgid "Signup Expiration"
+msgstr "Bejelentkezési határidő"
+
+#. module: auth_signup
+#: field:res.partner,signup_token:0
+msgid "Signup Token"
+msgstr "Regisztrációs token"
+
+#. module: auth_signup
+#: field:res.partner,signup_type:0
+msgid "Signup Token Type"
+msgstr "Feliratkozó Token típus"
+
+#. module: auth_signup
+#: field:res.partner,signup_valid:0
+msgid "Signup Token is Valid"
+msgstr "Regisztrációs token érvényes"
+
+#. module: auth_signup
+#: field:res.partner,signup_url:0
+msgid "Signup URL"
+msgstr "Bejelentkezési URL elérési útvonal"
+
+#. module: auth_signup
+#: field:res.users,state:0
+msgid "Status"
+msgstr "Állapot"
+
+#. module: auth_signup
+#: field:base.config.settings,auth_signup_template_user_id:0
+msgid "Template user for new users created through signup"
+msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
+
+#. module: auth_signup
+#: help:base.config.settings,auth_signup_reset_password:0
+msgid "This allows users to trigger a password reset from the Login page."
+msgstr "Ez lehetővé teszi a felhasználó részére a jelszó megváltoztatásának elindítását a bejelentkezési oldalról."
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_users
+msgid "Users"
+msgstr "Felhasználók"
+
+#. module: auth_signup
+#: view:website:auth_signup.fields view:website:auth_signup.reset_password
+msgid "Your Email"
+msgstr "Az Ön emailje"
+
+#. module: auth_signup
+#: view:website:auth_signup.fields
+msgid "Your Name"
+msgstr "At Ön neve"
+
+#. module: auth_signup
+#: view:website:auth_signup.fields
+msgid "e.g. John Doe"
+msgstr "pl. Gipsz Jakab"

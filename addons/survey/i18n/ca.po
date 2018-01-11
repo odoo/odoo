@@ -1,0 +1,2189 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# Eric Antones <eantones@users.noreply.github.com>, 2016
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# RGB Consulting <odoo@rgbconsulting.com>, 2016
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2017-09-22 08:21+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>\n"
+"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-8/language/ca/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ca\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: survey
+#: model:email.template,body_html:survey.email_template_survey
+msgid ""
+"\n"
+"                \n"
+"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+"                    <p>Hello,</p>\n"
+"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"                    <p>Thanks for your participation!</p>\n"
+"                </div>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: survey
+#: view:survey.page:survey.survey_page_tree
+msgid "#Questions"
+msgstr "Núm preguntes"
+
+#. module: survey
+#: code:addons/survey/survey.py:246 code:addons/survey/survey.py:543
+#: code:addons/survey/survey.py:662
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (còpia)"
+
+#. module: survey
+#: view:website:survey.page
+msgid "&times;"
+msgstr "&vegades;"
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">Click to add a survey.</p>\n"
+"                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>\n"
+"                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_1
+#: model:survey.page,description:survey.feedback_3
+#: model:survey.survey,thank_you_message:survey.feedback_form
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_4
+msgid "<p>If you do not contribute or develop in Odoo, skip this page.</p>"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
+msgid ""
+"<p>Nobody has replied to your survey yet.</p>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_user_input
+msgid ""
+"<p>Nobody has replied to your surveys yet.</p>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_2
+msgid ""
+"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"what have been your difficulties.</p>"
+msgstr ""
+
+#. module: survey
+#: model:survey.survey,description:survey.feedback_form
+msgid "<p>This survey should take less than five minutes.</p>"
+msgstr ""
+
+#. module: survey
+#: constraint:survey.label:0
+msgid "A label must be attached to one and only one question"
+msgstr ""
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "A length must be positive!"
+msgstr "Una duració ha de ser positiva"
+
+#. module: survey
+#: help:survey.survey,description:0
+msgid "A long description of the purpose of the survey"
+msgstr "Una descripció llarga del propòsit de l'enquesta"
+
+#. module: survey
+#: help:survey.label,quizz_mark:0
+msgid ""
+"A positive score indicates a correct answer; a negative or null score "
+"indicates a wrong answer"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.page
+msgid "A problem has occured"
+msgstr "S'ha produït un problema"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr "Un procés és definit per tots els fluxos empresarials"
+
+#. module: survey
+#: constraint:survey.user_input_line:0
+msgid "A question cannot be unanswered and skipped"
+msgstr "Una pregunta no pot ser no contestada ni saltada"
+
+#. module: survey
+#: sql_constraint:survey.user_input:0
+msgid "A token must be unique!"
+msgstr "El token ha de ser únic"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "Sobre el seu ús d'Odoo"
+
+#. module: survey
+#: field:survey.mail.compose.message,active_domain:0
+msgid "Active domain"
+msgstr "Domini actiu"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"Add list of email of recipients (will not converted in partner), separated "
+"by commas, semicolons or newline..."
+msgstr "Afegir llista dels correus dels destinataris (no es convertiran en empreses), separat per comes, punts i comes o noves línies..."
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Add list of existing contacts..."
+msgstr "Afegir llista de contactes existents..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "D'acord"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "All Data"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.result
+msgid "All surveys"
+msgstr "Totes les enquestes"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Allow Comments"
+msgstr "Permetre Comentaris"
+
+#. module: survey
+#: help:survey.page,description:0
+msgid "An introductory text to your page"
+msgstr "Un text introductori de la seva pàgina"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Analyze Answers"
+msgstr "Analitzar respostes"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Answer Choices"
+msgstr "Opcions de resposta"
+
+#. module: survey
+#: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
+msgid "Answer Type"
+msgstr "Tipus de resposta"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Answered"
+msgstr "Respost"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,user_input_line_ids:0
+#: field:survey.user_input,user_input_line_ids:0
+msgid "Answers"
+msgstr "Respostes"
+
+#. module: survey
+#: help:survey.mail.compose.message,no_auto_thread:0
+msgid ""
+"Answers do not go in the original document' discussion thread. This has an "
+"impact on the generated message-id."
+msgstr "Les respostes no van al document original del fil de la discussió. Això té un impacte en el id del missatge generat."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "Està utilitzant Odoo diàriament?"
+
+#. module: survey
+#: field:survey.mail.compose.message,attachment_ids:0
+msgid "Attachments"
+msgstr "Adjunts"
+
+#. module: survey
+#: field:survey.mail.compose.message,author_id:0
+msgid "Author"
+msgstr "Autor"
+
+#. module: survey
+#: help:survey.mail.compose.message,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "Autor del missatge. Si no es defineix,  email_from  pot tenir una adreça de correu que no coincideixi amb la de ninguna empresa."
+
+#. module: survey
+#: field:survey.mail.compose.message,author_avatar:0
+msgid "Author's Avatar"
+msgstr "Avatar de l'autor"
+
+#. module: survey
+#: help:survey.mail.compose.message,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr "Contingut HTML automàticament sanejat"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Average"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Cancel"
+msgstr "Canceŀla"
+
+#. module: survey
+#: field:survey.survey,res_model:0
+msgid "Category"
+msgstr "Categoria"
+
+#. module: survey
+#: field:survey.mail.compose.message,child_ids:0
+msgid "Child Messages"
+msgstr "Missatges fills"
+
+#. module: survey
+#: view:website:survey.simple_choice
+msgid "Choose..."
+msgstr "Seleccionar..."
+
+#. module: survey
+#: view:website:survey.result
+msgid "Clear All Filters"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:141
+#: code:addons/survey/wizard/survey_email_compose_message.py:51
+#, python-format
+msgid "Click here to start survey"
+msgstr "Premi clic aquí per iniciar l'enquesta"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:109
+#, python-format
+msgid "Click here to take survey"
+msgstr ""
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: view:website:survey.page
+msgid "Close"
+msgstr "Tanca"
+
+#. module: survey
+#: field:survey.stage,closed:0 model:survey.stage,name:survey.stage_closed
+msgid "Closed"
+msgstr "Tancada"
+
+#. module: survey
+#: field:survey.survey,color:0
+msgid "Color Index"
+msgstr "Índex de color"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+#: view:website:survey.result_comments
+msgid "Comment"
+msgstr "Comentari"
+
+#. module: survey
+#: field:survey.question,comment_count_as_answer:0
+msgid "Comment Field is an Answer Choice"
+msgstr "El camp comentari és una opció de resposta"
+
+#. module: survey
+#: field:survey.question,comments_message:0
+msgid "Comment Message"
+msgstr "Missatge del comentari"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "Comunitat i contribuïdors"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.user_input,state:0
+msgid "Completed"
+msgstr "Completada"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Compose Email"
+msgstr "Compondre correu electrònic"
+
+#. module: survey
+#: field:survey.mail.compose.message,composition_mode:0
+msgid "Composition mode"
+msgstr "Mode de composició"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "Assistent de configuració per cada configuració important"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Constraints"
+msgstr "Restriccions"
+
+#. module: survey
+#: field:survey.mail.compose.message,body:0
+msgid "Contents"
+msgstr "Continguts"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
+msgstr "Copi i empegui el codi HTML a continuació per afegir aquest enllaç web a qualsevol pàgina."
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Copy, paste and share the web link below to your audience."
+msgstr "Copia, enganxa i comparteix l'enllaç web a continuació a la seva audiència."
+
+#. module: survey
+#: field:survey.user_input_line,date_create:0
+msgid "Create Date"
+msgstr "Data de creació"
+
+#. module: survey
+#: field:survey.label,create_uid:0
+#: field:survey.mail.compose.message,create_uid:0
+#: field:survey.page,create_uid:0 field:survey.question,create_uid:0
+#: field:survey.stage,create_uid:0 field:survey.survey,create_uid:0
+#: field:survey.user_input,create_uid:0
+#: field:survey.user_input_line,create_uid:0
+msgid "Created by"
+msgstr "Creat per"
+
+#. module: survey
+#: field:survey.label,create_date:0
+#: field:survey.mail.compose.message,create_date:0
+#: field:survey.page,create_date:0 field:survey.question,create_date:0
+#: field:survey.stage,create_date:0 field:survey.survey,create_date:0
+#: field:survey.user_input,create_date:0
+#: field:survey.user_input_line,create_date:0
+msgid "Created on"
+msgstr "Creat el"
+
+#. module: survey
+#: field:survey.user_input,date_create:0
+msgid "Creation Date"
+msgstr "Data de creació"
+
+#. module: survey
+#: help:survey.mail.compose.message,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr "L'usuari actual té una notificació destacada associada a aquest missatge."
+
+#. module: survey
+#: help:survey.mail.compose.message,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr "L'usuari actual té una notificació sense llegir associada amb aquest missatge."
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_matrix
+msgid "Data"
+msgstr "Dades"
+
+#. module: survey
+#: field:survey.mail.compose.message,date:0
+#: selection:survey.user_input_line,answer_type:0
+msgid "Date"
+msgstr "Data"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Date and Time"
+msgstr "Data i hora"
+
+#. module: survey
+#: field:survey.user_input_line,value_date:0
+msgid "Date answer"
+msgstr "Data de resposta"
+
+#. module: survey
+#: help:survey.user_input,deadline:0
+msgid "Date by which the person can open the survey and submit answers"
+msgstr "Data en la qual l'usuari pot obrir l'enquesta i enviar les respostes"
+
+#. module: survey
+#: help:survey.survey,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Data de l'últim missatge enviat al registre."
+
+#. module: survey
+#: field:survey.user_input,deadline:0
+msgid "Deadline"
+msgstr "Data límit"
+
+#. module: survey
+#: help:survey.mail.compose.message,date_deadline:0
+msgid ""
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty, the invitation is still valid."
+msgstr ""
+
+#. module: survey
+#: field:survey.mail.compose.message,date_deadline:0
+msgid "Deadline to which the invitation to respond is valid"
+msgstr "Data límit per la qual la invitació es valida"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Delete!"
+msgstr "Esborrar!"
+
+#. module: survey
+#: field:survey.page,description:0 field:survey.question,description:0
+#: field:survey.survey,description:0
+msgid "Description"
+msgstr "Descripció"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr "Descripcions i l'ajuda contextual és prou clara"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Design"
+msgstr "Disseny"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "No estic d'acord"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,display_mode:0
+msgid "Display mode"
+msgstr "Nom a mostrar"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "Té alguna proposta per atraure noves contribuïdors?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "Té una proposta per ajudar a la gent a contribuir?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr "Té alguna suggerència en com millorar la vista del procés?"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_draft
+msgid "Draft"
+msgstr "Esborrany"
+
+#. module: survey
+#: field:survey.user_input,email:0
+msgid "E-mail"
+msgstr "Correu electrònic"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Edit Pages and Questions"
+msgstr "Editar pàgines i preguntes"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Email"
+msgstr "Correu electrònic"
+
+#. module: survey
+#: field:survey.survey,email_template_id:0
+msgid "Email Template"
+msgstr "Plantilla email"
+
+#. module: survey
+#: help:survey.mail.compose.message,email_from:0
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found for incoming emails."
+msgstr "Adreça de correu del remitent. Aquest camp s'estableix quan no existeix una empresa coincident pels correus entrants."
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr "Assistent de composició de correu electrònic per Enquesta"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr "Ergonomia i facilitat d'ús"
+
+#. module: survey
+#: field:survey.question,constr_error_msg:0
+#: field:survey.question,validation_error_msg:0
+msgid "Error message"
+msgstr "Missatge d'error"
+
+#. module: survey
+#: code:addons/survey/survey.py:439
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: survey
+#: field:survey.mail.compose.message,partner_ids:0
+msgid "Existing contacts"
+msgstr "Contactes existents"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr "Els mòduls extra propostes són rellevants"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Filters"
+msgstr "Filtres"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr "Gestió Financera"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Finished surveys"
+msgstr ""
+
+#. module: survey
+#: field:survey.stage,fold:0
+msgid "Folded in kanban view"
+msgstr "Replegat en la vista kanban"
+
+#. module: survey
+#: field:survey.survey,message_follower_ids:0
+msgid "Followers"
+msgstr "Seguidors"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Format"
+msgstr "Formatar"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Free Text"
+msgstr "Text Lliure"
+
+#. module: survey
+#: field:survey.user_input_line,value_free_text:0
+msgid "Free Text answer"
+msgstr "Text lliure"
+
+#. module: survey
+#: field:survey.mail.compose.message,email_from:0
+msgid "From"
+msgstr "Des de"
+
+#. module: survey
+#: view:website:survey.survey view:website:survey.survey_init
+msgid "Go back to surveys"
+msgstr "Tornar a les enquestes"
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_matrix
+msgid "Graph"
+msgstr "Diagrama"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+#: view:survey.question:survey.survey_question_search
+#: view:survey.user_input:survey.survey_user_input_search
+#: view:survey.user_input_line:survey.survey_response_line_search
+msgid "Group By"
+msgstr "Agrupa per"
+
+#. module: survey
+#: help:survey.survey,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Manté el resum de la conversa (número de missatges, etc). Aquest resum és en format html  per poder-lo inserir a les vistes kanban."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "Com contribueix o planeja contribuir a Odoo?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Ressources"
+msgstr "Recursos Humans"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "Desenvolupa noves característiques"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "No publico els meus desenvolupaments"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "Ajudo a traduir"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr "Ho allotjo en el meu propi lloc web"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "Participo en la discussió i els fòrums"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Launchpad, like all official Odoo projects"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "Utilitzo un altre sistema de repositoris (SourceForge...)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr "Utilitzo l'ajuda contextual en Odoo"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "Escric documentació"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr "M'agradaria contribuir però... com fer-ho?"
+
+#. module: survey
+#: field:survey.label,id:0 field:survey.mail.compose.message,id:0
+#: field:survey.page,id:0 field:survey.question,id:0 field:survey.stage,id:0
+#: field:survey.survey,id:0 field:survey.user_input,id:0
+#: field:survey.user_input_line,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: survey
+#: field:survey.user_input,token:0
+msgid "Identification token"
+msgstr "Token d'identificació"
+
+#. module: survey
+#: help:survey.survey,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Si està marcat hi ha missatges nous pendents."
+
+#. module: survey
+#: help:survey.survey,users_can_go_back:0
+msgid "If checked, users can go back to previous pages."
+msgstr "Si està marcat, els usuaris poden tornar a les pàgines anteriors."
+
+#. module: survey
+#: help:survey.stage,closed:0
+msgid "If closed, people won't be able to answer to surveys in this column."
+msgstr "Si està tancat, la gent no podrà respondre enquestes en aquesta columna."
+
+#. module: survey
+#: code:addons/survey/survey.py:649
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
+#, python-format
+msgid "If other, precise:"
+msgstr "Si altres, precisar"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "If you wish, you can"
+msgstr "Si vols, pots"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_in_progress
+msgid "In progress"
+msgstr "En procés"
+
+#. module: survey
+#: help:survey.mail.compose.message,parent_id:0
+msgid "Initial thread message."
+msgstr "Missatge inicial del fil"
+
+#. module: survey
+#: field:survey.question,validation_email:0
+msgid "Input must be an email"
+msgstr "L'entrada ha de ser un correu electrònic"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+msgid "Invitations sent"
+msgstr "Invitacions enviades"
+
+#. module: survey
+#: field:survey.survey,message_is_follower:0
+msgid "Is a Follower"
+msgstr "És un seguidor"
+
+#. module: survey
+#: field:survey.survey,designed:0
+msgid "Is designed?"
+msgstr "Està dissenyat?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr "Pot ser millorat"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "Ajuda al principi"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr "Està clar"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "Està complet"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "Està al dia"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr "És fàcil trobar el procés que necessita"
+
+#. module: survey
+#: field:survey.label,sequence:0
+msgid "Label Sequence order"
+msgstr "Seqüència d'ordre de l'etiqueta"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_label_form
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Labels"
+msgstr "Etiquetes"
+
+#. module: survey
+#: field:survey.survey,message_last_post:0
+msgid "Last Message Date"
+msgstr "Data Últim Missatge"
+
+#. module: survey
+#: field:survey.label,write_uid:0
+#: field:survey.mail.compose.message,write_uid:0 field:survey.page,write_uid:0
+#: field:survey.question,write_uid:0 field:survey.stage,write_uid:0
+#: field:survey.survey,write_uid:0 field:survey.user_input,write_uid:0
+#: field:survey.user_input_line,write_uid:0
+msgid "Last Updated by"
+msgstr "Actualitzat per última vegada per"
+
+#. module: survey
+#: field:survey.label,write_date:0
+#: field:survey.mail.compose.message,write_date:0
+#: field:survey.page,write_date:0 field:survey.question,write_date:0
+#: field:survey.stage,write_date:0 field:survey.survey,write_date:0
+#: field:survey.user_input,write_date:0
+#: field:survey.user_input_line,write_date:0
+msgid "Last Updated on"
+msgstr "Actualitzat per última vegada el dia"
+
+#. module: survey
+#: field:survey.user_input,last_displayed_page_id:0
+msgid "Last displayed page"
+msgstr "Última pàgina mostrada"
+
+#. module: survey
+#: selection:survey.user_input,type:0
+msgid "Link"
+msgstr "Enllaç"
+
+#. module: survey
+#: field:survey.mail.compose.message,multi_email:0
+msgid "List of emails"
+msgstr "Llista d'emails"
+
+#. module: survey
+#: field:survey.mail.compose.message,is_log:0
+msgid "Log an Internal Note"
+msgstr "Registrar una nota interna"
+
+#. module: survey
+#: field:survey.survey,auth_required:0 view:website:survey.auth_required
+msgid "Login required"
+msgstr "Es requereix iniciar sessió"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Long Text Zone"
+msgstr ""
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,constr_mandatory:0
+msgid "Mandatory Answer"
+msgstr "Resposta obligatòria"
+
+#. module: survey
+#: selection:survey.user_input,type:0
+msgid "Manually"
+msgstr "Manualment"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Matrix"
+msgstr "Matriu"
+
+#. module: survey
+#: field:survey.question,matrix_subtype:0
+msgid "Matrix Type"
+msgstr "Tipus de Matriu"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Matrix:"
+msgstr "Matriu:"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max date cannot be smaller than min date!"
+msgstr "La data màxima no pot ser menor que la mínima!"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max length cannot be smaller than min length!"
+msgstr "La longitud màxima no pot ser menor que la mínima!"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max value cannot be smaller than min value!"
+msgstr "El valor màxim no pot ser menor que el mínim!"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Maximum"
+msgstr "Màxim"
+
+#. module: survey
+#: field:survey.question,validation_max_date:0
+msgid "Maximum Date"
+msgstr "Data Màxima"
+
+#. module: survey
+#: field:survey.question,validation_length_max:0
+msgid "Maximum Text Length"
+msgstr "Data màxima"
+
+#. module: survey
+#: field:survey.question,validation_max_float_value:0
+msgid "Maximum value"
+msgstr "Valor màxim"
+
+#. module: survey
+#: field:survey.mail.compose.message,record_name:0
+msgid "Message Record Name"
+msgstr "Nom de registre del missatge"
+
+#. module: survey
+#: help:survey.mail.compose.message,type:0
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr "Tipus de missatge: e-mail per a missatges de correu, notificació per a missatges de sistema, comentaris per altres tipus de missatges com resposta d'usuaris."
+
+#. module: survey
+#: help:survey.mail.compose.message,message_id:0
+msgid "Message unique identifier"
+msgstr "Identificador únic del missatge"
+
+#. module: survey
+#: field:survey.mail.compose.message,message_id:0
+msgid "Message-Id"
+msgstr "Id del missatge"
+
+#. module: survey
+#: field:survey.survey,message_ids:0
+msgid "Messages"
+msgstr "Missatges"
+
+#. module: survey
+#: help:survey.survey,message_ids:0
+msgid "Messages and communication history"
+msgstr "Historial de missatges i comunicació"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Minimum"
+msgstr "Mínim"
+
+#. module: survey
+#: field:survey.question,validation_min_date:0
+msgid "Minimum Date"
+msgstr "Data Mínima"
+
+#. module: survey
+#: field:survey.question,validation_length_min:0
+msgid "Minimum Text Length"
+msgstr "Mínima longitud del text"
+
+#. module: survey
+#: field:survey.question,validation_min_float_value:0
+msgid "Minimum value"
+msgstr "Valor mínim"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Most Common"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple choice: multiple answers allowed"
+msgstr "Elecció múltiple: permeses respostes múltiples"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple choice: only one answer"
+msgstr "Elecció múltiple: només una resposta"
+
+#. module: survey
+#: selection:survey.question,matrix_subtype:0
+msgid "Multiple choices per row"
+msgstr "Diverses eleccions per fila"
+
+#. module: survey
+#: field:survey.stage,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: survey
+#: help:survey.mail.compose.message,record_name:0
+msgid "Name get of the related document."
+msgstr "Nom del document relacionat."
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "New"
+msgstr "Nou"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Next page"
+msgstr "Pàgina següent"
+
+#. module: survey
+#: field:survey.mail.compose.message,no_auto_thread:0
+msgid "No threading for answers"
+msgstr "No hi ha fil per les respostes"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "No, només ho he provat"
+
+#. module: survey
+#: view:website:survey.notopen
+msgid "Not open"
+msgstr "No obert"
+
+#. module: survey
+#: view:website:survey.nopages
+msgid "Not ready"
+msgstr "No està llest"
+
+#. module: survey
+#: selection:survey.user_input,state:0
+msgid "Not started yet"
+msgstr "Sense començar encara"
+
+#. module: survey
+#: field:survey.mail.compose.message,notification_ids:0
+msgid "Notifications"
+msgstr "Notificacions"
+
+#. module: survey
+#: field:survey.mail.compose.message,notified_partner_ids:0
+msgid "Notified partners"
+msgstr "Notificar als seguidors"
+
+#. module: survey
+#: field:survey.mail.compose.message,notify:0
+msgid "Notify followers"
+msgstr "Notificar als seguidors"
+
+#. module: survey
+#: help:survey.mail.compose.message,notify:0
+msgid "Notify followers of the document (mass post only)"
+msgstr "Notificar als seguidors del document (només per enviaments massius)"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Number"
+msgstr "Número"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,column_nb:0
+msgid "Number of columns"
+msgstr "Nombre de columnes"
+
+#. module: survey
+#: field:survey.survey,tot_comp_survey:0
+msgid "Number of completed surveys"
+msgstr "Nombre d'enquestes completades"
+
+#. module: survey
+#: field:survey.survey,tot_sent_survey:0
+msgid "Number of sent surveys"
+msgstr "Nombre d'enquestes enviades"
+
+#. module: survey
+#: field:survey.survey,tot_start_survey:0
+msgid "Number of started surveys"
+msgstr "Nombre d'enquestes començades"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Numerical Value"
+msgstr "Valor Numèric"
+
+#. module: survey
+#: field:survey.user_input_line,value_number:0
+msgid "Numerical answer"
+msgstr "Resposta numèrica"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Occurence"
+msgstr "Ocurrència"
+
+#. module: survey
+#: selection:survey.question,matrix_subtype:0
+msgid "One choice per row"
+msgstr "Una elecció per fila"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#, python-format
+msgid "One email at least is incorrect: %s"
+msgstr ""
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Options"
+msgstr "Opcions"
+
+#. module: survey
+#: field:survey.mail.compose.message,mail_server_id:0
+msgid "Outgoing mail server"
+msgstr "Servidor de correus sortint"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+#: view:survey.question:survey.survey_question_search
+#: field:survey.user_input_line,page_id:0 view:website:survey.page
+msgid "Page"
+msgstr "Pàgina"
+
+#. module: survey
+#: field:survey.page,title:0
+msgid "Page Title"
+msgstr "Títol de la pàgina"
+
+#. module: survey
+#: field:survey.page,sequence:0
+msgid "Page number"
+msgstr "Número de pàgina"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_pages
+#: model:ir.actions.act_window,name:survey.action_survey_page_form
+#: model:ir.ui.menu,name:survey.menu_survey_page_form1
+#: field:survey.survey,page_ids:0
+msgid "Pages"
+msgstr "Pàgines"
+
+#. module: survey
+#: field:survey.mail.compose.message,parent_id:0
+msgid "Parent Message"
+msgstr "Missatge pare"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.user_input,state:0
+msgid "Partially completed"
+msgstr "Parcialment complet"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+#: field:survey.user_input,partner_id:0
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
+msgid "Partner Survey Mailing"
+msgstr "Enviament d'enquestes a les empreses"
+
+#. module: survey
+#: help:survey.mail.compose.message,notified_partner_ids:0
+msgid ""
+"Partners that have a notification pushing this message in their mailboxes"
+msgstr "Empreses que tenen una notificació posant aquest missatge a les seves safates d'entrada"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_permanent
+msgid "Permanent"
+msgstr "Permanent"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Pie Chart"
+msgstr "Gràfic de pastís"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#, python-format
+msgid "Please enter at least one valid recipient."
+msgstr "Introdueixi almenys un destinatari vàlid"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:112
+#, python-format
+msgid "Please select a survey"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.page
+msgid "Previous page"
+msgstr "Pàgina anterior"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Print Survey"
+msgstr "Imprimeix enquesta"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "Print These Answers"
+msgstr "Imprimir aquestes respostes"
+
+#. module: survey
+#: field:survey.survey,print_url:0
+msgid "Print link"
+msgstr "Imprimir enllaç"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "Gestió de projectes"
+
+#. module: survey
+#: field:survey.mail.compose.message,public_url_html:0
+msgid "Public HTML web link"
+msgstr "Enllaç web HTML públic"
+
+#. module: survey
+#: field:survey.survey,public_url:0
+msgid "Public link"
+msgstr "Enllaç públic"
+
+#. module: survey
+#: field:survey.survey,public_url_html:0
+msgid "Public link (html version)"
+msgstr "Enllaç públic (versió html)"
+
+#. module: survey
+#: field:survey.user_input,print_url:0
+msgid "Public link to the empty survey"
+msgstr "Enllaç públic a l'enquesta buida"
+
+#. module: survey
+#: field:survey.user_input,result_url:0
+msgid "Public link to the survey results"
+msgstr "Enllaç públic als resultats de l'enquesta"
+
+#. module: survey
+#: field:survey.mail.compose.message,public_url:0
+msgid "Public url"
+msgstr "Url pública"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "Gestió de compres"
+
+#. module: survey
+#: view:survey.label:survey.survey_label_search
+#: field:survey.label,question_id:0 field:survey.label,question_id_2:0
+#: view:survey.question:survey.survey_question_search
+#: field:survey.user_input_line,question_id:0 view:website:survey.result
+msgid "Question"
+msgstr "Qüestió"
+
+#. module: survey
+#: field:survey.question,question:0
+msgid "Question Name"
+msgstr "Nom de la pregunta"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Question name"
+msgstr "Nom de la pregunta"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_page_question
+#: model:ir.actions.act_window,name:survey.act_survey_question
+#: model:ir.actions.act_window,name:survey.action_survey_question_form
+#: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: field:survey.page,question_ids:0
+msgid "Questions"
+msgstr "Preguntes"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "Preguntes per a desenvolupadors"
+
+#. module: survey
+#: field:survey.survey,quizz_mode:0
+msgid "Quiz mode"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,display_mode:0
+msgid "Radio Buttons/Checkboxes"
+msgstr ""
+
+#. module: survey
+#: field:survey.mail.compose.message,res_id:0
+msgid "Related Document ID"
+msgstr "Id. del document relacionat"
+
+#. module: survey
+#: field:survey.mail.compose.message,model:0
+msgid "Related Document Model"
+msgstr "Model de document relacionat"
+
+#. module: survey
+#: help:survey.mail.compose.message,reply_to:0
+msgid ""
+"Reply email address. Setting the reply_to bypasses the automatic thread "
+"creation."
+msgstr "Adreça de resposta dels correus. Establint aquest camp, se saltara la creació automàtica de fils."
+
+#. module: survey
+#: field:survey.mail.compose.message,reply_to:0
+msgid "Reply-To"
+msgstr "Respondre a"
+
+#. module: survey
+#: field:survey.survey,result_url:0
+msgid "Results link"
+msgstr "Enllaç de resultats"
+
+#. module: survey
+#: field:survey.user_input_line,value_suggested_row:0
+msgid "Row answer"
+msgstr "Fila de la resposta"
+
+#. module: survey
+#: field:survey.question,labels_ids_2:0
+msgid "Rows of the Matrix"
+msgstr "Files de la matriu"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr "Executar els assistents de configuració és una bona forma d'estalviar temps"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "Gestió de vendes"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Save as a new template"
+msgstr "Guardar com a nova plantilla"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Save as new template"
+msgstr "Guardar com a nova plantilla"
+
+#. module: survey
+#: field:survey.user_input,quizz_score:0
+msgid "Score for the quiz"
+msgstr "Marcador pel concurs"
+
+#. module: survey
+#: field:survey.label,quizz_mark:0
+msgid "Score for this answer"
+msgstr ""
+
+#. module: survey
+#: field:survey.user_input_line,quizz_mark:0
+msgid "Score given for this answer"
+msgstr ""
+
+#. module: survey
+#: view:survey.label:survey.survey_label_search
+msgid "Search Label"
+msgstr "Buscar etiqueta"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+msgid "Search Page"
+msgstr "Buscar pàgina"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_search
+msgid "Search Question"
+msgstr "Cerca pregunta"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Search Survey"
+msgstr "Cerca enquesta"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_search
+msgid "Search User input lines"
+msgstr "Cercar línies d'entrada de l'usuari"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Select Options"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,display_mode:0
+msgid "Selection Box"
+msgstr "Caixa de selecció"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Send"
+msgstr "Envia"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid "Send by email the public web link to your audience."
+msgstr "Enviar per correu electrònic l'enllaç web públic a la seva audiència."
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid ""
+"Send private invitation to your audience (only one response per recipient "
+"and per invitation)."
+msgstr "Enviar una invitació privada a la seva audiència (només una resposta per destinatari i invitació)."
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "Sent Invitation Again"
+msgstr ""
+
+#. module: survey
+#: field:survey.question,sequence:0 field:survey.stage,sequence:0
+msgid "Sequence"
+msgstr "Seqüència"
+
+#. module: survey
+#: sql_constraint:survey.stage:0
+msgid "Sequence number MUST be a natural"
+msgstr "El número de seqüència ha de ser un número natural"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Share &amp; Invite"
+msgstr ""
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Share and invite by email"
+msgstr "Compartir i invitar per correu electrònic"
+
+#. module: survey
+#: field:survey.mail.compose.message,public:0
+msgid "Share options"
+msgstr "Opcions de compartició"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid "Share the public web link to your audience."
+msgstr "Compartir l'enllaç web públic a la seva audiència."
+
+#. module: survey
+#: field:survey.question,comments_allowed:0
+msgid "Show Comments Field"
+msgstr "Mostrar camps de comentaris"
+
+#. module: survey
+#: field:survey.user_input_line,skipped:0 view:website:survey.result
+msgid "Skipped"
+msgstr "Omesa"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Something went wrong while contacting survey server."
+msgstr ""
+
+#. module: survey
+#: view:website:survey.result
+msgid "Sorry, No one answered this question."
+msgstr "Ho sentim. Ningú ha contestat aquesta pregunta."
+
+#. module: survey
+#: view:website:survey.no_result
+msgid "Sorry, No one answered this survey yet"
+msgstr ""
+
+#. module: survey
+#: view:survey.stage:survey.survey_stage_form field:survey.survey,stage_id:0
+msgid "Stage"
+msgstr "Etapa"
+
+#. module: survey
+#: field:survey.mail.compose.message,starred:0
+msgid "Starred"
+msgstr "Destacat"
+
+#. module: survey
+#: view:website:survey.survey_init
+msgid "Start Survey"
+msgstr "Iniciar enquesta"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+msgid "Started"
+msgstr "Iniciada"
+
+#. module: survey
+#: field:survey.user_input,state:0
+msgid "Status"
+msgstr "Estat"
+
+#. module: survey
+#: field:survey.mail.compose.message,subject:0
+msgid "Subject"
+msgstr "Assumpte"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Subject..."
+msgstr "Assumpte..."
+
+#. module: survey
+#: view:website:survey.page
+msgid "Submit survey"
+msgstr "Enviar enquesta"
+
+#. module: survey
+#: field:survey.mail.compose.message,subtype_id:0
+msgid "Subtype"
+msgstr "Subtip"
+
+#. module: survey
+#: field:survey.user_input_line,value_suggested:0
+msgid "Suggested answer"
+msgstr "Resposta suggerida"
+
+#. module: survey
+#: field:survey.label,value:0
+msgid "Suggested value"
+msgstr "Valor suggerit"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Suggestion"
+msgstr "Suggerència"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Sum"
+msgstr "Suma"
+
+#. module: survey
+#: field:survey.survey,message_summary:0
+msgid "Summary"
+msgstr "Resum"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_survey
+#: field:survey.mail.compose.message,survey_id:0
+#: view:survey.page:survey.survey_page_search field:survey.page,survey_id:0
+#: view:survey.question:survey.survey_question_search
+#: field:survey.question,survey_id:0 view:survey.survey:survey.survey_form
+#: view:survey.survey:survey.survey_tree
+#: view:survey.user_input:survey.survey_user_input_search
+#: field:survey.user_input,survey_id:0
+#: view:survey.user_input_line:survey.survey_response_line_search
+#: field:survey.user_input_line,survey_id:0
+msgid "Survey"
+msgstr "Enquesta"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_tree
+msgid "Survey Answer Line"
+msgstr "Línia de resposta enquesta"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_label
+#: view:survey.label:survey.survey_label_tree
+msgid "Survey Label"
+msgstr "Etiqueta de l'enquesta"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Survey Options"
+msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_page
+#: view:survey.page:survey.survey_page_form
+#: view:survey.page:survey.survey_page_tree
+msgid "Survey Page"
+msgstr "Pàgina de l'enquesta"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_question
+#: view:survey.question:survey.survey_question_form
+#: view:survey.question:survey.survey_question_tree
+msgid "Survey Question"
+msgstr "Pregunta de l'enquesta"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_stage
+msgid "Survey Stage"
+msgstr "Etapa de l'enquesta"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Entrada de l'usuari de l'enquesta"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_user_input_line
+msgid "Survey User Input Line"
+msgstr "Línia d'entrada d'usuari de l'enquesta"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
+msgid "Survey User Input lines"
+msgstr "Línies d'entrada d'usuari de l'enquesta"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_selected_survey_user_input
+msgid "Survey User input"
+msgstr "Entrada d'usuari de l'enquesta"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+#: view:survey.user_input:survey.survey_user_input_tree
+msgid "Survey User inputs"
+msgstr "Entrades d'usuari de l'enquesta"
+
+#. module: survey
+#: field:survey.question,page_id:0
+msgid "Survey page"
+msgstr "Pàgina de l'enquesta"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_form
+#: model:ir.ui.menu,name:survey.menu_survey_form
+#: model:ir.ui.menu,name:survey.menu_surveys
+#: model:ir.ui.menu,name:survey.menu_surveys_configuration
+msgid "Surveys"
+msgstr "Enquestes"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+msgid "System notification"
+msgstr "Notificació del sistema"
+
+#. module: survey
+#: help:survey.mail.compose.message,notification_ids:0
+msgid ""
+"Technical field holding the message notifications. Use notified_partner_ids "
+"to access notified partners."
+msgstr "Camp tecnic que conté les notificacions del missatge. Utilitzi notified_partner_ids per acceder a les empreses notificades."
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Test"
+msgstr "Test"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Test Survey"
+msgstr "Prova enquesta"
+
+#. module: survey
+#: field:survey.user_input,test_entry:0
+msgid "Test entry"
+msgstr "Provar enquesta"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Text"
+msgstr "Text"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Text Input"
+msgstr ""
+
+#. module: survey
+#: field:survey.user_input_line,value_text:0
+msgid "Text answer"
+msgstr "Text de la resposta"
+
+#. module: survey
+#: field:survey.survey,thank_you_message:0
+msgid "Thank you message"
+msgstr "Missatge d'agraïment"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "Thank you!"
+msgstr "Gràcies!"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr "El grup 'Usabilitat/Vista estesa' l'ajuda en el seu treball diari"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr "El grup 'Usabilitat/ Vista estesa' amaga només els camps opcionals"
+
+#. module: survey
+#: constraint:survey.user_input_line:0
+msgid "The answer must be in the right type"
+msgstr "La resposta ha d'estar en el tipus adequat"
+
+#. module: survey
+#: code:addons/survey/survey.py:647
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
+#, python-format
+msgid "The answer you entered has an invalid format."
+msgstr "La resposta introduïda té un format no vàlid."
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#, python-format
+msgid ""
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
+msgstr "El contingut del text no conte '__URL__'. __URL__ es convertirà automàticament en l'URL de l'enquesta"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr "L'estructura de menús actual és bona"
+
+#. module: survey
+#: sql_constraint:survey.user_input:0
+msgid "The deadline cannot be in the past"
+msgstr "El termini mínim no pot establir-se al passat"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr "El conjunt de grups establerts en els elements de menú són rellevants"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr "El nombre de grups és adequat"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr "Les regles de seguretat definides en els grups són útils"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr "Hi ha massa pocs grups definits. La seguretat no és molt precisa"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr "Hi ha massa grups definits. La seguretat és massa complexa d'establir"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr "Hi ha massa menús. És massa complex d'entendre"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr "Són clares i correctes"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr "Són útils en l'ús diari"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
+msgstr "Ajuden als nous usuaris a comprendre Odoo"
+
+#. module: survey
+#: code:addons/survey/survey.py:700
+#, python-format
+msgid "This answer must be an email address"
+msgstr "Aquesta resposta ha de ser una adreça de correu electrònica"
+
+#. module: survey
+#: code:addons/survey/survey.py:742
+#, python-format
+msgid "This is not a date/time"
+msgstr "Això no és una data/hora"
+
+#. module: survey
+#: code:addons/survey/survey.py:719
+#, python-format
+msgid "This is not a number"
+msgstr "Això no és un número"
+
+#. module: survey
+#: help:survey.mail.compose.message,multi_email:0
+msgid ""
+"This list of emails of recipients will not converted in contacts. Emails "
+"separated by commas, semicolons or newline."
+msgstr ""
+
+#. module: survey
+#: help:survey.survey,thank_you_message:0
+msgid "This message will be displayed when survey is completed"
+msgstr "Aquest missatge serà mostrat quan l'enquesta estigui completa"
+
+#. module: survey
+#: code:addons/survey/survey.py:646
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
+#, python-format
+msgid "This question requires an answer."
+msgstr "Aquesta pregunta requereix una resposta."
+
+#. module: survey
+#: view:website:survey.nopages
+msgid "This survey has no pages by now!"
+msgstr "Aquesta enquesta no té pàgines per ara!"
+
+#. module: survey
+#: view:website:survey.notopen
+msgid "This survey is not open. Thank you for your interest!"
+msgstr "Aquesta enquesta no està oberta. Gràcies pel seu interès!"
+
+#. module: survey
+#: view:website:survey.auth_required
+msgid "This survey is open only to registered people. Please"
+msgstr "Aquesta enquesta està oberta només per gent registrada. Si us plau,"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr "Les regles de seguretat són estàndard i poden ser utilitzades tal qual en la majoria de casos"
+
+#. module: survey
+#: field:survey.survey,title:0
+msgid "Title"
+msgstr "Títol"
+
+#. module: survey
+#: field:survey.mail.compose.message,to_read:0
+msgid "To read"
+msgstr "Per llegir"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "Totalment d'acord"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "Totalmente en desacuerdo"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Try refreshing."
+msgstr ""
+
+#. module: survey
+#: field:survey.mail.compose.message,type:0
+#: view:survey.question:survey.survey_question_search
+msgid "Type"
+msgstr "Tipus"
+
+#. module: survey
+#: field:survey.question,type:0
+msgid "Type of Question"
+msgstr "Tipus de pregunta"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Type of answers"
+msgstr "Tipus de resposta"
+
+#. module: survey
+#: field:survey.question,labels_ids:0
+msgid "Types of answers"
+msgstr "Tipus de resposta"
+
+#. module: survey
+#: field:survey.survey,message_unread:0
+msgid "Unread Messages"
+msgstr "Missatges pendents de llegir"
+
+#. module: survey
+#: field:survey.mail.compose.message,use_active_domain:0
+msgid "Use active domain"
+msgstr "Utilitzar el domini actiu"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: field:survey.mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Utilitzar plantilla"
+
+#. module: survey
+#: help:survey.question,description:0
+msgid ""
+"Use this field to add             additional explanations about your "
+"question"
+msgstr ""
+
+#. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
+msgstr "Formulari de retroalimentació de l'usuari"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_search
+#: field:survey.user_input_line,user_input_id:0
+msgid "User Input"
+msgstr "Entrada de l'usuari"
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "User Input Lines"
+msgstr "Línies d'entrada de l'usuari"
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_number
+#: view:website:survey.result_text
+msgid "User Responses"
+msgstr "Respostes de l'usuari"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "User can come back in the previous page"
+msgstr "L'usuari pot tornar a la pàgina anterior"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_user_input_line_form
+msgid "User input line details"
+msgstr "Detalls de la línia d'entrada de l'usuari"
+
+#. module: survey
+#: field:survey.survey,user_input_ids:0
+msgid "User responses"
+msgstr "Respostes de l'usuari"
+
+#. module: survey
+#: field:survey.survey,users_can_go_back:0
+msgid "Users can go back"
+msgstr "Els usuaris poden tornar enrere"
+
+#. module: survey
+#: help:survey.mail.compose.message,vote_user_ids:0
+msgid "Users that voted for this message"
+msgstr "Usuaris que han votat aquest missatge"
+
+#. module: survey
+#: help:survey.survey,auth_required:0
+msgid ""
+"Users with a public link will be requested to login before taking part to "
+"the survey"
+msgstr "Els usuaris que accedeixin amb un enllaç públic se'ls requerirà iniciar sessió abans de formar part de l'enquesta"
+
+#. module: survey
+#: field:survey.question,validation_required:0
+msgid "Validate entry"
+msgstr "Validar entrada"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "View Results"
+msgstr "Veure resultats"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "View results"
+msgstr "Veure resultats"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Vote"
+msgstr "Votació"
+
+#. module: survey
+#: field:survey.mail.compose.message,vote_user_ids:0
+msgid "Votes"
+msgstr "Vots"
+
+#. module: survey
+#: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898
+#: code:addons/survey/survey.py:1030
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#, python-format
+msgid "Warning!"
+msgstr "Avís!"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr "Que en penses sobre els assistents de configuració?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid ""
+"What do you think about the documentation available on doc.openerp.com?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr "Que en pensa dels grups d'usuaris?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr "Que n'opina sobre les vistes de procés d'Odoo, disponibles en el client web?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr "Que li sembla l'estructura dels menús?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr "On es desenvolupa les noves característiques?"
+
+#. module: survey
+#: help:survey.mail.compose.message,is_log:0
+msgid "Whether the message is an internal note (comment mode only)"
+msgstr "Si missatge és una nota interna (només mode comentari)"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "Quins mòduls estan utilitzant/provant?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "Sí, utilitzo una versió < 7.0"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "Sí, utilitzo la versió 7.0 instal·lada en local"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "Sí, utilitzo la versió en línia d'Odoo"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Public in website\" "
+"setting must be enabled)."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:898 code:addons/survey/survey.py:1030
+#, python-format
+msgid "You cannot duplicate this             element!"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:439
+#, python-format
+msgid "You cannot send an invitation for a survey that has no questions."
+msgstr "No pot enviar invitacions per una enquesta que no té preguntes."
+
+#. module: survey
+#: code:addons/survey/survey.py:445
+#, python-format
+msgid "You cannot send invitations for closed surveys."
+msgstr "No pots enviar invitacions per una enquesta tancada."
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "You scored"
+msgstr "Ha obtingut"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Your answers have probably not been recorded."
+msgstr ""
+
+#. module: survey
+#: view:website:survey.auth_required
+msgid "log in"
+msgstr "Iniciar sessió"
+
+#. module: survey
+#: view:website:survey.page
+msgid "on"
+msgstr "en"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "or"
+msgstr "o"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "points."
+msgstr "punts."
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "review your answers"
+msgstr "revisar les teves respostes"
+
+#. module: survey
+#: view:website:survey.datetime
+msgid "yyyy-mm-dd hh:mm:ss"
+msgstr ""

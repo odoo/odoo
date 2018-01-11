@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!--
+        Account Type
+        -->
+
+        <record id="account_type_cash_equity" model="account.account.type">
+            <field name="name">Equity</field>
+            <field name="code">equity</field>
+            <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
+        </record>
+
+        <!--
+        Chart of Accounts
+        -->
+
+        <record id="chart0" model="account.account">
+            <field name="code">X0</field>
+            <field name="name">Chart For Automated Tests</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_view"/>
+        </record>
+
+        <!-- Balance Sheet -->
+
+        <record id="bal" model="account.account">
+            <field name="code">X1</field>
+            <field name="name">Balance Sheet - (test)</field>
+            <field ref="chart0" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_view"/>
+        </record>
+
+        <record model="account.account" id="assets_view">
+            <field name="name">Assets - (test)</field>
+            <field name="code">X10</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="bal"/>
+        </record>
+
+        <record id="fas" model="account.account">
+            <field name="code">X100</field>
+            <field name="name">Fixed Assets - (test)</field>
+            <field ref="assets_view" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="xfa" model="account.account">
+            <field name="code">X1000</field>
+            <field name="name">Fixed Asset Account - (test)</field>
+            <field ref="fas" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="nca" model="account.account">
+            <field name="code">X101</field>
+            <field name="name">Net Current Assets - (test)</field>
+            <field ref="assets_view" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="cas" model="account.account">
+            <field name="code">X1100</field>
+            <field name="name">Current Assets - (test)</field>
+            <field ref="nca" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="stk" model="account.account">
+            <field name="code">X11001</field>
+            <field name="name">Purchased Stocks - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="a_recv" model="account.account">
+            <field name="code">X11002</field>
+            <field name="name">Debtors - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">receivable</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type" ref="data_account_type_receivable"/>
+        </record>
+
+        <record id="ova" model="account.account">
+            <field name="code">X11003</field>
+            <field name="name">Output VAT - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="bnk" model="account.account">
+            <field name="code">X11004</field>
+            <field name="name">Bank Current Account - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">liquidity</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="cash" model="account.account">
+            <field name="code">X11005</field>
+            <field name="name">Cash - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">liquidity</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+        </record>
+
+        <record id="o_income" model="account.account">
+            <field name="code">X11006</field>
+            <field name="name">Opening Income - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_income"/>
+        </record>
+        <record id="usd_bnk" model="account.account">
+            <field name="code">X11007</field>
+            <field name="name">USD Bank Account - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">liquidity</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record model="account.account" id="liabilities_view">
+            <field name="name">Liabilities - (test)</field>
+            <field name="code">X11</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_liability"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="bal"/>
+        </record>
+
+        <record id="cli" model="account.account">
+            <field name="code">X110</field>
+            <field name="name">Current Liabilities - (test)</field>
+            <field ref="liabilities_view" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_liability"/>
+        </record>
+
+        <record id="a_pay" model="account.account">
+            <field name="code">X1111</field>
+            <field name="name">Creditors - (test)</field>
+            <field ref="cli" name="parent_id"/>
+            <field name="type">payable</field>
+            <field eval="True" name="reconcile"/>
+            <field name="user_type" ref="data_account_type_payable"/>
+        </record>
+
+        <record id="iva" model="account.account">
+            <field name="code">X1112</field>
+            <field name="name">Input VAT - (test)</field>
+            <field ref="cli" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_liability"/>
+        </record>
+
+        <record id="rsa" model="account.account">
+            <field name="code">X1113</field>
+            <field name="name">Reserve and Profit/Loss - (test)</field>
+            <field ref="cli" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_liability"/>
+        </record>
+
+        <record id="o_expense" model="account.account">
+            <field name="code">X1114</field>
+            <field name="name">Opening Expense - (test)</field>
+            <field ref="cli" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+        </record>
+
+        <!-- Profit and Loss -->
+
+        <record id="gpf" model="account.account">
+            <field name="code">X2</field>
+            <field name="name">Profit and Loss - (test)</field>
+            <field ref="chart0" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_view"/>
+        </record>
+
+        <record model="account.account" id="income_view">
+            <field name="name">Income - (test)</field>
+            <field name="code">X20</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="gpf"/>
+        </record>
+
+        <record model="account.account" id="income_fx_income">
+            <field name="name">Foreign Exchange Gain - (test)</field>
+            <field name="code">X201</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_income"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="income_view"/>
+        </record>
+
+        <record id="rev" model="account.account">
+            <field name="code">X200</field>
+            <field name="name">Revenue - (test)</field>
+            <field ref="income_view" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_income"/>
+        </record>
+
+        <record id="a_sale" model="account.account">
+            <field name="code">X2001</field>
+            <field name="name">Product Sales - (test)</field>
+            <field ref="rev" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_income"/>
+        </record>
+
+        <record model="account.account" id="expense_view">
+            <field name="name">Expense - (test)</field>
+            <field name="code">X21</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="gpf"/>
+        </record>
+
+
+        <record id="cos" model="account.account">
+            <field name="code">X210</field>
+            <field name="name">Cost of Sales - (test)</field>
+            <field ref="expense_view" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+        </record>
+
+        <record id="cog" model="account.account">
+            <field name="code">X2100</field>
+            <field name="name">Cost of Goods Sold - (test)</field>
+            <field ref="cos" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+        </record>
+
+        <record id="ovr" model="account.account">
+            <field name="code">X211</field>
+            <field name="name">Overheads - (test)</field>
+            <field ref="expense_view" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+        </record>
+
+        <record id="a_expense" model="account.account">
+            <field name="code">X2110</field>
+            <field name="name">Expenses - (test)</field>
+            <field ref="ovr" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+        </record>
+
+        <record model="account.account" id="income_fx_expense">
+            <field name="name">Foreign Exchange Loss - (test)</field>
+            <field name="code">X2111</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="ovr"/>
+        </record>
+
+        <record id="a_salary_expense" model="account.account">
+            <field name="code">X2112</field>
+            <field name="name">Salary Expenses - (test)</field>
+            <field ref="ovr" name="parent_id"/>
+            <field name="type">other</field>
+            <field name="user_type" ref="data_account_type_expense"/>
+        </record>
+
+        <!-- Properties -->
+        <record forcecreate="True" id="property_account_receivable" model="ir.property">
+            <field name="name">property_account_receivable</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_receivable')]"/>
+            <field eval="'account.account,'+str(a_recv)" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_account_payable" model="ir.property">
+            <field name="name">property_account_payable</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_payable')]"/>
+            <field eval="'account.account,'+str(a_pay)" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record forcecreate="True" id="property_account_position" model="ir.property">
+            <field name="name">property_account_position</field>
+            <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_account_position')]"/>
+            <field eval="False" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!--
+        Account Journal
+        -->
+
+        <record id="sales_journal" model="account.journal">
+            <field name="name">Sales Journal - (test)</field>
+            <field name="code">TSAJ</field>
+            <field name="type">sale</field>
+            <field name="sequence_id" ref="sequence_sale_journal"/>
+            <field name="default_credit_account_id" ref="a_sale"/>
+            <field name="default_debit_account_id" ref="a_sale"/>
+            <field name="analytic_journal_id" ref="cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="refund_sales_journal" model="account.journal">
+            <field name="name">Sales Credit Note Journal - (test)</field>
+            <field name="code">TSCNJ</field>
+            <field name="type">sale_refund</field>
+            <field name="sequence_id" ref="sequence_refund_sales_journal"/>
+            <field name="default_credit_account_id" ref="a_sale"/>
+            <field name="default_debit_account_id" ref="a_sale"/>
+            <field name="analytic_journal_id" ref="cose_journal_sale"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="expenses_journal" model="account.journal">
+            <field name="name">Expenses Journal - (test)</field>
+            <field name="code">TEXJ</field>
+            <field name="type">purchase</field>
+            <field name="sequence_id" ref="sequence_purchase_journal"/>
+            <field name="default_debit_account_id" ref="a_expense"/>
+            <field name="default_credit_account_id" ref="a_expense"/>
+            <field name="analytic_journal_id" ref="exp"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="refund_expenses_journal" model="account.journal">
+            <field name="name">Expenses Credit Notes Journal - (test)</field>
+            <field name="code">TECNJ</field>
+            <field name="type">purchase_refund</field>
+            <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
+            <field name="default_debit_account_id" ref="a_expense"/>
+            <field name="default_credit_account_id" ref="a_expense"/>
+            <field name="analytic_journal_id" ref="exp"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="bank_journal" model="account.journal">
+            <field name="name">Bank Journal - (test)</field>
+            <field name="code">TBNK</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="sequence_bank_journal"/>
+            <field name="default_debit_account_id" ref="bnk"/>
+            <field name="default_credit_account_id" ref="bnk"/>
+            <field name="analytic_journal_id" ref="sit"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="check_journal" model="account.journal">
+            <field name="name">Checks Journal - (test)</field>
+            <field name="code">TCHK</field>
+            <field name="type">bank</field>
+            <field name="sequence_id" ref="sequence_check_journal"/>
+            <field name="default_debit_account_id" ref="cash"/>
+            <field name="default_credit_account_id" ref="cash"/>
+            <field name="analytic_journal_id" ref="sit"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="cash_journal" model="account.journal">
+            <field name="name">Cash Journal - (test)</field>
+            <field name="code">TCSH</field>
+            <field name="type">cash</field>
+            <field name="profit_account_id" ref="rsa" />
+            <field name="loss_account_id" ref="rsa" />
+            <field name="internal_account_id" ref="rsa" />
+            <field name="with_last_closing_balance" eval="True" />
+            <!--
+                 Usually, cash payment methods requires a control at opening and closing.
+                 Bot for demo data, it's better to avoid the control step so that people
+                 that test Odoo arrive directly in the touchscreen UI.
+            -->
+            <field name="cash_control" eval="False"/>
+            <field name="sequence_id" ref="sequence_cash_journal"/>
+            <field name="default_debit_account_id" ref="cash"/>
+            <field name="default_credit_account_id" ref="cash"/>
+            <field name="analytic_journal_id" ref="sit"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="miscellaneous_journal" model="account.journal">
+            <field name="name">Miscellaneous Journal - (test)</field>
+            <field name="code">TMIS</field>
+            <field name="type">general</field>
+            <field name="sequence_id" ref="sequence_miscellaneous_journal"/>
+            <field name="analytic_journal_id" ref="sit"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+        <record id="opening_journal" model="account.journal">
+            <field name="name">Opening Entries Journal - (test)</field>
+            <field name="code">TOEJ</field>
+            <field name="type">situation</field>
+            <field name="sequence_id" ref="sequence_opening_journal"/>
+            <field name="default_debit_account_id" ref="o_income"/>
+            <field name="default_credit_account_id" ref="o_expense"/>
+            <field eval="True" name="centralisation"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="bank_journal_usd" model="account.journal">
+            <field name="name">USD Bank Journal - (test)</field>
+            <field name="code">TUBK</field>
+            <field name="type">bank</field>
+            <field name="default_debit_account_id" ref="usd_bnk"/>
+            <field name="default_credit_account_id" ref="usd_bnk"/>
+            <field name="currency" ref="base.USD"/>
+        </record>
+        <!--
+        Product income and expense accounts, default parameters
+        -->
+
+        <record id="property_account_expense_categ" model="ir.property">
+            <field name="name">property_account_expense_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_expense_categ')]"/>
+            <field eval="'account.account,'+str(ref('account.a_expense'))" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+        <record id="property_account_income_categ" model="ir.property">
+            <field name="name">property_account_income_categ</field>
+            <field name="fields_id" search="[('model','=','product.category'),('name','=','property_account_income_categ')]"/>
+            <field eval="'account.account,'+str(ref('account.a_sale'))" model="account.account" name="value"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+    </data>
+</openerp>

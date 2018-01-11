@@ -1,0 +1,499 @@
+$actionColWidth: 15px;
+$mainTableBordersPadding: 3px;
+$lightBorder: 1px solid #bbb;
+$accountingBorder: 1px solid #000;
+$initialLineBackground: #f0f0f0;
+// Warning, this value is also specified in the instance.web.account.abstractReconciliation widget
+$aestetic_animation_speed: 300ms;
+
+
+.openerp .oe_bank_statement_reconciliation {
+    font-size: 12px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: default;
+    height: 100%;
+
+    .oe_form_sheetbg {
+        border-bottom: 0;
+        padding: 0;
+        height: 100%;
+
+        .oe_form_sheet {
+            position: relative;
+            padding: 20px 15px 30px 15px;
+            border-top: 0;
+            border-bottom: 0;
+            height: 100%;
+        }
+    }
+
+    h1 input, h2 input {
+       height: auto !important;
+    }
+
+    h1 {
+        width: 48%;
+        padding: 0 0 0 $actionColWidth;
+        margin: 0 0 25px 0;
+        float: left;
+        font-size: 2em;
+        height: 1.5em;
+    }
+
+    .statement_name span {
+        line-height: 1.5em;
+        cursor: pointer;
+    }
+
+    .change_statement_name_container {
+        display: none;
+        width: 95%;
+
+        td:first-child, td:first-child > input {
+            width: 99%;
+        }
+        td:last-child {
+            width: 1%;
+            padding-left: 3px;
+        }
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+
+    .progress {
+        width: 49%;
+        margin: 10px $actionColWidth 0 0;
+        float: right;
+        position: relative;
+        display: inline-block;
+
+        .progress-text {
+            text-align: center;
+            position: absolute;
+            width: 100%;
+            left: 0;
+            top: 2px;
+            z-index: 10;
+            text-shadow:
+               -1px -1px 0 #f5f5f5,
+                1px -1px 0 #f5f5f5,
+                -1px 1px 0 #f5f5f5,
+                 1px 1px 0 #f5f5f5;
+        }
+    }
+
+    .show_more_container {
+        text-align: center;
+        
+        .show_more {
+            display: none;
+        }
+    }
+
+    .protip {
+        margin: 0;
+        position: absolute;
+        bottom: 7px;
+        right: 15px;
+        text-align: right;
+        color: #bbb;
+    }
+
+    .done_message {
+        width: 100%;
+        padding: 0 20%;
+        margin-top: 50px;
+        margin-bottom: 50px;
+
+        h2 {
+            margin-bottom: 30px;
+
+            .congrats_icon {
+                float: right;
+                font-size: 2em;
+                position: relative;
+                top: -0.25em;
+            }
+        }
+
+        .achievements {
+            margin-top: 30px;
+            text-align: center;
+            position: relative;
+
+            .achievement {
+                font-size: 4em;
+                margin: 0 0.3em;
+                position: relative;
+                vertical-align: middle;
+                text-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+
+                i {
+                    font-size: 0.5em;
+                    color: white;
+                    position: absolute;
+                    top: 50%;
+                    margin-top: -0.55em;
+                    left: 0;
+                    width: 100%;
+                    text-align: center;
+                    //text-shadow: 1px 1px 0 black;
+                }
+            }
+        }
+
+        .action_buttons {
+            text-align: center;
+        }
+    }
+
+    /* icons */
+    .glyphicon {
+        font-size: 12px !important;
+
+        &.line_info_button {
+            color: #ccc !important;
+        }
+    }
+    .accounting_view .glyphicon-add-remove:before {
+        content: "\2212";
+    }
+    .match .glyphicon-add-remove:before {
+        content: "\2b";
+    }
+
+    // bankStatementReconciliationLine widget
+    .oe_bank_statement_reconciliation_line {
+        margin-bottom: 30px;
+
+        table {
+            width: 100%;
+        }
+
+        // modes : default
+        .toggle_match, .toggle_create {
+            -webkit-transition-property: -webkit-transform;
+            -moz-transition-property: -moz-transform;
+            -ms-transition-property: -ms-transform;
+            -o-transition-property: -o-transform;
+            transition-property: transform;
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+            -webkit-transition-duration: $aestetic_animation_speed;
+            -moz-transition-duration: $aestetic_animation_speed;
+            -ms-transition-duration: $aestetic_animation_speed;
+            -o-transition-duration: $aestetic_animation_speed;
+            transition-duration: $aestetic_animation_speed;
+        }
+
+        .visible_toggle {
+            visibility: visible !important;
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+
+        .partner_name {
+            .change_partner {
+                display: none;
+                cursor: pointer;
+                margin: 0 10px 0 5px;
+            }
+            &:hover .change_partner {
+                display: inline;
+            }
+        }
+
+        .change_partner_container {
+            width: 200px;
+            display: none;
+            position: relative !important;
+        }
+
+        // modes : specific
+        &[data-mode="match"] {
+            .toggle_match {
+                @extend .visible_toggle;
+            }
+        }
+
+        &[data-mode="create"] {
+            .toggle_create {
+                @extend .visible_toggle;
+            }
+        }
+
+        &[data-mode="inactive"] {
+            .initial_line > td {
+                background-color: ($initialLineBackground + #080808) !important;
+            }
+        }
+
+        &.no_match:not(.no_partner) {
+            .initial_line {
+                cursor: default !important;
+
+                .line_info_button {
+                    cursor: pointer;
+                }
+            }
+            .toggle_match {
+                visibility: hidden !important;
+            }
+        }
+
+        /* gap between accounting_view and action view */
+        > table > tbody > tr:nth-child(1) > td table {
+            margin-bottom: 10px;
+        }
+
+        /* popover */
+        table.details {
+            td:first-child {
+                padding-right: 10px;
+                font-weight: bold;
+            }
+        }
+
+        /* arrays of move lines */
+        .accounting_view, .match table {
+            width: 100%;
+
+            tr {
+                cursor: pointer;
+            }
+
+            td {
+                padding: 1px 8px;
+                vertical-align: middle;
+            }
+
+            td.cell_action, td.cell_info_popover {
+                width: $actionColWidth;
+                padding: 0;
+            }
+
+            td.cell_action {
+                text-align: left;
+            }
+
+            td.cell_account_code {
+                width: 80px;
+                padding-left: $mainTableBordersPadding;
+            }
+
+            td.cell_due_date {
+                width: 100px;
+            }
+
+            td.cell_label {
+
+            }
+
+            td.cell_debit {
+                text-align: right;
+                width: 15%;
+            }
+
+            td.cell_credit {
+                width: 15%;
+                text-align: right;
+                padding-right: $mainTableBordersPadding;
+            }
+
+            td.cell_info_popover {
+                text-align: right;
+            }
+
+            tr.line_open_balance {
+                color: #bbb;
+            }
+
+            tr .glyphicon:not(.line_info_button) {
+                visibility: hidden;
+                color: #555;
+            }
+
+            tr:hover .glyphicon, tr.active .glyphicon {
+                visibility: visible;
+            }
+
+            tr .do_partial_reconcile_button {
+                color: #f0ad4e;
+                padding-right: 5px;
+            }
+
+            tr .undo_partial_reconcile_button {
+                color: #555;
+                padding-right: 5px;
+            }
+        }
+
+        /* Partie infos */
+        .accounting_view {
+            border-collapse: separate;
+
+            .initial_line > td {
+                border-top: $lightBorder;
+                padding-top: 4px;
+                padding-bottom: 5px;
+                background-color: $initialLineBackground;
+                -webkit-transition-property: background-color;
+                -moz-transition-property: background-color;
+                -ms-transition-property: background-color;
+                transition-property: background-color;
+                -webkit-transition-duration: $aestetic_animation_speed;
+                -moz-transition-duration: $aestetic_animation_speed;
+                -ms-transition-duration: $aestetic_animation_speed;
+                -o-transition-duration: $aestetic_animation_speed;
+                transition-duration: $aestetic_animation_speed;
+
+                &.cell_action, &.cell_info_popover {
+                    border-top: none;
+                    background: white !important;
+                    // Hack pour l'alignement au px près
+                    padding-top: 6px;
+                    padding-bottom: 3px;
+                }
+            }
+
+            caption {
+                text-align: left;
+                height: 26px;
+                margin: 0 $actionColWidth 4px $actionColWidth;
+
+                .partner_name {
+                    font-size: 1.1em;
+                    font-weight: bold;
+                }
+
+                .tip_reconciliation_not_balanced {
+                    float: right;
+                    padding-right: 7px;
+                }
+
+                button {
+                    float: right;
+
+                    &:disabled {
+                        opacity: 0.5;
+                    }
+                }
+
+                > span, > input {
+                    position: relative; top: 7px; /* meh */
+                }
+            }
+
+            // accounting "T"
+            td.cell_credit { border-left: $accountingBorder; }
+        }
+
+
+        /* Match view */
+        .match {
+
+            .match_controls {
+                padding: 0 0 5px ($actionColWidth+$mainTableBordersPadding);
+
+                .filter {
+                    width: 240px;
+                }
+
+                .pager_control_left, .pager_control_right {
+                    display: inline-block;
+                    cursor: pointer;
+                }
+
+                .pager_control_left {
+                    margin-right: 10px;
+                }
+
+                .pager_control_left.disabled, .pager_control_right.disabled {
+                    color: #ddd;
+                    cursor: default;
+                }
+            }
+
+            .show_more {
+                display: inline-block;
+                margin-left: ($actionColWidth+$mainTableBordersPadding);
+                margin-top: 5px;
+            }
+        }
+
+
+        /* Action create */
+        .create {
+            margin: 0 $actionColWidth;
+            border: 1px solid #d5d5d5;
+            border-radius: 5px;
+            padding: 10px;
+
+            .quick_add {
+                margin-bottom: 10px;
+                clear: both;
+
+                &:empty {
+                    display: none;
+                }
+            }
+            .quick_add:empty {
+                display: none;
+            }
+
+            .oe_form > table {
+                width: 49%;
+                height: 26px;
+                
+                &:nth-child(2n+1) { float: left; clear: left; }
+                &:nth-child(2n) { float: right; clear: right; }
+
+                th {
+                    font-weight: bold;
+                    line-height: 26px;
+                    padding-right: 8px;
+                    min-width: 100px;
+                    border-right: 1px solid #ddd;
+                    white-space: nowrap;
+                    width: 1%;
+                }
+
+                td {
+                    width: 99%;
+                    padding-left: 8px;
+                }
+
+                input, select {
+                    width: 100%;
+                }
+
+                &.add_line_container {
+                    width: 98%;
+                    float: none;
+                    clear: both;
+                    margin: auto;
+
+                    td {
+                        text-align: center;
+                    }
+
+                    .add_line {
+                        line-height: 26px;
+                    }
+                }
+            }
+        }
+    }
+}

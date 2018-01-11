@@ -1,0 +1,31 @@
+<openerp>
+      <data>
+
+        <record id="view_bid_line_qty" model="ir.ui.view">
+            <field name="name">Quantity to Purchase</field>
+            <field name="model">bid.line.qty</field>
+            <field name="arch" type="xml">
+                <form string="Quantity">
+                    <group>
+                        <field name="qty" context="{'default_qty': 0}"/>
+                    </group>
+                    <footer>
+                        <button name="change_qty" string="Change Quantity" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bid_line_qty" model="ir.actions.act_window">
+               <field name="name">Bid Line Qty</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">bid.line.qty</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="context">{'record_id' : active_id}</field>
+               <field name="target">new</field>
+        </record>
+</data>
+</openerp>

@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    <!-- Sales Tax -->
+
+    <record id="sg_sale_tax_es_0" model="account.tax.template">
+        <field name="name">Sales Tax 0% ES33</field>
+        <field name="description">0% ES33</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="ref_base_sign">-1</field>
+        <field name="ref_tax_sign">-1</field>
+        <field name="account_collected_id" ref="account_account_791"/>
+        <field name="account_paid_id" ref="account_account_791"/>
+        <field name="base_code_id" ref="sg_base_code_exempted_sale_ES33"/>
+        <field name="tax_code_id" ref="sg_tax_code_exempted_sale_ES33"/>
+        <field name="ref_base_code_id" ref="sg_base_code_exempted_sale_ES33"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_exempted_sale_ES33"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_sale_tax_ds_7" model="account.tax.template">
+        <field name="name">Sales Tax 7% DS</field>
+        <field name="description">7% DS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="ref_base_sign">-1</field>
+        <field name="ref_tax_sign">-1</field>
+        <field name="account_collected_id" ref="account_account_792"/>
+        <field name="account_paid_id" ref="account_account_792"/>
+        <field name="base_code_id" ref="sg_base_code_standard_sale_7_DS"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_received_7_DS"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_sale_7_DS"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_received_7_DS"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_sale_tax_esn_0" model="account.tax.template">
+        <field name="name">Sales Tax 0% ESN33</field>
+        <field name="description">0% ESN33</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="ref_base_sign">-1</field>
+        <field name="ref_tax_sign">-1</field>
+        <field name="account_collected_id" ref="account_account_793"/>
+        <field name="account_paid_id" ref="account_account_793"/>
+        <field name="base_code_id" ref="sg_base_code_exempted_sale_ESN33"/>
+        <field name="tax_code_id" ref="sg_tax_code_exempted_sale_ESN33"/>
+        <field name="ref_base_code_id" ref="sg_base_code_exempted_sale_ESN33"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_exempted_sale_ESN33"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_sale_tax_os_0" model="account.tax.template">
+        <field name="name">Sales Tax 0% OS</field>
+        <field name="description">0% OS</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="ref_base_sign">-1</field>
+        <field name="ref_tax_sign">-1</field>
+        <field name="account_collected_id" ref="account_account_794"/>
+        <field name="account_paid_id" ref="account_account_794"/>
+        <field name="base_code_id" ref="sg_base_code_out_scope_sale"/>
+        <field name="tax_code_id" ref="sg_tax_code_out_scope_sale"/>
+        <field name="ref_base_code_id" ref="sg_base_code_out_scope_sale"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_out_scope_sale"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_sale_tax_zr_0" model="account.tax.template">
+        <field name="name">Sales Tax 0% ZR</field>
+        <field name="description">0% ZR</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.00</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="ref_base_sign">-1</field>
+        <field name="ref_tax_sign">-1</field>
+        <field name="account_collected_id" ref="account_account_795"/>
+        <field name="account_paid_id" ref="account_account_795"/>
+        <field name="base_code_id" ref="sg_base_code_standard_sale_0"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_received_0"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_sale_0"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_received_0"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_sale_tax_sr_7" model="account.tax.template">
+        <field name="name">Sales Tax 7% SR</field>
+        <field name="description">7% SR</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="ref_base_sign">-1</field>
+        <field name="ref_tax_sign">-1</field>
+        <field name="account_collected_id" ref="account_account_796"/>
+        <field name="account_paid_id" ref="account_account_796"/>
+        <field name="base_code_id" ref="sg_base_code_standard_sale_7_SR"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_received_7_SR"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_sale_7_SR"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_received_7_SR"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <!-- Purchases Tax -->
+
+    <record id="sg_purchase_tax_txn33_7" model="account.tax.template">
+        <field name="name">Purchase Tax 7% TX-N33</field>
+        <field name="description">7% TX-N33</field>
+        <field name="account_collected_id" ref="account_account_738"/>
+        <field name="account_paid_id" ref="account_account_738"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_7_TX-N33"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_7_TX-N33"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_7_TX-N33"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_7_TX-N33"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_txe33_7" model="account.tax.template">
+        <field name="name">Purchase Tax 7% TX-E33</field>
+        <field name="description">7% TX-E33</field>
+        <field name="account_collected_id" ref="account_account_739"/>
+        <field name="account_paid_id" ref="account_account_739"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_7_TX-E33"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_7_TX-E33"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_7_TX-E33"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_7_TX-E33"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_bl_7" model="account.tax.template">
+        <field name="name">Purchase Tax 7% BL</field>
+        <field name="description">7% BL</field>
+        <field name="account_collected_id" ref="account_account_740"/>
+        <field name="account_paid_id" ref="account_account_740"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_7_BL"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_7_BL"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_7_BL"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_7_BL"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_im_7" model="account.tax.template">
+        <field name="name">Purchase Tax 7% IM</field>
+        <field name="description">7% IM</field>
+        <field name="account_collected_id" ref="account_account_741"/>
+        <field name="account_paid_id" ref="account_account_741"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_7_IM"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_7_IM"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_7_IM"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_7_IM"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_txre_7" model="account.tax.template">
+        <field name="name">Purchase Tax 7% TX-RE</field>
+        <field name="description">7% TX-RE</field>
+        <field name="account_collected_id" ref="account_account_742"/>
+        <field name="account_paid_id" ref="account_account_742"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_7_TX-RE"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_7_TX-RE"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_7_TX-RE"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_7_TX-RE"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_me_0" model="account.tax.template">
+        <field name="name">Purchase Tax 0% ME</field>
+        <field name="description">0% ME</field>
+        <field name="account_collected_id" ref="account_account_743"/>
+        <field name="account_paid_id" ref="account_account_743"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_0_ME"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_0_ME"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_0_ME"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_0_ME"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_nr_0" model="account.tax.template">
+        <field name="name">Purchase Tax 0% NR</field>
+        <field name="description">0% NR</field>
+        <field name="account_collected_id" ref="account_account_744"/>
+        <field name="account_paid_id" ref="account_account_744"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_0_NR"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_0_NR"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_0_NR"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_0_NR"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_zp_0" model="account.tax.template">
+        <field name="name">Purchase Tax 0% ZP</field>
+        <field name="description">0% ZP</field>
+        <field name="account_collected_id" ref="account_account_745"/>
+        <field name="account_paid_id" ref="account_account_745"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_0_ZP"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_0_ZP"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_0_ZP"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_0_ZP"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_op_0" model="account.tax.template">
+        <field name="name">Purchase Tax 0% OP</field>
+        <field name="description">0% OP</field>
+        <field name="account_collected_id" ref="account_account_746"/>
+        <field name="account_paid_id" ref="account_account_746"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_out_scope_purchase"/>
+        <field name="tax_code_id" ref="sg_tax_code_out_scope_purchase"/>
+        <field name="ref_base_code_id" ref="sg_base_code_out_scope_purchase"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_out_scope_purchase"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_ep_0" model="account.tax.template">
+        <field name="name">Purchase Tax 0% EP</field>
+        <field name="description">0% EP</field>
+        <field name="account_collected_id" ref="account_account_747"/>
+        <field name="account_paid_id" ref="account_account_747"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_exempted_purchase"/>
+        <field name="tax_code_id" ref="sg_tax_code_exempted_purchase"/>
+        <field name="ref_base_code_id" ref="sg_base_code_exempted_purchase"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_exempted_purchase"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_mes_0" model="account.tax.template">
+        <field name="name">Purchase Tax MES</field>
+        <field name="description">0% MES</field>
+        <field name="account_collected_id" ref="account_account_748"/>
+        <field name="account_paid_id" ref="account_account_748"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.0</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_mes_import_purchase"/>
+        <field name="tax_code_id" ref="sg_tax_code_mes_purchase"/>
+        <field name="ref_base_code_id" ref="sg_base_code_mes_import_purchase"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_mes_purchase"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    <record id="sg_purchase_tax_tx7_7" model="account.tax.template">
+        <field name="name">Purchase Tax 7% TX7</field>
+        <field name="description">7% TX7</field>
+        <field name="account_collected_id" ref="account_account_749"/>
+        <field name="account_paid_id" ref="account_account_749"/>
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.07</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_sign">-1</field>
+        <field name="tax_sign">-1</field>
+        <field name="base_code_id" ref="sg_base_code_standard_purchase_7_TX7"/>
+        <field name="tax_code_id" ref="sg_tax_code_tax_paid_7_TX7"/>
+        <field name="ref_base_code_id" ref="sg_base_code_standard_purchase_7_TX7"/>
+        <field name="ref_tax_code_id" ref="sg_tax_code_tax_paid_7_TX7"/>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="sg_chart_template"/>
+    </record>
+
+    </data>
+</openerp>

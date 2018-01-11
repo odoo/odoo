@@ -1,0 +1,264 @@
+-
+  In order to test the EDI export features of Invoices
+-
+  First I create a draft customer invoice
+-
+  !record {model: account.invoice, id: invoice_edi_1}:
+    journal_id: 1
+    partner_id: base.res_partner_2
+    currency_id: base.EUR
+    company_id: 1
+    account_id: account.a_pay
+    date_invoice: !eval "'%s' % (time.strftime('%Y-%m-%d'))"
+    name: selling product
+    type: 'out_invoice'
+    invoice_line:
+      - product_id: product.product_product_3
+        uos_id: 1
+        quantity: 1.0
+        price_unit: 10.0
+        name: 'basic pc'
+        account_id: account.a_pay
+    invoice_line:
+      - product_id: product.product_product_5
+        uos_id: 1
+        quantity: 5.0
+        price_unit: 100.0
+        name: 'PC on Demand'
+        account_id: account.a_pay
+    tax_line:
+      - name: sale tax
+        account_id: account.a_pay
+        manual: True
+        amount: 1000.00
+-
+  I confirm and open the invoice
+-
+  !workflow {model: account.invoice, ref: invoice_edi_1, action: invoice_open}
+-
+  Then I export the customer invoice
+-
+  !python {model: edi.edi}: |
+    import json
+    invoice_pool = self.pool.get('account.invoice')
+    invoice = invoice_pool.browse(cr, uid, ref("invoice_edi_1"))
+    edi_doc = self.generate_edi(cr, uid, [invoice])
+    assert isinstance(json.loads(edi_doc)[0], dict), 'EDI doc should be a JSON dict' 
+-
+  Then I import a sample EDI document of another customer invoice from OpenERP 7.0
+-
+  !python {model: account.invoice}: |
+    import time
+    edi_document = {
+        "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.random_invoice_763jsms",
+        "__module": "account",
+        "__model": "account.invoice",
+        "__version": [7,0,0],
+        "internal_number": time.strftime("SAJ/%Y/070"),
+        "company_address": {
+                "__id": "base:b33adf8a-decd-11f0-a4de-702a04e25700.main_address",
+                "__module": "base",
+                "__model": "res.partner", 
+                "city": "Gerompont", 
+                "name": "Company main address",
+                "zip": "1367", 
+                "country_id": ["base:b33adf8a-decd-11f0-a4de-702a04e25700.be", "Belgium"], 
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40",
+                "bank_ids": [
+                    ["base:b33adf8a-decd-11f0-a4de-702a04e25700.res_partner_bank-ZrTWzesfsdDJzGbp","Sample bank: 70-123465789-156113"]
+                ],
+        },
+        "company_id": ["account:b33adf8a-decd-11f0-a4de-702a04e25700.res_company_test11", "Thomson pvt. ltd."],
+        "currency": {
+            "__id": "base:b33adf8a-decd-11f0-a4de-702a04e25700.EUR",
+            "__module": "base",
+            "__model": "res.currency",
+            "code": "EUR",
+            "symbol": "€",
+        },
+        "partner_id": ["account:b33adf8a-decd-11f0-a4de-702a04e25700.res_partner_test20", "Junjun wala"],
+        "partner_address": {
+                "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",
+                "__module": "base",
+                "__model": "res.partner",
+                "name": "Default Address",
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40", 
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
+        },
+        "date_invoice": time.strftime('%Y-%m-%d'),
+        "name": "sample invoice",
+        "tax_line": [{
+                "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.account_invoice_tax-4g4EutbiEMVl",
+                "__module": "account",
+                "__model": "account.invoice.tax",
+                "amount": 1000.0,
+                "manual": True,
+                "name": "sale tax",
+        }],
+        "type": "out_invoice",
+        "invoice_line": [{
+                "__module": "account",
+                "__model": "account.invoice.line",
+                "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.account_invoice_line-1RP3so",
+                "uos_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_uom_unit", "Unit"],
+                "name": "PC Assemble SC234",
+                "price_unit": 10.0,
+                "product_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_product_3", "[PCSC234] PC Assemble SC234"],
+                "quantity": 1.0
+        },
+        {
+                "__module": "account",
+                "__model": "account.invoice.line",
+                "__id": "account:b33adf8a-decd-11f0-a4de-702a04e25700.account_invoice_line-u2XV5",
+                "uos_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_uom_unit", "Unit"],
+                "name": "PC on Demand",
+                "price_unit": 100.0,
+                "product_id": ["product:b33adf8a-decd-11f0-a4de-702a04e25700.product_product_5", "[PC-DEM] PC on Demand"],
+                "quantity": 5.0
+        }]
+    }
+    invoice_id = self.edi_import(cr, uid, edi_document, context=context)
+    assert invoice_id, 'EDI import failed'
+    invoice_new = self.browse(cr, uid, invoice_id)
+
+    # check bank info on partner
+    assert invoice_new.partner_id.supplier, "Imported partner should be a supplier, as we just imported the document as a supplier invoice"
+    assert len(invoice_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
+    bank_info = invoice_new.partner_id.bank_ids[0]
+    assert bank_info.acc_number == "Sample bank: 70-123465789-156113", 'Expected "Sample bank: 70-123465789-156113", got %s' % bank_info.acc_number
+
+    assert invoice_new.partner_id.supplier, 'Imported Partner is not marked as supplier'
+    assert invoice_new.reference == time.strftime("SAJ/%Y/070"), "internal number is not stored in reference"
+    assert invoice_new.reference_type == 'none', "reference type is not set to 'none'"
+    assert invoice_new.internal_number == False, "internal number is not reset"
+    assert invoice_new.journal_id.id, "journal id is not selected"
+    assert invoice_new.type == 'in_invoice', "Invoice type was not set properly"
+    assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
+    for inv_line in invoice_new.invoice_line:
+        if inv_line.name == 'PC Assemble SC234':
+            assert inv_line.uos_id.name == "Unit" , "uom is not same"
+            assert inv_line.price_unit == 10 , "price unit is not same"
+            assert inv_line.quantity == 1 , "product qty is not same"
+            assert inv_line.price_subtotal == 10, "price sub total is not same"
+        elif inv_line.name == 'PC on Demand':
+            assert inv_line.uos_id.name == "Unit" , "uom is not same"
+            assert inv_line.price_unit == 100 , "price unit is not same"
+            assert inv_line.quantity == 5 , "product qty is not same"
+            assert inv_line.price_subtotal == 500, "price sub total is not same"
+        else:
+            raise AssertionError('unknown invoice line: %s' % inv_line)
+    for inv_tax in invoice_new.tax_line:
+        assert inv_tax.manual, "tax line not set to manual"
+        assert inv_tax.account_id, "missing tax line account"
+-
+  Then I import a sample EDI document of another customer invoice from OpenERP 6.1 (to test backwards compatibility)
+-
+  !python {model: account.invoice}: |
+    import time
+    edi_document = {
+        "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.random_invoice_763jsms", 
+        "__module": "account", 
+        "__model": "account.invoice", 
+        "__version": [6,1,0], 
+        "internal_number": time.strftime("SAJ/%Y/061"), 
+        "company_address": {
+                "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.main_address",
+                "__module": "base",
+                "__model": "res.partner.address", 
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "country_id": ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.be", "Belgium"], 
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40",
+                "bank_ids": [
+                    ["base:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_bank-ZrTWzesfsdDJzGbp","Sample bank: 123465789-156113"]
+                ],
+        }, 
+        "company_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_company_test11", "Thomson pvt. ltd."], 
+        "currency": {
+            "__id": "base:b22acf7a-ddcd-11e0-a4db-701a04e25543.EUR",
+            "__module": "base",
+            "__model": "res.currency",
+            "code": "EUR",
+            "symbol": "€",
+        }, 
+        "partner_id": ["account:b22acf7a-ddcd-11e0-a4db-701a04e25543.res_partner_test20", "Junjun wala"],
+        "partner_address": {
+                "__id": "base:5af1272e-dd26-11e0-b65e-701a04e25543.res_partner_address_7wdsjasdjh",
+                "__module": "base",
+                "__model": "res.partner.address",
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40", 
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "country_id": ["base:5af1272e-dd26-11e0-b65e-701a04e25543.be", "Belgium"], 
+        },
+        "date_invoice": time.strftime('%Y-%m-%d'), 
+        "name": "sample invoice", 
+        "tax_line": [{
+                "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_tax-4g4EutbiEMVl", 
+                "__module": "account",
+                "__model": "account.invoice.tax", 
+                "amount": 1000.0, 
+                "manual": True, 
+                "name": "sale tax", 
+        }], 
+        "type": "out_invoice", 
+        "invoice_line": [{
+                "__module": "account",
+                "__model": "account.invoice.line",
+                "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-1RP3so",
+                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "PCE"], 
+                "name": "Basic PC", 
+                "price_unit": 10.0, 
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc1", "[PC1] Basic PC"], 
+                "quantity": 1.0
+        },
+        {
+                "__module": "account",
+                "__model": "account.invoice.line",
+                "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-u2XV5",
+                "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "PCE"], 
+                "name": "Medium PC", 
+                "price_unit": 100.0, 
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_pc3", "[PC3] Medium PC"], 
+                "quantity": 5.0
+        }]
+    }
+    invoice_id = self.edi_import(cr, uid, edi_document, context=context)
+    assert invoice_id, 'EDI import failed'
+    invoice_new = self.browse(cr, uid, invoice_id)
+
+    # check bank info on partner
+    assert invoice_new.partner_id.supplier, "Imported partner should be a supplier, as we just imported the document as a supplier invoice"
+    assert len(invoice_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
+    bank_info = invoice_new.partner_id.bank_ids[0]
+    assert bank_info.acc_number == "Sample bank: 123465789-156113", 'Expected "Sample bank: 123465789-156113", got %s' % bank_info.acc_number
+
+    assert invoice_new.partner_id.supplier, 'Imported Partner is not marked as supplier'
+    assert invoice_new.reference == time.strftime("SAJ/%Y/061"), "internal number is not stored in reference"
+    assert invoice_new.reference_type == 'none', "reference type is not set to 'none'"
+    assert invoice_new.internal_number == False, "internal number is not reset"
+    assert invoice_new.journal_id.id, "journal id is not selected"
+    assert invoice_new.type == 'in_invoice', "Invoice type was not set properly"
+    assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
+    for inv_line in invoice_new.invoice_line:
+        if inv_line.name == 'Basic PC':
+            assert inv_line.uos_id.name == "PCE" , "uom is not same"
+            assert inv_line.price_unit == 10 , "price unit is not same"
+            assert inv_line.quantity == 1 , "product qty is not same"
+            assert inv_line.price_subtotal == 10, "price sub total is not same"
+        elif inv_line.name == 'Medium PC':
+            assert inv_line.uos_id.name == "PCE" , "uom is not same"
+            assert inv_line.price_unit == 100 , "price unit is not same"
+            assert inv_line.quantity == 5 , "product qty is not same"
+            assert inv_line.price_subtotal == 500, "price sub total is not same"
+        else:
+            raise AssertionError('unknown invoice line: %s' % inv_line)
+    for inv_tax in invoice_new.tax_line:
+        assert inv_tax.manual, "tax line not set to manual"
+        assert inv_tax.account_id, "missing tax line account"

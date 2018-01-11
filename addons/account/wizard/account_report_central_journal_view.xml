@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_central_journal" model="ir.ui.view">
+            <field name="name">Account central Journal</field>
+            <field name="model">account.central.journal</field>
+            <field name="inherit_id" ref="account_common_report_view" />
+            <field name="arch" type="xml">
+                <field name="target_move" position="after">
+                    <field name="amount_currency"/>
+                    <newline/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_account_central_journal" model="ir.actions.act_window">
+            <field name="name">Account Central Journal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.central.journal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_account_central_journal"/>
+        </record>
+
+        <menuitem
+            name="Centralizing Journal"
+            parent="account.menu_journals_report"
+            action="action_account_central_journal"
+            id="menu_account_central_journal"
+            icon="STOCK_PRINT"/>
+
+    </data>
+</openerp>

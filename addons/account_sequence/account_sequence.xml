@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_move_form_inherit" model="ir.ui.view">
+           <field name="name">account.move.form.inherit</field>
+           <field name="model">account.move</field>
+           <field name="inherit_id" ref="account.view_move_form"/>
+           <field name="arch" type="xml">
+                <field name="period_id" position="after">
+                    <field name="internal_sequence_number"/>
+                </field>
+           </field>
+        </record>
+
+        <record id="view_account_journal_form_inherit" model="ir.ui.view">
+           <field name="name">account.journal.form.inherit</field>
+           <field name="model">account.journal</field>
+           <field name="inherit_id" ref="account.view_account_journal_form"/>
+           <field name="arch" type="xml">
+                <field name="sequence_id" position="after">
+                    <field name="internal_sequence_id"/>
+                </field>
+           </field>
+        </record>
+
+        <record id="view_account_move_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="arch" type="xml">
+                <field name="ref" position="before">
+                    <field name="internal_sequence_number"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_move_search_inherit">
+            <field name="name">view.move.search.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_account_move_filter"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="internal_sequence_number"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_move_line_form_inherit">
+            <field name="name">view.move.line.form.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="internal_sequence_number"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_move_line_search_inherit">
+            <field name="name">view.move.line.search.inherit</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_account_move_line_filter"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='move_id']" position="after">
+                    <field name="internal_sequence_number"/>
+                </xpath>
+            </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

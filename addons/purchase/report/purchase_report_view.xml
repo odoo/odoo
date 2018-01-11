@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_purchase_order_graph">
+            <field name="name">product.month.graph</field>
+            <field name="model">purchase.report</field>
+            <field name="arch" type="xml">
+                <graph string="Purchase Orders Statistics" type="pivot">
+                    <field name="partner_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="price_total" type="measure"/>
+                    <field name="quantity" type="measure"/>
+                    <field name="price_average" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Custom reports (aka filters) -->
+        <record id="filter_purchase_order_monthly_purchases" model="ir.filters">
+            <field name="name">Monthly Purchases</field>
+            <field name="model_id">purchase.report</field>
+            <field name="domain">[('state','&lt;&gt;','cancel')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['category_id'], 'col_group_by': ['date:month'], 'measures': ['quantity']}</field>
+        </record>
+        <record id="filter_purchase_order_price_per_supplier" model="ir.filters">
+            <field name="name">Price Per Supplier</field>
+            <field name="model_id">purchase.report</field>
+            <field name="domain">[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['partner_id'], 'col_group_by': ['product_id'], 'measures': ['price_average']}</field>
+        </record>
+        <record id="filter_purchase_order_average_delivery_time" model="ir.filters">
+            <field name="name">Average Delivery Time</field>
+            <field name="model_id">purchase.report</field>
+            <field name="domain">[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]</field>
+            <field name="user_id" eval="False"/>
+            <field name="context">{'group_by': ['partner_id'], 'measures': ['delay_pass']}</field>
+        </record>
+
+
+        <record id="view_purchase_order_search" model="ir.ui.view">
+        <field name="name">report.purchase.order.search</field>
+        <field name="model">purchase.report</field>
+        <field name="arch" type="xml">
+            <search string="Purchase Orders">
+                <filter string="Quotations" name="quotes" domain="[('state','=','draft')]"/>
+                <filter string="Orders" name="orders" domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <group expand="0" string="Extended Filters">
+                    <field name="user_id"/>
+                    <field name="validator"/>
+                    <field name="location_id"/>
+                    <field name="picking_type_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="date"/>
+                    <field name="date_approve"/>
+                    <field name="expected_date"/>
+                </group>
+                <group expand="1" string="Group By">
+                    <filter string="Supplier" name="group_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Responsible" name="Responsible" context="{'group_by':'user_id'}"/>
+                    <filter string="Category of product" name="group_category_id" context="{'group_by':'category_id'}"/>
+                    <filter string="Status" context="{'group_by':'state'}"/>
+                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <separator/>
+                    <filter string="Order Month" context="{'group_by':'date:month'}" help="Order of Day"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_purchase_order_report_all" model="ir.actions.act_window">
+        <field name="name">Purchase Analysis</field>
+        <field name="res_model">purchase.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_purchase_order_graph"></field>
+        <field name="context">{'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your suppliers, etc.</field>
+    </record>
+
+    <menuitem id="base.next_id_73" name="Purchase" parent="base.menu_reporting" sequence="10"
+        groups="purchase.group_purchase_manager"/>
+    <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
+
+    <!--<record id="action_stock_move_report_po" model="ir.actions.act_window">
+        <field name="name">Receptions Analysis</field>
+        <field name="res_model">report.stock.move</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">graph</field>
+        <field name="search_view_id" ref="stock.view_stock_search"/>
+        <field name="view_id" ref="stock.view_stock_graph"/>
+        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,'search_default_year':1,}</field>
+        <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
+    </record>
+    <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="stock.next_id_61" sequence="1"/>-->
+
+    </data>
+</openerp>

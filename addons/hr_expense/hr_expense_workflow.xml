@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Workflow definition -->
+
+        <record id="wkf_expenses" model="workflow">
+            <field name="name">hr.wkf.expenses</field>
+            <field name="osv">hr.expense.expense</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_expenses"/>
+            <field name="name">draft</field>
+            <field name="flow_start">True</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state': 'draft'})</field>
+        </record>
+
+        <record id="act_confirm" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_expenses"/>
+            <field name="name">confirm</field>
+            <field name="kind">function</field>
+            <field name="action">expense_confirm()</field>
+        </record>
+
+        <record id="act_accepted" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_expenses"/>
+            <field name="name">accepted</field>
+            <field name="kind">function</field>
+            <field name="action">expense_accept()</field>
+        </record>
+
+        <record id="act_refused" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_expenses"/>
+            <field name="name">refused</field>
+            <field name="kind">function</field>
+            <field name="action">expense_canceled()</field>
+        </record>
+
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_expenses"/>
+            <field name="name">done</field>
+            <field name="kind">function</field>
+            <field name="action">action_move_create()</field>
+        </record>
+
+        <record id="t1" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_confirm"/>
+            <field name="signal">confirm</field>
+        </record>
+
+        <record id="t2" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_accepted"/>
+            <field name="signal">validate</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <record id="t4" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_refused"/>
+            <field name="signal">refuse</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <record id="t6" model="workflow.transition">
+            <field name="act_from" ref="act_accepted"/>
+            <field name="act_to" ref="act_refused"/>
+            <field name="signal">refuse</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <record id="t7" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="signal">draft</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <record id="t8" model="workflow.transition">
+            <field name="act_from" ref="act_accepted"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <record id="t10" model="workflow.transition">
+            <field name="act_from" ref="act_refused"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="signal">draft</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+    </data>
+</openerp>

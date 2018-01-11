@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- A bank statement -->
+        <record id="demo_bank_statement_1" model="account.bank.statement">
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="period_id" ref="account.period_5"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="name">BNK/2014/001</field>
+            <field name="balance_end" eval="2040.0"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="state">draft</field>
+            <field name="balance_start" eval="0.0"/>
+            <field name="balance_end_real" eval="3707.58"/>
+        </record>
+        <record id="demo_bank_statement_line_1" model="account.bank.statement.line">
+            <field name="ref"></field>
+            <field name="statement_id" ref="demo_bank_statement_1"/>
+            <field name="sequence" eval="1"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="name">First 2000 € of SAJ/2014/001</field>
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="amount" eval="2000.0"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+        </record>
+        <record id="demo_bank_statement_line_2" model="account.bank.statement.line">
+            <field name="ref"></field>
+            <field name="statement_id" ref="demo_bank_statement_1"/>
+            <field name="sequence" eval="2"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="name">SAJ/2014/002</field>
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="amount" eval="650.0"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+        </record>
+        <record id="demo_bank_statement_line_3" model="account.bank.statement.line">
+            <field name="ref"></field>
+            <field name="statement_id" ref="demo_bank_statement_1"/>
+            <field name="sequence" eval="3"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="name">Bank fees</field>
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="amount" eval="32.58"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+        </record>
+        <record id="demo_bank_statement_line_4" model="account.bank.statement.line">
+            <field name="ref"></field>
+            <field name="statement_id" ref="demo_bank_statement_1"/>
+            <field name="sequence" eval="4"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="name">SAJ/2014/003 and SAJ/2014/004</field>
+            <field name="journal_id" ref="account.bank_journal"/>
+            <field name="amount" eval="1025.0"/>
+            <field name="date" eval="time.strftime('%Y')+'-01-01'"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+        </record>
+        
+        <!-- Statement operation templates -->
+        <record id="statement_operation_template_1" model="account.statement.operation.template">
+            <field name="name">Discount For Early Payment</field>
+            <field name="account_id" ref="a_expense"></field>
+            <field name="label">Discount</field>
+            <field name="amount_type">percentage_of_total</field>
+            <field name="amount">-7</field>
+        </record>
+        <record id="statement_operation_template_2" model="account.statement.operation.template">
+            <field name="name">Bank Fees</field>
+            <field name="account_id" ref="a_expense"></field>
+            <field name="label">Bank Fees</field>
+            <field name="amount_type">percentage_of_balance</field>
+            <field name="amount">100.0</field>
+        </record>
+        <record id="statement_operation_template_3" model="account.statement.operation.template">
+            <field name="name">Profit / Loss</field>
+            <field name="account_id" ref="a_sale"></field>
+            <field name="label">Profit / Loss</field>
+            <field name="amount_type">percentage_of_balance</field>
+            <field name="amount">100.0</field>
+        </record>
+    </data>
+</openerp>

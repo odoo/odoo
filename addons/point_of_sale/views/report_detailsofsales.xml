@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_detailsofsales">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <h2>Details of Sales</h2>
+
+                <div class="row mt32">
+                    <div class="col-xs-3">
+                        <strong>Company</strong>:<br/>
+                        <span t-esc="res_company.name"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Users</strong>:<br/>
+                        <span t-esc="get_user_names(data['form']['user_ids']) or 'All'"/>
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>Print Date</strong>:<br/>
+                        <span t-esc="formatLang(time.strftime('%Y-%m-%d'),date=True)"/>
+                    </div>
+                </div>
+                <div class="row mb32">
+                    <div class="col-xs-3">
+                        <strong>Start Period</strong>:<br/>
+                        <span t-esc="formatLang(data['form']['date_start'],date=True)"/> 
+                    </div>
+                    <div class="col-xs-3">
+                        <strong>End Period</strong>:<br/>
+                        <span t-esc="formatLang(data['form']['date_end'],date=True)"/> 
+                    </div>
+                </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <th><strong>Date</strong></th>
+                        <th><strong>Order</strong></th>
+                        <th><strong>Product</strong></th>
+                        <th class="text-right"><strong>Price</strong></th>
+                        <th class="text-center"><strong>Qty</strong></th>
+                        <th class="text-center"><strong>Disc(%)</strong></th>
+                        <th class="text-center"><strong>Invoiced</strong></th>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="pos_sales_details(data['form'])" t-as="line_ids">
+                            <td>
+                                <span t-esc="formatLang(line_ids['date_order'], date_time=True)"/>
+                            </td>
+                            <td>
+                                <span t-esc="line_ids['pos_name']"/>
+                            </td>
+                            <td>
+                                [<t t-if="line_ids['code']">
+                                    <span t-esc="line_ids['code']"/>
+                                </t>]
+                                <span t-esc="line_ids['name']"/>
+                            </td>
+                            <td class="text-right">
+                                <span t-esc="formatLang(line_ids['price_unit'], dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-esc="formatLang(line_ids['qty'])"/>
+                                <span t-esc="line_ids['uom']"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-esc="formatLang(line_ids['discount'], dp='Sale Price')"/>
+                            </td>
+                            <td class="text-center">
+                                <t t-if="line_ids['invoice_id']">
+                                    <span t-esc="getinvoice(line_ids['invoice_id'])"/>
+                                </t>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="table table-condensed">
+                    <tr t-if="gettaxamount(data['form'])"><td colspan="2"><strong>Taxes</strong></td></tr>
+                    <tr t-foreach="gettaxamount(data['form'])" t-as="tax">
+                        <td><span t-esc="tax['name']"/></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(tax['amount'], currency_obj = res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Payment</strong></td>
+                    </tr>
+                    <tr t-foreach="getpayments(data['form'])" t-as="payment">
+                        <td><span t-esc="payment['name']"/></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(payment['sum'], dp='Account', currency_obj=res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Summary</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sales total(Revenue)</strong></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(getsalestotal2(), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Qty of product</strong></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(getqtytotal2())"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total invoiced</strong></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(getsuminvoice2(data['form']), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total discount</strong></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(getsumdisc(data['form']), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total paid</strong></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(getpaidtotal2(), dp='Sale Price', currency_obj=res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total of the day</strong></td>
+                        <td class="text-right">
+                            <strong t-esc="formatLang(gettotaloftheday(data['form']), dp='Sale Price', currency_obj = res_company.currency_id)"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

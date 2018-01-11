@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <!--  Add payment options to sale.order and invoice forms -->
+        <record model="ir.ui.view" id="sale_order_form_payment">
+                <field name="name">sale.order.form.payment</field>
+                <field name="model">sale.order</field>
+                <field name="inherit_id" ref="sale.view_order_form"/>
+                <field name="arch" type="xml">
+                    <notebook position="before">
+                        <field name="portal_payment_options" groups="portal_sale.group_payment_options" class="view_portal_payment_options"/>
+                    </notebook>
+                </field>
+        </record>
+        <record model="ir.ui.view" id="invoice_form_payment">
+                <field name="name">account.invoice.form.payment</field>
+                <field name="model">account.invoice</field>
+                <field name="inherit_id" ref="account.invoice_form"/>
+                <field name="arch" type="xml">
+                    <notebook position="before">
+                        <field name="portal_payment_options" groups="portal_sale.group_payment_options" class="view_portal_payment_options"/>
+                    </notebook>
+                </field>
+        </record>
+
+        <record model="ir.ui.view" id="invoice_form_portal">
+            <field name="name">account.invoice.form.portal</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="groups_id" eval="[(4,ref('base.group_portal'))]"/>
+            <field name="arch" type="xml">
+                <field name="payment_ids" position="replace" />
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter_share" model="ir.ui.view">
+            <field name="name">account.invoice.select.share</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr='//field[@name="user_id"]' position="attributes">
+                    <attribute name="domain">[('share','=', False)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            Override the original action to set another help field and/or
+            another context field, more suited for portal members
+        -->
+        <record id="action_quotations_portal" model="ir.actions.act_window">
+            <field name="name">Quotations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help">We haven't sent you any quotation.</field>
+        </record>
+
+        <record id="action_orders_portal" model="ir.actions.act_window">
+            <field name="name">Sale Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="domain">[('state', 'not in', ('draft', 'sent', 'cancel'))]</field>
+            <field name="context">{}</field>
+            <field name="help">We haven't sent you any sales order.</field>
+        </record>
+
+        <record id="portal_action_invoices" model="ir.actions.act_window">
+            <field name="name">Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('type','in',['out_invoice','out_refund'])]</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help">We haven't sent you any invoice.</field>
+        </record>
+
+        <record id="portal_action_invoices_tree_spec" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="portal_action_invoices"/>
+            <field name="view_id" ref="account.invoice_tree"/>
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="0"/>
+        </record>
+
+        <record id="portal_action_invoices_form_spec" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="portal_action_invoices"/>
+            <field name="view_id" ref="account.invoice_form"/>
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="1"/>
+        </record>
+
+        <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
+            action="action_quotations_portal" sequence="10"/>
+        <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal.portal_orders"
+            action="action_orders_portal" sequence="20"/>
+        <menuitem name="Invoices" id="portal_invoices" parent="portal.portal_orders"
+            action="portal_action_invoices" sequence="30"/>
+
+    </data>
+</openerp>

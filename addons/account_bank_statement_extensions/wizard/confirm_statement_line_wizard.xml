@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+    <!-- Confirm selected statement lines -->
+
+    <record id="view_confirm_statement_line" model="ir.ui.view">
+      <field name="name">confirm.statement.line.form</field>
+      <field name="model">confirm.statement.line</field>
+      <field name="arch" type="xml">
+        <form string="Confirm selected statement lines">
+            <header>
+                <button string="Confirm Lines" name="confirm_lines" type="object" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel"/>
+            </header>
+            <label string="Are you sure you want to confirm the selected Bank Statement lines ?"/>
+            <label string="Confirmed lines cannot be changed anymore."/>
+        </form>
+      </field>
+    </record>
+    
+    <record id="action_confirm_statement_line" model="ir.actions.act_window">
+      <field name="name">Confirm selected statement lines</field>
+      <field name="res_model">confirm.statement.line</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_id" ref="view_confirm_statement_line"/>
+      <field name="target">new</field>
+    </record>
+
+    <record model="ir.values" id="action_confirm_statement_line_values">
+      <field name="name">Confirm selected statement lines</field>
+      <field name="key2">client_action_multi</field>
+      <field name="value" eval="'ir.actions.act_window,' +str(ref('action_confirm_statement_line'))" />
+      <field name="model">account.bank.statement.line</field>
+    </record>
+            
+  </data> 
+</openerp>

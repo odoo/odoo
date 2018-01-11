@@ -1,0 +1,257 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<!-- Add plan_id after user_id in account.journal many2one with account.analytic.plan -->
+
+    <record model="ir.ui.view" id="view_account_journal_form_inherit">
+        <field name="name">account.journal.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <field name="centralisation" position="before">
+                <field name="plan_id" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_form_inherit" model="ir.ui.view">
+       <field name="name">account.move.form.inherit</field>
+       <field name="model">account.move</field>
+       <field name="inherit_id" ref="account.view_move_form"/>
+       <field name="arch" type="xml">
+           <xpath expr="/form/notebook/page/field[@name='line_id']/tree/field[@name='analytic_account_id']" position="replace">
+               <field name="analytics_id" context="{'journal_id':parent.journal_id}" groups="analytic.group_analytic_accounting"/>
+           </xpath>
+           <xpath expr="/form/notebook/page/field[@name='line_id']/form/notebook/page/group/group/field[@name='analytic_account_id']" position="replace">
+               <field name="analytics_id" context="{'journal_id':parent.journal_id}" groups="analytic.group_analytic_accounting"/>
+           </xpath>
+       </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_move_line_form_inherit">
+        <field name="name">account.move.line.form.inherit</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form"/>
+        <field name="arch" type="xml">
+            <field name="analytic_account_id" position="replace">
+                <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_move_line_form_1_inherit">
+        <field name="name">account.move.line.form.inherit1</field>
+        <field name="model">account.move.line</field>
+        <field name="priority">2</field>
+        <field name="inherit_id" ref="account.view_move_line_form2"/>
+        <field name="arch" type="xml">
+            <field name="analytic_account_id" position="replace">
+                <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_move_line_tree_inherit">
+        <field name="name">account.move.line.tree.inherit</field>
+        <field name="model">account.move.line</field>
+        <field name="priority">2</field>
+        <field name="inherit_id" ref="account.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="analytic_account_id" position="replace">
+                <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+
+    <!-- views for account.analytic.plan.instance -->
+    <record model="ir.ui.view" id="account_analytic_plan_instance_form">
+        <field name="name">account.analytic.plan.instance.form</field>
+        <field name="model">account.analytic.plan.instance</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Distribution">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="plan_id" required="1"/>
+                    <field name="journal_id"/>
+                </group>
+                <field name="account_ids">
+                    <tree string="Analytic Distribution" editable="bottom">
+                        <field name="rate"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    </tree>
+                    <form string="Analytic Distribution">
+                        <field name="rate"/>
+                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    </form>
+                </field>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_instance_tree">
+        <field name="name">account.analytic.plan.instance.tree</field>
+        <field name="model">account.analytic.plan.instance</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Distribution">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="plan_id"/>
+                <field name="journal_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_analytic_plan_instance_action">
+        <field name="name">Analytic Distribution's Models</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.analytic.plan.instance</field>
+        <field name="domain">[('plan_id','&lt;&gt;',False)]</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <act_window name="Distribution Models"
+        domain="[('plan_id','&lt;&gt;',False)]"
+        context="{'search_default_plan_id': active_id, 'default_plan_id': active_id}"
+        res_model="account.analytic.plan.instance"
+        src_model="account.analytic.plan"
+        id="account_analytic_instance_model_open"/>
+
+    <record model="ir.ui.view" id="account_analytic_plan_instance_line_form">
+        <field name="name">account.analytic.plan.instance.line.form</field>
+        <field name="model">account.analytic.plan.instance.line</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Distribution Line">
+                <group col="4">
+                    <field name="plan_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="rate"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_instance_line_tree">
+        <field name="name">account.analytic.plan.instance.line.tree</field>
+        <field name="model">account.analytic.plan.instance.line</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Distribution Lines">
+                <field name="plan_id"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="rate"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_search">
+        <field name="name">account.analytic.plan.search</field>
+        <field name="model">account.analytic.plan</field>
+        <field name="arch" type="xml">
+            <search string="Analytic Plans">
+                <field name="name" string="Analytic Plan"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_form">
+        <field name="name">account.analytic.plan.form</field>
+        <field name="model">account.analytic.plan</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Plan">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="default_instance_id"/>
+                </group>
+                <field name="plan_ids"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_tree">
+        <field name="name">account.analytic.plan.tree</field>
+        <field name="model">account.analytic.plan</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Plans">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="account_analytic_plan_form_action">
+        <field name="name">Analytic Plan</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.analytic.plan</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="account_analytic_plan_search"/>
+    </record>
+
+    <menuitem
+        parent="account.menu_analytic_accounting"
+        name="Multi Plans"
+        id="menu_account_analytic_multi_plan_action"
+        groups="analytic.group_analytic_accounting"/>
+     <menuitem
+         parent="menu_account_analytic_multi_plan_action"
+         id="menu_account_analytic_plan_action"
+         action="account_analytic_plan_form_action"/>
+
+    <record model="ir.ui.view" id="account_analytic_plan_line_form">
+        <field name="name">account.analytic.plan.line.form</field>
+        <field name="model">account.analytic.plan.line</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Plan Line">
+                <group col="4">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
+                    <newline/>
+                    <field name="min_required"/>
+                    <field name="max_required"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_analytic_plan_line_tree">
+        <field name="name">account.analytic.plan.line.tree</field>
+        <field name="model">account.analytic.plan.line</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Plan Lines">
+                <field name="name"/>
+                <field name="sequence"/>
+                <field name="root_analytic_id" groups="analytic.group_analytic_accounting"/>
+                <field name="min_required"/>
+                <field name="max_required"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- add property field on default analytic account-->
+
+    <record model="ir.ui.view" id="view_default_inherit_form">
+        <field name="name">account.analytic.default.form.plans</field>
+        <field name="model">account.analytic.default</field>
+        <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
+        <field name="arch" type="xml">
+            <field name="analytic_id" required="1" position="replace">
+                <field name="analytics_id" required="1"/>
+            </field>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_default_inherit_tree">
+        <field name="name">account.analytic.default.tree.plans</field>
+        <field name="model">account.analytic.default</field>
+        <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
+        <field name="arch" type="xml">
+            <xpath  expr="//field[@name='analytic_id']" position="replace">
+                <field name="analytics_id" required="1"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</openerp>

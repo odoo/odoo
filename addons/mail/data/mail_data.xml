@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
+            <field name="name">Email Queue Manager</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'mail.mail'" name="model"/>
+            <field eval="'process_email_queue'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <record id="ir_cron_module_update_notification" model="ir.cron">
+            <field name="name">Update Notification</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
+            <field eval="False" name="doall" />
+            <field eval="'publisher_warranty.contract'" name="model" />
+            <field eval="'update_notification'" name="function" />
+            <field eval="'(None,)'" name="args" />
+            <field name="priority">1000</field>
+        </record>
+
+        <record id="ir_cron_mail_garbage_collect_attachments" model="ir.cron">
+            <field name="name">Garbage Collect Mail Attachments</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field name="model">mail.thread</field>
+            <field name="function">_garbage_collect_attachments</field>
+            <field name="args">()</field>
+        </record>
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_messaging_menu" model="ir.actions.client">
+            <field name="name">Open Messaging Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('mail.mail_feeds_main')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_messaging_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Admin should not receivve emails at creation -->
+        <record id="base.partner_root" model="res.partner">
+            <field name="notify_email">none</field>
+        </record>
+
+        <!-- Catchall Email Alias -->
+        <record id="icp_mail_catchall_alias" model="ir.config_parameter">
+            <field name="key">mail.catchall.alias</field>
+            <field name="value">catchall</field>
+        </record>
+
+        <!-- Discussion subtype for messaging / Chatter -->
+        <record id="mt_comment" model="mail.message.subtype">
+            <field name="name">Discussions</field>
+            <field name="sequence" eval="0"/>
+        </record>
+    </data>
+</openerp>

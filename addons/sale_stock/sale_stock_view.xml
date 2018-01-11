@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_order_form_inherit" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                   <xpath expr="//button[@name='invoice_corrected']" position="after">
+                       <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
+                       <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
+                   </xpath>
+                   <xpath expr="//button[@name='action_view_invoice']" position="after">
+                       <field name="picking_ids" invisible="1"/>
+                       <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
+                           attrs="{'invisible': ['|',('picking_ids','=',False),('picking_ids','=',[])]}" groups="base.group_user"/>
+                   </xpath>
+                    <xpath expr="//button[@name='action_cancel']" position="after">
+                        <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
+                    </xpath>
+                    <field name="state" position="attributes">
+                        <attribute name="statusbar_colors" t-translate="off">{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}</attribute>
+                    </field>
+                    <field name="company_id" position="replace">
+                        <field name="company_id" readonly="True"/>
+                    </field>
+                    <field name="client_order_ref" position="after">
+                         <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" options="{'no_create': True}" groups="stock.group_locations"/>
+                    </field>
+                   <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="replace">
+                       <field name="product_id"
+                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':False, 'company_id': parent.company_id}"
+                       groups="base.group_user"
+                       on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, parent.warehouse_id, context)"/>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="replace">
+                       <field name="product_id"
+                       context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                       groups="base.group_user" 
+                       on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,False,product_uos_qty,False,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, parent.warehouse_id, context)"/>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="replace">
+                       <field context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                             name="product_uom_qty" 
+                       on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,False,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, parent.warehouse_id, context)"/>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/form//field[@name='product_uos_qty']" position="replace">
+                       <field context="{'partner_id':parent.partner_id, 'quantity':product_uos_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                             name="product_uos_qty" class="oe_inline"
+                       on_change="product_id_change_with_wh(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, parent.warehouse_id, context)"/>
+                   </xpath>
+
+                   <field name='invoiced' position="after">
+                       <field name="shipped"/>
+                       <field name="invoice_exists" invisible="1"/>
+                   </field>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='tax_id']" position="after">
+                       <label for="delay"/>
+                       <div>
+                           <field name="delay" class="oe_inline"/> days
+                       </div>
+                   </xpath>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='tax_id']" position="before">
+                       <field name="product_tmpl_id" invisible="1"/>
+                       <field name="product_packaging" context="{'default_product_tmpl_id': product_tmpl_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}" on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)" domain="[('product_tmpl_id','=',product_tmpl_id)]" groups="product.group_stock_packaging" />
+                   </xpath>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='sequence']" position="after">
+                       <field name="delay" invisible="1"/>
+                   </xpath>
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='th_weight']" position="after">
+                       <field name="product_packaging" invisible="1"/>
+                   </xpath>
+                   <xpath expr="//group[@name='sales_person']" position="before">
+                        <group name="logistics">
+                            <field name="incoterm" widget="selection" groups="base.group_user"/>
+                            <field name="picking_policy" required="True"/>
+                            <field name="order_policy"/>
+                        </group>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
+                        <field name="route_id" groups="sale_stock.group_route_so_lines"/>
+                   </xpath>
+                   <xpath expr="//field[@name='order_line']/tree/field[@name='price_unit']" position="before">
+                       <field name="route_id" groups="sale_stock.group_route_so_lines"/>
+                   </xpath>
+                </data>
+           </field>
+        </record>
+
+        <record id="view_res_partner_tree_type" model="ir.ui.view">
+            <field name="name">res.partner.tree.inherit.type</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="type" invisible="context.get('hide_type', 1)"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- On the customer/supplier form if "Allow a different address for
+        delivery and invoicing" is set add "Contact Details" in the more menu
+        showing the list of contact with their types -->
+        <act_window
+            id="res_partner_rule_children"
+            name="Contact Details"
+            context="{'default_parent_id': active_id, 'hide_type': 0}"
+            domain="[('parent_id','=',active_id)]"
+            res_model="res.partner"
+            src_model="res.partner"
+            view_mode="tree,form,kanban"
+            view_type="form"
+            groups="sale.group_delivery_invoice_address"
+            />
+
+        <record id="view_picking_internal_search_inherit" model="ir.ui.view">
+            <field name="name">stock.picking.search.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_order_form_inherit2" model="ir.ui.view">
+            <field name="name">sale.order.line.form.sale.stock.location</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_form2"/>
+            <field name="arch" type="xml">
+                <data>
+                   <xpath expr="//field[@name='price_unit']" position="before">
+                       <field name="route_id" groups="sale_stock.group_route_so_lines" />
+                   </xpath>
+                </data>
+           </field>
+        </record>
+        
+        <record id="view_order_line_tree_inherit" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.location</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position="before">
+                    <field name="route_id" groups="sale_stock.group_route_so_lines"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

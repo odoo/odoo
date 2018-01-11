@@ -1,0 +1,901 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * mrp_repair
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:42+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: mrp_repair
+#: help:mrp.repair.line,state:0
+msgid ""
+" * The 'Draft' status is set automatically as draft when repair order in draft status.                         \n"
+"* The 'Confirmed' status is set automatically as confirm when repair order in confirm status.                         \n"
+"* The 'Done' status is set automatically when repair order is completed.                        \n"
+"* The 'Cancelled' status is set automatically when user cancel repair order."
+msgstr " * Статусот 'Нацрт' е автоматски подесен како нацрт кога налогот за поправка е во статус нацрт.                         \n* Статусот 'Потврдено' е автоматски подесен како потврдено кога налогот за поправка е во статус потврди.                         \n* Статусот 'Завршено' е подесен автоматски кога налогот за поправка е завршен.                        \n* Статусот 'Откажано' е автоматски подесен кога корисникот го откажува налогот за поправка."
+
+#. module: mrp_repair
+#: help:mrp.repair,state:0
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed repair order.             \n"
+"* The 'Confirmed' status is used when a user confirms the repair order.             \n"
+"* The 'Ready to Repair' status is used to start to repairing, user can start repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' status is used to generate the invoice before or after repairing done.             \n"
+"* The 'Done' status is set when repairing is completed.            \n"
+"* The 'Cancelled' status is used when user cancel repair order."
+msgstr " * Статусот 'Нацрт' се користи кога корисникот внесува нов и непотврден налог за поправка.             \n* Статусот 'Потврдено' се користи кога корисникот го потврдува налогот за поправка.             \n* 'Спремно за поправка' се користи за да се започне со поправката. Корисникот може да започне откако налогот за поправка е потврден.             \n* Статусот 'За фактурирање' се користи за да се генерира фактура пред или после поправката.             \n* 'Завршено' се поставува откако поправката е целосно завршена.            \n* 'Откажано' се користи кога корисникот ќе го откаже налогот за поправка."
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "(Add)"
+msgstr "(Додади)"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "(update)"
+msgstr "(ажурирај)"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a reparation order. \n"
+"              </p><p>\n"
+"                In a repair order, you can detail the components you remove,\n"
+"                add or replace and record the time you spent on the different\n"
+"                operations.\n"
+"              </p><p>\n"
+"                The repair order uses the warranty date on the Serial Number in\n"
+"                order to know if whether the repair should be invoiced to the\n"
+"                customer or not.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Кликни за креирање на налог за поправка. \n              </p><p>\n                Во налогот за поправка, може детално да се претстават компонентите што ги одстранувате и да се сними времето што сте го искористиле за извршување на различни операции.\n              </p><p>\n                Налогот за поправка го користи датумот од гаранцијата на серискиот број во налогот за да се одреди дали треба да биде фактурирано или не.\n              </p>\n            "
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:41
+#, python-format
+msgid "Active ID not Found"
+msgstr "Активниот ID не е најден"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+msgid "Add"
+msgstr "Додади"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Add internal notes..."
+msgstr "Додади интерни забелешки..."
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Add quotation notes..."
+msgstr "Додај забелешки на понуда..."
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "After Repair"
+msgstr "После поправка"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "Before Repair"
+msgstr "Пред поправка"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Cancel Repair"
+msgstr "Откажи поправка"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid "Cancel Repair Order"
+msgstr "Откажи го налогот за поправка"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: mrp_repair
+#: help:mrp.repair,partner_id:0
+msgid "Choose partner for whom the order will be invoiced and delivered."
+msgstr "Избери партнер за кој налогот ќе биде фактуриран и испорачан."
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Confirm Repair"
+msgstr "Потврди поправка"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
+msgid "Confirmed"
+msgstr "Потврдено"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:541
+#, python-format
+msgid ""
+"Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr "Не е пронајдена ставка од ценовник што се совпаѓа со овој производ и количина.\nТреба да ги промените или производот, количината или ценовникот."
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Create Invoice"
+msgstr "Креирај фактура"
+
+#. module: mrp_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Create invoices"
+msgstr "Креирај фактури"
+
+#. module: mrp_repair
+#: field:mrp.repair,create_uid:0 field:mrp.repair.cancel,create_uid:0
+#: field:mrp.repair.fee,create_uid:0 field:mrp.repair.line,create_uid:0
+#: field:mrp.repair.make_invoice,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: mrp_repair
+#: field:mrp.repair,create_date:0 field:mrp.repair.cancel,create_date:0
+#: field:mrp.repair.fee,create_date:0 field:mrp.repair.line,create_date:0
+#: field:mrp.repair.make_invoice,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: mrp_repair
+#: field:mrp.repair,location_id:0
+msgid "Current Location"
+msgstr "Моменталан ситуација"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Датум на испраќање на последната порака"
+
+#. module: mrp_repair
+#: field:mrp.repair,address_id:0
+msgid "Delivery Address"
+msgstr "Адреса на испорака"
+
+#. module: mrp_repair
+#: field:mrp.repair,location_dest_id:0
+msgid "Delivery Location"
+msgstr "Локација за испорака"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,name:0 field:mrp.repair.line,name:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Description"
+msgstr "Опис"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,location_dest_id:0
+msgid "Dest. Location"
+msgstr "Одред. Локација"
+
+#. module: mrp_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Дали сакате да направите фактура?"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Done"
+msgstr "Завршено"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Нацрт"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "End Repair"
+msgstr "Заврши со поправката"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:339
+#: code:addons/mrp_repair/mrp_repair.py:367
+#: code:addons/mrp_repair/mrp_repair.py:396
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Extra Info"
+msgstr "Додатни информации"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: field:mrp.repair,fees_lines:0
+msgid "Fees"
+msgstr "Надоместоци"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Fees Line(s)"
+msgstr "Линии за трошоци"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_follower_ids:0
+msgid "Followers"
+msgstr "Следбеници"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Group By"
+msgstr "Групирање според"
+
+#. module: mrp_repair
+#: field:mrp.repair.make_invoice,group:0
+msgid "Group by partner invoice address"
+msgstr "Групирај ги по адреса на испорака на партнерот"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Guarantee Limit:"
+msgstr "Лимит на гаранција:"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit Month"
+msgstr "Месец за лимит на гаранција"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Guarantee limit by Month"
+msgstr "Лимит на гаранција според месец"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "History"
+msgstr "Историја"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
+
+#. module: mrp_repair
+#: field:mrp.repair,id:0 field:mrp.repair.cancel,id:0
+#: field:mrp.repair.fee,id:0 field:mrp.repair.line,id:0
+#: field:mrp.repair.make_invoice,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето внимание."
+
+#. module: mrp_repair
+#: field:mrp.repair,internal_notes:0
+msgid "Internal Notes"
+msgstr "Внатрешни белешки"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,move_id:0
+msgid "Inventory Move"
+msgstr "Движење на инвентар"
+
+#. module: mrp_repair
+#: field:mrp.repair,invoice_id:0
+msgid "Invoice"
+msgstr "Фактура"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Invoice Corrected"
+msgstr "Фактурата е поправена"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Invoice Exception"
+msgstr "Исклучување на фактура"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,invoice_line_id:0
+#: field:mrp.repair.line,invoice_line_id:0
+msgid "Invoice Line"
+msgstr "Ставка од фактура"
+
+#. module: mrp_repair
+#: field:mrp.repair,invoice_method:0
+msgid "Invoice Method"
+msgstr "Метод на фактурирање"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Invoice address:"
+msgstr "Адреса на фактура:"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Invoice and shipping address:"
+msgstr "Адреса на фактура и испорака:"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,invoiced:0 field:mrp.repair.fee,invoiced:0
+#: field:mrp.repair.line,invoiced:0
+msgid "Invoiced"
+msgstr "Фактурирано"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Invoicing"
+msgstr "Фактурирање"
+
+#. module: mrp_repair
+#: field:mrp.repair,partner_invoice_id:0
+msgid "Invoicing Address"
+msgstr "Адреса на фактурирање"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Е следбеник"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_last_post:0
+msgid "Last Message Date"
+msgstr "Датум на последна порака"
+
+#. module: mrp_repair
+#: field:mrp.repair,write_uid:0 field:mrp.repair.cancel,write_uid:0
+#: field:mrp.repair.fee,write_uid:0 field:mrp.repair.line,write_uid:0
+#: field:mrp.repair.make_invoice,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: mrp_repair
+#: field:mrp.repair,write_date:0 field:mrp.repair.cancel,write_date:0
+#: field:mrp.repair.fee,write_date:0 field:mrp.repair.line,write_date:0
+#: field:mrp.repair.make_invoice,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,lot_id:0
+msgid "Lot"
+msgstr "Лот"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Lot Number"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
+msgid "Make Invoice"
+msgstr "Направи фактура"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_ids:0
+msgid "Messages"
+msgstr "Пораки"
+
+#. module: mrp_repair
+#: help:mrp.repair,message_ids:0
+msgid "Messages and communication history"
+msgstr "Пораки и историја на комуникација"
+
+#. module: mrp_repair
+#: field:mrp.repair,move_id:0
+msgid "Move"
+msgstr "Премести"
+
+#. module: mrp_repair
+#: help:mrp.repair,move_id:0
+msgid "Move created by the repair order"
+msgstr "Движење креирано од налогот за поправка"
+
+#. module: mrp_repair
+#: selection:mrp.repair,invoice_method:0
+msgid "No Invoice"
+msgstr "Нема фактура"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:528
+#, python-format
+msgid "No Pricelist!"
+msgstr "Нема ценовник!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:339
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr "Не е дефинирана сметка за партнерот \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:367
+#: code:addons/mrp_repair/mrp_repair.py:396
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr "Нема дефинирано сметка за производот \"%s\"."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:325
+#, python-format
+msgid "No partner!"
+msgstr "Нема партнер!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:389
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "Нема дефинирано производи за надоместоците!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:539
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr "Не е пронајден валиден ценовник !"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Notes"
+msgstr "Белешки"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Operation Line(s)"
+msgstr "Линија(и) на операции"
+
+#. module: mrp_repair
+#: field:mrp.repair,operations:0
+msgid "Operation Lines"
+msgstr "Линии на операции"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Operations"
+msgstr "Операции"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,partner_id:0
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Price"
+msgstr "Цена"
+
+#. module: mrp_repair
+#: field:mrp.repair,pricelist_id:0
+msgid "Pricelist"
+msgstr "Ценовник"
+
+#. module: mrp_repair
+#: help:mrp.repair,pricelist_id:0
+msgid "Pricelist of the selected partner."
+msgstr "Ценовник за избраниот партнер."
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Printing Date:"
+msgstr "Датум на печатење:"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair.fee,product_id:0 field:mrp.repair.line,product_id:0
+msgid "Product"
+msgstr "Производ"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Product Information"
+msgstr "Информации за производот"
+
+#. module: mrp_repair
+#: field:mrp.repair,product_qty:0
+msgid "Product Quantity"
+msgstr "Количина"
+
+#. module: mrp_repair
+#: field:mrp.repair,product_uom:0 field:mrp.repair.fee,product_uom:0
+#: field:mrp.repair.line,product_uom:0
+msgid "Product Unit of Measure"
+msgstr "Единица мерка на производот"
+
+#. module: mrp_repair
+#: field:mrp.repair,product_id:0
+msgid "Product to Repair"
+msgstr "Производ за поправка"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Product to Repair:"
+msgstr "Производ за поправка:"
+
+#. module: mrp_repair
+#: help:mrp.repair,lot_id:0
+msgid "Products repaired are all belonging to this lot"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: field:mrp.repair.fee,product_uom_qty:0
+#: field:mrp.repair.line,product_uom_qty:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Quantity"
+msgstr "Количина"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Quotation"
+msgstr "Понуда"
+
+#. module: mrp_repair
+#: model:ir.actions.report.xml,name:mrp_repair.action_report_mrp_repair_order
+msgid "Quotation / Order"
+msgstr "Понуда / нарачка"
+
+#. module: mrp_repair
+#: field:mrp.repair,quotation_notes:0
+msgid "Quotation Notes"
+msgstr "Белешки за понудата"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Quotations"
+msgstr "Понуди"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Ready To Repair"
+msgstr "Спремно за поправка"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Ready to Repair"
+msgstr "Спремно за поправка"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Reair Orders"
+msgstr "Налози за поправка"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Recreate Invoice"
+msgstr "Креирај повторно Фактура"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,type:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Remove"
+msgstr "Одстрани"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
+msgstr "Ставка на надоместок за поправка"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Repair Line"
+msgstr "Линија за поправка"
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Repair Order"
+msgstr "Налог за поправка"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Repair Order N°:"
+msgstr "Бр. на налог за поправка:"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,repair_id:0 field:mrp.repair.line,repair_id:0
+msgid "Repair Order Reference"
+msgstr "Референца на налог за поправка"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
+msgid "Repair Orders"
+msgstr "Налози за поправка"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Repair Quotation N°:"
+msgstr "Понуда за поправка бр."
+
+#. module: mrp_repair
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
+msgstr "Референца"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:302
+#, python-format
+msgid "Repair order is already invoiced."
+msgstr "Налогот за поправка веќе фактуриран."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr "Налогот за поправка не е фактуриран."
+
+#. module: mrp_repair
+#: field:mrp.repair,repaired:0 selection:mrp.repair,state:0
+msgid "Repaired"
+msgstr "Поправено"
+
+#. module: mrp_repair
+#: field:mrp.repair,lot_id:0
+msgid "Repaired Lot"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+#: view:mrp.repair:mrp_repair.view_repair_order_tree
+msgid "Repairs order"
+msgstr "Налози за поправка"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+msgid "Search Reair Orders"
+msgstr "Пребарај ги налозите за поправка"
+
+#. module: mrp_repair
+#: help:mrp.repair,invoice_method:0
+msgid ""
+"Selecting 'Before Repair' or 'After Repair' will allow you to generate "
+"invoice before or after the repair is done respectively. 'No invoice' means "
+"you don't want to generate invoice for this repair order."
+msgstr "Со избирање на 'Пред поправка' или 'По поправка' ќе можете да генерирате фактура пред или по завршувањето на поправката. 'Не фактурирај' значи дека не сакате да изадете фактура за овој налог за поправка."
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:289
+#, python-format
+msgid "Serial number is required for operation line with product '%s'"
+msgstr "Потребен е сериски број за оперативна линија со производ '%s'"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Set to Draft"
+msgstr "Подеси на нацрт"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Shipping address :"
+msgstr "Адреса на испорака :"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,location_id:0
+msgid "Source Location"
+msgstr "Изворна локација"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Start Repair"
+msgstr "Започни со поправка"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form_filter
+#: field:mrp.repair,state:0 field:mrp.repair.line,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,price_subtotal:0
+#: field:mrp.repair.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Подзбир"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_summary:0
+msgid "Summary"
+msgstr "Резиме"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Tax"
+msgstr "Данок"
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_tax:0 field:mrp.repair.fee,tax_id:0
+#: field:mrp.repair.line,tax_id:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Taxes"
+msgstr "Даноци"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:224
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr "Единицата мерка на производот која ја избравте има различна категорија од онаа во формуларот за производот."
+
+#. module: mrp_repair
+#: sql_constraint:mrp.repair:0
+msgid "The name of the Repair Order must be unique!"
+msgstr "Името на налогот за поправка мора да е уникатно!"
+
+#. module: mrp_repair
+#: help:mrp.repair,guarantee_limit:0
+msgid ""
+"The warranty expiration limit is computed as: last move date + warranty "
+"defined on selected product. If the current date is below the warranty "
+"expiration limit, each operation and fee you will add will be set as 'not to"
+" invoiced' by default. Note that you can change manually afterwards."
+msgstr "Лимитот на истекување на гаранција се пресметува како: датум на последно движење + дефинирана гаранција на избранот производ. Ако моменталниот датум е под лимитот на истекување на гаранција, секоја операција и надоместок што ќе ги додадете ќе бидат подесени како 'да не се фактурира' по стандард. То може подоцна рачно да го промените."
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
+msgstr "Оваа операција ќе го откаже процесот на поправка, но нема да ја откаже фактурата за истата. Дали сакате да продолжите?"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,to_invoice:0 field:mrp.repair.line,to_invoice:0
+msgid "To Invoice"
+msgstr "За фактурирање"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "To be Invoiced"
+msgstr "За фактурирање"
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_total:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Total"
+msgstr "Вкупно"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Total Without Taxes"
+msgstr "Даночна основица"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Total amount"
+msgstr "Вкупен износ"
+
+#. module: mrp_repair
+#: field:mrp.repair.line,type:0
+msgid "Type"
+msgstr "Тип"
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr "Се поправа"
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,price_unit:0 field:mrp.repair.line,price_unit:0
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "Unit Price"
+msgstr "Единечна цена"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Unit of Measure"
+msgstr "Единица мерка"
+
+#. module: mrp_repair
+#: field:mrp.repair,message_unread:0
+msgid "Unread Messages"
+msgstr "Непрочитани пораки"
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Основица"
+
+#. module: mrp_repair
+#: view:mrp.repair:mrp_repair.view_repair_order_form
+msgid "Untaxed amount"
+msgstr "Даночна основа"
+
+#. module: mrp_repair
+#: view:website:mrp_repair.report_mrprepairorder
+msgid "VAT:"
+msgstr "ДДВ:"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:224
+#, python-format
+msgid "Warning"
+msgstr "Предупредување"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:289
+#: code:addons/mrp_repair/mrp_repair.py:302
+#: code:addons/mrp_repair/mrp_repair.py:389
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
+#, python-format
+msgid "Warning!"
+msgstr "Внимание!"
+
+#. module: mrp_repair
+#: field:mrp.repair,guarantee_limit:0
+msgid "Warranty Expiration"
+msgstr "Истек на гаранција"
+
+#. module: mrp_repair
+#: field:mrp.repair,website_message_ids:0
+msgid "Website Messages"
+msgstr "Пораки на веб сајт"
+
+#. module: mrp_repair
+#: help:mrp.repair,website_message_ids:0
+msgid "Website communication history"
+msgstr "Историја на веб комуникација"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+msgid "Yes"
+msgstr "Да"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:325
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form!"
+msgstr "Мора да изберете адреса за фактура на партнер во формуларот за поправка!"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:530
+#, python-format
+msgid ""
+"You have to select a pricelist in the Repair form !\n"
+"Please set one before choosing a product."
+msgstr "Мора да изберете ценовник во формуларот за поправка !\nВе молиме подесете еден пред да изберете производ."
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:mrp_repair.view_cancel_repair
+#: view:mrp.repair.make_invoice:mrp_repair.view_make_invoice
+msgid "or"
+msgstr "или"
+
+#. module: mrp_repair
+#: field:mrp.repair,default_address_id:0
+msgid "unknown"
+msgstr "непознато"

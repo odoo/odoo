@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record id="mrp_company" model="ir.ui.view">
+            <field name="name">res.company.mrp.config</field>
+            <field name="model">res.company</field>
+            <field name="priority">24</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='logistics_grp']" position="inside">
+                   <field name="security_lead"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

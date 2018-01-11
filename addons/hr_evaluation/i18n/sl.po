@@ -1,0 +1,1492 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_evaluation
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Matjaž Mozetič <m.mozetic@matmoz.si>, 2014-2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-11-13 14:04+0000\n"
+"Last-Translator: Matjaž Mozetič <m.mozetic@matmoz.si>\n"
+"Language-Team: Slovenian (http://www.transifex.com/odoo/odoo-8/language/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:84
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+msgstr "\nDatum: %(date)s\n\nSpoštovani %(employee_name)s,\n\nIzvajamo vrednotenje %(eval_name)s.\n\nProsimo, oddajte vaše odgovore.\n\n\nNajlepša hvala in lep pozdrav,\n--\n%(user_signature)s\n\n        "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,nbr:0
+msgid "# of Requests"
+msgstr "# zahtevkov"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(date)s: Current Date"
+msgstr "(date)s: Trenutni datum"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(employee_name)s: Partner name"
+msgstr "(employee_name)s: Naziv partnerja"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(eval_name)s:Appraisal Name"
+msgstr "(eval_name)s: Naziv ocene"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "(user_signature)s: User name"
+msgstr "(user_signature)s: Naziv uporabnika"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.opinion_1
+msgid ""
+"<h2>At the supervisor's appraisal date</h2>\n"
+"<p>His direct reports will be invited through Odoo to express a feedback on their supervisor's leadership and to give their opinion about their own engagement and effectiveness, the continuous improvement and openness in action in thecompany...</p>\n"
+"<p>The employees will send back their anonymous answers to Odoo. The data will be handled by the HR manager and a brief summary of the data will be sent to the concerned supervisor, to his team and to the supervisor's supervisor.</p>\n"
+"<p>The appraiser should rate the employee's major work accomplishments and performance according to the metric provided below\n"
+"</p><ol>\n"
+"<li>Significantly exceeds standards and expectations required of the position</li>\n"
+"<li>Exceeds standards and expectations</li>\n"
+"<li>Meet standards and expectations</li>\n"
+"<li>Did not meet standards and expectations</li>\n"
+"<li>Significantly below standards and expectations</li>\n"
+"</ol>"
+msgstr "<h2>Na datum ocenitve delovodje</h2>\n<p>bodo njegovi poročevalci povabljeni preko Odoo, da izrazijo mnenje o vodenju delovodje in izraz mnenja o njihovi lastni zavzetosti in storilnosti, konstantnem izboljševanju in odprtosti ukrepov družbe...</p>\n<p>Kadri pošljejo svoje anonimne odgovore nazaj v Odoo. Podatke bo obravnaval Vodja kadrovske službe, kratek povzetek podatkov pa bo poslan zainteresiranemu delovodji, njegovi ekipi in njegovemu nadrejenemu.</p>\n<p>Ocenjevalec ocenjuje pomembnejše delovne dosežke kadra in storilnost glede na spodaj podano metriko\n</p><ol>\n<li>Znatno presega standarde in pričakovanja za to delovno mesto</li>\n<li>Presega standarde in pričakovanja</li>\n<li>Dosega standarde in pričakovanja</li>\n<li>Ne dosega standardov in pričakovanj</li>\n<li>Občutno pod standardi in pričakovanji</li>\n</ol>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_1
+msgid ""
+"<h2>Overall Purpose Of Employee Appraisal</h2>\n"
+"<ul><li>To initiate a clear and open communication of performance expectations\n"
+"</li><li>To assist employees in their professional growth, through the identification of strengths and opportunities for\n"
+"development</li></ul>\n"
+"<h2>At the outset of the appraisal time period</h2>\n"
+"<ul><li>It is the joint responsibility of the employee and the supervisor (appraiser) to establish a feasible work plan for the\n"
+"coming year, including major employee responsibilities and corresponding benchmarks against which results will be\n"
+"evaluated.\n"
+"</li><li>Critical or key elements of performance and professional development needs (if any), should also be noted at this time</li></ul>\n"
+"<h2>At the conclusion of the appraisal time period</h2>\n"
+"<ul><li>The employee will be responsible for completing a draft of the Appraisal Form as a tool for self-appraisal and a starting\n"
+"point for the supervisor’s evaluation. The employee can add examples of achievements for each criterion.\n"
+"Once the form had been filled, the employee send it to his supervisor.\n"
+"</li><li>It is the primary responsibility of the supervisor to gather the necessary input from the appropriate sources of feedback\n"
+"(internal and/or external customers, peers). In case of collaboration with Odoo SA Belgium, the supervisor must\n"
+"receive completed evaluation form from the employee's Belgian project manager.\n"
+"</li><li>The supervisor synthesizes and integrates all input into the completed appraisal. He motivates his evaluation in the ad\n"
+"hoc fields.\n"
+"</li><li>The employee may choose to offer comments or explanation regarding the completed review.\n"
+"</li><li>The supervisor send the form to the HR department in India and in Belgium</li></ul>"
+msgstr "<h2>Osnovni namen ocenjevanja kadrov</h2>\n<ul><li>Vzpostavitev jasne in odprte komunikacije glede pričakovane storilnosti.\n</li><li>V pomoč kadrom pri poklicni rasti, preko prepoznavanja prednosti in priložnosti za\nrazvoj</li></ul>\n<h2>Na začetku obdobja ocenjevanja</h2>\n<ul><li>je skupna odgovornost kadrov in ocenjevalca, da uveljavijo izvedljiv delovni načrt za\nprihajajoče leto, vključno pomembnejše odgovornosti kadrov in ustrezne  mejnike preko katerih se rezultati\novrednotijo.\n</li><li>Prav tako se zdaj opozori na kritične ali ključne elemente storilnosti in potreb za poklicni razvoj (če katerih)</li></ul>\n<h2>Ob zaključku obdobja ocenjevanja</h2>\n<ul><li>bo zaposleni odgovoren za dokončanje osnutka ocenjevalnega obrazca kot orodja za samo ocenjevanje in začetno\ntočko za ocenjevanja delovodje. Zaposleni lahko doda primere dosežkov za vsak kriterij.\nKo bo obrazec enkrat izpolnjen, ga pošlje svojemu delovodji.\n</li><li>Glavna odgovornost delovodje je zbiranje potrebnih povratnih informacij od primernih virov\n(notranjih in/ali zunanjih kupcev, kolegov). V primeru sodelovanja z Odoo SA Belgija, mora delovodja\nprejeti celotni obrazec vrednotenja od belgijskega upravitelja projektov.\n</li><li>Delovodja povzame in integrira podatke v dokončano ocenjevanje. Svoje ocenjevanje motivira s trenutnimi\npodročji.\n</li><li>Zaposleni lahko izbere podajanje komentarjev ali obrazložitev glede dokončanega ocenjevanja.\n</li><li>Delovodja pošlje obrazec v kadrovsko službo v Indijo in Belgijo </li></ul>"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new appraisal.\n"
+"              </p><p>\n"
+"                Each employee may be assigned an Appraisal Plan. Such a plan\n"
+"                defines the frequency and the way you manage your periodic\n"
+"                personnel evaluation. You will be able to define steps and\n"
+"                attach interviews to each step. Odoo manages all kinds of\n"
+"                evaluations: bottom-up, top-down, self-evaluation and final\n"
+"                evaluation by the manager.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari novo oceno.\n              </p><p>\n                Vsakemu delojemalcu je lahko dodeljen plan ocenjevanja. Tak plan\n                določa frekvenco in način izvajanja periodičnega\n                vrednotenja osebja. Določili boste lahko korake in\n                priložili intervjuje vsakemu koraku. Odoo upravlja vsakovrstna\n                vrednotenja: z dna navzgor, z vrha navzdol, samo-vrednotenje in\n                končno vrednotenje upravitelja.\n              </p>\n            "
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new interview request related to a personal evaluation.\n"
+"              </p><p>\n"
+"                Interview requests are usually generated automatically by\n"
+"                Odoo according to an employee's appraisal plan. Each user\n"
+"                receives automatic emails and requests to evaluate their\n"
+"                colleagues periodically.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Ustvari nov poziv na intervju vezan na vrednotenje osebja.\n              </p><p>\n                Pozivi na  intervju so običajno samodejno ustvarjeni\n                glede na plan ocenjevanja kadrov. Vsak uporabnik\n                prejme samodejno e-pošto in zahtevke za periodično vrednotenje\n                svojih kolegov.\n              </p>\n            "
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new appraisal plan.\n"
+"              </p><p>\n"
+"                You can define appraisal plans (ex: first interview after 6\n"
+"                months, then every year). Then, each employee can be linked to\n"
+"                an appraisal plan so that Odoo can automatically generate\n"
+"                interview requests to managers and/or subordinates.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                Določi nov plan ocenjevanja.\n              </p><p>\n                Določanje planov ocenjevanja (npr: prvi intervju v 6\n                mesecih, nato letno). Vsak delojemalec je lahko povezan s\n                planom ocenjevanja, tako, da se lahko samodejno ustvarjajo\n                pozivi na intervjuje za upravitelje in/ali podrejene.\n              </p>\n            "
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_2
+#: model:survey.page,description:hr_evaluation.opinion_2
+#: model:survey.survey,description:hr_evaluation.appraisal_form
+#: model:survey.survey,description:hr_evaluation.opinion_form
+#: model:survey.survey,thank_you_message:hr_evaluation.appraisal_form
+#: model:survey.survey,thank_you_message:hr_evaluation.opinion_form
+msgid "<p> </p>"
+msgstr "<p> </p>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_5
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_4
+msgid ""
+"<p>Identify professional, performance, or project objectives you recommend for employee’s continued career development\n"
+"over the coming year.</p>"
+msgstr "<p>Opredelite poklicne, storilnostne in projektne cilje, ki jih priporočate delojemalcem za konstantno poklicno rast\nv prihajajočem letu.</p>"
+
+#. module: hr_evaluation
+#: model:survey.page,description:hr_evaluation.appraisal_3
+msgid ""
+"<p>The appraiser should rate the employee’s major work accomplishments and performance according to the metric provided\n"
+"below:</p><ol>\n"
+"<li> Significantly exceeds standards and expectations required of the position\n"
+"</li><li> Exceeds standards and expectations\n"
+"</li><li> Meet standards and expectations\n"
+"</li><li> Did not meet standards and expectations\n"
+"</li><li> Significantly below standards and expectations</li></ol>"
+msgstr "<p>Ocenjevalec mora ocenjevati glavne dosežke in storilnost kadrov glede na spodaj navedeno\nmetriko:</p><ol>\n<li> Significantly exceeds standards and expectations required of the position\n</li><li> Presega standarde in pričakovanja\n</li><li> Dosega standarde in pričakovanja\n</li><li> Ne dosega standardov in pričakovanj\n</li><li> Občutno pod standardi in pričakovanji</li></ol>"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_1
+msgid "Ability to cope with multidisciplinarity of team"
+msgstr "Sposobnost spoprijemati se z multi-disciplinarnostjo ekipe"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_6
+msgid "Ability to follow and complete work as instructed"
+msgstr "Sposobnost spremljanja in dokončanja dela po navodilih"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_5
+msgid "Ability to manage planning resources, risks, budgets and deadlines"
+msgstr "Sposobnost upravljanja načrtovanja virov, tveganj, proračunov in rokov"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,action:0
+msgid "Action"
+msgstr "Ukrep"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_action:0
+msgid "Action Plan"
+msgstr "Načrt ukrepov"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Action Plan..."
+msgstr "Načrt ukrepov..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Action to Perform"
+msgstr "Ukrepi za izvedbo"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_1
+msgid ""
+"Actions by Executive management show genuine interest in the well-being of "
+"employees"
+msgstr "Ukrepi izvršne uprave kažejo pristen interes za dobrobit delojemalcev"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,active:0
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_13
+msgid ""
+"Adaptability: Ability to adapt oneself to organizational changes while "
+"keeping efficiency"
+msgstr "Prilagodljivost: sposobnost prilagajanja organizacijskim spremembam brez padca storilnosti"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_2_3
+msgid "Additional Comments"
+msgstr "Dodatni komentarji"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_7
+msgid "Additional comments"
+msgstr "Dodatni komentarji"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,send_answer_employee:0
+#: field:hr_evaluation.plan.phase,send_answer_manager:0
+msgid "All Answers"
+msgstr "Vsi odgovori"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_11
+msgid "Analytical and synthetic mind"
+msgstr "Analitičen in sintetičen um"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,send_anonymous_employee:0
+#: field:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Anonymous Summary"
+msgstr "Anonimni povzetek"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Answer Survey"
+msgstr "Odgovor na anketo"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_tree
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
+msgid "Appraisal"
+msgstr "Ocena"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_graph
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
+#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
+msgid "Appraisal Analysis"
+msgstr "Analiza ocenjevanja"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date:0
+msgid "Appraisal Deadline"
+msgstr "Rok ocenjevanja"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,survey_id:0
+#: field:hr_evaluation.plan.phase,survey_id:0
+msgid "Appraisal Form"
+msgstr "Obrazec ocenjevanja"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: field:hr_evaluation.evaluation,survey_request_ids:0
+msgid "Appraisal Forms"
+msgstr "Obrazci ocenjevanja"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
+msgid "Appraisal Interview"
+msgstr "Ocenjevalni intervju"
+
+#. module: hr_evaluation
+#: field:hr.employee,appraisal_count:0
+msgid "Appraisal Interviews"
+msgstr "Ocenjevalni intervjuji"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,phase_id:0
+msgid "Appraisal Phase"
+msgstr "Faza ocenjevanja"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
+#: field:hr_evaluation.plan,phase_ids:0
+msgid "Appraisal Phases"
+msgstr "Faze ocenjevanja"
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_plan_id:0
+#: field:hr.evaluation.interview,evaluation_id:0
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_form
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_tree
+#: field:hr_evaluation.plan,name:0 field:hr_evaluation.plan.phase,plan_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
+msgid "Appraisal Plan"
+msgstr "Ocenjevalni plan"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
+msgid "Appraisal Plan Phase"
+msgstr "Faza ocenjevalnega plana"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_tree
+msgid "Appraisal Plan Phases"
+msgstr "Faze ocenjevalnega plana"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
+msgid "Appraisal Plans"
+msgstr "Ocenjevalni plani"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.opinion_1
+msgid "Appraisal Process"
+msgstr "Postopek ocenjevanja"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
+msgid "Appraisal Reminders"
+msgstr "Opomniki ocenjevanja"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Appraisal Summary"
+msgstr "Povzetek ocenjevanja"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Appraisal Summary..."
+msgstr "Povzetek ocenjevanja..."
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_3
+msgid "Appraisal for Period"
+msgstr "Ocenjevanje za obdobje"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisal that are in Plan In Progress state"
+msgstr "Ocenjevanja v stanju 'v postopku načrtovanja'"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisal that are in waiting appreciation state"
+msgstr "Ocenjevanja v stanju čakanja stališča"
+
+#. module: hr_evaluation
+#: view:hr.employee:hr_evaluation.hr_hr_employee_view_form
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
+msgid "Appraisals"
+msgstr "Ocenjevanja"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisals Month"
+msgstr "Mesec ocenjevanj"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Appraisals by Month"
+msgstr "Ocenjevanja po mesecih"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_5
+msgid "Appraiser"
+msgstr "Ocenjevalec"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr_evaluation.evaluation,rating:0
+msgid "Appreciation"
+msgstr "Stališče"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Bottom-Up Appraisal Requests"
+msgstr "Zahtevki po ocenjevanju 'z dna navzgor'"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Cancel Appraisal"
+msgstr "Preklic ocenjevanja"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+msgid "Cancel Survey"
+msgstr "Preklic ankete"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.interview,state:0
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Cancelled"
+msgstr "Preklicano"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,mail_feature:0
+msgid ""
+"Check this box if you want to send mail to employees coming under this phase"
+msgstr "Označite, če želite pošiljati pošto delojemalcem, ki vstopajo v tej fazi"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,wait:0
+msgid ""
+"Check this box if you want to wait that all preceding phases are finished "
+"before launching this phase."
+msgstr "Označite, če želite počakati, da so vse predhodne faze zaključne preden se prične ta faza."
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,closed:0
+msgid "Close Date"
+msgstr "Datum zaključka"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_9
+msgid ""
+"Communication skills (written & verbally): clearness, concision, exactitude"
+msgstr "Komunikacijske spretnosti (pisne in ustne): jasnost, jedrnatosti, točnost"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+#: field:hr_evaluation.plan,company_id:0
+#: field:hr_evaluation.plan.phase,company_id:0
+msgid "Company"
+msgstr "Družba"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_3
+msgid ""
+"Compared to similar jobs in other companies where I could work, my total "
+"compensation..."
+msgstr "V primerjavi s podobnimi delovnimi mesti v drugih družbah, kjer bi lahko delal, je moje nadomestilo..."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_3
+msgid ""
+"Compliance to internal rules and processes (timesheets completion, etc.)"
+msgstr "Skladnost z internimi pravili in postopki (izpolnjevanje časovnic itd.)"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_4
+msgid "Continuous Improvement"
+msgstr "Konstantno izboljševanje"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,create_date:0
+msgid "Create Date"
+msgstr "Datum nastanka"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,create_uid:0
+#: field:hr_evaluation.evaluation,create_uid:0
+#: field:hr_evaluation.plan,create_uid:0
+#: field:hr_evaluation.plan.phase,create_uid:0
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,create_date:0
+#: field:hr_evaluation.evaluation,create_date:0
+#: field:hr_evaluation.plan,create_date:0
+#: field:hr_evaluation.plan.phase,create_date:0
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Creation Month"
+msgstr "Mesec nastanka"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_14
+msgid "Creativity and forward looking aptitude"
+msgstr "Ustvarjalen in dolgoročno usmerjen pristop"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_8
+msgid "Customer commitment"
+msgstr "Zaveza kupca"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_1_2
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_4
+msgid "Date of review"
+msgstr "Datum ocenjevanja"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_last_post:0
+#: help:hr_evaluation.evaluation,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Datum zadnjega objavljenega sporočila na zapisu."
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,deadline:0
+#: field:hr.evaluation.report,deadline:0
+msgid "Deadline"
+msgstr "Rok"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Deadline Date"
+msgstr "Rok izvedbe"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_7
+msgid "Decision making"
+msgstr "Odločanje"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,delay_date:0
+msgid "Delay to Start"
+msgstr "Zakasnitev do začetka"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_2
+msgid "Delegation: Ability to efficiently assign tasks to other people"
+msgstr "Delegiranje: sposobnost učinkovitega dodeljevanja opravil drugim"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_1
+msgid "Demonstrates genuine concern for me as a person"
+msgstr "Izkazuje pristno skrb zame, kot osebo"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+msgid "Did not meet expectations"
+msgstr "Ni ustrezal pričakovanjem"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Do not meet expectations"
+msgstr "Ne ustreza pričakovanjem"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: selection:hr.evaluation.interview,state:0
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: selection:hr.evaluation.report,state:0
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Done"
+msgstr "Opravljeno"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.interview,state:0
+#: selection:hr.evaluation.report,state:0
+msgid "Draft"
+msgstr "Osnutek"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_3
+msgid "Effectiveness"
+msgstr "Učinkovitost"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,mail_body:0
+msgid "Email"
+msgstr "E-pošta"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr.evaluation.report,employee_id:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: field:hr_evaluation.evaluation,employee_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_employee
+msgid "Employee"
+msgstr "Delojemalec"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
+msgid "Employee Appraisal"
+msgstr "Kadrovsko ocenjevanje"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_1
+#: model:survey.survey,title:hr_evaluation.appraisal_form
+msgid "Employee Appraisal Form"
+msgstr "Obrazec kadrovskega ocenjevanja"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_5
+msgid "Employee Comments"
+msgstr "Komentarji delojemalca"
+
+#. module: hr_evaluation
+#: model:survey.survey,title:hr_evaluation.opinion_form
+msgid "Employee Opinion Form"
+msgstr "Obrazec delojemalčevih mnenj"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_3
+msgid "Employee Performance in Key Areas"
+msgstr "Kadrovska storilnost na ključnih področjih"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,user_to_review_id:0
+msgid "Employee to evaluate"
+msgstr "Delojemalec, ki se vrednoti"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date_close:0
+msgid "Ending Date"
+msgstr "Končni datum"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_1
+msgid "Engagement"
+msgstr "Zavzetost"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_2
+msgid "Enthusiasm & implication toward projects/assignments"
+msgstr "Navdušenje in smisel za projektno delo"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.opinion_2
+msgid "Evaluation"
+msgstr "Vrednotenje"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
+msgid "Evaluations Statistics"
+msgstr "Statistika vrednotenj"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Exceeds expectations"
+msgstr "Presega pričakovanja"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Extended Filters..."
+msgstr "Razširjeni filtri..."
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Final Interview"
+msgstr "Končni intervju"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: selection:hr.evaluation.report,state:0
+msgid "Final Validation"
+msgstr "Končno preverjanje"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Final Validation Evaluations"
+msgstr "Končno preverjanje vrednotenj"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "Prvo ocenjevanje čez (mesecev)"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_follower_ids:0
+#: field:hr_evaluation.evaluation,message_follower_ids:0
+msgid "Followers"
+msgstr "Sledilci"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "General"
+msgstr "Splošno"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: view:hr_evaluation.plan:hr_evaluation.view_hr_evaluation_plan_search
+msgid "Group By"
+msgstr "Združi po"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Group by..."
+msgstr "Združi po..."
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_summary:0
+#: help:hr_evaluation.evaluation,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Povzetek komunikacij (število sporočil, ...). Ta povzetek je neposredno v html formatu, da se lahko vstavlja v kanban prikaze."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_1
+msgid "I am proud to tell others I work here"
+msgstr "Ponosen sem, da delam tu"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_5
+msgid ""
+"I am willing to put in a great deal of effort beyond what is expected to "
+"help my workgroup succeed"
+msgstr "Pripravljen sem vložiti veliko mero truda preko pričakovanj, da bi pomagal svojemu kolektivu do uspeha"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_4
+msgid "I believe the information that I get from the person I report to."
+msgstr "Verjamem informacijam, ki jih prejemam od svojega nadrejenega."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_2
+msgid ""
+"I consistently acquire new knowledge, skills or understanding through "
+"contact with my supervisor. He helps me growing my compete"
+msgstr "Konstantno pridobivam nova znanja, spretnosti in razumevanje preko vsakodnevnih stikov z delovodjo. Pomaga mi pri rasti mojih kompetenc."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_3_2
+msgid "I have enough work"
+msgstr "Imam dovolj dela"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_2
+msgid ""
+"I have the same opportunity to succeed as others with similar experiences, "
+"performance and educational background"
+msgstr "Imam enake možnosti, da uspem, kot drugi s podobnimi izkušnjami, storilnostjo ali izobrazbo."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_5_1
+msgid "I know the company's values and live them"
+msgstr "Poznam vrednote družbe in se ravnam po njih"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_3_3
+msgid ""
+"I mostly work on value-added tasks for the company, the products or the "
+"services"
+msgstr "Za družbo delam v glavnem na opravilih z dodano vrednostjo, proizvodih in storitvah"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_6_4
+msgid "I understand the company strategy and how my workgroup supports it"
+msgstr "Razumem strategijo družbe in kako jo moja delovna skupina podpira"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_3
+msgid ""
+"I would prefer to remain with this company even if a comparable job were "
+"available in another company"
+msgstr "Pri tej družbi bi ostal tudi, če bi se odprlo primerljivo delovno mesto pri drugi družbi"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_3_1
+msgid "I'm efficient at work and my achievements are successful"
+msgstr "Pri delu sem učinkovit in moji dosežki so uspešni"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,id:0 field:hr.evaluation.report,id:0
+#: field:hr_evaluation.evaluation,id:0 field:hr_evaluation.plan,id:0
+#: field:hr_evaluation.plan.phase,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_unread:0
+#: help:hr_evaluation.evaluation,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Če je označeno, zahtevajo nova sporočila vašo pozornost."
+
+#. module: hr_evaluation
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_4
+#: model:survey.question,comments_message:hr_evaluation.appraisal_1_5
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_2_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_3_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_3_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_1
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_2
+#: model:survey.question,comments_message:hr_evaluation.appraisal_4_3
+#: model:survey.question,comments_message:hr_evaluation.appraisal_5_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_1_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_1_2
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_1
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_2
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_3
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_4
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_5
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_6
+#: model:survey.question,comments_message:hr_evaluation.opinion_2_7
+msgid "If other, precise:"
+msgstr "Če drugo, pojasnite:"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can propose an action "
+"plan"
+msgstr "Če vrednotenje ne izpolni pričakovanj, lahko predlagate načrt ukrepov"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "In Progress"
+msgstr "V postopku"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.interview,state:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "In progress"
+msgstr "V postopku"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "In progress Evaluations"
+msgstr "Vrednotenja v teku"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_5
+msgid "Initiative and self autonomy"
+msgstr "Samoiniciativen in samostojen"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Internal Notes"
+msgstr "Interni zaznamki"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Interview Appraisal"
+msgstr "Ocenjevalni intervju"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_evaluation_calendar
+msgid "Interview Request"
+msgstr "Poziv na intervju"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
+msgid "Interview Requests"
+msgstr "Pozivi na intervjuje"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+#: field:hr.evaluation.interview,user_id:0
+msgid "Interviewer"
+msgstr "Izpraševalec"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
+msgid "Interviews"
+msgstr "Intervjuji"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_is_follower:0
+#: field:hr_evaluation.evaluation,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Je sledilec"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_last_post:0
+#: field:hr_evaluation.evaluation,message_last_post:0
+msgid "Last Message Date"
+msgstr "Datum zadnjega sporočila"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,write_uid:0
+#: field:hr_evaluation.evaluation,write_uid:0
+#: field:hr_evaluation.plan,write_uid:0
+#: field:hr_evaluation.plan.phase,write_uid:0
+msgid "Last Updated by"
+msgstr "Zadnjič posodobil"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,write_date:0
+#: field:hr_evaluation.evaluation,write_date:0
+#: field:hr_evaluation.plan,write_date:0
+#: field:hr_evaluation.plan.phase,write_date:0
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_2
+msgid "Leadership"
+msgstr "Vodstvene sposobnosti"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_3
+msgid ""
+"Leadership: create a challenging and motivating work environment aligned "
+"with the company's strategy"
+msgstr "Vodstvene sposobnosti: ustvarjanje delovnega okoljq, ki je polno izzivov in motivacije v skladu s strategijo družbe"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_4
+msgid "Leadership: sustain subordinates in their professional growth"
+msgstr "Vodstvene sposobnosti: vzdrževanje poklicne rasti podrejenih"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Legend"
+msgstr "Legenda"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_2_3
+msgid ""
+"Listens and takes into account all ideas and do his best to put in place the"
+" best of these"
+msgstr "Posluša in obravnava vse ideje in po svojih najboljših močeh umesti najboljše izmed njih"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Mail Body"
+msgstr "Vsebina e-pošte"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Mail Settings"
+msgstr "Nastavitve e-pošte"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Meet expectations"
+msgstr "Ustreza pričakovanjem"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_ids:0
+#: field:hr_evaluation.evaluation,message_ids:0
+msgid "Messages"
+msgstr "Sporočila"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,message_ids:0
+#: help:hr_evaluation.evaluation,message_ids:0
+msgid "Messages and communication history"
+msgstr "Komunikacije in kronologija"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_6
+msgid "Miscellaneous"
+msgstr "Razno"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+msgid "Month"
+msgstr "Mesec"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_5_2
+msgid ""
+"My best achievements have been communicated to the community, internally or "
+"to customers"
+msgstr "Moji najboljši dosežki so bili posredovani skupnosti, interno ali kupcem."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_2
+msgid "My job provides me with a sense of personal accomplishment"
+msgstr "Moje delovno mesto mi daje občutek osebne izpolnitve."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_1
+msgid ""
+"My work contributes towards the continuous improvement of the company, our "
+"services or products"
+msgstr "Moje delo prispeva k konstantnemu napredku družbe, naših storitev in proizvodov"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_1
+msgid "Name"
+msgstr "Naziv"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_1_1
+msgid "Name of your direct supervisor"
+msgstr "Naziv neposredno nadrejenega"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,state:0
+msgid "New"
+msgstr "Novo"
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Appraisal Date"
+msgstr "Naslednji datum ocenjevanja"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_2_1
+msgid "Objectives"
+msgstr "Cilji"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.opinion_2_5
+msgid "Openness"
+msgstr "Odprtost"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_4
+msgid ""
+"Our workgroup identifies and reduces waste of time in our activities and "
+"processes"
+msgstr "Naša delovna skupina razpoznava in zmanjšuje potrato časa pri naših aktivnostih in procesih."
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,rating:0
+msgid "Overall Rating"
+msgstr "Splošna ocena"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_3
+msgid ""
+"Overall, I believe the quality of products and/or services my workgroup "
+"delivers is improving"
+msgstr "V splošnem menim, da se kvaliteta proizvodov in/ali storitev, ki jih zagotavlja moja delovna skupina, izboljšuje."
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,overpass_delay:0
+msgid "Overpassed Deadline"
+msgstr "Presežen rok"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Pending"
+msgstr "Na čakanju"
+
+#. module: hr_evaluation
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
+msgid "Periodic Appraisal"
+msgstr "Periodično ocenjevanje"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Appraisal (months)"
+msgstr "Periodičnost ocenjevanja (meseci)"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_4_2
+msgid "Personal Performance Objectives"
+msgstr "Osebni cilji storilnosti"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,name:0
+msgid "Phase"
+msgstr "Faza"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: field:hr_evaluation.evaluation,plan_id:0
+msgid "Plan"
+msgstr "Plan"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr "Plan v postopku"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_1_2
+msgid "Position Title"
+msgstr "Naziv položaja"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Print Survey"
+msgstr "Tisk ankete"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_4_1
+msgid "Professional Development Objectives"
+msgstr "Cilji poklicne rasti"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_4
+msgid "Professional Development and Performance Plan"
+msgstr "Načrt poklicne rasti in storilnosti"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_4_3
+msgid "Project Objectives"
+msgstr "Projektni cilji"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_12
+msgid "Promptness and attendance record"
+msgstr "Evidenca točnosti in prisotnosti"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Public Notes"
+msgstr "Javne beležke"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:83
+#, python-format
+msgid "Regarding "
+msgstr "Glede na "
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,request_id:0
+msgid "Request ID"
+msgstr "ID zahtevka"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Reset to Draft"
+msgstr "Vrni v osnutek"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_2_2
+msgid "Results"
+msgstr "Rezultati"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_2_1
+msgid ""
+"Results of the bottom-up survey and mitigation actions to face technical, "
+"organizational, structural and/or relational issues"
+msgstr "Rezultati raziskave od dna navzgor in ukrepi za ublažitev posledic organizacijskih, strukturnih in/ali relacijskih težav"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
+msgid "Review Appraisal Plans"
+msgstr "Pregled ocenjevalnih planov"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+msgid "Search Appraisal"
+msgstr "Iskanje ocenjevanj"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Self Appraisal Requests"
+msgstr "Zahtevki po samo-ocenjevanju"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Send Reminder Email"
+msgstr "Pošlji opomnik po e-pošti"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_form
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_tree
+msgid "Send Request"
+msgstr "Pošlji zahtevek"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_answer_employee:0
+msgid "Send all answers to the employee"
+msgstr "Pošlji vse odgovore delojemalcu"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_answer_manager:0
+msgid "Send all answers to the manager"
+msgstr "Pošlji vse odgovore upravitelju"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
+msgid "Send an anonymous summary to the employee"
+msgstr "Pošlji anonimni povzetek delojemalcu"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Send an anonymous summary to the manager"
+msgstr "Pošlji anonimni povzetek upravitelju"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,mail_feature:0
+msgid "Send mail for this phase"
+msgstr "Pošlji e-pošto za to fazo"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Send to Employees"
+msgstr "Pošlji delojemalcem"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:hr_evaluation.view_hr_evaluation_plan_phase_form
+msgid "Send to Managers"
+msgstr "Pošlji upraviteljem"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,sequence:0
+msgid "Sequence"
+msgstr "Zaporedje"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+msgid "Significantly bellow expectations"
+msgstr "Znatno pod pričakovanji"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Significantly below expectations"
+msgstr "Znatno pod pričakovanji"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Significantly exceeds expectations"
+msgstr "Občutno presega pričakovanja"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Start Appraisal"
+msgstr "Prični z ocenjevanjem"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,state:0
+msgid "State"
+msgstr "Stanje"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+#: view:hr.evaluation.report:hr_evaluation.view_evaluation_report_search
+#: field:hr.evaluation.report,state:0
+#: view:hr_evaluation.evaluation:hr_evaluation.evaluation_search
+#: field:hr_evaluation.evaluation,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,email_subject:0
+#: model:survey.question,question:hr_evaluation.appraisal_3_1
+msgid "Subject"
+msgstr "Zadeva"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_summary:0
+#: field:hr_evaluation.evaluation,message_summary:0
+msgid "Summary"
+msgstr "Povzetek"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_3_2
+msgid "Supervisors only"
+msgstr "Samo delovodje"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+msgid "Survey"
+msgstr "Anketa"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,request_id:0
+msgid "Survey Request"
+msgstr "Zahtevek po anketi"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_1_4
+msgid ""
+"Taking everything into account, how satisfied are you with your current job?"
+msgstr "Glede na vse okoliščine, kako ste zadovoljni s trenutnim delovnim mestom?"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_4
+msgid ""
+"Team spirit: ability to work efficiently with peers, manage the conflicts "
+"with diplomacy"
+msgstr "Ekipni duh: sposobnost učinkovitega dela s kolegi, diplomatsko razreševanje konfliktov"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_10
+msgid "Technical skills regarding to the job requirements"
+msgstr "Tehnične veščine glede na zahteve delovnega mesta"
+
+#. module: hr_evaluation
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_4
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_1_5
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_2_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_3_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_1
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_2
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_4_3
+#: model:survey.question,validation_error_msg:hr_evaluation.appraisal_5_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_1_2
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_1
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_2
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_3
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_4
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_5
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_6
+#: model:survey.question,validation_error_msg:hr_evaluation.opinion_2_7
+msgid "The answer you entered has an invalid format."
+msgstr "Vneseni odgovor ni v pravilnem formatu."
+
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr "Datum naslednjega ocenjevanja je izračunan po ocenjevalnem planu (prvo ocenjevanje + periodičnost)."
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
+msgstr "Število mesecev, ki prikazuje zamudo med posameznimi vrednotenji po tem načrtu (po prvem)."
+
+#. module: hr_evaluation
+#: help:hr_evaluation.evaluation,rating:0
+msgid "This is the appreciation on which the evaluation is summarized."
+msgstr "Stališče, po katerem je vrednotenje povzeto."
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_first:0
+msgid ""
+"This number of months will be used to schedule the first evaluation date of "
+"the employee when selecting an evaluation plan. "
+msgstr "Število mesecev za načrtovanje prvega kadrovskega vrednotenja ob izbiri načrta vrednotenja. "
+
+#. module: hr_evaluation
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_3
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_4
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_1_5
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_2_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_2_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_2_3
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_3_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_3_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_4_1
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_4_2
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_4_3
+#: model:survey.question,constr_error_msg:hr_evaluation.appraisal_5_1
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_1_1
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_1_2
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_1
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_2
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_3
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_4
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_5
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_6
+#: model:survey.question,constr_error_msg:hr_evaluation.opinion_2_7
+msgid "This question requires an answer."
+msgstr "To vprašanje zahteva odgovor."
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.arow_3_1_15
+msgid "Time management: projects/tasks are completed on time"
+msgstr "Upravljanje časa: projekti/opravila so dokončani pravočasno"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:hr_evaluation.view_hr_evaluation_interview_search
+msgid "To Do"
+msgstr "Seznam opravkov"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Top-Down Appraisal Requests"
+msgstr "Zahtevki po ocenjevanju 'z vrha navzdol'"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,message_unread:0
+#: field:hr_evaluation.evaluation,message_unread:0
+msgid "Unread Messages"
+msgstr "Neprebrana sporočila"
+
+#. module: hr_evaluation
+#: model:survey.question,question:hr_evaluation.appraisal_5_1
+msgid ""
+"Use the following space to make any comments regarding the above performance"
+" evaluation."
+msgstr "Uporabite sledeči prostor za komentiranje gornjega vrednotenja storilnosti."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:hr_evaluation.view_hr_evaluation_form
+msgid "Validate Appraisal"
+msgstr "Preverjanje ocenjevanja"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,wait:0
+msgid "Wait Previous Phases"
+msgstr "Čakanje predhodnih faz"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Waiting Appreciation"
+msgstr "Čakanje na stališče"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:239
+#: code:addons/hr_evaluation/hr_evaluation.py:339
+#, python-format
+msgid "Warning!"
+msgstr "Opozorilo!"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,website_message_ids:0
+#: field:hr_evaluation.evaluation,website_message_ids:0
+msgid "Website Messages"
+msgstr "Sporočila iz spletne strani"
+
+#. module: hr_evaluation
+#: help:hr.evaluation.interview,website_message_ids:0
+#: help:hr_evaluation.evaluation,website_message_ids:0
+msgid "Website communication history"
+msgstr "Kronologija komunikacij spletne strani"
+
+#. module: hr_evaluation
+#: model:survey.label,value:hr_evaluation.oprow_2_4_2
+msgid ""
+"What I did several months ago is still of use to the company, the services "
+"or the products today"
+msgstr "Kar sem naredil pred več meseci, je dandanes še vedno uporabno za družbo, storitve ali proizvode"
+
+#. module: hr_evaluation
+#: model:survey.page,title:hr_evaluation.appraisal_2
+msgid "Work Plan"
+msgstr "Delovni načrt"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:239
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal forms have not been "
+"completed."
+msgstr "Stanja ne morete spremeniti, ker nekateri obrazci ocenjevanja še niso bili dokončani."
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:339
+#, python-format
+msgid "You cannot start evaluation without Appraisal."
+msgstr "Ne morete pričeti vrednotenja brez ocenjevanja."

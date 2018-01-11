@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_project_task_delegate" model="ir.ui.view">
+            <field name="name">Project Task Delegate</field>
+            <field name="model">project.task.delegate</field>
+            <field name="arch" type="xml">
+                <form string="Project Task Delegate">
+                    <group>
+                        <group>
+                            <field name="project_id" on_change="onchange_project_id(project_id)"/>
+                            <separator string="Delegated Task" colspan="2"/>
+                            <field name="name"/>
+                            <field name="planned_hours"/>
+                            <separator string="New Task Description" colspan="2"/>
+                            <field name="new_task_description" colspan="2" nolabel="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
+                            <separator string="Validation Task" colspan="2"/>
+                            <field name="prefix" string="Validation Task Title"/>
+                            <field name="planned_hours_me"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="delegate" string="_Delegate" type="object" class="oe_highlight"/>
+                         or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_project_task_delegate" model="ir.actions.act_window">
+            <field name="name">Project Task Delegate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.task.delegate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_project_task_delegate"/>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,1535 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="ad" model="res.country">
+            <field name="name">Andorra, Principality of</field>
+            <field name="code">ad</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ad.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="ae" model="res.country">
+            <field name="name">United Arab Emirates</field>
+            <field name="code">ae</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ae.png"></field>
+            <field name="currency_id" ref="AED"/>
+        </record>
+        <record id="af" model="res.country">
+            <field name="name">Afghanistan, Islamic State of</field>
+            <field name="code">af</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/af.png"></field>
+            <field name="currency_id" ref="AFN"/>
+        </record>
+        <record id="ag" model="res.country">
+            <field name="name">Antigua and Barbuda</field>
+            <field name="code">ag</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ag.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="ai" model="res.country">
+            <field name="name">Anguilla</field>
+            <field name="code">ai</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ai.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="al" model="res.country">
+            <field name="name">Albania</field>
+            <field name="code">al</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/al.png"></field>
+            <field name="currency_id" ref="ALL"/>
+        </record>
+        <record id="am" model="res.country">
+            <field name="name">Armenia</field>
+            <field name="code">am</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/am.png"></field>
+            <field name="currency_id" ref="AMD"/>
+        </record>
+        <record id="an" model="res.country">
+            <field name="name">Netherlands Antilles</field>
+            <field name="code">an</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/an.png"></field>
+            <field name="currency_id" ref="NOK"/>
+        </record>
+        <record id="ao" model="res.country">
+            <field name="name">Angola</field>
+            <field name="code">ao</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ao.png"></field>
+            <field name="currency_id" ref="AOA"/>
+        </record>
+        <record id="aq" model="res.country">
+            <field name="name">Antarctica</field>
+            <field name="code">aq</field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="ar" model="res.country">
+            <field name="name">Argentina</field>
+            <field name="code">ar</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ar.png"></field>
+            <field name="currency_id" ref="ARS"/>
+        </record>
+        <record id="as" model="res.country">
+            <field name="name">American Samoa</field>
+            <field name="code">as</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/as.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="at" model="res.country">
+            <field name="name">Austria</field>
+            <field name="code">at</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/at.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="au" model="res.country">
+            <field name="name">Australia</field>
+            <field name="code">au</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/au.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="aw" model="res.country">
+            <field name="name">Aruba</field>
+            <field name="code">aw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/aw.png"></field>
+            <field name="currency_id" ref="AWG"/>
+        </record>
+        <record id="ax" model="res.country">
+            <field name="name">Åland Islands</field>
+            <field name="code">ax</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ax.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="az" model="res.country">
+            <field name="name">Azerbaijan</field>
+            <field name="code">az</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/az.png"></field>
+            <field name="currency_id" ref="AZN"/>
+        </record>
+        <record id="ba" model="res.country">
+            <field name="name">Bosnia-Herzegovina</field>
+            <field name="code">ba</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ba.png"></field>
+            <field name="currency_id" ref="BAM"/>
+        </record>
+        <record id="bb" model="res.country">
+            <field name="name">Barbados</field>
+            <field name="code">bb</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bb.png"></field>
+            <field name="currency_id" ref="BBD"/>
+        </record>
+        <record id="bd" model="res.country">
+            <field name="name">Bangladesh</field>
+            <field name="code">bd</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bd.png"></field>
+            <field name="currency_id" ref="BDT"/>
+        </record>
+        <record id="be" model="res.country">
+            <field name="name">Belgium</field>
+            <field name="code">be</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/be.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="bf" model="res.country">
+            <field name="name">Burkina Faso</field>
+            <field name="code">bf</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bf.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="bg" model="res.country">
+            <field name="name">Bulgaria</field>
+            <field name="code">bg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bg.png"></field>
+            <field name="currency_id" ref="BGN"/>
+        </record>
+        <record id="bh" model="res.country">
+            <field name="name">Bahrain</field>
+            <field name="code">bh</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bh.png"></field>
+            <field name="currency_id" ref="BHD"/>
+        </record>
+        <record id="bi" model="res.country">
+            <field name="name">Burundi</field>
+            <field name="code">bi</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bi.png"></field>
+            <field name="currency_id" ref="BIF"/>
+        </record>
+        <record id="bj" model="res.country">
+            <field name="name">Benin</field>
+            <field name="code">bj</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bj.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="bl" model="res.country">
+            <field name="name">Saint Barthélémy</field>
+            <field name="code">bl</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bl.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="bm" model="res.country">
+            <field name="name">Bermuda</field>
+            <field name="code">bm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bm.png"></field>
+            <field name="currency_id" ref="BMD"/>
+        </record>
+        <record id="bn" model="res.country">
+            <field name="name">Brunei Darussalam</field>
+            <field name="code">bn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bn.png"></field>
+            <field name="currency_id" ref="BND"/>
+        </record>
+        <record id="bo" model="res.country">
+            <field name="name">Bolivia</field>
+            <field name="code">bo</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bo.png"></field>
+            <field name="currency_id" ref="BOB"/>
+        </record>
+        <record id="bq" model="res.country">
+            <field name="name">Bonaire, Sint Eustatius and Saba</field>
+            <field name="code">bq</field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="br" model="res.country">
+            <field name="name">Brazil</field>
+            <field name="code">br</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/br.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s\n%(zip)s\n%(country_name)s'" />
+            <field name="currency_id" ref="BRL"/>
+        </record>
+        <record id="bs" model="res.country">
+            <field name="name">Bahamas</field>
+            <field name="code">bs</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bs.png"></field>
+            <field name="currency_id" ref="BSD"/>
+        </record>
+        <record id="bt" model="res.country">
+            <field name="name">Bhutan</field>
+            <field name="code">bt</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bt.png"></field>
+            <field name="currency_id" ref="BTN"/>
+        </record>
+        <record id="bv" model="res.country">
+            <field name="name">Bouvet Island</field>
+            <field name="code">bv</field>
+            <field name="currency_id" ref="NOK"/>
+        </record>
+        <record id="bw" model="res.country">
+            <field name="name">Botswana</field>
+            <field name="code">bw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bw.png"></field>
+            <field name="currency_id" ref="BWP"/>
+        </record>
+        <record id="by" model="res.country">
+            <field name="name">Belarus</field>
+            <field name="code">by</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/by.png"></field>
+            <field name="currency_id" ref="BYR"/>
+        </record>
+        <record id="bz" model="res.country">
+            <field name="name">Belize</field>
+            <field name="code">bz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/bz.png"></field>
+            <field name="currency_id" ref="BZD"/>
+        </record>
+        <record id="ca" model="res.country">
+            <field name="name">Canada</field>
+            <field name="code">ca</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ca.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
+            <field name="currency_id" ref="CAD"/>
+        </record>
+        <record id="cc" model="res.country">
+            <field name="name">Cocos (Keeling) Islands</field>
+            <field name="code">cc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cc.png"></field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="cf" model="res.country">
+            <field name="name">Central African Republic</field>
+            <field name="code">cf</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cf.png"></field>
+            <field name="currency_id" ref="XAF"/>
+        </record>
+        <record id="cd" model="res.country">
+            <field name="name">Congo, Democratic Republic of the</field>
+            <field name="code">cd</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cd.png"></field>
+            <field name="currency_id" ref="CDF"/>
+        </record>
+        <record id="cg" model="res.country">
+            <field name="name">Congo</field>
+            <field name="code">cg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cg.png"></field>
+            <field name="currency_id" ref="XAF"/>
+        </record>
+        <record id="ch" model="res.country">
+            <field name="name">Switzerland</field>
+            <field name="code">ch</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ch.png"></field>
+            <field name="currency_id" ref="CHF"/>
+        </record>
+        <record id="ci" model="res.country">
+            <field name="name">Ivory Coast (Cote D'Ivoire)</field>
+            <field name="code">ci</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ci.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="ck" model="res.country">
+            <field name="name">Cook Islands</field>
+            <field name="code">ck</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ck.png"></field>
+            <field name="currency_id" ref="NZD"/>
+        </record>
+        <record id="cl" model="res.country">
+            <field name="name">Chile</field>
+            <field name="code">cl</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cl.png"></field>
+            <field name="currency_id" ref="CLP"/>
+        </record>
+        <record id="cm" model="res.country">
+            <field name="name">Cameroon</field>
+            <field name="code">cm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cm.png"></field>
+            <field name="currency_id" ref="XAF"/>
+        </record>
+        <record id="cn" model="res.country">
+            <field name="name">China</field>
+            <field name="code">cn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cn.png"></field>
+            <field name="currency_id" ref="CNY"/>
+        </record>
+        <record id="co" model="res.country">
+            <field name="name">Colombia</field>
+            <field name="code">co</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/co.png"></field>
+            <field name="currency_id" ref="COP"/>
+        </record>
+        <record id="cr" model="res.country">
+            <field name="name">Costa Rica</field>
+            <field name="code">cr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cr.png"></field>
+            <field name="currency_id" ref="CRC"/>
+        </record>
+        <record id="cu" model="res.country">
+            <field name="name">Cuba</field>
+            <field name="code">cu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cu.png"></field>
+            <field name="currency_id" ref="CUP"/>
+        </record>
+        <record id="cv" model="res.country">
+            <field name="name">Cape Verde</field>
+            <field name="code">cv</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cv.png"></field>
+            <field name="currency_id" ref="CVE"/>
+        </record>
+        <record id="cw" model="res.country">
+            <field name="name">Curaçao</field>
+            <field name="code">cw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cw.png"></field>
+            <field name="currency_id" ref="ANG"/>
+        </record>
+        <record id="cx" model="res.country">
+            <field name="name">Christmas Island</field>
+            <field name="code">cx</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cx.png"></field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="cy" model="res.country">
+            <field name="name">Cyprus</field>
+            <field name="code">cy</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cy.png"></field>
+            <field name="currency_id" ref="CYP"/>
+        </record>
+        <record id="cz" model="res.country">
+            <field name="name">Czech Republic</field>
+            <field name="code">cz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/cz.png"></field>
+            <field name="currency_id" ref="CZK"/>
+        </record>
+        <record id="de" model="res.country">
+            <field name="name">Germany</field>
+            <field name="code">de</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/de.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="dj" model="res.country">
+            <field name="name">Djibouti</field>
+            <field name="code">dj</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/dj.png"></field>
+            <field name="currency_id" ref="DJF"/>
+        </record>
+        <record id="dk" model="res.country">
+            <field name="name">Denmark</field>
+            <field name="code">dk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/dk.png"></field>
+            <field name="currency_id" ref="DKK"/>
+        </record>
+        <record id="dm" model="res.country">
+            <field name="name">Dominica</field>
+            <field name="code">dm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/dm.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="do" model="res.country">
+            <field name="name">Dominican Republic</field>
+            <field name="code">do</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/do.png"></field>
+            <field name="currency_id" ref="DOP"/>
+        </record>
+        <record id="dz" model="res.country">
+            <field name="name">Algeria</field>
+            <field name="code">dz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/dz.png"></field>
+            <field name="currency_id" ref="DZD"/>
+        </record>
+        <record id="ec" model="res.country">
+            <field name="name">Ecuador</field>
+            <field name="code">ec</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ec.png"></field>
+            <field name="currency_id" ref="ECS"/>
+        </record>
+        <record id="ee" model="res.country">
+            <field name="name">Estonia</field>
+            <field name="code">ee</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ee.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="eg" model="res.country">
+            <field name="name">Egypt</field>
+            <field name="code">eg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/eg.png"></field>
+            <field name="currency_id" ref="EGP"/>
+        </record>
+        <record id="eh" model="res.country">
+            <field name="name">Western Sahara</field>
+            <field name="code">eh</field>
+            <field name="currency_id" ref="MAD"/>
+        </record>
+        <record id="er" model="res.country">
+            <field name="name">Eritrea</field>
+            <field name="code">er</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/er.png"></field>
+            <field name="currency_id" ref="ERN"/>
+        </record>
+        <record id="es" model="res.country">
+            <field name="name">Spain</field>
+            <field name="code">es</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/es.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="et" model="res.country">
+            <field name="name">Ethiopia</field>
+            <field name="code">et</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/et.png"></field>
+            <field name="currency_id" ref="ETB"/>
+        </record>
+        <record id="fi" model="res.country">
+            <field name="name">Finland</field>
+            <field name="code">fi</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/fi.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="fj" model="res.country">
+            <field name="name">Fiji</field>
+            <field name="code">fj</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/fj.png"></field>
+            <field name="currency_id" ref="FJD"/>
+        </record>
+        <record id="fk" model="res.country">
+            <field name="name">Falkland Islands</field>
+            <field name="code">fk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/fk.png"></field>
+            <field name="currency_id" ref="FKP"/>
+        </record>
+        <record id="fm" model="res.country">
+            <field name="name">Micronesia</field>
+            <field name="code">fm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/fm.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="fo" model="res.country">
+            <field name="name">Faroe Islands</field>
+            <field name="code">fo</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/fo.png"></field>
+            <field name="currency_id" ref="DKK"/>
+        </record>
+        <record id="fr" model="res.country">
+            <field name="name">France</field>
+            <field name="code">fr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/fr.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="ga" model="res.country">
+            <field name="name">Gabon</field>
+            <field name="code">ga</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ga.png"></field>
+            <field name="currency_id" ref="XAF"/>
+        </record>
+        <record id="gd" model="res.country">
+            <field name="name">Grenada</field>
+            <field name="code">gd</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gd.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="ge" model="res.country">
+            <field name="name">Georgia</field>
+            <field name="code">ge</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ge.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="gf" model="res.country">
+            <field name="name">French Guyana</field>
+            <field name="code">gf</field>
+            <field name="currency_id" ref="GEL"/>
+        </record>
+        <record id="gh" model="res.country">
+            <field name="name">Ghana</field>
+            <field name="code">gh</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gh.png"></field>
+            <field name="currency_id" ref="GHS"/>
+        </record>
+        <record id="gi" model="res.country">
+            <field name="name">Gibraltar</field>
+            <field name="code">gi</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gi.png"></field>
+            <field name="currency_id" ref="GIP"/>
+        </record>
+        <record id="gg" model="res.country">
+            <field name="name">Guernsey</field>
+            <field name="code">gg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gg.png"></field>
+            <field name="currency_id" ref="GBP"/>
+        </record>
+        <record id="gl" model="res.country">
+            <field name="name">Greenland</field>
+            <field name="code">gl</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gl.png"></field>
+            <field name="currency_id" ref="DKK"/>
+        </record>
+        <record id="gm" model="res.country">
+            <field name="name">Gambia</field>
+            <field name="code">gm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gm.png"></field>
+            <field name="currency_id" ref="GMD"/>
+        </record>
+        <record id="gn" model="res.country">
+            <field name="name">Guinea</field>
+            <field name="code">gn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gn.png"></field>
+            <field name="currency_id" ref="GNF"/>
+        </record>
+        <record id="gp" model="res.country">
+            <field name="name">Guadeloupe (French)</field>
+            <field name="code">gp</field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="gq" model="res.country">
+            <field name="name">Equatorial Guinea</field>
+            <field name="code">gq</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gq.png"></field>
+            <field name="currency_id" ref="XAF"/>
+        </record>
+        <record id="gr" model="res.country">
+            <field name="name">Greece</field>
+            <field name="code">gr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gr.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="gs" model="res.country">
+            <field name="name">South Georgia and the South Sandwich Islands</field>
+            <field name="code">gs</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gs.png"></field>
+            <field name="currency_id" ref="GBP"/>
+        </record>
+        <record id="gt" model="res.country">
+            <field name="name">Guatemala</field>
+            <field name="code">gt</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gt.png"></field>
+            <field name="currency_id" ref="QTQ"/>
+        </record>
+        <record id="gu" model="res.country">
+            <field name="name">Guam (USA)</field>
+            <field name="code">gu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gu.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="gw" model="res.country">
+            <field name="name">Guinea Bissau</field>
+            <field name="code">gw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gw.png"></field>
+            <field name="currency_id" ref="GWP"/>
+        </record>
+        <record id="gy" model="res.country">
+            <field name="name">Guyana</field>
+            <field name="code">gy</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gy.png"></field>
+            <field name="currency_id" ref="GYD"/>
+        </record>
+        <record id="hk" model="res.country">
+            <field name="name">Hong Kong</field>
+            <field name="code">hk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/hk.png"></field>
+            <field name="currency_id" ref="HKD"/>
+        </record>
+        <record id="hm" model="res.country">
+            <field name="name">Heard and McDonald Islands</field>
+            <field name="code">hm</field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="hn" model="res.country">
+            <field name="name">Honduras</field>
+            <field name="code">hn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/hn.png"></field>
+            <field name="currency_id" ref="HNL"/>
+        </record>
+        <record id="hr" model="res.country">
+            <field name="name">Croatia</field>
+            <field name="code">hr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/hr.png"></field>
+            <field name="currency_id" ref="HRK"/>
+        </record>
+        <record id="ht" model="res.country">
+            <field name="name">Haiti</field>
+            <field name="code">ht</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ht.png"></field>
+            <field name="currency_id" ref="HTG"/>
+        </record>
+        <record id="hu" model="res.country">
+            <field name="name">Hungary</field>
+            <field name="code">hu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/hu.png"></field>
+            <field name="currency_id" ref="HUF"/>
+        </record>
+        <record id="id" model="res.country">
+            <field name="name">Indonesia</field>
+            <field name="code">id</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/id.png"></field>
+            <field name="currency_id" ref="IDR"/>
+        </record>
+        <record id="ie" model="res.country">
+            <field name="name">Ireland</field>
+            <field name="code">ie</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ie.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="il" model="res.country">
+            <field name="name">Israel</field>
+            <field name="code">il</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/il.png"></field>
+            <field name="currency_id" ref="ILS"/>
+        </record>
+        <record id="im" model="res.country">
+            <field name="name">Isle of Man</field>
+            <field name="code">im</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/im.png"></field>
+            <field name="currency_id" ref="GBP"/>
+        </record>
+        <record id="in" model="res.country">
+            <field name="name">India</field>
+            <field name="code">in</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/in.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s\n%(country_name)s'" />
+            <field name="currency_id" ref="INR"/>
+        </record>
+        <record id="io" model="res.country">
+            <field name="name">British Indian Ocean Territory</field>
+            <field name="code">io</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/io.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="iq" model="res.country">
+            <field name="name">Iraq</field>
+            <field name="code">iq</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/iq.png"></field>
+            <field name="currency_id" ref="IQD"/>
+        </record>
+        <record id="ir" model="res.country">
+            <field name="name">Iran</field>
+            <field name="code">ir</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ir.png"></field>
+            <field name="currency_id" ref="IRR"/>
+        </record>
+        <record id="is" model="res.country">
+            <field name="name">Iceland</field>
+            <field name="code">is</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/is.png"></field>
+            <field name="currency_id" ref="ISK"/>
+        </record>
+        <record id="it" model="res.country">
+            <field name="name">Italy</field>
+            <field name="code">it</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/it.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="je" model="res.country">
+            <field name="name">Jersey</field>
+            <field name="code">je</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/je.png"></field>
+            <field name="currency_id" ref="GBP"/>
+        </record>
+        <record id="jm" model="res.country">
+            <field name="name">Jamaica</field>
+            <field name="code">jm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/jm.png"></field>
+            <field name="currency_id" ref="JMD"/>
+        </record>
+        <record id="jo" model="res.country">
+            <field name="name">Jordan</field>
+            <field name="code">jo</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/jo.png"></field>
+            <field name="currency_id" ref="JOD"/>
+        </record>
+        <record id="jp" model="res.country">
+            <field name="name">Japan</field>
+            <field name="code">jp</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/jp.png"></field>
+            <field name="currency_id" ref="JPY"/>
+        </record>
+        <record id="ke" model="res.country">
+            <field name="name">Kenya</field>
+            <field name="code">ke</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ke.png"></field>
+            <field name="currency_id" ref="KES"/>
+        </record>
+        <record id="kg" model="res.country">
+            <field name="name">Kyrgyz Republic (Kyrgyzstan)</field>
+            <field name="code">kg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kg.png"></field>
+            <field name="currency_id" ref="KGS"/>
+        </record>
+        <record id="kh" model="res.country">
+            <field name="name">Cambodia, Kingdom of</field>
+            <field name="code">kh</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kh.png"></field>
+            <field name="currency_id" ref="KHR"/>
+        </record>
+        <record id="ki" model="res.country">
+            <field name="name">Kiribati</field>
+            <field name="code">ki</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ki.png"></field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="km" model="res.country">
+            <field name="name">Comoros</field>
+            <field name="code">km</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/km.png"></field>
+            <field name="currency_id" ref="KMF"/>
+        </record>
+        <record id="kn" model="res.country">
+            <field name="name">Saint Kitts &amp; Nevis Anguilla</field>
+            <field name="code">kn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kn.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="kp" model="res.country">
+            <field name="name">North Korea</field>
+            <field name="code">kp</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kp.png"></field>
+            <field name="currency_id" ref="KPW"/>
+        </record>
+        <record id="kr" model="res.country">
+            <field name="name">South Korea</field>
+            <field name="code">kr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kr.png"></field>
+            <field name="currency_id" ref="KRW"/>
+        </record>
+        <record id="kw" model="res.country">
+            <field name="name">Kuwait</field>
+            <field name="code">kw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kw.png"></field>
+            <field name="currency_id" ref="KWD"/>
+        </record>
+        <record id="ky" model="res.country">
+            <field name="name">Cayman Islands</field>
+            <field name="code">ky</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ky.png"></field>
+            <field name="currency_id" ref="KYD"/>
+        </record>
+        <record id="kz" model="res.country">
+            <field name="name">Kazakhstan</field>
+            <field name="code">kz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/kz.png"></field>
+            <field name="currency_id" ref="KZT"/>
+        </record>
+        <record id="la" model="res.country">
+            <field name="name">Laos</field>
+            <field name="code">la</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/la.png"></field>
+            <field name="currency_id" ref="LAK"/>
+        </record>
+        <record id="lb" model="res.country">
+            <field name="name">Lebanon</field>
+            <field name="code">lb</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lb.png"></field>
+            <field name="currency_id" ref="LBP"/>
+        </record>
+        <record id="lc" model="res.country">
+            <field name="name">Saint Lucia</field>
+            <field name="code">lc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lc.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="li" model="res.country">
+            <field name="name">Liechtenstein</field>
+            <field name="code">li</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/li.png"></field>
+            <field name="currency_id" ref="CHF"/>
+        </record>
+        <record id="lk" model="res.country">
+            <field name="name">Sri Lanka</field>
+            <field name="code">lk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lk.png"></field>
+            <field name="currency_id" ref="LKR"/>
+        </record>
+        <record id="lr" model="res.country">
+            <field name="name">Liberia</field>
+            <field name="code">lr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lr.png"></field>
+            <field name="currency_id" ref="LRD"/>
+        </record>
+        <record id="ls" model="res.country">
+            <field name="name">Lesotho</field>
+            <field name="code">ls</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ls.png"></field>
+            <field name="currency_id" ref="LSL"/>
+        </record>
+        <record id="lt" model="res.country">
+            <field name="name">Lithuania</field>
+            <field name="code">lt</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lt.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="lu" model="res.country">
+            <field name="name">Luxembourg</field>
+            <field name="code">lu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lu.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="lv" model="res.country">
+            <field name="name">Latvia</field>
+            <field name="code">lv</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/lv.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="ly" model="res.country">
+            <field name="name">Libya</field>
+            <field name="code">ly</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ly.png"></field>
+            <field name="currency_id" ref="LYD"/>
+        </record>
+        <record id="ma" model="res.country">
+            <field name="name">Morocco</field>
+            <field name="code">ma</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ma.png"></field>
+            <field name="currency_id" ref="MAD"/>
+        </record>
+        <record id="mc" model="res.country">
+            <field name="name">Monaco</field>
+            <field name="currency_id" ref="EUR"/>
+            <field name="code">mc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mc.png"></field>
+        </record>
+        <record id="md" model="res.country">
+            <field name="name">Moldavia</field>
+            <field name="code">md</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/md.png"></field>
+            <field name="currency_id" ref="MDL"/>
+        </record>
+        <record id="me" model="res.country">
+            <field name="name">Montenegro</field>
+            <field name="code">me</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/me.png"></field>
+            <field name="currency_id" ref="LYD"/>
+        </record>
+        <record id="mf" model="res.country">
+            <field name="name">Saint Martin (French part)</field>
+            <field name="code">mf</field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="mg" model="res.country">
+            <field name="name">Madagascar</field>
+            <field name="code">mg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mg.png"></field>
+            <field name="currency_id" ref="MGA"/>
+        </record>
+        <record id="mh" model="res.country">
+            <field name="name">Marshall Islands</field>
+            <field name="code">mh</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mh.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="mk" model="res.country">
+            <field name="name">Macedonia, the former Yugoslav Republic of</field>
+            <field name="code">mk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mk.png"></field>
+            <field name="currency_id" ref="MKD"/>
+        </record>
+        <record id="ml" model="res.country">
+            <field name="name">Mali</field>
+            <field name="code">ml</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ml.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="mm" model="res.country">
+            <field name="name">Myanmar</field>
+            <field name="code">mm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mm.png"></field>
+            <field name="currency_id" ref="MMK"/>
+        </record>
+        <record id="mn" model="res.country">
+            <field name="name">Mongolia</field>
+            <field name="code">mn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mn.png"></field>
+            <field name="currency_id" ref="MNT"/>
+        </record>
+        <record id="mo" model="res.country">
+            <field name="name">Macau</field>
+            <field name="code">mo</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mo.png"></field>
+            <field name="currency_id" ref="MOP"/>
+        </record>
+        <record id="mp" model="res.country">
+            <field name="name">Northern Mariana Islands</field>
+            <field name="code">mp</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mp.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="mq" model="res.country">
+            <field name="name">Martinique (French)</field>
+            <field name="code">mq</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mq.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="mr" model="res.country">
+            <field name="name">Mauritania</field>
+            <field name="code">mr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mr.png"></field>
+            <field name="currency_id" ref="MRO"/>
+        </record>
+        <record id="ms" model="res.country">
+            <field name="name">Montserrat</field>
+            <field name="code">ms</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ms.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="mt" model="res.country">
+            <field name="name">Malta</field>
+            <field name="code">mt</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mt.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="mu" model="res.country">
+            <field name="name">Mauritius</field>
+            <field name="code">mu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mu.png"></field>
+            <field name="currency_id" ref="MUR"/>
+        </record>
+        <record id="mv" model="res.country">
+            <field name="name">Maldives</field>
+            <field name="code">mv</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mv.png"></field>
+            <field name="currency_id" ref="MVR"/>
+        </record>
+        <record id="mw" model="res.country">
+            <field name="name">Malawi</field>
+            <field name="code">mw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mw.png"></field>
+            <field name="currency_id" ref="MWK"/>
+        </record>
+        <record id="mx" model="res.country">
+            <field name="name">Mexico</field>
+            <field name="code">mx</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mx.png"></field>
+            <field name="currency_id" ref="MXN"/>
+        </record>
+        <record id="my" model="res.country">
+            <field name="name">Malaysia</field>
+            <field name="code">my</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/my.png"></field>
+            <field name="currency_id" ref="MYR"/>
+        </record>
+        <record id="mz" model="res.country">
+            <field name="name">Mozambique</field>
+            <field name="code">mz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/mz.png"></field>
+            <field name="currency_id" ref="MZN"/>
+        </record>
+        <record id="na" model="res.country">
+            <field name="name">Namibia</field>
+            <field name="code">na</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/na.png"></field>
+            <field name="currency_id" ref="NAD"/>
+        </record>
+        <record id="nc" model="res.country">
+            <field name="name">New Caledonia (French)</field>
+            <field name="code">nc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/nc.png"></field>
+            <field name="currency_id" ref="XPF"/>
+        </record>
+        <record id="ne" model="res.country">
+            <field name="name">Niger</field>
+            <field name="code">ne</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ne.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="nf" model="res.country">
+            <field name="name">Norfolk Island</field>
+            <field name="code">nf</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/nf.png"></field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="ng" model="res.country">
+            <field name="name">Nigeria</field>
+            <field name="code">ng</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ng.png"></field>
+            <field name="currency_id" ref="NGN"/>
+        </record>
+        <record id="ni" model="res.country">
+            <field name="name">Nicaragua</field>
+            <field name="code">ni</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ni.png"></field>
+            <field name="currency_id" ref="NIO"/>
+        </record>
+        <record id="nl" model="res.country">
+            <field name="name">Netherlands</field>
+            <field name="code">nl</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/nl.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="no" model="res.country">
+            <field name="name">Norway</field>
+            <field name="code">no</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/no.png"></field>
+            <field name="currency_id" ref="NOK"/>
+        </record>
+        <record id="np" model="res.country">
+            <field name="name">Nepal</field>
+            <field name="code">np</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/np.png"></field>
+            <field name="currency_id" ref="NPR"/>
+        </record>
+        <record id="nr" model="res.country">
+            <field name="name">Nauru</field>
+            <field name="code">nr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/nr.png"></field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="nt" model="res.country">
+            <field name="name">Neutral Zone</field>
+            <field name="code">nt</field>
+            <field name="currency_id" ref="IQD"/>
+        </record>
+        <record id="nu" model="res.country">
+            <field name="name">Niue</field>
+            <field name="code">nu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/nu.png"></field>
+            <field name="currency_id" ref="NZD"/>
+        </record>
+        <record id="nz" model="res.country">
+            <field name="name">New Zealand</field>
+            <field name="code">nz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/nz.png"></field>
+            <field name="currency_id" ref="NZD"/>
+        </record>
+        <record id="om" model="res.country">
+            <field name="name">Oman</field>
+            <field name="code">om</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/om.png"></field>
+            <field name="currency_id" ref="OMR"/>
+        </record>
+        <record id="pa" model="res.country">
+            <field name="name">Panama</field>
+            <field name="code">pa</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pa.png"></field>
+            <field name="currency_id" ref="PAB"/>
+        </record>
+        <record id="pe" model="res.country">
+            <field name="name">Peru</field>
+            <field name="code">pe</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pe.png"></field>
+            <field name="currency_id" ref="PEN"/>
+        </record>
+        <record id="pf" model="res.country">
+            <field name="name">Polynesia (French)</field>
+            <field name="code">pf</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pf.png"></field>
+            <field name="currency_id" ref="XPF"/>
+        </record>
+        <record id="pg" model="res.country">
+            <field name="name">Papua New Guinea</field>
+            <field name="code">pg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pg.png"></field>
+            <field name="currency_id" ref="PGK"/>
+        </record>
+        <record id="ph" model="res.country">
+            <field name="name">Philippines</field>
+            <field name="code">ph</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ph.png"></field>
+            <field name="currency_id" ref="PHP"/>
+        </record>
+        <record id="pk" model="res.country">
+            <field name="name">Pakistan</field>
+            <field name="code">pk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pk.png"></field>
+            <field name="currency_id" ref="PKR"/>
+        </record>
+        <record id="pl" model="res.country">
+            <field name="name">Poland</field>
+            <field name="code">pl</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pl.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
+            <field name="currency_id" ref="PLN"/>
+        </record>
+        <record id="pm" model="res.country">
+            <field name="name">Saint Pierre and Miquelon</field>
+            <field name="code">pm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pm.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="pn" model="res.country">
+            <field name="name">Pitcairn Island</field>
+            <field name="code">pn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pn.png"></field>
+            <field name="currency_id" ref="NZD"/>
+        </record>
+        <record id="pr" model="res.country">
+            <field name="name">Puerto Rico</field>
+            <field name="code">pr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pr.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="ps" model="res.country">
+            <field name="name">Palestinian Territory, Occupied</field>
+            <field name="code">ps</field>
+            <field name="currency_id" ref="ILS"/>
+        </record>
+        <record id="pt" model="res.country">
+            <field name="name">Portugal</field>
+            <field name="code">pt</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pt.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="pw" model="res.country">
+            <field name="name">Palau</field>
+            <field name="code">pw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/pw.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="py" model="res.country">
+            <field name="name">Paraguay</field>
+            <field name="code">py</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/py.png"></field>
+            <field name="currency_id" ref="PYG"/>
+        </record>
+        <record id="qa" model="res.country">
+            <field name="name">Qatar</field>
+            <field name="code">qa</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/qa.png"></field>
+            <field name="currency_id" ref="QAR"/>
+        </record>
+        <record id="re" model="res.country">
+            <field name="name">Reunion (French)</field>
+            <field name="code">re</field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="ro" model="res.country">
+            <field name="name">Romania</field>
+            <field name="code">ro</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ro.png"></field>
+            <field name="currency_id" ref="RON"/>
+        </record>
+        <record id="rs" model="res.country">
+            <field name="name">Serbia</field>
+            <field name="code">rs</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/rs.png"></field>
+            <field name="currency_id" ref="RSD"/>
+        </record>
+        <record id="ru" model="res.country">
+            <field name="name">Russian Federation</field>
+            <field name="code">ru</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ru.png"></field>
+            <field name="currency_id" ref="RUB"/>
+        </record>
+        <record id="rw" model="res.country">
+            <field name="name">Rwanda</field>
+            <field name="code">rw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/rw.png"></field>
+            <field name="currency_id" ref="RWF"/>
+        </record>
+        <record id="sa" model="res.country">
+            <field name="name">Saudi Arabia</field>
+            <field name="code">sa</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sa.png"></field>
+            <field name="currency_id" ref="SAR"/>
+        </record>
+        <record id="sb" model="res.country">
+            <field name="name">Solomon Islands</field>
+            <field name="code">sb</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sb.png"></field>
+            <field name="currency_id" ref="SBD"/>
+        </record>
+        <record id="sc" model="res.country">
+            <field name="name">Seychelles</field>
+            <field name="code">sc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sc.png"></field>
+            <field name="currency_id" ref="SCR"/>
+        </record>
+        <record id="sd" model="res.country">
+            <field name="name">Sudan</field>
+            <field name="code">sd</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sd.png"></field>
+            <field name="currency_id" ref="SDD"/>
+        </record>
+        <record id="se" model="res.country">
+            <field name="name">Sweden</field>
+            <field name="code">se</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/se.png"></field>
+            <field name="currency_id" ref="SEK"/>
+        </record>
+        <record id="sg" model="res.country">
+            <field name="name">Singapore</field>
+            <field name="code">sg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sg.png"></field>
+            <field name="currency_id" ref="SGD"/>
+        </record>
+        <record id="sh" model="res.country">
+            <field name="name">Saint Helena</field>
+            <field name="code">sh</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sh.png"></field>
+            <field name="currency_id" ref="SHP"/>
+        </record>
+        <record id="si" model="res.country">
+            <field name="name">Slovenia</field>
+            <field name="code">si</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/si.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="sj" model="res.country">
+            <field name="name">Svalbard and Jan Mayen Islands</field>
+            <field name="code">sj</field>
+            <field name="currency_id" ref="NOK"/>
+        </record>
+        <record id="sk" model="res.country">
+            <field name="name">Slovakia</field>
+            <field name="code">sk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sk.png"></field>
+            <field name="currency_id" ref="SKK"/>
+        </record>
+        <record id="sl" model="res.country">
+            <field name="name">Sierra Leone</field>
+            <field name="code">sl</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sl.png"></field>
+            <field name="currency_id" ref="SLL"/>
+        </record>
+        <record id="sm" model="res.country">
+            <field name="name">San Marino</field>
+            <field name="code">sm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sm.png"></field>
+            <field name="currency_id" ref="ITL"/>
+        </record>
+        <record id="sn" model="res.country">
+            <field name="name">Senegal</field>
+            <field name="code">sn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sn.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="so" model="res.country">
+            <field name="name">Somalia</field>
+            <field name="code">so</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/so.png"></field>
+            <field name="currency_id" ref="SOD"/>
+        </record>
+        <record id="sr" model="res.country">
+            <field name="name">Suriname</field>
+            <field name="code">sr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sr.png"></field>
+            <field name="currency_id" ref="SRG"/>
+        </record>
+        <record id="ss" model="res.country">
+            <field name="name">South Sudan</field>
+            <field name="code">ss</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ss.png"></field>
+            <field name="currency_id" ref="SSP"/>
+        </record>
+        <record id="st" model="res.country">
+            <field name="name">Saint Tome (Sao Tome) and Principe</field>
+            <field name="code">st</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/st.png"></field>
+            <field name="currency_id" ref="STD"/>
+        </record>
+        <record id="sv" model="res.country">
+            <field name="name">El Salvador</field>
+            <field name="code">sv</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sv.png"></field>
+            <field name="currency_id" ref="SVC"/>
+        </record>
+        <record id="sx" model="res.country">
+            <field name="name">Sint Maarten (Dutch part)</field>
+            <field name="code">sx</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sx.png"></field>
+            <field name="currency_id" ref="ANG"/>
+        </record>
+        <record id="sy" model="res.country">
+            <field name="name">Syria</field>
+            <field name="code">sy</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sy.png"></field>
+            <field name="currency_id" ref="SYP"/>
+        </record>
+        <record id="sz" model="res.country">
+            <field name="name">Swaziland</field>
+            <field name="code">sz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/sz.png"></field>
+            <field name="currency_id" ref="SZL"/>
+        </record>
+        <record id="tc" model="res.country">
+            <field name="name">Turks and Caicos Islands</field>
+            <field name="code">tc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tc.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="td" model="res.country">
+            <field name="name">Chad</field>
+            <field name="code">td</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/td.png"></field>
+            <field name="currency_id" ref="XAF"/>
+        </record>
+        <record id="tf" model="res.country">
+            <field name="name">French Southern Territories</field>
+            <field name="code">tf</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tf.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="tg" model="res.country">
+            <field name="name">Togo</field>
+            <field name="code">tg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tg.png"></field>
+            <field name="currency_id" ref="XOF"/>
+        </record>
+        <record id="th" model="res.country">
+            <field name="name">Thailand</field>
+            <field name="code">th</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/th.png"></field>
+            <field name="currency_id" ref="THB"/>
+        </record>
+        <record id="tj" model="res.country">
+            <field name="name">Tajikistan</field>
+            <field name="code">tj</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tj.png"></field>
+            <field name="currency_id" ref="TJR"/>
+        </record>
+        <record id="tk" model="res.country">
+            <field name="name">Tokelau</field>
+            <field name="code">tk</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tk.png"></field>
+            <field name="currency_id" ref="NZD"/>
+        </record>
+        <record id="tm" model="res.country">
+            <field name="name">Turkmenistan</field>
+            <field name="code">tm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tm.png"></field>
+            <field name="currency_id" ref="TMM"/>
+        </record>
+        <record id="tn" model="res.country">
+            <field name="name">Tunisia</field>
+            <field name="code">tn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tn.png"></field>
+            <field name="currency_id" ref="TND"/>
+        </record>
+        <record id="to" model="res.country">
+            <field name="name">Tonga</field>
+            <field name="code">to</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/to.png"></field>
+            <field name="currency_id" ref="TOP"/>
+        </record>
+        <record id="tp" model="res.country">
+            <field name="name">East Timor</field>
+            <field name="code">tp</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tp.png"></field>
+            <field name="currency_id" ref="TPE"/>
+        </record>
+        <record id="tr" model="res.country">
+            <field name="name">Turkey</field>
+            <field name="code">tr</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tr.png"></field>
+            <field name="currency_id" ref="TRY"/>
+        </record>
+        <record id="tt" model="res.country">
+            <field name="name">Trinidad and Tobago</field>
+            <field name="code">tt</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tt.png"></field>
+            <field name="currency_id" ref="TTD"/>
+        </record>
+        <record id="tv" model="res.country">
+            <field name="name">Tuvalu</field>
+            <field name="code">tv</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tv.png"></field>
+            <field name="currency_id" ref="AUD"/>
+        </record>
+        <record id="tw" model="res.country">
+            <field name="name">Taiwan</field>
+            <field name="code">tw</field>
+            <field name="currency_id" ref="TWD"/>
+        </record>
+        <record id="tz" model="res.country">
+            <field name="name">Tanzania</field>
+            <field name="code">tz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/tz.png"></field>
+            <field name="currency_id" ref="TZS"/>
+        </record>
+        <record id="ua" model="res.country">
+            <field name="name">Ukraine</field>
+            <field name="code">ua</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ua.png"></field>
+            <field name="currency_id" ref="UAG"/>
+        </record>
+        <!-- DEPRECATED, New currency code of Uganda is UGX ! -->
+        <record id="ug" model="res.country">
+            <field name="name">Uganda</field>
+            <field name="code">ug</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ug.png"></field>
+            <field name="currency_id" ref="UGX"/>
+        </record>
+        <record id="uk" model="res.country">
+            <field name="name">United Kingdom</field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" />
+            <field name="code">gb</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/gb.png"></field>
+            <field name="currency_id" ref="GBP"/>
+        </record>
+        <record id="um" model="res.country">
+            <field name="name">USA Minor Outlying Islands</field>
+            <field name="code">um</field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="us" model="res.country">
+            <field name="name">United States</field>
+            <field name="code">us</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/us.png"></field>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="uy" model="res.country">
+            <field name="name">Uruguay</field>
+            <field name="code">uy</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/uy.png"></field>
+            <field name="currency_id" ref="UYU"/>
+        </record>
+        <record id="uz" model="res.country">
+            <field name="name">Uzbekistan</field>
+            <field name="code">uz</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/uz.png"></field>
+            <field name="currency_id" ref="UZS"/>
+        </record>
+        <record id="va" model="res.country">
+            <field name="name">Holy See (Vatican City State)</field>
+            <field name="code">va</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/va.png"></field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="vc" model="res.country">
+            <field name="name">Saint Vincent &amp; Grenadines</field>
+            <field name="code">vc</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/vc.png"></field>
+            <field name="currency_id" ref="XCD"/>
+        </record>
+        <record id="ve" model="res.country">
+            <field name="name">Venezuela</field>
+            <field name="code">ve</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ve.png"></field>
+            <field name="currency_id" ref="VEF"/>
+        </record>
+        <record id="vg" model="res.country">
+            <field name="name">Virgin Islands (British)</field>
+            <field name="code">vg</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/vg.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="vi" model="res.country">
+            <field name="name">Virgin Islands (USA)</field>
+            <field name="code">vi</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/vi.png"></field>
+            <field name="currency_id" ref="USD"/>
+        </record>
+        <record id="vn" model="res.country">
+            <field name="name">Vietnam</field>
+            <field name="code">vn</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/vn.png"></field>
+            <field name="currency_id" ref="VND"/>
+        </record>
+        <record id="vu" model="res.country">
+            <field name="name">Vanuatu</field>
+            <field name="code">vu</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/vu.png"></field>
+            <field name="currency_id" ref="VUV"/>
+        </record>
+        <record id="wf" model="res.country">
+            <field name="name">Wallis and Futuna Islands</field>
+            <field name="code">wf</field>
+            <field name="currency_id" ref="XPF"/>
+        </record>
+        <record id="ws" model="res.country">
+            <field name="name">Samoa</field>
+            <field name="code">ws</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ws.png"></field>
+            <field name="currency_id" ref="WST"/>
+        </record>
+        <record id="ye" model="res.country">
+            <field name="name">Yemen</field>
+            <field name="code">ye</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/ye.png"></field>
+            <field name="currency_id" ref="YER"/>
+        </record>
+        <record id="yt" model="res.country">
+            <field name="name">Mayotte</field>
+            <field name="code">yt</field>
+            <field name="currency_id" ref="EUR"/>
+        </record>
+        <record id="yu" model="res.country">
+            <field name="name">Yugoslavia</field>
+            <field name="code">yu</field>
+            <field name="currency_id" ref="YUM"/>
+        </record>
+        <record id="za" model="res.country">
+            <field name="name">South Africa</field>
+            <field name="code">za</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/za.png"></field>
+            <field name="currency_id" ref="ZAR"/>
+        </record>
+        <record id="zm" model="res.country">
+            <field name="name">Zambia</field>
+            <field name="code">zm</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/zm.png"></field>
+            <field name="currency_id" ref="ZMK"/>
+        </record>
+
+        <!-- DEPRECATED, New name of Zaire is Democratic Republic of the Congo ! -->
+        <record id="zr" model="res.country">
+            <field name="name">Zaire</field>
+            <field name="code">zr</field>
+            <field name="currency_id" ref="ZRZ"/>
+        </record>
+        <record id="zw" model="res.country">
+            <field name="name">Zimbabwe</field>
+            <field name="code">zw</field>
+            <field name="image" type="base64" file="base/static/img/country_flags/zw.png"></field>
+            <field name="currency_id" ref="ZWD"/>
+        </record>
+
+
+
+        <record id="europe" model="res.country.group">
+            <field name="name">Europe</field>
+            <field name="country_ids" eval="[(6,0,[
+                ref('at'),ref('be'),ref('bg'),ref('hr'),ref('cy'),
+                ref('cz'),ref('dk'),ref('ee'),ref('fi'),ref('fr'),
+                ref('de'),ref('gr'),ref('hu'),ref('ie'),ref('it'),
+                ref('lv'),ref('lt'),ref('lu'),ref('mt'),ref('nl'),
+                ref('pl'),ref('pt'),ref('ro'),ref('sk'),ref('si'),
+                ref('es'),ref('se'),ref('uk')])]"/>
+        </record>
+    </data>
+</openerp>

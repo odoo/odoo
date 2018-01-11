@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         <act_window name="Return Shipment"
+            res_model="stock.return.picking"
+            src_model="stock.picking"
+            view_mode="form"
+            target="new"
+            key2="client_action_multi"
+            multi="True"
+            id="act_stock_return_picking"/>
+
+        <record id="stock_return_line_tree_in" model="ir.ui.view">
+            <field name="name">stock.return.picking.line.tree</field>
+            <field name="model">stock.return.picking.line</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" />
+                    <field name="lot_id" groups="stock.group_production_lot"/>
+                    <field name="quantity" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="stock_return_line_form_in" model="ir.ui.view">
+            <field name="name">stock.return.picking.line.from</field>
+            <field name="model">stock.return.picking.line</field>
+            <field name="arch" type="xml">
+                <form string="Return Picking Memory">
+                    <group col="4">
+                        <field name="product_id" />
+                        <field name="lot_id" groups="stock.group_production_lot"/>
+                        <field name="quantity" />
+                    </group>
+                 </form>
+            </field>
+        </record>   
+
+        <record id="view_stock_return_picking_form" model="ir.ui.view">
+            <field name="name">Return lines</field>
+            <field name="model">stock.return.picking</field>
+            <field name="arch" type="xml">
+                <form string="Return lines">
+                    <group string="Provide the quantities of the returned products.">
+                        <field name="move_dest_exists" invisible="1"/>
+			<div attrs="{'invisible': [('move_dest_exists', '=', False)]}" class="oe_grey" colspan="4">
+                            <p>This picking appears to be chained with another operation. Later, if you receive the goods you are returning now, make sure to <b>reverse</b> the returned picking in order to avoid logistic rules to be applied again (which would create duplicated operations)</p>
+                        </div>
+                        <field name="product_return_moves" colspan="4">
+                            <tree editable="top">
+                                <field name="product_id"/>
+                                <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="create_returns" string="Return" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        
+    </data>
+</openerp>

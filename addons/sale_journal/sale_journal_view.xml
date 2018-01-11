@@ -1,0 +1,127 @@
+<openerp>
+   <data>
+   <!--  sale journal invoice Type's Form  view -->
+
+        <record model="ir.ui.view" id="view_sale_journal_invoice_type_form">
+            <field name="name">sale_journal.invoice.type.form</field>
+            <field name="model">sale_journal.invoice.type</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Type">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="invoicing_method"/>
+                        <field name="active"/>
+                    </group>
+                    <separator string="Notes"/>
+                    <field name="note"/>
+                </form>
+            </field>
+        </record>
+
+      <!--  sale journal invoice Type's tree  view -->
+
+        <record model="ir.ui.view" id="view_sale_journal_invoice_type_tree">
+            <field name="name">sale_journal.invoice.type.tree</field>
+            <field name="model">sale_journal.invoice.type</field>
+            <field name="arch" type="xml">
+                <tree string="Invoice Type">
+                    <field name="name"/>
+                    <field name="invoicing_method"/>
+                </tree>
+            </field>
+        </record>
+
+      <!-- Action for sale journal invoice Type -->
+
+        <record model="ir.actions.act_window" id="action_definition_journal_invoice_type">
+            <field name="name">Invoice Types</field>
+            <field name="res_model">sale_journal.invoice.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">Invoice types are used for partners, sales orders and delivery orders. You can create a specific invoicing journal to group your invoicing according to your customer's needs: daily, each Wednesday, monthly, etc.</field>
+        </record>
+
+     <menuitem id="menu_definition_journal_invoice_type" sequence="15"
+        parent="base.menu_base_config" action="action_definition_journal_invoice_type"/>
+
+    <!-- Inherit sales order form view -->
+
+        <record model="ir.ui.view" id="sale_journal_sale_order">
+            <field name="name">sale.order.journal.view.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="invoice_type_id"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherit sales order tree view-->
+
+        <record model="ir.ui.view" id="sale_journal_sale_order_tree">
+            <field name="name">sale.order.journal.view.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree" />
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="invoice_type_id"/>
+                </field>
+            </field>
+        </record>
+
+<!--  Inherit stock picking's form view  -->
+
+        <record model="ir.ui.view" id="sale_journal_picking_order">
+            <field name="name">stock.picking.journal.view.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="arch" type="xml">
+                <field name="move_type" position="before">
+                    <field name="invoice_type_id"/>
+                </field>
+            </field>
+        </record>
+
+<!--  Inherit stock picking's tree view  -->
+
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.journal.property.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page string="Sales &amp; Purchases" position="inside">
+                    <group colspan="2" col="2" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                        <separator string="Invoicing" colspan="2"/>
+                        <field name="property_invoice_type"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+
+        <record id="view_sales_order_search" model="ir.ui.view">
+            <field name="name">sale.order.search.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Customer']" position="after">
+                    <filter string="Invoice Type" domain="[]" context="{'group_by':'invoice_type_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+<!--  Inherit stock picking's search view  -->
+
+        <record id="view_picking_internal_search" model="ir.ui.view">
+            <field name="name">stock.picking.internal.search.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Picking Type']" position="after">
+                    <filter string="Invoice Type" domain="[]" context="{'group_by':'invoice_type_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
+   </data>
+</openerp>

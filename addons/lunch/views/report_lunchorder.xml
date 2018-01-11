@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_lunchorder">
+    <t t-call="report.html_container">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="row">
+                        <div class="col-xs-5 col-xs-offset-7">
+                            <div t-field="user.partner_id"
+                                t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}' />
+                        </div>
+                    </div>
+
+                    <h2>Lunch Order</h2>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name/Date</th>
+                                <th>Order</th>
+                                <th>Description</th>
+                                <th class="text-right">Unit Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="get_users(docs)" t-as="o">
+                                <tr>
+                                    <td colspan="2">
+                                        <strong t-field="o.name"/>
+                                    </td>
+                                    <td class="text-right" colspan="2">
+                                        <strong>
+                                            <span t-esc="get_total(o, docs)"/>
+                                            <span t-field="o.company_id.currency_id.symbol"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr t-foreach="get_lines(o, docs)" t-as="lines">
+                                    <td>
+                                        <span t-field="lines.date"></span>
+                                    </td>
+                                    <td>
+                                        <span t-field="lines.product_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="lines.note"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="lines.price"
+                                            t-field-options='{"widget": "monetary", "display_currency": "o.company_id.currency_id"}'/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(get_nettotal(), currency_obj=res_company.currency_id)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+    </t>
+</template>
+</data>
+</openerp>

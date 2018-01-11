@@ -1,0 +1,179 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * auth_ldap
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 06:49+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Dutch (http://www.transifex.com/odoo/odoo-8/language/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_ldap
+#: help:res.company.ldap,create_user:0
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr "Maak automatisch locale gebruiker accounts voor nieuwe gebruikers welke inloggen via LDAP"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: auth_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Gebruiker maken"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_uid:0
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_date:0
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: auth_ldap
+#: field:res.company.ldap,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_ldap
+#: view:res.company:auth_ldap.company_form_view
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "LDAP Configuration"
+msgstr "LDAP instellingen"
+
+#. module: auth_ldap
+#: view:res.company:auth_ldap.company_form_view field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP parameters"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "LDAP Server adres"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "Poortnummer LDAP-server"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP basis-DN"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP bind DN"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAP-filter"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "Wachtwoord LDAP-server"
+
+#. module: auth_ldap
+#: field:res.company.ldap,write_uid:0
+msgid "Last Updated by"
+msgstr "Laatste bijgewerkt door"
+
+#. module: auth_ldap
+#: field:res.company.ldap,write_date:0
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Login Information"
+msgstr "Aanmeldingsinformatie"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Process Parameter"
+msgstr "Proces parameter"
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication"
+" attempts will fail."
+msgstr "Vraag beveiligde TLS / SSL-codering bij het verbinden met de LDAP-server. Deze optie vereist een server met ingeschakeld STARTTLS, anders zullen alle authenticatie pogingen mislukken."
+
+#. module: auth_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Volgnummer"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "Server Information"
+msgstr "Serverinformatie"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Stel uw LDAP server in"
+
+#. module: auth_ldap
+#: field:res.company.ldap,user:0
+msgid "Template User"
+msgstr "Sjabloon gebruiker"
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "Het wachtwoord van de gebruikersaccount op de LDAP-server die wordt gebruikt om de map te verkennen."
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr "De gebruikersaccount op de LDAP-server die wordt gebruikt om de map te verkennen. Laat leeg om verbinding anoniem."
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "TLS gebruiken"
+
+#. module: auth_ldap
+#: view:res.company.ldap:auth_ldap.view_ldap_installer_form
+msgid "User Information"
+msgstr "Gebruikersinformatie"
+
+#. module: auth_ldap
+#: help:res.company.ldap,user:0
+msgid "User to copy when creating new users"
+msgstr "gebruiker welke wordt gekopieerd bij aanmaken nieuwe gebruikers"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr "Gebruikers"

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="group_payment_options" model="res.groups">
+            <field name="name">View Online Payment Options</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="comment">Members of this group see the online payment options
+on Sale Orders and Customer Invoices. These options are meant for customers who are accessing
+their documents through the portal.</field>
+        </record>
+        <!-- Make the payment_options group implied for all portal users -->
+        <record id="base.group_portal" model="res.groups">
+            <field name="implied_ids" eval="[(4,ref('group_payment_options'))]"/>
+        </record>
+
+        <!-- Sale Portal Access Rules -->
+        <record id="portal_sale_order_user_rule" model="ir.rule">
+            <field name="name">Portal Personal Quotations/Sales Orders</field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+            <field name="domain_force">[('message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record id="portal_sale_order_line_rule" model="ir.rule">
+            <field name="name">Portal Sales Orders Line</field>
+            <field name="model_id" ref="sale.model_sale_order_line"/>
+            <field name="domain_force">[('order_id.message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+
+        <record id="portal_account_invoice_user_rule" model="ir.rule">
+            <field name="name">Portal Personal Account Invoices</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="domain_force">[('message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <record id="portal_account_invoice_line_rule" model="ir.rule">
+            <field name="name">Portal Invoice Lines</field>
+            <field name="model_id" ref="account.model_account_invoice_line"/>
+            <field name="domain_force">[('invoice_id.message_follower_ids','child_of',[user.commercial_partner_id.id])]</field>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+        <record id="portal_personal_contact" model="ir.rule">
+            <field name="name">Portal Personal Contacts</field>
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="domain_force">[('message_follower_ids','in',[user.commercial_partner_id.id])]</field>
+            <field eval="0" name="perm_read"/>
+            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        </record>
+
+    </data>
+</openerp>

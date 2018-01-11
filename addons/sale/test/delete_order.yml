@@ -1,0 +1,19 @@
+-
+  Sales manager can only delete order therefore test with that user which have sales manager rights,
+-
+  !context
+    uid: 'res_users_salesmanager'
+-
+  I try to delete In progress order and check Error Message.
+-
+  !python {model: sale.order}: |
+    try:
+        self.unlink(cr, uid, [ref("sale_order_7")])
+    except Exception,e:
+        pass
+-
+  I make duplicate order and delete.
+-
+  !python {model: sale.order}: |
+    id = self.copy(cr, uid, ref('sale_order_7'))
+    self.unlink(cr, uid, [id])

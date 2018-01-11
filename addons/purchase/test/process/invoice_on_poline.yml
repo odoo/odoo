@@ -1,0 +1,25 @@
+-
+   Purchase User confirm the order and create invoice based on purchase order line.
+-
+  !context
+    uid: 'res_users_purchase_user'
+-
+   I confirm purchase order which has invoicing control method "Based on Purchase Order Lines".
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_6}
+-
+  In order to test create invoice for purchase order line.
+-
+  !python {model: purchase.order}: |
+    invoice_line_obj = self.pool.get('purchase.order.line_invoice')
+    purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
+    context.update({'active_model': 'purchase.order', 'active_ids': [ref("purchase_order_6")]})
+    for purchase_line in purchase_order.order_line:
+        invoice_line_obj.makeInvoices(cr, uid, purchase_line.id, context=context)
+-
+  I check the invoice of order.
+-
+   !python {model: purchase.order}: |
+     purchase_order = self.browse(cr, uid, ref("purchase_order_6"))
+     for purchase_line in purchase_order.order_line:
+       assert len(purchase_order.invoice_ids) == 1, "Invoice should be generated."

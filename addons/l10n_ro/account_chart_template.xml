@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">        
+        <!-- Chart template -->
+        <record id="ro_chart_template" model="account.chart.template">
+            <field name="name">Romania - Chart of Accounts</field>
+            <field name="account_root_id" ref="pcg_0"/>
+            <field name="tax_code_root_id" ref="vat_code_tax"/>
+            <field name="bank_account_view_id" ref="ro_pcg_cash"/>
+            <field name="property_account_receivable" ref="ro_pcg_recv"/> <!-- 4111 -->
+            <field name="property_account_payable" ref="ro_pcg_pay"/> <!-- 4011 -->
+            <field name="property_account_expense_categ" ref="ro_pcg_expense"/> <!-- 607 --> 
+            <field name="property_account_income_categ" ref="ro_pcg_sale"/> <!-- 707 -->
+            <field name="currency_id" ref="base.RON"/>
+        </record>
+</data>
+</openerp>

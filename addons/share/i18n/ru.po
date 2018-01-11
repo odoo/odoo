@@ -1,0 +1,633 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * share
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Russian (http://www.transifex.com/odoo/odoo-8/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: share
+#: model:res.groups,comment:share.group_share_user
+msgid ""
+"\n"
+"Members of this groups have access to the sharing wizard, which allows them to invite external users to view or edit some of their documents."
+msgstr "\nЧлены этой группы имеют доступ к мастеру совместного доступа , который позволяет им приглашать внешних пользователей, для просмотра или изменения некоторых своих документов."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:524
+#, python-format
+msgid "(Copy for sharing)"
+msgstr "(Копировать для совместного доступа)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:549
+#, python-format
+msgid "(Duplicated for modified sharing permissions)"
+msgstr "(Дублирован для измененных прав совместного доступа)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:599
+#, python-format
+msgid "(Modified)"
+msgstr "(Изменено)"
+
+#. module: share
+#: model:ir.model,name:share.model_res_groups
+msgid "Access Groups"
+msgstr "Группы доступа"
+
+#. module: share
+#: field:share.wizard,access_mode:0
+msgid "Access Mode"
+msgstr "Режим доступа"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Access granted!"
+msgstr "Доступ предоставлен!"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Access info"
+msgstr "Данные доступа"
+
+#. module: share
+#: help:share.wizard,access_mode:0
+msgid "Access rights to be granted on the shared documents."
+msgstr "Права доступа будут предоставлены на документы совместного доступа."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:640
+#, python-format
+msgid "Action and Access Mode are required to create a shared access."
+msgstr "Для создания совместного доступа требуется указание действия и режима доступа."
+
+#. module: share
+#: field:share.wizard,action_id:0
+msgid "Action to share"
+msgstr "Действие совместного доступа"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid ""
+"An email notification with instructions has been sent to the following "
+"people:"
+msgstr "Уведомление с инструкциями было отправлено по эл.почте следующим людям:"
+
+#. module: share
+#: help:share.wizard,message:0
+msgid ""
+"An optional personal message, to be included in the email notification."
+msgstr "Персональное сообщение, которое может быть включено в эл.письмо."
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can edit"
+msgstr "Можно редактировать"
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can view"
+msgstr "Можно просматривать"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+#: view:share.wizard:share.share_step1_form
+msgid "Cancel"
+msgstr "Отменить"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Close"
+msgstr "Закрыть"
+
+#. module: share
+#: field:share.wizard,embed_code:0
+msgid "Code"
+msgstr "Код"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Configuration"
+msgstr "Настройка"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:491
+#, python-format
+msgid "Copied access for sharing"
+msgstr "Скопированы права совместного доступа"
+
+#. module: share
+#: field:share.wizard,create_uid:0 field:share.wizard.result.line,create_uid:0
+msgid "Created by"
+msgstr "Создано"
+
+#. module: share
+#: field:share.wizard,create_date:0
+#: field:share.wizard.result.line,create_date:0
+msgid "Created on"
+msgstr "Создан"
+
+#. module: share
+#: field:share.wizard,view_type:0
+msgid "Current View Type"
+msgstr "Тип этого вида"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:862
+#, python-format
+msgid "Database"
+msgstr "База данных"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:77
+#, python-format
+msgid "Direct link or embed code"
+msgstr "Прямая ссылка или встраиваемый код"
+
+#. module: share
+#: field:share.wizard,embed_option_search:0
+msgid "Display search view"
+msgstr "Показать поиск"
+
+#. module: share
+#: field:share.wizard,embed_option_title:0
+msgid "Display title"
+msgstr "Показ заголовка"
+
+#. module: share
+#: field:share.wizard,domain:0
+msgid "Domain"
+msgstr "Домен"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:813
+#: code:addons/share/wizard/share_wizard.py:844
+#, python-format
+msgid "Email Required"
+msgstr "Нужен адрес электронной почты"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:77 field:share.wizard,new_users:0
+#, python-format
+msgid "Emails"
+msgstr "Письма"
+
+#. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:63
+#, python-format
+msgid "Embed"
+msgstr "Встроить"
+
+#. module: share
+#: help:share.wizard,embed_code:0
+msgid ""
+"Embed this code in your documents to provide a link to the shared document."
+msgstr "Вставьте код  в ваши документы для совместного доступа к ним."
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Embedded code options"
+msgstr "Настройка встраиваемого кода"
+
+#. module: share
+#: help:res.users,share:0
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr "Внешний пользователь с ограниченным доступом, создан только для обмена данными."
+
+#. module: share
+#: help:res.groups,share:0
+msgid "Group created to set access rights for sharing data with some users."
+msgstr "Создана группа для установки прав доступа для обмена данными с другими пользователями."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:821
+#: code:addons/share/wizard/share_wizard.py:853
+#, python-format
+msgid ""
+"Hello,\n"
+"\n"
+msgstr "Здравствуйте,\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:822
+#, python-format
+msgid ""
+"I have shared %s (%s) with you!\n"
+"\n"
+msgstr "Я предоставил вам совместный доступ к %s (%s)!\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:854
+#, python-format
+msgid ""
+"I've shared %s with you!\n"
+"\n"
+msgstr "Я предоставил вам совместный доступ к %s!\n\n"
+
+#. module: share
+#: field:share.wizard,id:0 field:share.wizard.result.line,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Include an Optional Personal Message"
+msgstr "Включить дополнительное персональное сообщение"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:614
+#, python-format
+msgid "Indirect sharing filter created by user %s (%s) for group %s"
+msgstr "Фильтр косвенного доступа созданный пользователем %s (%s) для группы %s"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:795
+#, python-format
+msgid "Invitation"
+msgstr "Приглашение"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:820
+#, python-format
+msgid "Invitation to collaborate about %s"
+msgstr "Приглашение по сотрудничеству над %s"
+
+#. module: share
+#. openerp-web
+#: code:addons/share/static/src/xml/share.xml:9
+#, python-format
+msgid "Invite"
+msgstr "Приглашение"
+
+#. module: share
+#: field:share.wizard,invite:0
+msgid "Invite users to OpenSocial record"
+msgstr "Пригласить пользователей в запись OpenSocial"
+
+#. module: share
+#: field:share.wizard,write_uid:0 field:share.wizard.result.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Последний раз обновлено"
+
+#. module: share
+#: field:share.wizard,write_date:0 field:share.wizard.result.line,write_date:0
+msgid "Last Updated on"
+msgstr "Последний раз обновлено"
+
+#. module: share
+#: field:share.wizard.result.line,login:0
+msgid "Login"
+msgstr "Логин"
+
+#. module: share
+#: help:share.wizard,share_root_url:0
+msgid "Main access page for users that are granted shared access"
+msgstr "Главная страница доступа для пользователей, которым предоставляется совместный доступ"
+
+#. module: share
+#: help:share.wizard,record_name:0
+msgid "Name of the shared record, if sharing a precise record"
+msgstr "Название записи для совместного доступа, если совместный доступ к конкретной записи"
+
+#. module: share
+#: field:share.wizard,email_1:0 field:share.wizard,email_2:0
+#: field:share.wizard,email_3:0
+msgid "New user email"
+msgstr "Почта нового пользователя"
+
+#. module: share
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
+msgstr "Вновь созданный"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid "Next"
+msgstr "Далее"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:204
+#, python-format
+msgid "No email address configured"
+msgstr "Не настроен адрес эл.почты"
+
+#. module: share
+#: view:res.groups:share.res_groups_search_sharing
+msgid "Non-Share Groups"
+msgstr "Обычные группы"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:834
+#: code:addons/share/wizard/share_wizard.py:868
+#, python-format
+msgid ""
+"Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+"It is open source and can be found on https://www.odoo.com."
+msgstr "Odoo - мощный и удобный для пользователя пакет бизнес-приложений (управление взаимодействием с клиентами, продажи, управление персоналом и т.п.)\nЭто открытый источник, который доступен по ссылке http://www.odoo.com."
+
+#. module: share
+#: help:share.wizard,domain:0
+msgid "Optional domain for further data filtering"
+msgstr "Дополнительное ограничение для дальнейшей фильтрации данных"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid ""
+"Optionally, you may specify an additional domain restriction that will be "
+"applied to the shared data."
+msgstr "Опционально, вы можете указать дополнительные ограничения, которые будут применяться к общим данным."
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Or insert the following code where you want to embed your documents"
+msgstr "Или вставьте следующий код туда, где вы хотите вставить ваши документы"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:829
+#: code:addons/share/wizard/share_wizard.py:861
+#: field:share.wizard.result.line,password:0
+#, python-format
+msgid "Password"
+msgstr "Пароль"
+
+#. module: share
+#: field:share.wizard,message:0
+msgid "Personal Message"
+msgstr "Личное сообщение"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:647
+#, python-format
+msgid "Please indicate the emails of the persons to share with, one per line."
+msgstr "Пожалуйста укажите эл. адреса лиц для совместного доступа, по одному на строку."
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid ""
+"Please select the action that opens the screen containing the data you want "
+"to share."
+msgstr "Пожалуйста, выберите действие, которое открывает экран, содержащий данные, которыми вы хотите поделиться."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:758
+#, python-format
+msgid "Record id not found"
+msgstr "Идентификатор записи не найден"
+
+#. module: share
+#: field:share.wizard,record_name:0
+msgid "Record name"
+msgstr "Название записи"
+
+#. module: share
+#: view:res.users:share.res_users_search_sharing
+msgid "Regular users only (no share user)"
+msgstr "Обычные пользователи"
+
+#. module: share
+#: help:share.wizard,user_type:0
+msgid "Select the type of user(s) you would like to share data with."
+msgstr "Выберите тип пользователей с которыми вы хотели бы иметь совместный доступ к данным."
+
+#. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
+#: view:share.wizard:share.share_step1_form
+#, python-format
+msgid "Share"
+msgstr "Поделится"
+
+#. module: share
+#: field:share.wizard,share_root_url:0
+msgid "Share Access URL"
+msgstr "Адрес(URL) совместного доступа"
+
+#. module: share
+#: field:res.groups,share:0
+msgid "Share Group"
+msgstr "Группа совместного доступа"
+
+#. module: share
+#: view:res.groups:share.res_groups_search_sharing
+msgid "Share Groups"
+msgstr "Группы совместного доступа"
+
+#. module: share
+#: field:share.wizard,name:0
+msgid "Share Title"
+msgstr "Заголовок совместного доступа"
+
+#. module: share
+#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+msgid "Share URL"
+msgstr "Адрес совместного доступа"
+
+#. module: share
+#: field:res.users,share:0
+msgid "Share User"
+msgstr "Совместный доступ с пользователем"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard
+#: model:ir.model,name:share.model_share_wizard
+#: field:share.wizard.result.line,share_wizard_id:0
+msgid "Share Wizard"
+msgstr "Мастер совместного доступа"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Share with these People (one email per line)"
+msgstr "Совместный доступ с этими людьми (один эл.адрес в строке)"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard_step1
+msgid "Share your documents"
+msgstr "Поделитесь своими документами"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:771
+#, python-format
+msgid "Shared access created!"
+msgstr "Общий доступ создан!"
+
+#. module: share
+#: model:ir.module.category,name:share.module_category_share
+msgid "Sharing"
+msgstr "Совместный доступ"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Sharing Options"
+msgstr "Параметры общего доступа"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:61
+#: code:addons/share/wizard/share_wizard.py:635
+#, python-format
+msgid "Sharing access cannot be created."
+msgstr "Совместный доступ не возможен."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:577
+#, python-format
+msgid "Sharing filter created by user %s (%s) for group %s"
+msgstr "Фильтр совместного доступа созданный пользователем %s (%s) для группы %s"
+
+#. module: share
+#: field:share.wizard,user_type:0
+msgid "Sharing method"
+msgstr "Метод совместного доступа"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid "Sharing: preparation"
+msgstr "Совместный доступ: подготовка"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:636
+#, python-format
+msgid ""
+"Sorry, the current screen and filter you are trying to share are not supported at the moment.\n"
+"You may want to try a simpler filter."
+msgstr "К сожалению, текущий экран и фильтр, которыми вы пытаетесь поделиться не поддерживаются на данный момент.\n\nВы можете попробовать более простой фильтр."
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+#: field:share.wizard,result_line_ids:0
+msgid "Summary"
+msgstr "Резюме"
+
+#. module: share
+#: help:share.wizard,action_id:0
+msgid ""
+"The action that opens the screen containing the data you wish to share."
+msgstr "Действие, которое открывает экран, содержащий данные, которыми вы хотите поделиться."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:813
+#: code:addons/share/wizard/share_wizard.py:844
+#, python-format
+msgid ""
+"The current user must have an email address configured in User Preferences "
+"to be able to send outgoing emails."
+msgstr "Текущий пользователь должен иметь адрес эл. почты заданный в его настройках, чтобы иметь возможность отправлять ему эл. почту."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:826
+#: code:addons/share/wizard/share_wizard.py:855
+#, python-format
+msgid ""
+"The documents are not attached, you can view them online directly on my Odoo server at:\n"
+"    %s\n"
+"\n"
+msgstr "Документы не прикреплены, вы можете посмотреть их онлайн непосредственно на моем сервере Odoo:\n    %s\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:864
+#, python-format
+msgid ""
+"The documents have been automatically added to your current Odoo "
+"documents.\n"
+msgstr "Документы были автоматически добавлены к вашим текущим документам на Odoo.\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:831
+#, python-format
+msgid ""
+"The documents have been automatically added to your subscriptions.\n"
+"\n"
+msgstr "Документы были автоматически добавлены в ваши подписки.\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:758
+#, python-format
+msgid ""
+"The share engine has not been able to fetch a record_id for your invitation."
+msgstr "Механизм совместного доступа не смог обработать record_id Вашего приглашения."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:827
+#: code:addons/share/wizard/share_wizard.py:859
+#, python-format
+msgid "These are your credentials to access this protected area:\n"
+msgstr "Это ваши учетные данные для доступа к защищенной области:\n"
+
+#. module: share
+#: help:share.wizard,name:0
+msgid "Title for the share (displayed to users as menu and shortcut name)"
+msgstr "Название для общего доступа (выводится пользователям как меню и название закладки)"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Use this link"
+msgstr "Используйте эту ссылку"
+
+#. module: share
+#: model:res.groups,name:share.group_share_user
+msgid "User"
+msgstr "Пользователь"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:828
+#: code:addons/share/wizard/share_wizard.py:860
+#, python-format
+msgid "Username"
+msgstr "Имя пользователя"
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "Users"
+msgstr "Пользователи"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:865
+#, python-format
+msgid "You may use your current login (%s) and password to view them.\n"
+msgstr "Вы можете использовать ваш текущий логин (%s) и пароль, для их просмотра.\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:643
+#, python-format
+msgid "You must be a member of the Share/User group to use the share wizard."
+msgstr "Вы должны быть участником группы совместного доступа для использования мастера."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:205
+#, python-format
+msgid ""
+"You must configure your email address in the user preferences before using "
+"the Share button."
+msgstr "Вы должны настроить ваш адрес электронной почты в настройках пользователя, прежде чем использовать кнопку \"Совместный доступ\"."
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+#: view:share.wizard:share.share_step1_form
+msgid "or"
+msgstr "или"
+
+#. module: share
+#: field:share.wizard.result.line,user_id:0
+msgid "unknown"
+msgstr "неизвестно"
+
+#. module: share
+#: view:res.groups:share.view_groups_form_share
+msgid "{'search_default_no_share':1}"
+msgstr "{'search_default_no_share':1}"

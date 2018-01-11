@@ -1,0 +1,71 @@
+-
+  In order to check account budget module in OpenERP I created a budget with few budget positions
+-
+  Creating a crossovered.budget record
+-
+  !record {model: crossovered.budget, id: crossovered_budget_budget0}:
+    code: B2011
+    date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
+    date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
+    name: !eval "'Budget %s' %(datetime.now().year+1)"
+    state: draft
+-
+  I created two different budget lines
+-
+  Modifying a crossovered.budget record
+-
+  !record {model: crossovered.budget, id: crossovered_budget_budget0}:
+    crossovered_budget_line:
+      - analytic_account_id: account.analytic_consultancy
+        date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
+        date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
+        general_budget_id: account_budget.account_budget_post_purchase0
+        planned_amount: 10000.0
+      - analytic_account_id: account.analytic_super_product_trainings
+        date_from: !eval "'%s-09-01' %(datetime.now().year+1)"
+        date_to: !eval "'%s-09-30' %(datetime.now().year+1)"
+        general_budget_id: account_budget.account_budget_post_sales0
+        planned_amount: 400000.0
+
+-
+  I check that Initially Budget is in "draft" state
+-
+  !assert {model: crossovered.budget, id: crossovered_budget_budget0}:
+    - state == 'draft'
+
+-
+  I pressed the confirm button to confirm the Budget
+-
+  Performing a workflow action confirm on module crossovered.budget
+-
+  !workflow {model: crossovered.budget, action: confirm, ref: crossovered_budget_budget0}
+-
+  I check that budget is in "Confirmed" state
+-
+  !assert {model: crossovered.budget, id: crossovered_budget_budget0}:
+    - state == 'confirm'
+
+-
+  I pressed the validate button to validate the Budget
+-
+  Performing a workflow action validate on module crossovered.budget
+-
+  !workflow {model: crossovered.budget, action: validate, ref: crossovered_budget_budget0}
+-
+  I check that budget is in "Validated" state
+-
+  !assert {model: crossovered.budget, id: crossovered_budget_budget0}:
+    - state == 'validate'
+
+-
+  I pressed the done button to set the Budget to "Done" state
+-
+  Performing a workflow action done on module crossovered.budget
+-
+  !workflow {model: crossovered.budget, action: done, ref: crossovered_budget_budget0}
+-
+  I check that budget is in "done" state
+-
+  !assert {model: crossovered.budget, id: crossovered_budget_budget0}:
+    - state == 'done'
+

@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='utf-8'?>
+<openerp>
+<data>
+    <record model="ir.ui.view" id="certification_certification_tree">
+        <field name="name">view.certification.certification.tree</field>
+        <field name="model">certification.certification</field>
+        <field name="arch" type="xml">
+            <tree string="Granted Certifications">
+                <field name="partner_id" />
+                <field name="type_id" />
+                <field name="certification_date" />
+                <field name="certification_score" />
+                <field name="certification_hidden_score" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="certification_certification_form">
+        <field name="name">view.certification.certification.form</field>
+        <field name="model">certification.certification</field>
+        <field name="arch" type="xml">
+            <form string="Granted Certification">
+                <sheet>
+                    <group nolabel="1">
+                        <field name="partner_id" />
+                        <field name="type_id" />
+                        <field name="certification_date" />
+                        <field name="certification_score" />
+                        <field name="certification_hidden_score" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="certification_certification_search">
+        <field name="name">view.certification.certification.search</field>
+        <field name="model">certification.certification</field>
+        <field name="arch" type="xml">
+            <search string="Search Certification">
+                <field name="partner_id" />
+                <field name="type_id" />
+                <group expand="0" string="Group By">
+                    <filter string="Partner" name="group_by_partner"  domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Type"    name="group_by_type"     domain="[]" context="{'group_by': 'type_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_certifications_list">
+        <field name="name">Certifications</field>
+        <field name="res_model">certification.certification</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="certification_certification_search"/>
+    </record>
+    <menuitem name="Certifications" id="menu_certifications" parent="base.marketing_menu" sequence="35" />
+    <menuitem name="Certifications" id="menu_certifications_list" action="action_certifications_list" parent="menu_certifications" sequence="1"/>
+</data>
+</openerp>

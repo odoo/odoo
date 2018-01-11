@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!--  Demo Cases  -->
+        <record id="crm_phonecall_1" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-04 10:45:36')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field eval="'1'" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Left the message</field>
+            <field name="state">done</field>
+            <field name="partner_phone">+34 934 340 230</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="2.3" name="duration"/>
+        </record>
+        <record id="crm_phonecall_2" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-11 11:19:25')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_7"/>
+            <field eval="'0'" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Need more information on the proposed deal</field>
+            <field name="state">done</field>
+            <field name="partner_phone">+44 121 690 4596</field>
+            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="1.5" name="duration"/>
+        </record>
+        <record id="crm_phonecall_3" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-15 17:44:12')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_10"/>
+            <field eval="'2'" name="priority"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="name">Ask for convenient time of meeting</field>
+            <field name="state">open</field>
+            <field name="partner_phone">+1 786 525 0724</field>
+            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone2"/>
+            <field eval="5.0" name="duration"/>
+        </record>
+        <record id="crm_phonecall_4" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-21 14:10:23')" name="date"/>
+            <field eval="'1'" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Wanted information about pricing of laptops</field>
+            <field name="state">done</field>
+            <field name="partner_phone">(077) 582-4035</field>
+            <field name="partner_mobile">(077) 341-3591</field>
+            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="5.45" name="duration"/>
+        </record>
+        <record id="crm_phonecall_5" model="crm.phonecall">
+            <field eval="time.strftime('%Y-%m-28 16:20:43')" name="date"/>
+            <field name="partner_id" ref="base.res_partner_5"/>
+            <field eval="'1'" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">More information on the proposed deal</field>
+            <field name="state">pending</field>
+            <field name="partner_phone">+1 312 349 2324</field>
+            <field name="section_id" ref="sales_team.crm_case_section_1"/>
+            <field eval="1" name="active"/>
+            <field name="categ_id" ref="crm.categ_phone1"/>
+            <field eval="2.08" name="duration"/>
+        </record>
+        <record id="crm_phonecall_6" model="crm.phonecall">
+            <field eval="'1'" name="priority"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Proposal for discount offer</field>
+            <field name="state">open</field>
+            <field name="partner_phone">+34 230 953 485</field>
+            <field name="section_id" ref="sales_team.crm_case_section_2"/>
+            <field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
+            <field name="categ_id" ref="crm.categ_phone2"/>
+            <field eval="8.56" name="duration"/>
+        </record>
+
+    </data>
+</openerp>

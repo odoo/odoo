@@ -1,0 +1,18 @@
+<templates>
+    <t t-name="boolean-value-condition">
+        <t t-if="condition">ok</t>
+    </t>
+    <params id="boolean-value-condition">{"condition": true}</params>
+    <result id="boolean-value-condition">ok</result>
+
+    <t t-name="boolean-value-condition-false">
+        <t t-if="condition">fail</t>
+    </t>
+    <params id="boolean-value-condition-false">{"condition": false}</params>
+    <result id="boolean-value-condition-false"/>
+
+    <t t-name="boolean-value-condition-missing">
+        <t t-if="condition">fail</t>
+    </t>
+    <result id="boolean-value-condition-missing"/>
+</templates>

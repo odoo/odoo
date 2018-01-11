@@ -1,0 +1,23 @@
+-
+  Print the Analytic Budget Report through wizard
+-
+  !python {model: account.analytic.account}: |
+    ctx = {'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_budget_analytic',wiz_data={}, context=ctx, our_module='account_budget')
+
+-
+  Print the Budget Report through wizard
+-
+  !python {model: account.budget.post}: |
+    ctx = {'model': 'account.budget.post','active_ids': [ref('account_budget.account_budget_post_sales0')]}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_budget_report',wiz_data={}, context=ctx, our_module='account_budget')
+
+-
+  Print the CrossOvered Budget Report mode through wizard
+-
+  !python {model: crossovered.budget}: |
+    ctx = {'model': 'account.budget.post','active_ids': [ref('account_budget.crossovered_budget_budgetoptimistic0')]}
+    from openerp.tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_budget_crossvered_report',wiz_data={}, context=ctx, our_module='account_budget')

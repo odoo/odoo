@@ -1,0 +1,11 @@
+-
+  !record {model: hr.expense.expense, id: sep_expenses}:
+    employee_id: hr.employee_mit
+    name : 'John Smith'
+-
+  !record {model: product.product, id: car_travel}:
+    hr_expense_ok: 'True'
+-
+  !record {model: hr.expense.line, id: expense_line}:
+    product_id: car_travel
+    name: 'Car Travel Expenses'

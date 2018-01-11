@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="layout" inherit_id="website.layout" primary="True">
+    <!-- Add report attributes -->
+    <xpath expr="//html" position="attributes">
+        <attribute name="t-att-data-report-margin-top">data_report_margin_top if data_report_margin_top else None</attribute>
+        <attribute name="t-att-data-report-header-spacing">data_report_header_spacing if data_report_header_spacing else None</attribute>
+        <attribute name="t-att-data-report-dpi">data_report_dpi if data_report_dpi else None</attribute>
+    </xpath>
+    <!-- Add report style -->
+    <xpath expr="//head" position="inside">
+        <style type="text/css">
+            <t t-call="report.style"/>
+        </style>
+    </xpath>
+    <xpath expr="//body" position="attributes">
+        <attribute name="class">container</attribute>
+    </xpath>
+    <xpath expr="//header" position="replace"/>
+    <xpath expr="//footer" position="replace">
+        <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and editable)">
+            <li t-foreach="languages" t-as="lg">
+                <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
+                   t-att-data-lang="lg[0]"
+                   t-att-data-default-lang="editable and 'true' if website and lg[0] == website.default_lang_code else None">
+                    <t t-esc="lg[1].split('/').pop()"/>
+                </a>
+            </li>
+            <li groups="base.group_website_publisher">
+                <t t-set="url_return" t-value="url_for('', '[lang]') + '?' + keep_query()"/>
+                <a t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
+                    <i class="fa fa-plus-circle"/>
+                    Add a language...
+                </a>
+            </li>
+        </ul>
+    </xpath>
+</template>
+
+<template id="website_html_container" inherit_id="report.html_container">
+    <xpath expr="//t[@t-call='report.layout']" position="replace">
+        <t t-call="website_report.layout">          
+            <t t-raw="0"/>
+        </t>
+    </xpath>
+</template>
+</data>
+</openerp>

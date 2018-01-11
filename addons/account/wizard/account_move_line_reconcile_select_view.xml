@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_move_line_reconcile_select" model="ir.ui.view">
+            <field name="name">account.move.line.reconcile.select.form</field>
+            <field name="model">account.move.line.reconcile.select</field>
+            <field name="arch" type="xml">
+                <form string="Reconciliation">
+                    <group>
+                         <field name="account_id"/>
+                    </group>
+                    <footer>
+                        <button string="Open for Reconciliation" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_reconcile_select" model="ir.actions.act_window">
+            <field name="name">Reconcile Entries</field>
+            <field name="res_model">account.move.line.reconcile.select</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+           <field name="view_id" ref="view_account_move_line_reconcile_select"/>
+           <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

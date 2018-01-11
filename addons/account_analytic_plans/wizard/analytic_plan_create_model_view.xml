@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_analytic_plan_create_model_msg" model="ir.ui.view">
+            <field name="name">analytic.plan.create.model.msg.form</field>
+            <field name="model">analytic.plan.create.model</field>
+            <field name="arch" type="xml">
+            <form string="Distribution Model Saved">
+                <label string="Save This Distribution as a Model"/>
+                <footer>
+                    <button string="Ok" type="object" name="activate" default_focus="1" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="view_analytic_plan_create_model" model="ir.ui.view">
+            <field name="name">analytic.plan.create.model.form</field>
+            <field name="model">analytic.plan.create.model</field>
+            <field name="arch" type="xml">
+            <form string="Distribution Model Saved">
+                <label string="This distribution model has been saved.You will be able to reuse it later."/>
+            </form>
+            </field>
+        </record>
+
+
+        <record id="action_analytic_plan_create_model" model="ir.actions.act_window">
+            <field name="name">analytic.plan.create.model.action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">analytic.plan.create.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_analytic_plan_create_model_msg"/>
+        </record>
+
+    </data>
+</openerp>

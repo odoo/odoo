@@ -1,0 +1,633 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * share
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 08:03+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: German (http://www.transifex.com/odoo/odoo-8/language/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: share
+#: model:res.groups,comment:share.group_share_user
+msgid ""
+"\n"
+"Members of this groups have access to the sharing wizard, which allows them to invite external users to view or edit some of their documents."
+msgstr "\nMitglieder dieser Gruppe können dern Freigabe Assistenten verwenden. Dieser erlaubt externe Benutzer einzuladen, die dann die freigegebenen  Dokumente lesen und/oder bearbeiten können."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:524
+#, python-format
+msgid "(Copy for sharing)"
+msgstr "(Kopie für Freigabe)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:549
+#, python-format
+msgid "(Duplicated for modified sharing permissions)"
+msgstr "(Duplikat für modifizierte Freigabe Berechtigungen)"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:599
+#, python-format
+msgid "(Modified)"
+msgstr "(Verändert)"
+
+#. module: share
+#: model:ir.model,name:share.model_res_groups
+msgid "Access Groups"
+msgstr "Berechtigungsgruppen"
+
+#. module: share
+#: field:share.wizard,access_mode:0
+msgid "Access Mode"
+msgstr "Zugriff"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Access granted!"
+msgstr "Zugriff erteilt!"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Access info"
+msgstr "Zugriffsinfo"
+
+#. module: share
+#: help:share.wizard,access_mode:0
+msgid "Access rights to be granted on the shared documents."
+msgstr "Zugriffsrechte, die für die freigegebenen Dokumente vergeben werden"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:640
+#, python-format
+msgid "Action and Access Mode are required to create a shared access."
+msgstr "Aktion und Freigabe Modus ist erforderlich, um Freigaben auf Daten zu erzeugen."
+
+#. module: share
+#: field:share.wizard,action_id:0
+msgid "Action to share"
+msgstr "Freizugebende Aufgabe"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid ""
+"An email notification with instructions has been sent to the following "
+"people:"
+msgstr "Eine E-Mail Nachricht mit Anleitung wurde an folgende Personen versendet:"
+
+#. module: share
+#: help:share.wizard,message:0
+msgid ""
+"An optional personal message, to be included in the email notification."
+msgstr "Eine optionale persönliche Mitteilung, die in die E-Mail Benachrichtigung mit einbezogen wird."
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can edit"
+msgstr "Kann verändern"
+
+#. module: share
+#: selection:share.wizard,access_mode:0
+msgid "Can view"
+msgstr "Kann sehen"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+#: view:share.wizard:share.share_step1_form
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Close"
+msgstr "Beenden"
+
+#. module: share
+#: field:share.wizard,embed_code:0
+msgid "Code"
+msgstr "Kürzel"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Configuration"
+msgstr "Konfiguration"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:491
+#, python-format
+msgid "Copied access for sharing"
+msgstr "Kopierte Rechte für Nutzung"
+
+#. module: share
+#: field:share.wizard,create_uid:0 field:share.wizard.result.line,create_uid:0
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: share
+#: field:share.wizard,create_date:0
+#: field:share.wizard.result.line,create_date:0
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: share
+#: field:share.wizard,view_type:0
+msgid "Current View Type"
+msgstr "aktueller Ansicht Typ"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:830
+#: code:addons/share/wizard/share_wizard.py:862
+#, python-format
+msgid "Database"
+msgstr "Datenbank"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:77
+#, python-format
+msgid "Direct link or embed code"
+msgstr "Direkter Link oder Quellcode"
+
+#. module: share
+#: field:share.wizard,embed_option_search:0
+msgid "Display search view"
+msgstr "Zeige Such Ansicht"
+
+#. module: share
+#: field:share.wizard,embed_option_title:0
+msgid "Display title"
+msgstr "Titel anzeigen"
+
+#. module: share
+#: field:share.wizard,domain:0
+msgid "Domain"
+msgstr "Domain"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:813
+#: code:addons/share/wizard/share_wizard.py:844
+#, python-format
+msgid "Email Required"
+msgstr "E-Mail benötigt"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:77 field:share.wizard,new_users:0
+#, python-format
+msgid "Emails"
+msgstr "E-Mails"
+
+#. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:63
+#, python-format
+msgid "Embed"
+msgstr "Einbetten"
+
+#. module: share
+#: help:share.wizard,embed_code:0
+msgid ""
+"Embed this code in your documents to provide a link to the shared document."
+msgstr "Einbettung von Quellen in die Belege, um einen Zugriff so schnell wie möglich zu erhalten"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Embedded code options"
+msgstr "Einbindung optionale Quellen"
+
+#. module: share
+#: help:res.users,share:0
+msgid ""
+"External user with limited access, created only for the purpose of sharing "
+"data."
+msgstr "Optionale Domain für weitere Datenfreigaben."
+
+#. module: share
+#: help:res.groups,share:0
+msgid "Group created to set access rights for sharing data with some users."
+msgstr "Neu angelegte Gruppe zwecks Definition der Zugriffsrechte zum Datenaustausch zwischen freigegebenen Benutzern."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:821
+#: code:addons/share/wizard/share_wizard.py:853
+#, python-format
+msgid ""
+"Hello,\n"
+"\n"
+msgstr "Hallo,\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:822
+#, python-format
+msgid ""
+"I have shared %s (%s) with you!\n"
+"\n"
+msgstr "Ich habe folgende Daten   %s (%s) freigegeben!\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:854
+#, python-format
+msgid ""
+"I've shared %s with you!\n"
+"\n"
+msgstr "Ich habe %s für Sie freigegeben!\n\n"
+
+#. module: share
+#: field:share.wizard,id:0 field:share.wizard.result.line,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Include an Optional Personal Message"
+msgstr "Inklusive einer persönlichen Mitteilung"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:614
+#, python-format
+msgid "Indirect sharing filter created by user %s (%s) for group %s"
+msgstr "Indirekter Freigabefilter des Benutzers %s (%s) für die Gruppe %s"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:795
+#, python-format
+msgid "Invitation"
+msgstr "Einladung"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:820
+#, python-format
+msgid "Invitation to collaborate about %s"
+msgstr "Einladung zur Zusammenarbeit für %s"
+
+#. module: share
+#. openerp-web
+#: code:addons/share/static/src/xml/share.xml:9
+#, python-format
+msgid "Invite"
+msgstr "Einladen"
+
+#. module: share
+#: field:share.wizard,invite:0
+msgid "Invite users to OpenSocial record"
+msgstr "Benutzer zu OpenSocial einladen."
+
+#. module: share
+#: field:share.wizard,write_uid:0 field:share.wizard.result.line,write_uid:0
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: share
+#: field:share.wizard,write_date:0 field:share.wizard.result.line,write_date:0
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: share
+#: field:share.wizard.result.line,login:0
+msgid "Login"
+msgstr "Login"
+
+#. module: share
+#: help:share.wizard,share_root_url:0
+msgid "Main access page for users that are granted shared access"
+msgstr "Haupt Seite für Benutzer die Freigabe erhalten haben"
+
+#. module: share
+#: help:share.wizard,record_name:0
+msgid "Name of the shared record, if sharing a precise record"
+msgstr "Bezeichnung der Freigaben"
+
+#. module: share
+#: field:share.wizard,email_1:0 field:share.wizard,email_2:0
+#: field:share.wizard,email_3:0
+msgid "New user email"
+msgstr "Neue Benutzer E-Mail"
+
+#. module: share
+#: field:share.wizard.result.line,newly_created:0
+msgid "Newly created"
+msgstr "Neu erzeugt"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid "Next"
+msgstr "Weiter"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:204
+#, python-format
+msgid "No email address configured"
+msgstr "Es wurde keine E-Mail Adresse konfiguriert."
+
+#. module: share
+#: view:res.groups:share.res_groups_search_sharing
+msgid "Non-Share Groups"
+msgstr "Nicht-freigegebene  Gruppen"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:834
+#: code:addons/share/wizard/share_wizard.py:868
+#, python-format
+msgid ""
+"Odoo is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+"It is open source and can be found on https://www.odoo.com."
+msgstr "Odoo ist eine mächtige und nutzerfreundliche Business Application (CRM, Sales, HR, etc.)\nSie ist Open-Source und Sie finden mehr Informationen unter https://www.odoo.com."
+
+#. module: share
+#: help:share.wizard,domain:0
+msgid "Optional domain for further data filtering"
+msgstr "Optionale Domain als weiterer Filter"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid ""
+"Optionally, you may specify an additional domain restriction that will be "
+"applied to the shared data."
+msgstr "Optional können Sie auch eine erweiterte Domain als Restriktion hinterlegen, die dann für Ihre Datenfreigaben angewendet wird."
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Or insert the following code where you want to embed your documents"
+msgstr "Oder Fügen Sie diesen Code ein, wenn das Dokument eingebettet werden soll"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:829
+#: code:addons/share/wizard/share_wizard.py:861
+#: field:share.wizard.result.line,password:0
+#, python-format
+msgid "Password"
+msgstr "Passwort"
+
+#. module: share
+#: field:share.wizard,message:0
+msgid "Personal Message"
+msgstr "Persönliche Nachricht"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:647
+#, python-format
+msgid "Please indicate the emails of the persons to share with, one per line."
+msgstr "Bitte geben Sie Zeile für Zeile die E-Mail Adressen sämtlicher Personen ein, die freigegeben werden sollen."
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid ""
+"Please select the action that opens the screen containing the data you want "
+"to share."
+msgstr "Bitte wählen Sie die Aktion, die als Fenster die Daten öffnet, die zur Freigabe vorgesehen ist."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:758
+#, python-format
+msgid "Record id not found"
+msgstr "Datensatz wurde nicht gefunden."
+
+#. module: share
+#: field:share.wizard,record_name:0
+msgid "Record name"
+msgstr "Daten Bezeichnung"
+
+#. module: share
+#: view:res.users:share.res_users_search_sharing
+msgid "Regular users only (no share user)"
+msgstr "Nur reguläre Benutzer (keine Freigabe Benutzer)"
+
+#. module: share
+#: help:share.wizard,user_type:0
+msgid "Select the type of user(s) you would like to share data with."
+msgstr "Wählen Sie die Benutzer aus, für die Sie Daten freigeben wollen"
+
+#. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
+#: view:share.wizard:share.share_step1_form
+#, python-format
+msgid "Share"
+msgstr "Freigabe"
+
+#. module: share
+#: field:share.wizard,share_root_url:0
+msgid "Share Access URL"
+msgstr "Freigabe Zugriffs URL"
+
+#. module: share
+#: field:res.groups,share:0
+msgid "Share Group"
+msgstr "Freigabe Gruppe"
+
+#. module: share
+#: view:res.groups:share.res_groups_search_sharing
+msgid "Share Groups"
+msgstr "Freigabe Gruppen"
+
+#. module: share
+#: field:share.wizard,name:0
+msgid "Share Title"
+msgstr "Freigabe Bezeichnung"
+
+#. module: share
+#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+msgid "Share URL"
+msgstr "Freigabe URL"
+
+#. module: share
+#: field:res.users,share:0
+msgid "Share User"
+msgstr "Freizugebende Benutzer"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard
+#: model:ir.model,name:share.model_share_wizard
+#: field:share.wizard.result.line,share_wizard_id:0
+msgid "Share Wizard"
+msgstr "Freigabeassistent"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Share with these People (one email per line)"
+msgstr "Freigaben für  diese Personen (eine E-Mail Adresse pro Zeile)"
+
+#. module: share
+#: model:ir.actions.act_window,name:share.action_share_wizard_step1
+msgid "Share your documents"
+msgstr "Geben Sie Ihre Dokumente frei"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:771
+#, python-format
+msgid "Shared access created!"
+msgstr "Freigabe wurde erteilt!"
+
+#. module: share
+#: model:ir.module.category,name:share.module_category_share
+msgid "Sharing"
+msgstr "Freigaben"
+
+#. module: share
+#: view:share.wizard:share.share_step1_form
+msgid "Sharing Options"
+msgstr "Freigabeoptionen"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:61
+#: code:addons/share/wizard/share_wizard.py:635
+#, python-format
+msgid "Sharing access cannot be created."
+msgstr "Freigaben können nicht erstellt werden"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:577
+#, python-format
+msgid "Sharing filter created by user %s (%s) for group %s"
+msgstr "Freigabe durch Benutzer %s (%s) für die Gruppe %s"
+
+#. module: share
+#: field:share.wizard,user_type:0
+msgid "Sharing method"
+msgstr "Freigabe Methode"
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+msgid "Sharing: preparation"
+msgstr "Freigabe: Vorbereitung"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:636
+#, python-format
+msgid ""
+"Sorry, the current screen and filter you are trying to share are not supported at the moment.\n"
+"You may want to try a simpler filter."
+msgstr "Entschuldigung, die Filter und Anzeigen werden in dieser Form aktuell nicht unterstützt.\n Sie sollten möglicherweise einen der vorhandenen, gegenwärtig unterstützten Filter anwenden."
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+#: field:share.wizard,result_line_ids:0
+msgid "Summary"
+msgstr "Zusammenfassung"
+
+#. module: share
+#: help:share.wizard,action_id:0
+msgid ""
+"The action that opens the screen containing the data you wish to share."
+msgstr "Die Aktion, die ein Fenster öffnet, um festzulegen, welche Daten ausgetauscht und freigegeben werden sollen."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:813
+#: code:addons/share/wizard/share_wizard.py:844
+#, python-format
+msgid ""
+"The current user must have an email address configured in User Preferences "
+"to be able to send outgoing emails."
+msgstr "Der aktuelle Benutzer braucht eine konfigurierte E-Mail in den Benutzer Einstellungen für den Versand von E-Mails."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:826
+#: code:addons/share/wizard/share_wizard.py:855
+#, python-format
+msgid ""
+"The documents are not attached, you can view them online directly on my Odoo server at:\n"
+"    %s\n"
+"\n"
+msgstr "Die Dokumente wurden nicht angehängt, anstatt dessen können Sie direkt online geöffnet werden:\n    %s\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:864
+#, python-format
+msgid ""
+"The documents have been automatically added to your current Odoo "
+"documents.\n"
+msgstr "Die Dokumente wurden automatisch zu den anderen Odoo Dokumenten hinzugefügt.\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:831
+#, python-format
+msgid ""
+"The documents have been automatically added to your subscriptions.\n"
+"\n"
+msgstr "Die Dokumente wurde automatisch zu Ihrem Abomodell hinzugefügt.\n\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:758
+#, python-format
+msgid ""
+"The share engine has not been able to fetch a record_id for your invitation."
+msgstr "Die Einladung Automatik war leider nicht erfolgreich, um  eine record_id für Ihre Einladung zu erhalten."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:827
+#: code:addons/share/wizard/share_wizard.py:859
+#, python-format
+msgid "These are your credentials to access this protected area:\n"
+msgstr "Dies sind Ihre Berechtigungen um den geschützten Bereich zu sehen\n"
+
+#. module: share
+#: help:share.wizard,name:0
+msgid "Title for the share (displayed to users as menu and shortcut name)"
+msgstr "Bezeichnung der Freigabe (wird den Benutzern als Menü und Lesezeichen angezeigt)"
+
+#. module: share
+#: view:share.wizard:share.share_step2_form
+msgid "Use this link"
+msgstr "Verwenden Sie diesen Link"
+
+#. module: share
+#: model:res.groups,name:share.group_share_user
+msgid "User"
+msgstr "Benutzer"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:828
+#: code:addons/share/wizard/share_wizard.py:860
+#, python-format
+msgid "Username"
+msgstr "Benutzername"
+
+#. module: share
+#: model:ir.model,name:share.model_res_users
+msgid "Users"
+msgstr "Benutzer"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:865
+#, python-format
+msgid "You may use your current login (%s) and password to view them.\n"
+msgstr "Sie können Ihre aktuelles Login (%s) und Passwort verwenden um dies zu sehen.\n"
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:643
+#, python-format
+msgid "You must be a member of the Share/User group to use the share wizard."
+msgstr "Sie müssen Mitglied der Benutzergruppe Share/User sein, um den \"Freigabe Assistenten\" zu nutzen."
+
+#. module: share
+#: code:addons/share/wizard/share_wizard.py:205
+#, python-format
+msgid ""
+"You must configure your email address in the user preferences before using "
+"the Share button."
+msgstr "Sie müssen Ihre E-Mail Adresse in den Benutzereinstellungen eintragen, \r\nbevor Sie die Freigabe aktivieren."
+
+#. module: share
+#: view:share.wizard:share.share_step0_form
+#: view:share.wizard:share.share_step1_form
+msgid "or"
+msgstr "oder"
+
+#. module: share
+#: field:share.wizard.result.line,user_id:0
+msgid "unknown"
+msgstr "unbekannt"
+
+#. module: share
+#: view:res.groups:share.view_groups_form_share
+msgid "{'search_default_no_share':1}"
+msgstr "{'search_default_no_share':1}"

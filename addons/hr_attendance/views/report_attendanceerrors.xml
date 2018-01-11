@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_attendanceerrors">
+<t t-call="report.html_container">
+<t t-foreach="get_employees(data['form']['emp_ids'])" t-as="employee">
+<t t-call="report.internal_layout">
+<div class="page">
+<div class="oe_structure"/>
+<h2>Attendance Errors: <span t-esc="employee.name"/></h2>
+
+<table class="table table-condensed mt32">
+    <thead>
+        <tr>
+            <th>Operation</th>
+            <th>Date Signed</th>
+            <th>Date Recorded</th>
+            <th>Delay</th>
+            <th>Min Delay</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr t-foreach="lst(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])" t-as="att">
+            <td><span t-esc="att['action']"/></td>
+            <td><span t-esc="formatLang(att['date'],date_time=True)"/></td>
+            <td><span t-esc="formatLang(att['create_date'],date_time=True)"/></td>
+            <td><span t-esc="att['delay']"/></td>
+            <td><span t-esc="att['delay2']"/></td>
+        </tr>
+        <tr class="border-black" t-foreach="total(employee.id,data['form']['init_date'], data['form']['end_date'], data['form']['max_delay'])" t-as="total">
+            <td colspan="3"><strong>Total period</strong></td>
+            <td><strong t-esc="total['total']"/></td>
+            <td><strong t-esc="total['total2']"/></td>
+        </tr>
+    </tbody>
+</table>
+<p>(*) A positive delay means that the employee worked less than recorded.<br/>
+(*) A negative delay means that the employee worked more than encoded.</p>
+</div>
+</t>
+</t>
+</t>
+</template>
+</data>
+</openerp>

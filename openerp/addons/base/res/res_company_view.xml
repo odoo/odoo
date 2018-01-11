@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <menuitem id="menu_res_company_global" parent="base.menu_administration" name="Companies" sequence="2"
+            groups="base.group_no_one"/>
+
+        <report id="preview_report" model="res.company" name="preview.report" multi="True" rml="base/report/preview_report.rml" string="Preview Report"/>
+        <record id="bank_account_update" model="ir.actions.act_window">
+            <field name="name">Company Bank Accounts</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context" eval="{'default_partner_id':ref('base.main_partner'), 'company_hide':False, 'default_company_id':ref('base.main_company'), 'search_default_my_bank':1}"/>
+        </record>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <form string="Company">
+                  <sheet>
+                    <div>
+                        <field name="logo" widget="image"  class="oe_avatar oe_left"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                    </div>
+                    <div attrs="{'invisible' : [('logo','!=',False)]}" class="oe_view_nocontent oe_clear">
+                        <p class="oe_view_nocontent_create oe_edit_only">
+                            Click to set your company logo.
+                        </p>
+                    </div>
+                    <group col="4">
+                        <field name="parent_id"  groups="base.group_multi_company"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General Information">
+                            <group>
+                                <group>
+                                    <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
+                                    <label for="street" string="Address"/>
+                                    <div>
+                                        <field name="street" placeholder="Street..."/>
+                                        <field name="street2"/>
+                                        <div>
+                                            <field name="city" placeholder="City" style="width: 40%%"/>
+                                            <field name="state_id" class="oe_no_button" placeholder="State" on_change="onchange_state(state_id)" style="width: 24%%" options='{"no_open": True}'/>
+                                            <field name="zip" placeholder="ZIP" style="width: 34%%"/>
+                                        </div>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' on_change="on_change_country(country_id)"/>
+                                    </div>
+                                    <label for="rml_header1"/>
+                                    <div>
+                                        <field name="rml_header1" placeholder="e.g. Global Business Solutions"/>
+                                    </div>
+                                    <field name="website" widget="url" placeholder="e.g. www.odoo.com"
+                                        on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                </group>
+                                <group>
+                                    <field name="phone" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                    <field name="fax" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                    <field name="email" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                    <field name="vat" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                    <field name="company_registry" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                </group>
+                            </group>
+                            <group string="Bank Accounts">
+                                <field name="bank_ids" nolabel="1" context="{'default_company_id': active_id, 'footer_hide': False}"
+                                    on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                            </group>
+                        </page>
+                        <page string="Configuration">
+                            <group>
+                                <group name="account_grp" string="Accounting">
+                                    <field name="currency_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Report Configuration">
+                            <group string="Configuration">
+                                <field name="custom_footer" on_change="onchange_footer(custom_footer, phone, fax, email, website, vat, company_registry, bank_ids)"/>
+                                <field name="rml_footer" attrs="{'invisible': [('custom_footer','=',False)]}"/>
+                                <field name="rml_footer_readonly" attrs="{'invisible': [('custom_footer','=',True)]}"/>
+                            </group>
+
+                            <group string="Configuration (RML)" col="2" groups="base.group_no_one">
+                                <field name="rml_paper_format" on_change="onchange_rml_paper_format(rml_paper_format)"/>
+
+                                <label for="font" />
+                                <div>
+                                    <field name="font" class="oe_inline" on_change="onchange_font_name(font, rml_header, rml_header2, rml_header3)" />
+                                    <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link" colspan="1"/>
+                                </div>
+                                <div class="oe_right oe_button_box" name="button_box" colspan="2">
+                                    <button name="%(preview_report)d" string="Preview Header/Footer" type="action"/>
+                                </div>
+                                <group col="1" colspan="2">
+                                    <field name="rml_header"/>
+                                    <field name="rml_header2"/>
+                                    <field name="rml_header3"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_company_tree" model="ir.ui.view">
+            <field name="name">res.company.tree</field>
+            <field name="model">res.company</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="company_normal_action_tree" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('id','=',active_id)]</field>
+        </record>
+        <record id="action_res_company_form" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="view_type">form</field>
+            <field name="help">Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.</field>
+        </record>
+        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_res_company_global"/>
+        <record id="action_res_company_tree" model="ir.actions.act_window">
+            <field name="name">Company's Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+        </record>
+        <menuitem action="action_res_company_tree" groups="base.group_multi_company" id="menu_action_res_company_tree" parent="base.menu_res_company_global" sequence="16"/>
+
+        <record id="ir_open_company" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'res.company'" name="model"/>
+            <field name="name">Companies</field>
+            <field eval="'ir.actions.act_window,%d'%company_normal_action_tree" name="value"/>
+        </record>
+
+        <record id="view_inventory_tree" model="ir.ui.view">
+            <field name="name">multi_company.default.tree</field>
+            <field name="model">multi_company.default</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Multi Company">
+                    <field name="company_id"/>
+                    <field name="object_id"/>
+                    <field name="field_id"/>
+                    <field name="expression" />
+                    <field name="sequence"/>
+                    <field name="company_dest_id"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_inventory_form" model="ir.ui.view">
+            <field name="name">multi_company.default.form</field>
+            <field name="model">multi_company.default</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Multi Company">
+                  <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id"/>
+                            <field name="company_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="object_id"/>
+                            <field name="field_id" domain="[('model_id','=',object_id)]"/>
+                            <field name="expression"/>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_inventory_search" model="ir.ui.view">
+            <field name="name">multi_company.default.search</field>
+            <field name="model">multi_company.default</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Multi Company">
+                    <field name="name" string="Name"/>
+                    <field name="company_id"/>
+                    <field name="company_dest_id"/>
+                    <field name="object_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_inventory_form" model="ir.actions.act_window">
+            <field name="name">Company Defaults</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">multi_company.default</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="view_inventory_search"/>
+        </record>
+        <menuitem id="menu_action_inventory_form"  parent="base.menu_ir_property" action="action_inventory_form"/>
+
+    </data>
+</openerp>

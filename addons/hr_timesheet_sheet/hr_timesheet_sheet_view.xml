@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="hr_timesheet_account_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.account.form</field>
+            <field name="model">hr_timesheet_sheet.sheet.account</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet by Accounts">
+                    <group col="4">
+                        <field name="sheet_id"/>
+                        <field name="name" groups="analytic.group_analytic_accounting"/>
+                        <field name="total" sum="Total"/>
+                        <field name="invoice_rate"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="hr_timesheet_account_filter" model="ir.ui.view">
+            <field name="name">hr.timesheet.account.filter</field>
+            <field name="model">hr_timesheet_sheet.sheet.account</field>
+            <field name="arch" type="xml">
+                <search string="Search Account">
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
+                    <field name="invoice_rate"/>
+                    <field name="sheet_id" />
+                </search>
+            </field>
+        </record>
+        <record id="hr_timesheet_account_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.account.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet.account</field>
+            <field name="arch" type="xml">
+                <tree string="Timesheet by Accounts">
+                    <field name="sheet_id"/>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
+                    <field name="total" sum="Total"/>
+                    <field name="invoice_rate"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet">
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
+            <field name="name">Timesheet Activities</field>
+            <field name="res_model">hr.analytic.timesheet</field>
+            <field name="src_model">hr_timesheet_sheet.sheet</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="act_hr_timesheet_sheet_sheet_2_hr_attendance">
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
+            <field name="name">Attendances</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="src_model">hr_timesheet_sheet.sheet</field>
+        </record>
+
+
+        <record id="hr_timesheet_sheet_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.form</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="arch" type="xml">
+                <form string="Timesheet">
+                <header>
+                    <button name="button_confirm" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
+                    <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" />
+                    <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user" />
+                    <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button type="action"
+                            name="%(act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
+                            class="oe_stat_button"
+                            icon="fa-clock-o">
+                            <field name="timesheet_activity_count" widget="statinfo" string="Timesheet" help="Timesheet Activities"/>
+                        </button>
+                        <button type="action" groups="base.group_hr_attendance"
+                            class="oe_stat_button" icon="fa-users"
+                            name="%(act_hr_timesheet_sheet_sheet_2_hr_attendance)d">
+                            <field name="attendance_count" widget="statinfo" string="Attendances"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="employee_id" class="oe_edit_only"/>
+                        <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline"/></h1>
+                        <field name="user_id" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="date_from" string="Timesheet Period"/>
+                            <div><field name="date_from" class="oe_inline"/> to <field name="date_to" class="oe_inline"/></div>
+                            <field name="name" invisible="1"/>
+                            <field name="department_id" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group groups="base.group_hr_attendance">
+                            <field name="total_attendance" widget="float_time"/>
+                            <field name="total_timesheet" widget="float_time"/>
+                            <field name="total_difference" widget="float_time"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Summary">
+                            <widget type="weekly_timesheet" attrs="{'readonly': [['state', 'not in', ['new', 'draft']]]}">
+                            </widget>
+                        </page>
+                        <page string="Details">
+                            <field context="{'employee_id': employee_id, 'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
+                                <tree editable="bottom" string="Timesheet Activities">
+                                    <field name="date"/>
+                                    <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time" string="Hours" sum="Hours"/>
+                                    <field name="to_invoice" widget="selection"/>
+                                    <field invisible="1" name="journal_id"/>
+                                    <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field invisible="1" name="amount"/>
+                                    <field invisible="1" name="general_account_id"/>
+                                    <field invisible="1" name="user_id" required="1"/>
+                                </tree>
+                                <form string="Timesheet Activities">
+                                    <field name="date"/>
+                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id, user_id)"/>
+                                    <field name="name"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
+                                    <field name="to_invoice"/>
+                                    <field name="journal_id"/>
+                                    <field name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                    <field name="amount"/>
+                                    <field name="general_account_id"/>
+                                    <field name="user_id" required="1"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Attendances" groups="base.group_hr_attendance">
+                            <group>
+                                <field context="{'default_employee_id': employee_id, 'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                    <tree string="Attendances" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="action"/>
+                                        <field invisible="1" name="employee_id"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <label for="state_attendance"/>
+                                    <div>
+                                        <field name="state_attendance"/>
+                                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In" class="oe_link"/>
+                                        <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out" class="oe_link"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="period_ids">
+                                <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
+                                    <field name="name"/>
+                                    <field name="total_attendance" widget="float_time" sum="Attendances"/>
+                                    <field name="total_timesheet" widget="float_time" sum="Timesheets"/>
+                                    <field name="total_difference" widget="float_time" sum="Differences"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_timesheet_sheet_filter" model="ir.ui.view">
+            <field name="name">hr_timesheet_sheet.sheet.filter</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field name="arch" type="xml">
+                <search string="Search Timesheet">
+                    <field name="date_from"/>
+                    <filter name="new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
+            <field name="name">Timesheets to Validate</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+            <field name="view_type">form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{'search_default_to_approve':1}</field>
+            <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                New timesheet to approve.
+              </p><p>
+                You must record timesheets every day and confirm at the end
+                of the week. Once the timesheet is confirmed, it should be
+                validated by a manager.
+              </p><p>
+                Timesheets can also be invoiced to customers, depending on the
+                configuration of each project's related contract.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
+             sequence="2" groups="base.group_hr_user"/>
+
+        <!--
+            Company inheritancy
+        -->
+
+        <record id="hr_timesheet_sheet_company" model="ir.ui.view">
+            <field name="name">res.company.sheet</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='account_grp']" position="after">
+                    <group name="timesheets_grp" string="Timesheets">
+                        <field name="timesheet_range"/>
+                        <field name="timesheet_max_difference"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            hr.analytic.timesheet inheritancy
+        -->
+
+        <record id="hr_timesheet_line_form" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.form</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <field name="sheet_id" />
+                </field>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_line_search" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.search</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <field name="date" position="before">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+
+        <!--
+            hr.attendance inheritancy
+        -->
+
+        <record model="ir.ui.view" id="view_hr_attendance_filter">
+            <field name="name">view_hr_attendance_filter</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_hr_attendance_filter" />
+            <field name="arch" type="xml">
+                <field name="employee_id" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_attendance_form" model="ir.ui.view">
+            <field name="name">hr.attendance.form</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_form"/>
+            <field name="arch" type="xml">
+                <field name="action_desc" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_attendance_tree" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+            <field name="arch" type="xml">
+                <field name="action" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="view_attendance_tree_who" model="ir.ui.view">
+            <field name="name">hr.attendance.tree</field>
+            <field name="model">hr.attendance</field>
+            <field name="inherit_id" ref="hr_attendance.view_attendance_who"/>
+            <field name="arch" type="xml">
+                <field name="action" position="after">
+                    <field name="sheet_id"/>
+                </field>
+            </field>
+        </record>
+
+        <act_window
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_account"
+            name="Timesheet by Account"
+            groups="base.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.account"
+            src_model="hr_timesheet_sheet.sheet"/>
+
+        <act_window
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_day"
+            name="Timesheet by Day"
+            groups="base.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.day"
+            src_model="hr_timesheet_sheet.sheet"/>
+
+        <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" string="Timesheets">
+                    <field name="employee_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
+                    <field name="total_timesheet" widget="float_time"/>
+                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_day_tree" model="ir.ui.view">
+            <field name="name">hr.timesheet.day.tree</field>
+            <field name="model">hr_timesheet_sheet.sheet.day</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:total_difference&lt;0.1;red:total_difference&gt;=0.1" string="Period">
+                    <field name="name"/>
+                    <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="base.group_hr_attendance"/>
+                    <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>
+                    <field name="total_difference" widget="float_time" sum="Total Difference" groups="base.group_hr_attendance"/>
+                </tree>
+            </field>
+        </record>
+
+  <!-- Timesheet Button on Employee Form -->
+           
+    <record id="act_hr_employee_2_hr_timesheet" model="ir.actions.act_window">
+        <field name="res_model">hr_timesheet_sheet.sheet</field>
+        <field name="view_type">form</field>
+        <field name="name">Timesheets</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
+    </record>
+         
+      <record id="hr_timesheet_sheet_employee_extd_form" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.employee.extd_form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_employee_extd_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(act_hr_employee_2_hr_timesheet)d" 
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-clock-o" 
+                        groups="base.group_hr_manager">
+                        <field name="timesheet_count" widget="statinfo" string="Timesheets"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

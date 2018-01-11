@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record model="ir.module.category" id="module_category_purchase_requisition">
+        <field name="name">Purchase Requisition</field>
+        <field name="parent_id" ref="base.module_category_purchase_management"/>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="group_purchase_requisition_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="implied_ids" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+        <field name="category_id" ref="module_category_purchase_requisition"/>
+    </record>
+
+    <record id="group_purchase_requisition_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_category_purchase_requisition"/>
+        <field name="implied_ids" eval="[(4, ref('group_purchase_requisition_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+</data>
+<data noupdate="1">
+
+    <record model="ir.rule" id="purchase_requisition_comp_rule">
+        <field name="name">Purchase Requisition multi-company</field>
+        <field name="model_id" ref="model_purchase_requisition"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule" id="purchase_requisition_line_comp_rule">
+        <field name="name">Purchase requisition Line multi-company</field>
+        <field name="model_id" ref="model_purchase_requisition_line"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+</data>
+</openerp>

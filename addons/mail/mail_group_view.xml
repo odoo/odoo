@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- this record will be dynamically adapted to each new menu created -->
+        <record id="action_mail_group_feeds" model="ir.actions.client">
+            <field name="name">Discussion Group</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+            }</field>
+            <field name="params">{
+                'read_action': 'read'
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    No message in this group.
+                </p>
+            </field>
+        </record>
+
+        <!-- Group Kanban View  !-->
+        <record model="ir.ui.view" id="view_group_kanban">
+            <field name="name">mail.group.kanban</field>
+            <field name="model">mail.group</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="message_follower_ids"/>
+                    <field name="message_is_follower"/>
+                    <field name="message_summary"/>
+                    <field name="description"/>
+                    <field name="alias_id"/>
+                    <field name="alias_name"/>
+                    <field name="alias_domain"/>
+                    <templates>
+                        <t t-name="kanban-description">
+                            <div class="oe_group_description" t-if="record.description.raw_value">
+                                <field name="description"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="{record.message_is_follower.raw_value} oe_group_vignette oe_semantic_html_override">
+                                <div class="oe_group_image">
+                                    <a type="open"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
+                                </div>
+                                <div class="oe_group_details">
+                                    <h4><a type="open"><field name="name"/></a></h4>
+                                    <div class="oe_kanban_alias" t-if="record.alias_name.value and record.alias_domain.value">
+                                        <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                    </div>
+                                    <div class="oe_grey">
+                                        <field name="description"/>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <t t-raw="record.message_summary.raw_value"/>
+                                    </div>
+                                    <div class="oe_group_button">
+                                        <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>
+                                        <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object">Join Group</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Group Form View !-->
+        <record  model="ir.ui.view" id="view_group_form">
+            <field name="name">mail.group.form</field>
+            <field name="model">mail.group</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Group Form">
+                    <sheet class="openerp_mail_group_sheet">
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_small"}'/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Group Name"/>
+                            </div>
+                            <h1><field name="name" readonly="0"/></h1>
+                            <group colspan="2" name="group_alias"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <label for="alias_id" string=" " class="fa fa-envelope-o" style="min-width: 20px;"/>
+                                <div name="alias_def">
+                                    <field name="alias_id" class="oe_read_only oe_inline"
+                                            string="Email Alias" required="0"/>
+                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </div>
+                                </div>
+                                <label for="alias_contact" string=" " class="fa fa-lock" style="min-width: 20px;"/>
+                                <field name="alias_contact" class="oe_inline" nolabel="1"/>
+                            </group>
+                        </div>
+                        <field name="description" placeholder="Topics discussed in this group..."/>
+                        <div class="oe_clear"/>
+                        <group class="oe_edit_only">
+                            <field name="public"/>
+                            <field name="group_public_id"
+                                attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
+                                />
+                            <field name="group_ids" widget="many2many_tags"/>
+                        </group>
+                        <group attrs="{'invisible': [('public', 'not in', ['public', 'private'])]}">
+                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
+                                This group is visible by everyone,
+                                including your customers if you installed
+                                the portal module.
+                            </div>
+                            <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
+                                Only the invited followers can read the
+                                discussions on this group.
+                            </div>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Group List View !-->
+        <record  model="ir.ui.view" id="view_group_tree">
+            <field name="name">mail.group.tree</field>
+            <field name="model">mail.group</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Groups">
+                    <field name="name" string="Group Name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Group Search View !-->
+        <record  model="ir.ui.view" id="view_group_search">
+            <field name="name">mail.group.search</field>
+            <field name="model">mail.group</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <search string="Search Groups">
+                    <field name="name" string="Group"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- group record !-->
+        <record id="action_view_groups" model="ir.actions.act_window">
+            <field name="name">Join a group</field>
+            <field name="res_model">mail.group</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_group_search"/>
+        </record>
+
+        <!-- left-side menu: Groups !-->
+        <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="12" name="My Groups"/>
+        <menuitem id="mail_allgroups" parent="mail_group_root" sequence="100" action="action_view_groups"/>
+    </data>
+</openerp>

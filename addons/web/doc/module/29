@@ -1,0 +1,37 @@
+Index: web_example/static/src/tests/timer.js
+===================================================================
+--- web_example.orig/static/src/tests/timer.js
++++ web_example/static/src/tests/timer.js
+@@ -90,4 +90,32 @@ openerp.testing.section('timer', functio
+             strictEqual($lis[1].textContent, '23:21:32');
+         });
+     });
++    test('watch_stop', {templates: true, rpc: 'mock', asserts: 3}, function (instance, $fix, mock) {
++        var created = false;
++        mock('web_example.stopwatch:create', function (args, kwargs) {
++            created = true;
++            // return a fake id (unused)
++            return 42;
++        });
++        mock('/web/dataset/search_read', function () {
++            return {records: []};
++        });
++
++        var w = new instance.web_example.Action();
++        return w.appendTo($fix)
++        .then(function () {
++            // Virtual start point 5s before 'now'
++            w._start = new Date() - 5000;
++            return w.watch_stop();
++        })
++        .done(function () {
++            ok(created, "should have called create()");
++            strictEqual($fix.find('.oe_web_example_timer').text(),
++                        '00:00:05',
++                        "should have updated the timer");
++            strictEqual($fix.find('li')[0].textContent,
++                        '00:00:05',
++                        "should have added the new time to the list");
++        });
++    });
+ });

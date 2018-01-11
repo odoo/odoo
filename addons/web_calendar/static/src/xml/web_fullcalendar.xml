@@ -1,0 +1,74 @@
+<template>
+  <t t-name="CalendarView"> 
+    <table cellspacing="0" cellpadding="0" border="0" width="100%" class="oe_calendar_table">
+        <tr>
+            <td width="100%">
+                <div class="oe_calendar_view">        
+                  <div class="oe_calendar_widget" />
+                  <div class="oe_calendar_buttons"/>
+                  <div class="oe_calendar_qc_placeholder"/>                    
+                </div>                
+            </td>
+            <td class='oe_calendar_sidebar_container'>
+                 
+            </td>            
+        </tr>
+    </table>
+  </t>
+  
+   <t t-name="CalendarView.sidebar">
+      <div class="oe_calendar_sidebar">
+           <div class="oe_calendar_mini" />
+           <div class="oe_calendar_filter">
+               <h3><t t-esc="widget.getParent().color_string"/></h3>
+           </div>           
+       </div>
+   </t>
+   <t t-name="CalendarView.sidebar.responsible">
+       <div class="oe_calendar_all_responsibles"> 
+            <div t-foreach="filters" class="oe_calendar_responsible" > 
+                <t t-if="filters_value.value"> <!-- don't display if no value given (or undefined) -->
+                   <input type="checkbox" name="selection" t-att-value="filters_value.value" checked="checked" />
+                   <t t-if="filters_value.value == -1">
+                       <span><i t-attf-class="fa fa-users fa-fw cal_avatar" ></i></span>
+                   </t>
+                   <t t-if="(filters_value.value != -1) &amp;&amp; filters_value.avatar_model ">
+                       <img t-att-src="'/web/binary/image?model=' + filters_value.avatar_model + '&amp;field=image_small&amp;id=' + filters_value.value"  class="cal_avatar"/>     
+                   </t>
+                   <span t-attf-class="color_filter cal_opacity underline_color_#{filters_value.color}" ><t t-esc="filters_value.label" /></span>
+               </t>
+           </div>
+       </div>
+   </t>
+
+  <div t-name="CalendarView.buttons" class="oe_calendar_buttons">
+    <t t-if="widget.options.action_buttons !== false">
+      <t t-if="widget.is_action_enabled('create') &amp;&amp;
+               ((widget.field_widget &amp;&amp;
+                   (widget.field_widget.open_popup_add)) ||
+                (!widget.field_widget))">
+        <button type="button" class="oe_calendar_button_new oe_highlight">
+          <t t-esc="widget.options.create_text || _t('Create')"/>
+        </button>
+      </t>
+    </t>
+  </div>
+
+  <div t-name="CalendarView.quick_create" class="oe_calendar_quick_create openerp">
+    
+    <div class="form-group">
+        <label for='name' class='control-label'>Event summary:</label>
+        <input name='name' class="form-control"/>
+    </div>     
+    
+    <t t-if="widget._buttons">
+      <div class="oe_calendar_quick_create_buttons">
+        <button class="openerp oe_button oe_highlight oe_calendar_quick_create_add ">Create event</button>
+        <button class="oe_button oe_form_button oe_link oe_calendar_quick_create_edit" ><span>Edit Event <![CDATA[]]></span></button>
+      </div>
+    </t>
+  </div>
+
+
+  
+</template>

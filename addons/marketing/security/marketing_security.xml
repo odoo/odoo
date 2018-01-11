@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <record id="marketing.group_marketing_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_marketing"/>
+    </record>
+
+    <record id="marketing.group_marketing_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="base.module_category_marketing"/>
+        <field name="implied_ids" eval="[(4, ref('marketing.group_marketing_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+</data>
+</openerp>

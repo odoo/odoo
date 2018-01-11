@@ -1,0 +1,239 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_check_writing
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Jeffery CHEN <jeffery9@gmail.com>, 2015
+# Jeffery CHEN <jeffery9@gmail.com>, 2015-2016
+# liAnGjiA <liangjia@qq.com>, 2017
+# mrshelly <mrshelly@hotmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2017-08-31 01:43+0000\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>\n"
+"Language-Team: Chinese (China) (http://www.transifex.com/odoo/odoo-8/language/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you do\n"
+"                to your suppliers using checks. When you select a supplier, the\n"
+"                payment method and an amount for the payment, Odoo will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n点击创建新支票。\n</p><p>\n支票支付表可以让您跟踪供应商的支票支付情况。\n当您选择一个供应商时，\n会让您选择付款方式及付款合计， \n 当打开供应商发票或账单时Odoo 会建议调节您的付款。\n</p>"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "会计凭证"
+
+#. module: account_check_writing
+#: field:account.voucher,allow_check:0
+msgid "Allow Check Writing"
+msgstr "允许结账"
+
+#. module: account_check_writing
+#: field:account.journal,allow_check_writing:0
+msgid "Allow Check writing"
+msgstr "允许结账"
+
+#. module: account_check_writing
+#: field:account.voucher,amount_in_word:0
+msgid "Amount in Word"
+msgstr "金额大写"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "Cancel"
+msgstr "取消"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: model:ir.actions.report.xml,name:account_check_writing.action_report_check
+msgid "Check"
+msgstr "复核"
+
+#. module: account_check_writing
+#: field:res.company,check_layout:0
+msgid "Check Layout"
+msgstr "支票版式"
+
+#. module: account_check_writing
+#: help:account.journal,use_preprint_check:0
+msgid "Check if you use a preformated sheet for check"
+msgstr "检查是否为支票使用预格式的表"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check in middle"
+msgstr "中部版式布局"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on Top"
+msgstr "顶部版式布局"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on bottom"
+msgstr "底部版式布局"
+
+#. module: account_check_writing
+#: help:res.company,check_layout:0
+msgid ""
+"Check on top is compatible with Quicken, QuickBooks and Microsoft Money. "
+"Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on "
+"bottom is compatible with Peachtree, ACCPAC and DacEasy only"
+msgstr "每个会计软件都有各自的支票版式布局要求。其中，顶部版式布局与Quicken, QuickBooks 和 Microsoft Money兼容。中部版式布局与Peachtree, ACCPAC 和 DacEasy兼容。底部版式布局只与Peachtree, ACCPAC 和 DacEasy兼容。"
+
+#. module: account_check_writing
+#: help:account.journal,allow_check_writing:0
+msgid "Check this if the journal is to be used for writing checks."
+msgstr "如果这个账簿用于结账，请勾选这里。"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: account_check_writing
+#: field:account.check.write,create_uid:0
+msgid "Created by"
+msgstr "创建人"
+
+#. module: account_check_writing
+#: field:account.check.write,create_date:0
+msgid "Created on"
+msgstr "创建时间"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Description"
+msgstr "说明"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Discount"
+msgstr "折扣"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Due Date"
+msgstr "到期日期"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "Error!"
+msgstr "错误！"
+
+#. module: account_check_writing
+#: field:account.check.write,id:0
+#: field:report.account_check_writing.report_check,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_journal
+msgid "Journal"
+msgstr "分类账"
+
+#. module: account_check_writing
+#: field:account.check.write,write_uid:0
+msgid "Last Updated by"
+msgstr "最近更新人"
+
+#. module: account_check_writing
+#: field:account.check.write,write_date:0
+msgid "Last Updated on"
+msgstr "最近更新日期"
+
+#. module: account_check_writing
+#: field:account.check.write,check_number:0
+msgid "Next Check Number"
+msgstr "下一个支票号"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "No check selected "
+msgstr "未选择支票 "
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "One of the printed check already got a number."
+msgstr "打印的支票已经获得一个号码"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Open Balance"
+msgstr "开帐余额"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Original Amount"
+msgstr "原始金额"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Payment"
+msgstr "付款"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_check_write
+msgid "Prin Check in Batch"
+msgstr "批量打印支票"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: view:account.voucher:account_check_writing.view_vendor_payment_check_form
+msgid "Print Check"
+msgstr "打印支票"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
+msgid "Print Check in Batch"
+msgstr "批量打印支票"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "Printing error"
+msgstr "打印出错"
+
+#. module: account_check_writing
+#: help:account.check.write,check_number:0
+msgid "The number of the next check number to be printed."
+msgstr "下个要被打印的支票号码"
+
+#. module: account_check_writing
+#: field:account.journal,use_preprint_check:0
+msgid "Use Preprinted Check"
+msgstr "用预先打印的支票"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_write_check
+#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
+msgid "Write Checks"
+msgstr "结账"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "or"
+msgstr "或"

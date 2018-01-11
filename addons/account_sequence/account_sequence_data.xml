@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Account Journal Internal Number of account move line-->
+        
+	<record id="sequence_journal" model="ir.sequence.type">
+	    <field name="name">Account Journal</field>
+	    <field name="code">account.journal</field>
+	</record>
+
+	<record id="sequence_journal_seq" model="ir.sequence">
+	    <field name="name">Account journal sequence</field>
+	    <field name="code">account.journal</field>
+	    <field name="prefix">AJ</field>
+	    <field eval="1" name="number_next"/>
+	    <field eval="1" name="number_increment"/>
+	</record>
+    </data>
+
+</openerp>

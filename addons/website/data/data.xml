@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="default_website" model="website">
+            <field name="name">www.openerp.com</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
+            <field name="default_lang_id" ref="base.lang_en"/>
+            <field name="user_id" ref="base.public_user"/>
+        </record>
+
+        <record id="main_menu" model="website.menu">
+            <field name="name">Top Menu</field>
+        </record>
+
+        <record id="menu_homepage" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/page/homepage</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">10</field>
+        </record>
+
+        <record id="menu_contactus" model="website.menu">
+            <field name="name">Contact us</field>
+            <field name="url">/page/contactus</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">60</field>
+        </record>
+
+        <record id="base.group_website_publisher" model="res.groups">
+            <field name="name">Display Editor Bar on Website</field>
+            <field name="category_id" ref="base.module_category_website"/>
+        </record>
+
+        <!-- Access rules to edit ir.ui.view with qWeb type -->
+        <record id="base.group_website_designer" model="res.groups">
+            <field name="name">Manage Website and qWeb view</field>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_website_publisher'))]"/>
+            <field name="category_id" ref="base.module_category_website"/>
+        </record>
+
+        <record id="action_module_website" model="ir.actions.act_window">
+            <field name="name">Website Apps</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="context" eval="'{\'search_default_category_id\':'+str(ref('base.module_category_website'))+'}'"/>
+            <field name="help" type="html">
+              <p><b>No website module found!</b></p>
+              <p>You should try others search criteria.</p>
+            </field>
+        </record>
+
+        <record id="action_website" model="ir.actions.act_url">
+            <field name="name">Website</field>
+            <field name="url">/</field>
+            <field name="target">self</field>
+        </record>
+        <record id="action_website_tutorial" model="ir.actions.act_url">
+            <field name="name">Website With Tutorial</field>
+            <field name="url">/#tutorial.banner=true</field>
+            <field name="target">self</field>
+        </record>
+        <record id="action_website_homepage" model="ir.actions.act_url">
+            <field name="name">Website Homepage</field>
+            <field name="url">/page/homepage</field>
+            <field name="target">self</field>
+        </record>
+
+        <record id="menu_website" model="ir.ui.menu">
+            <field name="name">Website</field>
+            <field name="sequence" eval="400"/>
+            <field name="action" ref="action_website"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_website_tutorial"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Pre loaded images -->
+
+        <record model="ir.attachment">
+            <field name="name">business_conference</field>
+            <field name="datas_fname">business_conference.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/business_conference.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">business_hands</field>
+            <field name="datas_fname">business_hands.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/business_hands.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">business_stats</field>
+            <field name="datas_fname">business_stats.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/business_stats.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">engineer</field>
+            <field name="datas_fname">engineer.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/engineer.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">flight</field>
+            <field name="datas_fname">flight.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/flight.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">gears</field>
+            <field name="datas_fname">gears.png</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/gears.png</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">helpdesk</field>
+            <field name="datas_fname">helpdesk.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/helpdesk.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">imac</field>
+            <field name="datas_fname">imac.png</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/imac.png</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">lazagne</field>
+            <field name="datas_fname">lazagne.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/lazagne.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">manufacturing</field>
+            <field name="datas_fname">manufacturing.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/manufacturing.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">ipad</field>
+            <field name="datas_fname">ipad.png</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/ipad.png</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">school_kids</field>
+            <field name="datas_fname">school_kids.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/school_kids.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">ship_sea</field>
+            <field name="datas_fname">ship_sea.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/ship_sea.jpg</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">vegetables</field>
+            <field name="datas_fname">vegetables.png</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/vegetables.png</field>
+        </record>
+
+        <record model="ir.attachment">
+            <field name="name">world</field>
+            <field name="datas_fname">world.jpg</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/world.jpg</field>
+        </record>
+
+    </data>
+</openerp>

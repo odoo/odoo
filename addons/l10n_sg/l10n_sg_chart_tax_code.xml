@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data noupdate="1">
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_root">
+         <field name="name">Chart of Singapore</field>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_bases">
+         <field name="name">Tax Bases</field>
+         <field name="parent_id" ref="sg_tax_code_tax_root"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_balance_pay">
+         <field name="name">Tax Balance To Pay</field>
+         <field name="code">[Box 8]</field>
+         <field name="parent_id" ref="sg_tax_code_tax_root"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_exempted">
+         <field name="name">Exempted Taxes</field>
+         <field name="parent_id" ref="sg_tax_code_tax_root"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_out_of_scope">
+         <field name="name">Out of Scope Taxes</field>
+         <field name="parent_id" ref="sg_tax_code_tax_root"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_mes_purchase">
+         <field name="name">MES Purchase Tax</field>
+         <field name="parent_id" ref="sg_tax_code_tax_root"/>
+     </record>
+
+    <!-- Base Codes -->
+
+     <record model="account.tax.code.template" id="sg_base_code_taxed_sale">
+         <field name="name">Base of Taxed Sales</field>
+         <field name="code">[Box 4]</field>
+         <field name="parent_id" ref="sg_tax_code_tax_bases"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_sale_7">
+         <field name="name">Sales 7% Standard</field>
+         <field name="code">[Box 1]</field>
+         <field name="parent_id" ref="sg_base_code_taxed_sale"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_sale_7_SR">
+         <field name="name">Sales 7% Standard SR</field>
+         <field name="code"></field>
+         <field name="parent_id" ref="sg_base_code_standard_sale_7"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_sale_7_DS">
+         <field name="name">Sales 7% Standard DS</field>
+         <field name="code"></field>
+         <field name="parent_id" ref="sg_base_code_standard_sale_7"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_sale_0">
+         <field name="name">Sales 0% Standard</field>
+         <field name="code">[Box 2]</field>
+         <field name="parent_id" ref="sg_base_code_taxed_sale"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_exempted_sale">
+         <field name="name">Sales Exempted</field>
+         <field name="code">[Box 3]</field>
+         <field name="parent_id" ref="sg_base_code_taxed_sale"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_exempted_sale_ES33">
+         <field name="name">Sales Exempted ES33</field>
+         <field name="code"></field>
+         <field name="parent_id" ref="sg_base_code_exempted_sale"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_exempted_sale_ESN33">
+         <field name="name">Sales Exempted ESN33</field>
+         <field name="code"></field>
+         <field name="parent_id" ref="sg_base_code_exempted_sale"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_taxed_purchase">
+         <field name="name">Base of Taxed Purchases</field>
+         <field name="code">[Box 5]</field>
+         <field name="parent_id" ref="sg_tax_code_tax_bases"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_7_TX7">
+         <field name="name">Purchase 7% Standard TX7</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_7_TX-N33">
+         <field name="name">Purchase 7% Standard TX-N33</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_7_TX-E33">
+         <field name="name">Purchase 7% Standard TX-E33</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_7_BL">
+         <field name="name">Purchase 7% Standard BL</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_7_IM">
+         <field name="name">Purchase 7% Standard IM</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_7_TX-RE">
+         <field name="name">Purchase 7% Standard TX-RE</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_0_ME">
+         <field name="name">Purchase 0% Standard ME</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_0_NR">
+         <field name="name">Purchase 0% Standard NR</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_standard_purchase_0_ZP">
+         <field name="name">Purchase 0% Standard ZP</field>
+         <field name="parent_id" ref="sg_base_code_taxed_purchase"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_mes_import_purchase">
+         <field name="name">Purchase Imports Under MES</field>
+         <field name="code">[Box 9]</field>
+         <field name="parent_id" ref="sg_tax_code_tax_bases"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_exempted_purchase">
+         <field name="name">Purchase Exempted</field>
+         <field name="parent_id" ref="sg_tax_code_tax_bases"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_out_scope_purchase">
+         <field name="name">Purchase Out Of Scope</field>
+         <field name="parent_id" ref="sg_tax_code_tax_bases"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_base_code_out_scope_sale">
+         <field name="name">Sales Out Of Scope</field>
+         <field name="parent_id" ref="sg_tax_code_tax_bases"/>
+     </record>
+
+     <!-- Tax Codes -->
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_received">
+         <field name="name">Tax Received</field>
+         <field name="code">[Box 6]</field>
+         <field name="parent_id" ref="sg_tax_code_tax_balance_pay"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_received_0">
+         <field name="name">Tax Received @ 0%</field>
+         <field name="parent_id" ref="sg_tax_code_tax_received"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_received_7_SR">
+         <field name="name">Tax Received @ 7% SR</field>
+         <field name="parent_id" ref="sg_tax_code_tax_received"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_received_7_DS">
+         <field name="name">Tax Received @ 7% DS</field>
+         <field name="parent_id" ref="sg_tax_code_tax_received"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid">
+         <field name="name">Tax Paid</field>
+         <field name="code">[Box 7]</field>
+         <field name="parent_id" ref="sg_tax_code_tax_balance_pay"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_7_TX7">
+         <field name="name">Tax Paid @ 7% TX7</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_7_TX-N33">
+         <field name="name">Tax Paid @ 7% TX-N33</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_7_TX-E33">
+         <field name="name">Tax Paid @ 7% TX-E33</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_7_BL">
+         <field name="name">Tax Paid @ 7% BL</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_7_IM">
+         <field name="name">Tax Paid @ 7% IM</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_7_TX-RE">
+         <field name="name">Tax Paid @ 7% TX-RE</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_0_ME">
+         <field name="name">Tax Paid @ 0% ME</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_0_NR">
+         <field name="name">Tax Paid @ 0% NR</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_tax_paid_0_ZP">
+         <field name="name">Tax Paid @ 0% ZP</field>
+         <field name="parent_id" ref="sg_tax_code_tax_paid"/>
+     </record>
+
+     <!-- Exempted Tax Codes -->
+
+     <record model="account.tax.code.template" id="sg_tax_code_exempted_purchase">
+         <field name="name">Exempted Purchase Tax</field>
+         <field name="parent_id" ref="sg_tax_code_exempted"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_exempted_sale_ES33">
+         <field name="name">Exempted Sales Tax ES33</field>
+         <field name="parent_id" ref="sg_tax_code_exempted"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_exempted_sale_ESN33">
+         <field name="name">Exempted Sales Tax ESN33</field>
+         <field name="parent_id" ref="sg_tax_code_exempted"/>
+     </record>
+
+     <!-- Out of Scope Tax Codes -->
+
+     <record model="account.tax.code.template" id="sg_tax_code_out_scope_purchase">
+         <field name="name">Out of Scope Purchase Tax</field>
+         <field name="parent_id" ref="sg_tax_code_out_of_scope"/>
+     </record>
+
+     <record model="account.tax.code.template" id="sg_tax_code_out_scope_sale">
+         <field name="name">Out of Scope Sales Tax</field>
+         <field name="parent_id" ref="sg_tax_code_out_of_scope"/>
+     </record>
+
+    </data>
+</openerp>

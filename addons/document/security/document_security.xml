@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record id="base.group_document_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_knowledge_management"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+<!--    <record id="group_document_manager" model="res.groups">-->
+<!--        <field name="name">Document / Manager</field>-->
+<!--    </record>-->
+</data>
+<data noupdate="1">
+
+    <record id="ir_rule_readpublicdirectories0" model="ir.rule">
+        <field name="model_id" ref="document.model_document_directory"/>
+        <field name="domain_force">['|','|',('group_ids','in',[g.id for g in user.groups_id]), ('user_id', '=', user.id), '&amp;', ('user_id', '=', False), ('group_ids','=',False),  '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="name">Read public directories</field>
+        <field eval="0" name="global"/>
+        <field eval="[(6,0,[ref('base.group_user')])]" name="groups"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+    
+    <record id="ir_rule_documentmodifyowndirectories0" model="ir.rule">
+        <field name="model_id" ref="document.model_document_directory"/>
+        <field name="domain_force">[ '|', ('user_id', '=', user.id), '&amp;', ('group_ids','in',[g.id for g in user.groups_id]), ('user_id','=',False), '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="name">Document modify own directories</field>
+        <field eval="0" name="global"/>
+        <field eval="[(6,0,[ref('base.group_document_user')])]" name="groups"/>
+        <field eval="1" name="perm_unlink"/>
+        <field eval="1" name="perm_write"/>
+        <field eval="0" name="perm_read"/>
+        <field eval="1" name="perm_create"/>
+    </record>
+</data>
+</openerp>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">MRP application installed!</field>
+            <field name="body"><![CDATA[<p>Manage your manufacturing process with Odoo by defining your bills of materials (BoM), routings and work centers.</p><p>
+This application supports complete integration and production scheduling for stockable goods, consumables, and services.</p>
+<p>From the Manufacturing Settings, you can choose to compute production schedules periodically or just-in-time.</p>]]></field>
+        </record>
+        
+        <record id="sequence_mrp_prod_type" model="ir.sequence.type">
+            <field name="name">Production order</field>
+            <field name="code">mrp.production</field>
+        </record>
+        
+        <record id="sequence_mrp_prod" model="ir.sequence">
+            <field name="name">Production order</field>
+            <field name="code">mrp.production</field>
+            <field name="prefix">MO</field>
+            <field name="padding">5</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!--
+             Procurement rules and routes
+        -->
+
+        <record id="route_warehouse0_manufacture" model='stock.location.route'>
+            <field name="name">Manufacture</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- Enable the manufacturing in warehouse0 -->
+        <record id='stock.warehouse0' model='stock.warehouse'>
+            <field name='manufacture_to_resupply' eval='True'/>
+        </record>
+
+    </data>
+</openerp>

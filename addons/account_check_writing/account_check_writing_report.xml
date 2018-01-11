@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <report
+            id="action_report_check" 
+            model="account.voucher" 
+            string="Check"
+            report_type="qweb-pdf"
+            name="account_check_writing.report_check" 
+            file="account_check_writing.report_check" 
+        />
+
+        <record id="action_report_check" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="account_check_writing.paperformat_frenchcheck"/>
+        </record>
+    </data>
+</openerp>

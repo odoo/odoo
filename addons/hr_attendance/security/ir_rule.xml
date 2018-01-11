@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="base.group_hr_attendance" model="res.groups">
+            <field name="name">Attendances</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        <record id="property_rule_attendace_manager" model="ir.rule">
+            <field name="name">Manager Attendance</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4,ref('base.group_hr_manager')), (4,ref('base.group_hr_user'))]"/>
+        </record>
+        <record id="property_rule_attendace_employee" model="ir.rule">
+            <field name="name">Employee Attendance</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
+
+    </data>
+</openerp>
+

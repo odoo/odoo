@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!--
+        Resource: account.tax.code.template
+        Account tax code templates for Costa Rica
+        -->
+        <record id="account_chart_template_0" model="account.chart.template">
+            <field name="name">Costa Rica - Company 0</field>
+            <field name="account_root_id" ref="account_account_template_0_000000"/>
+            <field name="tax_code_root_id" ref="account_tax_code_template_CR"/>
+            <field name="bank_account_view_id" ref="account_account_template_0_111200"/>
+            <field name="property_account_receivable" ref="account_account_template_0_112001"/>
+            <field name="property_account_payable" ref="account_account_template_0_211001"/>
+            <field name="property_account_income" ref="account_account_template_0_410001"/>
+            <field name="property_account_expense" ref="account_account_template_0_511301"/>
+            <field name="property_account_income_categ" ref="account_account_template_0_410001"/>
+            <field name="property_account_expense_categ" ref="account_account_template_0_511301"/>
+            <field name="currency_id" ref="base.CRC"/>
+        </record>
+        <record id="account_chart_template_x" model="account.chart.template">
+            <field name="name">Costa Rica - Company 1</field>
+            <field name="account_root_id" ref="account_account_template_x000000"/>
+            <field name="tax_code_root_id" ref="account_tax_code_template_CR"/>
+            <field name="bank_account_view_id" ref="account_account_template_x111200"/>
+            <field name="property_account_receivable" ref="account_account_template_x112001"/>
+            <field name="property_account_payable" ref="account_account_template_x211001"/>
+            <field name="property_account_income" ref="account_account_template_x410001"/>
+            <field name="property_account_expense" ref="account_account_template_x511301"/>
+            <field name="property_account_income_categ" ref="account_account_template_x410001"/>
+            <field name="property_account_expense_categ" ref="account_account_template_x511301"/>
+            <field name="currency_id" ref="base.CRC"/>
+        </record>
+    </data>
+</openerp>

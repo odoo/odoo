@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="mail.group" id="group_all_employees">
+            <field name="name">Whole Company</field>
+            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="description">General announces for all employees.</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification" context="{'mail_notify_noemail': True}">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Welcome to Odoo!</field>
+            <field name="body"><![CDATA[<p>Your homepage is a summary of messages you received and key information about documents you follow.</p>
+            <p>The top menu bar contains all applications you installed. You can use the <i>Settings</i> menu to install more applications, activate other features or give access to new users.</p>
+            <p>To setup your preferences (name, email signature, avatar), click on the top right corner.</p>]]></field>
+        </record>
+    </data>
+</openerp>

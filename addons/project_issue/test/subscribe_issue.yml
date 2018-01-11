@@ -1,0 +1,16 @@
+-
+  In Order to test process of  Issue in OpenERP, Customer send the issue by email.
+-
+  !python {model: mail.thread}: |
+    request_file = open(openerp.modules.module.get_module_resource('project_issue','test', 'issue.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'project.issue', request_message)
+-
+  After getting the mail, I check details of new issue of that customer.
+- 
+  !python {model: project.issue}: |
+    issue_ids = self.search(cr, uid, [('email_from', '=', 'Robert Adersen <Robert_Adersen@yahoo.com>')])
+    assert issue_ids and len(issue_ids), "issue is not created after getting request"
+    issue = self.browse(cr, uid, issue_ids[0], context=context)
+    assert not issue.partner_id, "Customer should be a new"
+    assert issue.name == "Error in the account module", "Subject does not match"

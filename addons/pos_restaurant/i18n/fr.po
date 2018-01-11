@@ -1,0 +1,253 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_restaurant
+# 
+# Translators:
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2015
+# Florian Hatat, 2015
+# Peter MEUEL <peter@teriiehina.net>, 2015
+# Quentin THEURET <quentin@theuret.net>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-11-11 17:15+0000\n"
+"Last-Translator: Florian Hatat\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:44
+#, python-format
+msgid "--------------------------------"
+msgstr "--------------------------------"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a Restaurant Order Printer.\n"
+"              </p><p>\n"
+"                Order Printers are used by restaurants and bars to print the\n"
+"                order updates in the kitchen/bar when the waiter updates the order.\n"
+"              </p><p>\n"
+"                Each Order Printer has an IP Address that defines the PosBox/Hardware\n"
+"                Proxy where the printer can be found, and a list of product categories.\n"
+"                An Order Printer will only print updates for prodcuts belonging to one of\n"
+"                its categories.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour ajouter une imprimante de commandes.\n</p><p>\nLes imprimantes de commandes sont utilisées dans les restaurants\net les bars pour irmprimer les modifications de commandes dans\nla cuisine ou le bar lorsque le serveur modifie la commande.\n</p><p>\nChaque Imprimante de Commande a une adresse IP qui définit \nle Point de Vente ou le matériel où se trouve l'imprimante, et une liste\nde catégories de produits.\nUne Imprimante de Commandes n'imprimera que des modifications\npour des produits appartenant à une des catégories de sa liste.\n</p>"
+
+#. module: pos_restaurant
+#: help:pos.config,iface_printbill:0
+msgid "Allows to print the Bill before payment"
+msgstr "Autoriser l'impression de la facture avant le paiement"
+
+#. module: pos_restaurant
+#: help:restaurant.printer,name:0
+msgid "An internal identification of the printer"
+msgstr "Une identification en interne de l'imprimante"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:61
+#, python-format
+msgid "Back"
+msgstr "Retour"
+
+#. module: pos_restaurant
+#: view:pos.config:pos_restaurant.view_pos_config_form
+msgid "Bar & Restaurant"
+msgstr "Bar & Restaurant"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:6
+#, python-format
+msgid "Bill"
+msgstr "Facture"
+
+#. module: pos_restaurant
+#: field:pos.config,iface_printbill:0
+msgid "Bill Printing"
+msgstr "Impression de la Facture"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:64
+#: field:pos.config,iface_splitbill:0
+#, python-format
+msgid "Bill Splitting"
+msgstr "Partage d'addition"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:26
+#, python-format
+msgid "CANCELLED"
+msgstr "ANNULÉ"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:64
+#, python-format
+msgid "Discount:"
+msgstr "Réduction :"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:113
+#, python-format
+msgid "Discounts"
+msgstr "Remises"
+
+#. module: pos_restaurant
+#: help:pos.config,iface_splitbill:0
+msgid "Enables Bill Splitting in the Point of Sale"
+msgstr "Autoriser le partage d'addition en Point de Vente"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière modification par"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:40
+#, python-format
+msgid "NEW"
+msgstr "NOUVEAU"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/multiprint.xml:6
+#, python-format
+msgid "Order"
+msgstr "Ordre"
+
+#. module: pos_restaurant
+#: model:ir.actions.act_window,name:pos_restaurant.action_restaurant_printer_form
+#: model:ir.ui.menu,name:pos_restaurant.menu_restaurant_printer_all
+#: field:pos.config,printer_ids:0
+msgid "Order Printers"
+msgstr "Imprimantes de commandes"
+
+#. module: pos_restaurant
+#: view:restaurant.printer:pos_restaurant.view_restaurant_printer_form
+msgid "POS Printer"
+msgstr "Imprimante PdV"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,product_categories_ids:0
+msgid "Printed Product Categories"
+msgstr "Catégories de l'article imprimées"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,name:0
+msgid "Printer Name"
+msgstr "Nom de l'imprimante"
+
+#. module: pos_restaurant
+#: field:restaurant.printer,proxy_ip:0
+msgid "Proxy IP Address"
+msgstr "adresse IP du proxy"
+
+#. module: pos_restaurant
+#: view:restaurant.printer:pos_restaurant.view_restaurant_printer
+msgid "Restaurant Order Printers"
+msgstr "Imprimantes pour les commandes du restaurant"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:45
+#, python-format
+msgid "Served by"
+msgstr "Servi par"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:6
+#, python-format
+msgid "Split"
+msgstr "Diviser"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:91
+#, python-format
+msgid "Subtotal"
+msgstr "Sous-total"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:104
+#, python-format
+msgid "TOTAL"
+msgstr "SOMME"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:29
+#, python-format
+msgid "Tel:"
+msgstr "Tél. :"
+
+#. module: pos_restaurant
+#: help:restaurant.printer,proxy_ip:0
+msgid "The IP Address or hostname of the Printer's hardware proxy"
+msgstr "L'adresse IP ou le nom d'hôte du proxy de l'imprimante"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:32
+#, python-format
+msgid "VAT:"
+msgstr "TVA :"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:44
+#, python-format
+msgid "With a"
+msgstr "Avec un(e)"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:36
+#, python-format
+msgid "at"
+msgstr "à"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/splitbill.xml:46
+#, python-format
+msgid "discount"
+msgstr "Remise"

@@ -1,0 +1,33 @@
+-
+  In order to test the sale_margin module in OpenERP,
+  I create a sale order and verify its margin
+-
+   I place a sale order for product keyboard, quantity 50
+-
+  !record {model: sale.order, id: sale_order_so11}:
+    date_order: !eval time.strftime('%Y-%m-%d')
+    name: Test_SO011
+    order_line:
+      - name: '[CARD] Graphics Card'
+        price_unit: 7.0
+        product_uom: product.product_uom_unit
+        product_uom_qty: 100.0
+        state: draft
+        product_id: product.product_product_24
+        product_uos_qty: 100.0
+        th_weight: 0.0
+    order_policy: manual
+    partner_id: base.res_partner_4
+    partner_invoice_id: base.res_partner_address_7
+    partner_shipping_id: base.res_partner_address_7
+    pricelist_id: product.list0
+-
+  I confirm the sale order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so11}
+-
+  I verify that margin field gets bind with the value
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_so11"))
+    assert so.margin, "No margin !"

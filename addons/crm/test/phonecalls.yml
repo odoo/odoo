@@ -1,0 +1,17 @@
+-
+  Salesman check the phone calls data so test with the access rights of salesman.
+-
+  !context
+    uid: 'crm_res_users_salesman'
+-
+  I schedule a phone call with a customer.
+-
+  !python {model: crm.phonecall2phonecall}: |
+    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_phonecall_6")], 'active_id': ref("crm.crm_phonecall_6")})
+    res_id = self.create(cr, uid, {'name': "Proposition de réduction"}, context=context)
+    self.action_schedule(cr, uid, [res_id], context=context)
+-
+  I schedule a meeting based on this phone call.
+-
+  !python {model: crm.phonecall}: |
+    self.action_make_meeting(cr, uid, [ref("crm.crm_phonecall_6")])

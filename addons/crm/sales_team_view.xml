@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+        <!-- CRM lead search by Salesteams -->
+
+        <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_lead">
+            <field name="name">Leads</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
+            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="context">{
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id,
+                    'default_type': 'lead',
+                    'stage_type': 'lead',
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                    Use leads if you need a qualification step before creating an
+                    opportunity or a customer. It can be a business card you received,
+                    a contact form filled in your website, or a file of unqualified
+                    prospects you import, etc.
+                </p><p>
+                    Once qualified, the lead can be converted into a business
+                    opportunity and/or a new customer in your address book.
+                </p>
+            </field>
+        </record>
+
+        <!-- CRM opportunity search by Salesteams -->
+
+        <record model="ir.actions.act_window" id="crm_case_form_view_salesteams_opportunity">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,graph,form,calendar</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="view_id" ref="crm.crm_case_kanban_view_leads"/>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="context">{
+                    'search_default_section_id': [active_id],
+                    'default_section_id': active_id,
+                    'stage_type': 'opportunity',
+                    'default_type': 'opportunity',
+                    'default_user_id': uid,
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                    Odoo helps you keep track of your sales pipeline to follow
+                    up potential sales and better forecast your future revenues.
+                </p><p>
+                    You will be able to plan meetings and phone calls from
+                    opportunities, convert them into quotations, attach related
+                    documents, track all discussions, and much more.
+                </p>
+            </field>
+        </record>
+
+       <record id="action_report_crm_lead_salesteam" model="ir.actions.act_window">
+           <field name="name">Leads Analysis</field>
+           <field name="res_model">crm.lead.report</field>
+           <field name="context">{"search_default_month":1}</field>
+           <field name="view_mode">graph</field>
+           <field name="view_id" ref="crm.view_report_crm_lead_graph_two"/>
+           <field name="domain">[('type','=', 'lead'),('section_id', '=', active_id)]</field>
+           <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
+       </record>
+
+       <record id="action_report_crm_opportunity_salesteam" model="ir.actions.act_window">
+            <field name="name">Opportunities Analysis</field>
+            <field name="res_model">crm.opportunity.report</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="crm.view_report_crm_opportunity_graph"/>
+            <field name="domain">[('type','=', 'opportunity'), ('section_id', '=', active_id)]</field>
+            <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_case_section_salesteams_view_kanban">
+            <field name="name">crm.case.section.kanban</field>
+            <field name="model">crm.case.section</field>
+            <field name="inherit_id" ref="sales_team.crm_case_section_salesteams_view_kanban"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//templates" position="before">
+                        <field name="alias_id"/>
+                        <field name="alias_name"/>
+                        <field name="alias_domain"/>
+                        <field name="use_leads"/>
+                        <field name="use_opportunities"/>
+                        <field name="monthly_open_leads"/>
+                        <field name="monthly_planned_revenue"/>
+                    </xpath>
+                    <xpath expr="//h4[@name='name']" position="after">
+                        <div class="oe_kanban_alias text-center" t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
+                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                        </div>
+                        <div class="oe_items_list">
+                            <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
+                                <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
+                                <a name="%(action_report_crm_lead_salesteam)d" type="action" class="oe_sparkline_bar_link">
+                                    <field name="monthly_open_leads" widget="sparkline_bar"
+                                        options="{'height': '20px', 'barWidth': 4, 'barSpacing': 1, 'delayIn': '3000', 'tooltip_suffix': ' Leads'}">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field>
+                                </a>
+                            </div>
+                            <div class="oe_salesteams_opportunities" t-if="record.use_opportunities.raw_value">
+                                <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
+                                <a name="%(action_report_crm_opportunity_salesteam)d" type="action">
+                                    <field name="monthly_planned_revenue" widget="sparkline_bar"
+                                        options="{'height': '20px', 'barWidth': '4', 'barSpacing': '1', 'delayIn': '3000', 'tooltip_suffix': ' (Planned Revenue)'}">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field>
+                                </a>
+                            </div>
+                        </div>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sales_team_form_view_in_crm">
+                <field name="name">crm.case.section.form</field>
+                <field name="model">crm.case.section</field>
+                <field name="inherit_id" ref="sales_team.crm_case_section_view_form"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//div[@name='options_active']" position="inside">
+                        <field name="use_leads"/><label for="use_leads" string="Leads"/>
+                        <field name="use_opportunities" class="oe_inline"/><label for="use_opportunities"/>
+                    </xpath>
+                    <xpath expr="//group[@name='left']" position="after">
+                        <group>
+                            <label for="alias_name" string="Email Alias"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                            <div name="alias_def"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="alias_id" class="oe_read_only oe_inline"
+                                        string="Email Alias" required="0"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                            </div>
+                            <field name="alias_contact" class="oe_inline"
+                                    string="Accept Emails From"
+                                    attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                        </group>
+                    </xpath>
+                    <xpath expr="//page[@string='Team Members']" position="after">
+                        <page string="Stages">
+                            <separator string="Select Stages for this Sales Team"/>
+                                <field name="stage_ids"/>
+                        </page>
+                   </xpath>
+                </field>
+            </record>
+
+        <!-- Case Sections Action -->
+        <record model="ir.actions.act_window.view" id="action_crm_tag_kanban_view_salesteams_oppor11">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_salesteams_oppor11">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_crm_tag_form_view_salesteams_oppor11">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="crm_case_form_view_salesteams_opportunity"/>
+        </record>
+
+        <record id="crm_case_section_act_tree" model="ir.actions.act_window">
+            <field name="name">Cases by Sales Team</field>
+            <field name="res_model">crm.case.section</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="sales_team.crm_case_section_view_tree"/>
+        </record>
+  </data>
+</openerp>

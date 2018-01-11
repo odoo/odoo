@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sales_config" model="ir.ui.view">
+            <field name="name">sale settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <div name="customer feature" position="before">
+                    <separator string="Invoicing Process"/>
+                    <group>
+                        <label for="id" string="Invoicing Process"/>
+                        <div>
+                            <div name="group_invoice_so_lines">
+                                <field name="group_invoice_so_lines" class="oe_inline"/>
+                                <label for="group_invoice_so_lines"/>
+                            </div>
+                            <div name="timesheet">
+                                <field name="timesheet" class="oe_inline" on_change="onchange_timesheet(timesheet)"/>
+                                <label for="timesheet"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group name='default_options'>
+                        <label for="id" string="Default Options" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}"/>
+                        <div>
+                            <div name='time_unit' attrs="{'invisible': [('module_account_analytic_analysis','=',False)],'required':[('module_account_analytic_analysis','=',True)]}">
+                                <label for="time_unit"/>
+                                <field name="time_unit" domain="[('category_id.name','=','Working Time')]" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </group>
+                </div>
+                <div name="Customer Features" position="inside">
+                    <div>
+                        <field name="group_sale_pricelist" class="oe_inline"/>
+                        <label for="group_sale_pricelist"/>
+                    </div>
+                    <div name="module_warning">
+                        <field name="module_warning" class="oe_inline"/>
+                        <label for="module_warning"/>
+                    </div>
+                     <div>
+                          <field name="group_sale_delivery_address" class="oe_inline"/>
+                          <label for="group_sale_delivery_address"/>
+                     </div>
+                </div>
+                <group name="Sale" position="before">
+                    <group>
+                        <label for="id" string="Warehouse Features"/>
+                        <div name="warehouse_features">
+                            <div name='module_sale_stock'>
+                                <field name="module_sale_stock" class="oe_inline"/>
+                                <label for="module_sale_stock"/>
+                            </div>
+                            <div name='module_sale_journal'>
+                                <field name="module_sale_journal" class="oe_inline"/>
+                                <label for="module_sale_journal"/>
+                            </div>
+                        </div>
+                    </group>
+                </group>
+                <group name="Sale" position="before">
+                    <group name="Product Features">
+                        <label for="id" string="Product Features"/>
+                        <div>
+                            <div>
+                                <field name="group_uom" class="oe_inline"/>
+                                <label for="group_uom"/>
+                            </div>
+                            <div>
+                                <field name="group_discount_per_so_line" class="oe_inline"/>
+                                <label for="group_discount_per_so_line"/>
+                            </div>
+                        </div>
+                    </group>
+                </group>
+                <div name="Sale Features" position="inside">
+                    <div name="module_website_quote">
+                        <field name="module_website_quote" class="oe_inline"/>
+                        <label for="module_website_quote"/>
+                    </div>
+                    <div name="module_sale_margin">
+                        <field name="module_sale_margin" class="oe_inline"/>
+                        <label for="module_sale_margin"/>
+                    </div>
+                </div>
+                <div name="customer feature" position="after">
+                    <separator string="Contracts Management"/>
+                    <p>
+                        Use contract to be able to manage your services with
+                        multiple invoicing as part of the same contract with
+                        your customer.
+                    </p>
+                    <group>
+                        <label for="id" string="Contract Features"/>
+                        <div>
+                            <div>
+                                <field name="module_account_analytic_analysis" on_change="onchange_timesheet(module_account_analytic_analysis)" class="oe_inline"/>
+                                <label for="module_account_analytic_analysis"/>
+                            </div>
+                            <div name="module_analytic_user_function" attrs="{'invisible':[('module_account_analytic_analysis','=',False)]}">
+                                <field name="module_analytic_user_function" class="oe_inline"/>
+                                <label for="module_analytic_user_function"/>
+                            </div>
+                        </div>
+                    </group>
+                </div>
+            </field>
+        </record>
+
+        <menuitem id="base.menu_sale_config" name="Sales" parent="base.menu_config"
+            sequence="1" action="base_setup.action_sale_config"/>
+
+        <record id="view_account_config" model="ir.ui.view">
+            <field name="name">account settings</field>
+            <field name="model">account.config.settings</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <separator name="analytic_account" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </separator>
+                <group name="analytic_account_sale" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </group>
+                <xpath expr="//group[@name='analytic_account_sale']/div" position="inside">
+                    <div>
+                        <field name="group_analytic_account_for_sales" class="oe_inline"/>
+                        <label for="group_analytic_account_for_sales"/>
+                    </div>
+                    <div>
+                        <field name="module_sale_analytic_plans" on_change="onchange_sale_analytic_plans(module_sale_analytic_plans)" class="oe_inline"/>
+                        <label for="module_sale_analytic_plans"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

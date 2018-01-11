@@ -1,0 +1,191 @@
+.oe_import > p {
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 13px; /* Customize space according bootstrap3 */
+    text-align: justify
+}
+
+.oe_import h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.5em; /* Customize according bootstrap3 */
+}
+
+.oe_padding {
+    padding: 13px;
+}
+/* ----------- IMPORT BOX ----------- */
+
+.oe_import .oe_import_box{
+    margin: 16px; 
+    padding: 16px;
+    background: #F0EEEE;
+    border-radius: 3px;
+    border: solid 1px #dddddd;
+    width: 600px;
+}
+/* Customize according bootstrap3 */
+.oe_import .oe_import_box label{
+    font-weight: normal;
+}
+.oe_import .oe_import_box .oe_import_file {
+    display: inline-block;
+}
+/* End of Customize */
+.oe_import .oe_import_toggle{
+    margin-top: 8px;
+}
+.oe_import .oe_import_options{
+    margin-top: 8px;
+}
+.oe_import .oe_import_options input{
+    width: 150px;
+}
+
+.oe_import a.oe_import_toggle {
+    display: block;
+}
+.oe_import a.oe_import_toggle:before {
+    content: '+'
+}
+
+.oe_import .oe_import_options p {
+    margin: 0 0 -7px 0; /* Customize margin-bottom of <p> according bootstrap3 */
+    padding: 0;
+}
+.oe_import .oe_import_options label {
+    display: inline-block;
+    width: 100px;
+    height:32px;
+    line-height:32px;
+    text-align: right;
+}
+
+/* ----------- INITIAL SETUP ------------ */
+
+.openerp .oe_list_buttons .oe_alternative {
+    visibility: visible;
+}
+.openerp .oe_list_buttons.oe_editing .oe_list_button_import {
+    display: none;
+}
+
+.oe_import dd,
+.oe_import .oe_import_toggled,
+.oe_import .oe_import_grid,
+.oe_import .oe_import_error_report,
+.oe_import .oe_import_with_file,
+.oe_import .oe_import_noheaders,
+.oe_import .oe_import_report_more {
+    display: none;
+}
+/* Customize dd and label according bootstrap3 */ 
+.oe_import dd {
+    -webkit-margin-start: 40px;
+}
+.oe_import .oe_import_with_file label {
+    font-weight: normal;
+}
+/* End of customize */
+
+.oe_import.oe_import_preview .oe_import_grid {
+    display: table;
+}
+.oe_import.oe_import_error .oe_import_error_report,
+.oe_import.oe_import_with_file .oe_import_with_file,
+.oe_import.oe_import_noheaders .oe_import_noheaders,
+.oe_import .oe_import_report_showmore .oe_import_report_more {
+    display: block;
+}
+
+.oe_import .oe_import_noheaders {
+    color: #888;
+}
+
+
+.oe_import_selector ul,
+.oe_import_selector li {
+    margin: 0; padding: 0;
+}
+
+/* ------------- ERRORS AND WARNINGS REPORT ------------ */
+
+.oe_import .oe_import_error_report ul{
+    padding-left: 16px;
+}
+.oe_import .oe_import_report {
+    margin-right: 16px;
+    padding: 4px;
+    list-style: none;
+    border-bottom: solid 1px rgba(0,0,0,0.05);
+}
+.oe_import .oe_import_report:first-child{
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.oe_import .oe_import_report:last-child{
+    border-bottom-left-radius:3px;
+    border-bottom-right-radius:3px;
+    border-bottom: none;
+}
+.oe_import .oe_import_report_error {
+    background-color: #FFD9DB;
+    color: #AF5F5E;
+}
+.oe_import .oe_import_report_error:last-of-type{
+    border-bottom:none;
+}
+.oe_import .oe_import_report_warning {
+    background-color: #FEFFD9;
+    color: #918743;
+}
+.oe_import .oe_import_report_warning:last-of-type{
+    border-bottom:none;
+}
+.oe_import .oe_import_report_info {
+    background-color: #d3ffd3;
+}
+.oe_import .oe_import_report_info:last-of-type{
+    border-bottom:none;
+}
+
+/* ------------- THE CSV TABLE ------------ */
+
+.oe_import .oe_import_grid{
+    margin: 16px;
+    border-radius:3px;
+    border: solid 1px #909090;
+}
+.oe_import .oe_import_grid tr{
+    height:16px;
+}
+.oe_import .oe_import_grid tr.oe_import_grid-header:first-child{
+    height: 24px;
+    background: #909090;
+    color: white;
+}
+.oe_import .oe_import_grid tr:nth-child(odd){
+    background: rgba(0,0,0,0.05);
+}
+.oe_import .oe_import_grid td{
+    padding: 2px;
+    padding-left: 4px;
+}
+.oe_import .oe_import_grid tr.oe_import_grid-header td:not(:last-child){
+    border-right: 1px solid #707070;
+}
+.oe_import .oe_import_grid td:not(:last-child){
+    border-right: 1px solid #D0D0D0;
+}
+
+.oe_import .oe_import_error_report > p {
+    background: #efc9cb;
+}
+
+/* Field dropdown */
+.oe_import_selector {
+    font-size: 10px;
+    /* copied from base.sass:~148 */
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
+}
+

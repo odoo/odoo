@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_position_form" model="ir.ui.view">
+            <field name="name">account.fiscal.position.form</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <form string="Fiscal Position">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="auto_apply"/>
+                        <field name="sequence"/>
+                        <field name="vat_required" attrs="{'readonly': [('auto_apply', '=', False)]}"/>
+                        <field name="country_id"/>
+                        <field name="country_group_id"/>
+                    </group>
+                    <separator string="Taxes Mapping"/>
+                    <field name="tax_ids" widget="one2many_list">
+                        <tree string="Tax Mapping" editable="bottom">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False), ('price_include', '=', False)]"/>
+                        </tree>
+                        <form string="Tax Mapping">
+                            <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
+                            <field name="tax_dest_id" domain="[('parent_id','=',False), ('price_include', '=', False)]"/>
+                        </form>
+                    </field>
+                    <separator string="Accounts Mapping"/>
+                    <field name="account_ids" widget="one2many_list">
+                        <tree string="Account Mapping" editable="bottom">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </tree>
+                        <form string="Account Mapping">
+                            <field name="account_src_id"/>
+                            <field name="account_dest_id"/>
+                        </form>
+                    </field>
+                    <separator string="Notes"/>
+                    <field name="note"/>
+                </form>
+            </field>
+        </record>
+        <record id="view_account_position_tree" model="ir.ui.view">
+            <field name="name">account.fiscal.position.tree</field>
+            <field name="model">account.fiscal.position</field>
+            <field name="arch" type="xml">
+                <tree string="Fiscal Position">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
+            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+            <field name="name">Contracts/Analytic Accounts</field>
+            <field name="res_model">account.analytic.account</field>
+            <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="view_account_analytic_account_search"/>
+        </record>
+        <record model="ir.ui.view" id="partner_view_buttons">
+            <field name="name">partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="20"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action" 
+                        class="oe_stat_button"
+                        id="invoice_button"
+                        icon="fa-pencil-square-o"
+                        name="%(account.action_invoice_refund_out_tree)d"
+                        attrs="{'invisible': [('customer', '=', False)]}" 
+                        context="{'search_default_partner_id': active_id,'default_partner_id': active_id}">
+                        <div><strong><field name="total_invoiced" widget="monetary"/></strong><br/>Invoiced</div>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_view_button_journal_item_count">
+            <field name="name">partner.view.button.journal_item_count</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="21"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action" class="oe_stat_button" name="%(account.action_account_moves_all_tree)d" icon="fa-list">
+                        <field string="Journal Items" name="journal_item_count" widget="statinfo"/>                        
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_view_button_contracts_count">
+            <field name="name">partner.view.button.contracts_count</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="22"/>
+            <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button class="oe_inline oe_stat_button" type="action" name="%(account.action_open_partner_analytic_accounts)d" 
+                        icon="fa-book">
+                        <field string="Contracts" name="contracts_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_account_fiscal_position_form" model="ir.actions.act_window">
+            <field name="name">Fiscal Positions</field>
+            <field name="res_model">account.fiscal.position</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem
+            action="action_account_fiscal_position_form"
+            id="menu_action_account_fiscal_position_form"
+            parent="next_id_27" sequence="20"/>
+
+        <!--
+        Partners Extension
+        -->
+
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="arch" type="xml">
+                <page name="sales_purchases" position="after">
+                <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                    <group>
+                        <group>
+                            <field name="property_account_position" widget="selection"/>
+                        </group>
+                        <group>
+                            <field name="last_reconciliation_date"/>
+                        </group>
+                        <group>
+                            <field name="property_account_receivable"/>
+                            <field name="property_payment_term" widget="selection"/>
+                            <field name="credit"/>
+                            <field name="credit_limit"/>
+                        </group>
+                        <group>
+                            <field name="property_account_payable"/>
+                            <field name="property_supplier_payment_term" widget="selection"/>
+                            <field name="debit"/>
+                        </group>
+                    </group>
+                    <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}">
+                        <tree string="Bank Details">
+                            <field name="state" invisible="1"/>
+                            <field name="sequence" invisible="1"/>
+                            <field name="acc_number"/>
+                            <field name="bank_name"/>
+                            <field name="owner_name"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                    <div>
+                        <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
+                    </div>
+                </page>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

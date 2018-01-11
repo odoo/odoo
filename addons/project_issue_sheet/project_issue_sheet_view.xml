@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="project_issue_form_view">
+            <field name="name">Project Issue Tracker Form</field>
+            <field name="model">project.issue</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+            <field name="inherit_id" ref="project_issue.project_issue_form_view" />
+            <field name="arch" type="xml">
+                <field name="project_id" position="attributes">
+                    <attribute name="on_change">on_change_project(project_id)</attribute>
+                </field>
+                <field name="active" position="after">
+                    <newline/>
+                    <group colspan="4"> 
+                        <field name="analytic_account_id"
+                            domain="[('parent_id','!=',False),('partner_id', '=', partner_id),('type', '!=', 'view')]"
+                            on_change='on_change_account_id(analytic_account_id)'/>
+                    </group>
+                </field>
+                <xpath expr="//notebook/page[@string='Extra Info']" position="before">
+                    <page string="Worklogs">
+                        <field name="timesheet_ids" colspan="4" nolabel="1" context="{'default_user_id' : uid, 'default_account_id' : analytic_account_id}"
+                                groups="base.group_user">
+                            <tree editable="top" string="Timesheets">
+                                <field name="name"/>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
+                                <field name="account_id" invisible="0" domain="[('partner_id', '=', parent.partner_id)]" on_change="on_change_account_id(account_id)" groups="analytic.group_analytic_accounting"/>
+                                <field name="date"/>
+                                <field name="user_id"/>
+                                <field invisible="1" name="journal_id"/>
+                                <field invisible="1" name="product_id"/>
+                                <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
+                                <field invisible="1" name="amount"/>
+                                <field invisible="1" name="general_account_id"/>
+                                <field invisible="1" name="to_invoice"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

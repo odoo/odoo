@@ -1,0 +1,11 @@
+-
+  In order to test the PDF reports defined on HR Timesheet Account Analytic Profit, we will print report of  HR Timesheet Account Analytic Profit
+-
+  !python {model: account.analytic.line}: |
+    import os, time
+    import openerp.report
+    from openerp import tools
+    data_dict = {'model': 'ir.ui.menu', 'form': {'date_from': time.strftime('%Y-%m-01'), 'employee_ids': [[6,0,[ref('hr.employee_fp'), ref('hr.employee_qdp'),ref('hr.employee_al')]]], 'journal_ids': [[6,0,[ref('hr_timesheet.analytic_journal')]]], 'date_to': time.strftime('%Y-%m-%d')}}
+    data, format = openerp.report.render_report(cr, uid, [], 'hr_timesheet_invoice.report_analyticprofit', data_dict, {})
+    if tools.config['test_report_directory']:
+       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet_invoice-account_analytic_profit_report.'+format), 'wb+').write(data)

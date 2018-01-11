@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_marketing_configuration" model="ir.ui.view">
+            <field name="name">marketing.config.settings.crm</field>
+            <field name="model">marketing.config.settings</field>
+            <field name="inherit_id" ref="marketing.view_marketing_configuration"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='module_marketing_campaign']" position="after">
+                    <div attrs="{'invisible':[('module_marketing_campaign','=',False)]}">
+                        <field name="module_marketing_campaign_crm_demo" class="oe_inline"/>
+                        <label for="module_marketing_campaign_crm_demo"/>
+                    </div>
+                    <div>
+                        <field name="module_crm_profiling" class="oe_inline"/>
+                        <label for="module_crm_profiling"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

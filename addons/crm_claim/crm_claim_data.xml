@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!--
+        Claims Categories
+        -->
+        
+        <record model="crm.case.categ" id="categ_claim1">
+            <field name="name">Factual Claims</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+        </record>
+        
+        <record model="crm.case.categ" id="categ_claim2">
+            <field name="name">Value Claims</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+        </record>
+        
+        <record model="crm.case.categ" id="categ_claim3">
+            <field name="name">Policy Claims</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+            <field name="object_id" search="[('model','=','crm.claim')]" model="ir.model"/> 
+        </record>
+    
+        <!--
+        Case Category2
+        -->
+        
+        <record model="crm.tracking.campaign" id="claim_source1">
+            <field name="name">Corrective</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+        
+        <record model="crm.tracking.campaign" id="claim_source2">
+            <field name="name">Preventive</field>
+            <field name="section_id" ref="sales_team.section_sales_department"/>
+        </record>
+    
+        <!--
+        Case Stage
+        -->
+        
+        <record model="crm.claim.stage" id="stage_claim1">
+            <field name="name">New</field>
+            <field name="sequence">1</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record model="crm.claim.stage" id="stage_claim5">
+            <field name="name">In Progress</field>
+            <field name="sequence">27</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record model="crm.claim.stage" id="stage_claim2">
+            <field name="name">Settled</field>
+            <field name="sequence">28</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record model="crm.claim.stage" id="stage_claim3">
+            <field name="name">Rejected</field>
+            <field name="sequence">29</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        
+
+    </data>
+</openerp>

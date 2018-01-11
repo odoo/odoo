@@ -1,0 +1,275 @@
+-
+  In order to check the Account_voucher module with multi-currency in OpenERP, 
+  I create 2 Invoices in EUR and make 2 Payments in EUR based on the currency rating on that particular date.
+-
+  I create currency EUR in OpenERP for January of 1.000000 Rate
+-
+  !record {model: res.currency.rate, id: jan_eur}:
+    currency_id: base.EUR
+    name: !eval "'%s-01-01' %(datetime.now().year)"
+    rate: 1.000000
+-
+  I modify the debtor account in order to make sure there is no currency_id linked
+-
+  !python {model: account.account}: |
+    from datetime import datetime
+    ids = self.search(cr, uid, [('name', 'ilike', 'debtor')])
+    self.write(cr, uid, ids, {'currency_id': False})
+-
+  I create a bank journal with EUR as currency
+-
+  !record {model: account.journal, id: bank_journal_EUR}:
+    name: Bank Journal(EUR)
+    code: BEUR
+    type: bank
+    analytic_journal_id: account.sit
+    sequence_id: account.sequence_bank_journal
+    default_debit_account_id: account.cash
+    default_credit_account_id: account.cash
+    company_id: base.main_company
+-
+  I create the first invoice on 1st January for 150 EUR
+-
+  !record {model: account.invoice, id: account_first_invoice_jan_eur}:
+    account_id: account.a_recv
+    company_id: base.main_company
+    currency_id: base.EUR
+    date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
+    period_id: account.period_1
+    invoice_line:
+      - account_id: account.a_sale
+        name: '[PCSC234] PC Assemble SC234'
+        price_unit: 150.0
+        quantity: 1.0
+        product_id: product.product_product_3
+        uos_id: product.product_uom_unit
+    journal_id: account.sales_journal
+    partner_id: base.res_partner_19
+    reference_type: none
+-
+  I Validate invoice by clicking on Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_first_invoice_jan_eur}
+-
+  I check that first invoice move is correct for debtor account(debit - credit == 150)
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
+    assert invoice_id.move_id, "Move not created for open invoice"
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.debit - move_line.credit == 150.00), "Invoice move is incorrect for debtors account"
+-
+  I create the second invoice on 1st February for 80 EUR
+-
+  !record {model: account.invoice, id: account_second_invoice_feb_eur}:
+    account_id: account.a_recv
+    company_id: base.main_company
+    currency_id: base.EUR
+    date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
+    period_id: account.period_1
+    invoice_line:
+      - account_id: account.a_sale
+        name: '[PCSC234] PC Assemble SC234'
+        price_unit: 80.0
+        quantity: 1.0
+        product_id: product.product_product_3
+        uos_id: product.product_uom_unit
+    journal_id: account.sales_journal
+    partner_id: base.res_partner_19
+    reference_type: none
+-
+  I Validate invoice by clicking on Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_second_invoice_feb_eur}
+-
+  I check that second invoice move is correct for debtor account (debit - credit == 80)
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb_eur"))
+    assert invoice_id.move_id, "Move not created for open invoice"
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.debit - move_line.credit == 80.00), "Invoice move is incorrect for debtors account"
+-
+  I set the context that will be used for the encoding of all the vouchers of this file
+-
+  !context
+    'type': 'receipt'
+-
+  I create the first voucher of payment with values 120 EUR, journal EUR
+-
+  !record {model: account.voucher, id: account_voucher_1_case3, view: view_vendor_receipt_form}:
+    account_id: account.cash
+    amount: 120.0
+    company_id: base.main_company
+    journal_id: bank_journal_EUR
+    partner_id: base.res_partner_19
+    period_id: account.period_3
+    date: !eval time.strftime("%Y-03-01")
+    payment_option: 'with_writeoff'
+    writeoff_acc_id: account.a_expense
+    comment: 'Write Off'
+    name: 'First payment: Case 3'
+
+-
+  I fill amounts 100 for the invoice of 150€ and 20 for the invoice of 80€
+-
+  !python {model: account.voucher}: |
+    vals = {}
+    voucher_id = self.browse(cr, uid, ref('account_voucher_1_case3'))
+    data = []
+    for item in voucher_id.line_cr_ids:
+        if item.amount_unreconciled == 150.00:
+            data += [(item.id, 100.0)]
+        else:
+            data += [(item.id, 20.0)]
+    for line_id, amount in data:
+        self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
+    assert (voucher_id.state=='draft'), "Voucher is not in draft state"
+-
+  I check that writeoff amount computed is 0.00
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0.00"
+-
+  I confirm the voucher
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
+    self.signal_workflow(cr, uid, voucher, 'proforma_voucher')
+-
+  I check that the move of my first voucher is valid
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        assert move_line.state == 'valid', "Voucher move is not valid"
+-
+  I check that my debtor account is correct
+-
+  I check that the debtor account has 2 new lines with 0.00 and 0.00 in amount_currency columns and their credit are 20 and 100 respectively
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        if move_line.credit == 20.00:
+            assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
+        elif move_line.credit == 100.00:
+            assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
+-
+  I check the residual amount of Invoice1 is 50
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual_currency == 50.0 and move_line.amount_residual == 50.0) , "Residual amount is not correct for first Invoice"
+-
+  I check the residual amuont of Invoice2 is 60
+-
+   !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb_eur"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual_currency == 60.0 and move_line.amount_residual == 60.0) , "Residual amount is not correct for second Invoice"
+-
+  I create the second voucher of payment with values 120€, journal EUR, and check to let open the debtor overpaid amount
+-
+  !record {model: account.voucher, id: account_voucher_2_case3, view: view_vendor_receipt_form}:
+    account_id: account.cash
+    amount: 120.0
+    company_id: base.main_company
+    journal_id: bank_journal_EUR
+    partner_id: base.res_partner_19
+    period_id: account.period_3
+    date: !eval time.strftime("%Y-04-01")
+    payment_option: 'with_writeoff'
+    writeoff_acc_id: account.a_expense
+    comment: 'Write Off'
+    name: 'Second payment: Case 3'
+
+-
+  I fill amounts 50 for the invoice of 150€ and 70 for the invoice of 80€
+-
+  !python {model: account.voucher}: |
+    vals = {}
+    voucher_id = self.browse(cr, uid, ref('account_voucher_2_case3'))
+    data = []
+    for item in voucher_id.line_cr_ids:
+        if item.amount_unreconciled == 50.00:
+            data += [(item.id, 50.0)]
+        elif item.amount_unreconciled == 60.00:
+            data += [(item.id, 70.00)]
+    for line_id, amount in data:
+        self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
+    assert (voucher_id.state=='draft'), "Voucher is not in draft state"
+-
+  I check that writeoff amount computed is 0.00
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0"
+-
+  I confirm the voucher
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
+    self.signal_workflow(cr, uid, voucher, 'proforma_voucher')
+
+-
+  I check that the move of my second voucher is valid
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        assert move_line.state == 'valid', "Voucher move is not valid"
+-
+  I check that my debtor account is correct
+-
+  I check that the debtor account has 2 new lines with 0.00 and 0.00 in amount_currency columns and their credit are 70 and 50
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        if move_line.credit == 70.00:
+            assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
+        elif move_line.credit == 50.00:
+            assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
+-
+  I check the residual amount of Invoice1 is 0
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual_currency == 0 and move_line.amount_residual == 0) , "Residual amount is not correct for first Invoice"
+-    
+  I check the residual amuont of Invoice2 is -10
+-
+   !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb_eur"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual_currency == -10.0 and move_line.amount_residual == -10.0) , "Residual amount is not correct for second Invoice"

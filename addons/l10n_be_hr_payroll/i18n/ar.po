@@ -1,0 +1,149 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# * l10n_be_hr_payroll
+# 
+# Translators:
+# hoxhe aits <hoxhe0@gmail.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2017-01-26 06:41+0000\n"
+"Last-Translator: hoxhe aits <hoxhe0@gmail.com>\n"
+"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-8/language/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: l10n_be_hr_payroll
+#: help:hr.employee,disabled_spouse_bool:0
+msgid "if recipient spouse is declared disabled by law"
+msgstr "إذا كان قرين المستلم مصرح به كمعاق من قبل القانون"
+
+#. module: l10n_be_hr_payroll
+#: help:hr.employee,disabled_children_bool:0
+msgid "if recipient children is/are declared disabled by law"
+msgstr "إذا كان طفل/أطفال المستلم مصرح بهم كمعاقين من قبل القانون"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,misc_onss_deduction:0
+msgid "Miscellaneous exempt ONSS "
+msgstr "استثناءات متفرقات"
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model,name:l10n_be_hr_payroll.model_hr_employee
+msgid "Employee"
+msgstr "الموظف"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.employee,disabled_spouse_bool:0
+msgid "Disabled Spouse"
+msgstr "قرين معاق"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,retained_net_amount:0
+msgid "Net retained "
+msgstr "صافي المحتجز"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.employee,resident_bool:0
+msgid "Nonresident"
+msgstr "غير مقيم"
+
+#. module: l10n_be_hr_payroll
+#: help:hr.employee,resident_bool:0
+msgid "if recipient lives in a foreign country"
+msgstr "إذا كان المستلم يعيش في بلد أجنبي"
+
+#. module: l10n_be_hr_payroll
+#: view:hr.employee:0
+msgid "if spouse has professionnel income or not"
+msgstr "إذا كان القرين يملك دخل شخص مهني أم لا"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,insurance_employee_deduction:0
+msgid "Insurance Group - by worker "
+msgstr "المجموعة التأمين - حسب العامل"
+
+#. module: l10n_be_hr_payroll
+#: selection:hr.employee,spouse_fiscal_status:0
+msgid "With Income"
+msgstr "مع الدخل"
+
+#. module: l10n_be_hr_payroll
+#: selection:hr.employee,spouse_fiscal_status:0
+msgid "Without Income"
+msgstr "بدون الدخل"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.employee,disabled_children_number:0
+msgid "Number of disabled children"
+msgstr "عدد الأطفال ذوي الإعاقة"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,additional_net_amount:0
+msgid "Net supplements"
+msgstr "صافي الإضافات"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,car_company_amount:0
+msgid "Company car employer"
+msgstr "سيارة مؤسسة صاحب العمل"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,misc_advantage_amount:0
+msgid "Benefits of various nature "
+msgstr "فوائد الطبيعة المختلفة"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,car_employee_deduction:0
+msgid "Company Car Deduction for Worker"
+msgstr "خصم سيارة المؤسسة للعامل"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.employee,disabled_children_bool:0
+msgid "Disabled Children"
+msgstr "الأطفال ذوي الإعاقة"
+
+#. module: l10n_be_hr_payroll
+#: model:ir.model,name:l10n_be_hr_payroll.model_hr_contract
+msgid "Contract"
+msgstr "عقد"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,meal_voucher_amount:0
+msgid "Check Value Meal "
+msgstr "تحقق من قيمة الوجبة"
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,travel_reimbursement_amount:0
+msgid "Reimbursement of travel expenses"
+msgstr "تعويض مصاريف السفر"
+
+#. module: l10n_be_hr_payroll
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr "خطأ! تاريخ بدء العقد يجب أن يكون قبل تاريخ انتهاء العقد."
+
+#. module: l10n_be_hr_payroll
+#: field:hr.employee,spouse_fiscal_status:0
+msgid "Tax status for spouse"
+msgstr "الحالة الضريبية للقرين"
+
+#. module: l10n_be_hr_payroll
+#: view:hr.employee:0
+msgid "number of dependent children declared as disabled"
+msgstr "عدد الأطفال المعالين المصرح بهم كمعاقين"
+
+#. module: l10n_be_hr_payroll
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr "خطأ! لا يمكنك إنشاء التسلسل الهرمي العودي من الموظف ."
+
+#. module: l10n_be_hr_payroll
+#: field:hr.contract,meal_voucher_employee_deduction:0
+msgid "Check Value Meal - by worker "
+msgstr "تحقق من قيمة الوجبة - من قبل عمال"

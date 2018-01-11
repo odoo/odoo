@@ -1,0 +1,86 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * base_iban
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 06:51+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Serbian (Latin) (http://www.transifex.com/odoo/odoo-8/language/sr@latin/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr@latin\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: base_iban
+#: constraint:res.partner.bank:0
+msgid ""
+"\n"
+"Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
+msgstr "\nMolimo definišite BIC/Swift kod banke za tip IBAN račun za izvršenje validnih uplata/isplata."
+
+#. module: base_iban
+#: model:res.partner.bank.type,format_layout:base_iban.bank_iban
+msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Bankovni računi"
+
+#. module: base_iban
+#: field:res.partner.bank,iban:0
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: base_iban
+#: model:res.partner.bank.type,name:base_iban.bank_iban
+msgid "IBAN Account"
+msgstr "IBAN račun"
+
+#. module: base_iban
+#: help:res.partner.bank,iban:0
+msgid "International Bank Account Number"
+msgstr "Međunarodni broj Bankovnog računa"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:138
+#, python-format
+msgid ""
+"The IBAN does not seem to be correct. You should have entered something like"
+" this %s"
+msgstr "IBAN izgleda nije tačan. Trebalo je uneti nešto kao %s"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:142
+#, python-format
+msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "IBAN je neispravan, trebalo bi da počinje sa kodom države"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:141
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr "Ovaj IBAN ne prolazi proveru validacije, molimo proverite ga"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
+msgid "bank_bic"
+msgstr "bank_bic"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_country_field
+msgid "country_id"
+msgstr "country_id"
+
+#. module: base_iban
+#: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
+msgid "zip"
+msgstr "poštanski broj"

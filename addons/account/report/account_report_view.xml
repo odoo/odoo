@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Balance by account type -->
+
+        <record id="view_crm_case_user_graph" model="ir.ui.view">
+            <field name="name">report.account.receivable.graph</field>
+            <field name="model">report.account.receivable</field>
+            <field name="arch" type="xml">
+                <graph string="Accounts by Type" type="bar">
+                    <field name="name"/>
+                    <field name="balance" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        <record id="view_crm_case_user_tree" model="ir.ui.view">
+            <field name="name">report.account.receivable.tree</field>
+            <field name="model">report.account.receivable</field>
+            <field name="arch" type="xml">
+                <tree string="Accounts by Type">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="balance"/>
+                    <field name="debit"/>
+                    <field name="credit"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_crm_case_user_form" model="ir.ui.view">
+            <field name="name">report.account.receivable.form</field>
+            <field name="model">report.account.receivable</field>
+            <field name="arch" type="xml">
+                <form string="Accounts by Type">
+                    <group>
+                        <field name="name"/>
+                        <field name="type"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_account_receivable_graph" model="ir.actions.act_window">
+            <field name="name">Balance by Type of Account</field>
+            <field name="res_model">report.account.receivable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph</field>
+        </record>
+
+        <!-- Report for Aged Receivable -->
+
+        <record id="view_aged_recv_graph" model="ir.ui.view">
+            <field name="name">report.aged.receivable.graph</field>
+            <field name="model">report.aged.receivable</field>
+            <field name="arch" type="xml">
+                <graph string="Aged Receivable" type="bar">
+                    <field name="name"/>
+                    <field name="balance" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="view_aged_recv_tree" model="ir.ui.view">
+            <field name="name">report.aged.receivable.tree</field>
+            <field name="model">report.aged.receivable</field>
+            <field name="arch" type="xml">
+                <tree string="Aged Receivable">
+                    <field name="name"/>
+                    <field name="balance"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_aged_receivable_graph" model="ir.actions.act_window">
+            <field name="name">Aged Receivable</field>
+            <field name="res_model">report.aged.receivable</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+        </record>
+
+        <!-- Created Invoice for random activities of service dashboard -->
+
+        <record id="board_view_created_invoice" model="ir.ui.view">
+            <field name="name">report.invoice.created.tree</field>
+            <field name="model">report.invoice.created</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state in('paid','cancel') " string="Invoices">
+                       <field name="create_date"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="number"/>
+                    <field name="partner_id"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="currency_id"/>
+                    <field name="date_invoice"/>
+                    <field name="date_due"/>
+                    <field name="residual"/>
+                    <field name="state"/>
+                    <field name="origin"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_created_invoice_dashboard" model="ir.actions.act_window">
+            <field name="name">Invoices Created Within Past 15 Days</field>
+            <field name="res_model">report.invoice.created</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="board_view_created_invoice"/>
+        </record>
+
+        <record id="view_report_account_sales_tree" model="ir.ui.view">
+            <field name="name">report.account.sales.tree</field>
+            <field name="model">report.account.sales</field>
+            <field name="arch" type="xml">
+                <tree string="Sales by Account">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="product_id"/>
+                    <field name="account_id"/>
+                    <field name="quantity"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_report_account_sales_graph" model="ir.ui.view">
+             <field name="name">report.account.sales.graph</field>
+             <field name="model">report.account.sales</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales by Account" type="pie">
+                     <field name="account_id"/>
+                     <field name="amount_total"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="view_report_account_sales_search" model="ir.ui.view">
+            <field name="name">report.account.sales.search</field>
+            <field name="model">report.account.sales</field>
+            <field name="arch" type="xml">
+                <search string="Sales by Account">
+                    <field name="name" string="Year"/>
+                    <field name="month"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_report_account_sales_tree_all" model="ir.actions.act_window">
+            <field name="name">Sales by Account</field>
+            <field name="res_model">report.account.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_report_account_sales_search"/>
+        </record>
+
+        <record id="view_report_account_type_sales_tree" model="ir.ui.view">
+            <field name="name">report.account_type.sales.tree</field>
+            <field name="model">report.account_type.sales</field>
+            <field name="arch" type="xml">
+                <tree string="Sales by Account Type">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="period_id"/>
+                    <field name="product_id"/>
+                    <field name="user_type"/>
+                    <field name="quantity"/>
+                    <field name="amount_total"/>
+                    <field name="currency_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_report_account_type_sales_form" model="ir.ui.view">
+            <field name="name">report.account_type.sales.form</field>
+            <field name="model">report.account_type.sales</field>
+            <field name="arch" type="xml">
+                <tree string="Sales by Account Type">
+                    <field name="name"/>
+                    <field name="month"/>
+                    <field name="product_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_report_account_type_sales_graph" model="ir.ui.view">
+             <field name="name">report.account_type.sales.graph</field>
+             <field name="model">report.account_type.sales</field>
+             <field name="arch" type="xml">
+                 <graph string="Sales by Account" type="pie">
+                     <field name="user_type"/>
+                     <field name="amount_total"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="view_report_account_type_sales_search" model="ir.ui.view">
+            <field name="name">report.account_type.sales.search</field>
+            <field name="model">report.account_type.sales</field>
+            <field name="arch" type="xml">
+                <search string="Sales by Account">
+                    <field name="name" string="Year"/>
+                    <field name="month"/>
+               </search>
+            </field>
+        </record>
+
+        <record id="action_report_account_type_sales_tree_all" model="ir.actions.act_window">
+            <field name="name">Sales by Account Type</field>
+            <field name="res_model">report.account_type.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+            <field name="search_view_id" ref="view_report_account_type_sales_search"/>
+        </record>
+
+    </data>
+</openerp>

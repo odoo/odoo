@@ -1,0 +1,51 @@
+-
+  !record {model: account.asset.category, id: account_asset_category_fixedassets0}:
+    account_asset_id: account.xfa
+-
+  !record {model: account.asset.asset, id: account_asset_asset_vehicles0}:
+    category_id: account_asset_category_sale
+-
+  !record {model: account.asset.asset, id: account_asset_asset_vehicles0}:
+    method_number: 5
+-
+  !record {model: account.fiscalyear, id: data_fiscalyear_plus1}:
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year+1)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year+1)"
+    name: !eval "'Fiscal Year X %s' %(datetime.now().year+1)"
+    code: !eval "'FY%s' %(datetime.now().year+1)"
+-
+  !record {model: account.fiscalyear, id: data_fiscalyear_plus2}:
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year+2)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year+2)"
+    name: !eval "'Fiscal Year X %s' %(datetime.now().year+2)"
+    code: !eval "'FY%s' %(datetime.now().year+2)"
+-
+  !record {model: account.fiscalyear, id: data_fiscalyear_plus3}:
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year+3)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year+3)"
+    name: !eval "'Fiscal Year X %s' %(datetime.now().year+3)"
+    code: !eval "'FY%s' %(datetime.now().year+3)"
+-
+  !record {model: account.fiscalyear, id: data_fiscalyear_plus4}:
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year+4)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year+4)"
+    name: !eval "'Fiscal Year X %s' %(datetime.now().year+4)"
+    code: !eval "'FY%s' %(datetime.now().year+4)"
+-
+  !record {model: account.fiscalyear, id: data_fiscalyear_plus5}:
+    company_id: base.main_company
+    date_start: !eval "'%s-01-01' %(datetime.now().year+5)"
+    date_stop: !eval "'%s-12-31' %(datetime.now().year+5)"
+    name: !eval "'Fiscal Year X %s' %(datetime.now().year+5)"
+    code: !eval "'FY%s' %(datetime.now().year+5)"
+-
+  !python {model: account.fiscalyear}: |
+    self.create_period(cr, uid, [ref("data_fiscalyear_plus1")])
+    self.create_period(cr, uid, [ref("data_fiscalyear_plus2")])
+    self.create_period(cr, uid, [ref("data_fiscalyear_plus3")])
+    self.create_period(cr, uid, [ref("data_fiscalyear_plus4")])
+    self.create_period(cr, uid, [ref("data_fiscalyear_plus5")])

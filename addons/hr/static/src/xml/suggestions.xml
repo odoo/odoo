@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+
+    <!-- Employees placeholder in sidebar -->
+    <t t-extend="mail.wall.sidebar">
+        <t t-jquery=".oe_mail_wall_sidebar" t-operation="append">
+            <div class="oe_suggestions_employees"></div>
+        </t>
+    </t>
+
+    <!-- Suggested employees -->
+    <div t-name="hr.suggestions.employees" class="oe_sidebar_suggestion oe_suggestion_employee">
+        <div class="oe_suggest_title">
+            <a class="oe_suggestion_remove oe_suggestion_employee oe_e">X</a>
+            <h2>Suggested Employees</h2>
+        </div>
+        <div class="oe_suggest_items">
+            <t t-foreach="widget.employees" t-as="result">
+                <div class="oe_suggested_item">
+                    <div class="oe_suggested_item_image">
+                        <a t-attf-href="#model=hr.employee&amp;id=#{result.id}">
+                            <img t-att-src="result.image" t-att-alt="result.name"/>
+                        </a>
+                    </div>
+                    <div class="oe_suggested_item_content">
+                        <a class="oe_suggestion_item_name" t-attf-href="#model=hr.employee&amp;id=#{result.id}"><t t-esc="result.name"/></a>
+                        <a class="oe_suggestion_remove_item oe_suggestion_employee oe_e" t-att-id="result.id">X</a>
+                        <br/>
+                        <button class="oe_suggestion_follow" t-att-id="result.id">Follow</button>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+
+</template>

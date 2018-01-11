@@ -1,0 +1,106 @@
+-
+  I first create a warehouse with pick-pack-ship and receipt in 2 steps
+-
+  !record {model: stock.warehouse, id: wh_pps}:
+    name: WareHouse PickPackShip 
+    code: whpps
+    reception_steps: 'two_steps'
+    delivery_steps: 'pick_pack_ship' 
+-
+  Next I create a new product in this warehouse
+-
+  !record {model: product.product, id: product_mto}:
+    name: "My Product"
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_2
+        min_qty: 2.0
+        qty: 10.0
+-
+  Set routes on product to be MTO and Buy
+-
+ !python {model: product.product}: |
+    route_warehouse0_buy = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).buy_pull_id.route_id.id 
+    route_warehouse0_mto = self.pool.get('stock.warehouse').browse(cr, uid, ref('stock.warehouse0')).mto_pull_id.route_id.id 
+    self.write(cr, uid, ref('product_mto'), { 'route_ids': [(6, 0, [route_warehouse0_mto,route_warehouse0_buy])]}, context=context )
+-
+  Create a sales order with a line of 5 Units "My Product".
+- 
+  !record {model: sale.order, id: sale_order_product_mto}:
+    partner_id: base.res_partner_3
+    note: Create Sales order
+    warehouse_id: wh_pps
+    order_line:
+      - product_id: product_mto
+        product_uom_qty: 5.00
+- 
+  Confirm the sale order
+- 
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto}
+-
+  Create another sales order with 2 Dozen of the same product
+-
+  !record {model: sale.order, id: sale_order_product_mto2}:
+    partner_id: base.res_partner_4
+    note: Create Sales order
+    warehouse_id: wh_pps
+    order_line:
+      - product_id: product_mto
+        product_uom_qty: 2.00
+        product_uom: product.product_uom_dozen
+-
+  Confirm the sale order
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_product_mto2}
+-
+  I run scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+- 
+  Check the propagation when we cancel the main procurement 
+    * Retrieve related procurements and check that there are all running
+    * Check that a purchase order is well created
+    * Cancel the main procurement
+    * Check that all procurements related and the purchase order are well cancelled   
+-
+  !python {model: procurement.order}: |
+    # Retrieve related procurement
+    so = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto'))
+    procu_ids = self.search(cr, uid, [('group_id.name', '=', so.name)])
+    assert len(procu_ids)>0, 'No procurement found for sale order %s (with id: %d)' %(so.name,so.id)
+    
+    # Check that all procurements are running 
+    for procu in self.browse(cr,uid,procu_ids,context=context):
+        assert procu.state == u'running', 'Procurement with id: %d should be running but is with state : %s!' %(procu.id, procu.state)
+    
+    # Check that one purchase order has been created
+    purchase_ids = [proc.purchase_line_id.order_id for proc in self.browse(cr, uid, procu_ids) if proc.purchase_line_id]
+    assert len(purchase_ids) == 1, 'No purchase order found !'
+
+    # Check the total quantity on the purchase order which should be in Unit(s)
+    purchase_line = purchase_ids[0].order_line[0]
+    assert purchase_line.product_qty == 29.0, 'As we ordered 2 Dozen(s) and 5 Unit(s), total should be 29 Unit(s) and not %s' % (purchase_line.product_qty,)
+
+    # Let us cancel the procurement related to the 2nd sales order first and check that the 2 Dozen(s) are subtracted correctly
+    so2 = self.pool.get('sale.order').browse(cr, uid, ref('sale_order_product_mto2'))
+    self.cancel(cr, uid, [so2.order_line[0].procurement_ids[0].id], context=context)
+    assert so2.order_line[0].procurement_ids[0].state == u'cancel', 'Main procurement should be cancelled !'
+    assert purchase_line.product_qty == 5.0, 'As we ordered 2 Dozen(s) and 5 Unit(s) and cancelled the two Dozen, total should be 5 Unit(s) and not %s' % (purchase_line.product_qty,)
+
+    # Cancel the main procurement from the sale order in units
+    main_procu_id = self.search(cr, uid, [('origin', '=', so.name)])
+    assert len(main_procu_id) == 1, 'Main procurement not identified !'
+    self.cancel(cr, uid, main_procu_id, context=context)
+    assert self.browse(cr, uid, main_procu_id[0]).state == u'cancel', 'Main procurement should be cancelled !'
+    
+    # Check that all procurements related are cancelled    
+    for procu in self.browse(cr, uid, procu_ids, context=context):
+        assert procu.state == u'cancel', 'Procurement %d should be cancelled but is with a state : %s!' %(procu.id, procu.state)
+
+    # Check that the purchase order is cancelled
+    for po in self.pool.get('purchase.order').browse(cr, uid, [po.id for po in purchase_ids], context=context):
+        assert po.state == u'cancel', 'Purchase order %d should be cancelled but is in state : %s!' %(po.id, po.state)  

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_paymentorder">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-xs-offset-8">
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.name if o.mode.bank_id.bank.name else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.street if o.mode.bank_id.bank.street else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.street2 if o.mode.bank_id.bank.street2 else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.zip if o.mode.bank_id.bank.zip else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.city if o.mode.bank_id.bank.city else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.state.name if o.mode.bank_id.bank.state.name else ''"/>
+                            <span t-raw="'%s &lt;br&gt;' % o.mode.bank_id.bank.country.name if o.mode.bank_id.bank.country.name else ''"/>
+                        </div>
+                    </div>
+
+                    <h2>Payment Order / Payment</h2>
+
+                    <div class="row mt32 mb32">
+                        <div t-if="o.mode.name" class="col-xs-2">
+                            <strong>Payment Type:</strong>
+                            <p t-field="o.mode.name"/>
+                        </div>
+                        <div t-if="o.reference" class="col-xs-2">
+                            <strong>Reference</strong>
+                            <p t-field="o.reference"/>
+                        </div>
+                        <div t-if="o.mode.bank_id.id" class="col-xs-2">
+                            <strong>Used Account:</strong>
+                            <p t-esc="get_account_name(o.mode.bank_id.id)"/>
+                        </div>
+                        <div t-if="o.date_prefered" class="col-xs-2">
+                            <strong>Execution:</strong>
+                            <p t-field="o.date_prefered"/>
+                        </div>
+                        <div t-if="o.user_id.company_id.currency_id.name" class="col-xs-2">
+                            <strong>Company Currency:</strong>
+                            <p t-field="o.user_id.company_id.currency_id.name"/>
+                        </div>
+                    </div>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Partner</th>
+                                <th class="text-center">Bank Account</th>
+                                <th class="text-center">Invoice Ref</th>
+                                <th class="text-center">Value Date</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-right">Currency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.line_ids" t-as="line">
+                                <td>
+                                    <span t-field="line.partner_id.name"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="get_account_name(line.bank_id.id)"/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-esc="get_invoice_name(line.ml_inv_ref.id)"/>
+                                </td>
+                                <td class="text-center">
+                                    <p t-if="line.date"><span t-esc="formatLang(line.date,date=True)"/></p>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="formatLang(line.amount or 0.0, currency_obj=line.company_currency)"></span>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="formatLang(line.amount_currency, currency_obj=line.currency)"></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-xs-4 pull-right">
+                            <table class="table table-condensed">
+                                <tr class="border-black">
+                                    <td><strong>Total</strong></td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(get_amount_total(o), currency_obj=o.company_id.currency_id)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Total (Currency)</td>
+                                    <td class="text-right">
+                                        <span t-esc="formatLang(get_amount_total_in_currency(o), currency_obj=(o.line_ids and o.line_ids[0].currency or None))"></span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

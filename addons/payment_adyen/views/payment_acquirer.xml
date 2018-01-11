@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="acquirer_form_adyen" model="ir.ui.view">
+            <field name="name">acquirer.form.adyen</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer_display"]' position='after'>
+                    <group attrs="{'invisible': [('provider', '!=', 'adyen')]}">
+                        <field name="adyen_merchant_account"/>
+                        <field name="adyen_skin_code"/>
+                        <field name="adyen_skin_hmac_key"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="transaction_form_adyen" model="ir.ui.view">
+            <field name="name">acquirer.transaction.form.adyen</field>
+            <field name="model">payment.transaction</field>
+            <field name="inherit_id" ref="payment.transaction_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//notebook' position='inside'>
+                    <page string="Adyen TX Details">
+                        <group>
+                            <field name="adyen_psp_reference"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

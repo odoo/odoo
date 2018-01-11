@@ -1,0 +1,1610 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * hr_recruitment
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-07-17 07:20+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Hungarian (http://www.transifex.com/odoo/odoo-8/language/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.hr_job_survey
+msgid "(empty = remote work)"
+msgstr "(üres = távmunka)"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid ", To start the recruitment"
+msgstr ", toborzás megkezdéséhez"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_1
+msgid "0-15"
+msgstr "0-15"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_2
+msgid "16-20"
+msgstr "16-20"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_3
+msgid "21-30"
+msgstr "21-30"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_4
+msgid "31-40"
+msgstr "31-40"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_5
+msgid "41-50"
+msgstr "41-50"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_6
+msgid "51-60"
+msgstr "51-60"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_7
+msgid "61-70"
+msgstr "61-70"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_3_8
+msgid "71+"
+msgstr "71+"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Click here to create a new job or remove the filter on \"In Recruitment\" to recruit for an on hold job.\n"
+"              </p>\n"
+"              <p>\n"
+"                Define job position profile and manage recruitment in a context of a particular job: print interview survey, define number of expected new employees, and manage its recruitment pipe\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\n                 Kattintson egy új munkahely/állás létrehozásához vagy vegye ki a \"Toborzás alatt\" szűrőt egy régi  \n                 várakozásba tett állásra való toborzáshoz.\n              </p>\n              <p>\n                Határozzon meg állás elhelyezkedési profilt és kezelje a toborzásait a megfelelő állás vonatkozásában:\n                nyomtasson interjú felmérőt, határozza meg az elvárt új munkavállalók számát, és rendezze a toborzásuk \n                folyamatát\n              </p>\n            "
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new stage in the recruitment process.\n"
+"          </p><p>\n"
+"            Define here your stages of the recruitment process, for example:\n"
+"            qualification call, first interview, second interview, refused,\n"
+"            hired.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Kattintson a felvételi folyamat új szakaszának hozzáadásához.\n          </p><p>\n            Itt határozza meg a felvételi folyamatok szakaszait, például:\n            képzésre felhívás, első interjú, második interjú, elutasított,\n            felvett.\n          </p>\n        "
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new stage in the recruitment process.\n"
+"          </p><p>\n"
+"            Don't forget to specify the department if your recruitment process\n"
+"            is different according to the job position.\n"
+"          </p>\n"
+"        "
+msgstr "<p class=\"oe_view_nocontent_create\">\n            Kattintson a toborzás új szakaszának hozzáadásához.\n          </p><p>\n            Ne felejtse el részletezni az osztály megadását ha a toborzási folyamatai\n            eltérőek az állással illetően.\n          </p>\n        "
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
+msgid ""
+"<p>\n"
+"                Odoo helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, etc.\n"
+"              </p><p>\n"
+"                Applicants and their attached CV are created automatically when an email is sent.\n"
+"                If you install the document management modules, all resumes are indexed automatically,\n"
+"                so that you can easily search through their content.\n"
+"              </p>\n"
+"         "
+msgstr "<p>\n                Odoo randszer segít a toborzási folyamatra jelentkezők nyomon követésében\n                és az összes művelet áttekintésében: találkozók, interjúk, stb.\n              </p><p>\n                A jelentkezők és a csatolt CV önéletrajzaik egy email kiküldésekkor automatikusan kapcsolódnak.\n                Ha telepíti a dokumentum kezelő modulokat, az összes pályázat automatikusan sorszámozásra kerül,\n                így a tartalmakat könnyen áttekintheti.\n              </p>\n         "
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"<p>\n"
+"                Odoo helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, etc.\n"
+"              </p><p>\n"
+"                Applicants and their attached CV are created automatically when an email is sent.\n"
+"                If you install the document management modules, all resumes are indexed automatically, \n"
+"                so that you can easily search through their content.\n"
+"              </p>\n"
+"            "
+msgstr "<p>\n                Odoo randszer segít a toborzási folyamatra jelentkezők nyomon követésében\n                és az összes művelet áttekintésében: találkozók, interjúk, stb.\n              </p><p>\n                A jelentkezők és a csatolt CV önéletrajzaik egy email kiküldésekkor automatikusan kapcsolódnak.\n                Ha telepíti a dokumentum kezelő modulokat, az összes pályázat automatikusan sorszámozásra kerül,\n                így a tartalmakat könnyen áttekintheti.\n              </p>\n            "
+
+#. module: hr_recruitment
+#: model:survey.page,description:hr_recruitment.recruitment_1
+#: model:survey.page,description:hr_recruitment.recruitment_2
+#: model:survey.page,description:hr_recruitment.recruitment_3
+#: model:survey.survey,thank_you_message:hr_recruitment.recruitment_form
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: hr_recruitment
+#: model:email.template,body_html:hr_recruitment.applicant_interest
+msgid ""
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"        <p>Congrats! Your resume's got our interest!\n"
+"        I will call you as soon as possible to make a 10 minutes phone interview and  plan a first meeting.</p>\n"
+"        <p>If we can’t reach you or if you miss our call, feel free to reach me back on the number 001 312 349 3030\n"
+"        If I do not answer, please let me a message with some schedules to call you back.</p>\n"
+"        <p>Kind regards,</p>\n"
+"        <br/>\n"
+"         ${object.user_id.signature | safe}"
+msgstr "<p>Tisztelt${object.partner_name or 'applicant'},</p>\n        <p>Gratulálunk! Az ön jelentkezése felkeltette érdeklődésünket!\n        Amint lehetséges felkeressük Önt egy egy 10 perces telefonos interjú erejéig és közössen megtervezzük az   \n        első találkozót.</p>\n        <p>Ha nem tudjuk elérni vagy pont elfoglalt abban az időbenl, kérem vegye fel velem a kapcsolatot a \n        következő telefonszámon 001 312 349 3030\n        Ha nem válaszolok, kérem hagyjon üzenetet egy pár lehetésges időponttal, amikor visszahívhatnám.</p>\n        <p>Üdvözlettel,</p>\n        <br/>\n         ${object.user_id.signature | safe}"
+
+#. module: hr_recruitment
+#: model:email.template,body_html:hr_recruitment.applicant_refuse
+msgid ""
+"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
+"        <p>We thank you for your interest in our company and for your application.\n"
+"        Unfortunately, your profile does not match with our needs or our recruitment\n"
+"        campaign has reached its term.</p>\n"
+"        <p>If you want more details, feel free to contact us by phone.</p>\n"
+"        <p>Kind regards,</p>\n"
+"        <br/>\n"
+"         ${object.user_id and object.user_id.signature | safe or ''}"
+msgstr "<p>Tisztelt${object.partner_name or 'applicant'},</p>\n        <p>Köszönjük a vállalatunk iránti érdeklődését és a jelentkezését.\n        Sajnos, az önéletrajza nem egyezik az elvárásainkkal vagy a toborzási kapányunk elérte a célját.</p>\n        <p>Ha további részletekről tájékozódna, állunk rendelkezésére telefonos elérhetőségeinken.</p>\n        <p>Üdvözlettel,</p>\n        <br/>\n         ${object.user_id and object.user_id.signature | safe or ''}"
+
+#. module: hr_recruitment
+#: model:survey.survey,description:hr_recruitment.recruitment_form
+msgid ""
+"<p>This form is intended to help the responsible of a recruitment "
+"interview.</p>"
+msgstr "<p>Ez a nyomtatvány a toborzási interjúhoz szándékozik segítséget nyújtani a felelős részére.</p>"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
+#, python-format
+msgid "A contact is already defined on this job request."
+msgstr "Ehhez az állás igényléshez már van kapcsolat meghatározva."
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "A contact is already existing with the same name."
+msgstr "Ezzel a névvel már létezik kapcsolat."
+
+#. module: hr_recruitment
+#: field:hr.applicant,active:0
+msgid "Active"
+msgstr "Aktív"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_4
+msgid "Activities"
+msgstr "Tevékenységek"
+
+#. module: hr_recruitment
+#: help:hr.job,address_id:0
+msgid "Address where employees are working"
+msgstr "Cím, ahol a munkavállalók dolgoznak"
+
+#. module: hr_recruitment
+#: field:hr.job,alias_id:0
+msgid "Alias"
+msgstr "Álnév"
+
+#. module: hr_recruitment
+#: field:hr.config.settings,alias_domain:0
+msgid "Alias Domain"
+msgstr "Domain álnév"
+
+#. module: hr_recruitment
+#: field:hr.config.settings,module_document:0
+msgid "Allow the automatic indexation of resumes"
+msgstr "Engedje meg az önéletrajzok automatikus inexálását"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Answer related job question"
+msgstr "Kapcsolódó állás kérdés válasza"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant
+msgid "Applicant"
+msgstr "Pályázó"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_new
+msgid "Applicant Created"
+msgstr "Pályázó létrehozva"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_hired
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_hired
+msgid "Applicant Hired"
+msgstr "Felvett jelentkező"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
+msgid "Applicant Stage Changed"
+msgstr "Pályázó szintje megváltozottt"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
+msgid "Applicant created"
+msgstr "Pályázó létrehozva"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
+msgid "Applicant hired"
+msgstr "Jelentkező felvéve"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_name:0
+msgid "Applicant's Name"
+msgstr "Kérelmező neve"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:93
+#: view:hr.applicant:hr_recruitment.crm_case_tree_view_job
+#: view:hr.applicant:hr_recruitment.hr_applicant_calendar_view
+#, python-format
+msgid "Applicants"
+msgstr "Pályázók"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Application Summary"
+msgstr "Pályázatok összefoglalása"
+
+#. module: hr_recruitment
+#: model:email.template,subject:hr_recruitment.applicant_interest
+msgid "Application approved"
+msgstr "Pályázó elfogadva"
+
+#. module: hr_recruitment
+#: model:email.template,subject:hr_recruitment.applicant_refuse
+msgid "Application refused"
+msgstr "Pályázó elutasítva"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.hr_job_survey
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: field:hr.job,application_count:0 field:hr.job,application_ids:0
+#: field:hr.job,document_ids:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_applications
+#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+msgid "Applications"
+msgstr "Alkalmazások"
+
+#. module: hr_recruitment
+#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+msgid "Applied Job"
+msgstr "Alkalmazott állás"
+
+#. module: hr_recruitment
+#: field:hr.applicant,priority:0 field:hr.recruitment.report,priority:0
+msgid "Appreciation"
+msgstr "Elismerés"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+msgid "Are you sure you want to create a contact based on this job request ?"
+msgstr "Bizton létre akarja hozni a kapcsolati űrlapot az állás igénylés alapján?"
+
+#. module: hr_recruitment
+#: field:hr.applicant,date_open:0
+msgid "Assigned"
+msgstr "Hozzárendelve"
+
+#. module: hr_recruitment
+#: field:hr.applicant,availability:0 field:hr.recruitment.report,available:0
+msgid "Availability"
+msgstr "Elérhetőség"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Average"
+msgstr "Átlagos"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,delay_close:0
+msgid "Avg. Delay to Close"
+msgstr "Átl. bezárási idő"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_exp_avg:0
+msgid "Avg. Expected Salary"
+msgstr "Kívánt kereset átl."
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_prop_avg:0
+msgid "Avg. Proposed Salary"
+msgstr "Ajánlott  kereset átlaga"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
+msgid "Bachelor Degree"
+msgstr "Tudományos fokozat"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Bad"
+msgstr "Rossz"
+
+#. module: hr_recruitment
+#: model:survey.page,title:hr_recruitment.recruitment_1
+msgid "Basic information"
+msgstr "Alapvető információ"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Below Average"
+msgstr "Átalgon alluli"
+
+#. module: hr_recruitment
+#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
+msgid "By Department"
+msgstr "Osztály részlegenként"
+
+#. module: hr_recruitment
+#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
+msgid "By Job"
+msgstr "Munkákként"
+
+#. module: hr_recruitment
+#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
+msgid "By Recruiter"
+msgstr "Toborzásonként"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+msgid "Cancel"
+msgstr "Mégse"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_graph_view_job
+msgid "Cases By Stage and Estimates"
+msgstr "Szakasz és lehetőségenkénti esetek"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant_category
+msgid "Category of applicant"
+msgstr "Jelentkező kategóriája"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
+msgid ""
+"Check if the following stages are matching your recruitment process. Don't "
+"forget to specify the department if your recruitment process is different "
+"according to the job position."
+msgstr "Jelölje, ha a következő állapot egyezik a toborzási folyamatával. Ne felejtse az osztály meghatározását ha a toborzási folyamat különbözik a betöltendő állástól."
+
+#. module: hr_recruitment
+#: help:hr.job,survey_id:0
+msgid ""
+"Choose an interview form for this job position and you will be able to "
+"print/answer this interview from all applicants who apply for this job"
+msgstr "Vállaaszon ki egy interjú űrlapot ehhez az álláshoz és akkor ki tudja nyomtatni/ meg tudja válaszolni ezt az interjút azokkal a jelentkezőkkel akik jelentkeztek erre az állásra."
+
+#. module: hr_recruitment
+#: field:hr.recruitment.partner.create,close:0
+msgid "Close job request"
+msgstr "Állás igénylés lezárása"
+
+#. module: hr_recruitment
+#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+msgid "Closed"
+msgstr "Lezárt"
+
+#. module: hr_recruitment
+#: field:hr.applicant,color:0 field:hr.job,color:0
+msgid "Color Index"
+msgstr "Szín meghatározó"
+
+#. module: hr_recruitment
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: field:hr.recruitment.report,company_id:0
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_website_company
+msgid "Company Website"
+msgstr "Cég weboldala"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:381
+#: field:hr.applicant,partner_id:0
+#, python-format
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:383
+#, python-format
+msgid "Contact Email"
+msgstr "Kapcsolat Email"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+msgid "Contact:"
+msgstr "Kapcsolat:"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Contract"
+msgstr "Szerződés"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposed"
+msgstr "Javasolt szerződés"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "Aláírt szerződés"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+msgid "Convert To Partner"
+msgstr "Partnerré alakítás"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
+msgid "Create Contact"
+msgstr "Kapcsolat létrehozása"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,date_create:0
+msgid "Create Date"
+msgstr "Létrehozás dátuma"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Create Employee"
+msgstr "Alkalmazott létrehozás"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
+msgid "Create Partner from job application"
+msgstr "Partner létrehozás az állás jelentkezésből"
+
+#. module: hr_recruitment
+#: field:hr.applicant,create_uid:0 field:hr.applicant_category,create_uid:0
+#: field:hr.recruitment.degree,create_uid:0
+#: field:hr.recruitment.partner.create,create_uid:0
+#: field:hr.recruitment.source,create_uid:0
+#: field:hr.recruitment.stage,create_uid:0
+msgid "Created by"
+msgstr "Készítette"
+
+#. module: hr_recruitment
+#: field:hr.applicant_category,create_date:0
+#: field:hr.recruitment.degree,create_date:0
+#: field:hr.recruitment.partner.create,create_date:0
+#: field:hr.recruitment.source,create_date:0
+#: field:hr.recruitment.stage,create_date:0
+msgid "Created on"
+msgstr "Létrehozás dátuma"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: field:hr.applicant,create_date:0
+msgid "Creation Date"
+msgstr "Létrehozás dátuma"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Creation Week"
+msgstr "Létrehozás hete"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "A feljegyzésen történt utolsó üzenet dátuma."
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Day(s)"
+msgstr "Nap(ok)"
+
+#. module: hr_recruitment
+#: field:hr.applicant,day_close:0
+msgid "Days to Close"
+msgstr "Lezárásig hátralévő napok"
+
+#. module: hr_recruitment
+#: field:hr.applicant,day_open:0
+msgid "Days to Open"
+msgstr "Megnyitásig hátralévő napok"
+
+#. module: hr_recruitment
+#: field:hr.config.settings,alias_prefix:0
+msgid "Default Alias Name for Jobs"
+msgstr "Alapértelmezett álneve a munkának"
+
+#. module: hr_recruitment
+#: view:hr.config.settings:hr_recruitment.view_hr_apll_config_settings
+msgid "Default job email address"
+msgstr "Alapértelmezett munkához használt email"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.hr_job_survey
+msgid ""
+"Define a specific contact address for this job position. If you keep it "
+"empty, the default email address will be used which is in human resources "
+"settings"
+msgstr "Határozzon meg egy egyedi email címet ehhez az álláshoz. Ha üresen hagyja, az alapértelmezett emberi erőforrásoknál beállított email címet fogja használni"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_form
+#: view:hr.recruitment.degree:hr_recruitment.hr_recruitment_degree_tree
+#: field:hr.recruitment.report,type_id:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
+msgid "Degree"
+msgstr "Diploma"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Toborzás mértéke"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+msgid "Degree:"
+msgstr "Fok:"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
+msgid "Degrees"
+msgstr "Fokozat"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Delete"
+msgstr "Törlés"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+msgid "Departement:"
+msgstr "Osztály:"
+
+#. module: hr_recruitment
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: field:hr.recruitment.report,department_id:0
+msgid "Department"
+msgstr "Osztály, részleg"
+
+#. module: hr_recruitment
+#: field:hr.job,manager_id:0
+msgid "Department Manager"
+msgstr "Osztály részleg vezető"
+
+#. module: hr_recruitment
+#: field:hr.applicant,description:0
+msgid "Description"
+msgstr "Leírás"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_4
+msgid "Desk space"
+msgstr "Munkafelület méret"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
+msgid "Doctoral Degree"
+msgstr "Doktorátusi fokozat"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Document"
+msgstr "Dokumentum"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+#: view:hr.job:hr_recruitment.hr_job_survey
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+#: field:hr.job,documents_count:0
+msgid "Documents"
+msgstr "Dokumentumok"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_11
+msgid "Dress code"
+msgstr "Ruha méret"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Edit..."
+msgstr "Szerkesztés..."
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_2
+msgid "Education"
+msgstr "Tanulmányok"
+
+#. module: hr_recruitment
+#: model:survey.page,title:hr_recruitment.recruitment_2
+msgid "Education and Activities"
+msgstr "Tanulmányok és tevékenységek"
+
+#. module: hr_recruitment
+#: field:hr.applicant,email_from:0
+msgid "Email"
+msgstr "E-mail"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.hr_job_survey
+msgid "Email Alias"
+msgstr "E-mail fedőnevek"
+
+#. module: hr_recruitment
+#: help:hr.job,alias_id:0
+msgid ""
+"Email alias for this job position. New emails will automatically create new "
+"applicants for this job position."
+msgstr "e-mail álnév ehhez az állás pozícióhoz. Ide érkező új e-mailek automatikusan létrehoznak jelentkezőket erre az állásra."
+
+#. module: hr_recruitment
+#: field:hr.applicant,emp_id:0
+msgid "Employee"
+msgstr "Munkavállaló"
+
+#. module: hr_recruitment
+#: help:hr.applicant,emp_id:0
+msgid "Employee linked to the applicant."
+msgstr "Munkavállaló összekapcsolva a pályázóval."
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "Error!"
+msgstr "Hiba!"
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Excellent"
+msgstr "Kiváló"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_expected:0
+msgid "Expected Salary"
+msgstr "Várható fizetés"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_expected_extra:0
+msgid "Expected Salary Extra"
+msgstr "Elvárt extra jövedelem"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_3
+msgid "Experience"
+msgstr "Gyakorlat"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Extended Filters"
+msgstr "Részletes szűrők"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Extra advantages..."
+msgstr "Extra előnyök..."
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Feedback of interviews..."
+msgstr "Visszajelzés az interjúkról..."
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_2_2
+msgid "Female"
+msgstr "Nő"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+msgid "Filter and view on next actions and date"
+msgstr "Szűrés és nézet a következő műveletnél és dátumnál"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Első interjú"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.stage,fold:0
+msgid "Folded in Kanban View"
+msgstr "Kanban nézetben összehajtott"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_follower_ids:0
+msgid "Followers"
+msgstr "Követők"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_8
+msgid "Freebies such as tea, coffee and stationery"
+msgstr "Ingyenes juttatások, mint tea, kávé és irodaszerek"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_1_1
+msgid "From which university will you graduate?"
+msgstr "Melyik egyetemen fog végezni?"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_2
+msgid "Getting on with colleagues"
+msgstr "Együttműködés a kollégákkal"
+
+#. module: hr_recruitment
+#: help:hr.recruitment.degree,sequence:0
+msgid "Gives the sequence order when displaying a list of degrees."
+msgstr "Sorrendet ad a fokozatok listakénti megjelenítésénél."
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,sequence:0
+msgid "Gives the sequence order when displaying a list of stages."
+msgstr "Sorozati rendet ad a szakaszok lista nézetében."
+
+#. module: hr_recruitment
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Good"
+msgstr "Jó"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_7
+msgid "Good management"
+msgstr "Jó irányítás"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_1
+msgid "Good pay"
+msgstr "Jó fizetés"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_13
+msgid "Good social life"
+msgstr "Jó társadalmi élet"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
+msgid "Graduate"
+msgstr "Diplomás"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Group By"
+msgstr "Csoportosítás"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Hired Employees"
+msgstr "Felvett munkavállalók"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
+
+#. module: hr_recruitment
+#: field:hr.applicant,id:0 field:hr.applicant_category,id:0
+#: field:hr.recruitment.degree,id:0 field:hr.recruitment.partner.create,id:0
+#: field:hr.recruitment.report,id:0 field:hr.recruitment.source,id:0
+#: field:hr.recruitment.stage,id:0
+msgid "ID"
+msgstr "Azonosító ID"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_it
+msgid "IT"
+msgstr "IT Informatika"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+
+#. module: hr_recruitment
+#: model:survey.question,comments_message:hr_recruitment.recruitment_1_1
+#: model:survey.question,comments_message:hr_recruitment.recruitment_1_2
+#: model:survey.question,comments_message:hr_recruitment.recruitment_1_3
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_1
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_2
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_3
+#: model:survey.question,comments_message:hr_recruitment.recruitment_2_4
+#: model:survey.question,comments_message:hr_recruitment.recruitment_3_1
+msgid "If other, precise:"
+msgstr "Ha másik, pontosítsa:"
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,template_id:0
+msgid ""
+"If set, a message is posted on the applicant using the template when the "
+"applicant is set to the stage."
+msgstr "Ha beállított, egy üzenetet küld a jelentkezőnek a sablonból, amikor a jelentkezőt erre a szintre állítja."
+
+#. module: hr_recruitment
+#: help:hr.applicant,active:0
+msgid ""
+"If the active field is set to false, it will allow you to hide the case "
+"without removing it."
+msgstr "Ha az aktív mező hamisra van állítva, akkor lehetővé teszi az eset eltüntetését, annak eltávolítása nélkül."
+
+#. module: hr_recruitment
+#: model:survey.page,title:hr_recruitment.recruitment_3
+msgid "Importance"
+msgstr "Fontosság"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_3
+msgid "Important"
+msgstr "Fontos"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "Elsődleges végzettség"
+
+#. module: hr_recruitment
+#: model:calendar.event.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Interview"
+msgstr "Interjú"
+
+#. module: hr_recruitment
+#: field:hr.job,survey_id:0
+msgid "Interview Form"
+msgstr "Interjú űrlap"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Ez egy követő"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+msgid "Job"
+msgstr "Munka"
+
+#. module: hr_recruitment
+#: field:hr.job,address_id:0
+msgid "Job Location"
+msgstr "Munkahely helye"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_job
+msgid "Job Position"
+msgstr "Állás pozíció"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_job
+msgid "Job Positions"
+msgstr "Álláspozíciók"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Jobs"
+msgstr "Munkák"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Jobs - Recruitment Form"
+msgstr "Állások - Toborzási űrlap"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_2_1
+msgid "Knowledge"
+msgstr "Tudás"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_last_post:0
+msgid "Last Message Date"
+msgstr "Utolsó üzenet időpontja"
+
+#. module: hr_recruitment
+#: field:hr.applicant,last_stage_id:0
+#: field:hr.recruitment.report,last_stage_id:0
+msgid "Last Stage"
+msgstr "Utolsó szint"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: field:hr.applicant,date_last_stage_update:0
+#: field:hr.recruitment.report,date_last_stage_update:0
+msgid "Last Stage Update"
+msgstr "Utolsó szint frissítése"
+
+#. module: hr_recruitment
+#: field:hr.applicant,write_uid:0 field:hr.applicant_category,write_uid:0
+#: field:hr.recruitment.degree,write_uid:0
+#: field:hr.recruitment.partner.create,write_uid:0
+#: field:hr.recruitment.source,write_uid:0
+#: field:hr.recruitment.stage,write_uid:0
+msgid "Last Updated by"
+msgstr "Utoljára frissítve, által"
+
+#. module: hr_recruitment
+#: field:hr.applicant_category,write_date:0
+#: field:hr.recruitment.degree,write_date:0
+#: field:hr.recruitment.partner.create,write_date:0
+#: field:hr.recruitment.source,write_date:0
+#: field:hr.recruitment.stage,write_date:0
+msgid "Last Updated on"
+msgstr "Utoljára frissítve ekkor"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Launch Recruitment"
+msgstr "Toborzás elindítása"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
+msgid "LinkedIn"
+msgstr "LinkedIn"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.recruitment_1_2_1
+msgid "Male"
+msgstr "Férfi"
+
+#. module: hr_recruitment
+#: help:hr.config.settings,module_document:0
+msgid ""
+"Manage your CV's and motivation letter related to all applicants.\n"
+"-This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"
+msgstr "Szervezze a jelentkezőkhöz tartozó önéletrajzait és motiváló leveleit.\n-Ez a document_ftp modult telepíti. Ez az ismeret szervető (knowledge management)  modult telepíti, hogy lehetővé tegye a dokumentumok tartalmán belüli kulcsszavas keresést (PDF, .DOCx...)"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_manager
+msgid "Manager"
+msgstr "Vezető"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
+msgid "Master Degree"
+msgstr "Mester fokozat"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Meeting"
+msgstr "Találkozó"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
+msgid "Meetings"
+msgstr "Találkozók"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_ids:0
+msgid "Messages"
+msgstr "Üzenetek"
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_ids:0
+msgid "Messages and communication history"
+msgstr "Üzenetek és kommunikáció történet"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_mobile:0
+msgid "Mobile"
+msgstr "Mobilszám"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+msgid "Mobile:"
+msgstr "Mobil:"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_monster
+msgid "Monster"
+msgstr "Monster/szörny"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_5
+msgid "Most important"
+msgstr "Legfontosabb"
+
+#. module: hr_recruitment
+#: field:hr.applicant_category,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.recruitment.stage,name:0
+msgid "Name"
+msgstr "Név"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "New"
+msgstr "Új"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+msgid "New Applicant"
+msgstr "Új pályázó"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:508
+#, python-format
+msgid "New Employee %s Hired"
+msgstr "Új munkavállaló %s felvéve"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+msgid "New Mail"
+msgstr "Új e-mail"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:425
+#: code:addons/hr_recruitment/hr_recruitment.py:453
+#, python-format
+msgid "New application from %s"
+msgstr "Új jelentkezési űrlap %s"
+
+#. module: hr_recruitment
+#: field:hr.applicant,title_action:0
+msgid "Next Action"
+msgstr "Következő művelet"
+
+#. module: hr_recruitment
+#: field:hr.applicant,date_action:0
+msgid "Next Action Date"
+msgstr "Következő művelet időpontja"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+msgid "Next Actions"
+msgstr "Következő műveletek"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:395
+#, python-format
+msgid "No Subject"
+msgstr "Nincs tárgy"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_10
+msgid "No out of hours working"
+msgstr "Nem egy órai munka"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_1
+msgid "Not important"
+msgstr "Nem fontos"
+
+#. module: hr_recruitment
+#: field:hr.applicant,attachment_number:0
+msgid "Number of Attachments"
+msgstr "Mellékletek száma"
+
+#. module: hr_recruitment
+#: help:hr.recruitment.report,delay_close:0
+msgid "Number of Days to close the project issue"
+msgstr "Az ügy lezárásáig használt napok száma."
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_3
+msgid "Office environment"
+msgstr "Irodai környezet"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_6
+msgid "Office location"
+msgstr "Iroda helyszíne"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,partner_id:0
+msgid "Partner"
+msgstr "Partner"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_9
+msgid "Perks such as free parking, gym passes"
+msgstr "Borravalók, mint ingyenes parkolás, edzés bérletek"
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Print"
+msgstr "Nyomtat"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.hr_job_survey
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Print Interview"
+msgstr "Interjú kinyomtatás"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Print interview report"
+msgstr "Interjú jelentés nyomtatás"
+
+#. module: hr_recruitment
+#: field:hr.applicant,probability:0
+msgid "Probability"
+msgstr "Valószínűség"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_proposed:0
+msgid "Proposed Salary"
+msgstr "Javasolt fizetés"
+
+#. module: hr_recruitment
+#: field:hr.applicant,salary_proposed_extra:0
+msgid "Proposed Salary Extra"
+msgstr "Javasolt kiegészítő jövedelem"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_3_1
+msgid "Rate the Importance"
+msgstr "A fontosság értékelése"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
+msgid "Recruitment"
+msgstr "Toborzás"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
+msgid "Recruitment / Applicants Stages"
+msgstr "Toborzás / Pályázati szakaszok"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_graph
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_report_all
+msgid "Recruitment Analysis"
+msgstr "Toborzás elemzése"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "Recruitment Done"
+msgstr "Toborzás elvégezve"
+
+#. module: hr_recruitment
+#: model:survey.survey,title:hr_recruitment.recruitment_form
+msgid "Recruitment Form"
+msgstr "Toborzási űrlap"
+
+#. module: hr_recruitment
+#: field:hr.job,user_id:0
+msgid "Recruitment Responsible"
+msgstr "Toborzásért felelős"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
+msgid "Recruitments Statistics"
+msgstr "Toborzási statisztika"
+
+#. module: hr_recruitment
+#: field:hr.applicant,reference:0
+msgid "Referred By"
+msgstr "Előterjesztette"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+msgid "Refused"
+msgstr "Elutasított"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_12
+msgid "Regular meetings"
+msgstr "Általános telálkozók"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+#: field:hr.recruitment.stage,requirements:0
+msgid "Requirements"
+msgstr "Követelmények"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_reserve
+msgid "Reserve"
+msgstr "Lefoglalás"
+
+#. module: hr_recruitment
+#: field:hr.applicant,response_id:0
+msgid "Response"
+msgstr "Válasz"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: field:hr.applicant,user_id:0
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Responsible"
+msgstr "Felelős"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
+msgstr "Toborzási szakaszok felülvizsgálata"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_exp:0
+msgid "Salary Expected"
+msgstr "Várható fizetés"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_expected:0
+msgid "Salary Expected by Applicant"
+msgstr "Várható fizetések kérelmezőnként"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_expected_extra:0
+msgid "Salary Expected by Applicant, extra advantages"
+msgstr "A jelentkező által elvárt fizetés, extra előnyök"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_prop:0
+msgid "Salary Proposed"
+msgstr "Javasolt fizetés"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_proposed:0
+msgid "Salary Proposed by the Organisation"
+msgstr "Szervezet által javasolt fizetés"
+
+#. module: hr_recruitment
+#: help:hr.applicant,salary_proposed_extra:0
+msgid "Salary Proposed by the Organisation, extra advantages"
+msgstr "Fizetés a szervezet, extra előny által javasolva"
+
+#. module: hr_recruitment
+#: model:hr.applicant_category,name:hr_recruitment.tag_applicant_sales
+msgid "Sales"
+msgstr "Értékesítések"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Schedule"
+msgstr "Ütemezés"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+msgid "Schedule Interview"
+msgstr "Interjú ütemezés"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Schedule interview with this applicant"
+msgstr "Ennek a jelentkezőnek az interjú ütemezése"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+msgid "Search Applicants"
+msgstr "Jelentkező keresése"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Második interjú"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.degree,sequence:0
+#: field:hr.recruitment.stage,sequence:0
+msgid "Sequence"
+msgstr "Sorszám"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_2
+msgid "Somewhat important"
+msgstr "Valamelyest fontos"
+
+#. module: hr_recruitment
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr "Forrás"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.source,name:0
+msgid "Source Name"
+msgstr "Forrásnév"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "Jelentkezők forrása"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_form
+#: view:hr.recruitment.source:hr_recruitment.hr_recruitment_source_tree
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+msgid "Sources of Applicants"
+msgstr "Pályázók forrása"
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.hr_job_survey
+msgid "Specific Email Address"
+msgstr "Egyéni email címek"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.stage,department_id:0
+msgid "Specific to a Department"
+msgstr "Osztályhoz kötődő"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+#: field:hr.recruitment.report,stage_id:0
+#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+msgid "Stage"
+msgstr "Szakasz"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
+msgid "Stage Changed"
+msgstr "Szint megváltoztatva"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_form
+msgid "Stage Definition"
+msgstr "Szakasz meghatározása"
+
+#. module: hr_recruitment
+#: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
+msgid "Stage changed"
+msgstr "Szakasz megváltoztatva"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
+msgid "Stage of Recruitment"
+msgstr "Toborzási szakasz"
+
+#. module: hr_recruitment
+#: help:hr.applicant,last_stage_id:0
+msgid ""
+"Stage of the applicant before being in the current stage. Used for lost "
+"cases analysis."
+msgstr "A jelentkező szint szakasza mielőtt erre a szintre lépett volna. Az eredménytelen esetek kiértékelésére használja."
+
+#. module: hr_recruitment
+#: view:hr.recruitment.stage:hr_recruitment.hr_recruitment_stage_tree
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
+msgid "Stages"
+msgstr "Szakaszok"
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,department_id:0
+msgid ""
+"Stages of the recruitment process may be different per department. If this "
+"stage is common to all departments, keep this field empty."
+msgstr "A toborzás szakaszai eltérhetnek osztályonként. Ha ez a szakasz  minden osztálynak közös, akkor ezt a mezőt hagyja üresen."
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "Start"
+msgstr "Kezdés"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rrow_2_1_5
+msgid "State of the art technology"
+msgstr "Az ügyességi technika szintje"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+msgid "Subject / Applicant"
+msgstr "Tárgy / Jelentkező"
+
+#. module: hr_recruitment
+#: field:hr.applicant,name:0
+msgid "Subject / Application Name"
+msgstr "Tárgy / Jelentkező neve"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_summary:0
+msgid "Summary"
+msgstr "Összegzés"
+
+#. module: hr_recruitment
+#: field:hr.applicant,survey:0
+msgid "Survey"
+msgstr "Felmérés"
+
+#. module: hr_recruitment
+#: field:hr.applicant,categ_ids:0
+msgid "Tags"
+msgstr "Címkék"
+
+#. module: hr_recruitment
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_1
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_2
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_1_3
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_1
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_2
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_3
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_2_4
+#: model:survey.question,validation_error_msg:hr_recruitment.recruitment_3_1
+msgid "The answer you entered has an invalid format."
+msgstr "A beírt válasza nem megfelelő formátumú."
+
+#. module: hr_recruitment
+#: sql_constraint:hr.recruitment.degree:0
+msgid "The name of the Degree of Recruitment must be unique!"
+msgstr "A toborzási fok nevének egyedinek kell lennie!"
+
+#. module: hr_recruitment
+#: help:hr.applicant,availability:0
+msgid ""
+"The number of days in which the applicant will be available to start working"
+msgstr "A jelentkező tényleges munkába állásához szükséges idő száma, napokban."
+
+#. module: hr_recruitment
+#: help:hr.applicant,email_cc:0
+msgid ""
+"These email addresses will be added to the CC field of all inbound and "
+"outbound emails for this record before being sent. Separate multiple email "
+"addresses with a comma"
+msgstr "Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ mezőhöz minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több email felsorolását vesszővel elválasztva adja meg."
+
+#. module: hr_recruitment
+#: help:hr.applicant,email_from:0
+msgid "These people will receive email."
+msgstr "Ezek az emberek fogják megkapni az e-mailt."
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "This Year"
+msgstr "Tárgyév"
+
+#. module: hr_recruitment
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_1
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_2
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_1_3
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_1
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_2
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_3
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_2_4
+#: model:survey.question,constr_error_msg:hr_recruitment.recruitment_3_1
+msgid "This question requires an answer."
+msgstr "Erre a kérdésre kérjük válaszoljon."
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,fold:0
+msgid ""
+"This stage is folded in the kanban view whenthere are no records in that "
+"stage to display."
+msgstr "Ez a szint behajtott a kanban nézetben, ha ezen  szinten nincsenek kijelezhető rekordok."
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.view_crm_case_jobs_filter
+#: view:hr.recruitment.report:hr_recruitment.view_hr_recruitment_report_search
+msgid "Unassigned"
+msgstr "Nincs hozzárendelve"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_unread:0
+#: view:hr.job:hr_recruitment.view_job_filter_recruitment
+msgid "Unread Messages"
+msgstr "Olvasatlan üzenetek"
+
+#. module: hr_recruitment
+#: field:hr.applicant,write_date:0
+msgid "Update Date"
+msgstr "Frissítés dátuma"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.stage,template_id:0
+msgid "Use template"
+msgstr "Sablon használata"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,user_id:0
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: hr_recruitment
+#: field:hr.applicant,user_email:0
+msgid "User Email"
+msgstr "Felhasználó  email címe"
+
+#. module: hr_recruitment
+#: model:survey.label,value:hr_recruitment.rcol_3_1_4
+msgid "Very important"
+msgstr "Nagyon fontos"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:511
+#, python-format
+msgid "Warning!"
+msgstr "Figyelem!"
+
+#. module: hr_recruitment
+#: field:hr.applicant,email_cc:0
+msgid "Watchers Emails"
+msgstr "Email örző"
+
+#. module: hr_recruitment
+#: field:hr.applicant,website_message_ids:0
+msgid "Website Messages"
+msgstr "Weboldal üzenetek"
+
+#. module: hr_recruitment
+#: help:hr.applicant,website_message_ids:0
+msgid "Website communication history"
+msgstr "Weboldal  kommunikáció történet"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_1_3
+msgid "What age group do you belong to?"
+msgstr "Milyen korosztályba tartozik?"
+
+#. module: hr_recruitment
+#: model:survey.question,question:hr_recruitment.recruitment_1_2
+msgid "What is your gender?"
+msgstr "Milyen nemű?"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.source,name:hr_recruitment.source_word
+msgid "Word of Mouth"
+msgstr "Élő szóval"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:511
+#, python-format
+msgid "You must define an Applied Job and a Contact Name for this applicant."
+msgstr "Meg kell határoznia ehhez a jelentkezéshez egy Munkahelyi állást és egy Kapcsolat nevet."
+
+#. module: hr_recruitment
+#: view:hr.job:hr_recruitment.view_hr_job_kanban
+msgid "click here"
+msgstr "kattints ide"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.crm_case_form_view_job
+msgid "e.g. Call for interview"
+msgstr "pl. Interjúra hívás"
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:524
+#, python-format
+msgid "job applicants"
+msgstr "állásra jelentkezők"
+
+#. module: hr_recruitment
+#: view:hr.applicant:hr_recruitment.hr_kanban_view_applicant
+msgid "oe_kanban_text_red"
+msgstr "oe_kanban_text_red"
+
+#. module: hr_recruitment
+#: view:hr.recruitment.partner.create:hr_recruitment.view_hr_recruitment_partner_create
+msgid "or"
+msgstr "vagy"

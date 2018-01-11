@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+
+        <record id="account_aged_balance_view" model="ir.ui.view">
+            <field name="name">Aged Partner Balance</field>
+            <field name="model">account.aged.trial.balance</field>
+            <!--<field name="inherit_id" ref="account_common_report_view" />-->
+            <field name="arch" type="xml">
+                <form string="Report Options">
+                    <separator string="Aged Partner Balance"/>
+                    <label string="Aged Partner Balance is a more detailed report of your receivables by intervals. When opening that report, Odoo asks for the name of the company, the fiscal period and the size of the interval to be analyzed (in days). Odoo then calculates a table of credit balance by period. So if you request an interval of 30 days Odoo generates an analysis of creditors for the past month, past two months, and so on. "/>
+                    <group col="4">
+                        <field name="chart_account_id" widget='selection' on_change="onchange_chart_id(chart_account_id, context)"/>
+                        <field name="fiscalyear_id" invisible="1"/>
+                        <newline/>
+                        <field name="date_from"/>
+                        <field name="period_length"/>
+                        <newline/>
+                        <field name="result_selection"/>
+                        <field name="direction_selection"/>
+                        <field name="target_move"/>
+                    </group>
+                    <field name="journal_ids" required="0" invisible="1"/>
+                    <footer>
+                        <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+         <record id="action_account_aged_balance_view" model="ir.actions.act_window">
+             <field name="name">Aged Partner Balance</field>
+             <field name="res_model">account.aged.trial.balance</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="account_aged_balance_view"/>
+             <field name="context">{}</field>
+             <field name="target">new</field>
+       </record>
+
+        <menuitem icon="STOCK_PRINT"
+            name="Aged Partner Balance"
+            action="action_account_aged_balance_view"
+            id="menu_aged_trial_balance"
+            parent="account.next_id_22"/>
+
+    </data>
+</openerp>

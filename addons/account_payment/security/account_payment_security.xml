@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <record id="group_account_payment" model="res.groups">
+        <field name="name">Accounting / Payments</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+    <record id="account.group_account_invoice" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_account_payment'))]"/>
+    </record>
+
+</data>
+<data noupdate="1">
+
+    <record id="payment_mode_comp_rule" model="ir.rule">
+        <field name="name">Payment Mode company rule</field>
+        <field name="model_id" ref="model_payment_mode"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="payment_order_comp_rule" model="ir.rule">
+        <field name="name">Payment order multi company rule</field>
+        <field name="model_id" ref="model_payment_order"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record id="payment_line_comp_rule" model="ir.rule">
+        <field name="name">Payment line multi company rule</field>
+        <field name="model_id" ref="model_payment_line"/>
+        <field eval="True" name="global"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+</data>
+</openerp>

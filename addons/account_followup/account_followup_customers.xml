@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- followup of customers views -->
+
+        <record id="customer_followup_tree" model="ir.ui.view">
+            <field name="name">res.partner.followup.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Customer Followup" create="false" delete="false">
+                    <field name="display_name"/>
+                    <field name="payment_next_action_date"/>
+                    <field name="payment_next_action"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="payment_responsible_id"/>
+                    <field name="payment_earliest_due_date"/>
+                    <field name="latest_followup_level_id"/>
+                    <field name="payment_amount_overdue"/>
+                    <field name="payment_amount_due" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_partner_inherit_customer_followup_tree" model="ir.ui.view">
+            <field name="name">res.partner.followup.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                 <field name="display_name" position="after">
+                     <field name="payment_responsible_id" invisible="1"/>
+                 </field>
+             </field>
+         </record>
+
+        <record id="customer_followup_search_view" model="ir.ui.view">
+            <field name="name">Search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <search string="Search Partner" position="inside">
+                    <group string="Follow-up">
+                        <filter string="Partners with Overdue Credits" domain="[('payment_amount_overdue', '>', 0.0)]" name="credits"/>
+                        <separator/>
+                        <filter string="Follow-ups To Do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('payment_amount_overdue', '>', 0.0)]" name="todo"/>
+                        <separator/>
+                        <filter string="No Responsible" domain="[('payment_responsible_id', '=', False)]"/>
+                        <filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]" name="my"/>
+                    </group>
+                </search>
+                <group string="Group By" position="inside">
+                    <filter string="Follow-up Responsible" context="{'group_by':'payment_responsible_id'}"/>
+                    <filter string="Followup Level" context="{'group_by':'latest_followup_level_id'}"/>
+                </group>
+            </field>
+        </record>
+
+
+
+        <record id="action_customer_followup" model="ir.actions.act_window">
+            <field name="name">Manual Follow-Ups</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('payment_amount_due', '>', 0.0)]</field> 
+            <field name="context">{'Followupfirst':True, 'search_default_todo': True} </field>
+            <field name="search_view_id" ref="customer_followup_search_view"/>
+        </record>
+
+        <!--Inherited view -->
+        <record id="view_partner_inherit_followup_form" model="ir.ui.view">
+            <field name="name">res.partner.followup.form.inherit</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+            <field name="arch" type="xml" >
+                <page string="Accounting" position="before">
+                    <page string="Payment Follow-up" groups="account.group_account_invoice" name="followup_tab">
+                        <div class="oe_right oe_button_box" name="followup_button">
+                            <button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" 
+                                help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}" />
+                            <button name="do_partner_mail" type="object" string="Send Overdue Email" groups="account.group_account_user"
+                                help="If not specified by the latest follow-up level, it will send from the default email template" attrs="{'invisible':[('payment_amount_due', '&lt;=', 0.0)]}"/>
+                        </div>
+                        <p attrs="{'invisible':[('latest_followup_date','=', False)]}">
+                            The <field name="latest_followup_date"  class = "oe_inline"/>, the latest payment follow-up
+                            was: <field name="latest_followup_level_id" class="oe_inline"/>
+                        </p>
+                        <group>
+                            <field name="payment_responsible_id" placeholder="Responsible of credit collection" class="oe_inline"/>
+                            <label for="payment_next_action"/>
+                            <div>
+                                <field name="payment_next_action_date" class="oe_inline"/>
+                                <button name="action_done" type="object" string="⇾ Mark as Done"
+                                     help="Click to mark the action as done." class="oe_link"
+                                     attrs="{'invisible':[('payment_next_action_date','=', False)]}"
+                                     groups="account.group_account_user"/>
+                                <field name="payment_next_action" placeholder="Action to be taken e.g. Give a phonecall, Check if it's paid, ..."/>
+                            </div>
+                        </group>
+                        <label for="payment_note" class="oe_edit_only"/>
+                        <field name="payment_note" placeholder="He said the problem was temporary and promised to pay 50%% before 15th of May, balance before 1st of July."/>
+                        <p class="oe_grey">
+                            Below is the history of the transactions of this
+                            customer. You can check "No Follow-up" in
+                            order to exclude it from the next follow-up actions.
+                        </p>
+                        <field name="unreconciled_aml_ids">
+                            <tree string="Account Move line" editable="bottom" create="false" delete="false" colors="red:(not date_maturity or date_maturity&lt;=current_date) and result&gt;0">
+                                <field name="date" readonly="True"/>
+                                <field name="company_id" readonly="True" groups="base.group_multi_company" />
+                                <field name="move_id" readonly="True"/>
+                                <field name="blocked"/>
+                                <field name="date_maturity" readonly="True"/>
+                                <field name="reconcile_partial_id" readonly="True"/>
+                                <field name="result" readonly="True"/>
+                                <field name="followup_line_id" invisible='1'/>
+                            </tree>
+                        </field>
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="payment_amount_due"/>
+                        </group>
+                        <div class="oe_clear"/>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record id="action_view_customer_followup_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_partner_inherit_followup_form"/>
+            <field name="act_window_id" ref="action_customer_followup"/>
+        </record>
+        <record id="action_view_customer_followup_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="act_window_id" ref="action_customer_followup"/>
+        </record>
+
+        <!-- Menus about followup of customers -->
+        <menuitem id="account_followup_s" action="action_customer_followup" 
+            parent="menu_finance_followup" name="Do Manual Follow-Ups" sequence="3"/>
+        <record id="action_customer_my_followup" model="ir.actions.act_window">
+            <field name="name">My Follow-Ups</field>
+            <field name="view_id" ref="customer_followup_tree"/>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('payment_amount_due', '>', 0.0)]</field>
+            <field name="context">{'Followupfirst':True, 'search_default_todo': True, 'search_default_my': True} </field>
+            <field name="search_view_id" ref="customer_followup_search_view"/>
+        </record>
+        <menuitem id="base.menu_sales_followup" parent="base.menu_base_partner" name="Payment Follow-up" groups="account.group_account_invoice" sequence="2"/>
+        <menuitem id="menu_sale_followup" parent="base.menu_sales_followup" sequence="10" 
+                  action="action_customer_my_followup"  groups="account.group_account_invoice"/>
+    </data>
+</openerp>

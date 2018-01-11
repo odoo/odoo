@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!--  Work Center Load Report -->
+        
+        <record id="view_mrp_workcenter_load_wizard" model="ir.ui.view">
+            <field name="name">Work Center Load</field>
+            <field name="model">mrp.workcenter.load</field>
+            <field name="arch" type="xml">
+                <form string="Select time unit">
+                    <sheet>
+                        <group>
+                            <field name="time_unit"/>
+                            <field name="measure_unit"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <act_window name="Work Center Load"
+            res_model="mrp.workcenter.load"
+            src_model="mrp.workcenter"
+            view_mode="form"
+            target="new"   
+            key2="client_print_multi"    
+            id="action_mrp_workcenter_load_wizard"/>
+    </data>
+</openerp>

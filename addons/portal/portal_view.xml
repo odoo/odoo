@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Top menu item -->
+        <menuitem name="Portal"
+            id="portal_menu"
+            groups="base.group_portal"
+            sequence="15"/>
+
+        <menuitem name="Messaging" id="portal_messages" parent="portal_menu" sequence="10" groups="base.group_portal"/>
+
+        <record id="action_mail_inbox_feeds_portal" model="ir.actions.client">
+            <field name="name">Inbox</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                  ('to_read', '=', True),
+                ],
+                'show_compose_message': False,
+                'show_link': False,
+                'view_mailbox': True,
+                'view_inbox': True,
+                'read_action': 'read'
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    <b>Good Job!</b> Your inbox is empty.
+                </p><p>
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
+                </p>
+            </field>
+        </record>
+
+        <!-- TODO: remove me in 8.0 -->
+        <record id="action_mail_star_feeds_portal" model="ir.actions.client">
+            <field name="name">To-do</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+              'search_default_message_unread': True
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                    ('starred', '=', True),
+                ],
+                'show_compose_message': False,
+                'show_link': False,
+                'view_mailbox': True,
+                'read_action': 'read'
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    <b>No todo.</b>
+                </p><p>
+                    When you process messages in your inbox, you can mark some
+                    as <i>todo</i>. From this menu, you can process all your todo.
+                </p>
+            </field>
+        </record>
+        <menuitem name="To-do" id="portal_mail_starfeeds" parent="portal_messages"
+            action="action_mail_star_feeds_portal" sequence="20" groups="base.group_no_one"/>
+        <!-- end -->
+
+        <record id="action_mail_archives_feeds_portal" model="ir.actions.client">
+            <field name="name">Archives</field>
+            <field name="tag">mail.wall</field>
+            <field name="context">{
+              'default_model': 'res.users',
+              'default_res_id': uid,
+              'thread_model': 'res.partner',
+            }</field>
+            <field name="params" eval="&quot;{
+                'domain': [
+                    '|',
+                    ('notification_ids.partner_id.user_ids', 'in', [uid]),
+                    ('author_id.user_ids', 'in', [uid]),
+                ],
+                'show_compose_message': False,
+                'show_link': False,
+                'view_mailbox': True,
+            }&quot;"/>
+            <field name="help" type="html">
+                <p>
+                    No message found and no message sent yet.
+                </p><p>
+                    Click on the top-right icon to compose a message. This
+                    message will be sent by email if it's an internal contact.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Inbox" id="portal_inbox" parent="portal_messages"
+            action="action_mail_inbox_feeds_portal" sequence="10" groups="base.group_portal"/>
+        <menuitem name="Archives" id="portal_mail_archivesfeeds" parent="portal_messages"
+            action="action_mail_archives_feeds_portal" sequence="30" groups="base.group_portal"/>
+
+        <!--
+            Create menu items that we'll leave empty for now - they'll be
+            filled up by other portal modules.
+        -->
+        <menuitem name="Billing" id="portal_orders" parent="portal_menu" sequence="20"/>
+        <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="30"/>
+        <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
+
+        <!-- extend res.groups search view -->
+        <record id="group_search_view" model="ir.ui.view">
+            <field name="name">Group Search</field>
+            <field name="model">res.groups</field>
+            <field name="inherit_id" ref="base.view_groups_search"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <filter name="portal" string="Portal Groups" domain="[('is_portal','=',True)]"/>
+                    <filter name="no_portal" string="Non-Portal Groups" domain="[('is_portal','=',False)]"/>
+                    <separator orientation="vertical"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- extend res.groups form view -->
+        <record id="group_form_view" model="ir.ui.view">
+            <field name="name">Portal Form</field>
+            <field name="model">res.groups</field>
+            <field name="inherit_id" ref="base.view_groups_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="is_portal"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

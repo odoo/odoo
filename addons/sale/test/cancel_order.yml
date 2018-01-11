@@ -1,0 +1,82 @@
+-
+  Salesman can also cancel order therefore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_users_salesman'
+-
+  In order to test the cancel sale order.
+  I confirm order (with at least 2 lines)
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
+
+-
+  I check state of order in 'Sale Order'.
+-
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be In Progress state}:
+    - state == 'manual'  
+-
+  I check that Invoice should not be created.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_8"))
+    assert len(sale_order.invoice_ids) == False, "Invoice should not be created."
+-
+  I create an invoice for the first line
+-
+   !python {model: sale.order.line.make.invoice}: |
+
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("sale_order_line_20")], "active_id":ref("sale_order_line_20")})
+    pay_id = self.create(cr, uid, {})
+    self.make_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+-
+  I create an invoice for a fixed price (25% of the second line, thus 5)
+-
+   !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'amount': 5})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+
+-
+  I create an invoice for the remaining and check the amount (should be the remaining amount of second line)
+-
+   !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'all'})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+    assert len(invoice_ids) == 3, "All invoices are not created"
+    for invoice in invoice_ids:
+        assert invoice.amount_total in (7290,5,20), "Invoice total is not correct"
+-
+  I cancel all the invoices.
+-
+  !python {model: sale.order}: |
+    invoice_ids = self.browse(cr, uid, ref("sale_order_8")).invoice_ids
+    for invoice in invoice_ids:
+      invoice.signal_workflow('invoice_cancel')
+-
+  I check order status in "Invoice Exception" and related invoice is in cancel state.
+-
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Invoice Exception state}:
+    - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
+- 
+  I click recreate invoice.
+-
+  !workflow {model: sale.order, action: invoice_recreate, ref: sale_order_8}
+- 
+  I check that the invoice is correctly created with all lines.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_8"))
+    total_order_line = 0
+    assert len(sale_order.invoice_ids), "Invoice should be created."
+    for invoice in sale_order.invoice_ids:
+        if invoice.state != 'cancel':
+            total_order_line += len(invoice.invoice_line)
+    assert total_order_line == 2, "wrong number of invoice lines, got %s" % total_order_line
+

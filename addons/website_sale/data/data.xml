@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="menu_shop" model="website.menu">
+            <field name="name">Shop</field>
+            <field name="url">/shop</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+        <record id="action_open_website" model="ir.actions.act_url">
+            <field name="name">Website Shop</field>
+            <field name="target">self</field>
+            <field name="url">/shop#tutorial.shop=true</field>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_open_website"/>
+            <field name="state">open</field>
+        </record>
+
+        <record id="website_sale.image_promo" model="product.style">
+            <field name="name">Sale Ribbon</field>
+            <field name="html_class">oe_ribbon_promo</field>
+        </record>
+        <record id="website_sale.image_full" model="product.style">
+            <field name="name">Image Full</field>
+            <field name="html_class">oe_image_full</field>
+        </record>
+
+        <record model="crm.case.section" id="website.salesteam_website_sales">
+            <field name="name">Website Sales</field>
+            <field name="code">WS</field>
+            <field name="member_ids" eval="[(4, ref('base.user_root'))]"/>
+            <field name="use_quotations" eval="False"/>
+        </record>
+
+        <!-- Product Public Categories -->
+        <record id="categ_others" model="product.public.category">
+            <field name="name">Others</field>
+        </record>
+    </data>
+</openerp>

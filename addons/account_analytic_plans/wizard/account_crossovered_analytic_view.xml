@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_crossovered_analytic" model="ir.ui.view">
+            <field name="name">account.crossovered.analytic.form</field>
+            <field name="model">account.crossovered.analytic</field>
+            <field name="arch" type="xml">
+            <form string="Crossovered Analytic">
+                <group col="4">
+                    <field name="date1"/>
+                    <field name="date2"/>
+                    <field name="ref" groups="analytic.group_analytic_accounting"/>
+                    <field name="empty_line"/>
+                </group><group string="Analytic Journal">
+                    <field name="journal_ids" colspan="2" nolabel="1"/>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_crossovered_analytic" model="ir.actions.act_window">
+            <field name="name">Crossovered Analytic</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.crossovered.analytic</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="account_crossovered_analytic_values">
+            <field name="model_id" ref="analytic.model_account_analytic_account" />
+            <field name="name">Crossovered Analytic</field>
+            <field name="key2">client_print_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_crossovered_analytic'))" />
+            <field name="key">action</field>
+            <field name="model">account.analytic.account</field>
+        </record>
+
+    </data>
+</openerp>

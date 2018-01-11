@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!--  Cancel Repair -->
+        
+        <record id="view_cancel_repair" model="ir.ui.view">
+            <field name="name">Cancel Repair</field>
+            <field name="model">mrp.repair.cancel</field>
+            <field name="arch" type="xml">
+                <form string="Cancel Repair Order">
+                    <group>
+                        <label string="This operation will cancel the Repair process, but will not cancel it's Invoice. Do you want to continue?"/>
+                    </group>
+                    <footer>
+                        <button name="cancel_repair" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>         
+
+        <record id="action_cancel_repair" model="ir.actions.act_window">
+            <field name="name">Cancel Repair Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.repair.cancel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record> 
+        
+    </data>
+</openerp>    

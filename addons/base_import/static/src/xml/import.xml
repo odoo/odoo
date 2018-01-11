@@ -1,0 +1,408 @@
+<templates>
+    <t t-name="ImportView">
+        <t t-set="_id" t-value="_.uniqueId('export')"/>
+        <form action="" method="post" enctype="multipart/form-data" class="oe_import">
+            <div class="oe_view_manager oe_view_manager_current">
+                <div class="oe_view_manager_header oe_padding">
+                    <h2>
+                        Import a CSV File
+                    </h2>
+                    <input type="hidden" name="session_id"
+                       t-att-value="widget.session.session_id"/>
+                    <input type="hidden" name="import_id"/>
+                    <button type="button" disabled="disabled"
+                            class="oe_button oe_import_button oe_import_validate oe_highlight"
+                        >Validate</button>
+                    <button type="button" disabled="disabled"
+                            class="oe_button oe_import_button oe_import_import"
+                        >Import</button>
+                    <span class="oe_fade">or</span>
+                    <a class="oe_import_cancel" href="#">Cancel</a>
+                </div>
+            </div>
+
+            <p>Select the <a
+                    href="http://en.wikipedia.org/wiki/Comma-separated_values"
+                    class="oe_import_csv" target="_blank">.CSV</a>
+            file to import. If you need a sample importable file, you
+            can use the export tool to generate one.</p>
+            <div class="oe_import_box">
+                <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
+                <input type="file" id-attf-id="file_#{_id}"
+                       name="file" class="oe_import_file"/>
+                <button type="button" class="oe_import_file_reload"
+                        disabled="disabled"
+                        title="Reload data to check changes.">
+                    <img src="/web/static/src/img/icons/gtk-refresh.png"/>
+                </button>
+                <div class="oe_import_with_file">
+                    <a href="#" class="oe_import_toggle">
+                        File Format Options…</a>
+                    <div class="oe_import_toggled oe_import_options">
+                        <p t-foreach="widget.opts" t-as="option">
+                            <!-- no @name, avoid submission when file_update called -->
+                            <label t-attf-for="#{option.name}_#{_id}">
+                                <t t-esc="option.label"/></label>
+                            <input t-attf-id="#{option.name}_#{_id}"
+                                   t-attf-class="oe_import_#{option.name}"
+                                   t-att-value="option.value"/>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="oe_import_with_file oe_padding">
+                <h2>Map your data to Odoo</h2>
+                <div title="If the model uses openchatter, history tracking
+                            will set up subscriptions and send notifications
+                            during the import, but lead to a slower import.">
+                    <input type="checkbox" id="oe_import_tracking"
+                           checked="checked"/>
+                    <label for="oe_import_tracking">
+                        Track history during import
+                    </label>
+                </div>
+                <input type="checkbox" class="oe_import_has_header"
+                       id="oe_import_has_header" checked="checked"/>
+                <label for="oe_import_has_header">The first row of the
+                file contains the label of the column</label>
+                <p class="oe_import_noheaders">If the file contains
+                the column names, Odoo can try auto-detecting the
+                field corresponding to the column. This makes imports
+                simpler especially when the file has many columns.</p>
+
+                <div class="oe_import_error_report"></div>
+                <table class="oe_import_grid" />
+            </div>
+            <div class="oe_padding">
+                <h2>Frequently Asked Questions</h2>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        Need to import data from an other application?</a></dt>
+                    <dd>
+                        <p>In order to re-create relationships between
+                        different records, you should use the unique
+                        identifier from the original application and
+                        map it to the <abbr title="External ID">ID</abbr>
+                        column in Odoo. When you
+                        import an other record that links to the first
+                        one, use <abbr title="XXX/External ID">XXX/ID</abbr>
+                        to the original unique identifier.</p>
+                        <p>The <abbr title="External ID">ID</abbr>
+                        will also be used to update the original
+                        import if you need to re-import modified data
+                        later, it's thus good practice to specify it
+                        whenever possible</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What can I do when the Import preview table isn't 
+                        displayed correctly?</a></dt>
+                    <dd>
+                        <p>By default the Import preview is set on commas as 
+                        field separators and quotation marks as text 
+                        delimiters. If your csv file does not have these 
+                        settings, you can modify the File Format Options 
+                        (displayed under the Browse CSV file bar after you 
+                        select your file).</p> <p>Note that if your CSV file 
+                        has a tabulation as separator, Odoo will not 
+                        detect the separations. You will need to change the 
+                        file format options in your spreadsheet application. 
+                        See the following question.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How can I change the CSV file format options when 
+                        saving in my spreadsheet application?</a></dt>
+                    <dd>
+                        <p>If you edit and save CSV files in speadsheet 
+                        applications, your computer's regional settings will 
+                        be applied for the separator and delimiter. 
+                        We suggest you use OpenOffice or LibreOffice Calc 
+                        as they will allow you to modify all three options 
+                        (in 'Save As' dialog box > Check the box 'Edit filter 
+                        settings' > Save).</p> <p>Microsoft Excel will allow 
+                        you to modify only the encoding when saving 
+                        (in 'Save As' dialog box > click 'Tools' dropdown 
+                        list > Encoding tab).</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What's the difference between Database ID and 
+                        External ID?</a></dt>
+                    <dd>
+                        <p>Some fields define a relationship with another 
+                        object. For example, the country of a contact is a 
+                        link to a record of the 'Country' object. When you 
+                        want to import such fields, Odoo will have to 
+                        recreate links between the different records. 
+                        To help you import such fields, Odoo provides 3 
+                        mechanisms. You must use one and only one mechanism 
+                        per field you want to import.</p> <p>For example, to 
+                        reference the country of a contact, Odoo proposes 
+                        you 3 different fields to import: <ul>
+                        <li>Country: the name or code of the country</li>
+                        <li>Country/Database ID: the unique Odoo ID for a 
+                        record, defined by the ID postgresql column</li>
+                        <li>Country/External ID: the ID of this record 
+                        referenced in another application (or the .XML file 
+                        that imported it)</li> </ul></p> <p>For the country 
+                        Belgium, you can use one of these 3 ways to import: 
+                        <ul> <li>Country: Belgium</li> <li>Country/Database 
+                        ID: 21</li> <li>Country/External ID: base.be</li>
+                        </ul></p> <p>According to your need, you should use 
+                        one of these 3 ways to reference records in relations. 
+                        Here is when you should use one or the other, 
+                        according to your need: <ul> <li>Use Country: This is 
+                        the easiest way when your data come from CSV files 
+                        that have been created manually.</li> <li>Use 
+                        Country/Database ID: You should rarely use this 
+                        notation. It's mostly used by developers as it's main 
+                        advantage is to never have conflicts (you may have 
+                        several records with the same name, but they always 
+                        have a unique Database ID)</li> <li>Use 
+                        Country/External ID: Use External ID when you import 
+                        data from a third party application.</li> </ul></p> 
+                        <p>When you use External IDs, you can import CSV files 
+                        with the "External ID" column to define the External 
+                        ID of each record you import. Then, you will be able 
+                        to make a reference to that record with columns like 
+                        "Field/External ID". The following two CSV files give 
+                        you an example for Products and their Categories.</p>
+                        <a href="/base_import/static/csv/External_id_3rd_party_application_product_categories.csv">CSV file for categories</a><br/>
+                        <a href="/base_import/static/csv/External_id_3rd_party_application_products.csv">CSV file for Products</a>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What can I do if I have multiple matches for a field?
+                        </a></dt>
+                    <dd>
+                        <p>If for example you have two product categories 
+                        with the child name "Sellable" (ie. "Misc. 
+                        Products/Sellable" &amp; "Other Products/Sellable"),
+                        your validation is halted but you may still import 
+                        your data. However, we recommend you do not import the 
+                        data because they will all be linked to the first 
+                        'Sellable' category found in the Product Category list 
+                        ("Misc. Products/Sellable"). We recommend you modify 
+                        one of the duplicates' values or your product category 
+                        hierarchy.<br/>
+                        However if you do not wish to change your 
+                        configuration of product categories, we recommend you 
+                        use make use of the external ID for this field 
+                        'Category'.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How can I import a many2many relationship field 
+                        (e.g. a customer that has multiple tags)?</a></dt>
+                    <dd>
+                        <p>The tags should be separated by a comma without any 
+                        spacing. For example, if you want your customer to be 
+                        linked to both tags 'Manufacturer' and 'Retailer' 
+                        then you will encode "Manufacturer,
+                        Retailer" in the same column of your CSV file.</p>
+                        <a href="/base_import/static/csv/m2m_customers_tags.csv">
+                        CSV file for Manufacturer, Retailer</a><br/>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How can I import a one2many relationship (e.g. several 
+                        Order Lines of a Sales Order)?</a></dt>
+                    <dd>
+                        <p>If you want to import sales order having several 
+                        order lines; for each order line, you need to reserve 
+                        a specific row in the CSV file. The first order line 
+                        will be imported on the same row as the information 
+                        relative to order. Any additional lines will need an 
+                        addtional row that does not have any information in 
+                        the fields relative to the order.</p>
+                        <p>As an example, here is 
+                        purchase.order_functional_error_line_cant_adpat.CSV 
+                        file of some quotations you can import, based on demo 
+                        data.</p>
+                        <a href="/base_import/static/csv/purchase.order_functional_error_line_cant_adpat.csv">File for some Quotations</a>
+                        <p>The following CSV file shows how to import purchase 
+                        orders with their respective purchase order lines:</p>
+                        <a href="/base_import/static/csv/o2m_purchase_order_lines.csv">Purchase orders with their respective purchase order lines</a>
+                        <p>The following CSV file shows how to import 
+                        customers and their respective contacts</p>
+                        <a href="/base_import/static/csv/o2m_customers_contacts.csv">Customers and their respective contacts</a>
+                    </dd>
+                </dl>
+
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        Can I import several times the same record?</a></dt>
+                    <dd>
+                        <p>If you import a file that contains one of the 
+                        column "External ID" or "Database ID", records that 
+                        have already been imported will be modified instead of 
+                        being created. This is very usefull as it allows you 
+                        to import several times the same CSV file while having 
+                        made some changes in between two imports. Odoo will 
+                        take care of creating or modifying each record 
+                        depending if it's new or not.</p> <p> This feature 
+                        allows you to use the Import/Export tool of Odoo to 
+                        modify a batch of records in your favorite spreadsheet 
+                        application.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What happens if I do not provide a value for a 
+                        specific field?</a></dt>
+                    <dd>
+                        <p>If you do not set all fields in your CSV file, 
+                        Odoo will assign the default value for every non 
+                        defined fields. But if you
+                        set fields with empty values in your CSV file, Odoo 
+                        will set the EMPTY value in the field, instead of 
+                        assigning the default value.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How to export/import different tables from an SQL 
+                        application to Odoo?</a></dt>
+                    <dd>
+                        <p>If you need to import data from different tables, 
+                        you will have to recreate relations between records 
+                        belonging to different tables. (e.g. if you import 
+                        companies and persons, you will have to recreate the 
+                        link between each person and the company they work 
+                        for).</p> <p>To manage relations between tables, 
+                        you can use the "External ID" facilities of Odoo. 
+                        The "External ID" of a record is the unique identifier 
+                        of this record in another application. This "External 
+                        ID" must be unique accoss all the records of all 
+                        objects, so it's a good practice to prefix this 
+                        "External ID" with the name of the application or 
+                        table. (like 'company_1', 'person_1' instead of '1')
+                        </p> <p>As an example, suppose you have a SQL database 
+                        with two tables you want to import: companies and 
+                        persons. Each person belong to one company, so you 
+                        will have to recreate the link between a person and 
+                        the company he work for. (If you want to test this 
+                        example, here is a <a href="/base_import/static/csv/database_import_test.sql">
+                        dump of such a PostgreSQL database</a>).</p>
+                        <p>We will first export all companies and their 
+                        "External ID". In PSQL, write the following command:
+                        </p> <p>&#160;&#160;&#160;&#160;copy 
+                        (select 'company_'||id as "External ID",company_name 
+                        as "Name",'True' as "Is a Company" from companies) TO 
+                        '/tmp/company.csv' with CSV HEADER;</p>
+                        <p>This SQL command will create the following CSV file:
+                        <br/>&#160;&#160;&#160;&#160;External ID,Name,Is a Company
+                        <br/>&#160;&#160;&#160;&#160;company_1,Bigees,True
+                        <br/>&#160;&#160;&#160;&#160;company_2,Organi,True
+                        <br/>&#160;&#160;&#160;&#160;company_3,Boum,True</p>
+                        <p>To create the CSV file for persons, linked to 
+                        companies, we will use the following SQL command in 
+                        PSQL:</p> <p>&#160;&#160;&#160;&#160;copy (select 
+                        'person_'||id as "External ID",person_name as 
+                        "Name",'False' as "Is a Company",'company_'||company_id
+                         as "Related Company/External ID" from persons) TO 
+                        '/tmp/person.csv' with CSV</p>
+                        <p>It will produce the following CSV file:
+                        <br/>&#160;&#160;&#160;&#160;External ID,Name,Is a 
+                        Company,Related Company/External ID
+                        <br/>&#160;&#160;&#160;&#160;person_1,Fabien,False,company_1
+                        <br/>&#160;&#160;&#160;&#160;person_2,Laurence,False,company_1
+                        <br/>&#160;&#160;&#160;&#160;person_3,Eric,False,company_2
+                        <br/>&#160;&#160;&#160;&#160;person_4,Ramsy,False,company_3</p>
+                        <p>As you can see in this file, Fabien and Laurence 
+                        are working for the Bigees company (company_1) and 
+                        Eric is working for the Organi company. The relation 
+                        between persons and companies is done using the 
+                        External ID of the companies. We had to prefix the 
+                        "External ID" by the name of the table to avoid a 
+                        conflict of ID between persons and companies (person_1 
+                        and company_1 who shared the same ID 1 in the orignial 
+                        database).</p>
+                        <p>The two files produced are ready to be imported in 
+                        Odoo without any modifications. After having 
+                        imported these two CSV files, you will have 4 contacts 
+                        and 3 companies. (the firsts two contacts are linked 
+                        to the first company). You must first import the 
+                        companies and then the persons.</p>
+                    </dd>
+                </dl>
+
+            </div>
+        </form>
+    </t>
+
+    <t t-name="ImportView.preview">
+        <tr t-if="headers" class="oe_import_grid-header">
+            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                ><t t-esc="header"/></td>
+        </tr>
+        <tr class="oe_import_fields">
+            <!-- Iterate on first row to ensure we have all columns -->
+            <td t-foreach="preview[0]" t-as="column">
+                <input class="oe_import_match_field"/>
+            </td>
+        </tr>
+        <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+            <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                ><t t-esc="cell"/></td>
+        </tr>
+    </t>
+    <t t-name="ImportView.preview.error">
+        <p>Import preview failed due to: <t t-esc="error"/>. The issue is
+            usually an incorrect file encoding.</p>
+        <p>Here is the start of the file we could not import:</p>
+        <pre><t t-esc="preview"/></pre>
+    </t>
+    <ul t-name="ImportView.error">
+        <li t-foreach="errors" t-as="error"
+            t-attf-class="oe_import_report oe_import_report_#{error_value[0].type}">
+            <t t-call="ImportView.error.each">
+                <t t-set="error" t-value="error_value[0]"/>
+            </t>
+
+            <a href="#" class="oe_import_report_count" t-if="error_value.length gt 1">
+                <t t-esc="more(error_value.length - 1)"/>
+            </a>
+            <ul class="oe_import_report_more" t-if="error_value.length gt 1">
+                <li t-foreach="error_value.length - 1" t-as="index">
+                    <t t-call="ImportView.error.each">
+                        <t t-set="error" t-value="error_value[index + 1]"/>
+                    </t>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <t t-name="ImportView.error.each">
+        <span class="oe_import_report_message">
+            <t t-esc="error.message"/>
+        </span>
+        <t t-if="error.rows"  t-esc="at(error.rows)"/>
+        <t t-if="error.moreinfo" t-raw="info(error.moreinfo)"/>
+    </t>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="span.oe_alternative">
+            this.attr('t-if', 'widget.options.import_enabled');
+        </t>
+        <t t-jquery="span.oe_alternative" t-operation="append">
+            <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </t>
+    </t>
+</templates>

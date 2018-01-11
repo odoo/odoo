@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="account_unreconcile_view" model="ir.ui.view">
+            <field name="name">Unreconcile Entries</field>
+            <field name="model">account.unreconcile</field>
+            <field name="arch" type="xml">
+            <form string="Unreconcile">
+                <separator string="Unreconcile Transactions"/>
+                <label string="If you unreconcile transactions, you must also verify all the actions that are linked to those transactions because they will not be disabled"/>
+                <footer>
+                    <button string="Unreconcile" name="trans_unrec" type="object" default_focus="1" class="oe_highlight"/>
+                    or                    
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_unreconcile" model="ir.actions.act_window">
+            <field name="name">Unreconcile Entries</field>
+            <field name="res_model">account.unreconcile</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+           <field name="view_id" ref="account_unreconcile_view"/>
+           <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="account_unreconcile_values">
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field name="name">Unreconcile Entries</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_unreconcile'))" />
+            <field name="key">action</field>
+            <field name="model">account.move.line</field>
+        </record>
+
+        <record id="account_unreconcile_reconcile_view" model="ir.ui.view">
+            <field name="name">Unreconcile Entries</field>
+            <field name="model">account.unreconcile.reconcile</field>
+            <field name="arch" type="xml">
+            <form string="Unreconciliation">
+                <header>
+                    <button icon="gtk-ok" string="Unreconcile" name="trans_unrec_reconcile" type="object" default_focus="1" class="oe_highlight"  />
+                </header>
+                <separator string="Unreconcile Transactions"/>
+                <label string="If you unreconcile transactions, you must also verify all the actions that are linked to those transactions because they will not be disable"/>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_account_unreconcile_reconcile" model="ir.actions.act_window">
+            <field name="name">Unreconcile Entries</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.unreconcile.reconcile</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="account_unreconcile_reconcile_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+
+        <record model="ir.values" id="account_unreconcile_reconcile_values">
+            <field name="model_id" ref="account.model_account_move_reconcile" />
+            <field name="name">Unreconcile Entries</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_unreconcile_reconcile'))" />
+            <field name="key">action</field>
+            <field name="model">account.move.reconcile</field>
+        </record>
+
+    </data>
+</openerp>
+

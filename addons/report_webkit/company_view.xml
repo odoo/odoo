@@ -1,0 +1,18 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="currency_del_img">
+            <field name="name">res.company.form.inherit</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Report Configuration']/group[@string='Configuration']" position="after">
+                    <group string="Configuration (Webkit)" col="2">
+                        <field name="header_image"/>
+                        <field name="header_webkit"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+

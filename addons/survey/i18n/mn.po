@@ -1,0 +1,2187 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * survey
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2017-07-26 06:26+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Mongolian (http://www.transifex.com/odoo/odoo-8/language/mn/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mn\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: survey
+#: model:email.template,body_html:survey.email_template_survey
+msgid ""
+"\n"
+"                \n"
+"                <div style=\"font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); \">\n"
+"                    <p>Hello,</p>\n"
+"                    <p>We are conducting a survey, and your response would be appreciated.</p>\n"
+"                    <p><a href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"                    <p>Thanks for your participation!</p>\n"
+"                </div>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: survey
+#: view:survey.page:survey.survey_page_tree
+msgid "#Questions"
+msgstr "#Асуултууд"
+
+#. module: survey
+#: code:addons/survey/survey.py:246 code:addons/survey/survey.py:543
+#: code:addons/survey/survey.py:662
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (хуулбар)"
+
+#. module: survey
+#: view:website:survey.page
+msgid "&times;"
+msgstr "&times;"
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">Click to add a survey.</p>\n"
+"                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>\n"
+"                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_1
+#: model:survey.page,description:survey.feedback_3
+#: model:survey.survey,thank_you_message:survey.feedback_form
+msgid "<p></p>"
+msgstr "<p></p>"
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_4
+msgid "<p>If you do not contribute or develop in Odoo, skip this page.</p>"
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_selected_survey_user_input
+msgid ""
+"<p>Nobody has replied to your survey yet.</p>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:ir.actions.act_window,help:survey.action_survey_user_input
+msgid ""
+"<p>Nobody has replied to your surveys yet.</p>\n"
+"            "
+msgstr ""
+
+#. module: survey
+#: model:survey.page,description:survey.feedback_2
+msgid ""
+"<p>These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
+"what have been your difficulties.</p>"
+msgstr ""
+
+#. module: survey
+#: model:survey.survey,description:survey.feedback_form
+msgid "<p>This survey should take less than five minutes.</p>"
+msgstr ""
+
+#. module: survey
+#: constraint:survey.label:0
+msgid "A label must be attached to one and only one question"
+msgstr ""
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "A length must be positive!"
+msgstr "Урт нь эерэг байх ёстой!"
+
+#. module: survey
+#: help:survey.survey,description:0
+msgid "A long description of the purpose of the survey"
+msgstr "Асуулгын зорилгын дэлгэрэнгүй тайлбар"
+
+#. module: survey
+#: help:survey.label,quizz_mark:0
+msgid ""
+"A positive score indicates a correct answer; a negative or null score "
+"indicates a wrong answer"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.page
+msgid "A problem has occured"
+msgstr "Асуудал гарлаа"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_4
+msgid "A process is defined for all enterprise flows"
+msgstr "Бүх байгууллагын урсгалд үйл явцыг тодорхойлно"
+
+#. module: survey
+#: constraint:survey.user_input_line:0
+msgid "A question cannot be unanswered and skipped"
+msgstr "Асуултанд хариулахгүйгээр алгасах боломжгүй"
+
+#. module: survey
+#: sql_constraint:survey.user_input:0
+msgid "A token must be unique!"
+msgstr "Тасалбар нь давтагдаагүй байх ёстой!"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_1
+msgid "About your Odoo usage"
+msgstr "Таны Odoo хэрэглээний тухай"
+
+#. module: survey
+#: field:survey.mail.compose.message,active_domain:0
+msgid "Active domain"
+msgstr "Идэвхтэй дөмэйн"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"Add list of email of recipients (will not converted in partner), separated "
+"by commas, semicolons or newline..."
+msgstr "Таслал, цэгтэй таслал эсвэл шинэ мөрөөр тусгаарласан хүлээн авагчдын имэйлийн жагсаалт (харилцагч руу хувиргахгүй)"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Add list of existing contacts..."
+msgstr "Одоо байгаа холбогдох хаягуудын жагсаалтыг оруулна уу..."
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_3
+#: model:survey.label,value:survey.fcol_2_2_3
+#: model:survey.label,value:survey.fcol_2_5_3
+#: model:survey.label,value:survey.fcol_2_7_3
+msgid "Agree"
+msgstr "Зөвшөөрөх"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "All Data"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.result
+msgid "All surveys"
+msgstr ""
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Allow Comments"
+msgstr "Сэтгэгдэл бичихийг зөвшөөрөх"
+
+#. module: survey
+#: help:survey.page,description:0
+msgid "An introductory text to your page"
+msgstr "Хуудсын танилцуулга текст"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Analyze Answers"
+msgstr "Хариултуудыг шинжлэх"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Answer Choices"
+msgstr "Хариултын сонголтууд"
+
+#. module: survey
+#: field:survey.user_input,type:0 field:survey.user_input_line,answer_type:0
+msgid "Answer Type"
+msgstr "Хариултын төрөл"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Answered"
+msgstr "Хариулсан"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input
+#: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,user_input_line_ids:0
+#: field:survey.user_input,user_input_line_ids:0
+msgid "Answers"
+msgstr "Хариултууд"
+
+#. module: survey
+#: help:survey.mail.compose.message,no_auto_thread:0
+msgid ""
+"Answers do not go in the original document' discussion thread. This has an "
+"impact on the generated message-id."
+msgstr "Хариу нь эх баримтын салбар хөөрөлдөөн рүү орохгүй. Энэ нь үүсгэгдсэн message-id-д нөлөөлнө."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_1
+msgid "Are you using Odoo on a daily basis?"
+msgstr "Та Odoo - г өдөр болгон ашиглаж байгаа юу?"
+
+#. module: survey
+#: field:survey.mail.compose.message,attachment_ids:0
+msgid "Attachments"
+msgstr "Хавсралтууд"
+
+#. module: survey
+#: field:survey.mail.compose.message,author_id:0
+msgid "Author"
+msgstr "Зохиогч"
+
+#. module: survey
+#: help:survey.mail.compose.message,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that"
+" did not match any partner."
+msgstr "Зурвасын зохиогч. Хэрэв хоосон бол, email_from мэйл хаягтай тохирох харилцагч байхгүй гэсэн үг."
+
+#. module: survey
+#: field:survey.mail.compose.message,author_avatar:0
+msgid "Author's Avatar"
+msgstr "Зохиогчийн хөрөг"
+
+#. module: survey
+#: help:survey.mail.compose.message,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr "Автомат янзлагдсан HTML агуулга"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Average"
+msgstr "Дундаж"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_4
+msgid "CRM"
+msgstr "CRM"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: survey
+#: field:survey.survey,res_model:0
+msgid "Category"
+msgstr "Ангилал"
+
+#. module: survey
+#: field:survey.mail.compose.message,child_ids:0
+msgid "Child Messages"
+msgstr "Дэд зурвасууд"
+
+#. module: survey
+#: view:website:survey.simple_choice
+msgid "Choose..."
+msgstr "Сонгоно уу..."
+
+#. module: survey
+#: view:website:survey.result
+msgid "Clear All Filters"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:141
+#: code:addons/survey/wizard/survey_email_compose_message.py:51
+#, python-format
+msgid "Click here to start survey"
+msgstr "Асуулгыг эхлэх бол энд дарна уу"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:109
+#, python-format
+msgid "Click here to take survey"
+msgstr ""
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: view:website:survey.page
+msgid "Close"
+msgstr "Хаах"
+
+#. module: survey
+#: field:survey.stage,closed:0 model:survey.stage,name:survey.stage_closed
+msgid "Closed"
+msgstr "Хаасан"
+
+#. module: survey
+#: field:survey.survey,color:0
+msgid "Color Index"
+msgstr "Өнгөний Индекс"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+#: view:website:survey.result_comments
+msgid "Comment"
+msgstr "Сэтгэгдэл"
+
+#. module: survey
+#: field:survey.question,comment_count_as_answer:0
+msgid "Comment Field is an Answer Choice"
+msgstr "Сэтгэгдлийн Талбар нь Хариултын Сонголт"
+
+#. module: survey
+#: field:survey.question,comments_message:0
+msgid "Comment Message"
+msgstr "Сэтгэгдлийн зурвас"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_3
+msgid "Community and contributors"
+msgstr "Бүлэг ба оролцогчид"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.user_input,state:0
+msgid "Completed"
+msgstr "Дууссан"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Compose Email"
+msgstr "Эмэйл Үүсгэх"
+
+#. module: survey
+#: field:survey.mail.compose.message,composition_mode:0
+msgid "Composition mode"
+msgstr "Үүсгэх горим"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_2
+msgid "Configuration wizard exists for each important setting"
+msgstr "Чухал тохиргоо бүрт тохиргооны цонх байна"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Constraints"
+msgstr "Хязгаарлалт"
+
+#. module: survey
+#: field:survey.mail.compose.message,body:0
+msgid "Contents"
+msgstr "Агуулга"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
+msgstr "Доорх HTML кодыг хуулж энэ вэб холбоосыг аль ч вэб хуудас дээр нэмээрэй"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Copy, paste and share the web link below to your audience."
+msgstr "Доорх вэб холбоосыг хуулж уншигчдад хуваалцаарай"
+
+#. module: survey
+#: field:survey.user_input_line,date_create:0
+msgid "Create Date"
+msgstr "Үүсгэх огноо"
+
+#. module: survey
+#: field:survey.label,create_uid:0
+#: field:survey.mail.compose.message,create_uid:0
+#: field:survey.page,create_uid:0 field:survey.question,create_uid:0
+#: field:survey.stage,create_uid:0 field:survey.survey,create_uid:0
+#: field:survey.user_input,create_uid:0
+#: field:survey.user_input_line,create_uid:0
+msgid "Created by"
+msgstr "Үүсгэгч"
+
+#. module: survey
+#: field:survey.label,create_date:0
+#: field:survey.mail.compose.message,create_date:0
+#: field:survey.page,create_date:0 field:survey.question,create_date:0
+#: field:survey.stage,create_date:0 field:survey.survey,create_date:0
+#: field:survey.user_input,create_date:0
+#: field:survey.user_input_line,create_date:0
+msgid "Created on"
+msgstr "Үүсгэсэн огноо"
+
+#. module: survey
+#: field:survey.user_input,date_create:0
+msgid "Creation Date"
+msgstr "Үүсгэх огноо"
+
+#. module: survey
+#: help:survey.mail.compose.message,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr "Идэвхтэй хэрэглэгч нь энэ зурвас холбогдсон мэдэгдлийг одоор тэмдэглэсэн байна"
+
+#. module: survey
+#: help:survey.mail.compose.message,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr "Идэвхтэй хэрэглэгч нь энэ зурвастай холбоотой уншаагүй мэдэгдэлтэй байна"
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_matrix
+msgid "Data"
+msgstr "Өгөгдөл"
+
+#. module: survey
+#: field:survey.mail.compose.message,date:0
+#: selection:survey.user_input_line,answer_type:0
+msgid "Date"
+msgstr "Огноо"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Date and Time"
+msgstr "Огноо болон хугацаа"
+
+#. module: survey
+#: field:survey.user_input_line,value_date:0
+msgid "Date answer"
+msgstr "Хариултын огноо"
+
+#. module: survey
+#: help:survey.user_input,deadline:0
+msgid "Date by which the person can open the survey and submit answers"
+msgstr "Асуулгыг нээж хариулах боломжтой болох огноо"
+
+#. module: survey
+#: help:survey.survey,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Бичлэгэнд хамгийн сүүлийн мессеж илгээгдсэн огноо."
+
+#. module: survey
+#: field:survey.user_input,deadline:0
+msgid "Deadline"
+msgstr "Эцсийн хугацаа"
+
+#. module: survey
+#: help:survey.mail.compose.message,date_deadline:0
+msgid ""
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty, the invitation is still valid."
+msgstr ""
+
+#. module: survey
+#: field:survey.mail.compose.message,date_deadline:0
+msgid "Deadline to which the invitation to respond is valid"
+msgstr "Хариулах урилгын идэвхитэй байх эцсийн хугацаа"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Delete!"
+msgstr ""
+
+#. module: survey
+#: field:survey.page,description:0 field:survey.question,description:0
+#: field:survey.survey,description:0
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_1
+msgid "Descriptions and help tooltips are clear enough"
+msgstr "Тайлбар болон тусламжийн багажийн зөвлөгөөнүүд нь хангалттай тодорхой байна"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Design"
+msgstr "Зохиомж"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_2
+#: model:survey.label,value:survey.fcol_2_2_2
+#: model:survey.label,value:survey.fcol_2_5_2
+#: model:survey.label,value:survey.fcol_2_7_2
+msgid "Disagree"
+msgstr "Зөвшөөрөхгүй"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,display_mode:0
+msgid "Display mode"
+msgstr "Харуулах горим"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_3
+msgid "Do you have a proposition to attract new contributors?"
+msgstr "Танд шинэ хувь оруулагчдыг татах төлөвлөгөө байна уу?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_2
+msgid "Do you have a proposition to help people to contribute?"
+msgstr "Танд хувь оруулагчдад туслах төлөвлөгөө байна уу?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_3
+msgid "Do you have suggestions on how to improve the process view ?"
+msgstr "Танд явцын харагдацыг хэрхэн сайжруулах талаар өгөх зөвлөгөө байна уу ?"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_draft
+msgid "Draft"
+msgstr "Ноорог"
+
+#. module: survey
+#: field:survey.user_input,email:0
+msgid "E-mail"
+msgstr "Э-мэйл"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Edit Pages and Questions"
+msgstr "Хуудас ба Асуултуудыг засах"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Email"
+msgstr "Э-мэйл"
+
+#. module: survey
+#: field:survey.survey,email_template_id:0
+msgid "Email Template"
+msgstr "Э-мэйл загвар"
+
+#. module: survey
+#: help:survey.mail.compose.message,email_from:0
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found for incoming emails."
+msgstr "Илгээгчийн имэйл хаяг. Ирсэн имэйлд тохирох харилцагч олдоогүй тохиолдолд энэ талбар нь тохируулагдана."
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_mail_compose_message
+msgid "Email composition wizard for Survey"
+msgstr "Судалгаанд зориулсан эмэйл үүсгэх харилцах цонх"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_2
+msgid "Ergonomy and ease of use"
+msgstr "Ажиллахад тухтай ба хэрэглэхэд хялбар"
+
+#. module: survey
+#: field:survey.question,constr_error_msg:0
+#: field:survey.question,validation_error_msg:0
+msgid "Error message"
+msgstr "Алдааны мэссэж"
+
+#. module: survey
+#: code:addons/survey/survey.py:439
+#, python-format
+msgid "Error!"
+msgstr "Алдаа!"
+
+#. module: survey
+#: field:survey.mail.compose.message,partner_ids:0
+msgid "Existing contacts"
+msgstr "Одоо байгаа холбогдох хаягууд"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_3
+msgid "Extra modules proposed are relevant"
+msgstr "Санал болгосон нэмэлт модулиуд нь чухал"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Filters"
+msgstr "Шүүлтүүр"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_3
+msgid "Financial Management"
+msgstr "Санхүүгийн Менежмент"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Finished surveys"
+msgstr ""
+
+#. module: survey
+#: field:survey.stage,fold:0
+msgid "Folded in kanban view"
+msgstr "Канбан харагдацад эвхэгдсэн"
+
+#. module: survey
+#: field:survey.survey,message_follower_ids:0
+msgid "Followers"
+msgstr "Дагагчид"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Format"
+msgstr "Формат"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Free Text"
+msgstr "Чөлөөт Текст"
+
+#. module: survey
+#: field:survey.user_input_line,value_free_text:0
+msgid "Free Text answer"
+msgstr "Чөлөөт Текстийн хариу"
+
+#. module: survey
+#: field:survey.mail.compose.message,email_from:0
+msgid "From"
+msgstr "Хаанаас"
+
+#. module: survey
+#: view:website:survey.survey view:website:survey.survey_init
+msgid "Go back to surveys"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_matrix
+msgid "Graph"
+msgstr "Граф"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+#: view:survey.question:survey.survey_question_search
+#: view:survey.user_input:survey.survey_user_input_search
+#: view:survey.user_input_line:survey.survey_response_line_search
+msgid "Group By"
+msgstr "Бүлэглэх"
+
+#. module: survey
+#: help:survey.survey,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_3_1
+msgid "How do you contribute or plan to contribute to Odoo?"
+msgstr "Та Odoo - д хэрхэн хувь оруулдаг эсвэл хувь оруулахаар төлөвлөж байна вэ?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_6
+msgid "Human Ressources"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_3
+msgid "I develop new features"
+msgstr "Би шинэ боломжуудыг хөгжүүлдэг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_4
+msgid "I do not publish my developments"
+msgstr "Би хөгжүүлэлтүүдээ нийтлэдэггүй"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_4
+msgid "I help to translate"
+msgstr "Би орчуулахад тусладаг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_3
+msgid "I host them on my own website"
+msgstr "Би эдгээрийг өөрийн вэбсайт дээр зохион байгуулдаг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_1
+msgid "I participate to discussion and forums"
+msgstr "Би хэлэлцүүлэг болон форумд оролцдог"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_1
+msgid "I use Launchpad, like all official Odoo projects"
+msgstr ""
+
+#. module: survey
+#: model:survey.label,value:survey.choice_4_1_2
+msgid "I use another repository system (SourceForge...)"
+msgstr "Би өөр агуулах систем ашигладаг (SourceForge...)"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_3
+msgid "I use the contextual help in Odoo"
+msgstr "Би Odoo - н хам сэдвийн тусламжийг ашигладаг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_5
+msgid "I write documentations"
+msgstr "Би баримтжлуулалтуудыг бичдэг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_3_1_2
+msgid "I'd like to contribute but I don't know how?"
+msgstr "Би хувь нэмрээ оруулмаар байгаа ч яаж гэдгээ мэдэхгүй байна?"
+
+#. module: survey
+#: field:survey.label,id:0 field:survey.mail.compose.message,id:0
+#: field:survey.page,id:0 field:survey.question,id:0 field:survey.stage,id:0
+#: field:survey.survey,id:0 field:survey.user_input,id:0
+#: field:survey.user_input_line,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: survey
+#: field:survey.user_input,token:0
+msgid "Identification token"
+msgstr "Ялгах тасалбар"
+
+#. module: survey
+#: help:survey.survey,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Хэрэв тэмдэглэгдсэн бол таныг шинэ зурвасуудад анхаарал хандуулахыг шаардана."
+
+#. module: survey
+#: help:survey.survey,users_can_go_back:0
+msgid "If checked, users can go back to previous pages."
+msgstr "Үүнийг чагталвал хэрэглэгчид өмнөх хуудсууд руу буцах боломжтой болно."
+
+#. module: survey
+#: help:survey.stage,closed:0
+msgid "If closed, people won't be able to answer to surveys in this column."
+msgstr "Үүнийг хаавал хүмүүс энэ багана дахь асуулгуудад хариулах боломжгүй болно."
+
+#. module: survey
+#: code:addons/survey/survey.py:649
+#: model:survey.question,comments_message:survey.feedback_1_1
+#: model:survey.question,comments_message:survey.feedback_1_2
+#: model:survey.question,comments_message:survey.feedback_2_1
+#: model:survey.question,comments_message:survey.feedback_2_2
+#: model:survey.question,comments_message:survey.feedback_2_3
+#: model:survey.question,comments_message:survey.feedback_2_4
+#: model:survey.question,comments_message:survey.feedback_2_5
+#: model:survey.question,comments_message:survey.feedback_2_6
+#: model:survey.question,comments_message:survey.feedback_2_7
+#: model:survey.question,comments_message:survey.feedback_3_1
+#: model:survey.question,comments_message:survey.feedback_3_2
+#: model:survey.question,comments_message:survey.feedback_3_3
+#: model:survey.question,comments_message:survey.feedback_4_1
+#, python-format
+msgid "If other, precise:"
+msgstr "Хэрэв бусад бол тодорхой:"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "If you wish, you can"
+msgstr "Хэрэв та хүсвэл "
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_in_progress
+msgid "In progress"
+msgstr "Эхэлсэн"
+
+#. module: survey
+#: help:survey.mail.compose.message,parent_id:0
+msgid "Initial thread message."
+msgstr "Мөчирийн эхлэлийн зурвас."
+
+#. module: survey
+#: field:survey.question,validation_email:0
+msgid "Input must be an email"
+msgstr "Оролт нь имэйл байх ёстой"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+msgid "Invitations sent"
+msgstr "Илгээгдсэн урилгууд"
+
+#. module: survey
+#: field:survey.survey,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Дагагч эсэх"
+
+#. module: survey
+#: field:survey.survey,designed:0
+msgid "Is designed?"
+msgstr "Загварчлагдсан?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_2
+msgid "It can be improved"
+msgstr "Үүнийг сайжруулах боломжтой"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_2
+msgid "It helps in the beginning"
+msgstr "Эхлэлд тус болдог"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_5
+msgid "It is clear"
+msgstr "Ойлгомжтой"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_4
+msgid "It is complete"
+msgstr "Дууссан"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_1_1
+msgid "It is up-to-date"
+msgstr "Шинэчлэх шаардлагагүй"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_5
+msgid "It's easy to find the process you need"
+msgstr "Таны хэрэгтэй явцыг олоход хялбар"
+
+#. module: survey
+#: field:survey.label,sequence:0
+msgid "Label Sequence order"
+msgstr "Шошгын Дараалал"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_label_form
+#: model:ir.ui.menu,name:survey.menu_survey_label_form1
+msgid "Labels"
+msgstr "Шошго"
+
+#. module: survey
+#: field:survey.survey,message_last_post:0
+msgid "Last Message Date"
+msgstr "Сүүлийн зурвасын огноо"
+
+#. module: survey
+#: field:survey.label,write_uid:0
+#: field:survey.mail.compose.message,write_uid:0 field:survey.page,write_uid:0
+#: field:survey.question,write_uid:0 field:survey.stage,write_uid:0
+#: field:survey.survey,write_uid:0 field:survey.user_input,write_uid:0
+#: field:survey.user_input_line,write_uid:0
+msgid "Last Updated by"
+msgstr "Сүүлийн засвар хийсэн"
+
+#. module: survey
+#: field:survey.label,write_date:0
+#: field:survey.mail.compose.message,write_date:0
+#: field:survey.page,write_date:0 field:survey.question,write_date:0
+#: field:survey.stage,write_date:0 field:survey.survey,write_date:0
+#: field:survey.user_input,write_date:0
+#: field:survey.user_input_line,write_date:0
+msgid "Last Updated on"
+msgstr "Сүүлийн засвар хийсэн огноо"
+
+#. module: survey
+#: field:survey.user_input,last_displayed_page_id:0
+msgid "Last displayed page"
+msgstr "Хамгийн сүүлд харуулсан хуудас"
+
+#. module: survey
+#: selection:survey.user_input,type:0
+msgid "Link"
+msgstr "Линк"
+
+#. module: survey
+#: field:survey.mail.compose.message,multi_email:0
+msgid "List of emails"
+msgstr "Имэйлийн жагсаалт"
+
+#. module: survey
+#: field:survey.mail.compose.message,is_log:0
+msgid "Log an Internal Note"
+msgstr "Дотоод тэмдэглэл хөтлөх"
+
+#. module: survey
+#: field:survey.survey,auth_required:0 view:website:survey.auth_required
+msgid "Login required"
+msgstr "Нэвтрэх шаардлагатай"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Long Text Zone"
+msgstr ""
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,constr_mandatory:0
+msgid "Mandatory Answer"
+msgstr "Шаардлагатай Хариулт"
+
+#. module: survey
+#: selection:survey.user_input,type:0
+msgid "Manually"
+msgstr "Гараар"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Matrix"
+msgstr "Матриц"
+
+#. module: survey
+#: field:survey.question,matrix_subtype:0
+msgid "Matrix Type"
+msgstr "Матрицын Төрөл"
+
+#. module: survey
+#: view:website:survey.result
+msgid "Matrix:"
+msgstr "Матриц:"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max date cannot be smaller than min date!"
+msgstr "Дээд огноо нь доод огноогоос бага байх боломжгүй!"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max length cannot be smaller than min length!"
+msgstr "Дээд урт нь доод уртаас бага байх боломжгүй!"
+
+#. module: survey
+#: sql_constraint:survey.question:0
+msgid "Max value cannot be smaller than min value!"
+msgstr "Дээд утга нь доод утгаас бага байх боломжгүй!"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Maximum"
+msgstr ""
+
+#. module: survey
+#: field:survey.question,validation_max_date:0
+msgid "Maximum Date"
+msgstr "Дээд Огноо"
+
+#. module: survey
+#: field:survey.question,validation_length_max:0
+msgid "Maximum Text Length"
+msgstr "Текстийн Дээд Урт"
+
+#. module: survey
+#: field:survey.question,validation_max_float_value:0
+msgid "Maximum value"
+msgstr "Дээд утга"
+
+#. module: survey
+#: field:survey.mail.compose.message,record_name:0
+msgid "Message Record Name"
+msgstr "Зурвасын Бичлэгийн Нэр"
+
+#. module: survey
+#: help:survey.mail.compose.message,type:0
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr "Зурвасын төрөл: имэйл зурваст зориулсан имэйл, системийн зурвасын мэдэгдэл, бусад зурвас дахь сэтгэгдэл буюу хариулт гэх мэт"
+
+#. module: survey
+#: help:survey.mail.compose.message,message_id:0
+msgid "Message unique identifier"
+msgstr "Мессежийн цор ганц хувийн дугаар"
+
+#. module: survey
+#: field:survey.mail.compose.message,message_id:0
+msgid "Message-Id"
+msgstr "Зурвас-Id"
+
+#. module: survey
+#: field:survey.survey,message_ids:0
+msgid "Messages"
+msgstr "Зурвасууд"
+
+#. module: survey
+#: help:survey.survey,message_ids:0
+msgid "Messages and communication history"
+msgstr "Зурвас болон харилцсан түүх"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Minimum"
+msgstr ""
+
+#. module: survey
+#: field:survey.question,validation_min_date:0
+msgid "Minimum Date"
+msgstr "Доод Огноо"
+
+#. module: survey
+#: field:survey.question,validation_length_min:0
+msgid "Minimum Text Length"
+msgstr "Текстийн Доод Урт"
+
+#. module: survey
+#: field:survey.question,validation_min_float_value:0
+msgid "Minimum value"
+msgstr "Доод утга"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Most Common"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple choice: multiple answers allowed"
+msgstr "Олон сонголт: олон хариулт зөвшөөрөгдсөн"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Multiple choice: only one answer"
+msgstr "Олон сонголт: зөвхөн нэг хариулт"
+
+#. module: survey
+#: selection:survey.question,matrix_subtype:0
+msgid "Multiple choices per row"
+msgstr "Мөр бүрт олон сонголт"
+
+#. module: survey
+#: field:survey.stage,name:0
+msgid "Name"
+msgstr "Нэр"
+
+#. module: survey
+#: help:survey.mail.compose.message,record_name:0
+msgid "Name get of the related document."
+msgstr "Холбогдох баримтын нэр"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "New"
+msgstr "Шинэ"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Next page"
+msgstr "Дараагийн хуудас"
+
+#. module: survey
+#: field:survey.mail.compose.message,no_auto_thread:0
+msgid "No threading for answers"
+msgstr "Хариултыг салбарлуулахгүй"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_4
+msgid "No, I just tested it"
+msgstr "Үгүй, би дөнгөж сая үүнийг шалгасан"
+
+#. module: survey
+#: view:website:survey.notopen
+msgid "Not open"
+msgstr "Нээлттэй биш"
+
+#. module: survey
+#: view:website:survey.nopages
+msgid "Not ready"
+msgstr "Бэлэн биш"
+
+#. module: survey
+#: selection:survey.user_input,state:0
+msgid "Not started yet"
+msgstr "Одоохондоо эхлээгүй"
+
+#. module: survey
+#: field:survey.mail.compose.message,notification_ids:0
+msgid "Notifications"
+msgstr "Мэдэгдлүүд"
+
+#. module: survey
+#: field:survey.mail.compose.message,notified_partner_ids:0
+msgid "Notified partners"
+msgstr "Мэдэгдэл хүрсэн харилцагчид"
+
+#. module: survey
+#: field:survey.mail.compose.message,notify:0
+msgid "Notify followers"
+msgstr "Дагагчидад мэдэгдэх"
+
+#. module: survey
+#: help:survey.mail.compose.message,notify:0
+msgid "Notify followers of the document (mass post only)"
+msgstr "Баримтын дагагчидад мэдэгдэх (зөвхөн массаар илгээхэд)"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Number"
+msgstr "Дугаар"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+#: field:survey.question,column_nb:0
+msgid "Number of columns"
+msgstr "Баганы тоо"
+
+#. module: survey
+#: field:survey.survey,tot_comp_survey:0
+msgid "Number of completed surveys"
+msgstr "Дууссан асуулгын тоо"
+
+#. module: survey
+#: field:survey.survey,tot_sent_survey:0
+msgid "Number of sent surveys"
+msgstr "Илгээгдсэн асуулгын тоо"
+
+#. module: survey
+#: field:survey.survey,tot_start_survey:0
+msgid "Number of started surveys"
+msgstr "Эхэлсэн асуулгын тоо"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Numerical Value"
+msgstr "Тоон Утга"
+
+#. module: survey
+#: field:survey.user_input_line,value_number:0
+msgid "Numerical answer"
+msgstr "Тоон хариулт"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Occurence"
+msgstr "Тохиолдол"
+
+#. module: survey
+#: selection:survey.question,matrix_subtype:0
+msgid "One choice per row"
+msgstr "Мөр бүрт нэг сонголт"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#, python-format
+msgid "One email at least is incorrect: %s"
+msgstr ""
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Options"
+msgstr "Сонголт"
+
+#. module: survey
+#: field:survey.mail.compose.message,mail_server_id:0
+msgid "Outgoing mail server"
+msgstr "Мэйл серверийн гаралт"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+#: view:survey.question:survey.survey_question_search
+#: field:survey.user_input_line,page_id:0 view:website:survey.page
+msgid "Page"
+msgstr "Хуудас"
+
+#. module: survey
+#: field:survey.page,title:0
+msgid "Page Title"
+msgstr "Хуудасны гарчиг"
+
+#. module: survey
+#: field:survey.page,sequence:0
+msgid "Page number"
+msgstr "Хуудсын дугаар"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_pages
+#: model:ir.actions.act_window,name:survey.action_survey_page_form
+#: model:ir.ui.menu,name:survey.menu_survey_page_form1
+#: field:survey.survey,page_ids:0
+msgid "Pages"
+msgstr "Хуудсууд"
+
+#. module: survey
+#: field:survey.mail.compose.message,parent_id:0
+msgid "Parent Message"
+msgstr "Эцэг зурвас"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+#: selection:survey.user_input,state:0
+msgid "Partially completed"
+msgstr "Хэсэгчлэн дууссан"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+#: field:survey.user_input,partner_id:0
+msgid "Partner"
+msgstr "Түнш"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail
+#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
+msgid "Partner Survey Mailing"
+msgstr "Харилцагчийн Судалгааний Имэйлдэлт"
+
+#. module: survey
+#: help:survey.mail.compose.message,notified_partner_ids:0
+msgid ""
+"Partners that have a notification pushing this message in their mailboxes"
+msgstr "Энэ зурвасын мэдэгдэл имэйлд нь очиж байгаа харилцагчид"
+
+#. module: survey
+#: model:survey.stage,name:survey.stage_permanent
+msgid "Permanent"
+msgstr "Байнгын"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Pie Chart"
+msgstr "Бялуу диаграм"
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#, python-format
+msgid "Please enter at least one valid recipient."
+msgstr "Ядаж нэг зөв хүлээн авагч оруулна уу."
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:112
+#, python-format
+msgid "Please select a survey"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.page
+msgid "Previous page"
+msgstr "Өмнөх хуудас"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Print Survey"
+msgstr "Асуулга хэвлэх"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "Print These Answers"
+msgstr "Энэ хариултуудыг хэвлэх"
+
+#. module: survey
+#: field:survey.survey,print_url:0
+msgid "Print link"
+msgstr "Холбоосыг хэвлэх"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_5
+msgid "Project Management"
+msgstr "Төслийн менежмент"
+
+#. module: survey
+#: field:survey.mail.compose.message,public_url_html:0
+msgid "Public HTML web link"
+msgstr "Нийтийн HTML вэб холбоос"
+
+#. module: survey
+#: field:survey.survey,public_url:0
+msgid "Public link"
+msgstr "Нийтийн холбоос"
+
+#. module: survey
+#: field:survey.survey,public_url_html:0
+msgid "Public link (html version)"
+msgstr "Нийтийн холбоос (html хувилбар)"
+
+#. module: survey
+#: field:survey.user_input,print_url:0
+msgid "Public link to the empty survey"
+msgstr "Хоосон асуулгын нийтийн холбоос"
+
+#. module: survey
+#: field:survey.user_input,result_url:0
+msgid "Public link to the survey results"
+msgstr "Асуулгын үр дүнгүүдийн нийтийн холбоос"
+
+#. module: survey
+#: field:survey.mail.compose.message,public_url:0
+msgid "Public url"
+msgstr "Нийтийн холбоос"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_2
+msgid "Purchases Management"
+msgstr "Худалдан авалтын Менежмент"
+
+#. module: survey
+#: view:survey.label:survey.survey_label_search
+#: field:survey.label,question_id:0 field:survey.label,question_id_2:0
+#: view:survey.question:survey.survey_question_search
+#: field:survey.user_input_line,question_id:0 view:website:survey.result
+msgid "Question"
+msgstr "Асуулт"
+
+#. module: survey
+#: field:survey.question,question:0
+msgid "Question Name"
+msgstr "Асуултын Нэр"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Question name"
+msgstr "Асуултын нэр"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.act_survey_page_question
+#: model:ir.actions.act_window,name:survey.act_survey_question
+#: model:ir.actions.act_window,name:survey.action_survey_question_form
+#: model:ir.ui.menu,name:survey.menu_survey_question_form1
+#: field:survey.page,question_ids:0
+msgid "Questions"
+msgstr "Асуултууд"
+
+#. module: survey
+#: model:survey.page,title:survey.feedback_4
+msgid "Questions for developers"
+msgstr "Хөгжүүлэгчдээс асуух асуултууд"
+
+#. module: survey
+#: field:survey.survey,quizz_mode:0
+msgid "Quiz mode"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,display_mode:0
+msgid "Radio Buttons/Checkboxes"
+msgstr ""
+
+#. module: survey
+#: field:survey.mail.compose.message,res_id:0
+msgid "Related Document ID"
+msgstr "Холбогдох Баримтын ID"
+
+#. module: survey
+#: field:survey.mail.compose.message,model:0
+msgid "Related Document Model"
+msgstr "Холбогдох Баримтын Модель"
+
+#. module: survey
+#: help:survey.mail.compose.message,reply_to:0
+msgid ""
+"Reply email address. Setting the reply_to bypasses the automatic thread "
+"creation."
+msgstr "Хариулах эмэйл хаяг. reply_to хаягийг тохируулснаар автомат салбар хэлэлцүүлэг үүснэ."
+
+#. module: survey
+#: field:survey.mail.compose.message,reply_to:0
+msgid "Reply-To"
+msgstr "Хариулах"
+
+#. module: survey
+#: field:survey.survey,result_url:0
+msgid "Results link"
+msgstr "Үр дүнгийн холбоос"
+
+#. module: survey
+#: field:survey.user_input_line,value_suggested_row:0
+msgid "Row answer"
+msgstr "Мөрийн хариулт"
+
+#. module: survey
+#: field:survey.question,labels_ids_2:0
+msgid "Rows of the Matrix"
+msgstr "Матрицын Мөрүүд"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_7_4
+msgid "Running the configuration wizards is a good way to spare time"
+msgstr "Тохиргооны визардыг уншуулах нь цагийг ашиглах сайхан арга "
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_2_1
+msgid "Sales Management"
+msgstr "Борлуулалтын менежмент"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Save as a new template"
+msgstr "Шинэ үлгэрээр хадгалах"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Save as new template"
+msgstr "Шинэ үлгэр болгож хадгалах"
+
+#. module: survey
+#: field:survey.user_input,quizz_score:0
+msgid "Score for the quiz"
+msgstr "Асуултын оноо"
+
+#. module: survey
+#: field:survey.label,quizz_mark:0
+msgid "Score for this answer"
+msgstr ""
+
+#. module: survey
+#: field:survey.user_input_line,quizz_mark:0
+msgid "Score given for this answer"
+msgstr ""
+
+#. module: survey
+#: view:survey.label:survey.survey_label_search
+msgid "Search Label"
+msgstr "Шошго Хайх"
+
+#. module: survey
+#: view:survey.page:survey.survey_page_search
+msgid "Search Page"
+msgstr "Хуудас Хайх"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_search
+msgid "Search Question"
+msgstr "Асуулт хайх"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Search Survey"
+msgstr "Асуулга хайх"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_search
+msgid "Search User input lines"
+msgstr "Хэрэглэгчийн оруулсан мөрүүдийг хайх"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Select Options"
+msgstr ""
+
+#. module: survey
+#: selection:survey.question,display_mode:0
+msgid "Selection Box"
+msgstr "Сонголтын Хайрцаг"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Send"
+msgstr "Илгээх"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid "Send by email the public web link to your audience."
+msgstr "Уншигчдад нийтийн вэб холбоосыг имэйлээр илгээх"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid ""
+"Send private invitation to your audience (only one response per recipient "
+"and per invitation)."
+msgstr "Уншигчдад хувийн урилга илгээх (хүлээн авагч ба урилга бүрт зөвхөн нэг хариу)."
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "Sent Invitation Again"
+msgstr ""
+
+#. module: survey
+#: field:survey.question,sequence:0 field:survey.stage,sequence:0
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: survey
+#: sql_constraint:survey.stage:0
+msgid "Sequence number MUST be a natural"
+msgstr "Дарааллын тоо нь натурал байх ЁСТОЙ"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Share &amp; Invite"
+msgstr ""
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Share and invite by email"
+msgstr "Имэйлээр хуваалцах мөн урих"
+
+#. module: survey
+#: field:survey.mail.compose.message,public:0
+msgid "Share options"
+msgstr "Хуваалцах сонголтууд"
+
+#. module: survey
+#: selection:survey.mail.compose.message,public:0
+msgid "Share the public web link to your audience."
+msgstr "Нийтийн вэб холбоосыг уншигчидтайгаа хуваалцана уу."
+
+#. module: survey
+#: field:survey.question,comments_allowed:0
+msgid "Show Comments Field"
+msgstr "Сэтгэгдэлийн Талбарыг харуулах"
+
+#. module: survey
+#: field:survey.user_input_line,skipped:0 view:website:survey.result
+msgid "Skipped"
+msgstr "Алгассан"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Something went wrong while contacting survey server."
+msgstr ""
+
+#. module: survey
+#: view:website:survey.result
+msgid "Sorry, No one answered this question."
+msgstr "Уучлаарай, Энэ асуултанд хариулсан хүн алга."
+
+#. module: survey
+#: view:website:survey.no_result
+msgid "Sorry, No one answered this survey yet"
+msgstr ""
+
+#. module: survey
+#: view:survey.stage:survey.survey_stage_form field:survey.survey,stage_id:0
+msgid "Stage"
+msgstr "Үе"
+
+#. module: survey
+#: field:survey.mail.compose.message,starred:0
+msgid "Starred"
+msgstr "Одоор тэмдэглэсэн"
+
+#. module: survey
+#: view:website:survey.survey_init
+msgid "Start Survey"
+msgstr "Асуулгыг Эхлүүлэх"
+
+#. module: survey
+#: view:survey.survey:survey.survey_tree
+msgid "Started"
+msgstr "Эхлэсэн"
+
+#. module: survey
+#: field:survey.user_input,state:0
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: survey
+#: field:survey.mail.compose.message,subject:0
+msgid "Subject"
+msgstr "Сэдэв"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "Subject..."
+msgstr "Гарчиг..."
+
+#. module: survey
+#: view:website:survey.page
+msgid "Submit survey"
+msgstr "Асуулгыг илгээх"
+
+#. module: survey
+#: field:survey.mail.compose.message,subtype_id:0
+msgid "Subtype"
+msgstr "Дэд төрөл"
+
+#. module: survey
+#: field:survey.user_input_line,value_suggested:0
+msgid "Suggested answer"
+msgstr "Санал болгох хариулт"
+
+#. module: survey
+#: field:survey.label,value:0
+msgid "Suggested value"
+msgstr "Санал болгох утга"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Suggestion"
+msgstr "Санал болгох"
+
+#. module: survey
+#: view:website:survey.result_number
+msgid "Sum"
+msgstr "Нийлбэр"
+
+#. module: survey
+#: field:survey.survey,message_summary:0
+msgid "Summary"
+msgstr "Хураангуй"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_survey
+#: field:survey.mail.compose.message,survey_id:0
+#: view:survey.page:survey.survey_page_search field:survey.page,survey_id:0
+#: view:survey.question:survey.survey_question_search
+#: field:survey.question,survey_id:0 view:survey.survey:survey.survey_form
+#: view:survey.survey:survey.survey_tree
+#: view:survey.user_input:survey.survey_user_input_search
+#: field:survey.user_input,survey_id:0
+#: view:survey.user_input_line:survey.survey_response_line_search
+#: field:survey.user_input_line,survey_id:0
+msgid "Survey"
+msgstr "Асуулга"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_tree
+msgid "Survey Answer Line"
+msgstr "Асуулгын Хариултын мөр"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_label
+#: view:survey.label:survey.survey_label_tree
+msgid "Survey Label"
+msgstr "Асуулгын Шошго"
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+msgid "Survey Options"
+msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_page
+#: view:survey.page:survey.survey_page_form
+#: view:survey.page:survey.survey_page_tree
+msgid "Survey Page"
+msgstr "Асуулгын хуудас"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_question
+#: view:survey.question:survey.survey_question_form
+#: view:survey.question:survey.survey_question_tree
+msgid "Survey Question"
+msgstr "Асуулгын асуулт"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_stage
+msgid "Survey Stage"
+msgstr "Асуулгын Шат"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_user_input
+msgid "Survey User Input"
+msgstr "Асуулгын Хэрэглэгчийн Оролт"
+
+#. module: survey
+#: model:ir.model,name:survey.model_survey_user_input_line
+msgid "Survey User Input Line"
+msgstr "Асуулгын Хэрэглэгчийн Оролтын Мөр"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_user_input_line
+msgid "Survey User Input lines"
+msgstr "Асуулгын Хэрэглэгчийн Оролтын мөрүүд"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_selected_survey_user_input
+msgid "Survey User input"
+msgstr "Асуулгын Хэрэглэгчийн оролт"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+#: view:survey.user_input:survey.survey_user_input_tree
+msgid "Survey User inputs"
+msgstr "Асуулгын Хэрэглэгчийн оролтууд"
+
+#. module: survey
+#: field:survey.question,page_id:0
+msgid "Survey page"
+msgstr "Асуулгын хуудас"
+
+#. module: survey
+#: model:ir.actions.act_window,name:survey.action_survey_form
+#: model:ir.ui.menu,name:survey.menu_survey_form
+#: model:ir.ui.menu,name:survey.menu_surveys
+#: model:ir.ui.menu,name:survey.menu_surveys_configuration
+msgid "Surveys"
+msgstr "Асуулгууд"
+
+#. module: survey
+#: selection:survey.mail.compose.message,type:0
+msgid "System notification"
+msgstr "Системийн мэдэгдэл"
+
+#. module: survey
+#: help:survey.mail.compose.message,notification_ids:0
+msgid ""
+"Technical field holding the message notifications. Use notified_partner_ids "
+"to access notified partners."
+msgstr "Зурвас мэдэгдлийг хадгалах талбарын техник нэр. notified_partner_ids-г мэдэгдэл очсон харилцагчид руу хандахдаа хэрэглэ."
+
+#. module: survey
+#: view:survey.survey:survey.survey_kanban
+#: view:survey.user_input:survey.survey_user_input_search
+msgid "Test"
+msgstr "Тест"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "Test Survey"
+msgstr "Тест Асуулга"
+
+#. module: survey
+#: field:survey.user_input,test_entry:0
+msgid "Test entry"
+msgstr "Оролтыг шалгах"
+
+#. module: survey
+#: selection:survey.user_input_line,answer_type:0
+msgid "Text"
+msgstr "Текст"
+
+#. module: survey
+#: selection:survey.question,type:0
+msgid "Text Input"
+msgstr ""
+
+#. module: survey
+#: field:survey.user_input_line,value_text:0
+msgid "Text answer"
+msgstr "Текст хариу"
+
+#. module: survey
+#: field:survey.survey,thank_you_message:0
+msgid "Thank you message"
+msgstr ""
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "Thank you!"
+msgstr "Танд баярлалаа!"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_3
+msgid "The 'Usability/Extended View' group helps in daily work"
+msgstr "'Хэрэглэх боломж/Дэлгэрэнгүй Харагдац' групп нь өдөр тутмын ажилд тусладаг"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_4
+msgid "The 'Usability/Extended View' group hides only optional fields"
+msgstr "'Хэрэглэх боломж/Дэлгэрэнгүй Харагдац' групп нь зөвхөн нэмэлт талбаруудыг нуудаг"
+
+#. module: survey
+#: constraint:survey.user_input_line:0
+msgid "The answer must be in the right type"
+msgstr "Хариулт нь зөв төрөлтэй байх ёстой"
+
+#. module: survey
+#: code:addons/survey/survey.py:647
+#: model:survey.question,validation_error_msg:survey.feedback_1_1
+#: model:survey.question,validation_error_msg:survey.feedback_1_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_1
+#: model:survey.question,validation_error_msg:survey.feedback_2_2
+#: model:survey.question,validation_error_msg:survey.feedback_2_3
+#: model:survey.question,validation_error_msg:survey.feedback_2_4
+#: model:survey.question,validation_error_msg:survey.feedback_2_5
+#: model:survey.question,validation_error_msg:survey.feedback_2_6
+#: model:survey.question,validation_error_msg:survey.feedback_2_7
+#: model:survey.question,validation_error_msg:survey.feedback_3_1
+#: model:survey.question,validation_error_msg:survey.feedback_3_2
+#: model:survey.question,validation_error_msg:survey.feedback_3_3
+#: model:survey.question,validation_error_msg:survey.feedback_4_1
+#, python-format
+msgid "The answer you entered has an invalid format."
+msgstr "Таны оруулсан хариулт буруу форматтай байна."
+
+#. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#, python-format
+msgid ""
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
+msgstr "Текстийн агуулгад '__URL__' алга.  __URL__ нь асуулгын тусгай холбоос руу автоматаар хувиргагддаг."
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_1
+msgid "The current menu structure is good"
+msgstr "Одоогийн цэсийн бүтэц нь сайн байна"
+
+#. module: survey
+#: sql_constraint:survey.user_input:0
+msgid "The deadline cannot be in the past"
+msgstr "Эцсийн хугацаа нь өнгөрсөнд байх боломжгүй"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_5
+msgid "The groups set on menu items are relevant"
+msgstr "Цэсийн зүйлс дээр тохируулагдсан бүлгүүд нь чухал"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_3
+msgid "The number of groups is good"
+msgstr "Бүлгүүдийн тоо сайн байна"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_1
+msgid "The security rules defined on groups are useful"
+msgstr "Бүлгүүд дээр тодорхойлсон аюулгүй байдлын дүрмүүд нь хэрэгтэй"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_2
+msgid "There are too few groups defined, security isn't accurate enough"
+msgstr "Хэт цөөн бүлэг тодорхойлогдсон байна, аюулгүй байдал нь хангалттай нарийн биш байна"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_6_1
+msgid "There are too many groups defined, security is too complex to set"
+msgstr "Хэт олон бүлэг тодорхойлогдсон байна, аюулгүй байдлыг тохируулахад хэт түвэгтэй байна"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_2_4_3
+msgid "There are too much menus, it's complex to understand"
+msgstr "Хэт олон цэс байна, ойлгоход түвэгтэй байна"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_2
+msgid "They are clean and correct"
+msgstr "Эдгээр нь цэвэр ба зөв байна"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_3
+msgid "They are useful on a daily usage"
+msgstr "Эдгээр нь өдөр тутмын хэрэглээнд ашигтай"
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_2_1
+msgid "They help new users to understand Odoo"
+msgstr "Тэд шинэ хэрэглэгчдэд Odoo - г ойлгоход тусладаг"
+
+#. module: survey
+#: code:addons/survey/survey.py:700
+#, python-format
+msgid "This answer must be an email address"
+msgstr "Энэ хариулт нь имэйл хаяг байх ёстой"
+
+#. module: survey
+#: code:addons/survey/survey.py:742
+#, python-format
+msgid "This is not a date/time"
+msgstr "Энэ огноо/цаг биш байна"
+
+#. module: survey
+#: code:addons/survey/survey.py:719
+#, python-format
+msgid "This is not a number"
+msgstr "Энэ тоо биш байна"
+
+#. module: survey
+#: help:survey.mail.compose.message,multi_email:0
+msgid ""
+"This list of emails of recipients will not converted in contacts. Emails "
+"separated by commas, semicolons or newline."
+msgstr ""
+
+#. module: survey
+#: help:survey.survey,thank_you_message:0
+msgid "This message will be displayed when survey is completed"
+msgstr "Асуулгыг дуусах үед энэ зурвасыг харуулах болно"
+
+#. module: survey
+#: code:addons/survey/survey.py:646
+#: model:survey.question,constr_error_msg:survey.feedback_1_1
+#: model:survey.question,constr_error_msg:survey.feedback_1_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_1
+#: model:survey.question,constr_error_msg:survey.feedback_2_2
+#: model:survey.question,constr_error_msg:survey.feedback_2_3
+#: model:survey.question,constr_error_msg:survey.feedback_2_4
+#: model:survey.question,constr_error_msg:survey.feedback_2_5
+#: model:survey.question,constr_error_msg:survey.feedback_2_6
+#: model:survey.question,constr_error_msg:survey.feedback_2_7
+#: model:survey.question,constr_error_msg:survey.feedback_3_1
+#: model:survey.question,constr_error_msg:survey.feedback_3_2
+#: model:survey.question,constr_error_msg:survey.feedback_3_3
+#: model:survey.question,constr_error_msg:survey.feedback_4_1
+#, python-format
+msgid "This question requires an answer."
+msgstr "Энэ асуултанд хариулт заавал шаардлагатай."
+
+#. module: survey
+#: view:website:survey.nopages
+msgid "This survey has no pages by now!"
+msgstr "Одоогоор энэ асуулгад хуудас алга!"
+
+#. module: survey
+#: view:website:survey.notopen
+msgid "This survey is not open. Thank you for your interest!"
+msgstr "Энэ асуулга нээлттэй биш байна. Сонирхсонд тань баярлалаа!"
+
+#. module: survey
+#: view:website:survey.auth_required
+msgid "This survey is open only to registered people. Please"
+msgstr "Энэ асуулга нь зөвхөн бүртгэлтэй хүмүүст нээлттэй. "
+
+#. module: survey
+#: model:survey.label,value:survey.frow_2_5_2
+msgid ""
+"Those security rules are standard and can be used out-of-the-box in most "
+"cases"
+msgstr "Тэдгээр аюулгүй байдлын дүрмүүд нь стандарт бөгөөд ихэнх тохиолдолд шууд ашиглах боломжтой"
+
+#. module: survey
+#: field:survey.survey,title:0
+msgid "Title"
+msgstr "Гарчиг"
+
+#. module: survey
+#: field:survey.mail.compose.message,to_read:0
+msgid "To read"
+msgstr "Унших"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_4
+#: model:survey.label,value:survey.fcol_2_2_4
+#: model:survey.label,value:survey.fcol_2_5_4
+#: model:survey.label,value:survey.fcol_2_7_4
+msgid "Totally agree"
+msgstr "Бүрэн зөвшөөрч байна"
+
+#. module: survey
+#: model:survey.label,value:survey.fcol_2_1_1
+#: model:survey.label,value:survey.fcol_2_2_1
+#: model:survey.label,value:survey.fcol_2_5_1
+#: model:survey.label,value:survey.fcol_2_7_1
+msgid "Totally disagree"
+msgstr "Огт зөвшөөрөхгүй"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Try refreshing."
+msgstr ""
+
+#. module: survey
+#: field:survey.mail.compose.message,type:0
+#: view:survey.question:survey.survey_question_search
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: survey
+#: field:survey.question,type:0
+msgid "Type of Question"
+msgstr "Асуултын Төрөл"
+
+#. module: survey
+#: view:survey.question:survey.survey_question_form
+msgid "Type of answers"
+msgstr "Хариултуудын төрөл"
+
+#. module: survey
+#: field:survey.question,labels_ids:0
+msgid "Types of answers"
+msgstr "Хариултуудын төрлүүд"
+
+#. module: survey
+#: field:survey.survey,message_unread:0
+msgid "Unread Messages"
+msgstr "Уншаагүй зурвасууд"
+
+#. module: survey
+#: field:survey.mail.compose.message,use_active_domain:0
+msgid "Use active domain"
+msgstr "Идэвхтэй домэйн хэрэглэ"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+#: field:survey.mail.compose.message,template_id:0
+msgid "Use template"
+msgstr "Үлгэрийг хэрэглэх"
+
+#. module: survey
+#: help:survey.question,description:0
+msgid ""
+"Use this field to add             additional explanations about your "
+"question"
+msgstr ""
+
+#. module: survey
+#: model:survey.survey,title:survey.feedback_form
+msgid "User Feedback Form"
+msgstr "Хэрэглэгчийн Санал хүсэлтийн Форм"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_response_line_search
+#: field:survey.user_input_line,user_input_id:0
+msgid "User Input"
+msgstr "Хэрэглэгчийн Оролт"
+
+#. module: survey
+#: model:ir.ui.menu,name:survey.menu_survey_response_line_form
+msgid "User Input Lines"
+msgstr "Хэрэглэгчийн Оролтын Мөрүүд"
+
+#. module: survey
+#: view:website:survey.result_choice view:website:survey.result_number
+#: view:website:survey.result_text
+msgid "User Responses"
+msgstr "Хэрэглэгчийн Хариултууд"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "User can come back in the previous page"
+msgstr "Хэрэглэгч өмнөх хуудас руу буцаж болно"
+
+#. module: survey
+#: view:survey.user_input_line:survey.survey_user_input_line_form
+msgid "User input line details"
+msgstr "Хэрэглэгчийн оролтын мөрийн дэлгэрэнгүй"
+
+#. module: survey
+#: field:survey.survey,user_input_ids:0
+msgid "User responses"
+msgstr "Хэрэглэгчийн хариултууд"
+
+#. module: survey
+#: field:survey.survey,users_can_go_back:0
+msgid "Users can go back"
+msgstr "Хэрэглэгчид буцаж болно"
+
+#. module: survey
+#: help:survey.mail.compose.message,vote_user_ids:0
+msgid "Users that voted for this message"
+msgstr "Энэ зурвас санал өгсөн хэрэглэгчид"
+
+#. module: survey
+#: help:survey.survey,auth_required:0
+msgid ""
+"Users with a public link will be requested to login before taking part to "
+"the survey"
+msgstr "Нийтийн холбоостой хэрэглэгчдийг асуулгад оролцохоос өмнө нэвтрэхийг шаардана"
+
+#. module: survey
+#: field:survey.question,validation_required:0
+msgid "Validate entry"
+msgstr "Оролтыг батлах"
+
+#. module: survey
+#: view:survey.user_input:survey.survey_user_input_form
+msgid "View Results"
+msgstr "Үр дүнг Харах"
+
+#. module: survey
+#: view:survey.survey:survey.survey_form
+msgid "View results"
+msgstr "Үр дүнг харах"
+
+#. module: survey
+#: view:website:survey.result_choice
+msgid "Vote"
+msgstr "Санал өгөх"
+
+#. module: survey
+#: field:survey.mail.compose.message,vote_user_ids:0
+msgid "Votes"
+msgstr "Саналууд"
+
+#. module: survey
+#: code:addons/survey/survey.py:444 code:addons/survey/survey.py:898
+#: code:addons/survey/survey.py:1030
+#: code:addons/survey/wizard/survey_email_compose_message.py:95
+#: code:addons/survey/wizard/survey_email_compose_message.py:188
+#: code:addons/survey/wizard/survey_email_compose_message.py:213
+#, python-format
+msgid "Warning!"
+msgstr "Анхааруулга!"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_7
+msgid "What do you think about configuration wizards?"
+msgstr "Та тохиргооны визардын талаар юу гэж боддог вэ?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_1
+msgid ""
+"What do you think about the documentation available on doc.openerp.com?"
+msgstr ""
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_5
+msgid "What do you think about the groups of users?"
+msgstr "Та хэрэглэгчдийн бүлгийн талаар юу гэж боддог вэ?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_2
+msgid ""
+"What do you think about the process views of Odoo, available in the web "
+"client ?"
+msgstr "Та вэб клиент дээр байдаг Odoo - н явцын харагдцуудын талаар юу гэж боддог вэ?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_2_4
+#: model:survey.question,question:survey.feedback_2_6
+msgid "What do you think about the structure of the menus?"
+msgstr "Та цэсүүдийн бүтцийн талаар юу гэж боддог вэ?"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_4_1
+msgid "Where do you develop your new features?"
+msgstr "Та шинэ боломжуудаа хаана хөгжүүлдэг вэ?"
+
+#. module: survey
+#: help:survey.mail.compose.message,is_log:0
+msgid "Whether the message is an internal note (comment mode only)"
+msgstr "Зурвас нь дотоод тэмдэглэл байх нь хамаагүй (зөвхөн сэтгэгдэл горим)"
+
+#. module: survey
+#: model:survey.question,question:survey.feedback_1_2
+msgid "Which modules are you using/testing?"
+msgstr "Та аль модулиудыг хэрэглэж/шалгаж байгаа вэ?"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_1
+msgid "Yes, I use a version < 7.0"
+msgstr "Тийм, би 7.0 - с өмнөх хувилбарыг ашигладаг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_2
+msgid "Yes, I use the 7.0 version, installed locally"
+msgstr "Тийм, би дотооддоо суулгасан 7.0 хувилбарыг ашигладаг"
+
+#. module: survey
+#: model:survey.label,value:survey.choice_1_1_3
+msgid "Yes, I use the online version of Odoo"
+msgstr "Тийм, би Odoo - н онлайн хувилбарыг ашигладаг"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid ""
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Public in website\" "
+"setting must be enabled)."
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:898 code:addons/survey/survey.py:1030
+#, python-format
+msgid "You cannot duplicate this             element!"
+msgstr ""
+
+#. module: survey
+#: code:addons/survey/survey.py:439
+#, python-format
+msgid "You cannot send an invitation for a survey that has no questions."
+msgstr "Та асуултгүй санал асуулгын урилга илгээх боломжгүй."
+
+#. module: survey
+#: code:addons/survey/survey.py:445
+#, python-format
+msgid "You cannot send invitations for closed surveys."
+msgstr "Та хаагдсан санал асуулгын урилга илгээх боломжгүй."
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "You scored"
+msgstr "Та"
+
+#. module: survey
+#: view:website:survey.page
+msgid "Your answers have probably not been recorded."
+msgstr ""
+
+#. module: survey
+#: view:website:survey.auth_required
+msgid "log in"
+msgstr "нэвтрэх"
+
+#. module: survey
+#: view:website:survey.page
+msgid "on"
+msgstr "дээр"
+
+#. module: survey
+#: view:survey.mail.compose.message:survey.survey_email_compose_message
+msgid "or"
+msgstr "эсвэл"
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "points."
+msgstr "оноо авлаа."
+
+#. module: survey
+#: view:website:survey.sfinished
+msgid "review your answers"
+msgstr "хариултуудаа шалгах"
+
+#. module: survey
+#: view:website:survey.datetime
+msgid "yyyy-mm-dd hh:mm:ss"
+msgstr ""

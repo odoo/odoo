@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_holidays_user,hr.holidays.user,model_hr_holidays,base.group_hr_user,1,1,1,1
+access_hr_holidays_employee,hr.holidays.employee,model_hr_holidays,base.group_user,1,1,1,1
+access_hr_holydays_status_employee,hr.holidays.status employee,model_hr_holidays_status,base.group_user,1,0,0,0
+access_hr_holydays_status_manager,hr.holidays.status manager,model_hr_holidays_status,base.group_hr_manager,1,1,1,1
+access_hr_holidays_remain_user,hr.holidays.ramain.user,model_hr_holidays_remaining_leaves_user,base.group_hr_user,1,1,1,1
+access_resource_calendar_leaves_user,resource_calendar_leaves_user,resource.model_resource_calendar_leaves,base.group_hr_user,1,1,1,1
+access_calendar_event_hr_user,calendar.event.hr.user,calendar.model_calendar_event,base.group_hr_user,1,1,1,1
+access_calendar_event_type_manager,calendar.event.type.manager,calendar.model_calendar_event_type,base.group_hr_manager,1,1,1,1
+access_calendar_attendee_hr_user,calendar.attendee.hr.user,calendar.model_calendar_attendee,base.group_hr_user,1,1,1,1

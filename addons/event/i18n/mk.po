@@ -1,0 +1,1590 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * event
+# 
+# Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2015-07-17 07:07+0000\n"
+"Last-Translator: Martin Trigaux\n"
+"Language-Team: Macedonian (http://www.transifex.com/odoo/odoo-8/language/mk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: mk\n"
+"Plural-Forms: nplurals=2; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : 1;\n"
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_event
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} to ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n"
+"        For any further information please contact our event department.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr "\n        <p>Здраво ${object.name},</p>\n        <p>Настанот ${object.event_id.name} за којшто сте регистрирани е потврден и ќе се одржи од ${object.event_id.date_begin_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')} до ${object.event_id.date_end_located.strftime('%Y-%m-%d %H:%M:%S (%Z)')}.\n        За понатамошни информации ве молиме контактирајте го нашиот оддел за настани.</p>\n        <p>Ви благодариме на учеството!</p>\n        <p>Best regards</p>"
+
+#. module: event
+#: model:email.template,body_html:event.confirmation_registration
+msgid ""
+"\n"
+"        <p>Hello ${object.name},</p>\n"
+"        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.\n"
+"        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>\n"
+"        <p>Thank you for your participation!</p>\n"
+"        <p>Best regards</p>"
+msgstr "\n        <p>Почитувани ${object.name},</p>\n        <p>Ви потврдуваме дека вашата регистрација за настанот ${object.event_id.name} беше запишана.\n        Автоматски ќе добиете е-пошта со повеќе практични информации (како распоред, агенда...) веднаш штом настанот ќе биде потврден.</p>\n        <p>Ви благодариме за учеството!</p>\n        <p>Искрени поздрави</p>"
+
+#. module: event
+#: field:report.event.registration,confirm_state:0
+msgid " # No of Confirmed Registrations"
+msgstr " # Бр. од потврдени регистрации"
+
+#. module: event
+#: field:report.event.registration,draft_state:0
+msgid " # No of Draft Registrations"
+msgstr " # бр. на нацрт регистрации"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "(confirmed:"
+msgstr "(потврдено:"
+
+#. module: event
+#: model:event.event,description:event.event_0
+msgid ""
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"    <div class=\"carousel-inner\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"            <div class=\"container\">\n"
+"                <div class=\"row content\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
+"                    </div>\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
+"                        <h2>5 Intensive Days</h2>\n"
+"                        <h4>to learn .JS development</h4>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Course Summary</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
+"<h2>What you will learn?</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 1</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
+"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
+"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
+"\t<li class=\"list-group-item\">Functions</li>\n"
+"\t<li class=\"list-group-item\">Loops</li>\n"
+"\t<li class=\"list-group-item\">Arrays</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 2</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
+"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
+"\t<li class=\"list-group-item\">Underscore</li>\n"
+"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
+"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
+"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
+"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 3</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
+"\t<li class=\"list-group-item\">Python Objects</li>\n"
+"\t<li class=\"list-group-item\">Report Engine</li>\n"
+"\t<li class=\"list-group-item\">Workflows</li>\n"
+"\t<li class=\"list-group-item\">Training Center Module</li>\n"
+"\t<li class=\"list-group-item\">Integrated Help</li>\n"
+"\t<li class=\"list-group-item\">How to Debug</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Requirements</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
+"<p><strong>Objectives:</strong></p>\n"
+"\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
+"\n"
+"<ul><li>Understand the development concepts and architecture;</li>\n"
+"\t<li>Install and administer your own server;</li>\n"
+"\t<li>Develop a new module for a particular application.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Our prices include:</strong></p>\n"
+"\n"
+"<ul><li>drinks and lunch;</li>\n"
+"\t<li>training material.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Requirements:</strong></p>\n"
+"\n"
+"<ul><li>Bring your own laptop.</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"\n"
+"\n"
+"<div class=\"container oe_dark\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
+"<h1 class=\"text-center\">Read Great Contents</h1>\n"
+"\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_3
+msgid ""
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"    <div class=\"carousel-inner\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"            <div class=\"container\">\n"
+"                <div class=\"row content\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
+"                    </div>\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
+"                        <h2>5 Intensive Days</h2>\n"
+"                        <h4>to learn <i>business applications development</i></h4>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Course Summary</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
+"<h2>What you will learn?</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 1</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
+"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
+"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
+"\t<li class=\"list-group-item\">Functions</li>\n"
+"\t<li class=\"list-group-item\">Loops</li>\n"
+"\t<li class=\"list-group-item\">Arrays</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 2</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
+"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
+"\t<li class=\"list-group-item\">Underscore</li>\n"
+"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
+"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
+"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
+"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 3</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
+"\t<li class=\"list-group-item\">Python Objects</li>\n"
+"\t<li class=\"list-group-item\">Report Engine</li>\n"
+"\t<li class=\"list-group-item\">Workflows</li>\n"
+"\t<li class=\"list-group-item\">Training Center Module</li>\n"
+"\t<li class=\"list-group-item\">Integrated Help</li>\n"
+"\t<li class=\"list-group-item\">How to Debug</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Requirements</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
+"<p><strong>Objectives:</strong></p>\n"
+"\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
+"\n"
+"<ul><li>Understand the development concepts and architecture;</li>\n"
+"\t<li>Install and administer your own server;</li>\n"
+"\t<li>Develop a new module for a particular application.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Our prices include:</strong></p>\n"
+"\n"
+"<ul><li>drinks and lunch;</li>\n"
+"\t<li>training material.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Requirements:</strong></p>\n"
+"\n"
+"<ul><li>Bring your own laptop.</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"\n"
+"\n"
+"<div class=\"container oe_dark\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
+"<h1 class=\"text-center\">Read Great Contents</h1>\n"
+"\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_1
+msgid ""
+"<div class=\"carousel slide oe_small mb16\" data-interval=\"10000\" data-snippet-id=\"carousel\" id=\"myCarousel3\">\n"
+"    <div class=\"carousel-inner\">\n"
+"        <div class=\"item oe_img_bg active\" style=\"background-image: url(/website/static/src/img/banner/orange_red.jpg);\">\n"
+"            <div class=\"container\">\n"
+"                <div class=\"row content\">\n"
+"                    <div class=\"carousel-img hidden-sm hidden-xs mb48 col-md-5 col-md-offset-1 mt16\">\n"
+"                        <img alt=\"Banner Odoo Image\" class=\"img-responsive\" src=\"/website/static/src/img/banner/banner_picture.png\" style=\"\">\n"
+"                    </div>\n"
+"                    <div class=\"carousel-content col-sm-12 col-md-5 mt32\" style=\"text-align: center; color: white;\">\n"
+"                        <h2>5 Intensive Days</h2>\n"
+"                        <h4>to learn technical aspects</h4>\n"
+"                    </div>\n"
+"                </div>\n"
+"            </div>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb8 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Course Summary</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mt16 mb0\" data-snippet-id=\"colmd\">\n"
+"<p><span style=\"text-align: -webkit-center; \">This course is dedicated to developers who need to grasp knowledge of the <strong>business applications development </strong>process. This course is for new developers or for IT professionals eager to learn more about technical aspects.</span></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mt0 mb16\" data-snippet-id=\"colmd\">\n"
+"<h2>What you will learn?</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 1</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Introduction to Javascript</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Hello World</li>\n"
+"\t<li class=\"list-group-item\">Variables &amp; Operators</li>\n"
+"\t<li class=\"list-group-item\">Dive into Strings</li>\n"
+"\t<li class=\"list-group-item\">Functions</li>\n"
+"\t<li class=\"list-group-item\">Loops</li>\n"
+"\t<li class=\"list-group-item\">Arrays</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop simple dynamic compenents in HTML pages.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 2</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Odoo Web Client</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Introduction to JQuery</li>\n"
+"\t<li class=\"list-group-item\">Advanced JQuery</li>\n"
+"\t<li class=\"list-group-item\">Underscore</li>\n"
+"\t<li class=\"list-group-item\">Introduction to QWeb</li>\n"
+"\t<li class=\"list-group-item\">Controlers and Views</li>\n"
+"\t<li class=\"list-group-item\">Bootstrap CSS</li>\n"
+"\t<li class=\"list-group-item\">Calling the ORM</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to create dynamic page interacting with the ORM.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-4\" data-snippet-id=\"colmd\">\n"
+"<div class=\"panel panel-info\">\n"
+"<div class=\"panel-heading text-center\">\n"
+"<h2 style=\"margin: 0\">Day 3</h2>\n"
+"\n"
+"<p class=\"text-muted\" style=\"margin: 0\">Building a Full Application</p>\n"
+"</div>\n"
+"\n"
+"<ul class=\"list-group\"><li class=\"list-group-item\">Modules</li>\n"
+"\t<li class=\"list-group-item\">Python Objects</li>\n"
+"\t<li class=\"list-group-item\">Report Engine</li>\n"
+"\t<li class=\"list-group-item\">Workflows</li>\n"
+"\t<li class=\"list-group-item\">Training Center Module</li>\n"
+"\t<li class=\"list-group-item\">Integrated Help</li>\n"
+"\t<li class=\"list-group-item\">How to Debug</li>\n"
+"</ul><div class=\"panel-footer text-center\">\n"
+"<p class=\"text-muted\"><i>You will be able to develop a full application with backend and user interface.</i></p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"<div class=\"container\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12 text-center mb16 mt0\" data-snippet-id=\"colmd\">\n"
+"<h2>Requirements</h2>\n"
+"</div>\n"
+"\n"
+"<div class=\"col-md-12 mb16 mt16\" data-snippet-id=\"colmd\">\n"
+"<p><strong>Objectives:</strong></p>\n"
+"\n"
+"<p><strong>Having attended this course, participants should be able to:</strong></p>\n"
+"\n"
+"<ul><li>Understand the development concepts and architecture;</li>\n"
+"\t<li>Install and administer your own server;</li>\n"
+"\t<li>Develop a new module for a particular application.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Our prices include:</strong></p>\n"
+"\n"
+"<ul><li>drinks and lunch;</li>\n"
+"\t<li>training material.</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p><strong>Requirements:</strong></p>\n"
+"\n"
+"<ul><li>Bring your own laptop.</li>\n"
+"\t<li>Participants are expected to have some knowledge in programming. A basic knowledge of the Python programming is recommended.</li>\n"
+"\t<li>Participants preferably have a functional knowledge of our software (see Functional Training).</li>\n"
+"</ul><p></p>\n"
+"\n"
+"<p>To get more information, visit the <a href=\"http://openerp.com/\">Odoo Official Website</a>.</p>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+"\n"
+"\n"
+"\n"
+"<div class=\"container oe_dark\">\n"
+"<div class=\"row\">\n"
+"<div class=\"col-md-12\" data-snippet-id=\"colmd\">\n"
+"<h1 class=\"text-center\">Read Great Contents</h1>\n"
+"\n"
+"<h3 class=\"text-muted text-center\">What do people say about this course?</h3>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>I did not expect such a great learning experience. I feel like I can develop anything now.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"\n"
+"<div class=\"mt16 mb32 col-md-6\" data-snippet-id=\"colmd\">\n"
+"<blockquote data-snippet-id=\"quote\">\n"
+"<p>This course help me build my first application within a month. Definetly worth its price.</p>\n"
+"<small>John Doe, CEO</small></blockquote>\n"
+"</div>\n"
+"</div>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,description:event.event_2
+msgid ""
+"<div class=\"oe_structure\">\n"
+"    <center><strong>Conference on Business Applications</strong></center>\n"
+"    <p> </p>\n"
+"    <p> During this conference, our team will give a detailed overview of our business applications. You’ll know all the benefits of using it.</p>\n"
+"    <p> </p>\n"
+"    <p><strong>Objectives:</strong></p>\n"
+"    <p>Having attended this conference, participants should be able to:</p>\n"
+"    <ul>\n"
+"    <li>Understand the various modules;</li>\n"
+"    <li>Functional flow of the main applications;</li>\n"
+"    </ul>\n"
+"    <p> </p>\n"
+"    <p><strong>Program:</strong></p>\n"
+"    <ul>\n"
+"    <li>Introduction, CRM, Sales Management</li>\n"
+"    <li>Purchase, Sales &amp; Purchase management, Financial accounting.</li>\n"
+"    <li>Project management, Human resources, Contract management.</li>\n"
+"    <li>Warehouse management, Manufacturing (MRP) &amp; Sales, Import/Export.</li>\n"
+"    <li>Point of Sale (POS), Introduction to report customization.</li>\n"
+"    </ul>\n"
+"    <p> </p>\n"
+"    <p><strong>Where to find us:</strong></p>\n"
+"    <p>Chamber Works 60, Rosewood Court Detroit, MI 48212 (United States)</p>\n"
+"    <p>For any additional information, please contact us at <a href=\"mailto:events@openerp.com\">events@openerp.com</a>.</p>\n"
+"    <p> </p>\n"
+"    <p>Best regards,</p>\n"
+"    <p>Luigi Roni, Senior Event Manager</p>\n"
+"    <p> </p>\n"
+"    <p align=\"RIGHT\"><em>(Chamber Works reserves the right to cancel, re-name or re-locate<br>the event or change the dates on which it is held.)</em></p>\n"
+"</div>\n"
+msgstr ""
+
+#. module: event
+#: model:event.event,badge_innerright:event.event_1
+msgid ""
+"<div>\n"
+"                <h2>Exhibition Hall</h2>\n"
+"            </div>\n"
+"            <div>\n"
+"                Picture of the exhibition hall\n"
+"            </div>\n"
+"        "
+msgstr "<div>\n                <h2>Сала за изложба</h2>\n            </div>\n            <div>\n                Слика од салата за изложба\n            </div>\n        "
+
+#. module: event
+#: model:event.event,badge_innerleft:event.event_1
+msgid ""
+"<h2>Premium Tickets</h2>\n"
+"            <table class=\"text-center\">\n"
+"                <tr>\n"
+"                    <td width=\"10%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Full</div><div> Catering</div></td>\n"
+"                    <td width=\"5%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>BBQ &amp;</div><div>Beer Event</div></td>\n"
+"                    <td width=\"5%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Awards &amp;</div> <div>Walking</div><div> Dinner</div></td>\n"
+"                    <td width=\"10%\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 15px;\">\n"
+"                    <td colspan=\"7\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 35px;\">\n"
+"                    <td></td>\n"
+"                    <td>Every Day</td>\n"
+"                    <td colspan=\"3\">June 4th</td>\n"
+"                    <td>June 5th</td>\n"
+"                    <td></td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <br><br>\n"
+"            <h2>Free Tickets</h2>\n"
+"            <table class=\"text-center\">\n"
+"                <tr>\n"
+"                    <td width=\"10%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Drinks</div></td>\n"
+"                    <td width=\"5%\"></td>\n"
+"                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Premium</div><div>Ticket</div><div>onsite</div></td>\n"
+"                    <td width=\"25%\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 15px;\">\n"
+"                    <td colspan=\"5\"></td>\n"
+"                </tr>\n"
+"                <tr style=\"background:lightgrey; height: 35px;\">\n"
+"                    <td></td>\n"
+"                    <td>Every Day</td>\n"
+"                    <td></td>\n"
+"                    <td>60 €/day<div>30 €/Friday</div></td>\n"
+"                    <td></td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        "
+msgstr "<h2>Премиум билети</h2>\n            <table class=\"text-center\">\n                <tr>\n                    <td width=\"10%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Целосен</div><div> Кетеринг</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Скара и </div><div>Пиво Настан</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Награди и </div> <div>Опроштална</div><div> Вечера</div></td>\n                    <td width=\"10%\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 15px;\">\n                    <td colspan=\"7\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 35px;\">\n                    <td></td>\n                    <td>Секој ден</td>\n                    <td colspan=\"3\">4ти Јуни</td>\n                    <td>5ти Јуни</td>\n                    <td></td>\n                </tr>\n            </table>\n            <br><br>\n            <h2>Бесплатни билети</h2>\n            <table class=\"text-center\">\n                <tr>\n                    <td width=\"10%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Пијалоци</div></td>\n                    <td width=\"5%\"></td>\n                    <td width=\"10%\" style=\"height:45px; width:110px; border-radius: 90px 90px 0 0; -moz-border-radius: 90px 90px 0 0; -webkit-border-radius: 90px 90px 0 0; background:lightgrey; text-align: -webkit-center; padding-top: 10px;\"><div>Премиум</div><div>Билет</div><div>на место</div></td>\n                    <td width=\"25%\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 15px;\">\n                    <td colspan=\"5\"></td>\n                </tr>\n                <tr style=\"background:lightgrey; height: 35px;\">\n                    <td></td>\n                    <td>Секој ден</td>\n                    <td></td>\n                    <td>60 €/дневно<div>30 €/Петок</div></td>\n                    <td></td>\n                </tr>\n            </table>\n        "
+
+#. module: event
+#: model:event.event,badge_back:event.event_1
+msgid ""
+"<h2>Program</h2>\n"
+"            <div><strong>Registrations</strong><small> are from 8:30 am, except on Friday from 9:00 am</small></div>\n"
+"            <div>\n"
+"                <strong>Lunch</strong><small> is served between 1:00 pm and 2:00 pm.</small>\n"
+"            </div>\n"
+"            <h2>Special Events</h2>\n"
+"            <table style=\"border: 1px solid black;\">\n"
+"                <tr style=\"border: 1px solid black;\">\n"
+"                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n"
+"                    <td class=\"text-center\" width=\"25%\"><strong>19h00</strong></td>\n"
+"                    <td><small>Barbecue Beer Event</small></td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td class=\"text-center\"><strong>5/6</strong></td>\n"
+"                    <td class=\"text-center\"><strong>18h30</strong></td>\n"
+"                    <td><small>Odoo Awards Ceremony</small></td>\n"
+"                </tr>\n"
+"            </table>\n"
+"            <br>\n"
+"            <div class=\"row\">\n"
+"                <div class=\"col-xs-5\">\n"
+"                <p>\n"
+"                    <i class=\"fa fa-twitter\"></i> #OpenDays\n"
+"                </p>\n"
+"                </div>\n"
+"                <div class=\"col-xs-6\">\n"
+"                <div class=\"small\">Wifi network: opendays</div>\n"
+"                <div class=\"small\">Wifi password: odoo2014</div>\n"
+"                </div>\n"
+"            </div>\n"
+"            <div class=\"row\">\n"
+"                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">sponsored by</small>\n"
+"                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n"
+"                <span>\n"
+"                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n"
+"                </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
+msgstr "<h2>Програма</h2>\n            <div><strong>Регистрациите</strong><small> се од 8:30 наутро, освен Петок од 9:00 наутро</small></div>\n            <div>\n                <strong>Ручек</strong><small> се служи помеѓу 1:00 и 2:00 попладне.</small>\n            </div>\n            <h2>Специјални настани</h2>\n            <table style=\"border: 1px solid black;\">\n                <tr style=\"border: 1px solid black;\">\n                    <td class=\"text-center\" width=\"15%\"><strong>4/6</strong></td>\n                    <td class=\"text-center\" width=\"25%\"><strong>19ч00</strong></td>\n                    <td><small>Скара и пиво Настан</small></td>\n                </tr>\n                <tr>\n                    <td class=\"text-center\"><strong>5/6</strong></td>\n                    <td class=\"text-center\"><strong>18ч30</strong></td>\n                    <td><small>Odoo Церемонија на награди</small></td>\n                </tr>\n            </table>\n            <br>\n            <div class=\"row\">\n                <div class=\"col-xs-5\">\n                <p>\n                    <i class=\"fa fa-twitter\"></i> #OpenDays\n                </p>\n                </div>\n                <div class=\"col-xs-6\">\n                <div class=\"small\">Wifi мрежа: opendays</div>\n                <div class=\"small\">Wifi лозинка: odoo2014</div>\n                </div>\n            </div>\n            <div class=\"row\">\n                <small class=\"col-xs-3\" style=\"float: left; padding-right: 0px; padding-left: 0px;\">спонзорирано од</small>\n                <div class=\"col-xs-2\" style=\"padding-right: 0px; padding-left: 0px;\">\n                <span>\n                    <img class=\"img img-responsive\" src=\"https://www.odoo.com/openerp_website/static/src/img/logo_white.png\">\n                </span>\n                </div>\n            </div>\n        "
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Click to add a new event.\n"
+"             </p><p>\n"
+"               Odoo helps you schedule and efficiently organize your events:\n"
+"               track subscriptions and participations, automate the confirmation emails,\n"
+"               sell tickets, etc.\n"
+"             </p>\n"
+"           "
+msgstr "<p class=\"oe_view_nocontent_create\">\n               Кликнете да додадете нов настан.\n             </p><p>\n               Odoo ви помага да ги закажете и ефективно да ги организирате вашите настани:\n               претплати  и учества, автоматизирање на е-маил пораки за потврда,\n               продажба на билети, итн.\n             </p>\n           "
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+#: selection:event.registration,state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Attended"
+msgstr "Присуствува"
+
+#. module: event
+#: field:event.registration,date_closed:0
+msgid "Attended Date"
+msgstr "Датум на присуствување"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_tree
+msgid "Attended the Event"
+msgstr "Присуствувал на настан"
+
+#. module: event
+#: field:event.event,seats_available:0
+msgid "Available Seats"
+msgstr "Достапни места"
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Cancel Event"
+msgstr "Откажи настан"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_form
+#: view:event.registration:event.view_event_registration_tree
+msgid "Cancel Registration"
+msgstr "Откажи регистрација"
+
+#. module: event
+#: selection:event.event,state:0 selection:event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: event
+#: help:res.partner,speaker:0
+msgid "Check this box if this contact is a speaker."
+msgstr "Штиклирајте доколку овој контакт е говорник."
+
+#. module: event
+#: code:addons/event/event.py:219
+#, python-format
+msgid "Closing Date cannot be set before Beginning Date."
+msgstr "Датум на затварање не може да биде пред датум на почеток."
+
+#. module: event
+#: field:event.event,company_id:0 field:event.registration,company_id:0
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: event
+#: model:event.event,name:event.event_2
+msgid "Conference on Business Applications"
+msgstr "Конференција за бизнис апликации"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Confirm"
+msgstr "Потврди"
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid "Confirm Anyway"
+msgstr "Потврди во секој случај"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Confirm Event"
+msgstr "Потврди настан"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_tree
+msgid "Confirm Registration"
+msgstr "Потврди регистрација"
+
+#. module: event
+#: view:event.event:event.view_event_search selection:event.event,state:0
+#: view:event.registration:event.view_registration_search
+#: selection:event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Confirmed"
+msgstr "Потврдено"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Confirmed events"
+msgstr "Потврдени настани"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Confirmed registrations"
+msgstr "Потврдени регистрации"
+
+#. module: event
+#: field:event.event,country_id:0
+msgid "Country"
+msgstr "Земја"
+
+#. module: event
+#: field:event.confirm,create_uid:0 field:event.event,create_uid:0
+#: field:event.registration,create_uid:0 field:event.type,create_uid:0
+msgid "Created by"
+msgstr "Креирано од"
+
+#. module: event
+#: field:event.confirm,create_date:0 field:event.event,create_date:0
+#: field:event.registration,create_date:0 field:event.type,create_date:0
+msgid "Created on"
+msgstr "Креирано на"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Current Registrations"
+msgstr "Тековни регистрации"
+
+#. module: event
+#: help:event.event,message_last_post:0
+#: help:event.registration,message_last_post:0
+msgid "Date of the last message posted on the record."
+msgstr "Датум на испраќање на последната порака"
+
+#. module: event
+#: field:event.type,default_registration_max:0
+msgid "Default Maximum Registration"
+msgstr "Стандардна максимална регистрација"
+
+#. module: event
+#: field:event.type,default_registration_min:0
+msgid "Default Minimum Registration"
+msgstr "Стандардна минимална регистрација"
+
+#. module: event
+#: field:event.type,default_reply_to:0
+msgid "Default Reply-To"
+msgstr "Стандарден Одговор"
+
+#. module: event
+#: view:event.event:event.view_event_form field:event.event,description:0
+msgid "Description"
+msgstr "Опис"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Display"
+msgstr "Прикажи"
+
+#. module: event
+#: selection:event.event,state:0
+#: selection:report.event.registration,event_state:0
+msgid "Done"
+msgstr "Завршено"
+
+#. module: event
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
+msgid "Draft"
+msgstr "Нацрт"
+
+#. module: event
+#: field:event.registration,email:0
+msgid "Email"
+msgstr "Е-поштаE-mail"
+
+#. module: event
+#: field:event.event,date_end:0
+msgid "End Date"
+msgstr "Краен датум"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,event_id:0
+#: model:ir.model,name:event.model_event_event
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,event_id:0
+msgid "Event"
+msgstr "Настан"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event Beginning Date"
+msgstr "Датум на почеток на настан"
+
+#. module: event
+#: view:event.event:event.view_event_tree
+msgid "Event Category"
+msgstr "Категорија на настан"
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+#: model:ir.actions.act_window,name:event.action_event_confirm
+msgid "Event Confirmation"
+msgstr "Потврдување на настан"
+
+#. module: event
+#: field:event.event,email_confirmation_id:0
+#: field:event.type,default_email_event:0
+msgid "Event Confirmation Email"
+msgstr "Е-пошта за потврдување на настан"
+
+#. module: event
+#: field:report.event.registration,event_date:0
+msgid "Event Date"
+msgstr "Датум на настанот"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Event Description..."
+msgstr "Опис на настанот..."
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Event Details"
+msgstr "Детали за настанот"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event Month"
+msgstr "Месец на настанот"
+
+#. module: event
+#: field:event.event,name:0
+msgid "Event Name"
+msgstr "Име на настанот"
+
+#. module: event
+#: view:event.event:event.view_event_calendar
+msgid "Event Organization"
+msgstr "Организирање на настан"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_calendar
+#: view:event.registration:event.view_event_registration_form
+#: view:event.registration:event.view_registration_search
+#: model:ir.model,name:event.model_event_registration
+msgid "Event Registration"
+msgstr "Регистрација на настан"
+
+#. module: event
+#: code:addons/event/event.py:348
+#, python-format
+msgid "Event Registration confirmed."
+msgstr "Регистрацијата за настанот е потврдена."
+
+#. module: event
+#: field:report.event.registration,user_id:0
+msgid "Event Responsible"
+msgstr "Одговорен за настан"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,event_state:0
+msgid "Event State"
+msgstr "Состојба на настан"
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:event.type:event.view_event_type_form
+#: view:event.type:event.view_event_type_tree field:event.type,name:0
+#: model:ir.model,name:event.model_event_type
+#: view:report.event.registration:event.view_report_event_registration_search
+#: field:report.event.registration,event_type:0
+msgid "Event Type"
+msgstr "Тип на настан"
+
+#. module: event
+#: view:report.event.registration:event.report_event_registration_graph
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Event on Registration"
+msgstr "Настан на регистрација"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.event:event.view_event_search
+#: view:event.event:event.view_event_tree
+#: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_configuration
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_event_event
+#: model:ir.ui.menu,name:event.menu_reporting_events
+msgid "Events"
+msgstr "Настани"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_report_event_registration
+#: model:ir.ui.menu,name:event.menu_report_event_registration
+msgid "Events Analysis"
+msgstr "Анализа на настаните"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Events in New state"
+msgstr "Настани во состојба Ново"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Events which are in New state"
+msgstr "Настани кои се во состојба Ново"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Events which are in confirm state"
+msgstr "Настани кои се во состојба на потврдување"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Extended Filters..."
+msgstr "Проширени филтри..."
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Finish Event"
+msgstr "Заврши настан"
+
+#. module: event
+#: field:event.event,message_follower_ids:0
+#: field:event.registration,message_follower_ids:0
+msgid "Followers"
+msgstr "Пратители"
+
+#. module: event
+#: model:event.event,name:event.event_1
+msgid "Functional Webinar"
+msgstr "Функционален вебинар"
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Group By"
+msgstr "Групирање според"
+
+#. module: event
+#: model:ir.module.category,description:event.module_category_event_management
+msgid "Helps you manage your Events."
+msgstr "Ви помага со управувањето на настаните."
+
+#. module: event
+#: help:event.event,message_summary:0
+#: help:event.registration,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr "Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е директно во html формат со цел да биде вметнато во kanban преглед."
+
+#. module: event
+#: field:event.confirm,id:0 field:event.event,id:0
+#: field:event.registration,id:0 field:event.type,id:0
+#: field:report.event.registration,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: event
+#: help:event.event,message_unread:0 help:event.registration,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ако е избрано, вашите пораки бараат внимание."
+
+#. module: event
+#: help:event.event,state:0
+msgid ""
+"If event is created, the status is 'Draft'. If event is confirmed for the "
+"particular dates the status is set to 'Confirmed'. If the event is over, the"
+" status is set to 'Done'. If event is cancelled the status is set to "
+"'Cancelled'."
+msgstr "Доколку настанот е креиран, статусот е 'Нацрт'. Доколку настанот е потврден за одредените датуми статусот се променува во 'Потврден'. Доколку настанот е завршен, статусот се променува во 'Завршен'. Доколку настанот е откажан статусот се променува во 'Откажан'."
+
+#. module: event
+#: help:event.event,email_confirmation_id:0
+msgid ""
+"If you set an email template, each participant will receive this email "
+"announcing the confirmation of the event."
+msgstr "Доколку подестите урнек за е-пошта, секој учесник ќе ја добие оваа е-пошта за известување за потврдувањето на настанот."
+
+#. module: event
+#: field:event.event,message_is_follower:0
+#: field:event.registration,message_is_follower:0
+msgid "Is a Follower"
+msgstr "ПратителЕ следбеник"
+
+#. module: event
+#: help:event.type,default_email_event:0
+msgid ""
+"It will select this default confirmation event mail value when you choose "
+"this event"
+msgstr "Овој стандарден е-маил за потврда на настанот ќе биде избран, кога ќе го изберете овој настан."
+
+#. module: event
+#: help:event.type,default_email_registration:0
+msgid ""
+"It will select this default confirmation registration mail value when you "
+"choose this event"
+msgstr "Овој стандарден е-маил за потврда на регистрација ќе биде избран, кога ќе го изберете овој настан."
+
+#. module: event
+#: help:event.type,default_registration_max:0
+msgid "It will select this default maximum value when you choose this event"
+msgstr "Ќе ја избере оваа стандардна максимална вредност кога ќе го изберете овој настан"
+
+#. module: event
+#: help:event.type,default_registration_min:0
+msgid "It will select this default minimum value when you choose this event"
+msgstr "Ќе ја избере оваа стандардна минимална вредност кога ќе го изберете овој настан"
+
+#. module: event
+#: field:event.event,message_last_post:0
+#: field:event.registration,message_last_post:0
+msgid "Last Message Date"
+msgstr "Датум на последна порака"
+
+#. module: event
+#: field:event.confirm,write_uid:0 field:event.event,write_uid:0
+#: field:event.registration,write_uid:0 field:event.type,write_uid:0
+msgid "Last Updated by"
+msgstr "Последно ажурирање од"
+
+#. module: event
+#: field:event.confirm,write_date:0 field:event.event,write_date:0
+#: field:event.registration,write_date:0 field:event.type,write_date:0
+msgid "Last Updated on"
+msgstr "Последно ажурирање на"
+
+#. module: event
+#: field:event.event,address_id:0
+msgid "Location"
+msgstr "Локација"
+
+#. module: event
+#: field:event.registration,log_ids:0
+msgid "Logs"
+msgstr "Логови"
+
+#. module: event
+#: model:res.groups,name:event.group_event_manager
+msgid "Manager"
+msgstr "Менаџер"
+
+#. module: event
+#: field:report.event.registration,seats_max:0
+msgid "Max Seats"
+msgstr "Максимален број на седишта"
+
+#. module: event
+#: field:event.event,seats_max:0
+msgid "Maximum Available Seats"
+msgstr "Максимален број на слободни места"
+
+#. module: event
+#: field:event.event,message_ids:0 field:event.registration,message_ids:0
+msgid "Messages"
+msgstr "Пораки"
+
+#. module: event
+#: help:event.event,message_ids:0 help:event.registration,message_ids:0
+msgid "Messages and communication history"
+msgstr "Историја на пораки и комуникација"
+
+#. module: event
+#: field:event.event,seats_min:0
+msgid "Minimum Reserved Seats"
+msgstr "Минимален број на резервирани места"
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "My Events"
+msgstr "Мои настани"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "My Registrations"
+msgstr "Мои регистрации"
+
+#. module: event
+#: view:event.event:event.view_event_tree field:event.registration,name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "New"
+msgstr "Ново"
+
+#. module: event
+#: model:mail.message.subtype,name:event.mt_event_registration
+msgid "New Registration"
+msgstr "Нова регистрација"
+
+#. module: event
+#: code:addons/event/event.py:346
+#, python-format
+msgid "New registration confirmed: %s."
+msgstr "Новата регистрација е потврдена: %s."
+
+#. module: event
+#: code:addons/event/event.py:213 code:addons/event/event.py:337
+#, python-format
+msgid "No more available seats."
+msgstr "Нема повеќе слободни места."
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "No ticket available."
+msgstr "Нема билети."
+
+#. module: event
+#: field:report.event.registration,nbevent:0
+msgid "Number of Events"
+msgstr "Број на настани"
+
+#. module: event
+#: field:event.registration,nb_register:0
+msgid "Number of Participants"
+msgstr "Број на учесници"
+
+#. module: event
+#: field:event.event,seats_used:0
+msgid "Number of Participations"
+msgstr "Број на учесници"
+
+#. module: event
+#: field:report.event.registration,nbregistration:0
+msgid "Number of Registrations"
+msgstr "Број на регистрации"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Only"
+msgstr "Само"
+
+#. module: event
+#: model:event.event,name:event.event_0
+msgid "Open Days in Los Angeles"
+msgstr "Отворени денови во Лос Анџелес"
+
+#. module: event
+#: model:ir.actions.client,name:event.action_client_event_menu
+msgid "Open Event Menu"
+msgstr "Отвори мени Настани"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Organized by"
+msgstr "Организирани по"
+
+#. module: event
+#: field:event.event,organizer_id:0
+msgid "Organizer"
+msgstr "Организатор"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Participant"
+msgstr "Учесник"
+
+#. module: event
+#: field:report.event.registration,name_registration:0
+msgid "Participant / Contact Name"
+msgstr "Име на учесник/контакт"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,partner_id:0
+#: model:ir.model,name:event.model_res_partner
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: event
+#: field:event.registration,phone:0
+msgid "Phone"
+msgstr "Телефон"
+
+#. module: event
+#: help:event.registration,origin:0
+msgid "Reference of the sales order which created the registration"
+msgstr "Референца на налог за продажби кој ја креира регистрацијата"
+
+#. module: event
+#: field:report.event.registration,user_id_registration:0
+msgid "Register"
+msgstr "Регистрација"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Register with this event"
+msgstr "Регистрирај се на овој настан"
+
+#. module: event
+#: view:event.event:event.view_event_form
+#: view:event.registration:event.view_event_registration_form
+#: view:event.registration:event.view_event_registration_graph
+#: view:event.registration:event.view_event_registration_tree
+msgid "Registration"
+msgstr "Регистрација"
+
+#. module: event
+#: field:event.event,email_registration_id:0
+#: field:event.type,default_email_registration:0
+msgid "Registration Confirmation Email"
+msgstr "Е-поштаE-mail за потврдување на регистрација"
+
+#. module: event
+#: field:event.registration,date_open:0
+msgid "Registration Date"
+msgstr "Датум на регистрација"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Registration Day"
+msgstr "Ден на регистрација"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Registration Month"
+msgstr "Месец на регистрација"
+
+#. module: event
+#: field:report.event.registration,registration_state:0
+msgid "Registration State"
+msgstr "Состоба на регистрација"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Registration contact"
+msgstr "Контакт за регистрација"
+
+#. module: event
+#: view:event.event:event.view_event_form field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.ui.menu,name:event.menu_action_registration
+msgid "Registrations"
+msgstr "Регистрации"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Registrations in confirmed or done state"
+msgstr "Регистрации во состојба потврдено или завршено"
+
+#. module: event
+#: view:event.registration:event.view_registration_search
+msgid "Registrations in unconfirmed state"
+msgstr "Регистрации во непотврдена состојба"
+
+#. module: event
+#: field:event.event,reply_to:0
+msgid "Reply-To Email"
+msgstr "Е-поштаE-mail за повратен одговор"
+
+#. module: event
+#: field:event.event,seats_reserved:0
+msgid "Reserved Seats"
+msgstr "Резервирани седишта"
+
+#. module: event
+#: view:event.event:event.view_event_search
+#: view:event.registration:event.view_registration_search
+msgid "Responsible"
+msgstr "Одговорен"
+
+#. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Одговорен корисник"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+msgid "Send Email"
+msgstr "Испрати е-пошта"
+
+#. module: event
+#: view:event.event:event.view_event_form
+msgid "Set To Draft"
+msgstr "Поставено на Нацрт"
+
+#. module: event
+#: view:event.registration:event.view_event_registration_form
+msgid "Set To Unconfirmed"
+msgstr "Подесете на непотврдено"
+
+#. module: event
+#: view:report.event.registration:event.view_report_event_registration_search
+msgid "Show Confirmed Registrations"
+msgstr "Прикажи ги потврдените регистрации"
+
+#. module: event
+#: field:event.registration,origin:0
+msgid "Source Document"
+msgstr "Изворен документ"
+
+#. module: event
+#: field:res.partner,speaker:0
+msgid "Speaker"
+msgstr "Говорник"
+
+#. module: event
+#: field:event.event,date_begin:0
+msgid "Start Date"
+msgstr "Почетен датум"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Start Month"
+msgstr "Почетен месец"
+
+#. module: event
+#: view:event.event:event.view_event_search field:event.event,state:0
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+#: model:ir.actions.act_window,name:event.act_register_event_partner
+msgid "Subscribe"
+msgstr "Претплати се"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Subscribed"
+msgstr "Претплатен"
+
+#. module: event
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
+msgid "Summary"
+msgstr "Резиме"
+
+#. module: event
+#: model:event.event,name:event.event_3
+msgid "Technical Training"
+msgstr "Техничка обука"
+
+#. module: event
+#: help:event.event,reply_to:0
+msgid ""
+"The email address of the organizer is likely to be put here, with the effect"
+" to be in the 'Reply-To' of the mails sent automatically at event or "
+"registrations confirmation. You can also put the email address of your mail "
+"gateway if you use one."
+msgstr ""
+
+#. module: event
+#: help:event.type,default_reply_to:0
+msgid ""
+"The email address of the organizer which is put in the 'Reply-To' of all "
+"emails sent automatically at event or registrations confirmation. You can "
+"also put your email address of your mail gateway if you use one."
+msgstr "E-mail адресата на организаторот што е ставена во 'одговори на' на сите мејлови што се праќаат автоматски при потврдување на запишување или настан. Може да ставите и ваша e-mail адреса на вашиот mail премин доколку го користите."
+
+#. module: event
+#: help:event.event,seats_max:0
+msgid ""
+"The maximum registration level is equal to the sum of the maximum "
+"registration of event ticket. If you have too much registrations you are not"
+" able to confirm your event. (0 to ignore this rule )"
+msgstr "Максималниот број на регистрации е еднаков на збирот на максимум регистрации за тикети за настанот. Ако имате премногу регистрации не можете да го потврдите вашиот настан. (0 да го игнорирате ова правило )"
+
+#. module: event
+#: help:event.event,email_registration_id:0
+msgid ""
+"This field contains the template of the mail that will be automatically sent"
+" each time a registration for this event is confirmed."
+msgstr "Ова поле го содржи урнекот на е-поштата што автоматски ќе се прати секогаш кога регистрацијата за овој настан ќе биде потврдена."
+
+#. module: event
+#: field:event.event,date_tz:0
+msgid "Timezone"
+msgstr "Временска зона"
+
+#. module: event
+#: field:event.event,type:0
+msgid "Type of Event"
+msgstr "Тип на настан"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Types of Events"
+msgstr "Типови на настани"
+
+#. module: event
+#: view:event.event:event.view_event_search selection:event.event,state:0
+#: selection:event.registration,state:0
+msgid "Unconfirmed"
+msgstr "Нопотврдено"
+
+#. module: event
+#: field:event.event,seats_unconfirmed:0
+msgid "Unconfirmed Seat Reservations"
+msgstr "Непотврдени резервации"
+
+#. module: event
+#: view:event.event:event.view_event_search field:event.event,message_unread:0
+#: view:event.registration:event.view_registration_search
+#: field:event.registration,message_unread:0
+msgid "Unread Messages"
+msgstr "Непрочитани Пораки"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "Unsubscribe"
+msgstr "Отпиши се"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Upcoming"
+msgstr "Претстојни"
+
+#. module: event
+#: view:event.event:event.view_event_search
+msgid "Upcoming events from today"
+msgstr "Претстојни настани од денес"
+
+#. module: event
+#: field:event.registration,user_id:0
+#: model:res.groups,name:event.group_event_user
+msgid "User"
+msgstr "Корисник"
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid ""
+"Warning: This Event has not reached its Minimum Registration Limit. Are you "
+"sure you want to confirm it?"
+msgstr "Предупредување: Овој настан ја нема достигнато минималната граница на регистрација.  Сигурно ли сакате да го потврдите?"
+
+#. module: event
+#: help:event.event,seats_min:0
+msgid ""
+"You can for each event define a minimum registration level. If you do not "
+"enough registrations you are not able to confirm your event. (put 0 to "
+"ignore this rule )"
+msgstr "За секој настан може да дефинирате ниво на минимум регистрации. Доколку немате доволно регистрации неможете да го потврдите настанот. (внеси 0 за игнорирање на правилото)"
+
+#. module: event
+#: code:addons/event/event.py:229
+#, python-format
+msgid ""
+"You have already set a registration for this event as 'Attended'. Please "
+"reset it to draft if you want to cancel this event."
+msgstr "Веќе имате поставено регистрација за овој настан како 'Присуствувал'. Ресетирајте до нацрт доколку сакате да го откажете овој настан."
+
+#. module: event
+#: code:addons/event/event.py:364
+#, python-format
+msgid "You must wait for the starting day of the event to do this action."
+msgstr "Мора да го чекате почетниот ден на настанот за да ја извршите оваа постапка."
+
+#. module: event
+#: model:email.template,subject:event.confirmation_event
+#: model:email.template,subject:event.confirmation_registration
+msgid "Your registration at ${object.event_id.name}"
+msgstr "Вашата регистрација на ${object.event_id.name}"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "available."
+msgstr "достапно."
+
+#. module: event
+#: view:event.confirm:event.view_event_confirm
+msgid "or"
+msgstr "или"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "ticket"
+msgstr "билет"
+
+#. module: event
+#: view:event.event:event.view_event_kanban
+msgid "tickets"
+msgstr "билети"

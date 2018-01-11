@@ -1,0 +1,22 @@
+-
+  I set task work entry for Employee
+-
+  !record {model: project.task.work, id: project_task_work1}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Test Timesheet records
+    task_id: project.project_task_10
+    hours: 20.0
+    user_id: base.user_demo
+    company_id: base.main_company
+-
+  I check Timesheet line for employee in current Timesheet
+-
+  !python {model: hr.analytic.timesheet}: |
+    from openerp.osv import fields
+    start = fields.date.context_today(self, cr, uid, context=context)
+    task_work = self.search(cr, uid, [("name","=","Social network integration: Test Timesheet records")],context)[0]
+    task_ids = self.browse(cr, uid, task_work, context)
+    assert task_ids.user_id.id == ref("base.user_demo"), 'Error, The User in Timesheet is not Correct'
+    assert task_ids.date == start, 'Error, The Date in Timesheet is not ok'
+    assert task_ids.product_uom_id.name == "Hour(s)", 'Error, The Hour in Timesheet is not ok'
+

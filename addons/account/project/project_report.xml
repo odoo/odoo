@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+            id="action_account_analytic_account_inverted_balance"
+            model="account.analytic.account"
+            string="Inverted Analytic Balance"
+            report_type="qweb-pdf"
+            name="account.report_invertedanalyticbalance"
+            file="account.report_invertedanalyticbalance"
+            menu="False"
+        />
+
+        <report 
+            id="action_report_analytic_journal"
+            model="account.analytic.journal"
+            string="Analytic Journal"
+            report_type="qweb-pdf"
+            name="account.report_analyticjournal"
+            file="account.report_analyticjournal"
+            menu="False"
+        />
+
+         <report
+            id="action_report_analytic_balance"
+            model="account.analytic.account"
+            string="Analytic Balance"
+            report_type="qweb-pdf"
+            name="account.report_analyticbalance"
+            file="account.report_analyticbalance"
+            menu="False"
+        />
+
+        <report
+            id="action_report_cost_ledger"
+            model="account.analytic.account"
+            report_type="qweb-pdf"
+            string="Cost Ledger"
+            name="account.report_analyticcostledger"
+            file="account.report_analyticcostledger"
+            menu="False"
+        />
+
+        <report
+            id="action_report_cost_ledgerquantity"
+            model="account.analytic.account"
+            report_type="qweb-pdf"
+            string="Cost Ledger (Only quantities)"
+            name="account.report_analyticcostledgerquantity"
+            file="account.report_analyticcostledgerquantity"
+            menu="False"
+        />
+    </data>
+</openerp>

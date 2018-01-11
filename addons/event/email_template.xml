@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <record id="confirmation_event" model="email.template">
+        <field name="name">Confirmation of the Event</field>
+        <field name="model_id" ref="event.model_event_registration"/>
+        <field name="email_from" >${(object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com')|safe}</field>
+        <field name="email_to" >${object.email|safe}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="subject">Your registration at ${object.event_id.name}</field>
+        <field name="body_html"><![CDATA[
+        <p>Hello ${object.name},</p>
+        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin_located} to ${object.event_id.date_end_located}.
+        For any further information please contact our event department.</p>
+        <p>Thank you for your participation!</p>
+        <p>Best regards</p>]]></field>
+        </record>
+
+        <record id="confirmation_registration" model="email.template">
+        <field name="name">Confirmation of the Registration</field>
+        <field name="model_id" ref="event.model_event_registration"/>
+        <field name="email_from" >${(object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com')|safe}</field>
+        <field name="email_to" >${object.email|safe}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="subject">Your registration at ${object.event_id.name}</field>
+        <field name="body_html"><![CDATA[
+        <p>Hello ${object.name},</p>
+        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.
+        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>
+        <p>Thank you for your participation!</p>
+        <p>Best regards</p>]]></field>
+        </record>
+
+        <!-- Default Values -->
+        <record model="ir.values" id="default_value_event_mail_confirmation">
+            <field name="name">default_email_event</field>
+            <field name="key">default</field>
+            <field name="key2"></field>
+            <field eval="ref('confirmation_event')" name="value_unpickle"/>
+            <field name="model">event.type</field>
+        </record>
+        <record model="ir.values" id="default_value_registration_mail_confirmation">
+            <field name="name">default_email_registration</field>
+            <field name="key">default</field>
+            <field name="key2"></field>
+            <field eval="ref('confirmation_registration')" name="value_unpickle"/>
+            <field name="model">event.type</field>
+        </record>
+
+    </data>
+</openerp>

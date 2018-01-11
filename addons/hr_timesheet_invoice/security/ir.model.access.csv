@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_timesheet_invoice_factor_hr_user,hr_timesheet_invoice.factor.hr.user,model_hr_timesheet_invoice_factor,base.group_hr_user,1,1,1,1
+access_hr_timesheet_invoice_factor_employee,hr_timesheet_invoice.factor.hr.user,model_hr_timesheet_invoice_factor,base.group_user,1,1,1,1
+access_hr_timesheet_invoice_factor_acc_inv,hr_timesheet_invoice.factor.account.invoice,model_hr_timesheet_invoice_factor,account.group_account_invoice,1,1,1,1
+access_report_analytic_account_close,report.analytic.account.close,model_report_analytic_account_close,account.group_account_manager,1,0,0,0
+access_report_account_analytic_line_to_invoice,report.account.analytic.line.to.invoice,model_report_account_analytic_line_to_invoice,account.group_account_manager,1,0,0,0
+access_report_timesheet_user,report_timesheet.user,model_report_timesheet_user,base.group_hr_manager,1,1,1,1
+access_report_timesheet_account,report_timesheet.account,model_report_timesheet_account,base.group_hr_manager,1,1,1,1
+access_report_timesheet_account_date,report_timesheet.account.date,model_report_timesheet_account_date,base.group_hr_manager,1,1,1,1
+access_report_timesheet_invoice,report_timesheet.invoice,model_report_timesheet_invoice,base.group_hr_manager,1,1,1,1
+access_report_analytic_account_close_manager,report.analytic.account.close.manager,model_report_analytic_account_close,base.group_hr_manager,1,1,1,1
+access_report_account_analytic_line_to_invoice_manager,report.account.analytic.line.to.invoice.manager,model_report_account_analytic_line_to_invoice,base.group_hr_manager,1,1,1,1
+access_account_invoice_hr_user,account.invoice.hr.user,account.model_account_invoice,base.group_hr_user,1,1,1,1
+access_account_invoice_tax_hr_manager,account.invoice.tax.hr.manager,account.model_account_invoice_tax,base.group_hr_manager,1,1,1,1
+access_report_timesheet_line_employee,report.timesheet.line.employee,model_report_timesheet_line,base.group_hr_user,1,1,1,1
+access_report_timesheet_line_employee_user,report.timesheet.line,model_report_timesheet_line,base.group_user,1,1,1,0

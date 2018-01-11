@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="ogone_acquirer_button">
+            <form t-if="acquirer" t-att-action="tx_url" method="post" target="_self">
+                <!-- seller -->
+                <input type='hidden' name='PSPID' t-att-value='tx_values["PSPID"]'/>
+                <input type='hidden' name='ORDERID' t-att-value='tx_values["ORDERID"]'/>
+                <!-- cart -->
+                <input type='hidden' name='AMOUNT' t-att-value='tx_values["AMOUNT"] or "0.0"'/>
+                <input type='hidden' name='CURRENCY' t-att-value='tx_values["CURRENCY"]'/>
+                <!-- buyer -->
+                <input type='hidden' name='LANGUAGE' t-att-value='tx_values["LANGUAGE"]'/>
+                <input type='hidden' name='CN' t-att-value='tx_values["CN"]'/>
+                <input type='hidden' name='EMAIL' t-att-value='tx_values["EMAIL"]'/>
+                <input type='hidden' name='OWNERZIP' t-att-value='tx_values["OWNERZIP"]'/>
+                <input type='hidden' name='OWNERADDRESS' t-att-value='tx_values["OWNERADDRESS"]'/>
+                <input type='hidden' name='OWNERCTY' t-att-value='tx_values["OWNERCTY"]'/>
+                <input type='hidden' name='OWNERTOWN' t-att-value='tx_values["OWNERTOWN"]'/>
+                <input type='hidden' name='OWNERTELNO' t-att-value='tx_values["OWNERTELNO"]'/>
+                <!-- before payment verification -->
+                <input type='hidden' name='SHASIGN' t-att-value='tx_values["SHASIGN"]'/>
+                <!-- look and print -->
+                <!-- <input type='hidden' name='TITLE' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='BGCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='TXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='TBLBGCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='TBLTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='BUTTONBGCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='BUTTONTXTCOLOR' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='LOGO' t-att-value='tx_dict["currency_name"]'/>
+                <input type='hidden' name='FONTTYPE' t-att-value='tx_dict["currency_name"]'/> -->
+                <!-- after payment parameters -->
+                <t t-if='tx_values.get("PARAMPLUS")'>
+                    <input type='hidden' name="PARAMPLUS" t-att-value='tx_values["PARAMPLUS"]'/>
+                </t>
+                <!-- redirection -->
+                <input type='hidden' name='ACCEPTURL' t-att-value='tx_values["ACCEPTURL"]'/>
+                <input type='hidden' name='DECLINEURL' t-att-value='tx_values["DECLINEURL"]'/>
+                <input type='hidden' name='EXCEPTIONURL' t-att-value='tx_values["EXCEPTIONURL"]'/>
+                <input type='hidden' name='CANCELURL' t-att-value='tx_values["CANCELURL"]'/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_ogone/static/src/img/ogone_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

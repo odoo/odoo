@@ -1,0 +1,239 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * account_check_writing
+# 
+# Translators:
+# Clo <clo@odoo.com>, 2015
+# Fabien Pinckaers <fp@openerp.com>, 2015
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014
+# Florian Hatat, 2015
+# Quentin THEURET <quentin@theuret.net>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:07+0000\n"
+"PO-Revision-Date: 2015-08-05 09:26+0000\n"
+"Last-Translator: Clo <clo@odoo.com>\n"
+"Language-Team: French (http://www.transifex.com/odoo/odoo-8/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you do\n"
+"                to your suppliers using checks. When you select a supplier, the\n"
+"                payment method and an amount for the payment, Odoo will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nCliquez pour créer un nouveau chèque.\n              </p><p>\nLe formulaire de paiement par chèque vous permet de suivre les paiements effectués à vos fournisseurs par ce moyen. Après avoir choisi le fournisseur, le moyen de paiement et le montant, Odoo vous proposera de faire la réconciliation bancaire de votre paiement avec les factures encore non-payées du fournisseur correspondant.\n              </p>"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_voucher
+msgid "Accounting Voucher"
+msgstr "Justificatif comptable"
+
+#. module: account_check_writing
+#: field:account.voucher,allow_check:0
+msgid "Allow Check Writing"
+msgstr "Autoriser l'émission du chèque"
+
+#. module: account_check_writing
+#: field:account.journal,allow_check_writing:0
+msgid "Allow Check writing"
+msgstr "Autoriser l'émission de chèques"
+
+#. module: account_check_writing
+#: field:account.voucher,amount_in_word:0
+msgid "Amount in Word"
+msgstr "Montant en lettres"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: model:ir.actions.report.xml,name:account_check_writing.action_report_check
+msgid "Check"
+msgstr "Chèque"
+
+#. module: account_check_writing
+#: field:res.company,check_layout:0
+msgid "Check Layout"
+msgstr "Format du chèque"
+
+#. module: account_check_writing
+#: help:account.journal,use_preprint_check:0
+msgid "Check if you use a preformated sheet for check"
+msgstr "Vérifie si vous utilisez un papier pré-formaté pour les chèques"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check in middle"
+msgstr "Chèque au milieu"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on Top"
+msgstr "Chéque en haut"
+
+#. module: account_check_writing
+#: selection:res.company,check_layout:0
+msgid "Check on bottom"
+msgstr "Chèque en bas"
+
+#. module: account_check_writing
+#: help:res.company,check_layout:0
+msgid ""
+"Check on top is compatible with Quicken, QuickBooks and Microsoft Money. "
+"Check in middle is compatible with Peachtree, ACCPAC and DacEasy. Check on "
+"bottom is compatible with Peachtree, ACCPAC and DacEasy only"
+msgstr "Chèque en haut est compatible avec Quicken, QuickBooks et Microsoft Money. \r\nChèque  au milieu est compatible avec Peachtree, ACCPAC et DacEasy. \r\nChèque en bas est compatible with Peachtree, ACCPAC et DacEasy only"
+
+#. module: account_check_writing
+#: help:account.journal,allow_check_writing:0
+msgid "Check this if the journal is to be used for writing checks."
+msgstr "A vérifier si le journal doi être utilisé pour émettre des chèques."
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+
+#. module: account_check_writing
+#: field:account.check.write,create_uid:0
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: account_check_writing
+#: field:account.check.write,create_date:0
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Description"
+msgstr "Description"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Discount"
+msgstr "Remise"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Due Date"
+msgstr "Date"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "Error!"
+msgstr "Erreur !"
+
+#. module: account_check_writing
+#: field:account.check.write,id:0
+#: field:report.account_check_writing.report_check,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_journal
+msgid "Journal"
+msgstr "Journal"
+
+#. module: account_check_writing
+#: field:account.check.write,write_uid:0
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: account_check_writing
+#: field:account.check.write,write_date:0
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: account_check_writing
+#: field:account.check.write,check_number:0
+msgid "Next Check Number"
+msgstr "Numéro de chèque suivant"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "No check selected "
+msgstr "Aucun chèque n'est sélectionné"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/wizard/account_check_batch_printing.py:59
+#, python-format
+msgid "One of the printed check already got a number."
+msgstr "Un des chèques imprimés possède déjà un numéro."
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Open Balance"
+msgstr "Solde initial"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Original Amount"
+msgstr "Montant original"
+
+#. module: account_check_writing
+#: view:website:account_check_writing.report_check
+msgid "Payment"
+msgstr "Paiement"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_account_check_write
+msgid "Prin Check in Batch"
+msgstr "Imprimer des chèques par lots"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+#: view:account.voucher:account_check_writing.view_vendor_payment_check_form
+msgid "Print Check"
+msgstr "Imprimer un chèque"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_account_check_write
+msgid "Print Check in Batch"
+msgstr "Imprimer des chèques par lots"
+
+#. module: account_check_writing
+#: code:addons/account_check_writing/account_voucher.py:77
+#, python-format
+msgid "Printing error"
+msgstr "Erreur d'impression"
+
+#. module: account_check_writing
+#: help:account.check.write,check_number:0
+msgid "The number of the next check number to be printed."
+msgstr "Le numéro du prochain chèque à imprimer."
+
+#. module: account_check_writing
+#: field:account.journal,use_preprint_check:0
+msgid "Use Preprinted Check"
+msgstr "Utiliser des chèques pré-imprimés"
+
+#. module: account_check_writing
+#: model:ir.actions.act_window,name:account_check_writing.action_write_check
+#: model:ir.ui.menu,name:account_check_writing.menu_action_write_check
+msgid "Write Checks"
+msgstr "Émettre des chèques"
+
+#. module: account_check_writing
+#: view:account.check.write:account_check_writing.view_account_check_write
+msgid "or"
+msgstr "ou"

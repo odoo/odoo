@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Rename root menu "Accounting" -->
+        <!-- Top menu item -->
+        <menuitem name="Accounting"
+            id="account.menu_finance"/>
+        <menuitem id="account.menu_account_config" name="Accounting" parent="base.menu_config"/>
+
+    </data>
+
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_account_menu" model="ir.actions.client">
+            <field name="name">Open Accounting Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
+        </record>
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_account_menu"/>
+            <field name="state">open</field>
+        </record>
+
+        <!-- Notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="subject">Accounting and Finance application installed!</field>
+            <field name="body"><![CDATA[<p>With Odoo's accounting, you get instant access to your financial data, and can setup analytic accounting, forecast taxes, control budgets, easily create and send invoices, record bank statements, etc.</p>
+<p>The accounting features are fully integrated with other Odoo applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</p>]]></field>
+        </record>
+    </data>
+</openerp>

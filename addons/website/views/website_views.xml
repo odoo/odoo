@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="default_website" model="website">
+            <field name="name">localhost</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="language_ids" eval="[(6, 0, [ ref('base.lang_en')])]"/>
+            <field name="default_lang_id" ref="base.lang_en"/>
+        </record>
+    </data>
+
+    <data>
+
+        <record id="view_website_form" model="ir.ui.view">
+            <field name="name">website.form</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <form string="Website Settings">
+                     <header>
+                        <button string="Apply" type="object" name="noop" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="noop" class="oe_link"/>
+                    </header>
+                    <div name="domain">
+                        <separator string="Domain"/>
+                        <group name="domain">
+                            <field name="name" class="oe_inline"/>
+                            <field name="google_analytics_key" placeholder="UA-XXXXXXXX-Y"/>
+                        </group>
+                    </div>
+                    <div name="social_media">
+                        <separator string="Social Media"/>
+                        <group name="social_media">
+                            <field name="social_twitter" placeholder="https://twitter.com/odooapps"/>
+                            <field name="social_facebook" placeholder="https://facebook.com/odoo"/>
+                            <field name="social_googleplus" placeholder="https://plus.google.com/+Odooapps"/>
+                            <field name="social_linkedin" placeholder="http://www.linkedin.com/company/odoo"/>
+                            <field name="social_youtube" placeholder="https://www.youtube.com/channel/UCkQPikELWZFLgQNHd73jkdg"/>
+                            <field name="social_github" placeholder="https://youraccount.github.io"/>
+                        </group>
+                    </div>
+                    <div name="other">
+                        <separator string="Other Info"/>
+                        <group name="other">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="language_ids" widget="many2many_checkboxes"/>
+                            <field name="default_lang_id" widget="selection"/>
+                        </group>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_website_tree" model="ir.ui.view">
+            <field name="name">website.tree</field>
+            <field name="model">website</field>
+            <field name="arch" type="xml">
+                <tree string="Websites">
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="default_lang_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_base_language_install" model="ir.ui.view">
+            <field name="name">view_base_language_install.inherit</field>
+            <field name="model">base.language.install</field>
+            <field name="inherit_id" ref="base.view_base_language_install"/>
+            <field name="arch" type="xml">
+                <group states="init" position="inside">
+                    <field name="website_ids" widget="many2many_checkboxes"/>
+                </group>
+            </field>
+        </record>
+
+        <record id="action_website_menu" model="ir.actions.act_window">
+            <field name="name">Website Menu</field>
+            <field name="res_model">website.menu</field>
+            <field name="view_mode">list</field>
+        </record>
+
+        <record id="menu_tree" model="ir.ui.view">
+            <field name="name">website.menu.tree</field>
+            <field name="model">website.menu</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree string="Website menu" editable="bottom">
+                    <field name="name"/>
+                    <field name="url"/>
+                    <field name="new_window"/>
+                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

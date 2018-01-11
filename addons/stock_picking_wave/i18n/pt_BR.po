@@ -1,0 +1,305 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * stock_picking_wave
+# 
+# Translators:
+# danimaribeiro <danimaribeiro@gmail.com>, 2015
+# grazziano <g.negocios@outlook.com.br>, 2016
+# Rodrigo Macedo <rodrigomacedo@rmsolucoeseminformatica.com>, 2015
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo 8.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-21 14:08+0000\n"
+"PO-Revision-Date: 2016-07-22 12:03+0000\n"
+"Last-Translator: grazziano <g.negocios@outlook.com.br>\n"
+"Language-Team: Portuguese (Brazil) (http://www.transifex.com/odoo/odoo-8/language/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: stock_picking_wave
+#: model:ir.actions.act_window,help:stock_picking_wave.action_picking_wave
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a Picking Wave. \n"
+"              </p><p>\n"
+"                The Goal of the picking waves is to group operations that may \n"
+"                (needs to) be done together in order to increase their efficiency.\n"
+"                It may also be useful to assign jobs (one person = one wave) or\n"
+"                help the timing management of operations (tasks to be done at 1pm).\n"
+"              </p>\n"
+"            "
+msgstr "<p class=\"oe_view_nocontent_create\">\nClique para criar uma Remessa de Separação \n</p><p>\nO objetivo das remessas de separação é agrupar operações que podem\n(necessitam) serem feitas em conjunto, a fim de aumentar a sua eficiência.\nTambém podem ser úteis para atribuir postos de trabalho (uma pessoa = uma remessa) ou\najudar a gestão de tempos de operações (tarefas a serem concluídas as 13:00).\n</p>\n            "
+
+#. module: stock_picking_wave
+#: model:ir.model,name:stock_picking_wave.model_stock_picking_to_wave
+msgid "Add pickings to a picking wave"
+msgstr "Adicionar separações para uma remessa de separação"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "Add pickings to wave"
+msgstr "Adicionar separações para a remessa"
+
+#. module: stock_picking_wave
+#: model:ir.actions.act_window,name:stock_picking_wave.action_picking_to_wave
+#: model:ir.actions.act_window,name:stock_picking_wave.picking_to_wave_act
+msgid "Add to Wave"
+msgstr "Adicionar a remessa"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "Add to wave"
+msgstr "Adicionar a remessa"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Cancel picking"
+msgstr "Cancelar separação"
+
+#. module: stock_picking_wave
+#: selection:stock.picking.wave,state:0
+msgid "Cancelled"
+msgstr "Cancelada"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Confirm picking"
+msgstr "Confirmar separação"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,create_uid:0
+#: field:stock.picking.wave,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,create_date:0
+#: field:stock.picking.wave,create_date:0
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+#: selection:stock.picking.wave,state:0
+msgid "Done"
+msgstr "Concluído"
+
+#. module: stock_picking_wave
+#: selection:stock.picking.wave,state:0
+msgid "Draft"
+msgstr "Provisório"
+
+#. module: stock_picking_wave
+#: model:product.category,name:stock_picking_wave.product_category_dry
+msgid "Dry"
+msgstr "Seca"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:40
+#, python-format
+msgid "Error!"
+msgstr "Erro!"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Force availability"
+msgstr "Força disponibilidade"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,id:0 field:stock.picking.wave,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: stock_picking_wave
+#: model:product.category,name:stock_picking_wave.product_category_icecream
+msgid "Ice Cream"
+msgstr "Sorvete"
+
+#. module: stock_picking_wave
+#: model:product.template,name:stock_picking_wave.product_product_ice_cream_choco_product_template
+msgid "Ice Cream Chocolate"
+msgstr "Sorvete de chocolate"
+
+#. module: stock_picking_wave
+#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_choco_product_template
+msgid "Ice Cream Chocolate with stucks"
+msgstr "Sorvete de chocolate com canudinhos"
+
+#. module: stock_picking_wave
+#: model:product.template,description_sale:stock_picking_wave.product_product_ice_cream_vani_product_template
+#: model:product.template,name:stock_picking_wave.product_product_ice_cream_vani_product_template
+msgid "Ice Cream Vanilla"
+msgstr "Sorvete de Baunilha"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "In Progress"
+msgstr "Em Andamento"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,write_uid:0
+#: field:stock.picking.wave,write_uid:0
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: stock_picking_wave
+#: field:stock.picking.to.wave,write_date:0
+#: field:stock.picking.wave,write_date:0
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: stock_picking_wave
+#: help:stock.picking.wave,picking_ids:0
+msgid "List of picking associated to this wave"
+msgstr "Lista de separação associada com esta remessa"
+
+#. module: stock_picking_wave
+#: help:stock.picking.wave,name:0
+msgid "Name of the picking wave"
+msgstr "Nome da remessa de separação"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:40
+#, python-format
+msgid "Nothing to print."
+msgstr "Nada para imprimir"
+
+#. module: stock_picking_wave
+#: help:stock.picking.wave,user_id:0
+msgid "Person responsible for this wave"
+msgstr "Pessoa responsável por esta remessa"
+
+#. module: stock_picking_wave
+#: model:ir.model,name:stock_picking_wave.model_stock_picking
+msgid "Picking List"
+msgstr "Lista de Separação"
+
+#. module: stock_picking_wave
+#: model:ir.model,name:stock_picking_wave.model_stock_picking_wave
+#: field:stock.picking,wave_id:0 field:stock.picking.to.wave,wave_id:0
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Picking Wave"
+msgstr "Remessa de Separação"
+
+#. module: stock_picking_wave
+#: field:stock.picking.wave,name:0
+msgid "Picking Wave Name"
+msgstr "Nome da Remessa de Separação"
+
+#. module: stock_picking_wave
+#: model:ir.actions.act_window,name:stock_picking_wave.action_picking_wave
+#: model:ir.ui.menu,name:stock_picking_wave.menu_action_picking_wave
+msgid "Picking Waves"
+msgstr "Remessas de Separação"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Picking Waves not finished"
+msgstr "Remessas de Separação não finalizadas"
+
+#. module: stock_picking_wave
+#: help:stock.picking,wave_id:0
+msgid "Picking wave associated to this picking"
+msgstr "Remessa associada a esta separação"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+#: field:stock.picking.wave,picking_ids:0
+msgid "Pickings"
+msgstr "Separações"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+msgid "Print all pickings"
+msgstr "Imprimir todas as separações"
+
+#. module: stock_picking_wave
+#: field:stock.picking.wave,user_id:0
+msgid "Responsible"
+msgstr "Responsável"
+
+#. module: stock_picking_wave
+#: selection:stock.picking.wave,state:0
+msgid "Running"
+msgstr "Em execução"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "Search Picking Waves"
+msgstr "Pesquisar Remessas de Separação"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "Select a wave"
+msgstr "Selecione uma remessa"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:57
+#, python-format
+msgid ""
+"Some pickings are still waiting for goods. Please check or force their "
+"availability before setting this wave to done."
+msgstr "Algumas separações ainda estão esperando por mercadorias. Por favor force sua disponibilidade antes de marcar esta remessa como pronta"
+
+#. module: stock_picking_wave
+#: model:product.template,name:stock_picking_wave.product_product_dry_specu_product_template
+msgid "Speculoos"
+msgstr "Speculoos"
+
+#. module: stock_picking_wave
+#: model:product.template,description_sale:stock_picking_wave.product_product_dry_specu_product_template
+msgid "Speculoos - A belgian speciality"
+msgstr "Speculoos - Uma especilidade belga"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+#: field:stock.picking.wave,state:0
+msgid "State"
+msgstr "Estado"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_form
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_tree
+msgid "Stock Picking Waves"
+msgstr "Remessas de Separação de Estoque"
+
+#. module: stock_picking_wave
+#: view:stock.picking.wave:stock_picking_wave.view_picking_wave_filter
+msgid "User"
+msgstr "Usuário"
+
+#. module: stock_picking_wave
+#: code:addons/stock_picking_wave/stock_picking_wave.py:57
+#, python-format
+msgid "Warning"
+msgstr "Aviso"
+
+#. module: stock_picking_wave
+#: view:stock.picking:stock_picking_wave.view_stock_picking_wave_search_inherit
+msgid "Wave"
+msgstr "Remessa"
+
+#. module: stock_picking_wave
+#: view:stock.picking.to.wave:stock_picking_wave.picking_to_wave_form
+msgid "or"
+msgstr "ou"

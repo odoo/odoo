@@ -1,0 +1,94 @@
+-
+  In order to test Carrier Cost,
+-
+  Create sale order with Normal Delivery Charges
+- 
+  !record {model: sale.order, id: sale_normal_delivery_charges}:
+    partner_id: base.res_partner_18
+    partner_invoice_id: base.res_partner_18
+    partner_shipping_id: base.res_partner_18
+    pricelist_id: product.list0
+    order_policy: 'picking'
+    order_line:
+      - name: 'PC Assamble + 2GB RAM'
+        product_id: product.product_product_4
+        product_uom_qty: 1
+        product_uos_qty: 1
+        product_uom: product.product_uom_unit
+        price_unit: 750.00
+    carrier_id: normal_delivery_carrier
+-
+  I add delivery cost in Sale order.
+
+-
+  !python {model: sale.order}: |
+    self.delivery_set(cr, uid, [ref("sale_normal_delivery_charges")], context=context)
+    
+-
+  I check sale order after added delivery cost.
+-
+  !python {model: sale.order.line}: |
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale_normal_delivery_charges')), ('product_id','=', ref('product_product_delivery'))])
+    assert len(line_ids), "Delivery cost is not Added"
+    line_data = self.browse(cr ,uid ,line_ids[0] ,context)
+    assert line_data.price_subtotal == 10, "Delivey cost is not correspond."
+-
+  I confirm the sale order.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_normal_delivery_charges}
+-
+  I create Invoice from shipment.
+-
+  !python {model: stock.invoice.onshipping}: |
+    sale = self.pool.get('sale.order')
+    sale_order = sale.browse(cr, uid, ref("sale_normal_delivery_charges"))
+    ship_ids = [x.id for x in sale_order.picking_ids]
+    wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
+      {'active_ids': ship_ids, 'active_model': 'stock.picking'})
+    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
+-
+  Create one more sale order with Free Delivery Charges
+- 
+  !record {model: sale.order, id: sale_free_delivery_charges}:
+    partner_id: base.res_partner_7
+    partner_invoice_id: base.res_partner_address_13
+    partner_shipping_id: base.res_partner_address_13
+    pricelist_id: product.list0
+    order_policy: 'manual'
+    order_line:
+      - name: 'Service on demand'
+        product_id: product.product_product_consultant
+        product_uom_qty: 24
+        product_uos_qty: 24
+        product_uom: product.product_uom_hour
+        price_unit: 75.00
+    order_line:
+      - name: 'On Site Assistance'
+        product_id: product.product_product_2
+        product_uom_qty: 30
+        product_uos_qty: 30
+        product_uom: product.product_uom_hour
+        price_unit: 38.25
+    carrier_id: free_delivery_carrier
+-
+  I add free delivery cost in Sale order.
+-
+  !python {model: sale.order}: |
+    self.delivery_set(cr, uid, [ref("sale_free_delivery_charges")], context=context)
+-
+  I check sale order after added delivery cost.
+-
+  !python {model: sale.order.line}: |
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale_free_delivery_charges')), ('product_id','=', ref('product_product_delivery'))])
+    assert len(line_ids), "Delivery cost is not Added"
+    line_data = self.browse(cr ,uid ,line_ids[0] ,context)
+    assert line_data.price_subtotal == 0, "Delivey cost is not correspond."
+
+-
+  I set default delivery policy.
+-
+  !record {model: sale.config.settings, id: default_delivery_policy}:
+    {}
+-
+  !python {model: sale.config.settings}: |
+    self.execute(cr, uid, [ref('default_delivery_policy')], context=context)

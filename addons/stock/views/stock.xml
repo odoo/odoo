@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- vim:fdn=3:
+-->
+<openerp>
+    <data>
+
+<template id="assets_backend" name="stock assets" inherit_id="web.assets_backend">
+    <xpath expr="." position="inside">
+        <link rel="stylesheet" href="/stock/static/src/css/stock.css"/>
+        <script type="text/javascript" src="/stock/static/src/js/widgets.js"></script>
+    </xpath>
+</template>
+
+<template id="barcode_index" name="Barcode Scanner">&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <title>Barcode Scanner</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+
+        <meta name="viewport" content=" width=1024, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <link rel="shortcut icon"    sizes="80x51" href="/stock/static/src/img/scan.png"/>
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+
+        <link rel="stylesheet" href="/stock/static/src/css/barcode.css" />
+        <link rel="stylesheet" href="/web/static/lib/bootstrap/css/bootstrap.css" />
+        <link rel="stylesheet" href="/web/static/lib/jquery.ui/css/smoothness/jquery-ui-1.9.1.custom.css" />
+        <link rel="stylesheet" href="/web/static/lib/fontawesome/css/font-awesome.css" />
+
+        <t t-call-assets="web.assets_common" t-css="false" />
+        <t t-call-assets="web.assets_backend" t-css="false" />
+
+        <script type="text/javascript" id="loading-script" t-raw="init">
+            $(function() {
+                var s = new openerp.init();
+                var wc = new s.web.WebClient();
+
+                wc.show_application = function() {
+                    wc.action_manager.do_action("stock.ui", {});
+                };
+
+                wc.do_push_state = function(state){};
+                wc.setElement($(document.body));
+                wc.start();
+            });
+        </script>
+
+    </head>
+    <body>
+        <div class='openerp openerp_webclient_container'>
+            <table class='oe_webclient'>
+                <tr>
+                    <td class='oe_application' />
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>
+</template>
+
+    </data>
+</openerp>

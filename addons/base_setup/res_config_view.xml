@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_general_configuration" model="ir.ui.view">
+            <field name="name">General Settings</field>
+            <field name="model">base.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="General Settings" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <separator string="General Settings"/>
+                    <div>
+                        <p>
+                            <label string="You will find more options in your company details: address for the header and footer, overdue payments texts, etc."/>
+                            <button type="object" name="open_company" string="Configure your company data" icon="gtk-execute" class="oe_inline oe_link"/>
+                        </p>
+                    </div>
+                    <group>
+                        <label for="id" string="Options"/>
+                        <div>
+                            <div name="multi_company">
+                                <field name="module_multi_company" class="oe_inline"/>
+                                <label for="module_multi_company"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Email"/>
+                        <div name="email">
+                            <div name="email.outgoing_server">
+                                <button type="action"
+                                    name="%(base.action_ir_mail_server_list)d"
+                                    string="Configure outgoing email servers" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Portal access"/>
+                        <div>
+                            <div>
+                                <field name="module_portal" class="oe_inline"/>
+                                <label for="module_portal"/>
+                                <p>
+                                    When you send a document to a customer
+                                    (quotation, invoice), your customer will be
+                                    able to signup to get all his documents,
+                                    read your company news, check his projects,
+                                    etc.
+                                </p>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Authentication"/>
+                        <div>
+                            <div>
+                                <field name="module_auth_oauth" class="oe_inline"/>
+                                <label for="module_auth_oauth"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Import / Export"/>
+                        <div>
+                            <div>
+                                <field name="module_base_import" class="oe_inline"/>
+                                <label for="module_base_import"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Google Drive"/>
+                        <div name="google_drive">
+                            <div name="module_google_drive">
+                                <field name="module_google_drive" class="oe_inline"/>
+                                <label for="module_google_drive"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Google Calendar"/>
+                        <div name="google_calendar">
+                            <div name="module_google_calendar">
+                                <field name="module_google_calendar" class="oe_inline"/>
+                                <label for="module_google_calendar"/>
+                                    <div name="google_calendar_config_description" attrs="{'invisible': [('module_google_calendar','=',False)]}">
+                                        <p> 
+                                            Once installed, you can configure your API credentials for "Google calendar"
+                                        </p>
+                                    </div>
+                                </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="font" />
+                        <div>
+                            <div>
+                                <field name="font" class="oe_inline" />
+                                <button string="(reload fonts)" name="act_discover_fonts" type="object" class="oe_link"/>
+                            </div>
+                        </div>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_general_configuration" model="ir.actions.act_window">
+            <field name="name">General Settings</field>
+            <field name="res_model">base.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+        <menuitem id="menu_general_configuration" parent="base.menu_config"
+            sequence="100" action="action_general_configuration"/>
+
+        <!-- Sale config wizard -->
+        <record id="view_sale_config_settings" model="ir.ui.view">
+            <field name="name">sale settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Configure Sales" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
+                    </header>
+                    <div name="linkedin">
+                        <separator string="Social Network Integration"/>
+                        <group name="LinkedIn">
+                            <label for="id" string="Contacts"/>
+                            <div name="LinkedIn">
+                                <div name="module_web_linkedin" class="oe_inline">
+                                    <field name="module_web_linkedin"/>
+                                    <label for="module_web_linkedin"/>
+                                </div>
+                                <div>
+                                    <field name="module_mass_mailing" class="oe_inline"/>
+                                    <label for="module_mass_mailing"/>
+                                </div>
+                            </div>
+                        </group>
+                    </div>
+                    <div name="customer feature" attrs="{'invisible': [('module_sale','=',False)]}">
+                        <field name="module_sale" invisible="1"/>
+                        <separator string="Quotations and Sales Orders"/>
+                        <group name="Customer">
+                            <label for="id" string="Customer Features"/>
+                            <div name="Customer Features"/>
+                        </group>
+                        <group name="Sale">
+                            <label for="id" string="Sale Features"/>
+                            <div name="Sale Features"/>
+                        </group>
+                    </div>
+                    <div name="config_sale">
+                        <field name="module_crm" invisible="1"/>
+                        <separator string="Emails Integration" attrs="{'invisible': [('module_crm','=',False)]}"/>
+                        <p name="config_email_integration" attrs="{'invisible': [('module_crm','=',False)]}">
+                            Odoo allows to automatically create leads (or others documents)
+                            from incoming emails. You can automatically synchronize emails with Odoo
+                            using regular POP/IMAP accounts, using a direct email integration script for your
+                            email server, or by manually pushing emails to Odoo using specific
+                            plugins for your preferred email application.
+                        </p>
+                    </div>
+                    <div name="config_other"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_sale_config" model="ir.actions.act_window">
+            <field name="name">Configure Sales</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.config.settings</field>
+            <field name="view_id" ref="view_sale_config_settings"/>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+    </data>
+</openerp>

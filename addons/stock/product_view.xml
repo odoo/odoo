@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_stock_product_tree" model="ir.ui.view">
+            <field name="name">product.stock.tree.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="colors" translation="off">red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')</attribute>
+                </tree>
+                <field name="price" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stock_product_template_tree" model="ir.ui.view">
+            <field name="name">product.template.stock.tree.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="colors" translation="off">red:virtual_available&lt;0;blue:virtual_available&gt;=0 and state in ('draft', 'end', 'obsolete');black:virtual_available&gt;=0 and state not in ('draft', 'end', 'obsolete')</attribute>
+                </tree>
+                <field name="uom_id" position="after">
+                    <field name="qty_available"/>
+                    <field name="virtual_available"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="action_receive_move" model="ir.actions.act_window">
+            <field name="name">Receipts</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain" eval="[('picking_id.picking_type_id.code','=','incoming'), ('location_id.usage','!=','internal'), ('location_dest_id.usage', '=', 'internal')]"/>
+            <field name="view_id" ref="view_move_tree_receipt_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a receipt for this product.
+              </p><p>
+                Here you will find the history of all receipts related to
+                this product, as well as all future receipts you are waiting
+                from your suppliers.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_deliver_move" model="ir.actions.act_window">
+            <field name="name">Deliveries</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_tree_receipt_picking"/>
+            <field name="domain" eval="[('picking_type_id.code','=','outgoing'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal')]"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a delivery order for this product.
+              </p><p>
+                Here you will find the history of all past deliveries related to
+                this product, as well as all the products you must deliver to
+                customers.
+              </p>
+            </field>
+        </record>
+
+        <!-- Product Template -->
+
+        <record id="product_template_search_form_view_stock" model="ir.ui.view">
+            <field name="name">product.template.search.stock.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <field name="product_variant_ids" position="before">
+                    <separator/>
+                    <filter name="real_stock_available" string="Available Products" domain="[('qty_available','&gt;',0)]"/>
+                    <filter name="virtual_stock_available" string="Forecast Available Products" domain="[('virtual_available','&gt;',0)]"/>
+                    <filter name="real_stock_exhausted" string="Exhausted Stock" domain="[('qty_available','&lt;=',0)]"/>
+                    <filter name="virtual_stock_exhausted" string="Forecast Exhausted Stock" domain="[('virtual_available','&lt;=',0)]"/>
+                    <filter name="real_stock_negative" string="Negative Stock" domain="[('qty_available','&lt;',0)]"/>
+                    <filter name="virtual_stock_negative" string="Forecast Negative Stock" domain="[('virtual_available','&lt;',0)]"/>
+                </field>
+                <filter name="consumable" position="before">
+                   <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="view_template_property_form" model="ir.ui.view">
+            <field name="name">product.template.stock.property.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <group name="sale_condition" position="inside">
+                    <label for="sale_delay"/>
+                    <div>
+                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}" class="oe_inline" style="vertical-align:baseline"/> days
+                    </div>
+                </group>
+                <group name="status" position="before">
+                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                        <label for="qty_available"/>
+                            <div>
+                                <field name="qty_available" class="oe_inline"/>
+                                <button name="%(action_view_change_product_quantity)d" string="⇒ Update"
+                                    type="action"
+                                    class="oe_link"/>
+                            </div>
+                        <label for="incoming_qty"/>
+                            <div>
+                                <field name="incoming_qty" class="oe_inline"/>
+                                <button string="⇒ Request Procurement" name="%(stock.act_make_procurement)d" type="action" class="oe_link"/>
+                            </div>
+                        <field name="virtual_available"/>
+                    </group>
+                </group>
+                <group name="status" position="after">
+                    <group name="store" string="Storage Location" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="loc_rack"/>
+                        <field name="loc_row"/>
+                        <field name="loc_case"/>
+                    </group>
+                </group>
+                <group name="status" position="before">
+                    <group name="lot" groups="stock.group_production_lot" string="Lots" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="track_all" groups="stock.group_production_lot"/>
+                        <field name="track_incoming" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                        <field name="track_outgoing" groups="stock.group_production_lot" attrs="{'invisible': [('track_all', '=', True)]}"/>
+                    </group>
+                </group>
+                <group name="weight" position="before">
+                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties" attrs="{'invisible':[('type','=','service')]}">
+                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                    </group>
+                </group>
+                <field name="product_manager" position="attributes">
+                    <attribute name="context" translation="off">{'default_groups_ref': ['base.group_user', 'base.group_sale_manager', 'stock.group_stock_manager']}</attribute>
+                </field>
+                <group name="procurement_uom" position="after" >
+                   <group string="Supply Chain Information" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                       <field name="route_ids" widget="many2many_checkboxes"/>
+                   </group>
+                </group>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="product_template_kanban_stock_view">
+            <field name="name">Product Template Kanban Stock</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="lst_price" position="after">
+                    <field name="type"/>
+                </field>
+                <ul position="inside">
+                    <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value != 'service'">Forecasted: <field name="virtual_available"/> <field name="uom_id"/></li>
+                </ul>
+            </field>
+        </record>
+
+        <!-- Product Variant -->
+
+        <record id="product_search_form_view_stock" model="ir.ui.view">
+            <field name="name">product.search.stock.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="before">
+                    <field name="location_id" widget="selection" context="{'location': self}"/>
+                    <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_kanban_stock_view">
+            <field name="name">Product Kanban Stock</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="lst_price" position="after">
+                    <field name="reception_count"/>
+                    <field name="delivery_count"/>
+                </field>
+                <xpath expr="//div[@name='tags']" position="inside">
+                    <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value&gt;1">
+                        <t t-esc="record.reception_count.value"/> Receipts
+                    </a>
+                    <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value==1">
+                        <t t-esc="record.reception_count.value"/> Receipt
+                    </a>
+                    <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value&gt;1">
+                        <t t-esc="record.delivery_count.value"/> Deliveries
+                    </a>
+                    <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value==1">
+                        <t t-esc="record.delivery_count.value"/> Delivery
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_form_view_procurement_button">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_stat_button"
+                           name="%(product_open_quants)d"
+                           icon="fa-building-o"
+                           type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+                    <div><field name="qty_available_text"/></div>
+                    </button>
+                   <button class="oe_inline oe_stat_button" string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_inline oe_stat_button" name="%(product_open_orderpoint)d" type="action" 
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
+                </xpath>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="product_template_form_view_procurement_button">
+            <field name="name">product.template_procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                   <button class="oe_stat_button"
+                           name="action_open_quants"
+                           icon="fa-building-o"
+                           type="object"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations">
+                   <div><field name="qty_available_text"/></div>
+                   </button>
+                   <button class="oe_inline oe_stat_button" string="Moves" name= "action_view_stock_moves" type="object" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user" icon="fa-arrows-v"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_orderpoints" type="object" 
+                        attrs="{'invisible':[('type', '=', 'service')]}" icon="fa-refresh" string="Reordering Rules"/>
+                   <button class="oe_inline oe_stat_button" name="action_view_routes" string="Routes" type="object" icon="fa-cogs" attrs="{'invisible':[('type', '=', 'service')]}" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

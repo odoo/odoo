@@ -1,0 +1,19 @@
+-
+ In order to test Spread Wizard of account_budget module I spread record with amount=1000
+- 
+  Creating a account.budget.spread record
+- 
+  !record {model: account.budget.spread, id: account_budget_spread_0}:
+    amount: 1000.0
+    fiscalyear: account.data_fiscalyear
+    
+    
+- 
+  Performing an osv_memory action check_spread on model account.budget.spread
+- 
+  !python {model: account.budget.spread}: |
+    self.check_spread(cr, uid, [ref("account_budget_spread_0")], {"lang": 'en_US',
+      "active_model": "account.budget.post", "active_ids": [ref("account_budget.account_budget_post_sales0")],
+      "tz": False, "active_id": ref("account_budget.account_budget_post_sales0"),
+      })
+

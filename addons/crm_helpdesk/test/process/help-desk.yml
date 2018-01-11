@@ -1,0 +1,29 @@
+-
+  Customer has Questions regarding our service. so He sent questions list by email.
+-
+  Mail script will be fetched him request from mail server. so I process that mail after read EML file 
+-
+  !python {model: mail.thread}: |
+    request_file = open(openerp.modules.module.get_module_resource('crm_helpdesk','test', 'customer_question.eml'),'rb')
+    request_message = request_file.read()
+    self.message_process(cr, uid, 'crm.helpdesk', request_message)
+-
+  After getting the mail, I check details of new question of that customer.
+-
+  !python {model: crm.helpdesk}: |
+    from openerp import tools
+    question_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    assert question_ids and len(question_ids), "Question is not created after getting request"
+    question = self.browse(cr, uid, question_ids[0], context=context)
+    assert question.name == tools.ustr("Where is download link of user manual of your product ? "), "Subject does not match"
+-
+  Now I Update message according to provide services.
+-
+  !python {model: crm.helpdesk}: |
+    question_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
+    try:
+      self.message_update(cr, uid, question_ids, {'subject': 'Link of product', 'body': 'www.openerp.com'})
+    except:
+      pass
+
+

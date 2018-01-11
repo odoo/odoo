@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+    <!-- "Thank you" message when the survey is completed -->
+    <template id="sfinished" name="Survey Finished">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Thank you!</h1>
+                        <div t-field="survey.thank_you_message" class="oe_no_empty" />
+                        <div t-if='survey.quizz_mode'>You scored <t t-esc="user_input.quizz_score" /> points.</div>
+                        <div>If you wish, you can <a t-att-href="'/survey/print/%s/%s' % (slug(survey), token)">review your answers</a>.</div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Message when the survey is not open  -->
+    <template id="notopen" name="Survey not open">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Not open</h1>
+                        <p>This survey is not open. Thank you for your interest!</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Message when a login is required  -->
+    <template id="auth_required" name="Login required for this survey">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Login required</h1>
+                        <p>This survey is open only to registered people. Please <a t-attf-href="/web/login?redirect=%2Fsurvey%2Fstart%2F#{ slug(survey) }">log in</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Message when the survey has no pages  -->
+    <template id="nopages" name="Survey has no pages">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="jumbotron mt32">
+                        <h1>Not ready</h1>
+                        <p>This survey has no pages by now!</p>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- First page of a survey -->
+    <template id="survey_init" name="Survey">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="oe_structure" />
+                <div class="container">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="text-right">
+                        <a href="/web#action=survey.action_survey_form" class="btn btn-default">Go back to surveys</a>
+                    </div>
+                    <div class='jumbotron mt32'>
+                        <h1 t-field='survey.title' />
+                        <div t-field='survey.description' class="oe_no_empty"/>
+                        <a class="btn btn-primary btn-lg" t-att-href="'/survey/fill/%s/%s' % (slug(survey), token)">
+                            Start Survey
+                        </a>
+                    </div>
+                </div>
+                <div class="oe_structure" />
+            </div>
+        </t>
+    </template>
+
+    <!-- A survey -->
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/survey/static/src/js/survey.js" />
+        </xpath>
+    </template>
+    <template id="survey" name="Survey">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="oe_structure"/>
+                <div class="container">
+                    <div groups="base.group_website_publisher" t-ignore="true" class="text-right">
+                        <a href="/web#action=survey.action_survey_form" class="btn btn-default">Go back to surveys</a>
+                    </div>
+                    <t t-call="survey.page" />
+                </div>
+                <div class="oe_structure"/>
+            </div>
+        </t>
+    </template>
+
+    <!-- A page -->
+    <template id="page" name="Page">
+        <div class="page-header">
+            <p class="pull-right">Page <span t-raw='page_nr + 1'/> on <span t-raw="len(survey.page_ids)"/></p>
+            <h1 t-field='page.title' />
+            <div t-field='page.description' class="oe_no_empty"/>
+        </div>
+
+        <form role="form" method="post" class="js_surveyform" t-att-name="'%s_%s' % (survey.id, page.id)" t-att-action="'/survey/fill/%s/%s' % (slug(survey), token)" t-att-data-prefill="'/survey/prefill/%s/%s/%s' % (slug(survey), token, slug(page))" t-att-data-validate="'/survey/validate/%s' % (slug(survey))" t-att-data-submit="'/survey/submit/%s' % (slug(survey))">
+            <input type="hidden" name="page_id" t-att-value="page.id" />
+            <input type="hidden" name="token" t-att-value="token" />
+            <t t-foreach='page.question_ids' t-as='question'>
+                <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, page.id, question.id)" />
+                <div class="js_question-wrapper" t-att-id="prefix">
+                    <h2>
+                        <span t-field='question.question' />
+                        <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                    </h2>
+                    <div t-field='question.description' class="text-muted oe_no_empty"/>
+                    <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
+                    <t t-if="question.type == 'textbox'"><t t-call="survey.textbox"/></t>
+                    <t t-if="question.type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
+                    <t t-if="question.type == 'datetime'"><t t-call="survey.datetime"/></t>
+                    <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
+                    <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
+                    <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
+                    <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                </div>
+            </t>
+            <div class="text-center mt16 mb16">
+                <button t-if="survey.users_can_go_back and page_nr > 0" type="submit" class="btn btn-default" name="button_submit" value="previous">Previous page</button>
+                <button t-if="not last" type="submit" class="btn btn-primary" name="button_submit" value="next">Next page</button>
+                <button t-if="last" type="submit" class="btn btn-primary" name="button_submit" value="finish">Submit survey</button>
+            </div>
+        </form>
+
+        <!-- Modal used to display error message, i.c.o. ajax error -->
+        <div class="modal fade" id="AJAXErrorModal" role="dialog" aria-labelledby="AJAXErrorModal" aria-hidden="true" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
+                        <h4 class="modal-title">A problem has occured</h4>
+                    </div>
+                    <div class="modal-body"><p>Something went wrong while contacting survey server. <strong class="text-danger">Your answers have probably not been recorded.</strong> Try refreshing.</p></div>
+                    <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div>
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <!-- Question widgets -->
+    <template id="free_text" name="Free text box">
+        <textarea class="form-control" rows="3" t-att-name="prefix"></textarea>
+    </template>
+
+    <template id="textbox" name="Text box">
+        <input type="text" class="form-control" t-att-name="prefix"/>
+    </template>
+
+    <template id="numerical_box" name="Numerical box">
+        <input type="number" step="any" class="form-control" t-att-name="prefix"/>
+    </template>
+
+    <template id="datetime" name="Datetime box">
+        <input type="text" class="form-control" t-att-name="prefix" placeholder="yyyy-mm-dd hh:mm:ss" />
+    </template>
+
+    <template id="simple_choice" name="Simple choice">
+        <div t-if="question.display_mode == 'dropdown' and token" class="js_drop row">
+            <div class="col-md-12">
+                <select class="form-control" t-att-name="prefix">
+                    <option disabled="1" selected="1" value="">Choose...</option>
+                    <t t-foreach='question.labels_ids' t-as='label'>
+                        <option t-att-value='label.id'><t t-esc='label.value'/></option>
+                    </t>
+                    <t t-if='question.comments_allowed and question.comment_count_as_answer'>
+                        <option class="js_other_option" value="-1"><span t-esc="question.comments_message" /></option>
+                    </t>
+                </select>
+            </div>
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="col-md-6">
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+            </div>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12 mt16">
+                <span t-field="question.comments_message"/>
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+            </div>
+        </div>
+        <div t-if="question.display_mode == 'columns' or not token" class="row js_radio">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                    <input type="radio" t-att-name="prefix" t-att-value='label.id' />
+                    <span t-field='label.value'/>
+                </label>
+            </div>
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_comments col-md-12" >
+                <label>
+                    <input type="radio" t-att-name="prefix" value="-1"/>
+                    <span t-field="question.comments_message" />
+                </label>
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+            </div>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12">
+                <span t-field="question.comments_message"/>
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="multiple_choice" name="Multiple choice">
+        <div class="row">
+            <div t-foreach='question.labels_ids' t-as='label' t-attf-class="col-md-#{question.column_nb}">
+                <label t-att-class="' bg-success ' if quizz_correction and label.quizz_mark > 0.0 else ''">
+                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, label.id)" t-att-value='label.id' />
+                    <span t-field='label.value'/>
+                </label>
+            </div>
+            <div t-if='question.comments_allowed and question.comment_count_as_answer' class="js_ck_comments col-md-12" >
+                <label>
+                    <input type="checkbox" t-att-name="'%s_%s' % (prefix, -1)" value="-1" />
+                    <span t-field="question.comments_message" />
+                </label>
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')"/>
+            </div>
+            <div t-if='question.comments_allowed and not question.comment_count_as_answer' class="col-md-12">
+                <span t-field="question.comments_message"/>
+                <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" data-oe-survey-othert="1"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="matrix" name="Matrix">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th> </th>
+                    <th t-foreach="question.labels_ids" t-as="col_label"><span t-field="col_label.value" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="question.labels_ids_2" t-as="row_label">
+                    <th><span t-field="row_label.value" /></th>
+                    <td t-foreach="question.labels_ids" t-as="col_label">
+                        <input t-if="question.matrix_subtype == 'simple'" type="radio" t-att-name="'%s_%s' % (prefix, row_label.id)" t-att-value='col_label.id' />
+                        <input t-if="question.matrix_subtype == 'multiple'" type="checkbox" t-att-name="'%s_%s_%s' % (prefix, row_label.id, col_label.id)" t-att-value='col_label.id' />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div t-if='question.comments_allowed'>
+            <span t-field="question.comments_message"/>
+            <input type="text" class="form-control" t-att-name="'%s_%s' % (prefix, 'comment')" />
+        </div>
+    </template>
+
+    <template id="assets_frontend_survey" inherit_id="website.assets_frontend" name="Printing Survey assets">
+        <xpath expr="." position="inside">
+            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+        </xpath>
+    </template>
+
+    <!-- Printable view of a survey (all pages) -->
+    <template id="survey_print" name="Survey">
+        <t t-call="website.layout">
+            <div class="wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class='jumbotron mt32'>
+                            <h1><span t-field='survey.title'/></h1>
+                            <t t-if="survey.description"><div t-field='survey.description' class="oe_no_empty"/></t>
+                        </div>
+                        <form role="form" method="post" class="js_surveyform" t-att-name="'%s' % (survey.id)" t-att-data-prefill="'/survey/prefill/%s/%s' % (slug(survey), token)" t-att-data-scores="'/survey/scores/%s/%s' % (slug(survey), token) if quizz_correction else ''">
+                            <t t-foreach="survey.page_ids" t-as="page">
+                                <div class="page-header">
+                                    <h1 t-field='page.title' />
+                                    <t t-if="page.description"><div t-field='page.description' class="oe_no_empty"/></t>
+                                </div>
+                                <t t-foreach='page.question_ids' t-as='question'>
+                                    <t t-set="prefix" t-value="'%s_%s_%s' % (survey.id, page.id, question.id)" />
+                                    <div class="js_question-wrapper" t-att-id="prefix">
+                                        <h2>
+                                            <span t-field='question.question' />
+                                            <span t-if="question.constr_mandatory" class="text-danger">*</span>
+                                            <span t-if="quizz_correction" class="badge" t-att-data-score-question="question.id"></span>
+                                        </h2>
+                                        <t t-if="question.description"><div class="text-muted oe_no_empty" t-field='question.description'/></t>
+                                        <t t-if="question.type == 'free_text'"><t t-call="survey.free_text"/></t>
+                                        <t t-if="question.type == 'textbox'"><t t-call="survey.textbox"/></t>
+                                        <t t-if="question.type == 'numerical_box'"><t t-call="survey.numerical_box"/></t>
+                                        <t t-if="question.type == 'datetime'"><t t-call="survey.datetime"/></t>
+                                        <t t-if="question.type == 'simple_choice'"><t t-call="survey.simple_choice"/></t>
+                                        <t t-if="question.type == 'multiple_choice'"><t t-call="survey.multiple_choice"/></t>
+                                        <t t-if="question.type == 'matrix'"><t t-call="survey.matrix"/></t>
+                                        <div class="js_errzone alert alert-danger" style="display:none;"></div>
+                                    </div>
+                                </t>
+                                <hr/>
+                            </t>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</data>
+</openerp>

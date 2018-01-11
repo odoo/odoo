@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
+
+    <xpath expr="//div[@id='snippet_content']" position="inside">
+        <div>
+            <div class="oe_snippet_thumbnail">
+                <img class="oe_snippet_thumbnail_img" src="/website_mail_group/static/src/img/blocks/button_group_subscribe.png"/>
+                <span class="oe_snippet_thumbnail_title">Discussion Group</span>
+            </div>
+
+            <div class="oe_snippet_body js_follow_alias"
+                      data-id="0"
+                      data-object="mail.group"
+                      data-follow="off">
+                <div class="input-group js_mg_follow_form">
+                    <input
+                          type="email"
+                          name="email"
+                          class="js_follow_email form-control"
+                          placeholder="your email..."/>
+                    <span class="input-group-btn">
+                        <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
+                    </span>
+                </div>
+                <p class="js_mg_details hidden well well-sm">
+                    <span class="js_mg_email hidden"><i class="fa fa-envelope-o"/><a href="#" class="js_mg_email"> send mail</a> - </span>
+                    <i class="fa fa-file-o"/><a href="#" class="js_mg_link"> archives</a> -
+                    <i class="fa fa-times"/><a href="#" class="js_unfollow_btn"> unsubscribe</a>
+                </p>
+            </div>
+
+        </div>
+    </xpath>
+
+
+    <xpath expr="//div[@id='snippet_options']" position="inside">
+        <div data-snippet-option-id='subscribe'
+            data-selector=".js_follow_alias"
+            data-selector-siblings="p, h1, h2, h3, blockquote, .well, .panel"
+           >
+            <li>
+                <a href="#" class="button js_mailing_list">Change Discussion List</a>
+            </li>
+        </div>
+    </xpath>
+
+</template>
+
+</data>
+</openerp>

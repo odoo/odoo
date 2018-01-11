@@ -1,0 +1,93 @@
+-   |
+    Tax Scenario:
+    In order to check that the accounting entries and tax engine works
+    efficiently with all kind of price accuracies we run this test scenario.
+-  
+    Given the price accuracy for the account module is configured with two
+    digits
+-  
+    !record {model: decimal.precision, id: product.decimal_account}:
+      digits: 2
+-  
+    And we have a tax defined
+-  
+    !record {model: account.tax, id: tax196}:
+      name: Tax 19.6%
+      amount: &tax 0.196
+-  
+    And we define an invoice with one invoice line with a tax of *tax
+-  
+    !record {model: account.invoice, id: invoice1}: &invoice
+        name: Precision Test
+        type: out_invoice
+        partner_id: base.res_partner_2
+        account_id: account.a_recv
+        date_invoice: !eval time.strftime('%Y-%m-%d')
+        invoice_line:
+            - product_id: product.product_product_3
+              quantity: &qty 11.11
+              account_id: account.a_sale
+              uos_id: product.product_uom_unit
+              price_unit: &price 12.34
+              name: test
+              invoice_line_tax_id:
+                  - tax196
+-  
+    When I press on the CREATE button on the invoice to open it.
+-  
+    !python {model: account.invoice}: |
+        self.action_move_create(cr, uid, [ref("invoice1")])  
+-  
+    Then I should see an account entry linked to this invoice.
+-  
+    !assert {model: account.invoice, id: invoice1}:
+      test:
+        - bool(move_id)
+-  
+    # This is not working, find a way to do that in YAML, *qty is not
+    # interpreted because it's not a node.
+    And this account entry must have a credit equals to 163.97€ which is
+    equal to *qty x *price x (1 + *tax)
+-  
+    !assert {model: account.invoice, id: invoice1}:
+        test:
+            - abs(sum(x.credit for x in move_id.line_id) - 163.97) < 0.000001
+-  
+    And this account entry must have a credit equals to the debit
+-  
+    !assert {model: account.invoice, id: invoice1}:
+        test:
+            - abs(sum(x.credit - x.debit for x in move_id.line_id)) < 0.000001
+-  
+    Then, I change the precision of numbers to 3 digits.
+-  
+    !record {model: decimal.precision, id: product.decimal_account}:
+      digits: 3
+-  
+    And I create another invoice with the same content.
+-  
+    !record {model: account.invoice, id: invoice2}:
+        *invoice
+-  
+    When I press on the CREATE button on the invoice to open it.
+-  
+    !python {model: account.invoice}: |
+        self.action_move_create(cr, uid, [ref("invoice2")])  
+-    
+    Then this account entry must have a credit equals to the debit
+-  
+    !assert {model: account.invoice, id: invoice2}:
+        test:
+            - abs(sum(x.credit - x.debit for x in move_id.line_id)) < 0.000001
+-
+    And this account entry must have a credit equals to 163.968€ which is
+    equal to *qty x *price x (1 + *tax)
+-  
+    !python {model: account.invoice}: |
+        xid = "invoice2"
+        invoice = self.browse(cr, uid, ref(xid))
+        sum_of_credits = sum(x.credit for x in invoice.move_id.line_id)
+        log("The sum of credits for %s is %f", xid, sum_of_credits)
+        expected_value = 163.968
+        assert (sum_of_credits - expected_value) < 0.000001, "Wrong sum of credits: %f <> %f" % (sum_of_credits, expected_value)
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="action_hr_timesheet_invoice_create_final" model="ir.actions.act_window">
+            <field name="name">Create Invoice</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.timesheet.invoice.create.final</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="multi" eval="1"/>
+        </record>
+
+        <record model="ir.values" id="hr_timesheet_invoice_create_final_values">
+            <field name="model_id" ref="model_account_analytic_account" />
+            <field name="name">Invoice</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_timesheet_invoice_create_final'))" />
+            <field name="key">action</field>
+            <field name="model">account.analytic.account</field>
+        </record>
+
+
+        <record id="view_hr_timesheet_invoice_create_final" model="ir.ui.view">
+            <field name="name">hr.timesheet.invoice.create.final.form</field>
+            <field name="model">hr.timesheet.invoice.create.final</field>
+            <field name="arch" type="xml">
+            <form string="Invoice contract">
+                    <p>Do you want to show details of each activity to your customer?</p>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="time"/>
+                        </group><group>
+                            <field name="name"/>
+                            <field name="price"/>
+                        </group>
+                    </group>
+                    <group string="Force to use a special product" groups="base.group_no_one">
+                        <field name="product"/>
+                    </group>
+                <footer>
+                    <button name="do_create" string="Create Invoice" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

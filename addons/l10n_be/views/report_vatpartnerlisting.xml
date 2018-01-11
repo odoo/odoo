@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_l10nvatpartnerlisting">
+    <t t-call="report.html_container">
+        <t t-call="report.internal_layout">
+            <div class="page">
+                <div class="oe_structure"/>
+                <h2>Annual Listing of VAT-Subjected</h2>
+                <p><span t-esc="res_company.name"/> (<span t-esc="year"/>)</p>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Nr</th>
+                            <th>Partner</th>
+                            <th>VAT Number</th>
+                            <th>Base Amount</th>
+                            <th>VAT Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><span t-esc="sum_turnover"/></td>
+                            <td><span t-esc="sum_tax"/></td>
+                        </tr>
+                        <tr t-foreach="client_list" t-as="l">
+                            <td><span t-esc="l['seq']"/></td>
+                            <td><span t-esc="l['partner_name']"/></td>
+                            <td><span t-esc="l['vat']"/></td>
+                            <td><span t-esc="l['turnover']"/></td>
+                            <td><span t-esc="l['vat_amount']"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

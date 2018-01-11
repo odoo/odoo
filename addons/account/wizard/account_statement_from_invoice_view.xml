@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_statement_from_invoice_lines" model="ir.ui.view">
+            <field name="name">account.statement.from.invoice.lines.form</field>
+            <field name="model">account.statement.from.invoice.lines</field>
+            <field name="arch" type="xml">
+                <form string="Import Entries">
+                    <separator string="Payable and Receivables"/>
+                    <field height="300" width="700"
+                        name="line_ids"
+                        domain="[('account_id.type','in',['receivable','payable']), ('reconcile_id','=',False), ('state', '=', 'valid')]"
+                        context="{'currency':True}" />
+                    <footer>
+                        <button string="Ok" name="populate_statement" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_view_account_statement_from_invoice_lines" model="ir.actions.act_window">
+            <field name="name">Import Entries</field>
+            <field name="res_model">account.statement.from.invoice.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_statement_from_invoice_lines"/>
+            <field name="target">new</field>
+            <field name="context">{'statement_id': active_id}</field>
+        </record>
+    </data>
+</openerp>

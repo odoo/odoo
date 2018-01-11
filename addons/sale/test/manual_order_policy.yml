@@ -1,0 +1,69 @@
+-
+  I confirm the Quotation with "On Demand" order policy.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_2}
+-
+  I check that Invoice should not created.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_2"))
+    assert len(sale_order.invoice_ids) == 0, "Invoice should not created."
+-
+  I create advance invoice where type is 'Fixed Price'.
+-
+  !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
+    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("sale_order_line_4"), context=context)
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'product_id': order_line.product_id.id, 'amount': order_line.price_unit})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+-
+  I check Invoice which made advance.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref('sale_order_2'))
+    assert order.invoice_ids, "Invoice should be created after make advance invoice."
+-
+  I create advance invoice where type is 'Invoice all the Sale Order'.
+-
+  !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'all'})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+-
+  I check Invoice which made advance where type is 'Invoice all the Sale Order'.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref('sale_order_2'))
+    assert order.invoice_ids, "Invoice should be created after make advance invoice where type is 'Invoice all the Sale Order'."
+-
+  I open the Invoice.
+-
+  !python {model: sale.order}: |
+    so = self.browse(cr, uid, ref("sale_order_2"))
+    account_invoice_obj = self.pool.get('account.invoice')
+    for invoice in so.invoice_ids:
+      invoice.signal_workflow('invoice_open')
+-
+  I pay the invoice.
+-
+  !python {model: account.invoice}: |
+    sale_order = self.pool.get('sale.order')
+    order = sale_order.browse(cr, uid, ref("sale_order_2"))
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
+    for invoice in order.invoice_ids:
+        invoice.pay_and_reconcile(
+            invoice.amount_total, ref('account.cash'), ref('account.period_8'),
+            journal_ids[0], ref('account.cash'),
+            ref('account.period_8'), journal_ids[0],
+            name='test')
+-
+  I check Invoice after do manual.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_2"))
+    assert sale_order.invoice_ids, "Invoice should be created."
+    assert sale_order.invoice_exists, "Order is not invoiced."
+    assert sale_order.invoiced, "Order is not paid."
+    assert sale_order.state == 'done', 'Order should be Done.'

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <report
+            id="payslip_details_report"
+            model="hr.payslip"
+            string="PaySlip Details"
+            report_type="qweb-pdf"
+            name="l10n_in_hr_payroll.report_payslipdetails" 
+            file="l10n_in_hr_payroll.report_payslipdetails" />
+
+        <report
+            auto="False"
+            id="payroll_advice" 
+            model="hr.payroll.advice" 
+            string="Print Advice"
+            report_type="qweb-pdf"
+            name="l10n_in_hr_payroll.report_payrolladvice" 
+            file="l10n_in_hr_payroll.report_payrolladvice"/>
+
+        <report 
+            id="hr_salary_bymonth"
+            string="Yearly Salary by Head"
+            model="hr.salary.employee.month"
+            report_type="qweb-pdf"
+            file="l10n_in_hr_payroll.report_hrsalarybymonth"
+            name="l10n_in_hr_payroll.report_hrsalarybymonth"/>
+
+        <report
+            auto="False" 
+            id="yearly_salary" 
+            model="yearly.salary.detail" 
+            name="l10n_in_hr_payroll.report_hryearlysalary" 
+            file="l10n_in_hr_payroll.report_hryearlysalary"
+            report_type="qweb-pdf"
+            string="Yearly Salary by Employee" /> 
+
+    </data>
+</openerp>

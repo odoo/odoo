@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="crm_case_form_view_oppor">
+            <field name="name">CRM - Opportunities - Quote Inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='stage_id']" position="before">
+                        <button attrs="{'invisible': [('probability', '&lt;', 100)]}" string="Create Quotation" name="%(action_crm_make_sale)d" type="action"/>
+                        <button attrs="{'invisible': [('probability', '=', 100)]}" string="Convert to Quotation" name="%(action_crm_make_sale)d" type="action" class="oe_highlight"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
+        <record model="ir.actions.act_window" id="crm.crm_case_category_act_oppor11">
+            <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity', 'default_user_id': uid, 'needaction_menu_ref': 'sale.menu_sale_quotations'}</field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_view_inherit123">
+            <field name="name">sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="categ_ids" widget="many2many_tags"/>
+                </field>
+                <field name="origin" position="after">
+                    <field name="campaign_id" />
+                    <field name="medium_id" />
+                    <field name="source_id" />
+                </field>
+
+            </field>
+        </record>
+    </data>
+</openerp>

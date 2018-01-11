@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- mail.message tree: short view !-->
+        <record model="ir.ui.view" id="view_message_tree">
+            <field name="name">mail.message.tree</field>
+            <field name="model">mail.message</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Messages">
+                    <field name="date"/>
+                    <field name="subject"/>
+                    <field name="author_id"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- mail.message form: short view !-->
+        <record model="ir.ui.view" id="view_message_form">
+            <field name="name">mail.message.form</field>
+            <field name="model">mail.message</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="subject"/>
+                                <field name="author_id"/>
+                                <field name="email_from"/>
+                                <field name="reply_to"/>
+                                <field name="date"/>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="model"/>
+                                <field name="res_id"/>
+                                <field name="parent_id"/>
+                                <field name="partner_ids" widget="many2many_tags"/>
+                                <field name="notified_partner_ids" widget="many2many_tags"/>
+                                <field name="subtype_id"/>
+                            </group>
+                        </group>
+                        <field name="body"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- mail.message search: wall view !-->
+        <record model="ir.ui.view" id="view_message_search">
+            <field name="name">mail.message.search</field>
+            <field name="model">mail.message</field>
+            <field name="priority">25</field>
+            <field name="arch" type="xml">
+                <search string="Messages Search">
+                    <field name="body" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
+                    <field name="subject"/>
+                    <field name="type"/>
+                    <field name="author_id"/>
+                    <field name="partner_ids"/>
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="parent_id"/>
+                    <filter string="To Read"
+                            name="message_unread" help="Show messages to read"
+                            domain="[('to_read', '=', True)]"/>
+                    <separator/>
+                    <filter string="Has attachments"
+                            name="attachments"
+                            domain="[('attachment_ids', '!=', False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="thread" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_view_mail_message" model="ir.actions.act_window">
+            <field name="name">Messages</field>
+            <field name="res_model">mail.message</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_message_search"/>
+        </record>
+        
+        <!-- Add menu entry in Settings/Email -->
+        <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
+
+        <record model="ir.ui.view" id="view_document_file_kanban">
+            <field name="name">ir.attachment kanban</field>
+            <field name="model">ir.attachment</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="file_type_icon"/>
+                    <field name="url"/>
+                    <field name="name"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_vignette">
+                                    <div class="oe_attachment">
+                                        <div t-if="record.file_type_icon.value != 'webimage'">
+                                            <img t-att-src="'/mail/static/src/img/mimetypes/' + record.file_type_icon.value + '.png'"></img>
+                                        </div>
+                                        <div t-if="record.file_type_icon.value == 'webimage' and !record.url.value">
+                                            <img t-att-src="kanban_image('ir.attachment', 'datas', record.id.value)"/>
+                                        </div>
+                                        <div t-if="record.file_type_icon.value and record.url.value">
+                                            <img t-att-src="record.url.value"/>
+                                        </div>
+                                        <div class="oe_name">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="base.action_attachment" model="ir.actions.act_window">
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+
+
+    </data>
+</openerp>

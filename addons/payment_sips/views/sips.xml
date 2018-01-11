@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+
+        <template id="sips_acquirer_button">
+            <form t-att-action="tx_url" method="post" target="_self">
+                <input type="hidden" name="Data" t-att-value="tx_values['Data']"/>
+                <input type="hidden" name="InterfaceVersion" t-att-value="tx_values['InterfaceVersion']"/>
+                <input type="hidden" name="Seal" t-att-value="tx_values['Seal']"/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_sips/static/src/img/sips_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

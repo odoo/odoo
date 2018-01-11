@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <template id="paypal_acquirer_button">
+            <form t-if="acquirer.paypal_email_account" t-att-action="tx_url" method="post" target="_self">
+                <input type="hidden" name="cmd" t-att-value="tx_values['cmd']"/>
+                <input type="hidden" name="business" t-att-value="tx_values['business']"/>
+                <input type="hidden" name="item_name" t-att-value="tx_values['item_name']"/>
+                <input type="hidden" name="item_number" t-att-value="tx_values['item_number']"/>
+                <input type="hidden" name="amount" t-att-value="tx_values['amount'] or '0.0'"/>
+                <input t-if="'handling' in tx_values" type="hidden" name="handling"
+                    t-att-value="tx_values.get('handling')"/>
+                <input type="hidden" name="currency_code" t-att-value="tx_values['currency_code']"/>
+                <!-- partner / address data -->
+                <input type="hidden" name="address1" t-att-value="tx_values['address1']"/>
+                <input type="hidden" name="city" t-att-value="tx_values['city']"/>
+                <input type="hidden" name="country" t-att-value="tx_values['country']"/>
+                <input type="hidden" name="email" t-att-value="tx_values['email']"/>
+                <input type="hidden" name="first_name" t-att-value="tx_values['first_name']"/>
+                <input type="hidden" name="last_name" t-att-value="tx_values['last_name']"/>
+                <input type="hidden" name="zip" t-att-value="tx_values['zip']"/>
+                <!-- after payment parameters -->
+                <input t-if='tx_values.get("custom")' type='hidden' name="custom"
+                    t-att-value='tx_values.get("custom")'/>
+                <!-- URLs -->
+                <input t-if="tx_values.get('return')" type='hidden' name='return'
+                    t-att-value="tx_values.get('return')"/>
+                <input t-if="acquirer.paypal_use_ipn" type='hidden' name='notify_url'
+                    t-att-value="tx_values.get('notify_url')"/>
+                <input t-if="tx_values.get('cancel_return')" type="hidden" name="cancel_return"
+                    t-att-value="tx_values.get('cancel_return')"/>
+                <!-- submit -->
+                <button type="submit" width="100px"
+                    t-att-class="submit_class">
+                    <img t-if="not submit_txt" src="/payment_paypal/static/src/img/paypal_icon.png"/>
+                    <span t-if="submit_txt"><t t-esc="submit_txt"/> <span class="fa fa-long-arrow-right"/></span>
+                </button>
+            </form>
+        </template>
+
+    </data>
+</openerp>

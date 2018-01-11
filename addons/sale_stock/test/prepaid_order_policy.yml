@@ -1,0 +1,30 @@
+-
+  In order to test the Prepaid Order Policy, I create a product
+-
+  !record {model: product.product, id: product_prepaid1}:
+    name: 'OpenERP Documentation Book'
+    list_price: 60.60
+-
+  Now i create a sale order that uses my new product
+-
+  !record {model: sale.order, id: sale_order_prepaid1}:
+    partner_id: base.res_partner_2
+    order_policy: prepaid
+    order_line:
+      - product_id: sale_stock.product_prepaid1
+        product_uom_qty: 10
+-
+  Now I confirm the Quotation with "Pay before delivery" policy with access rights of salesman.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_prepaid1}
+-
+  I check that delivery order should not created before invoice is paid.
+-
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_prepaid1"))
+    assert len(sale_order.picking_ids) == False, "Delivery order should not created before invoice."
+    assert sale_order.invoice_ids, "Invoice should be created."
+

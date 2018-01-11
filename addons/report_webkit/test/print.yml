@@ -1,0 +1,11 @@
+-
+  Print the report_webkit demo report.
+- 
+  !python {model: ir.actions.report.xml}: |
+    import os
+    from openerp import tools
+    from openerp.report import render_report
+    ids = self.pool['ir.actions.report.xml'].search(cr, uid, [], {})
+    data, format = render_report(cr, uid, ids, 'webkit.ir.actions.report.xml', {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'report_webkit_demo_report.'+format), 'wb+').write(data)

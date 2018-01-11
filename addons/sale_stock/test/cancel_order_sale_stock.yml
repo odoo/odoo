@@ -1,0 +1,94 @@
+-
+  In order to test the cancel sale order with that user which have salesman rights.
+  First I confirm order.
+-
+  !context
+    uid: 'res_sale_stock_salesman'
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_8}
+-
+  I do a partial delivery order as a stock user.
+-
+  !context
+    uid: 'res_stock_user'
+-
+  !python {model: stock.picking}: |
+    domain = [('origin','=','Test/001')]
+    picks = self.search(cr, uid, domain, context=context)
+    pick = self.browse(cr, uid, picks[-1], context=context)
+    self.pool.get('stock.pack.operation').create(cr, uid, {
+        'picking_id': pick.id,
+        'product_id': ref('product.product_product_27'),
+        'product_uom_id': ref('product.product_uom_unit'),
+        'product_qty': 1,
+        'location_id': pick.location_id.id,
+        'location_dest_id': pick.location_dest_id.id,
+    })
+    pick.do_transfer()
+-
+  I test that I have two pickings, one done and one backorder to do
+-
+  !python {model: stock.picking}: |
+    picks = self.search(cr, uid, [('origin','=','Test/001')])
+    assert len(picks)>1, 'Only one picking, partial picking may have failed!'
+    picks = self.search(cr, uid, [('origin','=','Test/001'), ('state','=','done')])
+    assert len(picks)==1, 'You should have one delivery order which is done!'
+    picks = self.search(cr, uid, [('origin','=','Test/001'), ('backorder_id','=',picks[0])])
+    assert len(picks)==1, 'You should have one backorder to process!'
+-
+  I cancel the backorder
+-
+  !python {model: stock.picking}: |
+    picks = self.search(cr, uid, [('origin','=','Test/001'),('backorder_id','<>',False)])
+    self.action_cancel(cr, uid, picks)
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+
+     self.run_scheduler(cr, uid)
+-
+  Salesman can also check order therefore test with that user which have salesman rights,
+-
+  !context
+    uid: 'res_sale_stock_salesman'
+-
+  I check order status in "Ship Exception".
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be in shipping exception}:
+    - state == "shipping_except"
+-
+  Now I regenerate shipment.
+-
+  !workflow {model: sale.order, action: ship_recreate, ref: sale.sale_order_8}
+-
+  I check state of order in 'To Invoice'.
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be In Progress state}:
+    - state == 'manual'
+-
+  I make invoice for order.
+-
+  !workflow {model: sale.order, action: manual_invoice, ref: sale.sale_order_8}
+-
+  To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
+-
+  !python {model: sale.order}: |
+    invoice_ids = self.browse(cr, uid, ref("sale.sale_order_8")).invoice_ids
+    first_invoice_id = invoice_ids[0]
+    self.pool.get('account.invoice').signal_workflow(cr, uid, [first_invoice_id.id], 'invoice_cancel')
+-
+  I check order status in "Invoice Exception" and related invoice is in cancel state.
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be in Invoice Exception state}:
+    - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
+-
+  Then I click on the Ignore Exception button.
+-
+  !workflow {model: sale.order, action: invoice_corrected, ref: sale.sale_order_8}
+
+-
+  I check state of order in 'In Progress'.
+-
+  !assert {model: sale.order, id: sale.sale_order_8, string: Sale order should be In progress state}:
+    - state == 'progress'

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SubmitOrderButton">
+        <span class="control-button order-submit">
+            <i class="fa fa-cutlery"></i>
+            Order
+        </span>
+    </t>
+
+    <t t-name="OrderChangeReceipt">
+        <receipt 
+            align='center' 
+            width='40' 
+            size='double-height' 
+            line-ratio='0.6' 
+            value-decimals='3' 
+            value-thousands-separator=''
+            value-autoint='on' 
+        >
+            <div><t t-esc="changes.name" /></div>
+            <br />
+            <br />
+            <t t-if="changes.cancelled.length > 0">
+                <div color='red'>
+                    <div bold='on' size='double'>CANCELLED</div>
+                    <br />
+                    <br />
+                    <t t-foreach="changes.cancelled" t-as="change">
+                        <line>
+                            <left><t t-esc="change.name" /></left>
+                            <right><value><t t-esc="change.quantity" /></value></right>
+                        </line>
+                    </t>
+                    <br />
+                    <br />
+                </div>
+            </t>
+            <t t-if="changes.new.length > 0">
+                <div bold='on' size='double'>NEW</div>
+                <br />
+                <br />
+                <t t-foreach="changes.new" t-as="change">
+                    <line>
+                        <left><t t-esc="change.name" /></left>
+                        <right><value><t t-esc="change.quantity" /></value></right>
+                    </line>
+                </t>
+                <br />
+                <br />
+            </t>
+        </receipt>
+    </t>
+
+</templates>

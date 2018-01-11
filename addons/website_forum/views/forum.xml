@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- MAIN FORUM MENU -->
+        <menuitem name="Forum" id="menu_website_forum"
+            parent="mail.mail_feeds_main" sequence="50"/>
+
+        <!-- FORUM VIEWS -->
+        <record id="view_forum_forum_list" model="ir.ui.view">
+            <field name="name">forum.forum.list</field>
+            <field name="model">forum.forum</field>
+            <field name="arch" type="xml">
+                <tree string="Forums">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_forum_forum_form" model="ir.ui.view">
+            <field name="name">forum.forum.form</field>
+            <field name="model">forum.forum</field>
+            <field name="arch" type="xml">
+                <form string="Forum">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="description"/>
+                        </group>
+                        <notebook>
+                            <page string='Karma Gains'>
+                                <group>
+                                    <field name="karma_gen_question_new"/>
+                                    <field name="karma_gen_question_upvote"/>
+                                    <field name="karma_gen_question_downvote"/>
+                                    <field name="karma_gen_answer_upvote"/>
+                                    <field name="karma_gen_answer_downvote"/>
+                                    <field name="karma_gen_answer_accept"/>
+                                    <field name="karma_gen_answer_accepted"/>
+                                </group>
+                            </page>
+                            <page string='Karma Requirements'>
+                                <group>
+                                    <group>
+                                        <field name="karma_ask"/>
+                                        <field name="karma_upvote"/>
+                                        <field name="karma_downvote"/>
+                                        <field name="karma_edit_own"/>
+                                        <field name="karma_edit_all"/>
+                                        <field name="karma_close_own"/>
+                                        <field name="karma_close_all"/>
+                                        <field name="karma_unlink_own"/>
+                                        <field name="karma_unlink_all"/>
+                                    </group>
+                                    <group>
+                                        <field name="karma_answer_accept_own"/>
+                                        <field name="karma_answer_accept_all"/>
+                                        <field name="karma_comment_own"/>
+                                        <field name="karma_comment_all"/>
+                                        <field name="karma_comment_convert_own"/>
+                                        <field name="karma_comment_convert_all"/>
+                                        <field name="karma_comment_unlink_own"/>
+                                        <field name="karma_comment_unlink_all"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_forum_forum" model="ir.actions.act_window">
+            <field name="name">Forums</field>
+            <field name="res_model">forum.forum</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_forum" parent="menu_website_forum" name="Forums" action="action_forum_forum" sequence="10"/>
+
+        <!-- POST VIEWS -->
+        <record id="view_forum_post_list" model="ir.ui.view">
+            <field name="name">forum.post.list</field>
+            <field name="model">forum.post</field>
+            <field name="arch" type="xml">
+                <tree string="Forum Posts">
+                    <field name="name"/>
+                    <field name="forum_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_forum_post_form" model="ir.ui.view">
+            <field name="name">forum.post.form</field>
+            <field name="model">forum.post</field>
+            <field name="arch" type="xml">
+                <form string="Forum Post">
+                    <sheet>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="forum_id"/>
+                                <field name="parent_id"/>
+                            </group><group>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="state"/>
+                                <field name="closed_reason_id"/>
+                                <field name="closed_uid"/>
+                                <field name="closed_date"/>
+                            </group><group>
+                                <field name="create_uid"/>
+                                <field name="create_date"/>
+                                <field name="write_uid"/>
+                                <field name="write_date"/>
+                            </group><group>
+                                <field name="is_correct"/>
+                                <field name="views"/>
+                                <field name="vote_count"/>
+                                <field name="favourite_count"/>
+                                <field name="child_count"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}' placeholder="Send a message to the group"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_forum_post_search" model="ir.ui.view">
+            <field name="name">forum.post.search</field>
+            <field name="model">forum.post</field>
+            <field name="arch" type="xml">
+                <search string="Search in Post">
+                    <field name="name" string="Content" filter_domain="['|', ('name', 'ilike', self), ('content', 'ilike', self)]"/>
+                    <field name="create_uid"/>
+                    <field name="forum_id"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Forum" domain="[]" context="{'group_by': 'forum_id'}"/>
+                        <filter string="Author" domain="[]" context="{'group_by': 'create_uid'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_forum_post" model="ir.actions.act_window">
+            <field name="name">Forum Posts</field>
+            <field name="res_model">forum.post</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_forum_post_list"/>
+            <field name="search_view_id" ref="view_forum_post_search"/>
+        </record>
+
+        <menuitem id="menu_forum_posts" parent="menu_website_forum" name="Posts" action="action_forum_post" sequence="20"/>
+
+    </data>
+</openerp>

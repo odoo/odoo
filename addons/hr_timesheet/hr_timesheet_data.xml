@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="analytic_journal" model="account.analytic.journal">
+            <field name="code">TS</field>
+            <field name="name">Timesheet Journal</field>
+            <field name="type">general</field>
+        </record>
+
+        <record id="hr.employee" model="hr.employee">
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+        <record id="product.product_product_consultant" model="product.product">
+            <field name="sale_ok">True</field>
+        </record>
+
+    </data>
+</openerp>

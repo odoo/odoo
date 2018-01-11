@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="action_account_period_tree" model="ir.actions.act_window">
+            <field name="name">Close a Period</field>
+            <field name="res_model">account.period</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_account_period_tree"/>
+            <field name="context">{'search_default_draft': 1}</field>
+            <field name="help">A period is a fiscal period of time during which accounting entries should be recorded for accounting related activities. Monthly period is the norm but depending on your countries or company needs, you could also have quarterly periods. Closing a period will make it impossible to record new accounting entries, all new entries should then be made on the following open period. Close a period when you do not want to record new entries and want to lock this period for tax related calculation.</field>
+        </record>
+        <menuitem
+            action="action_account_period_tree"
+            id="menu_action_account_period_close_tree"
+            parent="account.menu_account_end_year_treatments"
+            sequence="0"/>
+        
+    </data>
+</openerp>

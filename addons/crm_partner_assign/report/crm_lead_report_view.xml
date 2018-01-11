@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--     Opportunity tree view  -->
+        <record id="view_report_crm_lead_assign_filter" model="ir.ui.view">
+            <field name="name">crm.lead.report.assign.select</field>
+            <field name="model">crm.lead.report.assign</field>
+            <field name="arch" type="xml">
+                <search string="Leads Analysis">
+                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
+                    <field name="grade_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_assigned_id"/>
+                    <group  expand="0" string="Extended Filters...">
+                      <field name="partner_id"/>
+                      <separator/>
+                      <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
+                      <separator />
+                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                      <field name="opening_date"/>
+                      <field name="date_closed"/>
+                    </group>
+                    <group  expand="1" string="Group By">
+                        <filter string="Salesperson" name="user"
+                            context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" context="{'group_by':'section_id'}"
+                                groups="base.group_multi_salesteams"/>
+                        <filter string="Country" context="{'group_by':'country_id'}" />
+                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}" />
+                        <separator/>
+                        <filter string="Assign Month" context="{'group_by':'date_assign:month'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+<!-- Crm Lead Assign report Graph View -->
+
+        <record id="view_report_crm_lead_assign_graph" model="ir.ui.view">
+            <field name="name">crm.lead.assign.graph</field>
+            <field name="model">crm.lead.report.assign</field>
+            <field name="arch" type="xml">
+                <graph string="Lead Assign" type="pivot" stacked="True">
+                    <field name="stage_id" type="row"/>
+                    <field name="date_assign" interval="month" type="col"/>
+                    <field name="delay_open" type="measure"/>
+                    <field name="probability" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+       <!-- Leads by user and section Action -->
+
+       <record id="action_report_crm_opportunity_assign" model="ir.actions.act_window">
+            <field name="name">Opp. Assignment Analysis</field>
+            <field name="res_model">crm.lead.report.assign</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_type': 'opportunity', 'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_mode">graph</field>
+            <field name="domain">[('type', '=', 'opportunity')]</field>
+        </record>
+
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_assign_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_assign_graph"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
+       </record>
+
+       <menuitem id="menu_report_crm_opportunities_assign_tree"
+           parent="base.next_id_64" action="action_report_crm_opportunity_assign" sequence="20"/>
+
+    </data>
+</openerp>

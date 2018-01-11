@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<openerp>
+    <data>
+        <report
+            id="action_report_account_statement" 
+            model="account.bank.statement"
+            string="Statement"
+            name="point_of_sale.report_statement"
+            file="point_of_sale.report_statement"
+            report_type="qweb-pdf"
+        />
+        <report
+            id="action_report_pos_users_product"
+            string="User's Product"
+            model="account.bank.statement"
+            name="point_of_sale.report_usersproduct"
+            file="point_of_sale.report_usersproduct"
+            report_type="qweb-pdf"
+        />
+    </data>
+</openerp>

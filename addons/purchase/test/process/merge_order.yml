@@ -1,0 +1,45 @@
+-
+  Give access rights of Purchase user to merge two RFQ.
+-
+  !context
+    uid: 'res_users_purchase_user'
+-
+  In order to merge RFQ, I merge two RFQ which has same supplier and check new merged order.
+-
+  !python {model: purchase.order}: |
+    context.update({"mail_create_nolog" : True })
+    order3 = self.browse(cr, uid, ref('purchase_order_4'))
+    order7 = self.browse(cr, uid, ref('purchase_order_7'))
+    total_qty = sum([x.product_qty for x in order3.order_line] + [x.product_qty for x in order7.order_line])
+    new_id = self.do_merge(cr, uid, [ref('purchase_order_4'), ref('purchase_order_7')], context=context)
+
+    assert order3.state == 'cancel', "Merged order should be canceled"
+    assert order7.state == 'cancel', "Merged order should be canceled"
+
+    def merged_data(lines):
+        product_id =[]
+        product_uom = []
+        res = {}
+        for line in lines:
+          product_id.append(line.product_id.id)
+          product_uom.append(line.product_uom.id)
+        res.update({'product_ids': product_id,'product_uom':product_uom})
+        return res
+
+    for order in self.browse(cr, uid, new_id.keys()):
+       assert order.state == 'draft',"New created order state should be in draft"
+       assert order.partner_id == order3.partner_id ,"partner is not correspond"
+       assert order.pricelist_id == order3.pricelist_id,"Price list is not correspond"
+       assert order.location_id == order3.location_id ,"Location is not correspond"
+
+       total_new_qty = sum(x.product_qty for x in order.order_line)
+       assert total_new_qty == total_qty,"product quantities are not correspond"
+
+       date_order = min(order3.date_order, order7.date_order)
+       assert order.date_order == date_order, "Date of order is not correspond"
+
+       n_product_data = merged_data(order.order_line)
+       o_product_data= merged_data(order3.order_line)
+       o_pro_data = merged_data(order7.order_line)
+       assert n_product_data == o_product_data or o_pro_data,"product data are not correspond"
+

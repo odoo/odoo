@@ -1,0 +1,115 @@
+-
+  In order to test hr_timesheet_invoice in OpenERP, I create account line to manage invoice based on costs.
+-
+  I create an account analytic line.
+-
+  !record {model: account.analytic.line, id: account_analytic_line_developyamlforhrmodule0 }:
+    account_id: account.analytic_agrolait
+    amount: -1.0
+    general_account_id: account.a_expense
+    journal_id: hr_timesheet.analytic_journal
+    name: develop yaml for hr module
+    product_id: product.product_product_consultant
+    product_uom_id: product.product_uom_hour
+    to_invoice: hr_timesheet_invoice.timesheet_invoice_factor2
+    unit_amount: 5.00
+-
+  Assign partner name and price list in analytic account.
+-
+  !record {model: account.analytic.account, id: account.analytic_agrolait}:
+    partner_id: base.res_partner_2
+    pricelist_id: product.list0
+-
+  I open this account and make the state as pending.
+-
+  !python {model: account.analytic.account}: |
+    self.set_open(cr, uid, [ref('account.analytic_agrolait')], None)
+    self.set_pending(cr, uid, [ref('account.analytic_agrolait')], None)
+-
+  I assign account on analytic account line.
+-
+  !python {model: hr.analytic.timesheet}: |
+    self.on_change_account_id(cr, uid, [ref('account_analytic_line_developyamlforhrmodule0')], ref('account.analytic_agrolait'))
+
+-
+  I create a Tax Codes
+-
+  !record {model: account.tax.code, id: tax_case}:
+    name: Tax_case
+    company_id: base.main_company
+    sign: 1
+-
+  I create a Tax
+-
+  !record {model: account.tax, id: tax10}:
+    name: Tax 10.0
+    amount: 10.0
+    type: fixed
+    sequence: 1
+    company_id: base.main_company
+    type_tax_use: all
+    tax_code_id: tax_case
+-
+  I create an Account with the tax
+-
+  !record {model: account.account, id: account_income_i000}:
+    name: "income account"
+    code: "I000"
+    type: 'other'
+    user_type: "account.data_account_type_income"
+    tax_ids: [tax10]
+- 
+  I set the account as property_account_income on the product and I set the tax on the product 
+-  
+  !record {model: product.product, id: product.product_product_consultant, view: False}:
+    property_account_income: account_income_i000
+    uom_id: product.product_uom_hour
+    taxes_id: [tax10] 
+    list_price: 75
+-
+  I create invoice on analytic Line using "Invoice analytic Line" wizard.
+-
+  !record {model: hr.timesheet.invoice.create, id: hr_timesheet_invoice_create_0}:
+    date: 1
+    name: 1
+    price: 1
+    product: product.product_product_consultant
+    time: 1
+-
+  I click on "Create Invoice" button of "Invoice analytic Line" wizard to create invoice.
+-
+  !python {model: hr.timesheet.invoice.create}: |
+    action_result = self.do_create(cr, uid, [ref("hr_timesheet_invoice_create_0")], {
+        "active_ids": [ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule0")]
+    })
+    invoice_pool = self.pool.get('account.invoice')
+    invoice_domain = action_result['domain']
+    invoice_ids = invoice_pool.search(cr, uid, invoice_domain)
+    invoice_pool.write(cr, uid, invoice_ids, {'origin': 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) \
+        + '_aaldyfhrm0_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule0") ) })
+
+-
+  I check that Invoice is created for this timesheet.
+-
+  !python {model: account.analytic.line}: |
+    aline = self.browse(cr, uid, ref('account_analytic_line_developyamlforhrmodule0'))
+    analytic_account_obj = self.pool.get('account.analytic.account')
+    data = self.pool.get('hr.timesheet.invoice.create').read(cr, uid, [ref("hr_timesheet_invoice_create_0")], [], context)[0]
+    partner = aline.account_id.partner_id.id
+
+    invoice_obj = self.pool.get('account.invoice')
+    invoice_ids = invoice_obj.search(cr, uid, [('partner_id', '=', partner),
+       ('origin', '=', 'test-hrtsic0_id_'+str( ref("hr_timesheet_invoice_create_0")) + '_aaldyfhrm0_id_'+str( ref("hr_timesheet_invoice.account_analytic_line_developyamlforhrmodule0") ))
+    ])
+    invoice_id = invoice_obj.browse(cr, uid, invoice_ids)[0]
+
+    for invoice in invoice_id.invoice_line:
+      product = invoice.product_id.id
+
+    product_exp = data['product'][0]
+
+    assert product == product_exp
+    assert aline.invoice_id, "Invoice created, but analytic line wasn't updated."
+    assert aline.invoice_id == invoice_id, "Invoice doesn't match the one at analytic line"
+    assert invoice_id.amount_untaxed == 187.5, "Invoice amount mismatch: %s" % invoice_id.amount_untaxed
+    assert invoice_id.amount_tax == 50, "Invoice tax mismatch: %s" %  invoice_id.amount_tax

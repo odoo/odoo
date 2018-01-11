@@ -1,0 +1,946 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+      <!--Users-->
+      <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4, ref('fleet.group_fleet_manager'))]" />
+      </record>
+
+      <record id="vehicle_state_inshop" model="fleet.vehicle.state">
+        <field name="name">In shop</field>
+        <field name="sequence">1</field>
+      </record>
+
+      <record id="vehicle_state_active" model="fleet.vehicle.state">
+        <field name="name">Active</field>
+        <field name="sequence">2</field>
+      </record>
+
+      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
+        <field name="name">Inactive</field>
+        <field name="sequence">3</field>
+      </record>
+
+      <record id="vehicle_state_sold" model="fleet.vehicle.state">
+        <field name="name">Sold</field>
+        <field name="sequence">4</field>
+      </record>
+
+      <record id="vehicle_1" model="fleet.vehicle">
+          <field name="license_plate">1-ACK-205</field>
+          <field name="vin_sn">5454541</field>
+          <field name="model_id" ref="model_astra"/>
+          <field name="color">Black</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">5</field>
+          <field name="driver_id" ref="base.user_demo_res_partner" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="odometer_unit">kilometers</field>
+          <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+      </record>
+
+      <record id="vehicle_2" model="fleet.vehicle">
+          <field name="license_plate">1-SYN-404</field>
+          <field name="vin_sn">1337</field>
+          <field name="model_id" ref="model_corsa"/>
+          <field name="color">Red</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">5</field>
+          <field name="driver_id" ref="base.res_partner_address_19" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state_id" ref="vehicle_state_inactive"/>
+          <field name="odometer_unit">kilometers</field>
+          <field name="car_value">16000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
+      </record>
+
+      <record id="vehicle_3" model="fleet.vehicle">
+          <field name="license_plate">1-BMW-001</field>
+          <field name="vin_sn">54818</field>
+          <field name="model_id" ref="model_serie1"/>
+          <field name="color">Titanium Grey</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">3</field>
+          <field name="driver_id" ref="base.res_partner_address_17" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="odometer_unit">kilometers</field>
+          <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+      </record>
+
+       <record id="vehicle_4" model="fleet.vehicle">
+          <field name="license_plate">1-AUD-001</field>
+          <field name="vin_sn">455257985</field>
+          <field name="model_id" ref="model_a1"/>
+          <field name="color">White</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">3</field>
+          <field name="driver_id" ref="base.res_partner_address_16" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="odometer_unit">kilometers</field>
+          <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+      </record>
+
+      <record id="vehicle_5" model="fleet.vehicle">
+          <field name="license_plate">1-MER-001</field>
+          <field name="vin_sn">789546128</field>
+          <field name="model_id" ref="model_classa"/>
+          <field name="color">Brown</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">5</field>
+          <field name="driver_id" ref="base.res_partner_address_15" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state_id" ref="vehicle_state_active"/>
+          <field name="odometer_unit">kilometers</field>
+          <field name="car_value">18000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
+      </record>
+
+      <record id="log_odometer_1" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-01-01</field>
+          <field name="value">0</field>
+      </record>
+
+       <record id="log_fuel_1" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-01-01</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">52</field>
+          <field name="inv_ref">67458</field>
+          <field name="odometer_id" ref="log_odometer_1" />
+          <field name="notes">First refueling</field>
+      </record>
+
+      <record id="log_odometer_2" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-02-11</field>
+          <field name="value">658</field>
+      </record>
+
+      <record id="log_fuel_2" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-02-11</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">65</field>
+          <field name="inv_ref">455812</field>
+          <field name="odometer_id" ref="log_odometer_2" />
+          <field name="notes">Second refueling of the car</field>
+      </record>
+
+      <record id="log_odometer_3" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-03-23</field>
+          <field name="value">1360</field>
+      </record>
+
+       <record id="log_fuel_3" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-03-23</field>
+          <field name="liter">45</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">59.4</field>
+          <field name="inv_ref">45199877</field>
+          <field name="odometer_id" ref="log_odometer_3" />
+          <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_odometer_4" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-04-5</field>
+          <field name="value">2044</field>
+      </record>
+
+      <record id="log_fuel_4" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-5</field>
+          <field name="liter">55</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">72.6</field>
+          <field name="inv_ref">654</field>
+          <field name="odometer_id" ref="log_odometer_4" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_5" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-04-25</field>
+          <field name="value">2756</field>
+      </record>
+
+      <record id="log_fuel_5" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-25</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">54</field>
+          <field name="inv_ref">55488</field>
+          <field name="odometer_id" ref="log_odometer_5" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_6" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-05-15</field>
+          <field name="value">3410</field>
+      </record>
+
+      <record id="log_fuel_6" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-05-15</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="odometer_id" ref="log_odometer_6" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_7" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-06-11</field>
+          <field name="value">3750</field>
+      </record>
+
+      <record id="log_fuel_7" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-06-11</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="odometer_id" ref="log_odometer_7" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_8" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-07-02</field>
+          <field name="value">4115</field>
+      </record>
+
+      <record id="log_fuel_8" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-02</field>
+          <field name="liter">47.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">64.53</field>
+          <field name="inv_ref">15151</field>
+          <field name="odometer_id" ref="log_odometer_8" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_9" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-07-28</field>
+          <field name="value">4750</field>
+      </record>
+
+      <record id="log_fuel_9" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-28</field>
+          <field name="liter">25</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">33.75</field>
+          <field name="inv_ref">874195</field>
+          <field name="odometer_id" ref="log_odometer_9" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_10" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-08-17</field>
+          <field name="value">5171</field>
+      </record>
+
+       <record id="log_fuel_10" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-08-17</field>
+          <field name="liter">51.2</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">69.12</field>
+          <field name="inv_ref">4431</field>
+          <field name="odometer_id" ref="log_odometer_10" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_11" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-09-11</field>
+          <field name="value">5873</field>
+      </record>
+
+      <record id="log_fuel_11" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-09-11</field>
+          <field name="liter">45.36</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">61.236</field>
+          <field name="inv_ref">11234</field>
+          <field name="odometer_id" ref="log_odometer_11" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_12" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-10-06</field>
+          <field name="value">6571</field>
+      </record>
+
+      <record id="log_fuel_12" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-10-06</field>
+          <field name="liter">53.4</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">73.158</field>
+          <field name="inv_ref">798846</field>
+          <field name="odometer_id" ref="log_odometer_12" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_13" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-11-02</field>
+          <field name="value">7954</field>
+      </record>
+
+      <record id="log_fuel_13" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-11-02</field>
+          <field name="liter">48.5</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">66.445</field>
+          <field name="inv_ref">7954</field>
+          <field name="odometer_id" ref="log_odometer_13" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_14" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-12-02</field>
+          <field name="value">7981</field>
+      </record>
+
+      <record id="log_fuel_14" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-12-02</field>
+          <field name="liter">35</field>
+          <field name="price_per_liter">1.4</field>
+          <field name="amount">49</field>
+          <field name="inv_ref">545</field>
+          <field name="odometer_id" ref="log_odometer_14" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_15" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-01-01</field>
+          <field name="value">0</field>
+      </record>
+
+      <record id="log_fuel_15" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-01-01</field>
+          <field name="liter">45</field>
+          <field name="price_per_liter">1.27</field>
+          <field name="amount">57.15</field>
+          <field name="inv_ref">5881418</field>
+          <field name="odometer_id" ref="log_odometer_15" />
+          <field name="notes">First refueling</field>
+      </record>
+
+      <record id="log_odometer_16" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-02-11</field>
+          <field name="value">702</field>
+      </record>
+
+      <record id="log_fuel_16" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-02-11</field>
+          <field name="liter">30</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">39</field>
+          <field name="inv_ref">884351</field>
+          <field name="odometer_id" ref="log_odometer_16" />
+          <field name="notes">Second refueling of the car</field>
+      </record>
+
+      <record id="log_odometer_17" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-03-23</field>
+          <field name="value">1205.4</field>
+      </record>
+
+       <record id="log_fuel_17" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-03-23</field>
+          <field name="liter">52</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">68.64</field>
+          <field name="inv_ref">984</field>
+          <field name="odometer_id" ref="log_odometer_17" />
+          <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_odometer_18" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-04-5</field>
+          <field name="value">2122</field>
+      </record>
+
+      <record id="log_fuel_18" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-5</field>
+          <field name="liter">35</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">46.2</field>
+          <field name="inv_ref">777</field>
+          <field name="odometer_id" ref="log_odometer_18" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_19" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-04-25</field>
+          <field name="value">2430</field>
+      </record>
+
+      <record id="log_fuel_19" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-25</field>
+          <field name="liter">55</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">74.25</field>
+          <field name="inv_ref">4454112</field>
+          <field name="odometer_id" ref="log_odometer_19" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_20" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-05-15</field>
+          <field name="value">3015</field>
+      </record>
+
+      <record id="log_fuel_20" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-05-15</field>
+          <field name="liter">41.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">56.43</field>
+          <field name="inv_ref">98754</field>
+          <field name="odometer_id" ref="log_odometer_20" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_21" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-06-11</field>
+          <field name="value">3602.1</field>
+      </record>
+
+      <record id="log_fuel_21" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-06-11</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">67.5</field>
+          <field name="inv_ref">4952</field>
+          <field name="odometer_id" ref="log_odometer_21" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_22" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-07-02</field>
+          <field name="value">4205.5</field>
+      </record>
+
+      <record id="log_fuel_22" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-02</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">67.5</field>
+          <field name="inv_ref">8976435</field>
+          <field name="odometer_id" ref="log_odometer_22" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_23" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-07-28</field>
+          <field name="value">4935</field>
+      </record>
+
+      <record id="log_fuel_23" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-28</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">67.5</field>
+          <field name="inv_ref">9564</field>
+          <field name="odometer_id" ref="log_odometer_23" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_24" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-08-17</field>
+          <field name="value">5555</field>
+      </record>
+
+       <record id="log_fuel_24" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-08-17</field>
+          <field name="liter">20</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">27</field>
+          <field name="inv_ref">975</field>
+          <field name="odometer_id" ref="log_odometer_24" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_25" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-09-11</field>
+          <field name="value">5987</field>
+      </record>
+
+      <record id="log_fuel_25" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-09-11</field>
+          <field name="liter">44.5</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">60.075</field>
+          <field name="inv_ref">9876</field>
+          <field name="odometer_id" ref="log_odometer_25" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_26" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-10-06</field>
+          <field name="value">6571</field>
+      </record>
+
+      <record id="log_fuel_26" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-10-06</field>
+          <field name="liter">48.5</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">66.445</field>
+          <field name="inv_ref">786</field>
+          <field name="odometer_id" ref="log_odometer_26" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_27" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-11-02</field>
+          <field name="value">7201.5</field>
+      </record>
+
+      <record id="log_fuel_27" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-11-02</field>
+          <field name="liter">55</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">75.35</field>
+          <field name="inv_ref">895</field>
+          <field name="odometer_id" ref="log_odometer_27" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_28" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-12-02</field>
+          <field name="value">8001.2</field>
+      </record>
+
+      <record id="log_fuel_28" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_address_18" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-12-02</field>
+          <field name="liter">35</field>
+          <field name="price_per_liter">1.4</field>
+          <field name="amount">49</field>
+          <field name="inv_ref">545</field>
+          <field name="odometer_id" ref="log_odometer_28" />
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_29" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-10-01</field>
+          <field name="value">1000</field>
+      </record>
+
+      <record id="log_service_1" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">650</field>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
+        <field name="date">2012-09-02</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">4586</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Usual vehicle repairing</field>
+      </record>
+
+      <record id="services_cost_11" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="type_service_7"/>
+        <field name="date">2012-09-02</field>
+        <field name="parent_id" ref="log_service_1_fleet_vehicle_cost" />
+      </record>
+
+      <record id="services_cost_12" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="type_service_8"/>
+        <field name="date">2012-09-02</field>
+        <field name="parent_id" ref="log_service_1_fleet_vehicle_cost" />
+      </record>
+
+      <record id="services_cost_13" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_service_9"/>
+        <field name="date">2012-09-02</field>
+        <field name="parent_id" ref="log_service_1_fleet_vehicle_cost" />
+      </record>
+
+      <record id="log_service_2" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">350</field>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
+        <field name="date">2012-11-02</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">4814</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">After crash repairing</field>
+      </record>
+
+      <record id="services_cost_21" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_service_10"/>
+        <field name="date">2012-11-02</field>
+        <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="services_cost_22" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">150</field>
+        <field name="cost_subtype_id" ref="type_service_11"/>
+        <field name="date">2012-11-02</field>
+        <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="services_cost_23" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_service_12"/>
+        <field name="date">2012-11-02</field>
+        <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="log_service_3" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_1" />
+        <field name="amount">513</field>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
+        <field name="date">2012-10-15</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">124</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_service_4" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_3" />
+        <field name="amount">412</field>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
+        <field name="date">2012-10-08</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">20984</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_service_5" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_4" />
+        <field name="amount">275</field>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
+        <field name="date">2012-09-25</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">241</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_service_6" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_5" />
+        <field name="amount">302</field>
+        <field name="cost_subtype_id" ref="type_service_service_8"/>
+        <field name="date">2012-09-15</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">22513</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_contract_1" model="fleet.vehicle.log.contract" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">0</field>
+        <field name="cost_generated">20</field>
+        <field name="cost_frequency">daily</field>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
+        <field name="start_date" eval="time.strftime('%Y-01-01')" />
+        <field name="expiration_date" eval="(DateTime.now() + timedelta(5)).strftime('%Y-%m-%d')" />
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="notes">Daily leasing contract</field>
+      </record>
+
+      <record id="contract_cost_11" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_1_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_12" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_1_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_13" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_2" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_1_fleet_vehicle_cost" />
+      </record>
+
+      <record id="log_contract_2" model="fleet.vehicle.log.contract" >
+        <field name="vehicle_id" ref="vehicle_1" />
+        <field name="amount">0</field>
+        <field name="cost_generated">150</field>
+        <field name="cost_frequency">weekly</field>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
+        <field name="start_date" eval="time.strftime('%Y-01-01')" />
+        <field name="expiration_date" eval="(DateTime.now() + timedelta(-1)).strftime('%Y-%m-%d')" />
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="notes">Weekly leasing contract</field>
+      </record>
+
+      <record id="contract_cost_21" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_1" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_22" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_1" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_23" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_1" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_2_fleet_vehicle_cost" />
+      </record>
+
+      <record id="log_contract_3" model="fleet.vehicle.log.contract" >
+        <field name="vehicle_id" ref="vehicle_3" />
+        <field name="amount">0</field>
+        <field name="cost_generated">400</field>
+        <field name="cost_frequency">monthly</field>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
+        <field name="date" eval="time.strftime('%Y-01-01')"/>
+        <field name="start_date" eval="time.strftime('%Y-01-01')" />
+        <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="notes">Monthly leasing contract</field>
+      </record>
+
+      <record id="contract_cost_31" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_3" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_3_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_32" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_3" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_3_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_33" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_3" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_3_fleet_vehicle_cost" />
+      </record>
+
+      <record id="log_contract_4" model="fleet.vehicle.log.contract" >
+        <field name="vehicle_id" ref="vehicle_4" />
+        <field name="amount">0</field>
+        <field name="cost_generated">4000</field>
+        <field name="cost_frequency">yearly</field>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
+        <field name="start_date" eval="time.strftime('%Y-01-01')" />
+        <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="notes">Yearly leasing contract</field>
+      </record>
+
+      <record id="contract_cost_41" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_4" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_4_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_42" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_4" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_4_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_43" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_4" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_4_fleet_vehicle_cost" />
+      </record>
+
+      <record id="log_contract_5" model="fleet.vehicle.log.contract" >
+        <field name="vehicle_id" ref="vehicle_5" />
+        <field name="amount">17000</field>
+        <field name="cost_generated">0</field>
+        <field name="cost_frequency">no</field>
+        <field name="cost_subtype_id" ref="type_contract_leasing"/>
+        <field name="date" eval="time.strftime('2012-01-01')" />
+        <field name="start_date" eval="time.strftime('2012-01-01')" />
+        <field name="expiration_date" eval="time.strftime('2016-12-31')" />
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="insurer_id" ref="base.res_partner_13" />
+        <field name="notes">Unique leasing contract</field>
+      </record>
+
+      <record id="contract_cost_51" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_5" />
+        <field name="amount">50</field>
+        <field name="cost_subtype_id" ref="type_service_service_2"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_52" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_5" />
+        <field name="amount">25</field>
+        <field name="cost_subtype_id" ref="type_service_service_3"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
+      </record>
+
+      <record id="contract_cost_53" model="fleet.vehicle.cost" >
+        <field name="vehicle_id" ref="vehicle_5" />
+        <field name="amount">100</field>
+        <field name="cost_subtype_id" ref="type_contract_omnium"/>
+        <field name="date">2012-01-01</field>
+        <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
+      </record>
+    </data>
+</openerp>

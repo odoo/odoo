@@ -1,0 +1,55 @@
+# HG changeset patch
+# Parent 8c721171aa16a41e94059f53d6780c67b5ef2dfc
+# Parent  8d2ca42b5be2031ea9624896df53f09f7ca131be
+
+diff --git a/openacademy/models.py b/openacademy/models.py
+--- a/openacademy/models.py
++++ b/openacademy/models.py
+@@ -66,6 +66,24 @@ class Session(models.Model):
+     attendees_count = fields.Integer(
+         string="Attendees count", compute='_get_attendees_count', store=True)
+ 
++    state = fields.Selection([
++        ('draft', "Draft"),
++        ('confirmed', "Confirmed"),
++        ('done', "Done"),
++    ], default='draft')
++
++    @api.multi
++    def action_draft(self):
++        self.state = 'draft'
++
++    @api.multi
++    def action_confirm(self):
++        self.state = 'confirmed'
++
++    @api.multi
++    def action_done(self):
++        self.state = 'done'
++
+     @api.depends('seats', 'attendee_ids')
+     def _taken_seats(self):
+         for r in self:
+diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
+--- a/openacademy/views/openacademy.xml
++++ b/openacademy/views/openacademy.xml
+@@ -96,6 +96,19 @@
+             <field name="model">openacademy.session</field>
+             <field name="arch" type="xml">
+                 <form string="Session Form">
++                    <header>
++                        <button name="action_draft" type="object"
++                                string="Reset to draft"
++                                states="confirmed,done"/>
++                        <button name="action_confirm" type="object"
++                                string="Confirm" states="draft"
++                                class="oe_highlight"/>
++                        <button name="action_done" type="object"
++                                string="Mark as done" states="confirmed"
++                                class="oe_highlight"/>
++                        <field name="state" widget="statusbar"/>
++                    </header>
++
+                     <sheet>
+                         <group>
+                             <group string="General">

@@ -1,0 +1,57 @@
+-
+  In order to test the stock_invoice_directly module. I will create an outgoing
+  picking order which creates an invoice from the picking order itself.
+-
+  I create an Outgoing Picking order.
+-
+  !record {model: stock.picking, id: stock_picking_out0}:
+    partner_id: base.res_partner_address_22
+    move_lines:
+      - company_id: base.main_company
+        location_id: stock.stock_location_stock
+        product_id: product.product_product_3
+        product_uom_qty: 3.0
+        product_uom: product.product_uom_unit
+        location_dest_id: stock.stock_location_customers
+    invoice_state: 2binvoiced
+    move_type: direct
+    picking_type_id: stock.picking_type_out
+-
+  I need to check the availability of the product so I make my picking order for processing later.
+-
+  !python {model: stock.picking}: |
+    self.action_confirm(cr, uid, [ref("stock_picking_out0")], {"lang": "en_US", "search_default_available":
+      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
+      })
+-
+  I check the product availability. Product is available in the stock and ready to be sent.
+-
+  !python {model: stock.picking}: |
+    self.action_assign(cr, uid, [ref("stock_picking_out0")], {"lang": "en_US", "search_default_available":
+      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
+      })
+-
+  I process the delivery
+-
+  !python {model: stock.picking}: |
+    partial_id = ref("stock_picking_out0")
+    self.do_transfer(cr, uid, [partial_id])
+
+-
+  As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
+-
+  !python {model: stock.invoice.onshipping}: |
+    wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('account.sales_journal')},
+      {'active_ids': [ref("stock_picking_out0")], "active_model": "stock.picking"})
+    self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
+      "search_default_available": 1, "tz": False, "active_model": "stock.picking",
+      "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})
+-
+  I check that the customer invoice is created successfully.
+-
+  !python {model: account.invoice}: |
+    picking_obj = self.pool.get('stock.picking')
+    picking = picking_obj.browse(cr, uid, [ref('stock_picking_out0')], context=context)
+    partner = picking[0].partner_id.id
+    inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)], context=context)
+    assert inv_ids, 'No Invoice is generated!'
