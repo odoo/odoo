@@ -39,8 +39,6 @@ class WebsitePayment(http.Controller):
         acquirer = env['payment.acquirer'].with_context(submit_class='btn btn-primary pull-right',
                                                         submit_txt=_('Pay Now')).browse(acquirer_id)
         # auto-increment reference with a number suffix if the reference already exists
-        reference = request.env['payment.transaction'].get_next_reference(reference)
-
         partner_id = user.partner_id.id if not user._is_public() else False
 
         payment_form = acquirer.sudo().render(reference, float(amount), currency.id, values={'return_url': '/website_payment/confirm', 'partner_id': partner_id})
@@ -56,12 +54,11 @@ class WebsitePayment(http.Controller):
         # return request.render('payment.pay', values)
         return request.render('website.404')
 
-    @http.route(['/website_payment/transaction'], type='json', auth="public", website=True)
-    def transaction(self, reference, amount, currency_id, acquirer_id):
+    @http.route(['/website_payment/transaction'], type='http', auth="public", website=True)
+    def transaction(self, amount, currency_id, acquirer_id):
         partner_id = request.env.user.partner_id.id if not request.env.user._is_public() else False
         values = {
             'acquirer_id': int(acquirer_id),
-            'reference': reference,
             'amount': float(amount),
             'currency_id': int(currency_id),
             'partner_id': partner_id,
@@ -76,10 +73,10 @@ class WebsitePayment(http.Controller):
         tx_id = request.session.pop('website_payment_tx_id', False)
         if tx_id:
             tx = request.env['payment.transaction'].browse(tx_id)
-            if tx.state == 'done':
+            if tx.state == 'posted':
                 status = 'success'
                 message = tx.acquirer_id.done_msg
-            elif tx.state == 'pending':
+            elif tx.pending:
                 status = 'warning'
                 message = tx.acquirer_id.pending_msg
             else:

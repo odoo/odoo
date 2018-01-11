@@ -17,7 +17,6 @@ Provide tools for sale-related payment
     'depends': ['payment', 'sale'],
     'data': [
         'views/payment_views.xml',
-        'views/crm_team_views.xml',
         'views/sale_order_views.xml',
         'views/sale_portal_templates.xml',
     ],

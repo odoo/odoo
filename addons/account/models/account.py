@@ -604,6 +604,8 @@ class AccountJournal(models.Model):
         # Seek the next available number for the account code
         if type == 'bank':
             account_code_prefix = company.bank_account_code_prefix or ''
+        elif type == 'transfer':
+            account_code_prefix = company.transfer_account_code_prefix or ''
         else:
             account_code_prefix = company.cash_account_code_prefix or company.bank_account_code_prefix or ''
         for num in range(1, 100):

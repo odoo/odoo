@@ -216,24 +216,43 @@
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
                 <form string="Payment Transactions">
-                    <header>
-                        <button type="object" name="action_capture" states="authorized" string="Capture Transaction" class="oe_highlight"/>
-                        <button type="object" name="action_void" states="authorized" string="Void Transaction"/>
-                        <field name="state" widget="statusbar" clickable="True"/>
-                    </header>
+                    <field name="fees_implemented" invisible='1'/>
+                    <field name="token_implemented" invisible='1'/>
+                    <field name="authorize_implemented" invisible="1"/>
+                    <field name="capture" invisible="1"/>
+                    <field name="pending" invisible="1"/>
                     <sheet>
+                        <div class="oe_title">
+                            <h1><field name="reference"/></h1>
+                            <div class="o_field_many2manytags"
+                                 attrs="{'invisible':[('capture','=',False)]}">
+                                <span class="badge dropdown o_tag_color_1">
+                                    <span class="o_badge_text">Capture allowed</span>
+                                </span>
+                            </div>
+                            <div class="o_field_many2manytags"
+                                 attrs="{'invisible':['|', ('capture','=',True), ('pending','=',False)]}">
+                                <span class="badge dropdown o_tag_color_1">
+                                    <span class="o_badge_text">Pending</span>
+                                </span>
+                            </div>
+                        </div>
                         <group>
                             <group>
-                                <field name="reference"/>
-                                <label for="amount"/>
+                                <field name="payment_id"/>
+                                <label string="Amount"/>
                                 <div class="o_row">
-                                    <field name="amount"/>
-                                    <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                                    <field name="amount"
+                                           attrs="{'readonly': [('pending', '=', True)]}"/>
+                                    <field name="currency_id" options="{'no_open': True, 'no_create': True}"
+                                           attrs="{'readonly': [('pending', '=', True)]}"/>
                                 </div>
-                                <field name="fees" readonly="1"/>
+                                <field name="fees" readonly="1"
+                                       attrs="{'readonly': [('pending', '=', True)], 'invisible': [('fees_implemented', '=', False)]}"/>
                                 <label for="partner_id"/>
                                 <div>
-                                    <field name="partner_id" context="{'show_address': 1}" options="{'always_reload': True}"/>
+                                    <field name="partner_id" context="{'show_address': 1}" options="{'always_reload': True}"
+                                           attrs="{'readonly': [('pending', '=', True)]}"/>
                                     <div name="partner_details" class="o_address_format" attrs="{'invisible': [('partner_id', '!=', False)]}">
                                         <field name="partner_name" placeholder="Name" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
                                         <field name="partner_address" placeholder="Address" attrs="{'readonly': [('partner_id', '!=', False)]}" class="o_address_street"/>
@@ -246,12 +265,15 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="acquirer_id"/>
-                                <field name="provider" invisible="1"/>
-                                <field name="payment_token_id" options="{'no_create': True}"/>
+                                <field name="acquirer_id"
+                                       attrs="{'readonly': [('pending', '=', True)]}"/>
+                                <field name="provider" invisible="1"
+                                       attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                <field name="payment_token_id" options="{'no_create': True}"
+                                       attrs="{'invisible': [('token_implemented', '=', False)]}"/>
                                 <field name="acquirer_reference" readonly="1"/>
-                                <field name="create_date"/>
-                                <field name="date_validate"/>
+                                <field name="payment_date"
+                                       attrs="{'readonly': [('pending', '=', True)]}"/>
                             </group>
                         </group>
                         <group string="Message">

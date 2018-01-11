@@ -148,18 +148,27 @@ class StripeTest(StripeCommon):
             'currency_id': self.currency_euro.id,
             'reference': 'SO100',
             'partner_name': 'Norbert Buyer',
+            'partner_id': self.buyer_id,
             'partner_country_id': self.country_france.id})
 
         # validate it
         tx.form_feedback(stripe_post_data, 'stripe')
-        self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
+        self.assertEqual(tx.state, 'posted', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
         # reset tx
-        tx.write({'state': 'draft', 'date_validate': False, 'acquirer_reference': False})
+        tx.unlink()
+        tx = self.env['payment.transaction'].create({
+            'amount': 4700,
+            'acquirer_id': self.stripe.id,
+            'currency_id': self.currency_euro.id,
+            'reference': 'SO100',
+            'partner_name': 'Norbert Buyer',
+            'partner_id': self.buyer_id,
+            'partner_country_id': self.country_france.id})
         # simulate an error
         stripe_post_data['status'] = 'error'
         stripe_post_data.update({u'error': {u'message': u"Your card's expiration year is invalid.", u'code': u'invalid_expiry_year', u'type': u'card_error', u'param': u'exp_year'}})
         with mute_logger('odoo.addons.payment_stripe.models.payment'):
             tx.form_feedback(stripe_post_data, 'stripe')
         # check state
-        self.assertEqual(tx.state, 'error', 'Stipe: erroneous validation did not put tx into error state')
+        self.assertEqual(tx.state, 'cancelled', 'Stipe: erroneous validation did not put tx into error state')

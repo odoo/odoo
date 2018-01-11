@@ -89,9 +89,9 @@ class WebsiteSaleBackend(WebsiteBackend):
                 ('cart_recovery_email_sent', '=', False)
             ]),
             payment_to_capture_count=request.env['payment.transaction'].search_count([
-                ('state', '=', 'authorized'),
+                ('capture', '=', True),
                 # that part perform a search on sale.order in order to comply with access rights as tx do not have any
-                ('sale_order_id.id', 'in', request.env['sale.order'].search(sale_order_domain + [('state', '!=', 'cancel')]).ids),
+                ('sale_order_ids', 'in', request.env['sale.order'].search(sale_order_domain + [('state', '!=', 'cancel')]).ids),
             ]),
             total_sold=sum(price_line['price_subtotal'] for price_line in report_price_lines)
         )
