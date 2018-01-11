@@ -255,13 +255,6 @@ class MailMail(models.Model):
                     if mail.state != 'exception' and mail.auto_delete:
                         mail.sudo().unlink()
                     continue
-                # TDE note: remove me when model_id field is present on mail.message - done here to avoid doing it multiple times in the sub method
-                if mail.model:
-                    model = self.env['ir.model']._get(mail.model)[0]
-                else:
-                    model = None
-                if model:
-                    mail = mail.with_context(model_name=model.name)
 
                 # load attachment binary data with a separate read(), as prefetching all
                 # `datas` (binary field) could bloat the browse cache, triggerring
