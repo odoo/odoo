@@ -260,14 +260,8 @@
                 <field name="active"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
+                <progressbar field="activity_state" colors='{"planned": "success", "overdue": "danger", "today": "warning"}'/>
                 <templates>
-                    <t t-name="kanban-tooltip">
-                        <ul class="oe_kanban_tooltip">
-                            <li t-if="record.type_id.raw_value"><b>Degree:</b> <field name="type_id"/></li>
-                            <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
-                            <li t-if="record.department_id.raw_value"><b>Departement:</b> <field name="department_id"/></li>
-                        </ul>
-                    </t>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <div class="o_dropdown_kanban dropdown">
@@ -281,9 +275,8 @@
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
-                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                            <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar mr8"/>
                                     <div class="o_kanban_record_headings">
                                         <b class="o_kanban_record_title mt8" t-if="record.partner_name.raw_value">
                                             <field name="partner_name"/><br/>
@@ -299,19 +292,25 @@
                                 <t t-if="record.partner_mobile.raw_value"><i class="fa fa-mobile mr4"/><field name="partner_mobile"/><br/></t>
                                 <div class="o_kanban_record_bottom mt4">
                                     <div class="oe_kanban_bottom_left">
-                                        <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object"> <field name="attachment_number"/> Documents</a>
-                                    </div>
-                                    <div class="oe_kanban_bottom_right">
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
-                                        <div class="o_kanban_inline_block mr8">
-                                            <field name="activity_ids" widget="kanban_activity"/>
-                                        </div>
                                         <div class="pull-left mr4" groups="base.group_user">
                                             <field name="priority" widget="priority"/>
                                         </div>
+                                        <div class="o_kanban_inline_block mr8">
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new mr4' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
                                     </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <a name="action_get_attachment_tree_view" type="object">
+                                            <span title='Documents'><i class='fa fa-book'/>
+                                                <t t-esc="record.attachment_number.raw_value"/>
+                                            </span>
+                                        </a>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="30" height="30" class="oe_kanban_avatar"/>
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -410,17 +409,17 @@
                 <sheet>
                     <group>
                         <field name="name" class="oe_inline" placeholder="e.g. Sales Manager"/>
-                        <label for="alias_name" string="Job Email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
+                        <label for="alias_name" string="Application email" attrs="{'invisible': [('alias_domain', '=', False)]}" help="Define a specific contact address for this job position. If you keep it empty, the default email address will be used which is in human resources settings"/>
                         <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <field name="alias_id" class="oe_read_only" string="Email Alias" required="0"/>
                             <div class="oe_edit_only" name="edit_alias">
                                 <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                             </div>
+                            <div class="text-muted" attrs="{'invisible': [('alias_domain', '=', False)]}">Applicants can send resume to this email address,<br/>it will create an application automatically</div>
                         </div>
                     </group>
                     <footer>
                         <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                        <button string="Create &amp; Edit" name="edit_dialog" type="object" class="btn-primary"/>
                         <button string="Discard" class="btn-default" special="cancel"/>
                     </footer>
                 </sheet>
