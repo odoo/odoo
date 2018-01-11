@@ -42,7 +42,7 @@
         <div class="btn-group">
             <a href="#" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" title="Search Contact"><i class="fa fa-search"></i></a>
             <ul class="dropdown-menu contact_menu" role="menu">
-                <li><a><input href="#" type="email" placeholder="Search"/></a></li>
+                <li><a><input href="#" type="email" t-att-placeholder="placeholder or 'Search'"/></a></li>
             </ul>
         </div>
     </t>
@@ -52,4 +52,9 @@
             <li><a href="#" t-att-data-id="item.id" t-att-data-name="item.display_name"><t t-esc="item.display_name"/> <t t-if="item.city or item.country_id"><small class="text-muted">(<t t-esc="item.city"/> <t t-esc="item.country_id and item.country_id[1]"/>)</small></t></a></li>
         </t>
     </t>
+
+    <t t-name="web_editor.datetime">
+        <input type='text' class='o_datepicker_input'/>
+    </t>
+
 </templates>

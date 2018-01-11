@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="snippet_options" inherit_id="web_editor.snippet_options">
+        <xpath expr="//div[@data-js='datetime']" position="after">
+            <div data-js='timezone'
+                data-selector="[data-class='o_event_timezone']"
+                data-no-check="true"/>
+        </xpath>
+    </template>
+</odoo>

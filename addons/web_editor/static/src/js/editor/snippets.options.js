@@ -6,6 +6,7 @@ var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var widget = require('web_editor.widget');
+var time = require('web.time');
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -1136,7 +1137,8 @@ registry.many2one = SnippetOption.extend({
         this.ID = +this.$target.data('oe-many2one-id');
 
         // create search button and bind search bar
-        this.$btn = $(qweb.render('web_editor.many2one.button'))
+        var options = this.$target.data('oeContactOptions');
+        this.$btn = $(qweb.render("web_editor.many2one.button", {'placeholder': options.placeholder}))
             .insertAfter(this.$overlay.find('.oe_options'));
 
         this.$ul = this.$btn.find('ul');
@@ -1281,6 +1283,92 @@ registry.many2one = SnippetOption.extend({
         _.defer(function () {
             self.trigger_up('deactivate_snippet');
         });
+    }
+});
+
+/**
+ * Allows to edit the date & datetime field easily with datepicker.
+ */
+
+registry.datetime = SnippetOption.extend({
+    /**
+     * @override
+     */
+    start: function() {
+        this._initializeDatetimePicker();
+        this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    onFocus: function() {
+        this.$target.hide();
+        this.$datetime.insertAfter(this.$target);
+        this.$datetime.data('DateTimePicker').toggle();
+        this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Initialize the datetime picker.
+     *
+     * @private
+     */
+    _initializeDatetimePicker: function() {
+        this.$datetime = $(qweb.render("web_editor.datetime"));
+        var originalValue = this.$target.attr('data-oe-original');
+        var typeOfDate = this.$target.attr('data-oe-type');
+        var l10n = _t.database.parameters;
+        var options = {
+            format: time.strftime_to_moment_format((typeOfDate === 'datetime') ? (l10n.date_format + ' ' + l10n.time_format) : l10n.date_format),
+            defaultDate: originalValue,
+            minDate: moment({
+                y: 1900
+            }),
+            maxDate: moment().add(200, "y"),
+            icons: {
+                time: 'fa fa-clock-o',
+                date: 'fa fa-calendar',
+                next: 'fa fa-chevron-right',
+                previous: 'fa fa-chevron-left',
+                up: 'fa fa-chevron-up',
+                down: 'fa fa-chevron-down',
+                close: 'fa fa-times',
+            },
+            keyBinds: {
+                enter: function() {
+                    this.hide();
+                },
+                escape: function() {
+                    this.hide();
+                },
+            },
+            showClose: true,
+            locale: moment.locale(),
+            allowInputToggle: true,
+            widgetParent: 'main',
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+        };
+        this.$datetime.datetimepicker(options);
+        this.$datetime.on('dp.hide', this._onHide.bind(this));
+    },
+    /**
+     * get the value from datepicker and set to target field.
+     *
+     * @private
+     */
+    _onHide: function() {
+        var value = this.$datetime.val();
+        this.$target.attr('data-oe-original', value).text(value);
+        this.$datetime.detach();
+        this.$target.show();
+        this.$target.trigger('content_changed');
     }
 });
 

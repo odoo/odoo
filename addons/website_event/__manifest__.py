@@ -13,6 +13,7 @@
         'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/event_views.xml',
+        'views/snippets.xml',
         'security/ir.model.access.csv',
         'security/event_security.xml',
     ],

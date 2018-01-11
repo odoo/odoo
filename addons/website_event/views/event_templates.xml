@@ -11,6 +11,7 @@
 <template id="assets_editor" inherit_id="website.assets_editor" name="Event Editor">
     <xpath expr="." position="inside">
         <script type="text/javascript" src="/website_event/static/src/js/website_event.editor.js"></script>
+        <script type="text/javascript" src="/website_event/static/src/js/snippets.options.js"></script>
         <script type="text/javascript" src="/website_event/static/src/js/website.tour.event.js"></script>
     </xpath>
 </template>
@@ -71,7 +72,8 @@
                                 <t t-if="not event.is_online">
                                     <div itemprop="location" t-field="event.address_id" t-options='{
                                         "widget": "contact",
-                                        "fields": ["city"]
+                                        "fields": ["city"],
+                                        "placeholder": "Select the place"
                                         }'/>
                                 </t>
                                 <div class="text-muted" t-if="event.event_type_id">
@@ -280,12 +282,13 @@
             <h4 class="text-center text-muted">
                 <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-field="event.with_context(tz=event.date_tz).date_begin" t-options='{"hide_seconds":"True"}'/> to
                 <span itemprop="endDate" t-field="event.with_context(tz=event.date_tz).date_end" t-options='{"hide_seconds":"True"}'/>
-                <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+                <t t-if="event.date_tz">(<span data-class="o_event_timezone" t-field="event.date_tz"/>)</t>
             </h4>
             <h4 class="text-center text-muted"
                 t-field="event.address_id" t-options='{
                 "widget": "contact",
-                "fields": ["city"]
+                "fields": ["city"],
+                "placeholder": "Select the place"
                 }'/>
             <div class="row mt32 mb32">
                 <t t-raw="0"/>

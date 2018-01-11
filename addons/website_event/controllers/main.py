@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import babel.dates
+import pytz
 import re
 import werkzeug
 from datetime import datetime, timedelta
@@ -9,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import fields, http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
+from odoo.addons.web_editor.controllers.main import Web_Editor
 
 
 class WebsiteEventController(http.Controller):
@@ -262,3 +264,9 @@ class WebsiteEventController(http.Controller):
             'attendees': Attendees,
             'event': event,
         })
+
+
+class WebEditor(Web_Editor):
+    @http.route(['/get/timezone'], type='json', auth='user')
+    def get_timezone(self, **kwargs):
+        return [timezone for timezone in pytz.all_timezones]
