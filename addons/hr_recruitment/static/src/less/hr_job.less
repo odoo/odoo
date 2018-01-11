@@ -1,0 +1,56 @@
+.o_kanban_view.o_kanban_ungrouped {
+    .o-flex-display();
+    .o_kanban_record {
+        width: 350px;
+    }
+}
+
+.o_kanban_view.o_kanban_dashboard {
+    .o_recruitment_kanban_boxes {
+        .o-flex-display();
+        .o-flex-flow(row, nowrap);
+
+        .o_recruitment_kanban_box {
+            position: relative;
+            text-align: center;
+            padding: 0 0 0 0;
+            .o-flex(1, 1, auto);
+            .o-flex-display();
+            .o-flex-flow(row, nowrap);
+            .o-justify-content(center);
+
+            &:first-child {
+                .o-justify-content(flex-start);
+                padding-left: 16px;
+            }
+            &:last-child {
+                .o-justify-content(flex-end);
+                padding-right: 16px;
+            }
+
+            .o_value {
+                font-weight: 800;
+            }
+
+            > a {
+                font-weight: 500;
+
+                &.o_needaction{
+                    font-size: small;
+                    font-weight: 400;
+                    margin-left: 4px;
+                    .o-hover-opacity(0.5, 1);
+
+                    &:before {
+                        content: "/ ";
+                    }
+
+                    &:after {
+                        content: "\f086";
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+                }
+            }
+        }
+    }
+}

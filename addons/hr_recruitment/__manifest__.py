@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Recruitment Process',
+    'name': 'Recruitment',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 90,
