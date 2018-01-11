@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Melroy van den Berg webmaster1989@gmail.com https://github.com/danger89
+Melroy van den Berg melroy@melroy.org https://github.com/danger89
