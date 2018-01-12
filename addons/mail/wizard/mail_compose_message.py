@@ -197,6 +197,7 @@ class MailComposer(models.TransientModel):
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
+        notif_layout = self._context.get('custom_layout')
         for wizard in self:
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
@@ -255,6 +256,7 @@ class MailComposer(models.TransientModel):
                         ActiveModel.browse(res_id).message_post(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
+                            notif_layout=notif_layout,
                             **mail_values)
 
                 if wizard.composition_mode == 'mass_mail':

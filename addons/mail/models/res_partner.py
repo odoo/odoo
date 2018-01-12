@@ -158,13 +158,7 @@ class Partner(models.Model):
         if not self.ids:
             return True
 
-        # existing custom notification email
-        if message.model and self._context.get('custom_layout', False):
-            template_xmlid = self._context['custom_layout']
-        elif layout:
-            template_xmlid = layout
-        else:
-            template_xmlid = 'mail.mail_template_data_notification_email_default'
+        template_xmlid = layout if layout else 'mail.mail_template_data_notification_email_default'
         try:
             base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
         except ValueError:
