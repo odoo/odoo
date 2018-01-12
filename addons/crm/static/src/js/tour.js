@@ -16,14 +16,15 @@ tour.register('crm_tour', {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
-    position: "right"
+    position: "right",
 }, {
     trigger: ".modal-body input:first",
-    auto: true,
-    run: function (actions) {
-        actions.auto();
-        actions.auto(".modal-footer .btn-primary");
-    },
+    auto: true
+}, {
+    trigger: ".modal-footer button:first",
+    extra_trigger: '.o_opportunity_kanban',
+    content: _t("Create the opportunity."),
+    position: "bottom",
 }, {
     trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
@@ -32,12 +33,12 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("This opportunity has <b>no activity planned</b>. <i>Click to check them.</i>"),
+    content: _t("This opportunity has <b>no activity planned</b>."),
     position: "bottom"
 }, {
     trigger: ".o_schedule_activity",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("Schedule an activity by clicking here"),
+    content: _t("Let's schedule an activity."),
     position: "bottom"
 }, {
     trigger: ".modal-body .o_field_many2one",
@@ -50,7 +51,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_kanban_record",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("Click on an opportunity to zoom to it."),
+    content: _t("Click on the opportunity to zoom in."),
     position: "bottom",
     run: function (actions) {
         actions.auto(".o_kanban_record .oe_kanban_action[data-type=edit]");
@@ -58,7 +59,7 @@ tour.register('crm_tour', {
 }, {
     trigger: ".o_opportunity_form .o_chatter_button_new_message",
     content: _t('<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class="mb0">Type <i>\'@\'</i> to mention people - it\'s like cc-ing on emails.</p>'),
-    position: "top"
+    position: "right"
 }, {
     trigger: ".breadcrumb li:not(.active):last",
     extra_trigger: '.o_opportunity_form',
