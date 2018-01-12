@@ -4,11 +4,11 @@
 
         <!-- CRM-related subtypes for messaging / Chatter -->
         <record id="mt_lead_create" model="mail.message.subtype">
-            <field name="name">Lead Created</field>
+            <field name="name">Opportunity Created</field>
             <field name="hidden" eval="True"/>
             <field name="res_model">crm.lead</field>
             <field name="default" eval="False"/>
-            <field name="description">Lead created</field>
+            <field name="description">Opportunity created</field>
         </record>
         <record id="mt_lead_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
