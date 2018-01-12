@@ -14,6 +14,7 @@ var ReportWidget = Widget.extend({
         'click span.o_stock_reports_unfoldable': 'unfold',
         'click .o_stock_reports_web_action': 'boundLink',
         'click .o_stock_reports_stream': 'updownStream',
+        'click .o_stock_report_lot_action': 'actionOpenLot'
     },
     init: function(parent) {
         this._super.apply(this, arguments);
@@ -29,6 +30,20 @@ var ReportWidget = Widget.extend({
             res_id: $(e.target).data('active-id'),
             views: [[false, 'form']],
             target: 'current'
+        });
+    },
+    actionOpenLot: function(e) {
+        var $el = $(e.target).parents('tr');
+        var lot_id = $el.data('lot_id');
+        this.do_action({
+            type: 'ir.actions.client',
+            tag: 'stock_report_generic',
+            name: $el.data('lot_id'),
+            context: {
+                active_id : lot_id,
+                active_model : 'stock.production.lot',
+                url: '/stock/output_format/stock/active_id'
+            },
         });
     },
     updownStream: function(e) {
