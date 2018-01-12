@@ -4,13 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2017
+# Eneko <eastigarraga@codesyntax.com>, 2018
+# Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Mikel Lizarralde <mikellizarralde@gmail.com>, 2018\n"
 "Language-Team: Basque (https://www.transifex.com/odoo/teams/41243/eu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,6 +52,8 @@ msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
 msgstr ""
+"Bazkidetza elkartu nahi duzun erabiltzailea. Asoziatutako erabiltzailearen "
+"bazkidetza-egoera hartuko du kontuan."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_account_invoice_line
@@ -82,7 +86,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_users_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
-msgstr ""
+msgstr "Lotutako Kideak"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -103,7 +107,7 @@ msgstr "Ezeztatu"
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_cancel
 msgid "Cancel Membership Date"
-msgstr ""
+msgstr "Baliogabetu kidetza-data"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_cancel
@@ -177,7 +181,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_state
 msgid "Current Membership Status"
-msgstr ""
+msgstr "Kidetzaren egungo egoera"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -190,7 +194,7 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_res_partner_membership_start
 #: model:ir.model.fields,help:membership.field_res_users_membership_start
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Kidetza aktiboa bilakatzen den data."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_date
@@ -201,7 +205,7 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
 #: model:ir.model.fields,help:membership.field_res_users_membership_cancel
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Kidetza bertan-behera geratzen den data"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_product_product_membership_date_to
@@ -209,7 +213,7 @@ msgstr ""
 #: model:ir.model.fields,help:membership.field_res_partner_membership_stop
 #: model:ir.model.fields,help:membership.field_res_users_membership_stop
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Kidetza noiz arte egongo den aktibo."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_display_name
@@ -271,7 +275,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr ""
+msgstr "Doako kidea"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_date_from
@@ -347,6 +351,13 @@ msgid ""
 "-Invoiced Member: A member whose invoice has been created.\n"
 "-Paying member: A member who has paid the membership fee."
 msgstr ""
+"Kidetzaren egoera zehazten du.\n"
+"- Ez da Bazkidea: bazkidetzarik eskatu ez duen kidea.\n"
+"- Baliogabetutako Bazkidea: bere bazkidetza baliogabetu duena.\n"
+"- Bazkide zaharra: bazkidetza iraungitu zaiona.\n"
+"- Zain dagoen bazkidea: bazkidetza eskatu duena eta bere faktura sortzeko zain dagoena.\n"
+"- Fakturatutako bazkidea: faktura sortu zaiona.\n"
+"- Ordaintzen duen bazkidea: bazkidetza-kuota ordaindu duena."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_membership_membership_line_state
@@ -370,7 +381,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line___last_update
 #: model:ir.model.fields,field_description:membership.field_report_membership___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Azken aldaketa"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_write_uid
@@ -419,13 +430,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:membership.view_report_membership_pivot
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
 msgid "Membership"
-msgstr ""
+msgstr "Kidetza"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_amount
 msgid "Membership Amount"
-msgstr ""
+msgstr "Kidetza kopurua"
 
 #. module: membership
 #: model:ir.model,name:membership.model_report_membership
@@ -443,7 +454,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_stop
 msgid "Membership End Date"
-msgstr ""
+msgstr "Kidetza amaiera-data"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_member_price
@@ -482,7 +493,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_start
 #: model:ir.model.fields,field_description:membership.field_res_users_membership_start
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Kidetza hasiera-data"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
@@ -585,7 +596,7 @@ msgstr "Kopurua"
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
 msgid "Reporting"
-msgstr ""
+msgstr "Txostenak"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_report_membership_search
@@ -603,7 +614,7 @@ msgstr "Salesperson"
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
 #: model:ir.model.fields,help:membership.field_res_users_free_member
 msgid "Select if you want to give free membership."
-msgstr ""
+msgstr "Aukeratu, doako bazkidetza eman nahi baduzu."
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_start_date
@@ -629,7 +640,7 @@ msgstr "Zergak"
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
 #: model:ir.model.fields,help:membership.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Kideak negoziatutako prezioa"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.membership_products_form
