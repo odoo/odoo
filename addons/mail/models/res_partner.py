@@ -79,6 +79,7 @@ class Partner(models.Model):
         company_name = company.name;
 
         return {
+            'message': message,
             'signature': signature,
             'website_url': website_url,
             'company': company,
@@ -158,7 +159,7 @@ class Partner(models.Model):
         if not self.ids:
             return True
 
-        template_xmlid = layout if layout else 'mail.mail_template_data_notification_email_default'
+        template_xmlid = layout if layout else 'mail.message_notification_email'
         try:
             base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
         except ValueError:
@@ -182,9 +183,10 @@ class Partner(models.Model):
             if recipient_template_values['recipients']:
                 # generate notification email content
                 template_ctx = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
-                template = base_template.with_context(**template_ctx)
-                # generate templates for followers and not followers
-                fol_values = template.generate_email(message.id, fields=['body_html', 'subject'])
+                fol_values = {
+                    'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
+                    'body': base_template.render(template_ctx, engine='ir.qweb'),
+                }
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
                 # update notifications
