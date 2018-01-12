@@ -27,6 +27,7 @@ var ActionManager = Widget.extend({
         breadcrumb_clicked: '_onBreadcrumbClicked',
         history_back: '_onHistoryBack',
         push_state: '_onPushState',
+        redirect: '_onRedirect',
     },
 
     /**
@@ -884,6 +885,24 @@ var ActionManager = Widget.extend({
             ev.stopPropagation();
             this._pushState(ev.data.controllerID, ev.data.state);
         }
+    },
+    /**
+    * Intercepts and triggers a redirection on a link
+    *
+    * @private
+    * @param {OdooEvent} ev
+    * @param {integer} ev.data.res_id
+    * @param {string} ev.data.res_model
+    */
+    _onRedirect: function (ev) {
+        this.do_action({
+            type:'ir.actions.act_window',
+            view_type: 'form',
+            view_mode: 'form',
+            res_model: ev.data.res_model,
+            views: [[false, 'form']],
+            res_id: ev.data.res_id,
+        });
     },
 });
 
