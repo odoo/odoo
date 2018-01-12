@@ -199,7 +199,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('only necessary fields are fetched with correct context', function (assert) {
-        assert.expect(2);
+        assert.expect(1);
 
         var form = createView({
             View: FormView,
@@ -214,8 +214,6 @@ QUnit.module('Views', {
                 // field, not sure why.  Maybe this test should be modified.
                 assert.deepEqual(args.args[1], ["foo", "display_name"],
                     "should only fetch requested fields");
-                assert.deepEqual(args.kwargs.context, {bin_size: true},
-                    "bin_size should always be in the context");
                 return this._super(route, args);
             }
         });
@@ -477,6 +475,37 @@ QUnit.module('Views', {
 
         assert.notOk(form.$('.o_notebook .nav li:first()').is(':visible'),
             'first tab should be invisible');
+        assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
+            'second tab should be active');
+
+        form.destroy();
+    });
+
+    QUnit.test('autofocus on second notebook page', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="product_id"/>' +
+                        '<notebook>' +
+                            '<page string="Choucroute">' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                            '<page string="Cassoulet" autofocus="autofocus">' +
+                                '<field name="bar"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.notOk(form.$('.o_notebook .nav li:first()').hasClass('active'),
+            'first tab should not active');
         assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
             'second tab should be active');
 

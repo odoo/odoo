@@ -565,6 +565,7 @@ def extract_subtypes(parent_name, doc):
             'name': typename,
             'doc': param.doc,
             '_members': [
+                # TODO: add default value
                 (sub.name, jsdoc.PropertyDoc(dict(sub.to_dict(), sourcemodule=doc['sourcemodule'])))
                 for sub in subs
             ],

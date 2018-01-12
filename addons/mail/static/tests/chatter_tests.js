@@ -1273,7 +1273,7 @@ QUnit.test('fieldmany2many tags email', function (assert) {
         },
         mockRPC: function (route, args) {
             if (route === "/web/dataset/call_kw/partner_type/name_get") {
-                assert.deepEqual(args.args, nameGottenIds.shift(),
+                assert.deepEqual(args.args[0], nameGottenIds.shift(),
                     "partner with email should be name_get'ed");
             }
             else if (args.method ==='read' && args.model === 'partner_type') {

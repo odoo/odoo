@@ -1518,40 +1518,6 @@ QUnit.module('basic_fields', {
         session.get_file = oldGetFile;
     });
 
-    QUnit.test('download_link widget in list view', function (assert) {
-        assert.expect(5);
-        
-        this.data.partner.fields.filename = { string: "Filename", type: "char" };
-        this.data.partner.records[0].filename = "document.txt";
-
-        var form = createView({
-            View: ListView,
-            model: 'partner',
-            data: this.data,
-            arch: '<tree string="Partners">' +
-                      '<field name="document" widget="download_link" options="{\'filename\': \'filename\'}"/>' +
-                      '<field name="filename"/>' +
-                  '</tree>',
-            res_id: 1,
-        });
-
-        assert.ok(form.$('.o_data_cell').first().hasClass("o_download_link_cell"),
-            "this should be a download link cell");
-        assert.ok(form.$('.o_data_cell').first().find('a').eq(0),
-            "there should be a link in the cell");
-        assert.strictEqual(form.$('.o_data_cell').first().find('a').eq(0).attr('download'),
-            "document.txt",
-            "it should download a file named 'document.txt'");
-        assert.strictEqual(form.$('.o_data_cell').first().find('a').eq(0).attr('href').trim(),
-            "data:application/octet-stream;base64,coucou==",
-            "it should have the appropriate link of a binary");
-        assert.strictEqual(form.$('.o_data_cell').first().find('a').eq(0).text(),
-            "Download",
-            "the text of the link should be 'Download'");
-
-        form.destroy();
-    });
-
     QUnit.test('text field rendering in list view', function (assert) {
         assert.expect(1);
 
