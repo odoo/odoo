@@ -331,6 +331,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_draft(self):
         self.write({'state': 'draft'})
+        self.mapped('order_line').mapped('procurement_ids').filtered(lambda r: r.state == 'cancel').write({'state': 'running'})
         return {}
 
     @api.multi
