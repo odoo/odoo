@@ -108,7 +108,6 @@ class MrpStockReport(models.TransientModel):
             'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
             'location_source': move_line.location_id.name,
             'location_destination': move_line.location_dest_id.name,
-
             'reference_id': ref,
             'res_id': res_id,
             'res_model': res_model}]
