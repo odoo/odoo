@@ -25,8 +25,6 @@ var KanbanColumn = Widget.extend({
     events: {
         'click .o_column_edit': '_onEditColumn',
         'click .o_column_delete': '_onDeleteColumn',
-        'click .o_column_archive': '_onArchiveRecords',
-        'click .o_column_unarchive': '_onUnarchiveRecords',
         'click .o_kanban_quick_add': '_onAddQuickCreate',
         'click .o_kanban_load_more': '_onLoadMore',
         'click .o_kanban_toggle_fold': '_onToggleFold',
@@ -240,14 +238,6 @@ var KanbanColumn = Widget.extend({
     },
     /**
      * @private
-     * @param {MouseEvent} event
-     */
-    _onArchiveRecords: function (event) {
-        event.preventDefault();
-        this.trigger_up('kanban_column_archive_records', {archive: true});
-    },
-    /**
-     * @private
      */
     _onCancelQuickCreate: function () {
         this._cancelQuickCreate();
@@ -326,14 +316,6 @@ var KanbanColumn = Widget.extend({
         _.each(this.records, function (record) {
             ev.data.callback(record.$el, record.state.data);
         });
-    },
-    /**
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onUnarchiveRecords: function (event) {
-        event.preventDefault();
-        this.trigger_up('kanban_column_archive_records', {archive: false});
     },
 });
 
