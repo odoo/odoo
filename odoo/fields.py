@@ -763,6 +763,9 @@ class Field(MetaField('DummyField', (object,), {})):
             cache, the full cache key being ``(self, record.id, key)``.
         """
         env = record.env
+        # IMPORTANT: odoo.api.Cache.get_records() depends on the fact that the
+        # result does not depend on record.id. If you ever make the following
+        # dependent on record.id, don't forget to fix the other method!
         return env if self.context_dependent else (env.cr, env.uid)
 
     def null(self, record):

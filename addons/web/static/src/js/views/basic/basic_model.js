@@ -33,7 +33,7 @@ odoo.define('web.BasicModel', function (require) {
  *      isOpen: {boolean},
  *      loadMoreOffset: {integer},
  *      limit: {integer},
- *      model: {string,
+ *      model: {string},
  *      offset: {integer},
  *      openGroupByDefault: {boolean},
  *      orderedBy: {Object[]},
@@ -1854,7 +1854,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: _.extend({}, record.getContext(), {bin_size: true}),
+                context: record.getContext(),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -2374,7 +2374,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
-                    var def = self._readUngroupedList(list).then(function () {
+                    var def = self._readUngroupedList(list).then(function (list) {
                         return $.when(
                             self._fetchX2ManysBatched(list),
                             self._fetchReferencesBatched(list)
@@ -3040,10 +3040,33 @@ var BasicModel = AbstractModel.extend({
      * the resource in the localData object.
      *
      * @param {Object} params
-     * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
-     * @param {Array} [params.fieldNames] the name of fields to load, the list
-     *   of all fields by default
+     * @param {Object} [params.aggregateValues={}]
+     * @param {Object} [params.context={}] context of the action
+     * @param {integer} [params.count=0] number of record being manipulated
+     * @param {Object|Object[]} [params.data={}|[]] data of the record
+     * @param {*[]} [params.domain=[]]
      * @param {Object} params.fields contains the description of each field
+     * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
+     * @param {Object[]} [params.fieldNames] the name of fields to load, the list
+     *   of all fields by default
+     * @param {string[]} [params.groupedBy=[]]
+     * @param {boolean} [params.isOpen]
+     * @param {integer} params.limit max number of records shown on screen (pager size)
+     * @param {string} params.modelName
+     * @param {integer} [params.offset]
+     * @param {boolean} [params.openGroupByDefault]
+     * @param {Object[]} [params.orderedBy=[]]
+     * @param {integer[]} [params.orderedResIDs]
+     * @param {string} [params.parentID] model name ID of the parent model
+     * @param {Object} [params.rawContext]
+     * @param {[type]} [params.ref]
+     * @param {string} [params.relationField]
+     * @param {integer|null} [params.res_id] actual id of record in the server
+     * @param {integer[]} [params.res_ids] context in which the data point is used, from a list of res_id
+     * @param {boolean} [params.static=false]
+     * @param {string} [params.type='record'|'list']
+     * @param {[type]} [params.value]
+     * @param {string} [params.viewType] the type of the view, e.g. 'list' or 'form'
      * @returns {Object} the resource created
      */
     _makeDataPoint: function (params) {
@@ -3069,13 +3092,23 @@ var BasicModel = AbstractModel.extend({
             id: {type: 'integer'},
         }, params.fields);
 
+        // datapoint context is extended by fields widgets
+        var context = _.extend({}, params.context);
+        if (params.fieldsInfo && params.viewType) {
+            _.each(params.fieldsInfo[params.viewType], function (field) {
+                if (field.context) {
+                    _.extend(context, field.context);
+                }
+            });
+        }
+
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: params.context || {},
+            context: context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],
