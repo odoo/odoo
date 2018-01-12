@@ -313,13 +313,12 @@ class MonetaryConverter(models.AbstractModel):
 
         lang = self.user_lang()
         formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'\u2011')
-
+                                grouping=True, monetary=True).replace(r' ', '').replace(r'-', u'\u2011')
         pre = post = u''
         if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol or '')
+            pre = u'{symbol}'.format(symbol=display_currency.symbol or '')
         else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
+            post = u'{symbol}'.format(symbol=display_currency.symbol or '')
 
         return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(formatted_amount, pre=pre, post=post)
 

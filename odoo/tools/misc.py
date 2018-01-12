@@ -1102,9 +1102,9 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
 
     if currency_obj and currency_obj.symbol:
         if currency_obj.position == 'after':
-            res = '%s %s' % (res, currency_obj.symbol)
+            res = '%s%s' % (res, currency_obj.symbol)
         elif currency_obj and currency_obj.position == 'before':
-            res = '%s %s' % (currency_obj.symbol, res)
+            res = '%s%s' % (currency_obj.symbol, res)
     return res
 
 def format_date(env, value, lang_code=False, date_format=False):

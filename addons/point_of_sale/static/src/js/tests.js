@@ -107,7 +107,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".selection-item:contains('Fixed')",
     }, {
         content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Miscellaneous'):contains('$ 1.00')",
+        trigger: ".product:contains('Miscellaneous'):contains('$1.00')",
         run: function () {}, // it's a check
     }, {
         content: "open customer list",
@@ -130,7 +130,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".button.cancel:visible",
     }, {
         content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Miscellaneous'):contains('$ 18.00')",
+        trigger: ".product:contains('Miscellaneous'):contains('$18.00')",
         run: function () {}, // it's a check
     }, {
         content: "open customer list",
@@ -165,7 +165,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".numpad button.input-button:visible:contains('2')",
     }, {
         content: "verify that unit price of oranges changed to $1",
-        trigger: ".total > .value:contains('$ 2.00')",
+        trigger: ".total > .value:contains('$2.00')",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -174,7 +174,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         trigger: ".selection-item:contains('Public Pricelist')",
     }, {
         content: "verify that order has been recomputed",
-        trigger: ".total > .value:contains('$ 3.96')",
+        trigger: ".total > .value:contains('$3.96')",
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",

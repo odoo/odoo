@@ -312,9 +312,9 @@ function formatMonetary(value, field, options) {
         return formatted_value;
     }
     if (currency.position === "after") {
-        return formatted_value += '&nbsp;' + currency.symbol;
+        return formatted_value += currency.symbol;
     } else {
-        return currency.symbol + '&nbsp;' + formatted_value;
+        return currency.symbol + formatted_value;
     }
 }
 
@@ -472,8 +472,8 @@ function parseFloat(value) {
  *
  * @param {string} value
  *                The string to be parsed
- *                We assume that a monetary is always a pair (symbol, amount) separated
- *                by a non breaking space. A simple float can also be accepted as value
+ *                Monetary is always a pair (symbol, amount) either separated
+ *                by a non breaking space or without any space. A simple float can also be accepted as value
  * @param {Object} [field]
  *        a description of the field (returned by fields_get for example).
  * @param {Object} [options] additional options.
@@ -493,13 +493,6 @@ function parseFloat(value) {
  * @throws {Error} if no float is found or if parameter does not respect monetary condition
  */
 function parseMonetary(value, field, options) {
-    var values = value.split('&nbsp;');
-    if (values.length === 1) {
-        return parseFloat(value);
-    }
-    else if (values.length !== 2) {
-        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
-    }
     options = options || {};
     var currency = options.currency;
     if (!currency) {
@@ -510,7 +503,21 @@ function parseMonetary(value, field, options) {
         }
         currency = session.get_currency(currency_id);
     }
-    return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
+    // Support non breaking space also, even if non breaking space is added still value should be parsed
+    var values = value.split('&nbsp;');
+    var float_value = value;
+    if (values.length === 2) {
+        var float_value = values[0] === currency.symbol ? values[1] : values[0];
+    } else if (currency) {
+        // If there is no non breaking space(i.e. length is 1) then we will replace currency symbol with '' and then call parseFloat
+        var escapedCurrency = _.str.escapeRegExp(currency.symbol);
+        var float_value = value.replace(new RegExp(escapedCurrency, 'g'), '');
+    }
+    try {
+        return parseFloat(float_value);
+    } catch (e) {
+        throw new Error(_.str.sprintf(core._t("'%s' is not a correct monetary field"), value));
+    }
 }
 
 function parseFloatTime(value) {
