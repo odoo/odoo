@@ -207,10 +207,12 @@ class BlogPost(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.ensure_one()
         if 'website_published' in vals and 'published_date' not in vals:
-            if self.published_date <= fields.Datetime.now():
-                vals['published_date'] = vals['website_published'] and fields.Datetime.now()
+            for post in self:
+                if post.published_date <= fields.Datetime.now():
+                    copy_vals = vals
+                    copy_vals['published_date'] = copy_vals['website_published'] and fields.Datetime.now()
+                    super(BlogPost, post).write(copy_vals)
         result = super(BlogPost, self).write(vals)
         self._check_for_publication(vals)
         return result
