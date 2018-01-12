@@ -18,9 +18,11 @@ class StockMoveLots(models.Model):
         'stock.production.lot', 'Lot',
         domain="[('product_id', '=', product_id)]")
     lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot')
-    lot_produced_qty = fields.Float('Quantity Finished Product', help="Informative, not used in matching")
-    quantity = fields.Float('To Do', default=1.0)
-    quantity_done = fields.Float('Done')
+    lot_produced_qty = fields.Float(
+        'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
+        help="Informative, not used in matching")
+    quantity = fields.Float('To Do', default=1.0, digits=dp.get_precision('Product Unit of Measure'))
+    quantity_done = fields.Float('Done', digits=dp.get_precision('Product Unit of Measure'))
     product_id = fields.Many2one(
         'product.product', 'Product',
         readonly=True, related="move_id.product_id", store=True)
