@@ -482,13 +482,18 @@ class Home(http.Controller):
             values['databases'] = None
 
         if request.httprequest.method == 'POST':
+            # ensure there's no leftover in the session from non-web auth
+            request.session.pop('login_error', None)
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
                 request.params['login_success'] = True
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             request.uid = old_uid
-            values['error'] = _("Wrong login/password")
+            values['error'] = request.session.pop(
+                'login_error',
+                _("Wrong login/password")
+            )
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employee can access this database. Please contact the administrator.')

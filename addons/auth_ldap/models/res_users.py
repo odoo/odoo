@@ -29,10 +29,9 @@ class Users(models.Model):
                         break
             return user_id
 
-    @api.model
-    def check_credentials(self, password):
+    def _check_credentials(self, password):
         try:
-            super(Users, self).check_credentials(password)
+            super(Users, self)._check_credentials(password)
         except AccessDenied:
             if self.env.user.active:
                 Ldap = self.env['res.company.ldap']
