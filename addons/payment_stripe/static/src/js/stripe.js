@@ -68,6 +68,7 @@ odoo.define('payment_stripe.stripe', function(require) {
         e.preventDefault();
         if ($('.o_website_payment').length !== 0) {
             var currency = $("input[name='currency']").val();
+            var currency_id = $("input[name='currency_id']").val();
             var amount = parseFloat($("input[name='amount']").val() || '0.0');
             if (!_.contains(int_currencies, currency)) {
                 amount = amount*100;
@@ -76,7 +77,7 @@ odoo.define('payment_stripe.stripe', function(require) {
             ajax.jsonRpc('/website_payment/transaction', 'call', {
                     reference: $("input[name='invoice_num']").val(),
                     amount: amount,
-                    currency_id: currency,
+                    currency_id: currency_id,
                     acquirer_id: acquirer_id
                 })
                 handler.open({
