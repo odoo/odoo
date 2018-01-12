@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: mariana rodrigues <mariana12v@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -1334,11 +1334,6 @@ msgid "Account"
 msgstr "Conta"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr "Contador Conta"
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Relatório dos Balancetes das Contas Antigas"
@@ -1674,6 +1669,7 @@ msgstr ""
 " baseadas em pagamentos."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Contabilidade"
@@ -2043,7 +2039,6 @@ msgstr "Permite o uso de contabilidade analítica"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -4132,6 +4127,28 @@ msgstr "Dia(s) após a data da fatura"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
 msgstr "Desativar barra de instalação no painel"
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Caro Sr / Sra,\n"
+"\n"
+"Nossos registros indicam que alguns pagamentos em sua conta ainda são devidos. Por favor, veja os detalhes abaixo.\n"
+"Se a quantia já foi paga, por favor desconsidere este aviso. Caso contrário, por favor envie-nos a quantidade total indicada abaixo.\n"
+"Se você tiver alguma dúvida sobre a sua conta, por favor, entre em contato conosco.\n"
+"\n"
+"Agradecemos antecipadamente a sua colaboração.\n"
+"Cumprimentos,"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -6300,6 +6317,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Journals"
 msgstr "Diários"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8944,13 +8968,6 @@ msgid "Sale Tax"
 msgstr "Imposto de Vendas"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "Diário de Venda/Compra"
-
-#. module: account
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -9904,8 +9921,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
 "Campo técnico usado para manter o controle da reconciliação de regime de "
@@ -10888,6 +10905,7 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Valor Total"
@@ -11078,22 +11096,12 @@ msgid "UP"
 msgstr "Para Cima"
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-"Incapaz de mixar quaisquer impostos sendo como inclusos no preço com "
-"impostos afetando o montante base mas não incluídos no preço."
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr "Ainda Indefinido"
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Lucros/Perdas não distribuídos(as)"

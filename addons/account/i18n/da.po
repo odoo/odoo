@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: JonathanStein <jstein@image.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
@@ -1255,11 +1255,6 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Aldersopdelt råbalance"
@@ -1591,6 +1586,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Regnskab"
@@ -1960,7 +1956,6 @@ msgstr "Giver dig mulighed for at bruge analytisk bogføring"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2277,7 +2272,7 @@ msgstr "Automatisér poster for udskudt omsætning for multi-år kontrakter"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automated Entries"
-msgstr "Automatiserede Poster"
+msgstr "Automatiserede poster"
 
 #. module: account
 #: code:addons/account/models/company.py:349
@@ -2455,7 +2450,7 @@ msgstr "Forudindstilling for bevægelser for bankudligning"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
 msgid "Bank Setup Marked As Done"
-msgstr "Bankopsætning Markeret som Udført"
+msgstr "Bankopsætning markeret som udført"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -4036,6 +4031,28 @@ msgid "Deactivate setup bar on the dashboard"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Kære Kunde\n"
+"\n"
+"Vores registreringer viser, at nogle betalinger på din konto stadig er ubetalte. Find venligst detaljer nedenfor.\n"
+"Hvis beløbet allerede er betalt, bedes du se bort fra denne meddelelse. Ellers kan du sende os det samlede beløb angivet nedenfor.\n"
+"Hvis du har spørgsmål vedrørende din konto, bedes du kontakte os\n"
+"\n"
+"Tak på forhånd for dit samarbejde\n"
+"Med venlig hilsen"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -4128,7 +4145,7 @@ msgstr "Standardmoms gældende for lokale transaktioner"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deferred Revenues Management"
-msgstr "Håndtering af Udskudt Omsætning"
+msgstr "Håndtering af udskudt omsætning"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6173,6 +6190,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Journals"
 msgstr "Journaler"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8785,13 +8809,6 @@ msgid "Sale Tax"
 msgstr "Salgsmoms"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "Salgs-/indkøbs journal"
-
-#. module: account
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -9723,8 +9740,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
 
@@ -10654,6 +10671,7 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Beløb i alt"
@@ -10844,20 +10862,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Ufordelt fortjeneste / tab"

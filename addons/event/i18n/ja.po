@@ -704,6 +704,12 @@ msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (コピー)"
+
+#. module: event
 #: model:event.event,description:event.event_0
 msgid ""
 "1 business room: to discuss implementation methodologies, best sales "
@@ -1415,7 +1421,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr "イベントや登録は作成時に自動的に確認され、簡単なイベントの流れが容易になります。"
 
@@ -2096,7 +2102,7 @@ msgstr ""
 msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
-msgstr ""
+msgstr "すでにこのイベントに参加した出席者がいます。 このイベントをキャンセルする場合は、下書きにリセットしてください。"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -2105,6 +2111,7 @@ msgid ""
 " the solution meets their needs, and can adapt to the scope of their "
 "project."
 msgstr ""
+"これらのウェビナーは、ソフトウェアに興味のある企業がソリューションがニーズを満たしているかどうかを評価し、プロジェクトの範囲に適応できるようにします。"
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -2118,19 +2125,19 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_0
 msgid "This event and all the conferences are in english!"
-msgstr ""
+msgstr "このイベントとすべての会議は英語です！"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
 #: model:ir.model.fields,help:event.field_event_type_mail_template_id
 msgid ""
 "This field contains the template of the mail that will be automatically sent"
-msgstr ""
+msgstr "このフィールドには、自動的に送信されるメールのテンプレートが含まれます"
 
 #. module: event
 #: model:event.event,description:event.event_1
 msgid "This webinar helps participants to:"
-msgstr ""
+msgstr "このウェビナーでは、参加者に役立ちます"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale
@@ -2235,7 +2242,7 @@ msgstr "ユーザ"
 #. module: event
 #: model:event.event,description:event.event_1
 msgid "View full flow: purchasing, sales, project management, accounting;"
-msgstr ""
+msgstr "フルフローを見る：購買、販売、プロジェクト管理、会計、"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
@@ -2257,7 +2264,7 @@ msgstr "警告：このイベントは最少催行人数に達していません
 #. module: event
 #: model:event.event,description:event.event_1
 msgid "We are looking forward to meeting you online,"
-msgstr ""
+msgstr "オンラインでお会いできることを楽しみにしています。"
 
 #. module: event
 #: model:event.event,description:event.event_3

@@ -23,19 +23,19 @@ msgstr ""
 #: code:addons/account_payment/models/payment.py:61
 #, python-format
 msgid "<%s>  transaction (%s) invoice confirmation failed : <%s>"
-msgstr ""
+msgstr "<%s> η συναλλαγή (%s) επιβεβαίωσης τιμολογίου απέτυχε: <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:45
 #, python-format
 msgid "<%s> transaction (%s) failed : <%s>"
-msgstr ""
+msgstr "<%s> η συναλλαγή (%s) απέτυχε: <%s>"
 
 #. module: account_payment
 #: code:addons/account_payment/models/payment.py:52
 #, python-format
 msgid "<%s> transaction (%s) invalid state : %s"
-msgstr ""
+msgstr "<%s> η συναλλαγή (%s) έχει λάθος κατάσταση: %s"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
@@ -54,12 +54,12 @@ msgstr ""
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Εξοφλημένο"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_page_inherit_payment
 msgid "<i class=\"fa fa-check-circle\"/> Pending"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Σε αναμονή"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_report
@@ -91,6 +91,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Εάν αποθηκεύσουμε τα στοιχεία πληρωμής σας στον εξυπηρετητή μας, οι πληρωμές"
+" συνδρομών θα πραγματοποιηθούν αυτόματα."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
@@ -101,12 +103,12 @@ msgstr "Τιμολόγιο"
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_success
 msgid "Invoice successfully paid."
-msgstr ""
+msgstr "Το τιμολόγιο έχει πληρωθεί επιτυχώς."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_id
 msgid "Last Transaction"
-msgstr ""
+msgstr "Τελευταία Συναλλαγή"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_count
@@ -157,16 +159,22 @@ msgstr "Κατάσταση"
 msgid ""
 "There was an error processing your payment: impossible to validate invoice."
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: δεν είναι δυνατή"
+" η επικύρωση του τιμολογίου."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice state."
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: μη έγκυρη "
+"κατάσταση τιμολογίου."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: invalid invoice."
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: μη έγκυρο "
+"τιμολόγιο."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -174,27 +182,37 @@ msgid ""
 "There was an error processing your payment: issue with credit card ID "
 "validation."
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας:  πρόβλημα με την"
+" επικύρωση ταυτότητας της πιστωτικής κάρτας."
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid ""
 "There was an error processing your payment: transaction amount issue.<br/>"
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: πρόβλημα με το "
+"ποσό συναλλαγής.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction failed.<br/>"
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: απέτυχε η "
+"συναλλαγή.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was an error processing your payment: transaction issue.<br/>"
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: πρόβλημα με τη "
+"συναλλαγή.<br/>"
 
 #. module: account_payment
 #: model:ir.ui.view,arch_db:account_payment.portal_invoice_error
 msgid "There was en error processing your payment: invalid credit card ID."
 msgstr ""
+"Παρουσιάστηκε σφάλμα κατά την επεξεργασία της πληρωμής σας: μη έγκυρη "
+"ταυτότητα πιστωτικής κάρτας."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_invoice_payment_tx_ids

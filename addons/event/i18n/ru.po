@@ -7,7 +7,7 @@
 # Владимир Куряев <istercul@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Collex100 <manyatovskiy@gmail.com>, 2017
 # Sergey Vilizhanin <sv@grimmette.ru>, 2017
 # Максим Дронь <dronmax@gmail.com>, 2017
 # Masha Koc <mariya.kos.ua@gmail.com>, 2017
@@ -383,6 +383,12 @@ msgstr ""
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копия)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1094,7 +1100,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
 

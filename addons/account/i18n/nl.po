@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -400,7 +400,7 @@ msgstr ""
 ",</p>\n"
 "<p>In de bijlage vind u, uw \n"
 "% if object.number:\n"
-"invoice <strong>${object.number}</strong>\n"
+"factuur <strong>${object.number}</strong>\n"
 "% else:\n"
 "factuur\n"
 "% endif\n"
@@ -1322,11 +1322,6 @@ msgid "Account"
 msgstr "Rekening"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr "Grootboek boekhouder"
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Grootboek meerjarige proefbalans"
@@ -1662,6 +1657,7 @@ msgstr ""
 "gebaseerd op betalingen."
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Boekhouding"
@@ -2036,7 +2032,6 @@ msgstr "Stelt u in staat kostenplaatsen te gebruiken"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -4124,6 +4119,29 @@ msgid "Deactivate setup bar on the dashboard"
 msgstr "De-activeer installatie hulp in dashboard"
 
 #. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Geachte heer / mevrouw,\n"
+"\n"
+"Uit onze gegevens blijkt dat sommige rekeningen nog niet zijn betaald. Hieronder vindt u meer informatie.\n"
+"Indien het bedrag reeds is betaald, dan kunt u dit bericht negeren. Anders willen wij u vragen om het onderstaande totaal bedrag over te maken.\n"
+"\n"
+"Als u vragen heeft over uw facturen, neem dan contact met ons op.\n"
+"\n"
+"Dank u bij voorbaat voor uw medewerking.\n"
+"Met vriendelijke groet,"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -4780,7 +4798,7 @@ msgstr "Kostenrekening op product sjabloon"
 #: model:account.account.type,name:account.data_account_type_expenses
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Expenses"
-msgstr "Declaraties"
+msgstr "Kosten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_reference
@@ -6294,6 +6312,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Journals"
 msgstr "Dagboeken"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr "Dagboeken controle"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8933,13 +8958,6 @@ msgid "Sale Tax"
 msgstr "Verkoop BTW"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "Verkoopboek/inkoopboek"
-
-#. module: account
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -9893,8 +9911,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
 "Technisch veld gebruikt om de BTW kasbasis aflettering bij te houden. Dit is"
@@ -10884,6 +10902,7 @@ msgid "Total"
 msgstr "Totaal"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Totaalbedrag"
@@ -11076,22 +11095,12 @@ msgid "UP"
 msgstr "OMHOOG"
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-"Het is niet mogelijk om BTW's te combineren welke staan ingesteld op "
-"inclusief BTW en welke de grondslag aanpassen maar dan exclusief BTW."
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr "Nog niet gedefinieerd"
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Uitgekeerde winsten/verliezen"

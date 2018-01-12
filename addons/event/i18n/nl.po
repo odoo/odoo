@@ -704,16 +704,24 @@ msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopie)"
+
+#. module: event
 #: model:event.event,description:event.event_0
 msgid ""
 "1 business room: to discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
+"1 bedrijfsruimte: om implementatiemethoden, beste verkooppraktijken, enz. te"
+" bespreken."
 
 #. module: event
 #: model:event.event,description:event.event_0
 msgid "1 workshop room: mainly for developers."
-msgstr ""
+msgstr "1 werkkamer: voornamelijk voor ontwikkelaars."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1434,11 +1442,13 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
+"Evenementen en registraties worden automatisch bevestigd \n"
+"bij het aanmaken, wat het proces flow van evenementen gemakkelijker maakt."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
 "Evenementen en registraties worden automatisch bevestigd bij het aanmaken, "
@@ -1459,6 +1469,13 @@ msgid ""
 "partners' case studies, methodology or developments. Be there and see "
 "directly from the source the features of the version 8!"
 msgstr ""
+"Elk jaar nodigen we de community, de partners en de eindgebruikers uit om "
+"ons te komen ontmoeten! Het is het ideale evenement om samen te komen en "
+"nieuwe mogelijkheden, een roadmap van nieuwe versies, prestaties van de "
+"software, workshops, training sessies enzovoort voor te stellen. Dit "
+"evenement is ook een mogelijkheid om onze partners hun case studies, "
+"methodologie of ontwikkelingen te presenteren. Wees erbij en zie direct de "
+"mogelijkheden van versie 8!"
 
 #. module: event
 #: model:event.type,name:event.event_type_1
@@ -1511,7 +1528,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_3
 msgid "For more information on the program, please explore"
-msgstr ""
+msgstr "Voor meer informatie over het programma, verken a.u.b. "
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -1572,6 +1589,8 @@ msgid ""
 "If you have a question<strong> concerning the content of the "
 "training</strong>, please contact"
 msgstr ""
+"Indien u een vraag heeft <strong>betreffende de inhoud van de "
+"training</strong>, neem dan a.u.b. contact met ons op"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
@@ -1762,6 +1781,8 @@ msgid ""
 "More information about our Headquarter office (directions, transports, "
 "parking, hotels, ...), please have a look at"
 msgstr ""
+"Meer informatie over ons hoofdkantoor (route, transport, parking, hotels, "
+"...), gelieve te kijken op"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
@@ -1851,6 +1872,8 @@ msgstr "Open dagen in Los Angeles"
 msgid ""
 "OpenElec Applications 23 Rockwell Lane, Los Angeles, CA 90001, United States"
 msgstr ""
+"OpenElec Applications 23 Rockwell Lane, Los Angeles, CA 90001, Verenigde "
+"staten"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_organizer_id
@@ -2122,6 +2145,9 @@ msgid ""
 "time for thematical meetings, conferences, workshops and tutorial sessions "
 "in the afternoon."
 msgstr ""
+"De plenaire sessies in de ochtend zullen korter zijn en we geven meer tijd "
+"voor thematische meetings, conferenties, workshops en opleiding sessies in "
+"de namiddag."
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -2150,6 +2176,8 @@ msgid ""
 " the solution meets their needs, and can adapt to the scope of their "
 "project."
 msgstr ""
+"Deze webinars staan bedrijven geïnteresseerd in onze software toe of de "
+"oplossing voldoet aan hun noden en kan de scope van hun project wijzigen."
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -2163,7 +2191,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_0
 msgid "This event and all the conferences are in english!"
-msgstr ""
+msgstr "Dit evenement en alle conferenties zijn in het Engels!"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -2176,7 +2204,7 @@ msgstr ""
 #. module: event
 #: model:event.event,description:event.event_1
 msgid "This webinar helps participants to:"
-msgstr ""
+msgstr "Deze webiner helpt deelnemers om:"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_sale

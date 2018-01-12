@@ -12,7 +12,7 @@
 # Artur Komishenko <Archi1792@gmail.com>, 2017
 # Mekan Bash <tmbashimov@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Collex100 <manyatovskiy@gmail.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
@@ -38,8 +38,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -1184,11 +1184,6 @@ msgid "Account"
 msgstr "Счёт"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Счёт: сальдовая ведомость"
@@ -1522,6 +1517,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Бухгалтерский учёт"
@@ -1888,7 +1884,6 @@ msgstr "Позволяет использовать аналитический �
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -3948,6 +3943,28 @@ msgstr "Дня(ей) после даты выставления счет-фак�
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Здравствуйте!\n"
+"\n"
+"Согласно нашим данным, у Вас есть неоплаченные счета от нашей компании. Подробности указаны в данном письме.\n"
+"Если сумма уже оплачена, просто проигнорируйте это оповещение. В противном случае, пожалуйста, произведите указанные платежи.\n"
+"Если у Вас есть какие-либо замечания, пожалуйста, свяжитесь с нами.\n"
+"\n"
+"Благодарим за сотрудничество.\n"
+"С наилучшими пожеланиями,"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -6090,6 +6107,13 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_journal_form
 msgid "Journals"
 msgstr "Журналы"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -8705,13 +8729,6 @@ msgid "Sale Tax"
 msgstr "Налог с Продаж"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "Журнал продаж/покупок"
-
-#. module: account
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -9646,13 +9663,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"Техническое поле, используемое для отслеживания выравнивания налоговой "
-"кассовой базы. Это необходимо при отмене источника: он будет публиковать "
-"обратную запись в журнале, чтобы отменить эту часть."
+"Технические поле используется для отслеживания согласования налога на "
+"наличной основе. Это необходимо при отмене источника: он будет размещать "
+"обратную запись в журнале, чтобы отменить эту часть тоже."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -10600,6 +10617,7 @@ msgid "Total"
 msgstr "Всего"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Итоговая сумма"
@@ -10791,20 +10809,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Нераспределенная Прибыль/Убытки"
