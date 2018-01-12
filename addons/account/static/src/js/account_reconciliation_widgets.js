@@ -2137,6 +2137,8 @@ var manualReconciliation = abstractReconciliation.extend({
         this.mode = defaultIfUndef(context.context.mode, 'all');
         this.partner_ids = context.context.partner_ids;
         this.account_ids = context.context.account_ids;
+        // DO NOT FORWARD-PORT! ONLY FOR v10
+        this.account_move_ids = context.context.account_move_ids;
         this.show_mode_selector = defaultIfUndef(context.context.show_mode_selector, true);
         // If working on given accounts or partners, don't fetch reconciliations for the other type
         if (this.partner_ids && ! this.account_ids) this.account_ids = [];
@@ -2554,6 +2556,10 @@ var manualReconciliationLine = abstractReconciliationLine.extend({
 
     updateMatchesGetMvLines: function(excluded_ids, offset, limit, callback) {
         var self = this;
+        // DO NOT FORWARD-PORT! ONLY FOR v10
+        var context = {
+            'account_move_ids': self.getParent() && self.getParent().account_move_ids,
+        };
         return self.model_aml
             .call("get_move_lines_for_manual_reconciliation", [
                 self.data.account_id,
@@ -2562,7 +2568,9 @@ var manualReconciliationLine = abstractReconciliationLine.extend({
                 self.filter,
                 offset,
                 limit,
-                self.get("currency_id") ])
+                self.get("currency_id") ], {
+                    'context': context,
+                })
             .then(function (lines) {
                 _.each(lines, function(line) { self.decorateMoveLine(line) }, self);
                 callback.call(self, lines);

@@ -90,7 +90,9 @@ class HrExpenseRegisterPaymentWizard(models.TransientModel):
                 account_move_lines_to_reconcile |= line
         # DO NOT FORWARD-PORT! ONLY FOR v10
         if len(expense_sheet.expense_line_ids) > 1:
-            return payment.open_payment_matching_screen()
+            account_move_ids = self.env['account.move'].search([('ref', '=', expense_sheet.name)])
+            account_move_ids += account_move_lines_to_reconcile.mapped('move_id')
+            return payment.with_context(account_move_ids=account_move_ids.ids).open_payment_matching_screen()
         else:
             account_move_lines_to_reconcile.reconcile()
 
