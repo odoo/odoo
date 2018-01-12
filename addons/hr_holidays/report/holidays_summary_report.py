@@ -112,7 +112,6 @@ class HrHolidaySummaryReport(models.AbstractModel):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
         holidays_report = self.env['ir.actions.report']._get_report_from_name('hr_holidays.report_holidayssummary')
-        # TODO: See if that is the correct type
         holidays = self.env['hr.leave'].browse(self.ids)
         return {
             'doc_ids': self.ids,
