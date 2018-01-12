@@ -151,7 +151,7 @@ class BlogPost(models.Model):
     write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
-    visits = fields.Integer('No of Views')
+    visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
     @api.multi

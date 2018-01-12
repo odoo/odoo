@@ -148,7 +148,7 @@ var utils = {
             size /= 1024;
             ++i;
         }
-        return size.toFixed(2) + ' ' + units[i];
+        return size.toFixed(2) + ' ' + units[i].trim();
     },
     /**
      * Insert "thousands" separators in the provided number (which is actually
