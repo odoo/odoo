@@ -23,6 +23,8 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
         this.given_context.active_id = action.context.active_id || action.params.active_id;
         this.given_context.model = action.context.active_model || false;
         this.given_context.ttype = action.context.ttype || false;
+        this.given_context.auto_unfold = action.context.auto_unfold || false;
+        this.given_context.lot_id = action.context.lot_id || false;
         return this._super.apply(this, arguments);
     },
     willStart: function() {
@@ -38,6 +40,11 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
         def.then(function () {
             self.report_widget.$el.html(self.html);
             self.report_widget.$el.find('.o_report_heading').html('<h1>Traceability Report</h1>')
+            if (self.given_context.auto_unfold) {
+                _.each(self.$el.find('.fa-caret-right'), function (line) {
+                    self.report_widget.autounfold(line, self.given_context.lot_id);
+                });
+            }
         });
     },
     start: function() {
