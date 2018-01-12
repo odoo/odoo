@@ -77,7 +77,7 @@ in each method::
 
 .. note::
 
-    Test methods must start with `test_`
+    Test methods must start with ``test_``
 
 Running tests
 -------------
