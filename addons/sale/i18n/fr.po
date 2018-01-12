@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Florian Hatat <mininet@wanadoo.fr>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
 # Simon CARRIER <carrier.sim@gmail.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2016
 # Clo <clo@odoo.com>, 2016
@@ -325,7 +325,7 @@ msgstr "Un seul prix de vente par article"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
-"Un avertissement peut être défini sur un produit ou un client (ventes)"
+"Un avertissement peut être défini sur un article ou un client (ventes)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -368,8 +368,7 @@ msgstr ""
 #: selection:sale.config.settings,group_warning_sale:0
 msgid "All the products and the customers can be used in sales orders"
 msgstr ""
-"Tous les produits et clients peuvent être utilisés dans les bons de commande"
-" de vente."
+"Tous les articles et clients peuvent être utilisés dans les bons de commande"
 
 #. module: sale
 #: selection:sale.config.settings,group_discount_per_so_line:0
@@ -382,8 +381,8 @@ msgid ""
 "Allow to edit sales order from the 'Sales Order' menu (not from the "
 "Quotation menu)"
 msgstr ""
-"Autoriser la modification des ordres de vente dans le menu \"Ordres de "
-"vente\" (et non dans le menu \"Devis\")"
+"Autoriser la modification des bons de commandes dans le menu \"Bons de "
+"commandes\" (et non dans le menu \"Devis\")"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
@@ -391,8 +390,8 @@ msgid ""
 "Allows to manage different prices based on rules per category of customers.\n"
 "                Example: 10% for retailers, promotion of 5 EUR on this product, etc."
 msgstr ""
-"Permet de gérer différent pris en fonction de règles par catégorie de clients.\n"
-"Par exemple : 10% pour les revendeurs, promotion de 5 € sur ce produit, etc."
+"Permet de gérer différents prix en fonction de règles par catégorie de clients.\n"
+"Par exemple : 10% pour les revendeurs, promotion de 5 € sur un article, etc."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
@@ -418,7 +417,7 @@ msgstr "Montant des ventes à facturer"
 msgid ""
 "An informative or blocking warning can be set on a product or a customer"
 msgstr ""
-"Un avertissement bloquant ou non peut être défini pour un produit ou un "
+"Un avertissement bloquant ou non peut être défini pour un article ou un "
 "client"
 
 #. module: sale
@@ -513,7 +512,8 @@ msgstr "Annulé"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_invoices
 msgid "Check this box to manage invoices in this sales team."
-msgstr "Cochez cette case pour gérer les factures cette équipe de ventes"
+msgstr ""
+"Cochez cette case pour gérer les factures de cette équipe commerciale."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
@@ -734,7 +734,7 @@ msgstr "Dépôt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
 msgid "Deposit Product"
-msgstr "Article de dépôt"
+msgstr "Article d'acompte"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
@@ -746,7 +746,7 @@ msgstr "Description"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
 msgid "Digital Products"
-msgstr "Produits numériques"
+msgstr "Articles numériques"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -785,8 +785,8 @@ msgid ""
 "Display 3 fields on sales orders: customer, invoice address, delivery "
 "address"
 msgstr ""
-"Afficher 3 champs dans les ordres de vente : le client, l'adresse de "
-"facturation, l'adresse de livraison"
+"Afficher 3 champs dans les bons de commande : le client, l'adresse de "
+"facturation et l'adresse de livraison"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
@@ -805,12 +805,12 @@ msgstr "Afficher les incotermes sur les ordres de vente et les factures liées"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Display margins on quotations and sales orders"
-msgstr "Afficher les marges sur les devis et les commandes de ventes"
+msgstr "Afficher les marges sur les devis et les bons de commandes"
 
 #. module: sale
 #: selection:sale.config.settings,group_sale_layout:0
 msgid "Do not personalize sales orders and invoice reports"
-msgstr "Ne pas personnaliser les rapports de vente"
+msgstr "Ne pas personnaliser les rapports bons de commandes et factures"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:84
@@ -883,8 +883,8 @@ msgid ""
 "Advanced pricing based on formula: You can have all the rights on pricelist"
 msgstr ""
 "Prix fixe : tous les prix sont gérés depuis le prix de vente de l'article.\n"
-"Différents prix par client : vous pouvez attribuer le prix sur un achat d'une quantité minimum dans l'onglet ventes de l'article.\n"
-"La tarification avancée basée sur une formule : Vous pouvez avoir tous les droits sur la liste de prix"
+"Prix spécifique par client : vous pouvez faire varier le prix de vente selon la quantité, à définir dans l'onglet Ventes de chaque article.\n"
+"Tarification avancée en fonction de formules : vous avez tous les droits sur la liste de prix"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -1028,7 +1028,7 @@ msgid ""
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
-"Prévision de facturation pour le mois en cours. C'est le montant que l'équipe commerciale a facturé ce mois.\n"
+"Facturation pour le mois en cours. C'est le montant que l'équipe commerciale a facturé ce mois.\n"
 "Permet de calculer le ratio réalisé/prévision affiché sur la vue kanban."
 
 #. module: sale
@@ -1118,8 +1118,8 @@ msgid ""
 "Invoicing and shipping addresses are always the same (Example: services "
 "companies)"
 msgstr ""
-"Les adresses de facturation et de livraison sont toujours les mêmes. "
-"(Exemple : sociétés de services)"
+"Les adresses de facturation et de livraison sont toujours les mêmes (exemple"
+" : sociétés de services)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
@@ -1174,7 +1174,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr "Jetons un oeil aux devis de cette équipe de vente."
+msgstr "Jetons un œil aux devis de cette équipe commerciale."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1189,7 +1189,7 @@ msgstr "Verrouillé"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
 msgid "Manage subscriptions and recurring invoicing"
-msgstr "Gérer les inscriptions et les facturations récurrentes"
+msgstr "Gérer les abonnements et les facturations récurrentes"
 
 #. module: sale
 #: selection:product.template,track_service:0
@@ -1293,18 +1293,18 @@ msgstr "Aucun Message"
 #: selection:sale.config.settings,group_discount_per_so_line:0
 msgid "No discount on sales order lines, global discount only"
 msgstr ""
-"Pas de réduction sur les lignes des ordres de commande, que réduction "
+"Pas de remise individuelle sur chaque ligne de commande, remise uniquement "
 "globale"
 
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "No incoterm on reports"
-msgstr "Pas de incoterm dans les rapports"
+msgstr "Pas d'incoterm dans les rapports"
 
 #. module: sale
 #: selection:sale.config.settings,group_product_variant:0
 msgid "No variants on products"
-msgstr "Pas de variantes sur les articles"
+msgstr "Pas de variantes d'articles"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -1367,8 +1367,8 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
-"Une fois votre devis terminé, vous pouvez l'enregistrer, l'imprimer ou "
-"l'envoyer par mai"
+"Lorsque votre devis est prêt, vous pouvez l'enregistrer, l'imprimer ou "
+"l'envoyer par courriel"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
@@ -1535,8 +1535,8 @@ msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
 msgstr ""
-"Veuillez définir un compte de revenu pour ce produit: \"%s\" (id. : %d) -ou "
-"pour sa catégorie \"%s\""
+"Veuillez définir un compte de revenu pour cet article : \"%s\" (id. : %d) - "
+"ou pour sa catégorie \"%s\""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_invoice_layouted
@@ -1638,7 +1638,7 @@ msgstr "Modèle d'article"
 #: model:ir.ui.menu,name:sale.menu_product
 #: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
-msgstr "Variantes d'article"
+msgstr "Variantes d'articles"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -1659,7 +1659,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_uom:0
 msgid "Products have only one unit of measure (easier)"
-msgstr "Les produits ont seulement une unité de mesure (plus facile)"
+msgstr "Les articles ont une seule unité de mesure (plus facile)"
 
 #. module: sale
 #: model:res.groups,name:sale.group_mrp_properties
@@ -1811,7 +1811,7 @@ msgstr "Lignes de ventes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
 msgid "Sale Order Modification"
-msgstr "Modification du bon de ventes"
+msgstr "Modification des bons de commande"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -1928,7 +1928,7 @@ msgstr "Statistiques sur les commandes de ventes"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_layout
 msgid "Sales Reports Layout"
-msgstr "Mise en page des gabarits d'impression de vente"
+msgstr "Mise en page des rapports de vente"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -1953,7 +1953,7 @@ msgstr "Commandes à facturer"
 #. module: sale
 #: selection:sale.config.settings,module_sale_margin:0
 msgid "Salespeople do not need to view margins when quoting"
-msgstr "Les Vendeurs n'ont pas besoin de voir les marges dans le devis"
+msgstr "Les vendeurs n'ont pas besoin de voir les marges sur les devis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
@@ -1991,7 +1991,7 @@ msgid ""
 "the default sale price (that you can change), taxes and description "
 "automatically."
 msgstr ""
-"Sélectionnez un produit ou créez-en un nouveau à la volée. Le produit "
+"Sélectionnez un article ou créez-en un nouveau à la volée. L'article "
 "détermine automatiquement le prix de vente par défaut (modifiable), les "
 "taxes et la désignation."
 
@@ -2015,7 +2015,7 @@ msgstr ""
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
-"Vendez des produits numériques – mettez à disposition du contenu "
+"Vendez des articles numériques – mettez à disposition du contenu "
 "téléchargeable sur votre portail client"
 
 #. module: sale
@@ -2027,8 +2027,8 @@ msgstr "Envoyer par email"
 #: selection:sale.config.settings,module_website_quote:0
 msgid "Send quotations your customer can approve & pay online (advanced)"
 msgstr ""
-"Envoyer les devis aux clients qui peut approuver et payer en ligne (option "
-"avancée)"
+"Envoyer les devis aux clients afin qu'ils les approuvent et paient en ligne "
+"(option avancée)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2063,7 +2063,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.settings,group_display_incoterm:0
 msgid "Show incoterms on sales orders and invoices"
-msgstr "Afficher les incotermes sur les bons de commande et factures de vente"
+msgstr "Afficher les incoterms sur les bons de commande et les factures"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
@@ -2080,12 +2080,12 @@ msgstr "Afficher les sous-totaux HT (B2B)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
 msgid "Show pricelists On Products"
-msgstr "Montrer les listes de prix sur les Produits"
+msgstr "Montrer les listes de prix sur les articles"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
 msgid "Show pricelists to customers"
-msgstr "Montrer les listes de prix au clients"
+msgstr "Montrer les listes de prix aux clients"
 
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
@@ -2107,8 +2107,8 @@ msgstr "Afficher le total"
 msgid ""
 "Some products may be sold/purchased in different units of measure (advanced)"
 msgstr ""
-"Les unités de mesure d'achat ou de vente des produits peuvent varier "
-"(avancé)"
+"Les articles peuvent avoir des unités de mesure d'achat et de vente "
+"différentes (avancé)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2118,7 +2118,7 @@ msgstr "Document d'origine"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Specific prices per customer segment, currency, etc."
-msgstr "Prix spécifique par catégorie de client, devises spécifiques, etc."
+msgstr "Prix spécifique par catégorie de client, devise, etc."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -2149,7 +2149,7 @@ msgid ""
 "sales team estimates to be able to invoice this month."
 msgstr ""
 "Objectif de revenu facturé pour le mois courant.\n"
-"C'est le montant que l'équipe commerciale pense pouvoir atteindre ce mois."
+"C'est le montant que l'équipe commerciale pense pouvoir facturer ce mois."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
@@ -2232,8 +2232,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Le produit utilisé pour facturer une avance doit être de type 'service'. "
-"Veuillez utiliser un autre produit pour modifier ce produit."
+"L'article utilisé pour facturer une avance doit être de type 'service'. "
+"Veuillez utiliser un autre article ou mettre à jour cet article."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146
@@ -2243,9 +2243,9 @@ msgid ""
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
 msgstr ""
-"Le produit utilisé pour facturer un acompte doit avoir une police de facture"
-" configurée sous \"Quantités commandées\". Veuillez mettre à jour votre "
-"produit de dépôt pour pouvoir créer une facture d'acompte."
+"L'article utilisé pour facturer un acompte doit avoir une politique de "
+"facturation définie à \"Quantités commandées\". Veuillez mettre à jour votre"
+" article d'acompte pour pouvoir créer une facture d'acompte."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:78
@@ -2260,8 +2260,8 @@ msgid ""
 "There is no income account defined for this product: \"%s\". You may have to"
 " install a chart of account from Accounting app, settings menu."
 msgstr ""
-"Il n'y a pas de compte de revenus défini pour ce produit: \"%s\". Vous "
-"devrez sans doute installer un plan comptabe depuis l'application "
+"Il n'y a pas de compte de revenus défini pour cet article : \"%s\". Vous "
+"devrez peut-être installer un plan comptable depuis l'application "
 "Comptabilité, dans le menu de configuration. "
 
 #. module: sale
@@ -2417,7 +2417,7 @@ msgstr "Opportunité de montée en gamme"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
 msgid "Use pricelists to adapt your price per customers"
-msgstr "Utilisez les listes de prix pour adapter votre prix aux clients"
+msgstr "Utilisez les listes de prix pour adapter vos prix aux clients"
 
 #. module: sale
 #. openerp-web
@@ -2478,8 +2478,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same products\n"
 "                , an ease the product management in the ecommerce for example"
 msgstr ""
-"L'utilisation de variantes produits vous permet de définir des variations d'un même  produit,\n"
-"cela facilite la gestion de produits pour le commerce électronique par exemple."
+"L'utilisation de variantes d'articles vous permet de définir des variations d'un même article,\n"
+"cela facilite la gestion d'articles pour le commerce électronique par exemple."
 
 #. module: sale
 #. openerp-web
