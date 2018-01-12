@@ -52,6 +52,7 @@ class MrpStockReport(models.TransientModel):
             model = kw['model_name']
             model_id = kw['model_id']
         res = []
+        move_line = self.env['stock.move.line']
         if context.get('active_id') and not context.get('model') or context.get('model') == 'stock.production.lot':
             move_ids = self.env['stock.move.line'].search([
                 ('lot_id', '=', context.get('active_id')),
@@ -63,8 +64,16 @@ class MrpStockReport(models.TransientModel):
             move_ids = self.env['stock.picking'].browse(context['active_id']).move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
             res = self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, obj_ids=move_ids)
         elif context.get('active_id') and context.get('model') == 'stock.move.line':
-            move_line_ids = self.env['stock.move.line'].browse(context.get('active_id'))
-            res = self._lines(line_id, model_id=context.get('active_id'), model=context.get('model'), level=level, obj_ids=move_line_ids)
+            move_ids = self.env['stock.move.line'].search([
+                ('lot_id', '=', context.get('lot_id')),
+                ('state', '=', 'done'),
+                ('move_id.returned_move_ids', '=', False),
+            ])
+            for line in move_ids:
+                dummy, is_used = self._get_linked_move_lines(line)
+                if is_used:
+                    move_line |= is_used
+            res = self._lines(line_id, model_id=context.get('active_id'), model=context.get('model'), level=level, obj_ids=move_line)
         else:
             res = self._lines(line_id,  model_id=model_id, model=model, level=level)
         final_vals = sorted(res, key=lambda v: v['date'], reverse=True)
@@ -92,11 +101,13 @@ class MrpStockReport(models.TransientModel):
 
     def make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self.get_links(move_line)
+        dummy, is_used = self._get_linked_move_lines(move_line)
         data = [{
             'level': level,
             'unfoldable': unfoldable,
             'date': move_line.move_id.date,
             'parent_id': parent_id,
+            'is_used': bool(is_used),
             'model_id': move_line.id,
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
@@ -104,6 +115,7 @@ class MrpStockReport(models.TransientModel):
             'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
             'location_source': move_line.location_id.name,
             'location_destination': move_line.location_dest_id.name,
+
             'reference_id': ref,
             'res_id': res_id,
             'res_model': res_model}]
@@ -151,6 +163,8 @@ class MrpStockReport(models.TransientModel):
                 'model': data['model'],
                 'model_id': data['model_id'],
                 'parent_id': data['parent_id'],
+                'is_used': data.get('is_used', False),
+                'lot_id': data.get('lot_id', False),
                 'type': 'line',
                 'reference': data.get('reference_id', False),
                 'res_id': data.get('res_id', False),
