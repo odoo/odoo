@@ -9,17 +9,19 @@ from odoo.tools import consteq
 
 
 class PortalAccount(CustomerPortal):
-
-    def _prepare_portal_layout_values(self):
-        values = super(PortalAccount, self)._prepare_portal_layout_values()
+    
+    def _get_account_invoice_domain(self):
         partner = request.env.user.partner_id
-
-        invoice_count = request.env['account.invoice'].search_count([
+        domain = [
             ('type', 'in', ['out_invoice', 'out_refund']),
             ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
             ('state', 'in', ['open', 'paid', 'cancel'])
-        ])
+        ]
+        return domain
 
+    def _prepare_portal_layout_values(self):
+        values = super(PortalAccount, self)._prepare_portal_layout_values()
+        invoice_count = request.env['account.invoice'].search_count(self._get_account_invoice_domain())
         values['invoice_count'] = invoice_count
         return values
 
@@ -62,11 +64,7 @@ class PortalAccount(CustomerPortal):
         partner = request.env.user.partner_id
         AccountInvoice = request.env['account.invoice']
 
-        domain = [
-            ('type', 'in', ['out_invoice', 'out_refund']),
-            ('message_partner_ids', 'child_of', [partner.commercial_partner_id.id]),
-            ('state', 'in', ['open', 'paid', 'cancelled'])
-        ]
+        domain = self._get_account_invoice_domain()
 
         searchbar_sortings = {
             'date': {'label': _('Invoice Date'), 'order': 'date_invoice desc'},

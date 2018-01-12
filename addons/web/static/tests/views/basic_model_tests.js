@@ -74,7 +74,6 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 assert.deepEqual(args.kwargs.context, {
                     active_field: 2,
-                    bin_size: true,
                     someKey: 'some value',
                 }, "should have sent the correct context");
                 return this._super.apply(this, arguments);

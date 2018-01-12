@@ -33,7 +33,6 @@ registry
     .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
     .add('url', basic_fields.UrlWidget)
-    .add('download_link', basic_fields.FieldBinaryDownloadLink)
     .add('image', basic_fields.FieldBinaryImage)
     .add('binary', basic_fields.FieldBinaryFile)
     .add('monetary', basic_fields.FieldMonetary)

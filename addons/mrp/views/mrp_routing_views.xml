@@ -85,7 +85,7 @@
                                 <field name="name"/>
                             </group>
                             <group>
-                                <field name="location_id" groups="stock.group_adv_location"/>
+                                <field name="location_id" groups="stock.group_adv_location" domain="[('usage', '!=', 'view')]"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                            </group>
                         </group>

@@ -35,7 +35,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         $(this).remove();
                     });
 
-                $modal.on('click', '.a-submit', function () {
+                $modal.on('click', '.a-submit', function (ev) {
                     var $a = $(this);
                     $form.ajaxSubmit({
                         url:  '/shop/cart/update_option',
@@ -50,6 +50,7 @@ $('.oe_website_sale #add_to_cart, .oe_website_sale #products_grid .a-submit')
                         }
                     });
                     $modal.modal('hide');
+                    ev.preventDefault();
                 });
 
                 $modal.on('click', '.css_attribute_color input', function (event) {
