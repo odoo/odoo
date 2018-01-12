@@ -4,7 +4,7 @@
 
 from odoo import fields, models, api, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountVoucher(models.Model):
@@ -45,9 +45,9 @@ class AccountVoucher(models.Model):
         states={'draft': [('readonly', False)]})
     narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', compute='_get_journal_currency',
-        string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
+        string='Currency', readonly=True, store=True, default=lambda self: self._get_currency())
     company_id = fields.Many2one('res.company', 'Company',
-        required=True, readonly=True, states={'draft': [('readonly', False)]},
+        store=True, readonly=True, states={'draft': [('readonly', False)]},
         related='journal_id.company_id', default=lambda self: self._get_company())
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -90,6 +90,14 @@ class AccountVoucher(models.Model):
     @api.model
     def _get_company(self):
         return self._context.get('company_id', self.env.user.company_id.id)
+
+    @api.constrains('company_id', 'currency_id')
+    def _check_company_id(self):
+        for voucher in self:
+            if not voucher.company_id:
+                raise ValidationError(_("Missing Company"))
+            if not voucher.currency_id:
+                raise ValidationError(_("Missing Currency"))
 
     @api.multi
     @api.depends('name', 'number')
