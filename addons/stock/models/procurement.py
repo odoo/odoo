@@ -78,7 +78,6 @@ class ProcurementRule(models.Model):
         data = self._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
         # Since action_confirm launch following procurement_group we should activate it.
         move = self.env['stock.move'].sudo().create(data)
-        move._assign_picking()
         move._action_confirm()
         return True
 

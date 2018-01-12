@@ -363,7 +363,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
 
-            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1 &&
+            if ((state.balance.amount_currency !== 0 || line.partial_reconcile) && props.length === 1 &&
                     line.already_paid === false &&
                     (
                         (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
@@ -425,7 +425,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 }
             });
         }
-        this.$('.create .add_line').toggle(!!state.balance.amount);
+        this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
 
     //--------------------------------------------------------------------------
