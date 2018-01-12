@@ -26,7 +26,6 @@ var KanbanController = BasicController.extend({
         kanban_column_delete: '_onDeleteColumn',
         kanban_column_add_record: '_onAddRecordToColumn',
         kanban_column_resequence: '_onColumnResequence',
-        kanban_column_archive_records: '_onArchiveRecords',
         kanban_load_more: '_onLoadMore',
         kanban_load_records: '_onLoadColumnRecords',
         column_toggle_fold: '_onToggleColumn',
@@ -179,28 +178,6 @@ var KanbanController = BasicController.extend({
                         });
                     });
             }).fail(this.reload.bind(this));
-    },
-    /**
-     * The interface allows in some case the user to archive a column. This is
-     * what this handler is for.
-     *
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onArchiveRecords: function (event) {
-        var self = this;
-        var active_value = !event.data.archive;
-        var column = event.target;
-        var record_ids = _.pluck(column.records, 'db_id');
-        if (record_ids.length) {
-            this.model
-                .toggleActive(record_ids, active_value, column.db_id)
-                .then(function (db_id) {
-                    var data = self.model.get(db_id);
-                    self.renderer.updateColumn(db_id, data);
-                    self._updateEnv();
-                });
-        }
     },
     /**
      * @private
