@@ -63,43 +63,31 @@ from ${object.company_id.name}.
         </record>
 
         <!--Default Notification Email template for invoices-->
-        <record id="account.mail_template_data_notification_email_account_invoice" model="mail.template">
-            <field name="name">Account: Invoice notification header</field>
-            <field name="subject">${object.subject}</field>
-            <field name="model_id" ref="mail.model_mail_message"/>
-            <field name="auto_delete" eval="True"/>
-            <field name="body_html" type="html">
+        <template id="mail_notification_invoice">
 <div>
-% set record = ctx.get('record')
-% set company = record and record.company_id or user.company_id
 <table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
 <tbody>
     <!-- HEADER -->
     <tr>
         <td align="center" style="min-width: 590px;">
             <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
-                <tr>
-                    <td valign="middle">
-                        <span style="font-size:20px; color:white; font-weight: bold;">
-                            Invoice ${object.record_name}
-                        </span>
-                    </td>
-                    <td valign="middle" align="right">
-                        <img src="/logo.png?company=${company.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${company.name}"/>
-                    </td>
-                </tr>
-          </table>
-    </td>
-  </tr>
-  <!-- CONTENT -->
-  <tr>
+                <tr><td valign="middle">
+                    <span style="font-size:20px; color:white; font-weight: bold;">
+                        Invoice <t t-esc="message.record_name"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % company.id" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
         <td align="center" style="min-width: 590px;">
             <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
-                <tbody>
-                    <td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
-                        ${object.body | safe}
-                    </td>
-                </tbody>
+                <tbody><td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                    <t t-raw="message.body"/>
+                </td></tbody>
             </table>
         </td>
     </tr>
@@ -107,22 +95,19 @@ from ${object.company_id.name}.
     <tr>
         <td align="center" style="min-width: 590px;">
             <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
-                <tr>
-                    <td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                        ${company.name}<br/>
-                        ${company.phone or ''}
-                    </td>
-                    <td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
-                        % if company.email:
-                        <a href="mailto:${company.email}" style="text-decoration:none; color: white;">${company.email}</a><br/>
-                        % endif
-                        % if company.website:
-                        <a href="${company.website}" style="text-decoration:none; color: white;">
-                        ${company.website}
+                <tr><td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                    <t t-esc="company.name"/><br/>
+                    <t t-esc="company.phone"/>
+                </td><td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                    <t t-if="company.email">
+                        <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: white;"><t t-esc="company.email"/></a><br/>
+                    </t>
+                    <t t-if="company.website">
+                        <a t-att-href="'%s' % company.website" style="text-decoration:none; color: white;">
+                            <t t-esc="company.website"/>
                         </a>
-                        % endif
-                    </td>
-                </tr>
+                    </t>
+                </td></tr>
             </table>
         </td>
     </tr>
@@ -133,8 +118,8 @@ from ${object.company_id.name}.
     </tr>
 </tbody>
 </table>
-</div></field>
-        </record>
+</div>
+        </template>
 
     </data>
 </odoo>
