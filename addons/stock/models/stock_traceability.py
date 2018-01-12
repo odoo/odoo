@@ -100,6 +100,7 @@ class MrpStockReport(models.TransientModel):
             'model_id': move_line.id,
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
+            'lot_id': move_line.lot_id.name,
             'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
             'location_source': move_line.location_id.name,
             'location_destination': move_line.location_dest_id.name,
@@ -114,7 +115,7 @@ class MrpStockReport(models.TransientModel):
         if model == 'stock.move.line':
             data = [{
                 'level': level,
-                'unfoldable': True,
+                'unfoldable': False if not move_line.lot_id else True,
                 'date': move_line.move_id.date,
                 'model_id': move_line.id,
                 'parent_id': parent_id,
@@ -122,8 +123,8 @@ class MrpStockReport(models.TransientModel):
                 'product_id': move_line.product_id.display_name,
                 'lot_id': move_line.lot_id.name,
                 'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
-                'location_source': move_line.location_id.name,
-                'location_destination': move_line.location_dest_id.name,
+                'location_source': move_line.location_id.name if not move_line.lot_id else False,
+                'location_destination': move_line.location_dest_id.name if not move_line.lot_id else False,
                 'reference_id': ref,
                 'res_id': res_id,
                 'res_model': res_model}]
@@ -131,7 +132,7 @@ class MrpStockReport(models.TransientModel):
 
     @api.model
     def get_traceability(self, level, line_id=False, model=False, model_obj=False):
-        final_vals =[]
+        final_vals = []
         if model == 'stock.move.line':
             moves = self.get_move_lines(model_obj)
         for move in moves:
@@ -167,20 +168,25 @@ class MrpStockReport(models.TransientModel):
             })
         return lines
 
+    def _get_linked_move_lines(self, move_line):
+        """ This method will return the consumed line or produced line for this operation."""
+        return False, False
+
     @api.model
     def _lines(self, line_id=None, model_id=False, model=False, level=0, obj_ids=[], **kw):
         final_vals = []
         if model and line_id:
-            model_obj = self.env[model].browse(model_id)
-            final_vals += self.get_traceability(level, line_id=line_id, model=model, model_obj=model_obj)
-            if model == 'stock.move.line':
-                if model_obj.consume_line_ids:
-                    final_vals += self.get_produced_or_consumed_vals(model_obj.consume_line_ids, level, model=model, parent_id=line_id)
-                else:
-                    final_vals = self.make_dict_move(level, parent_id=line_id, move_line=model_obj) + final_vals
+            move_line = self.env[model].browse(model_id)
+            move_lines, dummy = self._get_linked_move_lines(move_line)
+            if move_lines:
+                final_vals += self.get_produced_or_consumed_vals(move_lines, level, model=model, parent_id=line_id)
+            else:
+                final_vals += self.get_traceability(level, line_id=line_id, model=model, model_obj=move_line)
+                final_vals = self.make_dict_move(level, parent_id=line_id, move_line=move_line) + final_vals
         else:
             for move_line in obj_ids:
-                final_vals += self.make_dict_head(level, parent_id=line_id, model=model or 'stock.pack.operation', move_line=move_line)
+                unfoldable = bool(move_line.produce_line_ids or move_line.consume_line_ids)
+                final_vals += self.make_dict_move(level, parent_id=line_id, move_line=move_line, unfoldable=unfoldable)
         return final_vals
 
     @api.model
@@ -195,7 +201,8 @@ class MrpStockReport(models.TransientModel):
         lines = []
         for line in line_data:
             model = self.env[line['model_name']].browse(line['model_id'])
-            if line.get('unfoldable'):
+            dummy, move_line = self._get_linked_move_lines(model)
+            if line.get('unfoldable') and move_line:
                     final_vals += self.make_dict_head(line['level'], model=line['model_name'], parent_id=line['id'], move_line=model)
             else:
                 if line['model_name'] == 'stock.move.line':

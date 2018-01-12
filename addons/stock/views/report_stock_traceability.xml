@@ -12,7 +12,9 @@
             <t t-set="column" t-value="0" />
             <tr t-att-data-type="a['type']" t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-class="trclass">
                 <t t-set="tdclass" t-value="''" />
+                <t t-set="spanclass" t-value="''" />
                 <t t-if="a.get('unfoldable')"><t t-set="tdclass" t-value="'o_stock_reports_unfoldable'" /></t>
+                <t t-if="not a.get('unfoldable')"><t t-set="spanclass" t-value="'o_stock_reports_nofoldable'" /></t>
                 <t t-set="column" t-value="0" />
                 <t t-foreach="a['columns']" t-as="c">
                     <t t-set="column" t-value="column + 1" />
@@ -24,7 +26,7 @@
                             </t>
                         </t>
                         <t t-if="a['reference'] == c">
-                            <span>
+                            <span t-if="c" t-att-class="spanclass">
                                 <a t-att-data-active-id="a['res_id']" t-att-data-res-model="a['res_model']" class="o_stock_reports_web_action"><t t-raw="c" /></a>
                             </span>
                         </t>
