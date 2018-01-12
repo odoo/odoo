@@ -44,38 +44,31 @@ class MrpStockReport(models.TransientModel):
     @api.model
     def get_lines(self, line_id=None, **kw):
         context = dict(self.env.context)
-        model = False
-        model_id = False
-        level = 1
-        if kw:
-            level = kw['level']
-            model = kw['model_name']
-            model_id = kw['model_id']
+        model = kw and kw['model_name'] or context.get('model')
+        rec_id = kw and kw['model_id'] or context.get('active_id')
+        level = kw and kw['level'] or 1
+        lines = []
         res = []
         move_line = self.env['stock.move.line']
-        if context.get('active_id') and not context.get('model') or context.get('model') == 'stock.production.lot':
-            move_ids = self.env['stock.move.line'].search([
-                ('lot_id', '=', context.get('active_id')),
+        if rec_id and model in ('stock.production.lot', 'stock.move.line'):
+            lines = self.env['stock.move.line'].search([
+                ('lot_id', '=', context.get('lot_id') or rec_id),
                 ('state', '=', 'done'),
                 ('move_id.returned_move_ids', '=', False),
             ])
-            res += self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, obj_ids=move_ids)
-        elif context.get('active_id') and context.get('model') == 'stock.picking':
-            move_ids = self.env['stock.picking'].browse(context['active_id']).move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
-            res = self._lines(line_id, model_id=model_id, model='stock.move.line', level=level, obj_ids=move_ids)
-        elif context.get('active_id') and context.get('model') == 'stock.move.line':
-            move_ids = self.env['stock.move.line'].search([
-                ('lot_id', '=', context.get('lot_id')),
-                ('state', '=', 'done'),
-                ('move_id.returned_move_ids', '=', False),
-            ])
-            for line in move_ids:
-                dummy, is_used = self._get_linked_move_lines(line)
-                if is_used:
-                    move_line |= is_used
-            res = self._lines(line_id, model_id=context.get('active_id'), model=context.get('model'), level=level, obj_ids=move_line)
-        else:
-            res = self._lines(line_id,  model_id=model_id, model=model, level=level)
+            if model == 'stock.move.line':
+                for line in lines:
+                    dummy, is_used = self._get_linked_move_lines(line)
+                    if is_used:
+                        move_line |= is_used
+                lines = move_line
+        elif rec_id and model in ('stock.picking', 'mrp.production'):
+            res = self.env[model].browse(rec_id)
+            if model == 'stock.picking':
+                lines = res.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+            else:
+                lines = res.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+        res = self._lines(line_id, model_id=rec_id, model=model, level=level, obj_ids=lines)
         final_vals = sorted(res, key=lambda v: v['date'], reverse=True)
         lines = self.final_vals_to_lines(final_vals, level)
         return lines
