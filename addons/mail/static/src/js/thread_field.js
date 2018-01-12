@@ -168,13 +168,9 @@ var ThreadField = AbstractField.extend({
         });
     },
     _onRedirect: function (res_model, res_id) {
-        this.do_action({
-            type:'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            res_model: res_model,
-            views: [[false, 'form']],
+        this.trigger_up('redirect', {
             res_id: res_id,
+            res_model: res_model,
         });
     },
     _onUpdateMessage: function (message) {
