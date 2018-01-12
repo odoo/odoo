@@ -1,6 +1,7 @@
 odoo.define('web_tour.Tip', function(require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
@@ -9,6 +10,7 @@ var Tip = Widget.extend({
     events: {
         mouseenter: "_to_info_mode",
         mouseleave: "_to_bubble_mode",
+        click: '_onClickTip',
     },
     /**
      * @param {Widget} parent
@@ -259,6 +261,26 @@ var Tip = Widget.extend({
             height: this.init_height,
             margin: 0,
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * If tablet or smaller devices
+     * Close the message by clicking on the message and bubble should reappear
+     *
+     * @private
+     */
+    _onClickTip: function () {
+        if (config.device.size_class <= config.device.SIZES.MD) {
+            if (this.tip_opened) {
+                this._to_bubble_mode();
+            } else {
+                this._to_info_mode();
+            }
+        }
     },
 });
 
