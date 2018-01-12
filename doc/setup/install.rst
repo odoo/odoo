@@ -360,13 +360,6 @@ Source installation requires manually installing dependencies:
     Install ``psycopg`` using the installer here
     http://www.stickpeople.com/projects/python/win-psycopg/
 
-    Then edit the requirements.txt file:
-
-    - remove ``psycopg2`` as you already have it.
-    - remove the optional ``python-ldap``, ``gevent`` and ``psutil`` because
-      they require compilation.
-    - add ``pypiwin32`` because it's needed under windows.
-
     Then use pip to install the dependencies using the following
     command from a cmd.exe prompt (replace ``\YourOdooPath`` by the actual
     path where you downloaded Odoo):
