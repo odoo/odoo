@@ -213,6 +213,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
     fn_boutton_update.call(this, $container, oStyle);
 
     $container.find('.note-color').removeClass("hidden");
+    $('#wrapwrap .fa').removeClass('o_icon_selected');
 
     if (oStyle.image) {
         $container.find('[data-event]').parent().removeClass("active");
@@ -225,6 +226,13 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
         if (dom.isImgFont(oStyle.image)) {
 
+            $(oStyle.image).addClass('o_icon_selected');
+            // remove all ranges and prevent typing when icon is selected
+            setTimeout(function() {
+                $('#wrap').blur();
+                window.getSelection().empty();
+                window.getSelection().removeAllRanges();
+            }, 0);
             $container.find('.btn-group:not(.only_fa):has(button[data-event="resize"],button[data-value="img-thumbnail"])').addClass("hidden");
             $container.find('.only_fa').removeClass("hidden");
             $container.find('button[data-event="resizefa"][data-value="2"]').toggleClass("active", $(oStyle.image).hasClass("fa-2x"));
@@ -290,7 +298,9 @@ eventHandler.modules.popover.update = function ($popover, oStyle, isAirMode) {
         if (!oStyle.image.className.match(/(^|\s)media_iframe_video(\s|$)/i)) {
             target_node = dom.firstChild(target_node);
         }
-        range.createFromNode(target_node).select();
+        if (dom.isImgFont(oStyle.image)) {
+            range.createFromNode(target_node).select();
+        }
         // save range on the editor so it is not lost if restored
         eventHandler.modules.editor.saveRange(dom.makeLayoutInfo(target_node).editable());
     } else {
@@ -594,6 +604,100 @@ function reRangeSelectKey(event) {
         }
     }
 }
+// adjust icon position as per requirement
+function adjustPosition(event) {
+    var $icon = $('.fa.o_icon_selected');
+    if ($icon.length == 0) {
+        return;
+    }
+    var $parent = $('.fa.o_icon_selected').parent();
+    // if the icon is anchor then parent is <a>.
+    if (dom.isAnchor($parent[0])) {
+        $parent = $($parent).parent()
+    }
+    var childNodes = $parent[0].childNodes;
+    if (_.last(childNodes).nodeName == 'BR') {
+        childNodes = _.initial(childNodes);
+    }
+    if ($icon.length == 1 && childNodes.length) {
+
+        var needFirst = false, needLast = false, index = false;
+        _.each(childNodes, function(node, i, l) {
+            if ($(node).hasClass("o_icon_selected") || $(node.firstChild).hasClass("o_icon_selected")) {
+                index = i;
+                if (i === 0) {
+                    needFirst = true;
+                } else if (i == l.length - 1) {
+                    needLast = true;
+                }
+            }
+        });
+        // Add space if character right after icon
+        if (event.keyCode == 39 && !needLast) {
+            if (childNodes[index+1].textContent.charAt(0) != dom.NBSP_CHAR) {
+                var emptyNode = document.createTextNode(dom.NBSP_CHAR);
+                var node = childNodes[index];
+                $(node).after(emptyNode);
+                setFirstRange(emptyNode);
+            }
+        }
+        // set range to the start of the first right node
+        if (event.keyCode == 39 && !needLast && index !== childNodes.length - 1) {
+            var node = childNodes[index+1];
+            setFirstRange(node);
+        } else if (event.keyCode == 37 && !needFirst && index !== 0) {
+            // set range to the end of the first left node
+            event.preventDefault();
+            var node = childNodes[index-1];
+            setLastRange(node);
+        } else if (event.keyCode == 37 && needFirst && index === 0) {
+            // add an empty node to start
+            event.preventDefault();
+            var emptyNode = document.createTextNode(dom.NBSP_CHAR);
+            var node = childNodes[index];
+            $(node).before(emptyNode);
+            setLastRange(emptyNode);
+        } else if (event.keyCode == 39 && needLast && index === childNodes.length - 1) {
+            // add an empty node to end
+            var emptyNode = document.createTextNode(dom.NBSP_CHAR);
+            var node = childNodes[index];
+            $(node).after(emptyNode);
+            setFirstRange(emptyNode);
+        } else if (event.keyCode == 8 || event.keyCode == 46) {
+            // on delete icon set range
+            event.preventDefault();
+            dom.isAnchor($icon.parentNode) ? $icon.parentNode.remove : $icon.remove();
+            if (needFirst) {
+                var node = childNodes[index+1];
+                setFirstRange(node);
+            } else {
+                var node = childNodes[index-1];
+                setLastRange(node);
+            }
+        }
+    }
+}
+
+// create range and set range at start the node
+var setFirstRange = function(node) {
+    var range = document.createRange();
+    range.setStart(node, 0);
+    range.collapse(true);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
+// create range and set carate at last
+var setLastRange = function(node) {
+    var range = document.createRange();
+    range.selectNodeContents(node);
+    range.collapse(false);
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
 function reRangeSelect(event, dx, dy) {
     var r = range.create();
     if (!r || r.isCollapsed()) return;
@@ -776,6 +880,7 @@ eventHandler.attach = function (oLayoutInfo, options) {
         }
     });
     $(document).on("keyup", reRangeSelectKey);
+    $(document).on("keydown", adjustPosition);
 
     var clone_data = false;
     var $node = oLayoutInfo.editor();
@@ -875,6 +980,7 @@ eventHandler.detach = function (oLayoutInfo, options) {
     $(document).off('mouseup', summernote_mouseup);
     oLayoutInfo.editor().off("dblclick");
     $(document).off("keyup", reRangeSelectKey);
+    $(document).off("keydown", adjustPosition);
 };
 
 // Translation for odoo

@@ -167,13 +167,16 @@ tour.register('rte', {
     trigger: '.note-image-popover:visible button[data-event="floatMe"][data-value="right"]',
     extra_trigger: '#wrapwrap span.fa-3x',
 }, {
+        content: "select a pictogram",
+        trigger: '.fa.fa-glass.fa-3x',
+}, {
     content: "click on create link",
     trigger: '.note-image-popover:visible button[data-event="showLinkDialog"]',
     extra_trigger: '#editable_area > section .row > div:first span.fa.pull-right',
 }, {
     content: "click on color style",
     trigger: '.o_link_dialog_color > .o_link_dialog_color_item.btn-success',
-    extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+><\\/span>$/) > span.fa.fa-3x.pull-right',
+    extra_trigger: 'a#link-preview:containsRegex(/^<span [^>]+>'+$.summernote.core.dom.ZERO_WIDTH_NBSP_CHAR+'<\\/span>$/) > span.fa.fa-3x.pull-right',
 }, {
     content: "insert a link url",
     trigger: '#o_link_dialog_url_input',
@@ -186,7 +189,7 @@ tour.register('rte', {
 }, {
     content: "save link",
     trigger: 'button.o_save_button',
-    extra_trigger: 'a#link-preview.btn:containsRegex(/^ABC<span [^>]+><\\/span> DEF$/)',
+    extra_trigger: 'a#link-preview.btn:containsRegex(/^ABC<span [^>]+>'+$.summernote.core.dom.ZERO_WIDTH_NBSP_CHAR+'<\\/span> DEF$/)',
 }, {
     content: "click on other picture",
     trigger: '#editable_area > section .row > div:last img',

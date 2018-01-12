@@ -144,6 +144,7 @@ var EditorMenuBar = Widget.extend({
      */
     save: function (reload) {
         var self = this;
+        $('#wrapwrap .fa').removeClass('o_icon_selected');
         this.snippetsMenu.cleanForSave();
         return this.rte.save().then(function () {
             if (reload !== false) {
