@@ -145,7 +145,6 @@ class AccountMove(models.Model):
         self._post_validate()
         for move in self:
             move.line_ids.create_analytic_lines()
-            move.line_ids.create_analytic_distribution_lines()
             if move.name == '/':
                 new_name = False
                 journal = move.journal_id
@@ -1455,57 +1454,22 @@ class AccountMoveLine(models.Model):
             currency_id = invoice_currency.id
         return debit, credit, amount_currency, currency_id
 
-    @api.multi
-    def create_analytic_distribution_lines(self):
-        """ Create analytic items upon validation of an account.move.line having analytic tags with
-            an analytic distribution.
-        """
-        for obj_line in self:
-            analytic_tags = obj_line.analytic_tag_ids
-            analytic_tags_with_distribution = analytic_tags.filtered('active_analytic_distribution')
-            analytic_tags_without_distribution = analytic_tags - analytic_tags_with_distribution
-            for tag in analytic_tags_with_distribution:
-                for distribution in tag.analytic_distribution_ids:
-                    # todo jov shouldn't this be part of account.analytic.tag or something?
-                    vals_line = obj_line._prepare_analytic_distribution_line(distribution, analytic_tags_without_distribution)
-                    self.env['account.analytic.line'].create(vals_line)
-
-    def _prepare_analytic_distribution_line(self, distribution, analytic_tags):
-        """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
-            analytic tags with analytic distribution.
-        """
+    def _get_analytic_tag_ids(self):
         self.ensure_one()
-        amount = ((self.credit or 0.0) - (self.debit or 0.0)) * (distribution.percentage / 100.0)
-        analytic_account_id = distribution.account_id
-
-        return {
-            'name': self.name,
-            'date': self.date,
-            'account_id': analytic_account_id.id,
-            'partner_id': self.partner_id.id,
-            'tag_ids': [(6, 0, [distribution.tag_id.id] + analytic_tags.ids)],
-            'unit_amount': self.quantity,
-            'product_id': self.product_id and self.product_id.id or False,
-            'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
-            'amount': amount,
-            'general_account_id': self.account_id.id,
-            'ref': self.ref,
-            'move_id': self.id,
-            'user_id': self.invoice_id.user_id.id or self._uid,
-            'company_id': self.env.user.company_id.id
-        }
-
+        return self.analytic_tag_ids.filtered(lambda r: not r.active_analytic_distribution).ids
 
     @api.multi
     def create_analytic_lines(self):
-        """ Create analytic items upon validation of an account.move.line having an analytic account.
+        """ Create analytic items upon validation of an account.move.line having an analytic account or an analytic distribution.
         """
-        self.mapped('analytic_line_ids').unlink()
         for obj_line in self:
+            for tag in obj_line.analytic_tag_ids.filtered('active_analytic_distribution'):
+                for distribution in tag.analytic_distribution_ids:
+                    vals_line = obj_line._prepare_analytic_distribution_line(distribution)
+                    self.env['account.analytic.line'].create(vals_line)
             if obj_line.analytic_account_id:
                 vals_line = obj_line._prepare_analytic_line()[0]
                 self.env['account.analytic.line'].create(vals_line)
-
 
     @api.one
     def _prepare_analytic_line(self):
@@ -1517,7 +1481,7 @@ class AccountMoveLine(models.Model):
             'name': self.name,
             'date': self.date,
             'account_id': self.analytic_account_id.id,
-            'tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
+            'tag_ids': [(6, 0, self._get_analytic_tag_ids())],
             'unit_amount': self.quantity,
             'product_id': self.product_id and self.product_id.id or False,
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
@@ -1528,6 +1492,29 @@ class AccountMoveLine(models.Model):
             'user_id': self.invoice_id.user_id.id or self._uid,
             'partner_id': self.partner_id.id,
             'company_id': self.env.user.company_id.id,
+        }
+
+    def _prepare_analytic_distribution_line(self, distribution):
+        """ Prepare the values used to create() an account.analytic.line upon validation of an account.move.line having
+            analytic tags with analytic distribution.
+        """
+        self.ensure_one()
+        amount = -self.balance * distribution.percentage / 100.0
+        return {
+            'name': self.name,
+            'date': self.date,
+            'account_id': distribution.account_id.id,
+            'partner_id': self.partner_id.id,
+            'tag_ids': [(6, 0, [distribution.tag_id.id] + self._get_analytic_tag_ids())],
+            'unit_amount': self.quantity,
+            'product_id': self.product_id and self.product_id.id or False,
+            'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
+            'amount': amount,
+            'general_account_id': self.account_id.id,
+            'ref': self.ref,
+            'move_id': self.id,
+            'user_id': self.invoice_id.user_id.id or self._uid,
+            'company_id': self.env.user.company_id.id
         }
 
     @api.model
@@ -1734,6 +1721,8 @@ class AccountPartialReconcile(models.Model):
                             'debit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                             'credit': rounded_amt if rounded_amt > 0 else 0.0,
                             'account_id': line.account_id.id,
+                            'analytic_account_id': line.analytic_account_id.id,
+                            'analytic_tag_ids': line.analytic_tag_ids.ids,
                             'tax_exigible': True,
                             'amount_currency': self.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
                             'currency_id': line.currency_id.id,
@@ -1747,6 +1736,7 @@ class AccountPartialReconcile(models.Model):
                             'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
                             'account_id': line.tax_line_id.cash_basis_account.id,
                             'analytic_account_id': line.analytic_account_id.id,
+                            'analytic_tag_ids': line.analytic_tag_ids.ids,
                             'tax_line_id': line.tax_line_id.id,
                             'tax_exigible': True,
                             'amount_currency': self.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,

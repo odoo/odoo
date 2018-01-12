@@ -69,7 +69,7 @@ class AccountInvoiceLine(models.Model):
         rec = self.env['account.analytic.default'].account_get(self.product_id.id, self.invoice_id.partner_id.id, self.env.uid,
                                                                fields.Date.today(), company_id=self.company_id.id)
         self.account_analytic_id = rec.analytic_id.id
-        self.analytic_tag_ids = rec.analytic_tag_ids
+        self.analytic_tag_ids = rec.analytic_tag_ids.ids
         return res
 
     def _set_additional_fields(self, invoice):
@@ -81,5 +81,5 @@ class AccountInvoiceLine(models.Model):
                 if self.account_analytic_id:
                     self.account_analytic_id = rec.analytic_id.id
                 if self.analytic_tag_ids:
-                    self.analytic_tag_ids = rec.analytic_tag_ids
+                    self.analytic_tag_ids = rec.analytic_tag_ids.ids
         super(AccountInvoiceLine, self)._set_additional_fields(invoice)

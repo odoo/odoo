@@ -295,6 +295,7 @@
                                                 <field name="manual" invisible="1"/>
                                                 <field name="account_id" groups="account.group_account_user"/>
                                                 <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                                 <field name="amount"/>
                                                 <field name="amount_rounding" invisible="1"/>
                                                 <field name="amount_total" invisible="1"/>
@@ -502,6 +503,7 @@
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="amount" invisible="1"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                     <field name="amount_rounding" invisible="1"/>
                                     <field name="amount_total"/>
                                     <field name="currency_id" invisible="1"/>
