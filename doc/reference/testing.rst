@@ -75,6 +75,10 @@ in each method::
 
         # other tests...
 
+.. note::
+
+    Test methods must start with ``test_``
+
 Running tests
 -------------
 
