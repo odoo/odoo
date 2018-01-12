@@ -2179,6 +2179,36 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('progress bar subgroup count recompute', function(assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                '<kanban>' +
+                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                            '<field name="foo"/>' +
+                        '</div>' +
+                    '</t></templates>' +
+                '</kanban>',
+            groupBy: ['bar'],
+        });
+
+        var initialCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
+        assert.strictEqual(initialCount, 3,
+            "Initial count should be Three");
+        kanban.$('.bg-success-full').click();
+        var lastCount = parseInt(kanban.$('.o_kanban_counter_side').eq(1).text());
+        assert.strictEqual(lastCount, 0,
+            "kanban counters should vary according to what subgroup is selected");
+
+        kanban.destroy();
+    });
+
     QUnit.test('keep adding quickcreate in first column after a record from this column was moved', function (assert) {
         assert.expect(2);
 
