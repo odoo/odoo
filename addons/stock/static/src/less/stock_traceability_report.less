@@ -15,7 +15,15 @@
     }
 }
 
+.o_main_content {
+    .o_stock_reports_page {
+        position: absolute;
+    }
+}
 .o_stock_reports_page {
+    @media (max-width: @screen-md-min) {
+        overflow-x:scroll;
+    }
     background-color: @odoo-view-background-color;
     color: @odoo-main-text-color;
     &.o_stock_reports_no_print {
