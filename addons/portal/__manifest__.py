@@ -28,6 +28,6 @@ very handy when used in combination with the module 'share'.
         'security/ir.model.access.csv',
     ],
     'demo': ['data/portal_demo.xml'],
-    'auto_install': False,
+    'auto_install': True,
     'installable': True,
 }
