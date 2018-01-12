@@ -177,7 +177,9 @@ class WebsiteBlog(http.Controller):
         v = {}
         v['blog'] = blog
         v['base_url'] = request.env['ir.config_parameter'].get_param('web.base.url')
-        v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)], limit=min(int(limit), 50))
+        v['posts'] = request.env['blog.post'].search([('blog_id','=', blog.id)],
+            limit=min(int(limit), 50),
+            order="post_date DESC")
         v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
