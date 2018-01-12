@@ -36,6 +36,11 @@ class SaleCouponRule(models.Model):
         if self.filtered(lambda applicability: applicability.rule_minimum_amount < 0):
             raise ValidationError(_('Minimum purchased amount should be greater than 0'))
 
+    @api.constrains('rule_min_quantity')
+    def _check_rule_min_quantity(self):
+        if not self.rule_min_quantity > 0:
+            raise ValidationError(_('Minimum quantity should be greater than 0'))
+
     # YTI TODO Remove in master
     def _compute_rule_partner_ids(self):
         pass
