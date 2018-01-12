@@ -444,11 +444,10 @@ class IrActionsServer(models.Model):
 
         if self._context.get('onchange_self'):
             record_cached = self._context['onchange_self']
-            for field, new_value in res.iteritems():
+            for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
             self.env[action.model_id.model].browse(self._context.get('active_id')).write(res)
-
 
     @api.model
     def run_action_object_create(self, action, eval_context=None):
