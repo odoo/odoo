@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <!-- Holidays status -->
+    <record id="view_holidays_status_filter" model="ir.ui.view">
+        <field name="name">hr.leave.type.filter</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Leave Type">
+                <field name="name" string="Leave Types"/>
+                <field name="categ_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="edit_holiday_status_form" model="ir.ui.view">
+        <field name="name">hr.leave.type.form</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <form string="Leave Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                            options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <group>
+                        <group name="description" string="Description">
+                            <field name="name"/>
+                            <field name="double_validation"/>
+                            <field name="limit"/>
+                        </group>
+                        <group name="options" string="Options">
+                            <field name="categ_id"/>
+                            <field name="color_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_holiday_status_tree" model="ir.ui.view">
+        <field name="name">hr.leave.type.tree</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Type">
+                <field name="name"/>
+                <field name="max_leaves"/>
+                <field name="leaves_taken"/>
+                <field name="remaining_leaves"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_holiday_status_view_kanban" model="ir.ui.view">
+        <field name="name">hr.leave.type.kanban</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div>
+                                <span>Max Leaves: <field name="max_leaves"/></span>
+                                <span class="pull-right">Leaves Taken: <field name="leaves_taken"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_holiday_status_normal_tree" model="ir.ui.view">
+        <field name="name">hr.leave.type.normal.tree</field>
+        <field name="model">hr.leave.type</field>
+        <field name="priority">35</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Type">
+                <field name="name"/>
+                <field name="limit"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_holidays_status_search" model="ir.ui.view">
+        <field name="name">hr.leave.type.search</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <search string="Leave Type">
+                <field name="name" string="Leave Types"/>
+                <field name="categ_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="open_view_holiday_status" model="ir.actions.act_window">
+        <field name="name">Leave Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="view_id" eval="view_holiday_status_normal_tree"/>
+        <field name="search_view_id" ref="view_hr_holidays_status_search"/>
+    </record>
+
+</odoo>
