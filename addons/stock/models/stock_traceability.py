@@ -92,6 +92,16 @@ class MrpStockReport(models.TransientModel):
             ref = move_line.move_id.scrap_ids[0].name
         return res_model, res_id, ref
 
+    def _get_usage(self, move_line):
+        usage = ''
+        if (move_line.location_id.usage == 'internal') and (move_line.location_dest_id.usage == 'internal'):
+            usage = 'internal'
+        elif (move_line.location_id.usage != 'internal') and (move_line.location_dest_id.usage == 'internal'):
+            usage = 'in'
+        else:
+            usage = 'out'
+        return usage
+
     def make_dict_move(self, level, parent_id, move_line, unfoldable=False):
         res_model, res_id, ref = self.get_links(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
@@ -101,6 +111,7 @@ class MrpStockReport(models.TransientModel):
             'date': move_line.move_id.date,
             'parent_id': parent_id,
             'is_used': bool(is_used),
+            'usage': self._get_usage(move_line),
             'model_id': move_line.id,
             'model':'stock.move.line',
             'product_id': move_line.product_id.display_name,
@@ -122,6 +133,7 @@ class MrpStockReport(models.TransientModel):
                 'unfoldable': False if not move_line.lot_id else True,
                 'date': move_line.move_id.date,
                 'model_id': move_line.id,
+                'usage': self._get_usage(move_line),
                 'parent_id': parent_id,
                 'model': model or 'stock.move.line',
                 'product_id': move_line.product_id.display_name,
@@ -155,6 +167,7 @@ class MrpStockReport(models.TransientModel):
                 'model': data['model'],
                 'model_id': data['model_id'],
                 'parent_id': data['parent_id'],
+                'usage': data.get('usage', False),
                 'is_used': data.get('is_used', False),
                 'lot_id': data.get('lot_id', False),
                 'type': 'line',

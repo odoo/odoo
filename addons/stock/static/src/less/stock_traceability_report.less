@@ -1,8 +1,7 @@
-.o_stock_reports_lines(@border-width: 5px, @color: inherit, @font-weight: inherit, @border-top-style: initial, @border-bottom-style: initial) {
+.o_stock_reports_lines(@border-width: 5px, @font-weight: inherit, @border-top-style: initial, @border-bottom-style: initial) {
     border-width: @border-width;
     border-left-style: hidden;
     border-right-style: hidden;
-    color: @color;
     font-weight: @font-weight;
     border-top-style: @border-top-style;
     border-bottom-style: @border-bottom-style;
@@ -25,13 +24,12 @@
         overflow-x:scroll;
     }
     background-color: @odoo-view-background-color;
-    color: @odoo-main-text-color;
     &.o_stock_reports_no_print {
         padding-bottom: 125px;
         margin: @odoo-horizontal-padding auto;
         .o-webclient-padding(@top: @odoo-sheet-vpadding, @bottom: @odoo-sheet-vpadding);
         .o_stock_reports_level0 {
-            .o_stock_reports_lines(@border-width: 1px, @color: @odoo-brand-primary, @font-weight: bold, @border-top-style: solid, @border-bottom-style: groove);
+            .o_stock_reports_lines(@border-width: 1px, @font-weight: normal, @border-top-style: solid, @border-bottom-style: groove);
         }
         .o_stock_reports_table {
             white-space: nowrap;
