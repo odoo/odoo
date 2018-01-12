@@ -240,7 +240,7 @@ def restore_db(db, dump_file, copy=False):
                     filestore_path = os.path.join(dump_dir, 'filestore')
 
             pg_cmd = 'psql'
-            pg_args = ['-q', '-f', os.path.join(dump_dir, 'dump.sql')]
+            pg_args = ['--no-psqlrc', '-q', '-f', os.path.join(dump_dir, 'dump.sql')]
 
         else:
             # <= 7.0 format (raw pg_dump output)
