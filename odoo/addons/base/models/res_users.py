@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import contextlib
+
 import pytz
 import datetime
+import ipaddress
 import itertools
 import logging
 import hmac
@@ -18,7 +21,7 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.http import request
 from odoo.osv import expression
 from odoo.service.db import check_super
-from odoo.tools import partition, pycompat
+from odoo.tools import partition, pycompat, collections
 
 _logger = logging.getLogger(__name__)
 
@@ -287,8 +290,21 @@ class Users(models.Model):
         )
         self.invalidate_cache(['password'], [uid])
 
-    @api.model
-    def check_credentials(self, password):
+    def _check_credentials(self, password):
+        """ Validates the current user's password.
+
+        Override this method to plug additional authentication methods.
+
+        Overrides should:
+
+        * call `super` to delegate to parents for credentials-checking
+        * catch AccessDenied and perform their own checking
+        * (re)raise AccessDenied if the credentials are still invalid
+          according to their own validation method
+
+        When trying to check for credentials validity, call _check_credentials
+        instead.
+        """
         """ Override this method to plug additional authentication methods"""
         self.env.cr.execute(
             'SELECT password FROM res_users WHERE id=%s',
@@ -534,11 +550,12 @@ class Users(models.Model):
         try:
             with cls.pool.cursor() as cr:
                 self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-                user = self.search([('login', '=', login)])
-                if user:
-                    user_id = user.id
-                    user.sudo(user_id).check_credentials(password)
-                    user.sudo(user_id)._update_last_login()
+                with self._assert_can_auth():
+                    user = self.search([('login', '=', login)])
+                    if user:
+                        user_id = user.id
+                        user.sudo(user_id)._check_credentials(password)
+                        user.sudo(user_id)._update_last_login()
         except AccessDenied:
             user_id = False
 
@@ -587,8 +604,9 @@ class Users(models.Model):
         cr = cls.pool.cursor()
         try:
             self = api.Environment(cr, uid, {})[cls._name]
-            self.check_credentials(passwd)
-            cls.__uid_cache[db][uid] = passwd
+            with self._assert_can_auth():
+                self._check_credentials(passwd)
+                cls.__uid_cache[db][uid] = passwd
         finally:
             cr.close()
 
@@ -817,6 +835,104 @@ class Users(models.Model):
             if groups_id_vals:
                 user.write({'groups_id': groups_id_vals})
 
+    @contextlib.contextmanager
+    def _assert_can_auth(self):
+        """ Checks that the current environment even allows the current auth
+        request to happen.
+
+        The baseline implementation is a simple linear login cooldown: after
+        a number of failures trying to log-in, the user (by login) is put on
+        cooldown. During the cooldown period, login *attempts* are ignored
+        and logged.
+
+        .. warning::
+
+            The login counter is not shared between workers and not
+            specifically thread-safe, the feature exists mostly for
+            rate-limiting on large number of login attempts (brute-forcing
+            passwords) so that should not be much of an issue.
+
+            For a more complex strategy (e.g. database or distribute storage)
+            override this method. To simply change the cooldown criteria
+            (configuration, ...) override _on_login_cooldown instead.
+
+        .. note::
+
+            This is a *context manager* so it can be called around the login
+            procedure without having to call it itself.
+        """
+        # needs request for remote address
+        if not request:
+            yield
+            return
+
+        reg = self.env.registry
+        failures_map = getattr(reg, '_login_failures', None)
+        if failures_map is None:
+            failures_map = reg._login_failures = collections.defaultdict(lambda : (0, datetime.datetime.min))
+
+        source = request.httprequest.remote_addr
+        (failures, previous) = failures_map[source]
+        if self._on_login_cooldown(failures, previous):
+            request.session['login_error'] = _("Too many login failures, please wait a bit before trying again.")
+
+            _logger.warn(
+                "Login attempt ignored for %s on %s: "
+                "%d failures since last success, last failure at %s. "
+                "You can configure the number of login failures before a "
+                "user is put on cooldown as well as the duration in the "
+                "System Parameters. Disable this feature by setting "
+                "\"base.login_cooldown_after\" to 0.",
+                source, self.env.cr.dbname, failures, previous)
+            if ipaddress.ip_address(source).is_private:
+                _logger.warn(
+                    "The rate-limited IP address %s is classified as private "
+                    "and *might* be a proxy. If your Odoo is behind a proxy, "
+                    "it may be mis-configured. Check that you are running "
+                    "Odoo in Proxy Mode and that the proxy is properly configured, see "
+                    "https://www.odoo.com/documentation/11.0/setup/deploy.html#https for details.",
+                    source
+                )
+            raise AccessDenied()
+
+        try:
+            yield
+        except AccessDenied:
+            (failures, __) = reg._login_failures[source]
+            reg._login_failures[source] = (failures + 1, datetime.datetime.now())
+            raise
+        else:
+            reg._login_failures.pop(source, None)
+
+    def _on_login_cooldown(self, failures, previous):
+        """ Decides whether the user trying to log in is currently
+        "on cooldown" and not even allowed to attempt logging in.
+
+        The default cooldown function simply puts the user on cooldown for
+        <login_cooldown_duration> seconds after each failure following the
+        <login_cooldown_after>th (0 to disable).
+
+        Can be overridden to implement more complex backoff strategies, or
+        e.g. wind down or reset the cooldown period as the previous failure
+        recedes into the far past.
+
+        :param int failures: number of recorded failures (since last success)
+        :param previous: timestamp of previous failure
+        :type previous:  datetime.datetime
+        :returns: whether the user is currently in cooldown phase (true if cooldown, false if no cooldown and login can continue)
+        :rtype: bool
+        """
+        cfg = self.env['ir.config_parameter'].sudo()
+        min_failures = int(cfg.get_param('base.login_cooldown_after', 5))
+        if min_failures == 0:
+            return True
+
+        delay = int(cfg.get_param('base.login_cooldown_duration', 60))
+        return failures >= min_failures and (datetime.datetime.now() - previous) < datetime.timedelta(seconds=delay)
+
+    def _register_hook(self):
+        if hasattr(self, 'check_credentials'):
+            _logger.warn("The check_credentials method of res.users has been renamed _check_credentials. One of your installed modules defines one, but it will not be called anymore.")
 
 #
 # Implied groups
@@ -862,7 +978,6 @@ class GroupsImplied(models.Model):
                 vals = {'users': list(pycompat.izip(repeat(4), group.with_context(active_test=False).users.ids))}
                 super(GroupsImplied, group.trans_implied_ids).write(vals)
         return res
-
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'

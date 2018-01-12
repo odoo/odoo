@@ -108,7 +108,7 @@ class IrHttp(models.AbstractModel):
                     request.session.check_security()
                     # what if error in security.check()
                     #   -> res_users.check()
-                    #   -> res_users.check_credentials()
+                    #   -> res_users._check_credentials()
                 except (AccessDenied, http.SessionExpiredException):
                     # All other exceptions mean undetermined status (e.g. connection pool full),
                     # let them bubble up
