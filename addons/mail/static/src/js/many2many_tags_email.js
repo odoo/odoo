@@ -48,7 +48,7 @@ BasicModel.include({
                 def = self._rpc({
                     model: list.model,
                     method: 'name_get',
-                    args: list.res_ids,
+                    args: [list.res_ids],
                     context: record.getContext({fieldName: fieldName}),
                 });
             }
