@@ -238,6 +238,7 @@ class StockMove(models.Model):
                 'move_id': self.id,
                 'product_id': self.product_id.id,
                 'location_id': location_id.id if location_id else self.location_id.id,
+                'production_id': self.raw_material_production_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom.id,
