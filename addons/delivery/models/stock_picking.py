@@ -99,7 +99,7 @@ class StockPicking(models.Model):
         for picking in self:
             picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
 
-    @api.depends('product_id', 'move_lines')
+    @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')

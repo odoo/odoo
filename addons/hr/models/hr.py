@@ -107,7 +107,7 @@ class Employee(models.Model):
     # resource and user
     # required on the resource, make sure required="True" set in the view
     name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id')
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True)
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(

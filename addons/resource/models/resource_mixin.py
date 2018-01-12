@@ -20,7 +20,7 @@ class ResourceMixin(models.AbstractModel):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Hours',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
-        index=True, related='resource_id.calendar_id')
+        index=True, related='resource_id.calendar_id', store=True)
 
     @api.model
     def create(self, values):
