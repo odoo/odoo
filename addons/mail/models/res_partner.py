@@ -147,7 +147,7 @@ class Partner(models.Model):
             })
 
     @api.multi
-    def _notify(self, message, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, user_signature=True):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 
@@ -159,11 +159,17 @@ class Partner(models.Model):
             return True
 
         # existing custom notification email
-        base_template = None
         if message.model and self._context.get('custom_layout', False):
-            base_template = self.env.ref(self._context['custom_layout'], raise_if_not_found=False)
-        if not base_template:
-            base_template = self.env.ref('mail.mail_template_data_notification_email_default')
+            template_xmlid = self._context['custom_layout']
+        elif layout:
+            template_xmlid = layout
+        else:
+            template_xmlid = 'mail.mail_template_data_notification_email_default'
+        try:
+            base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
+        except ValueError:
+            _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
+            return False
 
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:
