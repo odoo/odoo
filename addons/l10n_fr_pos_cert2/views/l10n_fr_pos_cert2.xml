@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="l10n_fr_pos_cert2_assets" inherit_id="point_of_sale.assets" name="l10n_fr_pos_cert2 assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/l10n_fr_pos_cert2/static/src/js/models.js"></script>
+            </xpath>
+        </template>
+
+        <template id="l10n_fr_pos_cert2_receipt" inherit_id="point_of_sale.report_receipt" name="l10n_fr_pos_cert2_receipt">
+            <xpath expr="//div[@class='page']" position="inside">
+                <span>DUPLICATA</span>
+            </xpath>
+        </template>
+
+        <record model="ir.ui.view" id="l10n_fr_pos_cert2_view_pos_pos_form">
+            <field name="name">pos.order.form.view.inherit</field>
+            <field name="model">pos.order</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='order_fields']" position="before">
+                    <div class="oe_button_box" name="button_box">
+                           <button class="oe_stat_button" name="action_see_attachments" type="object" icon="fa-book" string="Receipts"/>
+                        </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="XmlReceipt">
+        <t t-jquery="div:last" t-operation="append">
+            <div class="l10n_fr_hash">Hash: <t t-esc='receipt.l10n_fr_hash'/></div>
+        </t>
+    </t>
+    <t t-extend="PosTicket">
+         <t t-jquery='.receipt-change' t-operation='after'>
+             <t t-if="receipt.l10n_fr_hash">
+                 <div class="l10n_fr_hash">Hash: <t t-esc='receipt.l10n_fr_hash'/></div>
+             </t>
+             <t t-if="!receipt.l10n_fr_hash">
+                 PRO FORMA TICKET
+             </t>
+        </t>
+    </t>
+
+    <t t-extend="BillReceipt">
+        <t t-jquery="t[t-esc='receipt.name']" t-operation="replace">
+            PRO FORMA TICKET
+        </t>
+    </t>
+</templates>
