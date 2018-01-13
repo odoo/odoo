@@ -8,6 +8,7 @@ var models = require('point_of_sale.models');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
+var framework = require('web.framework');
 
 
 var _t = core._t;
@@ -330,6 +331,13 @@ var StatusWidget = PosBaseWidget.extend({
             this.$('.js_'+this.status[i]).addClass('oe_hidden');
         }
         this.$('.js_'+status).removeClass('oe_hidden');
+        
+        console.log('status', status)
+        if(status === 'connecting'){
+            framework.blockUI();
+        } else {
+            framework.unblockUI();
+        }
         
         if(msg){
             this.$('.js_msg').removeClass('oe_hidden').html(msg);
