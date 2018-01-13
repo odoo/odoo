@@ -21,36 +21,39 @@ msgstr ""
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_key
 msgid "Merchant Key"
-msgstr ""
+msgstr "Κλειδί Εμπόρου"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer_payumoney_merchant_salt
 msgid "Merchant Salt"
-msgstr ""
+msgstr "Salt Εμπόρου"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:145
 #, python-format
 msgid "PayUmoney: feedback error"
-msgstr ""
+msgstr "PayUmoney: σφάλμα επιστροφής"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:107
 #, python-format
 msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
+"PayUmoney: μη έγκυρη υπογραφή sha, λήφθηκε %s, υπολογισμένο %s, για τα "
+"δεδομένα %s"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:101
 #, python-format
 msgid "PayUmoney: received data for reference %s; multiple orders found"
 msgstr ""
+"PayUmoney: λήφθηκαν δεδομένα αναφοράς %s, βρέθηκαν πολλαπλές παραγγελίες "
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:98
 #, python-format
 msgid "PayUmoney: received data for reference %s; no order found"
-msgstr ""
+msgstr "PayUmoney: λήφθηκαν δεδομένα αναφοράς %s, δεν βρέθηκε παραγγελία"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:93
@@ -59,6 +62,8 @@ msgid ""
 "PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
 "shashign (%s)"
 msgstr ""
+"PayUmoney: λήφθηκαν δεδομένα αλλά λείπει η αναφορά (%s) ή pay_id (%s) ή "
+"υπογραφή sha (%s)"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer
