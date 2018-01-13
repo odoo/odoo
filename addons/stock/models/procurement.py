@@ -79,7 +79,7 @@ class ProcurementRule(models.Model):
         # Since action_confirm launch following procurement_group we should activate it.
         move = self.env['stock.move'].sudo().create(data)
         move._action_confirm()
-        return move
+        return True
 
     def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
         ''' Returns a dictionary of values that will be used to create a stock move from a procurement.

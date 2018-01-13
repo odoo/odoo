@@ -935,8 +935,7 @@ class ProcurementRule(models.Model):
                     break
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
-            po_line = self.env['purchase.order.line'].create(vals)
-        return po_line
+            self.env['purchase.order.line'].create(vals)
 
     def _get_purchase_schedule_date(self, values):
         """Return the datetime value to use as Schedule Date (``date_planned``) for the
