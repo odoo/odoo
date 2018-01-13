@@ -11,3 +11,4 @@ Laurent Destailleur ldestailleur@teclib.com https://github.com/eldy
 List of contributors:
 
 Laurent Destailleur ldestailleur@teclib.com https://github.com/eldy
+Guillaume Masson gmasson@teclib.com https://github.com/metaminux
