@@ -21,12 +21,12 @@ msgstr ""
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_login
 msgid "API Login Id"
-msgstr ""
+msgstr "API Login Id"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer_authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "API Transaction Key"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/authorize_request.py:66
@@ -35,11 +35,13 @@ msgid ""
 "Authorize.net Error Message(s):\n"
 " %s"
 msgstr ""
+"Authorize.net Μηνύματα Λάθους:\n"
+" %s"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
-msgstr ""
+msgstr "Authorize.net Αναγνωριστικό Προφίλ"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:167
@@ -48,11 +50,13 @@ msgid ""
 "Authorize: received data with missing reference (%s) or trans_id (%s) or "
 "fingerprint (%s)"
 msgstr ""
+"Authorize: λήφθησαν δεδομένα με ελλειπή αναφορά (%s) ή trans_id (%s) ή "
+"fingerprint  (%s)"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
 msgid "CVC"
-msgstr ""
+msgstr "CVC"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
@@ -100,7 +104,7 @@ msgstr "Συναλλαγή Πληρωμής"
 #: code:addons/payment_authorize/models/payment.py:347
 #, python-format
 msgid "The Customer Profile creation in Authorize.NET failed."
-msgstr ""
+msgstr "Η δημιουργία του Προφίλ Πελάτη στο Authorize.NET απέτυχε."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
@@ -108,6 +112,8 @@ msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
 msgstr ""
+"Αυτό περιέχει τη μοναδική αναφορά αυτού του συνδυασμού αναγνωριστικών "
+"συνεργάτη/πληρωμής στο σύστημα του Authorize.net"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_token
