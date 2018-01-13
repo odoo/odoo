@@ -120,7 +120,7 @@ class AccountInvoice(models.Model):
         '''
         Hook sera utilizado en un modulo superior
         '''
-        return valuation_price_unit != i_line.price_unit and line['price_unit'] == i_line.price_unit and acc
+        return float_compare(valuation_price_unit,i_line.price_unit,precision_digits=self.company_id.currency_id.decimal_places) != 0 and line['price_unit'] == i_line.price_unit and acc
         
     @api.model
     def _anglo_saxon_purchase_move_lines(self, i_line, res):

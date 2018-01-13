@@ -306,6 +306,11 @@ class AdjustmentLines(models.Model):
     @api.depends('former_cost', 'additional_landed_cost')
     def _compute_final_cost(self):
         self.final_cost = self.former_cost + self.additional_landed_cost
+        
+    def get_debit_account_id(self, move, accounts):
+        ''' Hook metodo utilizado en un modulo superior
+        '''
+        return accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
 
     def _create_accounting_entries(self, move, qty_out):
         # TDE CLEANME: product chosen for computation ?
@@ -313,7 +318,8 @@ class AdjustmentLines(models.Model):
         if not cost_product:
             return False
         accounts = self.product_id.product_tmpl_id.get_product_accounts()
-        debit_account_id = accounts.get('stock_valuation') and accounts['stock_valuation'].id or False
+        #siguiente linea agregado por Trescloud
+        debit_account_id = self.get_debit_account_id(move, accounts)
         already_out_account_id = accounts['stock_output'].id
         credit_account_id = self.cost_line_id.account_id.id or cost_product.property_account_expense_id.id or cost_product.categ_id.property_account_expense_categ_id.id
 
