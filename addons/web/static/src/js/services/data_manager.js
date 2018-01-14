@@ -387,10 +387,6 @@ return core.Class.extend({
             attrs.fieldDependencies = attrs.Widget.prototype.fieldDependencies;
         }
 
-        if (attrs.Widget.prototype.context) {
-            attrs.context = attrs.Widget.prototype.context;
-        }
-
         return attrs;
     },
     /**

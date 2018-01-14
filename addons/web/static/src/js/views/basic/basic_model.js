@@ -1854,7 +1854,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: record.getContext(),
+                context: _.extend({}, record.getContext(), {bin_size: true}),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -3094,13 +3094,6 @@ var BasicModel = AbstractModel.extend({
 
         // datapoint context is extended by fields widgets
         var context = _.extend({}, params.context);
-        if (params.fieldsInfo && params.viewType) {
-            _.each(params.fieldsInfo[params.viewType], function (field) {
-                if (field.context) {
-                    _.extend(context, field.context);
-                }
-            });
-        }
 
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
