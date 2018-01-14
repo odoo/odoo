@@ -2218,7 +2218,7 @@ msgstr ""
 #: code:addons/account/wizard/account_invoice_refund.py:54
 #, python-format
 msgid "Cannot create credit note for the draft/cancelled invoice."
-msgstr ""
+msgstr "Taslak / İptal edilen fatura için iade/fiyat farkı oluşturulamaz."
 
 #. module: account
 #: code:addons/account/models/account_move.py:198
@@ -2571,7 +2571,7 @@ msgstr "Yeni bir tedarikçi faturası kaydetmek için tıklayın."
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_in_refund
 msgid "Click to record a new vendor credit note."
-msgstr ""
+msgstr "Yeni bir tedarikçi iade/fiyat farkı eklemek için tıklayın."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2965,7 +2965,7 @@ msgstr "Borç Silme Oluştur"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft credit note"
-msgstr ""
+msgstr "Taslak İade/Fiyat Farkı oluşturun"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -3174,12 +3174,12 @@ msgstr "Alacak Dekontu"
 #: code:addons/account/models/account_invoice.py:447
 #, python-format
 msgid "Credit Note - %s"
-msgstr ""
+msgstr "İade Fiyat Farkı - %s"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Credit Note Bill"
-msgstr ""
+msgstr "İade/Fiyat Farkı Faturası"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund_date_invoice
@@ -3195,7 +3195,7 @@ msgstr "İade/Fiyat Farkı Giriş Sırası"
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Credit Notes"
-msgstr ""
+msgstr "İade/Fiyat Farkları"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
@@ -3496,7 +3496,7 @@ msgstr "Aralık"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "İade/Fiyat Farkı Sırası"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -3810,7 +3810,7 @@ msgstr "Taslak Fatura"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "Draft Credit Note"
-msgstr ""
+msgstr "Taslak İade/Fiyat Farkı"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:444
@@ -4532,7 +4532,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "How do account types affect your reports?"
-msgstr ""
+msgstr "Hesap türleri mali tablolarınızı etkileyeceği için çok önemlidir !"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7130,7 +7130,7 @@ msgstr "Lütfen birkaç fatura satırı oluşturun."
 #: code:addons/account/models/account_move.py:160
 #, python-format
 msgid "Please define a sequence for the credit notes"
-msgstr ""
+msgstr "İade/Fiyat Farkları için bir numara belirleyin"
 
 #. module: account
 #: code:addons/account/models/account_move.py:165
@@ -9050,7 +9050,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr ""
+msgstr "Sonraki İade/Fiyat Farkı için sıradaki numara kullanılacak"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_number_next
@@ -10090,7 +10090,7 @@ msgstr "Tedarikçi İade/Fiyat Farkı"
 #: code:addons/account/models/account_invoice.py:451
 #, python-format
 msgid "Vendor Credit Note - %s"
-msgstr ""
+msgstr "Tedarikçi İade/Fiyat Farkı - %s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_in_refund
@@ -10102,7 +10102,7 @@ msgstr "Tedarikçi İade/Fiyat Farkı Faturaları"
 #: code:addons/account/models/account_invoice.py:1243
 #, python-format
 msgid "Vendor Credit note"
-msgstr ""
+msgstr "Tedarikçi İade/Fiyat Farkı"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:666
@@ -10367,6 +10367,8 @@ msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
 "create a credit note instead."
 msgstr ""
+"Durumu Taslak veya İptal olmayan bir faturayı iptal edemezsiniz. Bunun "
+"yerine bir fiyat farkı oluşturabilirsiniz."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:112
