@@ -289,7 +289,7 @@
                                     <h4><strong>Quote template</strong> <span class="small">(packaged services)</span></h4>
                                     <span>
                                         <li>Activate the 'Online Quotations' option in <a t-att-href="prepare_backend_url(
-                                        'sales_team.action_sale_config')">Sales Settings</a></li>
+                                        'sale.action_sale_config_settings')">Sales Settings</a></li>
                                         <li>Create your templates of offers</li>
                                     </span>
                                 </div>
@@ -361,7 +361,7 @@
                                 <p>
                                     This email address has been preconfigured as the default
                                     for your sales department.<br/>
-                                    <a t-att-href="prepare_backend_url('sales_team.action_sale_config')">(you can change it here)</a>
+                                    <a t-att-href="prepare_backend_url('sale.action_sale_config_settings')">(you can change it here)</a>
                                 </p>
                                 <span class="arrow-down"></span>
                             </div>
@@ -569,7 +569,7 @@
 
                     <div class="well well-lg">
                         <strong>Next actions:</strong>
-                        <li><a t-att-href="prepare_backend_url('sales_team.action_sale_config')" target="blank"> Select your pricing preference and allow discounts</a></li>
+                        <li><a t-att-href="prepare_backend_url('sale.action_sale_config_settings')" target="blank"> Select your pricing preference and allow discounts</a></li>
                         <li><a t-att-href="prepare_backend_url('product.product_pricelist_action2')" target="blank"> Configure your pricelists</a></li>
                         <li><a t-att-href="prepare_backend_url('account.action_account_config')" target="blank"> Apply multi-currencies</a></li>
                         <li><a href="https://www.odoo.com/documentation/user/11.0/sales.html" target="blank"> Read the documentation about pricing &amp; discounts</a></li>

@@ -215,7 +215,7 @@ class ir_cron(models.Model):
                         _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['cron_name'])
                         continue
                     # Got the lock on the job row, run its code
-                    _logger.debug('Starting job `%s`.', job['cron_name'])
+                    _logger.info('Starting job `%s`.', job['cron_name'])
                     job_cr = db.cursor()
                     try:
                         registry = odoo.registry(db_name)

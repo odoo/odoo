@@ -7,13 +7,14 @@
 # Paolo Valier <paolo.valier@hotmail.it>, 2017
 # Lorenzo Battistini <lorenzo.battistini@agilebg.com>, 2017
 # Pietro Della Notte <pdellanotte@gmail.com>, 2017
+# Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Pietro Della Notte <pdellanotte@gmail.com>, 2017\n"
+"Last-Translator: Paolo Caruccio <paolo.caruccio66@gmail.com>, 2018\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -308,6 +309,8 @@ msgstr ""
 msgid ""
 "<span>You need to install the Sales Management app for this flow.</span>"
 msgstr ""
+"<span>È necessario installare il modulo Sales Management per gestire questo "
+"flusso.</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_template_property_form
@@ -725,7 +728,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_entire_packs
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_show_entire_packs
 msgid "Allow moving packs"
-msgstr ""
+msgstr "Consenti movimentazione pacchi"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:82
@@ -852,18 +855,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_backorder_id
 msgid "Back Order of"
-msgstr ""
+msgstr "Ordine arretrato di"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "Back Orders"
-msgstr ""
+msgstr "Ordini arretrati"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_backorder_confirmation.py:20
 #, python-format
 msgid "Back order <em>%s</em> <b>cancelled</b>."
-msgstr ""
+msgstr "Ordine arretrato <em>%s</em> annullato</b>."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:790
@@ -945,11 +948,13 @@ msgstr ""
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Bring goods to output location before shipping (Pick + Ship)"
 msgstr ""
+"Sposta le merci nel punto di partenza prima della spedizione (Prelievo + "
+"Spedizione)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_quant_ids
 msgid "Bulk Content"
-msgstr ""
+msgstr "Contenuto complessivo"
 
 #. module: stock
 #: selection:procurement.rule,action:0
@@ -1395,7 +1400,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr ""
+msgstr "Crea Ordine arretrato"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:715
@@ -1707,7 +1712,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse.orderpoint,lead_type:0
 msgid "Day(s) to purchase"
-msgstr ""
+msgstr "Giorno(i) all'acquisto"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_1
@@ -1843,7 +1848,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_delivery_route_id
 msgid "Delivery Route"
-msgstr ""
+msgstr "Percorso di Consegna"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_delivery
@@ -2495,6 +2500,8 @@ msgid ""
 "If a product is not at the right place, set the checked quantity to 0 and "
 "create a new line with correct location."
 msgstr ""
+"Se un prodotto non è nel posto corretto, impostare la quantità a 0 e creare "
+"una nuova riga con la posizione corretta."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_picking_type_entire_packs
@@ -2702,7 +2709,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_exhausted
 msgid "Include Exhausted Products"
-msgstr ""
+msgstr "Includi Prodotti Esauriti"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_incoming_qty
@@ -2753,7 +2760,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move_product_uom_qty
 #: model:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Initial Demand"
-msgstr ""
+msgstr "Domanda iniziale"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3021,7 +3028,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
 msgid "Is a Return Location?"
-msgstr ""
+msgstr "È una location di Ritorno?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_scrap_location
@@ -3321,7 +3328,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_location_barcode
 msgid "Location BarCode"
-msgstr ""
+msgstr "Codice a Barre Location"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_location_name
@@ -3471,6 +3478,8 @@ msgid ""
 "Make packages into a dedicated location, then bring them to the output "
 "location for shipping (Pick + Pack + Ship)"
 msgstr ""
+"Prepara i pacchi in un punto dedicato, portali nel punto di partenza per la "
+"spedizione (Prelievo + Imballaggio + Spedizione)"
 
 #. module: stock
 #: model:res.groups,name:stock.group_tracking_owner
@@ -3995,7 +4004,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr ""
+msgstr "Tipi Operazioni"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_partner_id
@@ -4212,7 +4221,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package_packaging_id
 msgid "Package Type"
-msgstr ""
+msgstr "Tipo di Pacco"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_package_view
@@ -4634,7 +4643,7 @@ msgstr "Movimenti Prodotto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line_product_name
 msgid "Product Name"
-msgstr ""
+msgstr "Nome prodotto"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packagings
@@ -4846,7 +4855,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Multiplo Quantità"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_qty_available
@@ -5004,7 +5013,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
 msgid "Receive goods directly in stock (1 step)"
-msgstr ""
+msgstr "Ricevi le merci direttamente in magazzino (1 passaggio)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:324
@@ -5066,13 +5075,13 @@ msgstr ""
 #: model:ir.model,name:stock.model_product_removal
 #: model:ir.model.fields,field_description:stock.field_stock_location_removal_strategy_id
 msgid "Removal Strategy"
-msgstr ""
+msgstr "Strategia di Rimozione"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:111
 #, python-format
 msgid "Removal strategy %s not implemented."
-msgstr ""
+msgstr "Strategia di rimozione %s non implementata."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product_reordering_max_qty
@@ -5176,7 +5185,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_resupply_wh_ids
 msgid "Resupply Warehouses"
-msgstr ""
+msgstr "Magazzini di Rifornimento"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -5265,6 +5274,8 @@ msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
 msgstr ""
+"Saranno create le rotte per questi magazzini di rifornimento e le potrai "
+"selezionare nei prodotti e nelle categorie prodotto"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
@@ -5549,7 +5560,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.warehouse,delivery_steps:0
 msgid "Ship directly from stock (Ship only)"
-msgstr ""
+msgstr "Spedisci direttamente dal magazzino (Spedisci soltanto)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -5649,7 +5660,7 @@ msgstr "Documento di origine"
 #: model:ir.model.fields,field_description:stock.field_stock_move_location_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking_location_id
 msgid "Source Location"
-msgstr ""
+msgstr "Location di Provenienza"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.message_body
@@ -6285,7 +6296,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "This shipment is a backorder of"
-msgstr ""
+msgstr "Questa spedizione è un ordine arretrato di "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_partner_property_stock_customer
@@ -6341,7 +6352,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Receive"
-msgstr ""
+msgstr "Da Ricevere"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -6474,7 +6485,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_picking_picking_type_code
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type_code
 msgid "Type of Operation"
-msgstr ""
+msgstr "Tipo di Operazione"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings_module_delivery_ups
@@ -6556,6 +6567,7 @@ msgstr ""
 #: selection:stock.warehouse,reception_steps:0
 msgid "Unload in input location then go to stock (2 steps)"
 msgstr ""
+"Scarica nel punto di ricezione e ricevi le merci in magazzino (2 passaggi)"
 
 #. module: stock
 #: selection:stock.warehouse,reception_steps:0
@@ -6563,6 +6575,8 @@ msgid ""
 "Unload in input location, go through a quality control before being admitted"
 " in stock (3 steps)"
 msgstr ""
+"Scarica nel punto di ricezione, esegui un controllo di qualità prima che le "
+"merci siano ricevute nel magazzino (3 passaggi)"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form

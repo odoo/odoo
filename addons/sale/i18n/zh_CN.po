@@ -12,7 +12,7 @@
 # liAnGjiA <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
-# 林俊 <54773801@qq.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # Li Xiang <lvx5013@foxmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -20,7 +20,6 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
 # Skyy rao <raozhangshun@163.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
@@ -197,7 +196,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;<span>基于</span>&amp;nbsp;"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -279,12 +278,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Accept &amp; Sign"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/>接收＆amp;符号"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/>同意 ＆amp; 签名"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-check-circle\"/> Signed"
-msgstr "有符号的"
+msgstr "已签名"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -432,7 +431,7 @@ msgstr "<strong>数量</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Quotation Date:</strong>"
-msgstr " <strong>报价日期：</strong>"
+msgstr " <strong>报价日期:</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -556,7 +555,7 @@ msgstr "允许你发送形式发票给客户"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "允许你发送形式发票"
+msgstr "允许你发送形式发票."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -655,12 +654,12 @@ msgstr "按销售团队"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr "已交付的可编辑"
+msgstr "允许编辑已交付的"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_updatable
 msgid "Can Edit Product"
-msgstr ""
+msgstr "允许编辑"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -723,22 +722,22 @@ msgstr "计算运输成本并用DHL装运"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
-msgstr "计算运输成本并用ＦｅｄＥＸ装运"
+msgstr "计算运输成本并用FedEx装运"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with UPS"
-msgstr "计算运输成本并用ＵＰＳ装运"
+msgstr "计算运输成本并用UPS装运"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with USPS"
-msgstr " 计算运输成本并用ＵＳＰＳ装运"
+msgstr "  计算运输成本并用USPS装运"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
-msgstr " 计算运输成本并用bpost装运"
+msgstr "  计算运输成本并用bpost装运"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1642,7 +1641,7 @@ msgstr "订单号码"
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
-msgstr "订单参照"
+msgstr "订单参考"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
@@ -1653,18 +1652,18 @@ msgstr "订单状态"
 #: code:addons/sale/controllers/portal.py:218
 #, python-format
 msgid "Order is not in a state requiring customer validation."
-msgstr " 订单不在状态，需要客户验证。"
+msgstr "订单不处于需要客户验证的状态。"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:225
 #, python-format
 msgid "Order signed by %s"
-msgstr "订单签署自 %s"
+msgstr "订单由%s签名"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "以发票"
+msgstr "已开票"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2060,7 +2059,7 @@ msgstr "重新开票费用"
 #: code:addons/sale/controllers/portal.py:139
 #, python-format
 msgid "Reference"
-msgstr "参照"
+msgstr "参考"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
@@ -2083,7 +2082,7 @@ msgstr "报表布局类别"
 #: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
-msgstr "报告"
+msgstr "报表"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
@@ -2224,7 +2223,7 @@ msgstr "销售价格"
 #: code:addons/sale/models/sales_team.py:94
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "销售：免税的总价"
+msgstr "销售：不含税总价"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_user_id
@@ -2252,12 +2251,12 @@ msgstr "搜索销售订单"
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
 msgid "Section"
-msgstr "章节"
+msgstr "部分"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_layout
 msgid "Sections on Sales Orders"
-msgstr "关于销售订单的章节"
+msgstr "关于销售订单的部分"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_access_token
@@ -2574,7 +2573,7 @@ msgstr "定金必须为正数。"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "There are currently no orders for your account."
-msgstr "现在你的账户没有订单"
+msgstr "现在你的账户没有订单."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -2601,12 +2600,12 @@ msgstr "本产品：“%s” 未定义应收科目。你可能需要从会计应
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
 msgid "There is no invoiceable line."
-msgstr ""
+msgstr "不存在可开票的明细。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
 msgid "There was an error processing this page."
-msgstr "此页有出错流程"
+msgstr "此页存在错误."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -2816,7 +2815,7 @@ msgstr "你要开什么发票？"
 #: code:addons/sale/static/src/js/sale.js:32
 #, python-format
 msgid "Wrong value entered!"
-msgstr "错误值输入!"
+msgstr "输入了错误值!"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:188

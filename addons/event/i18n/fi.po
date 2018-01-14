@@ -12,7 +12,7 @@
 # Jussi Lehto <jussi@gulfeo.com>, 2017
 # Tommi Rintala <tommi.rintala@gmail.com>, 2017
 # Kari Lindgren <karisatu@gmail.com>, 2017
-# salmemik <salmemik@gmail.com>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
 # Miku Laitinen <miku.laitinen@gmail.com>, 2017
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 msgid ""
@@ -382,6 +382,12 @@ msgstr ""
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr ""
+
+#. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopio)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1092,7 +1098,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
 
