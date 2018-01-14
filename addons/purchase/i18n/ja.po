@@ -7,9 +7,9 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
-# kent_ocean <ke.tanabe@gmail.com>, 2017
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# kent_ocean <ke.tanabe@gmail.com>, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -113,7 +113,7 @@ msgstr "行数"
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
-msgstr "発注数"
+msgstr "購買オーダ数"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
@@ -342,12 +342,12 @@ msgstr "全て"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
-msgstr "発注の編集を許可"
+msgstr "購買オーダの編集を許可"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
 msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "購買発注明細に分析勘定を指定することができます。"
+msgstr "購買オーダ明細に分析勘定を指定することができます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -976,7 +976,7 @@ msgstr "発注のメッセージ"
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr "発注明細のメッセージ"
+msgstr "購買オーダ明細のメッセージ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation_amount
@@ -1115,7 +1115,7 @@ msgstr "オーダ参照"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_state
 msgid "Order Status"
-msgstr "発注ステータス"
+msgstr "オーダステータス"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1283,7 +1283,7 @@ msgstr "購買契約"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr "発注分析"
+msgstr "購買分析"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1307,7 +1307,7 @@ msgstr "購買請求"
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lead
 msgid "Purchase Lead Time"
-msgstr "発注リードタイム"
+msgstr "購買リードタイム"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:54
@@ -1335,7 +1335,7 @@ msgstr "注文 #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr ""
+msgstr "購買オーダ会計ポジション"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1346,13 +1346,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr "発注明細"
+msgstr "購買オーダ明細"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr "発注明細"
+msgstr "購買オーダ明細"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
@@ -1383,7 +1383,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
-msgstr "発注"
+msgstr "購買オーダ"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -1399,7 +1399,7 @@ msgstr "発注統計"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "請求書受領済の購買オーダ"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1428,7 +1428,7 @@ msgstr "購買"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr "発注"
+msgstr "購買オーダ"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
