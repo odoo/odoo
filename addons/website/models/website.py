@@ -175,7 +175,7 @@ class Website(models.Model):
     social_googleplus = fields.Char('Google+ Account')
     google_analytics_key = fields.Char('Google Analytics Key')
 
-    user_id = fields.Many2one('res.users', string='Public User', default=lambda self: self.env.ref('base.public_user').id)
+    user_id = fields.Many2one('res.users', string='Public User', required=True, default=lambda self: self.env.ref('base.public_user').id)
     compress_html = fields.Boolean('Compress HTML') # TODO: REMOVE ME IN SAAS-14
     cdn_activated = fields.Boolean('Activate CDN for assets')
     cdn_url = fields.Char('CDN Base URL', default='')

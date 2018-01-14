@@ -318,7 +318,7 @@ msgstr "Seleziona se vuoi che questo prodotto appaia all'interno del POS"
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
 msgid "Click to define a new delivery method."
-msgstr "Clic per definire un nuovo tipo di spedizione"
+msgstr "Clicca per impostare un nuovo metodo di consegna."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_color
@@ -456,7 +456,7 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
-"Unità di misura utilizzata di default per gli ordini di acquisto. Deve "
+"Unità di misura predefinita utilizzata per gli ordini di acquisto. Deve "
 "essere della stessa categoria dell'unità di misura predefinita."
 
 #. module: delivery
@@ -474,12 +474,12 @@ msgstr "Consegna"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Delivery Carrier"
-msgstr ""
+msgstr "Trasportatore"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Delivery Information"
-msgstr ""
+msgstr "Informazioni di Consegna"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -632,6 +632,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
+"La compilazione del form permette di filtrare i corrieri in base "
+"all'indirizzo di consegna del tuo cliente."
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -675,8 +677,9 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.free_delivery_carrier
 #: model:product.product,name:delivery.free_delivery_carrier_product_product
+#: model:product.template,name:delivery.free_delivery_carrier_product_template
 msgid "Free delivery charges"
-msgstr "Nessuna spesa di Spedizione"
+msgstr "Consegna gratuita"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_if_more_than
@@ -932,7 +935,7 @@ msgstr "Unità logistica"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Manage Package Type"
-msgstr "Gestisci Tipo di Package"
+msgstr "Gestisci Tipo di Imballo"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_track_service
@@ -1064,6 +1067,7 @@ msgstr "Costo normale - costo totale"
 #. module: delivery
 #: model:delivery.carrier,name:delivery.normal_delivery_carrier
 #: model:product.product,name:delivery.normal_delivery_carrier_product_product
+#: model:product.template,name:delivery.normal_delivery_carrier_product_template
 msgid "Normal Delivery Charges"
 msgstr "Spese di Spedizione Normali"
 
@@ -1338,7 +1342,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_expense_policy
 msgid "Re-Invoice Expenses"
-msgstr ""
+msgstr "Spese di Ri-fatturazione"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_reception_count
@@ -1592,6 +1596,7 @@ msgstr ""
 #. module: delivery
 #: model:delivery.carrier,name:delivery.delivery_carrier
 #: model:product.product,name:delivery.delivery_carrier_product_product
+#: model:product.template,name:delivery.delivery_carrier_product_template
 msgid "The Poste"
 msgstr "La Posta"
 
@@ -1768,7 +1773,7 @@ msgstr "Tracciabilità"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_ref
 msgid "Tracking Reference"
-msgstr ""
+msgstr "Tracking di riferimento"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -1890,7 +1895,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Peso per Spedizione"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_alert_time
@@ -1992,18 +1997,18 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Il metodo di spedizione non reindirizza al sito dello spedizioniere per il "
+"Il metodo di consegna non reindirizza al sito dello spedizioniere per il "
 "tracking dell'ordine."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_from
 msgid "Zip From"
-msgstr "CAP Da"
+msgstr "Da CAP"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_zip_to
 msgid "Zip To"
-msgstr "CAP A"
+msgstr "A CAP"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form

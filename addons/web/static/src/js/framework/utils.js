@@ -288,7 +288,7 @@ function human_size (size) {
         size /= 1024;
         ++i;
     }
-    return size.toFixed(2) + ' ' + units[i];
+    return size.toFixed(2) + ' ' + units[i].trim();
 }
 
 /**
