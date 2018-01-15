@@ -183,10 +183,6 @@ class Route(models.Model):
             'domain': [('route_ids', 'in', self.ids)],
         }
 
-    @api.onchange('warehouse_selectable')
-    def _onchange_warehouse_selectable(self):
-        if not self.warehouse_selectable:
-            self.warehouse_ids = [(5, 0, 0)]
 
 class PushedFlow(models.Model):
     _name = "stock.location.path"
