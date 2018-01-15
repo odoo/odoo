@@ -401,9 +401,9 @@ class ProductProduct(models.Model):
             name = variant and "%s (%s)" % (product.name, variant) or product.name
             sellers = []
             if partner_ids:
-                sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and (x.product_id == product)]
+                sellers = [x for x in product.seller_ids.filtered(lambda x: x.company_id == self.env.user.company_id) if (x.name.id in partner_ids) and (x.product_id == product)]
                 if not sellers:
-                    sellers = [x for x in product.seller_ids if (x.name.id in partner_ids) and not x.product_id]
+                    sellers = [x for x in product.seller_ids.filtered(lambda x: x.company_id == self.env.user.company_id) if (x.name.id in partner_ids) and not x.product_id]
             if sellers:
                 for s in sellers:
                     seller_variant = s.product_name and (
