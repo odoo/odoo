@@ -274,8 +274,8 @@ class Lang(models.Model):
         cr = cls.pool.cursor()
 
         self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-        if self.search_count([('code', '=ilike', lang), ('active', '=', True)]) == 0:
-            if lang.lower() != fallback.lower() and self.search_count([('code', '=ilike', fallback), ('active', '=', True)]) != 0:
+        if self.search_count([('code', '=', lang), ('active', '=', True)]) == 0:
+            if lang.lower() != fallback.lower() and self.search_count([('code', '=', fallback), ('active', '=', True)]) != 0:
                 lang = fallback
             else:
                 lang = 'en_US'
