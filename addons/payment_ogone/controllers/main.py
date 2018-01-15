@@ -25,7 +25,7 @@ class OgoneController(http.Controller):
     def ogone_form_feedback(self, **post):
         """ Ogone contacts using GET, at least for accept """
         _logger.info('Ogone: entering form_feedback with post data %s', pprint.pformat(post))  # debug
-        request.env['payment.transaction'].sudo().form_feedback(post, 'ogone')
+        request.env['payment.transaction'].sudo().with_context(lang=None).form_feedback(post, 'ogone')
         return werkzeug.utils.redirect(post.pop('return_url', '/'))
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
@@ -48,7 +48,7 @@ class OgoneController(http.Controller):
     def feedback(self, **kwargs):
         try:
             tx = request.env['payment.transaction'].sudo()._ogone_form_get_tx_from_data(kwargs)
-            tx._ogone_s2s_validate()
+            tx.with_context(lang=None)._ogone_s2s_validate()
         except ValidationError:
             return 'ko'
         return 'ok'
