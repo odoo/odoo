@@ -7,7 +7,7 @@ import logging
 import re
 from operator import itemgetter
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.tools.safe_eval import safe_eval
 from odoo.exceptions import UserError, ValidationError
 
@@ -268,6 +268,18 @@ class Lang(models.Model):
                 formatted = intersperse(formatted, eval_lang_grouping, thousands_sep)[0]
 
         return formatted
+
+    @classmethod
+    def _check_setup_lang(cls, lang):
+        cr = cls.pool.cursor()
+
+        self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
+        if self.search_count([('code', '=ilike', lang), ('active', '=', True)]) == 0:
+            lang = 'en_US'
+
+        cr.close()
+
+        return lang
 
 
 def split(l, counts):

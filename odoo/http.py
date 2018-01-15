@@ -1373,6 +1373,11 @@ class Root(object):
                     lang = babel.core.LOCALE_ALIASES[code]
             except (ValueError, KeyError):
                 lang = 'en_US'
+
+            if httprequest.session.db:
+                res_lang = odoo.registry(httprequest.session.db)['res.lang']
+                lang = res_lang._check_setup_lang(lang)
+
             httprequest.session.context["lang"] = lang
 
     def get_request(self, httprequest):
