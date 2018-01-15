@@ -29,6 +29,7 @@ class AccountJournal(models.Model):
             self.check_sequence_id.sudo().number_next_actual = self.check_next_number
 
     check_manual_sequencing = fields.Boolean('Manual Numbering', default=False,
+        readonly=True,
         help="Check this option if your pre-printed checks are not numbered.")
     check_sequence_id = fields.Many2one('ir.sequence', 'Check Sequence', readonly=True, copy=False,
         help="Checks numbering sequence.")
