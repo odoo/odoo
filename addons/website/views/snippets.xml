@@ -134,9 +134,8 @@
     <section class="s_title">
         <div class="container">
             <div class="row">
-                <div class="col-md-12">
-                    <h1 class="text-center">Your Website Title</h1>
-                    <h3 class="text-center text-muted">And a great subtitle too</h3>
+                <div class="col-md-12 pt48 pb48" style="text-align: center;">
+                    <h1 class="s_title_default" style="font-size: 48px;">Your Website Title</h1>
                 </div>
             </div>
         </div>
@@ -800,7 +799,6 @@
         </li>
         <li class="dropdown-submenu">
             <a tabindex="-2" href="#"><i class="fa fa-arrows-h"/>Images spacing</a>
-
             <ul class="dropdown-menu">
                 <li data-select-class="o_spc-none"><a href="#">None</a></li>
                 <li data-select-class="o_spc-small"><a href="#">Small</a></li>
@@ -845,6 +843,7 @@
             </ul>
         </li>
     </div>
+
     <div data-js="colorpicker"
         data-selector=".s_text_block_image_fw .row > div, .s_banner .carousel-content"
         data-palette-exclude="grayscale"
@@ -854,6 +853,23 @@
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
             <ul class="dropdown-menu">
                 <li></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-selector=".s_title" data-target="h1, h2, h3, h4, h5, h6">
+        <li class="divider"></li>
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-font"/>Typography</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_title_boxed"><a>Boxed</a></li>
+                <li data-select-class="s_title_lines"><a>Line-On-Sides</a></li>
+                <li data-select-class="s_title_thin"><a>Thin</a></li>
+                <li data-select-class="s_title_transparent"><a>Transparent</a></li>
+                <li data-select-class="s_title_underlined"><a>Underlined</a></li>
+                <li data-select-class="s_title_uppercase"><a>Uppercase</a></li>
+                <li class="divider"></li>
+                <li data-select-class="s_title_default"><a>Default</a></li>
             </ul>
         </li>
     </div>
