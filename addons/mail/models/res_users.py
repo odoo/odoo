@@ -125,7 +125,7 @@ class Users(models.Model):
 
     @api.model
     def activity_user_count(self):
-        query = """SELECT m.name, count(*), act.res_model as model,
+        query = """SELECT m.id, count(*), act.res_model as model,
                         CASE
                             WHEN now()::date - act.date_deadline::date = 0 Then 'today'
                             WHEN now()::date - act.date_deadline::date > 0 Then 'overdue'
@@ -134,16 +134,18 @@ class Users(models.Model):
                     FROM mail_activity AS act
                     JOIN ir_model AS m ON act.res_model_id = m.id
                     WHERE user_id = %s
-                    GROUP BY m.name, states, act.res_model;
+                    GROUP BY m.id, states, act.res_model;
                     """
         self.env.cr.execute(query, [self.env.uid])
         activity_data = self.env.cr.dictfetchall()
+        model_ids = [a['id'] for a in activity_data]
+        model_names = {n[0]:n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
 
         user_activities = {}
         for activity in activity_data:
             if not user_activities.get(activity['model']):
                 user_activities[activity['model']] = {
-                    'name': activity['name'],
+                    'name': model_names[activity['id']],
                     'model': activity['model'],
                     'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,
