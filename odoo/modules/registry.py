@@ -111,7 +111,7 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._init = True
-        self._init_parent = {}
+        self._init_parent = set()
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._post_init_queue = deque()
