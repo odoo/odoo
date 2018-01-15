@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
-    holiday_id = fields.Many2one("hr.holidays", string='Leave Request')
+    holiday_id = fields.Many2one("hr.leave", string='Leave Request')
 
     @api.multi
     def unlink(self):
