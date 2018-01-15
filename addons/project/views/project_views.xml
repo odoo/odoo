@@ -102,7 +102,6 @@
             <field name="arch" type="xml">
                 <form string="Project">
                 <sheet string="Project">
-                    <field name="analytic_account_id" invisible="1" required="0"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
@@ -150,8 +149,9 @@
                                 <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
                             </group>
                             <group name="misc">
-                                <group string="Configuration" groups="base.group_no_one">
+                                <group string="Configuration" groups="base.group_no_one" name="configuration">
                                     <field name="sequence" groups="base.group_no_one"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group string="Time Scheduling" groups="base.group_no_one">
                                     <field name="resource_calendar_id" groups="base.group_no_one"/>
@@ -663,21 +663,6 @@
                     <field name="project_id"/>
                     <field name="stage_id"/>
                 </graph>
-            </field>
-        </record>
-
-        <record id="analytic_account_inherited_form" model="ir.ui.view">
-            <field name="name">account.analytic.account.form.inherit</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
-            <field eval="18" name="priority"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='toggle_active']" position="before">
-                    <button class="oe_stat_button" type="object" name="projects_action"
-                        icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
-                        <field string="Projects" name="project_count" widget="statinfo"/>
-                    </button>
-                </xpath>
             </field>
         </record>
 
