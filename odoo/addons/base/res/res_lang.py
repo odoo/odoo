@@ -270,12 +270,15 @@ class Lang(models.Model):
         return formatted
 
     @classmethod
-    def _check_setup_lang(cls, lang):
+    def _check_setup_lang(cls, lang, fallback):
         cr = cls.pool.cursor()
 
         self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
         if self.search_count([('code', '=ilike', lang), ('active', '=', True)]) == 0:
-            lang = 'en_US'
+            if lang.lower() != fallback.lower() and self.search_count([('code', '=ilike', fallback), ('active', '=', True)]) != 0:
+                lang = fallback
+            else:
+                lang = 'en_US'
 
         cr.close()
 

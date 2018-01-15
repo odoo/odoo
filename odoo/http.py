@@ -1365,6 +1365,7 @@ class Root(object):
     def setup_lang(self, httprequest):
         if "lang" not in httprequest.session.context:
             alang = httprequest.accept_languages.best or "en-US"
+            code = None
             try:
                 code, territory, _, _ = babel.core.parse_locale(alang, sep='-')
                 if territory:
@@ -1376,7 +1377,7 @@ class Root(object):
 
             if httprequest.session.db:
                 res_lang = odoo.registry(httprequest.session.db)['res.lang']
-                lang = res_lang._check_setup_lang(lang)
+                lang = res_lang._check_setup_lang(lang, babel.core.LOCALE_ALIASES.get(code, 'en_US'))
 
             httprequest.session.context["lang"] = lang
 
