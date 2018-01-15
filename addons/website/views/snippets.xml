@@ -102,28 +102,13 @@
 </template>
 
 <template id="s_text_block" name="Text Block">
-    <section class="s_text_block pt16 pb16">
+    <section class="s_text_block pt48 pb48">
         <div class="container">
-            <h2 class="text-center">A Great Headline</h2>
-            <h3 class="text-center text-muted">A good subtitle</h3>
             <div class="row">
-                <div class="col-md-12">
-                    <p>
-                        A great way to catch your reader's attention is to tell a story.
-                        Everything you consider writing can be told as a story.
-                    </p><p>
-                        <b>Great stories have personality.</b> Consider telling
-                        a great story that provides personality. Writing a story
-                        with personality for potential clients will assists with
-                        making a relationship connection. This shows up in small
-                        quirks like word choices or phrases. Write from your point
-                        of view, not from someone else's experience.
-                    </p><p>
-                        <b>Great stories are for everyone even when only written for
-                        just one person.</b> If you try to write with a wide general
-                        audience in mind, your story will ring false and be bland.
-                        No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.
-                    </p>
+                <div class="col-md-12 s_padding_default">
+                    <p>A great way to catch your reader's attention is to tell a story. Everything you consider writing can be told as a story.</p>
+                    <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                    <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
                 </div>
             </div>
         </div>
@@ -691,11 +676,11 @@
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_title" t-thumbnail="/website/static/src/img/blocks/block_title.png"/>
+                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
                     <t t-snippet="website.s_cover" t-thumbnail="/website/static/src/img/blocks/block_banner.png"/>
                     <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
                     <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
                     <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
-                    <t t-snippet="website.s_text_block" t-thumbnail="/website/static/src/img/blocks/block_text_block.png"/>
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
                     <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
                     <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
@@ -834,7 +819,7 @@
     </div>
 
     <div data-js="colorpicker"
-        data-selector="section, :not(.o_gallery > .container) > .carousel"
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_text_block [class*='col-md-']"
         data-exclude=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
@@ -870,6 +855,22 @@
                 <li data-select-class="s_title_uppercase"><a>Uppercase</a></li>
                 <li class="divider"></li>
                 <li data-select-class="s_title_default"><a>Default</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-selector=".s_text_block [class*='col-md-']">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-arrows-alt"/>Spacing</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_padding_none"><a href="#">None</a></li>
+                <li data-select-class="s_padding_xs"><a href="#">Extra Small</a></li>
+                <li data-select-class="s_padding_sm"><a href="#">Small</a></li>
+                <li data-select-class="s_padding_md"><a href="#">Medium</a></li>
+                <li data-select-class="s_padding_lg"><a href="#">Large</a></li>
+                <li data-select-class="s_padding_xl"><a href="#">Extra Large</a></li>
+                <li class="divider"></li>
+                <li data-select-class="s_padding_default"><a>Default</a></li>
             </ul>
         </li>
     </div>
