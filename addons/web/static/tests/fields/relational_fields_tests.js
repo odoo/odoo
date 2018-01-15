@@ -7639,7 +7639,7 @@ QUnit.module('relational_fields', {
                 mode: 'edit',
             },
         });
-        form.$('span[name="delete"]').first().click();
+        form.$('.o_list_record_remove:first i').click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange',
             'onchange has been properly applied');
         form.destroy();
