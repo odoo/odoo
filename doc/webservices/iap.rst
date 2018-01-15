@@ -309,15 +309,22 @@ perform the service within:
 
 .. todo:: "My Account" > "Your InApp Services"?
 
+
 The :class:`~odoo.addons.iap.models.iap.charge` helper will:
+
+.. note::
+
+    Since the 15th of January 2018, a new functionality that allows one to capture a different amount than autorized has been added.
+    See :ref:`Charging <iap-charging>`
 
 1. authorize (create) a transaction with the specified number of credits,
    if the account does not have enough credits it will raise the relevant
    error
 2. execute the body of the ``with`` statement
-3. if the body of the ``with`` executes succesfully, capture (confirm) the
-   transaction
-4. otherwise if an error is raised from the body of the ``with`` cancel the
+3. (NEW) if the body of the ``with`` executes succesfully, update the price 
+   of the transaction if needed
+4. capture (confirm) the transaction
+5. otherwise if an error is raised from the body of the ``with`` cancel the
    transaction (and release the hold on the credits)
 
 .. danger::
@@ -523,8 +530,16 @@ Odoo Helpers
 For convenience, if you are implementing your service using Odoo the ``iap``
 module provides a few helpers to make IAP flow even simpler:
 
+.. _iap-charging:
+
 Charging
 --------
+
+.. note::
+
+    A new functionality was introduced to capture a different amount of credits than reserved.
+    As this patch was added on the 15th of January 2018, you will need to upgrade your ``iap`` module in order to use it.
+    The specifics of the new functionality are highlighted in the code. 
 
 .. class:: odoo.addons.iap.models.iap.charge(env, key, account_token, credit[, description, credit_template])
 
@@ -544,8 +559,10 @@ Charging
     :param UserToken token:
     :param int credit:
     :param str description:
+    :param Qweb template credit_template:
 
 .. code-block:: python
+  :emphasize-lines: 10,13,14,15
 
     @route('/deathstar/superlaser', type='json')
     def superlaser(self, user_account,
@@ -556,8 +573,11 @@ Charging
                        0.0 is none, 1.0 is full power
         """
         credits = int(MAXIMUM_POWER * factor)
-        with charge(request.env, SERVICE_KEY, user_account, credits):
+        with charge(request.env, SERVICE_KEY, user_account, credits) as transaction:
             # TODO: allow other targets
+            transaction.credit = credits * 0.85 
+            # Sales ongoing one the energy price,
+            # only 85% of the price will be charged/captured.
             self.env['systems.planets'].search([
                 ('grid', '=', 'M-10'),
                 ('name', '=', 'Alderaan'),
