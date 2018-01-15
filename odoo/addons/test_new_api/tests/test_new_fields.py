@@ -3,7 +3,7 @@
 #
 from datetime import date, datetime
 
-from odoo.exceptions import AccessError, except_orm
+from odoo.exceptions import AccessError, UserError, except_orm
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr, pycompat
 
@@ -937,3 +937,123 @@ class TestMagicFields(common.TransactionCase):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
         self.assertEqual(record.create_uid, self.env.user)
         self.assertEqual(record.write_uid, self.env.user)
+
+
+class Tree(object):
+    def __init__(self, node, *children):
+        self.node = node
+        self.children = children
+
+    def __str__(self):
+        return "%s(%s, %s)" % (self.node.name, self.node.parent_left, self.node.parent_right)
+
+
+class TestParentStore(common.TransactionCase):
+
+    def setUp(self):
+        super(TestParentStore, self).setUp()
+        # pretend the pool has finished loading to avoid deferring parent_store
+        # computation
+        self.patch(self.registry, '_init', False)
+        self.registry.do_parent_store(self.cr)
+
+    def assertTree(self, tree):
+        self.assertLess(tree.node.parent_left, tree.node.parent_right,
+                        "incorrect node %s" % tree)
+        for child in tree.children:
+            self.assertLess(tree.node.parent_left, child.node.parent_left,
+                            "incorrect parent %s - child %s" % (tree, child))
+            self.assertLess(child.node.parent_right, tree.node.parent_right,
+                            "incorrect parent %s - child %s" % (tree, child))
+        self.assertTrees(*tree.children)
+
+    def assertTrees(self, *trees):
+        for tree in trees:
+            self.assertTree(tree)
+        for tree1, tree2 in pycompat.izip(trees, trees[1:]):
+            self.assertLess(tree1.node.parent_right, tree2.node.parent_left,
+                            "wrong node order: %s < %s" % (tree1, tree2))
+
+    def test_parent_store(self):
+        """ Test parent_left/parent_right computation. """
+        Category = self.env['test_new_api.category']
+
+        def descendants(recs):
+            return Category.search([('id', 'child_of', recs.ids)])
+
+        def ascendants(recs):
+            return Category.search([('id', 'parent_of', recs.ids)])
+
+        # create root nodes
+        c = Category.create({'name': 'c'})
+        a = Category.create({'name': 'a'})
+        b = Category.create({'name': 'b'})
+        self.assertTrees(Tree(a), Tree(b), Tree(c))
+
+        # create nodes d, e, f under b
+        f = Category.create({'name': 'f', 'parent': b.id})
+        d = Category.create({'name': 'd', 'parent': b.id})
+        e = Category.create({'name': 'e', 'parent': b.id})
+        self.assertTrees(Tree(a), Tree(b, Tree(d), Tree(e), Tree(f)), Tree(c))
+        self.assertEqual(descendants(a), a)
+        self.assertEqual(descendants(b), b + d + e + f)
+        self.assertEqual(descendants(c), c)
+        self.assertEqual(descendants(d), d)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), b)
+        self.assertEqual(ascendants(c), c)
+        self.assertEqual(ascendants(d), b + d)
+        self.assertEqual(ascendants(e), b + e)
+        self.assertEqual(ascendants(f), b + f)
+
+        # move d, f under c
+        (f + d).write({'parent': c.id})
+        self.assertTrees(Tree(a), Tree(b, Tree(e)), Tree(c, Tree(d), Tree(f)))
+        self.assertEqual(descendants(a), a)
+        self.assertEqual(descendants(b), b + e)
+        self.assertEqual(descendants(c), c + d + f)
+        self.assertEqual(descendants(d), d)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), b)
+        self.assertEqual(ascendants(c), c)
+        self.assertEqual(ascendants(d), c + d)
+        self.assertEqual(ascendants(e), b + e)
+        self.assertEqual(ascendants(f), c + f)
+
+        # move b, c under a
+        (b + c).write({'parent': a.id})
+        self.assertTrees(Tree(a, Tree(b, Tree(e)), Tree(c, Tree(d), Tree(f))))
+        self.assertEqual(descendants(a), a + b + c + d + e + f)
+        self.assertEqual(descendants(b), b + e)
+        self.assertEqual(descendants(c), c + d + f)
+        self.assertEqual(descendants(d), d)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), a + b)
+        self.assertEqual(ascendants(c), a + c)
+        self.assertEqual(ascendants(d), a + c + d)
+        self.assertEqual(ascendants(e), a + b + e)
+        self.assertEqual(ascendants(f), a + c + f)
+
+        # remove node d
+        d.unlink()
+        self.assertTrees(Tree(a, Tree(b, Tree(e)), Tree(c, Tree(f))))
+        self.assertEqual(descendants(a), a + b + c + e + f)
+        self.assertEqual(descendants(b), b + e)
+        self.assertEqual(descendants(c), c + f)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), a + b)
+        self.assertEqual(ascendants(c), a + c)
+        self.assertEqual(ascendants(e), a + b + e)
+        self.assertEqual(ascendants(f), a + c + f)
+
+        # not cycle should occur
+        with self.assertRaises(UserError):
+            a.parent = e

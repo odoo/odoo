@@ -3044,24 +3044,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         cr = self._cr
 
         # determine records that require updating parent_left, parent_right
-        parents_changed = []
-        if self._parent_store and (self._parent_name in vals) and \
-                not self._context.get('defer_parent_store_computation'):
-            # The parent_left/right computation may take up to 5 seconds. No
-            # need to recompute the values if the parent is the same.
-            #
-            # Note: to respect parent_order, nodes must be processed in
-            # order, so ``parents_changed`` must be ordered properly.
-            parent_val = vals[self._parent_name]
-            if parent_val:
-                query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, self._parent_name, self._parent_order)
-                cr.execute(query, (tuple(self.ids), parent_val))
-            else:
-                query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL) ORDER BY %s" % \
-                                (self._table, self._parent_name, self._parent_order)
-                cr.execute(query, (tuple(self.ids),))
-            parents_changed = [x[0] for x in cr.fetchall()]
+        parent_records = self._parent_store_update_prepare(vals)
 
         # determine SQL values
         columns = []                    # list of (column_name, format, value)
@@ -3149,63 +3132,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # check Python constraints
         self._validate_fields(vals)
 
-        # TODO: use _order to set dest at the right position and not first node of parent
-        # We can't defer parent_store computation because the stored function
-        # fields that are computer may refer (directly or indirectly) to
-        # parent_left/right (via a child_of domain)
-        if parents_changed:
-            if self.pool._init:
-                self.pool._init_parent[self._name] = True
-            else:
-                parent_val = vals[self._parent_name]
-                if parent_val:
-                    clause, params = '%s=%%s' % self._parent_name, (parent_val,)
-                else:
-                    clause, params = '%s IS NULL' % self._parent_name, ()
-
-                for id in parents_changed:
-                    # determine old parent_left, parent_right of current record
-                    cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % self._table, (id,))
-                    pleft0, pright0 = cr.fetchone()
-                    width = pright0 - pleft0 + 1
-
-                    # determine new parent_left of current record; it comes
-                    # right after the parent_right of its closest left sibling
-                    # (this CANNOT be fetched outside the loop, as it needs to
-                    # be refreshed after each update, in case several nodes are
-                    # sequentially inserted one next to the other)
-                    pleft1 = None
-                    cr.execute('SELECT id, parent_right FROM %s WHERE %s ORDER BY %s' % \
-                               (self._table, clause, self._parent_order), params)
-                    for (sibling_id, sibling_parent_right) in cr.fetchall():
-                        if sibling_id == id:
-                            break
-                        pleft1 = (sibling_parent_right or 0) + 1
-                    if not pleft1:
-                        # the current record is the first node of the parent
-                        if not parent_val:
-                            pleft1 = 0          # the first node starts at 0
-                        else:
-                            cr.execute('SELECT parent_left FROM %s WHERE id=%%s' % self._table, (parent_val,))
-                            pleft1 = cr.fetchone()[0] + 1
-
-                    if pleft0 < pleft1 <= pright0:
-                        raise UserError(_('Recursivity Detected.'))
-
-                    # make some room for parent_left and parent_right at the new position
-                    cr.execute('UPDATE %s SET parent_left=parent_left+%%s WHERE %%s<=parent_left' % self._table, (width, pleft1))
-                    cr.execute('UPDATE %s SET parent_right=parent_right+%%s WHERE %%s<=parent_right' % self._table, (width, pleft1))
-                    # slide the subtree of the current record to its new position
-                    if pleft0 < pleft1:
-                        cr.execute('''UPDATE %s SET parent_left=parent_left+%%s, parent_right=parent_right+%%s
-                                      WHERE %%s<=parent_left AND parent_left<%%s''' % self._table,
-                                   (pleft1 - pleft0, pleft1 - pleft0, pleft0, pright0))
-                    else:
-                        cr.execute('''UPDATE %s SET parent_left=parent_left-%%s, parent_right=parent_right-%%s
-                                      WHERE %%s<=parent_left AND parent_left<%%s''' % self._table,
-                                   (pleft0 - pleft1 + width, pleft0 - pleft1 + width, pleft0 + width, pright0 + width))
-
-                self.invalidate_cache(['parent_left', 'parent_right'])
+        # update parent_left/parent_right
+        if parent_records:
+            parent_records._parent_store_update(vals)
 
         return True
 
@@ -3296,11 +3225,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _create(self, vals):
         self = self.browse()
+        cr = self.env.cr
 
         # set boolean fields to False by default (to make search more powerful)
         for name, field in self._fields.items():
             if field.type == 'boolean' and field.store:
                 vals.setdefault(name, False)
+
+        # prepare the update of parent_left, parent_right
+        parent_store = self._parent_store_create_prepare(vals)
 
         # determine SQL values
         columns = []                    # list of (column_name, format, value)
@@ -3332,7 +3265,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
 
         # insert a row for this record
-        cr = self._cr
         query = """INSERT INTO "%s" (%s) VALUES(%s) RETURNING id""" % (
                 self._table,
                 ', '.join('"%s"' % column[0] for column in columns),
@@ -3344,39 +3276,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self = self.browse(cr.fetchone()[0])
 
         # update parent_left, parent_right
-        if self._parent_store and not self._context.get('defer_parent_store_computation'):
-            if self.pool._init:
-                self.pool._init_parent[self._name] = True
-            else:
-                parent_val = vals.get(self._parent_name)
-                if parent_val:
-                    # determine parent_left: it comes right after the
-                    # parent_right of its closest left sibling
-                    pleft = None
-                    cr.execute("SELECT parent_right FROM %s WHERE %s=%%s ORDER BY %s" % \
-                                    (self._table, self._parent_name, self._parent_order),
-                               (parent_val,))
-                    for (pright,) in cr.fetchall():
-                        if not pright:
-                            break
-                        pleft = pright + 1
-                    if not pleft:
-                        # this is the leftmost child of its parent
-                        cr.execute("SELECT parent_left FROM %s WHERE id=%%s" % self._table, (parent_val,))
-                        pleft = cr.fetchone()[0] + 1
-                else:
-                    # determine parent_left: it comes after all top-level parent_right
-                    cr.execute("SELECT MAX(parent_right) FROM %s" % self._table)
-                    pleft = (cr.fetchone()[0] or 0) + 1
-
-                # make some room for the new node, and insert it in the MPTT
-                cr.execute("UPDATE %s SET parent_left=parent_left+2 WHERE parent_left>=%%s" % self._table,
-                           (pleft,))
-                cr.execute("UPDATE %s SET parent_right=parent_right+2 WHERE parent_right>=%%s" % self._table,
-                           (pleft,))
-                cr.execute("UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table,
-                           (pleft, pleft + 1, record_id))
-                self.invalidate_cache(['parent_left', 'parent_right'])
+        if parent_store:
+            self._parent_store_update(vals)
 
         with self.env.protecting(protected_fields, self):
             # mark fields to recompute; do this before setting other fields,
@@ -3416,6 +3317,143 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self.env['ir.translation']._set_ids(tname, 'model', self.env.lang, self.ids, val, val)
 
         return self
+
+    def _parent_store_create_prepare(self, vals):
+        """ Prepare the creation of a record, and return whether its
+            parent_left/parent_right fields must be updated after creation.
+        """
+        if not self._parent_store or self._context.get('defer_parent_store_computation'):
+            return False
+
+        if self.pool._init:
+            self.pool._init_parent.add(self._name)
+            return False
+
+        # temporarily put the node at the top-level rightmost position
+        query = "SELECT COALESCE(MAX(parent_right) + 1, 0) FROM {}"
+        self._cr.execute(query.format(self._table))
+        parent_left = self._cr.fetchone()[0]
+        vals.setdefault(self._parent_name, False)
+        vals['parent_left'] = parent_left
+        vals['parent_right'] = parent_left + 1
+        return True
+
+    def _parent_store_update_prepare(self, vals):
+        """ Return the records in ``self`` that must update their parent_left,
+            parent_right fields, in their sibling order. This must be called
+            before updating the parent field.
+        """
+        if not self._parent_store or self._parent_name not in vals or \
+                self._context.get('defer_parent_store_computation'):
+            return self.browse()
+
+        if self.pool._init:
+            self.pool._init_parent.add(self._name)
+            return self.browse()
+
+        # The parent_left/right computation may take up to 5 seconds. No need to
+        # recompute the values if the parent is the same.
+        #
+        # Note: to respect parent_order, nodes must be processed in order, so
+        # the result must be ordered properly.
+        parent_val = vals[self._parent_name]
+        if parent_val:
+            query = """ SELECT id FROM {0}
+                        WHERE id IN %s AND ({1} != %s OR {1} IS NULL)
+                        ORDER BY {2} """
+            params = [tuple(self.ids), parent_val]
+        else:
+            query = """ SELECT id FROM {0}
+                        WHERE id IN %s AND {1} IS NOT NULL
+                        ORDER BY {2} """
+            params = [tuple(self.ids)]
+        query = query.format(self._table, self._parent_name, self._parent_order)
+        self._cr.execute(query, params)
+        return self.browse([row[0] for row in self._cr.fetchall()])
+
+    def _parent_store_update(self, vals):
+        """ Update the parent_left/parent_right fields of ``self``. """
+        cr = self.env.cr
+        parent_val = vals[self._parent_name]
+        if parent_val:
+            clause, params = '{}=%s'.format(self._parent_name), [parent_val]
+        else:
+            clause, params = '{} IS NULL'.format(self._parent_name), []
+
+        modified_ids = set()
+        for record in self:
+            # retrieve record's siblings data (this CANNOT be fetched
+            # outside the loop, as it needs to be refreshed after each
+            # update, in case several nodes are sequentially inserted one
+            # next to the other)
+            query = """ SELECT id, parent_left, parent_right FROM {}
+                        WHERE {} ORDER BY {} """
+            cr.execute(query.format(self._table, clause, self._parent_order), params)
+            siblings = cr.fetchall()
+
+            # determine record's position among its siblings
+            index = next(pos
+                         for pos, data in enumerate(siblings)
+                         if data[0] == record.id)
+
+            # retrieve record's current data
+            pleft0, pright0 = siblings[index][1:]
+            width = pright0 - pleft0 + 1
+
+            # determine new parent_left of current record
+            if index:
+                # record comes right after its closest left sibling
+                pleft1 = (siblings[index - 1][2] or 0) + 1
+            else:
+                # record is the first node of its parent
+                if not parent_val:
+                    pleft1 = 0          # the first node starts at 0
+                else:
+                    query = "SELECT parent_left FROM {} WHERE id=%s"
+                    cr.execute(query.format(self._table), [parent_val])
+                    pleft1 = cr.fetchone()[0] + 1
+
+            if pleft0 == pleft1:
+                continue
+
+            if pleft0 < pleft1 <= pright0:
+                raise UserError(_('Recursivity Detected.'))
+
+            # We have to slide values in the interval [x,x+a+b) in order to
+            # swap the subsets in [x,x+a) and [x+a,x+a+b), respectively.
+            #
+            #             x          x+a         x+b        x+a+b
+            #             |-----------|-----------|-----------|
+            #     before: A A A A A A B B B B B B B B B B B B
+            #      after: B B B B B B B B B B B B A A A A A A
+            #
+            query1 = """
+                UPDATE {}
+                SET parent_left = parent_left + (CASE
+                        WHEN parent_left<%(x)s THEN 0
+                        WHEN parent_left<%(x)s+%(a)s THEN %(b)s
+                        WHEN parent_left<%(x)s+%(a)s+%(b)s THEN -%(a)s
+                        ELSE 0 END),
+                    parent_right = parent_right + (CASE
+                        WHEN parent_right<%(x)s THEN 0
+                        WHEN parent_right<%(x)s+%(a)s THEN %(b)s
+                        WHEN parent_right<%(x)s+%(a)s+%(b)s THEN -%(a)s
+                        ELSE 0 END)
+                WHERE (parent_left BETWEEN %(x)s AND %(x)s+%(a)s+%(b)s-1)
+                   OR (parent_right BETWEEN %(x)s AND %(x)s+%(a)s+%(b)s-1)
+                RETURNING id
+            """
+            if pleft0 < pleft1:
+                # x = pleft0, a = width, x+a+b = pleft1
+                params1 = dict(x=pleft0, a=width, b=pleft1 - pleft0 - width)
+            else:
+                # x = pleft1, x+a = pleft0, b = width
+                params1 = dict(x=pleft1, a=pleft0 - pleft1, b=width)
+
+            cr.execute(query1.format(self._table), params1)
+            modified_ids.update(row[0] for row in cr.fetchall())
+
+        self.browse(modified_ids).modified(['parent_left', 'parent_right'])
 
     # TODO: ameliorer avec NULL
     @api.model

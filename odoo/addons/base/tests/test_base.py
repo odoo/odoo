@@ -443,6 +443,7 @@ class TestParentStore(TransactionCase):
         super(TestParentStore, self).setUp()
         # pretend the pool has finished loading to avoid deferring parent_store computation
         self.patch(self.registry, '_init', False)
+        self.registry.do_parent_store(self.cr)
 
         # force res_partner_category.copy() to copy children
         category = self.env['res.partner.category']
