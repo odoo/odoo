@@ -11,7 +11,6 @@
     'depends': [
         'base_setup',
         'product',
-        'analytic',
         'mail',
         'portal',
         'rating',
