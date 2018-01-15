@@ -199,7 +199,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('only necessary fields are fetched with correct context', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var form = createView({
             View: FormView,
@@ -214,6 +214,8 @@ QUnit.module('Views', {
                 // field, not sure why.  Maybe this test should be modified.
                 assert.deepEqual(args.args[1], ["foo", "display_name"],
                     "should only fetch requested fields");
+                assert.deepEqual(args.kwargs.context, {bin_size: true},
+                    "bin_size should always be in the context");
                 return this._super(route, args);
             }
         });
