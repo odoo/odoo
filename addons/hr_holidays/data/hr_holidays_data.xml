@@ -3,93 +3,156 @@
     <data noupdate="1">
 
         <!-- Casual leave -->
-        <record id="holiday_status_cl" model="hr.holidays.status">
+        <record id="holiday_status_cl" model="hr.leave.type">
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
         </record>
 
         <!-- Sick leave -->
-        <record id="holiday_status_sl" model="hr.holidays.status">
+        <record id="holiday_status_sl" model="hr.leave.type">
             <field name="name">Sick Leaves</field>
             <field name="limit" eval="True"/>
             <field name="color_name">red</field>
         </record>
 
         <!-- Compensatory Days -->
-        <record id="holiday_status_comp" model="hr.holidays.status">
+        <record id="holiday_status_comp" model="hr.leave.type">
             <field name="name">Compensatory Days</field>
             <field name="limit" eval="False"/>
             <field name="color_name">lavender</field>
         </record>
 
         <!--Unpaid Leave -->
-        <record id="holiday_status_unpaid" model="hr.holidays.status">
+        <record id="holiday_status_unpaid" model="hr.leave.type">
             <field name="name">Unpaid</field>
             <field name="limit" eval="True"/>
             <field name="color_name">brown</field>
         </record>
 
         <!-- Holidays-related subtypes for messaging / Chatter -->
-        <record id="mt_holidays_confirmed" model="mail.message.subtype">
+        <record id="mt_leave_confirmed" model="mail.message.subtype">
             <field name="name">Confirmed</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="description">Request created and waiting confirmation</field>
         </record>
 
-        <record id="mt_holidays_first_validated" model="mail.message.subtype">
+        <record id="mt_leave_first_validated" model="mail.message.subtype">
             <field name="name">Waiting Second Validation</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="default" eval="False"/>
             <field name="description">Request validated, waiting second validation</field>
         </record>
 
-        <record id="mt_holidays_approved" model="mail.message.subtype">
+        <record id="mt_leave_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
             <field name="description">Request approved</field>
         </record>
 
-        <record id="mt_holidays_refused" model="mail.message.subtype">
+        <record id="mt_leave_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.leave</field>
+            <field name="default" eval="False"/>
+            <field name="description">Request refused</field>
+        </record>
+
+        <!-- Allocation-related subtypes for messaging / Chatter -->
+        <record id="mt_leave_allocation_confirmed" model="mail.message.subtype">
+            <field name="name">Confirmed</field>
+            <field name="res_model">hr.leave.allocation</field>
+            <field name="description">Request created and waiting confirmation</field>
+        </record>
+
+        <record id="mt_leave_allocation_first_validated" model="mail.message.subtype">
+            <field name="name">Waiting Second Validation</field>
+            <field name="res_model">hr.leave.allocation</field>
+            <field name="default" eval="False"/>
+            <field name="description">Request validated, waiting second validation</field>
+        </record>
+
+        <record id="mt_leave_allocation_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.leave.allocation</field>
+            <field name="description">Request approved</field>
+        </record>
+
+        <record id="mt_leave_allocation_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.leave.allocation</field>
             <field name="default" eval="False"/>
             <field name="description">Request refused</field>
         </record>
 
         <!-- Department related subtypes for messaging / Chatter -->
-        <record id="mt_department_holidays_confirmed" model="mail.message.subtype">
-            <field name="name">Leaves/Allocations Confirmed</field>
+        <record id="mt_department_leave_confirmed" model="mail.message.subtype">
+            <field name="name">Leaves Confirmed</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="True"/>
-            <field name="parent_id" eval="ref('mt_holidays_confirmed')"/>
+            <field name="parent_id" eval="ref('mt_leave_confirmed')"/>
             <field name="relation_field">department_id</field>
             <field name="sequence" eval="6"/>
         </record>
 
-        <record id="mt_department_holidays_first_validated" model="mail.message.subtype">
-            <field name="name">Leaves/Allocations First Approval</field>
+        <record id="mt_department_leave_first_validated" model="mail.message.subtype">
+            <field name="name">Leaves First Approval</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_holidays_first_validated')"/>
+            <field name="parent_id" eval="ref('mt_leave_first_validated')"/>
             <field name="relation_field">department_id</field>
             <field name="sequence" eval="7"/>
         </record>
 
-        <record id="mt_department_holidays_approved" model="mail.message.subtype">
-            <field name="name">Leaves/Allocation Approved</field>
+        <record id="mt_department_leave_approved" model="mail.message.subtype">
+            <field name="name">Leaves Approved</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_holidays_approved')"/>
+            <field name="parent_id" eval="ref('mt_leave_approved')"/>
             <field name="relation_field">department_id</field>
             <field name="sequence" eval="8"/>
         </record>
 
-        <record id="mt_department_holidays_refused" model="mail.message.subtype">
-            <field name="name">Leaves/Allocation Refused</field>
+        <record id="mt_department_leave_refused" model="mail.message.subtype">
+            <field name="name">Leaves Refused</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_holidays_refused')"/>
+            <field name="parent_id" eval="ref('mt_leave_refused')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="9"/>
+        </record>
+
+        <record id="mt_department_leave_allocation_confirmed" model="mail.message.subtype">
+            <field name="name">Allocations Confirmed</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_leave_allocation_confirmed')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="6"/>
+        </record>
+
+        <record id="mt_department_leave_allocation_first_validated" model="mail.message.subtype">
+            <field name="name">Allocations First Approval</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_leave_allocation_first_validated')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="7"/>
+        </record>
+
+        <record id="mt_department_leave_allocation_approved" model="mail.message.subtype">
+            <field name="name">Allocation Approved</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_leave_allocation_approved')"/>
+            <field name="relation_field">department_id</field>
+            <field name="sequence" eval="8"/>
+        </record>
+
+        <record id="mt_department_leave_allocation_refused" model="mail.message.subtype">
+            <field name="name">Allocation Refused</field>
+            <field name="res_model">hr.department</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" eval="ref('mt_leave_allocation_refused')"/>
             <field name="relation_field">department_id</field>
             <field name="sequence" eval="9"/>
         </record>
