@@ -57,12 +57,12 @@ class ResConfigSettings(models.TransientModel):
         ], 'Invoicing Policy',
         default='order',
         default_model='product.template')
-    default_deposit_product_id = fields.Many2one(
+    deposit_default_product_id = fields.Many2one(
         'product.product',
         'Deposit Product',
         domain="[('type', '=', 'service')]",
         config_parameter='sale.default_deposit_product_id',
-        oldname='deposit_product_id_setting',
+        oldname='default_deposit_product_id',
         help='Default product used for payment advances')
     auto_done_setting = fields.Boolean("Lock Confirmed Sales", config_parameter='sale.auto_done_setting')
     module_website_sale_digital = fields.Boolean("Sell digital products - provide downloadable content on your customer portal")

@@ -18,8 +18,13 @@ class ResConfigSettings(models.TransientModel):
     website_name = fields.Char('Website Name', related='website_id.name')
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')
     language_count = fields.Integer(string='Number of languages', compute='_compute_language_count', readonly=True)
-    default_lang_id = fields.Many2one(string='Default language', related='website_id.default_lang_id', relation='res.lang', required=True)
-    default_lang_code = fields.Char('Default language code', related='website_id.default_lang_code')
+    website_default_lang_id = fields.Many2one(
+        string='Default language', related='website_id.default_lang_id',
+        relation='res.lang', required=True,
+        oldname='default_lang_id')
+    website_default_lang_code = fields.Char(
+        'Default language code', related='website_id.default_lang_code',
+        oldname='default_lang_code')
     google_analytics_key = fields.Char('Google Analytics Key', related='website_id.google_analytics_key')
     google_management_client_id = fields.Char('Google Client ID', related='website_id.google_management_client_id')
     google_management_client_secret = fields.Char('Google Client Secret', related='website_id.google_management_client_secret')
