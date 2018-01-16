@@ -50,17 +50,17 @@
                         </div>
                         <div id="emails"/>
                         <h2>Users</h2>
-                        <div class="row mt16 o_settings_container" id="default_user_rights">
+                        <div class="row mt16 o_settings_container" id="user_default_rights">
                             <div class="col-xs-12 col-md-6 o_setting_box"  title="By default, new users get highest access rights for all installed apps." id="access_rights">
                                 <div class="o_setting_left_pane">
-                                    <field name="default_user_rights"/>
+                                    <field name="user_default_rights"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Access Rights" for="default_user_rights"/>
+                                    <label string="Access Rights" for="user_default_rights"/>
                                     <div class="text-muted">
                                         Set custom access rights for new users
                                     </div>
-                                    <div class="content-group" attrs="{'invisible': [('default_user_rights','=',False)]}">
+                                    <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
                                         <div class="mt16">
                                             <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
                                         </div>

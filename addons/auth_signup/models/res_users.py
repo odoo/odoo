@@ -84,7 +84,7 @@ class ResUsers(models.Model):
 
         # check that uninvited users may sign up
         if 'partner_id' not in values:
-            if not literal_eval(get_param('auth_signup.allow_uninvited', 'False')):
+            if get_param('auth_signup.invitation_scope', 'b2b') != 'b2c':
                 raise SignupError(_('Signup is not allowed for uninvited users'))
 
         assert values.get('login'), "Signup: no login given for new user"
