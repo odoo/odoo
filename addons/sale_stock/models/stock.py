@@ -3,6 +3,8 @@
 
 from odoo import api, fields, models, _
 
+from odoo.tools.float_utils import float_is_zero
+
 
 class StockLocationRoute(models.Model):
     _inherit = "stock.location.route"
@@ -31,7 +33,7 @@ class StockMove(models.Model):
         related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
-        rslt += self.picking_id.sale_id.invoice_ids
+        rslt += self.picking_id.sale_id.invoice_ids.filtered(lambda x: x.state not in ('draft', 'cancel'))
         return rslt
 
 class ProcurementGroup(models.Model):
