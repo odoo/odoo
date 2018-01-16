@@ -437,21 +437,17 @@
     </section>
 </template>
 
-<template id="s_button" name="Call to Action">
-    <section class="jumbotron s_button bg-gray-lighter">
+<template id="s_call_to_action" name="Call to Action">
+    <section class="s_call_to_action bg-gray-lighter pt48 pb64">
         <div class="container">
             <div class="row">
                 <div class="col-md-9">
-                    <p class="mb0">
-                        <strong>50,000+ companies run Odoo to grow their businesses.</strong>
-                    </p><p class="mb0">
-                        Join us and make your company a better place.
-                    </p>
+                    <h2>50,000+ companies run Odoo to grow their businesses.</h2>
+                    <h4 class="text-gray-light">Join us and make your company a better place.</h4>
                 </div>
-                <div class="col-md-3">
-                    <a href="/contactus" class="btn btn-primary btn-lg pull-right mt8">
-                        <span>Contact Us Now</span>
-                        <i class="fa fa-chevron-right"></i>
+                <div class="col-md-3 pt24" style="text-align: right;">
+                    <a href="/contactus" class="btn btn-primary btn-lg">
+                        Contact us <i class="fa fa-1x fa-fw fa-long-arrow-right"/>
                     </a>
                 </div>
             </div>
@@ -696,7 +692,7 @@
                     <t t-snippet="website.s_image_gallery" t-thumbnail="/website/static/src/img/blocks/block_image_gallery.png"/>
                     <t t-snippet="website.s_comparisons" t-thumbnail="/website/static/src/img/blocks/block_comparison.png"/>
                     <t t-snippet="website.s_company_team" t-thumbnail="/website/static/src/img/blocks/block_company_team.png"/>
-                    <t t-snippet="website.s_button" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
+                    <t t-snippet="website.s_call_to_action" t-thumbnail="/website/static/src/img/blocks/block_call_to_action.png"/>
                     <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
                     <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_feature_grid.png"/>
