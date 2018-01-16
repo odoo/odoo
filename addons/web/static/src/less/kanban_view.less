@@ -4,7 +4,7 @@
 @o-kanban-default-record-width: 300px;
 @o-kanban-small-record-width: 240px;
 
-@o-kanban-header-title-height: 50px;
+@o-kanban-header-title-height: 35px;
 
 @o-kanban-image-width: 64px;
 @o-kanban-inside-vgutter: 8px;
@@ -547,6 +547,7 @@
 
     // Kanban Grouped Layout - "Create new column" column
     .o_column_quick_create {
+<<<<<<< HEAD
         .o_quick_create_folded {
             cursor: pointer;
             padding: 12px 16px;
@@ -564,6 +565,32 @@
             }
             .o_kanban_title {
                 margin-left: 10px;
+=======
+        padding: 0 @o-kanban-group-padding*2 @o-kanban-group-padding @o-kanban-group-padding !important;
+        .o-kanban-slim-col();
+
+        .o_column_header {
+            .o-kanban-header-title();
+            position: relative;
+            opacity: 0.5;
+
+            .o_kanban_title {
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .o_kanban_add_column {
+                .o-kanban-icon(1);
+                > div {
+                    background-color: @gray-lighter-dark;
+                    display: inline-block;
+                    vertical-align: middle;
+                    border: 1px solid transparent;
+                    padding: 5px 10px;
+                    line-height: 1.42857143;
+                    color: @text-color;
+                }
+>>>>>>> beeae6e... [IMP] web: added '+' button in kanban for add new column instead of vertical bar
             }
         }
 
