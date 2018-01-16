@@ -168,7 +168,8 @@
         </t>
     </t>
     <t t-extend="KanbanView.buttons">
-        <t t-jquery="button.o-kanban-button-new" t-operation="after">
+        <!-- t-jquery can not find classname inside t-attf-class -->
+        <t t-jquery="button:first" t-operation="after">
             <t t-call="ImportView.import_button"/>
         </t>
     </t>
