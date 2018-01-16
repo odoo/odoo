@@ -1589,6 +1589,8 @@ class stock_picking(models.Model):
     def do_new_transfer(self, cr, uid, ids, context=None):
         pack_op_obj = self.pool['stock.pack.operation']
         data_obj = self.pool['ir.model.data']
+        if not context:
+            context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             to_delete = []
             if not pick.move_lines and not pick.pack_operation_ids:
@@ -1642,7 +1644,7 @@ class stock_picking(models.Model):
             if to_delete:
                 pack_op_obj.unlink(cr, uid, to_delete, context=context)
         self.do_transfer(cr, uid, ids, context=context)
-        return
+        return True
 
     def check_backorder(self, cr, uid, picking, context=None):
         need_rereserve, all_op_processed = self.picking_recompute_remaining_quantities(cr, uid, picking, done_qtys=True, context=context)
