@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import collections
 import copy
 import datetime
@@ -11,6 +12,7 @@ import time
 
 import itertools
 from dateutil.relativedelta import relativedelta
+from functools import partial
 from operator import itemgetter
 
 import json
@@ -38,6 +40,20 @@ MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpa
 # First sort criterion for inheritance is priority, second is chronological order of installation
 # Note: natural _order has `name`, but only because that makes list browsing easier
 INHERIT_ORDER = 'priority,id'
+
+# attributes in views that may contain references to field names
+ATTRS_WITH_FIELD_NAMES = {
+    'context',
+    'domain',
+    'decoration-bf',
+    'decoration-it',
+    'decoration-danger',
+    'decoration-info',
+    'decoration-muted',
+    'decoration-primary',
+    'decoration-success',
+    'decoration-warning',
+}
 
 
 def keep_query(*keep_params, **additional_params):
@@ -231,7 +247,7 @@ actual arch.
                 if fullpath:
                     arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id)
+                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id).replace('%%', '%')
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
                     arch_fs = False
@@ -310,6 +326,7 @@ actual arch.
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
         # Any exception raised below will cause a transaction rollback.
+        self = self.with_context(check_field_names=True)
         for view in self:
             view_arch = etree.fromstring(view.arch.encode('utf-8'))
             view._valid_inheritance(view_arch)
@@ -853,6 +870,76 @@ actual arch.
 
         return arch
 
+    def get_attrs_symbols(self):
+        """ Return a set of predefined symbols for evaluating attrs. """
+        return {
+            'True', 'False', 'None',    # those are identifiers in Python 2.7
+            'self',
+            'parent',
+            'id',
+            'uid',
+            'context',
+            'context_today',
+            'active_id',
+            'active_ids',
+            'active_model',
+            'time',
+            'datetime',
+            'relativedelta',
+            'current_date',
+        }
+
+    def get_attrs_field_names(self, arch):
+        """ Retrieve the field names appearing in context, domain and attrs, and
+            return a list of triples ``(field_name, attr_name, attr_value)``.
+        """
+        symbols = self.get_attrs_symbols() | {None}
+        result = []
+
+        def get_name(node):
+            """ return the name from an AST node, or None """
+            if isinstance(node, ast.Name):
+                return node.id
+
+        def get_subname(get, node):
+            """ return the subfield name from an AST node, or None """
+            if isinstance(node, ast.Attribute) and get(node.value) == 'parent':
+                return node.attr
+
+        def process_expr(expr, get, key, val):
+            """ parse `expr` and collect triples """
+            for node in ast.walk(ast.parse(expr.strip(), mode='eval')):
+                name = get(node)
+                if name not in symbols:
+                    result.append((name, key, val))
+
+        def process_attrs(expr, get, key, val):
+            """ parse `expr` and collect field names in lhs of conditions. """
+            for domain in safe_eval(expr).values():
+                if not isinstance(domain, list):
+                    continue
+                for arg in domain:
+                    if isinstance(arg, (tuple, list)):
+                        process_expr(str(arg[0]), get, key, expr)
+
+        def process(node, get=get_name):
+            """ traverse `node` and collect triples """
+            for key, val in node.items():
+                if not val:
+                    continue
+                if key in ATTRS_WITH_FIELD_NAMES:
+                    process_expr(val, get, key, val)
+                elif key == 'attrs':
+                    process_attrs(val, get, key, val)
+            if node.tag == 'field':
+                # retrieve subfields of 'parent'
+                get = partial(get_subname, get)
+            for child in node:
+                process(child, get)
+
+        process(arch)
+        return result
+
     @api.model
     def postprocess_and_fields(self, model, node, view_id):
         """ Return an architecture and a description of all the fields.
@@ -888,6 +975,11 @@ actual arch.
             fields = Model.fields_get(None)
 
         node = self.add_on_change(model, node)
+
+        attrs_fields = []
+        if self.env.context.get('check_field_names'):
+            attrs_fields = self.get_attrs_field_names(node)
+
         fields_def = self.postprocess(model, node, view_id, False, fields)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
@@ -917,6 +1009,20 @@ actual arch.
             else:
                 message = _("Field `%(field_name)s` does not exist") % dict(field_name=field)
                 self.raise_view_error(message, view_id)
+
+        missing = [item for item in attrs_fields if item[0] not in fields]
+        if missing:
+            msg_lines = []
+            msg_fmt = _("Field %r used in attributes must be present in view but is missing:")
+            line_fmt = _(" - %r in %s=%r")
+            for name, lines in itertools.groupby(sorted(missing), itemgetter(0)):
+                if msg_lines:
+                    msg_lines.append("")
+                msg_lines.append(msg_fmt % name)
+                for line in lines:
+                    msg_lines.append(line_fmt % line)
+            self.raise_view_error("\n".join(msg_lines), view_id)
+
         return arch, fields
 
     #------------------------------------------------------

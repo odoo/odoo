@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 09:37+0000\n"
-"PO-Revision-Date: 2017-11-16 09:37+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Yihya Hugirat <hugirat@gmail.com>, 2017\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
@@ -299,7 +299,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:703
+#: code:addons/calendar/models/calendar.py:720
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -307,42 +307,42 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:694
+#: code:addons/calendar/models/calendar.py:711
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:208
+#: code:addons/calendar/models/calendar.py:225
 #, python-format
 msgid "%s has accepted invitation"
-msgstr ""
+msgstr "%s קיבל את ההזמנה"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:216
+#: code:addons/calendar/models/calendar.py:233
 #, python-format
 msgid "%s has declined invitation"
-msgstr ""
+msgstr "%s סירב להזמנה"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
 msgid "1 Day(s)"
-msgstr ""
+msgstr "יום"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_3
 msgid "1 Hour(s)"
-msgstr ""
+msgstr "שעה אחת"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_1
 msgid "15 Minute(s)"
-msgstr ""
+msgstr "15 דקה(ות)"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_4
 msgid "2 Hour(s)"
-msgstr ""
+msgstr "2 שעות"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
@@ -352,7 +352,7 @@ msgstr ""
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_2
 msgid "30 Minute(s)"
-msgstr ""
+msgstr "30 דקה(ות)"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
@@ -363,50 +363,50 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "<span> hours</span>"
-msgstr ""
+msgstr "<span> שעות</span>"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Accept"
-msgstr ""
+msgstr "אשר"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Accepted"
-msgstr ""
+msgstr "אושרה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_active
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_active
 msgid "Active"
-msgstr ""
+msgstr "פעיל"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "פעילויות"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "פעילות"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
+msgstr "סוג פעילות"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
 msgid "All Day"
-msgstr ""
+msgstr "כל היום"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:690
+#: code:addons/calendar/models/calendar.py:707
 #, python-format
 msgid "AllDay , %s"
-msgstr ""
+msgstr "כל היום , %s"
 
 #. module: calendar
 #: sql_constraint:calendar.contacts:0
@@ -416,17 +416,17 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_attendee
 msgid "Attendee"
-msgstr ""
+msgstr "משתתף"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_status
 msgid "Attendee Status"
-msgstr ""
+msgstr "מצב משתתף"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "מידע משתתפים"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_ids
@@ -434,31 +434,31 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Attendees"
-msgstr ""
+msgstr "משתתפים"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
-msgstr ""
+msgstr "זמינות"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1583
+#: code:addons/calendar/models/calendar.py:1606
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
 msgid "Busy"
-msgstr ""
+msgstr "לא פנוי"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_byday
 msgid "By day"
-msgstr ""
+msgstr "לפי יום"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 msgid "Calendar"
-msgstr ""
+msgstr "יומן"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -466,12 +466,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.calendar_alarm_view_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_alarm_tree
 msgid "Calendar Alarm"
-msgstr ""
+msgstr "התראת יומן"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Calendar Invitation"
-msgstr ""
+msgstr "הזמנה ביומן"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_calendar_event_id
@@ -493,12 +493,12 @@ msgstr ""
 #. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "Click to schedule a new meeting."
-msgstr ""
+msgstr "לחץ לקבוע פגישה חדשה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
 msgid "Common name"
-msgstr ""
+msgstr "שם נפוץ"
 
 #. module: calendar
 #: selection:calendar.event,state:0
@@ -539,45 +539,45 @@ msgstr "תאריך"
 #: selection:calendar.event,month_by:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_day
 msgid "Date of month"
-msgstr ""
+msgstr "תאריך בחודש"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Day of Month"
-msgstr ""
+msgstr "יום בחודש"
 
 #. module: calendar
 #: selection:calendar.event,month_by:0
 msgid "Day of month"
-msgstr ""
+msgstr "יום בחודש"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0 selection:calendar.event,rrule_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "ימים"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Decline"
-msgstr ""
+msgstr "דחה"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Declined"
-msgstr ""
+msgstr "נדחה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_description
 msgid "Description"
-msgstr ""
+msgstr "תיאור"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:18
 #, python-format
 msgid "Details"
-msgstr ""
+msgstr "פרטים"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_display_name
@@ -593,50 +593,50 @@ msgstr "השם המוצג"
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Document"
-msgstr ""
+msgstr "מסמך"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_res_id
 msgid "Document ID"
-msgstr ""
+msgstr "מזהה מסמך"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model_id
 msgid "Document Model"
-msgstr ""
+msgstr "מודל מסמך"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model
 msgid "Document Model Name"
-msgstr ""
+msgstr "שם מודל מסמך"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Duration"
-msgstr ""
+msgstr "משך"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration_minutes
 #: model:ir.model.fields,help:calendar.field_calendar_alarm_duration_minutes
 msgid "Duration in minutes"
-msgstr ""
+msgstr "משך - בדקות"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_email
 msgid "Email"
-msgstr ""
+msgstr "דוא\"ל"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee_email
 msgid "Email of Invited Person"
-msgstr ""
+msgstr "דוא\"ל של המוזמן"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_partner_id
 msgid "Employee"
-msgstr ""
+msgstr "עובד"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_date
@@ -647,26 +647,26 @@ msgstr "תאריך סיום"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop_datetime
 msgid "End Datetime"
-msgstr ""
+msgstr "תאריך וזמן סיום"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "תאריך סיום"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Ending at"
-msgstr ""
+msgstr "מסתיים ב -"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:898
+#: code:addons/calendar/models/calendar.py:915
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:896
+#: code:addons/calendar/models/calendar.py:913
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr ""
@@ -674,20 +674,20 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 msgid "Event"
-msgstr ""
+msgstr "אירוע"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_display_time
 msgid "Event Time"
-msgstr ""
+msgstr "זמן האירוע"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm
 msgid "Event alarm"
-msgstr ""
+msgstr "התראת יומן"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1141
+#: code:addons/calendar/models/calendar.py:1164
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr ""
@@ -695,7 +695,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
-msgstr ""
+msgstr "כולם"
 
 #. module: calendar
 #: code:addons/calendar/models/mail_activity.py:38
@@ -706,15 +706,15 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fifth"
-msgstr ""
+msgstr "החמישי"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "First"
-msgstr ""
+msgstr "הראשון"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:938
+#: code:addons/calendar/models/calendar.py:955
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -722,36 +722,36 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Fourth"
-msgstr ""
+msgstr "הרביעי"
 
 #. module: calendar
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 msgid "Free"
-msgstr ""
+msgstr "פנוי"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_availability
 msgid "Free/Busy"
-msgstr ""
+msgstr "פנוי/עסוק"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_fr
 msgid "Fri"
-msgstr ""
+msgstr "שישי"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Friday"
-msgstr ""
+msgstr "שישי"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Group By"
-msgstr ""
+msgstr "קבץ לפי"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1526
+#: code:addons/calendar/models/calendar.py:1549
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -786,27 +786,27 @@ msgstr ""
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
 msgid "Invitation"
-msgstr ""
+msgstr "הזמנה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_access_token
 msgid "Invitation Token"
-msgstr ""
+msgstr "אסימון הזמנה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitation details"
-msgstr ""
+msgstr "פרטי ההזמנה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "הזמנה עבור"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Invitations"
-msgstr ""
+msgstr "הזמנות"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_wizard_invite
@@ -816,7 +816,7 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Last"
-msgstr ""
+msgstr "אחרון"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm___last_update
@@ -861,49 +861,49 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_location
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
-msgstr ""
+msgstr "מיקום"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_location
 msgid "Location of Event"
-msgstr ""
+msgstr "מיקום האירוע"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_contacts_user_id
 msgid "Me"
-msgstr ""
+msgstr "אני"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Meeting"
-msgstr ""
+msgstr "פגישה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Meeting Details"
-msgstr ""
+msgstr "פרטי הפגישה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_name
 msgid "Meeting Subject"
-msgstr ""
+msgstr "נושא הפגישה"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Meeting Type"
-msgstr ""
+msgstr "סוג הפגישה"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event_type
 #: model:ir.ui.menu,name:calendar.menu_calendar_event_type
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_type_tree
 msgid "Meeting Types"
-msgstr ""
+msgstr "סוגי פגישות"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_event_id
 msgid "Meeting linked"
-msgstr ""
+msgstr "פגישות מקושרות"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_event
@@ -913,47 +913,47 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Meetings"
-msgstr ""
+msgstr "פגישות"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "הודעה"
 
 #. module: calendar
 #: selection:calendar.alarm,interval:0
 msgid "Minute(s)"
-msgstr ""
+msgstr "דקות"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Misc"
-msgstr ""
+msgstr "שונות"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_mo
 msgid "Mon"
-msgstr ""
+msgstr "שני"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Monday"
-msgstr ""
+msgstr "שני"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Month(s)"
-msgstr ""
+msgstr "חודש(ים)"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Events"
-msgstr ""
+msgstr "האירועים שלי"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "My Meetings"
-msgstr ""
+msgstr "הפגישות שלי"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_name
@@ -965,59 +965,59 @@ msgstr "שם"
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 msgid "Needs Action"
-msgstr ""
+msgstr "נדרשת פעולה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No I'm not going."
-msgstr ""
+msgstr "לא אני לא הולך"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "Notification"
-msgstr ""
+msgstr "התראה"
 
 #. module: calendar
 #: selection:calendar.event,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "מספר החזרות"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:17
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "אוקי"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only internal users"
-msgstr ""
+msgstr "רק משתמשים פנימיים"
 
 #. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Only me"
-msgstr ""
+msgstr "רק אני"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_month_by
 msgid "Option"
-msgstr ""
+msgstr "אפשרות"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Options"
-msgstr ""
+msgstr "אפשרויות"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Owner"
-msgstr ""
+msgstr "בעלים"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_attendee_ids
 msgid "Participant"
-msgstr ""
+msgstr "משתתף"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_partner_id
@@ -1025,16 +1025,16 @@ msgid "Partner-related data of the user"
 msgstr ""
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1154
+#: code:addons/calendar/models/calendar.py:1177
 #, python-format
 msgid "Please select a proper day of the month."
-msgstr ""
+msgstr "בבקשה בחר את היום המתאים בחודש"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_privacy
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Privacy"
-msgstr ""
+msgstr "פרטיות"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
@@ -1044,12 +1044,12 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
 msgid "Recurrence Termination"
-msgstr ""
+msgstr "סיום החזרה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrency
 msgid "Recurrent"
-msgstr ""
+msgstr "חוזרת"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrent_id
@@ -1064,122 +1064,122 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_recurrency
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "פגישה חוזרת"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule
 msgid "Recurrent Rule"
-msgstr ""
+msgstr "כלל החזרה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
 msgid "Remind Before"
-msgstr ""
+msgstr "הזכר לפני"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
 msgid "Reminders"
-msgstr ""
+msgstr "תזכורות"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
 msgid "Repeat"
-msgstr ""
+msgstr "חזרה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_interval
 msgid "Repeat Every"
-msgstr ""
+msgstr "חזור כל"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_final_date
 msgid "Repeat Until"
-msgstr ""
+msgstr "חזור עד"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_interval
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "חזור כל (יום/שבוע/חודש/שנה)"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_count
 msgid "Repeat x times"
-msgstr ""
+msgstr "חזור x פעמים"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr ""
+msgstr "אחראי"
 
 #. module: calendar
 #: selection:calendar.alarm,type:0
 msgid "SMS Text Message"
-msgstr ""
+msgstr "הודעת מסרון"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_sa
 msgid "Sat"
-msgstr ""
+msgstr "שבת"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "שבת"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
 msgid "Schedule a meeting"
-msgstr ""
+msgstr "קבע פגישה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Search Meetings"
-msgstr ""
+msgstr "חפש פגישות"
 
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Second"
-msgstr ""
+msgstr "שנייה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Select attendees..."
-msgstr ""
+msgstr "בחר משתתפים..."
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send mail"
-msgstr ""
+msgstr "שלח דואר אלקטרוני"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_show_as
 msgid "Show Time as"
-msgstr ""
+msgstr "הצג זמן כ"
 
 #. module: calendar
 #. openerp-web
 #: code:addons/calendar/static/src/xml/base_calendar.xml:19
 #, python-format
 msgid "Snooze"
-msgstr ""
+msgstr "השעה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start
 msgid "Start"
-msgstr ""
+msgstr "התחל"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start_date
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr ""
+msgstr "תאריך התחלה"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_start_datetime
 msgid "Start DateTime"
-msgstr ""
+msgstr "תאריך וזמן התחלה"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_start
@@ -1190,7 +1190,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
 msgid "Starting at"
-msgstr ""
+msgstr "מתחיל ב"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_state
@@ -1201,12 +1201,12 @@ msgstr "סטטוס"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee_state
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "סטטוס השתתפות המוזמנים"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_stop
 msgid "Stop"
-msgstr ""
+msgstr "עצור"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event_stop
@@ -1221,17 +1221,17 @@ msgstr "נושא"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_su
 msgid "Sun"
-msgstr ""
+msgstr "ראשון"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Sunday"
-msgstr ""
+msgstr "ראשון"
 
 #. module: calendar
 #: sql_constraint:calendar.event.type:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "שם תגית כבר קיים !"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_categ_ids
@@ -1241,7 +1241,7 @@ msgstr "תגיות"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "The"
-msgstr ""
+msgstr "ה־"
 
 #. module: calendar
 #. openerp-web
@@ -1263,102 +1263,102 @@ msgstr ""
 #. module: calendar
 #: selection:calendar.event,byday:0
 msgid "Third"
-msgstr ""
+msgstr "השלישי"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
-msgstr ""
+msgstr "אירוע זה מקושר ל חזרה...<br/>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_th
 msgid "Thu"
-msgstr ""
+msgstr "חמישי"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Thursday"
-msgstr ""
+msgstr "חמישי"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_tu
 msgid "Tue"
-msgstr ""
+msgstr "שלישי"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Tuesday"
-msgstr ""
+msgstr "שלישי"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_type
 msgid "Type"
-msgstr ""
+msgstr "סוג"
 
 #. module: calendar
 #: selection:calendar.attendee,state:0
 #: selection:calendar.event,attendee_status:0
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Uncertain"
-msgstr ""
+msgstr "לא בטוח"
 
 #. module: calendar
 #: selection:calendar.event,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "לא מאושר"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_interval
 msgid "Unit"
-msgstr ""
+msgstr "יחידה"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Unread Messages"
-msgstr ""
+msgstr "הודעות שלא נקראו"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
-msgstr ""
+msgstr "עד"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Update only this instance"
-msgstr ""
+msgstr "עדכן  מופע זה בלבד"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_we
 msgid "Wed"
-msgstr ""
+msgstr "רביעי"
 
 #. module: calendar
 #: selection:calendar.event,week_list:0
 msgid "Wednesday"
-msgstr ""
+msgstr "רביעי"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Week(s)"
-msgstr ""
+msgstr "שבוע(ות)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_week_list
 msgid "Weekday"
-msgstr ""
+msgstr "יום בשבוע"
 
 #. module: calendar
 #: selection:calendar.event,rrule_type:0
 msgid "Year(s)"
-msgstr ""
+msgstr "שנים"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Yes I'm going."
-msgstr ""
+msgstr "כן אני הולך."
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:138
+#: code:addons/calendar/models/calendar.py:155
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
@@ -1376,13 +1376,13 @@ msgstr ""
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr ""
+msgstr "למשל ארוחת צהריים עסקית"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1139
+#: code:addons/calendar/models/calendar.py:1162
 #, python-format
 msgid "interval cannot be negative."
-msgstr ""
+msgstr "מרווח לא יכול להיות שלילי."
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_ir_attachment

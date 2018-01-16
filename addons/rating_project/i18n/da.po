@@ -6,14 +6,14 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,11 +97,83 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\" /></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Tilfredshedsundersøgelse\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Hej,</p>\n"
+"                <p>Brug venligst et øjeblik på at vurdere vores servicer i forbindelse med opgaven \"<strong>${object.name}</strong>\"\n"
+"                   som er tildelt til <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+"                <p>Vi sætter pris på den feedback. Den hjælper os til at forbedre os løbende.</p>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:10px 20px\">\n"
+"                <table summary=\"o_mail_notification\" style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
+"                    <tr>\n"
+"                        <td style=\"text-align:center;\">\n"
+"                            <h2 style=\"font-weight:300;font-size:18px;\">\n"
+"                                Fortæl os hvad du synes om vores service:\n"
+"                            </h2>\n"
+"                            <div style=\"text-color: #888888\">(klik på en af disse smileys)</div>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:10px 10px;\">\n"
+"                            <table style=\"width:100%;text-align:center;\">\n"
+"                                <tr>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/10\">\n"
+"                                            <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/5\">\n"
+"                                            <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <a href=\"/rating/${access_token}/1\">\n"
+"                                            <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                        </a>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </table>\n"
+"            </td></tr>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">${(object.user_id.signature or '')| safe}</td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding-top:10px;color:#afafaf;\">\n"
+"                % if object.project_id.rating_status == 'stage':\n"
+"                    <p>Denne kundeundersøgelse er blevet sendt, fordi din opgave er blevet flyttet til fasen <b>${object.stage_id.name}</b></p>\n"
+"                % endif\n"
+"                % if object.project_id.rating_status == 'periodic':\n"
+"                    <p>Denne kundeundersøgelse er sendes <b>${object.project_id.rating_status_period}</b> så længe opgaven er i <b>${object.stage_id.name}</b> fasen.</p>\n"
+"                % endif\n"
+"                <p>Email automatisk sendt af <a target=\"_blank\" href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\">Odoo Projekt</a> for <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
 
 #. module: rating_project
 #: model:mail.template,subject:rating_project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Anmodning om Servicebedømmelse"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_form
@@ -111,7 +183,7 @@ msgstr "Procenter på opgaver"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.view_project_project_rating_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Ingen bedømmelse endnu"
 
 #. module: rating_project
 #: model:ir.model.fields,field_description:rating_project.field_project_task_type_auto_validation_kanban_state
@@ -121,7 +193,7 @@ msgstr "Automatisk status på kanban"
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback request for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
@@ -135,8 +207,8 @@ msgstr "Kundebedømmelse "
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
-msgid "Customer Ratings from task"
-msgstr ""
+msgid "Customer Ratings on tasks"
+msgstr "Kundebedømmelser på Opgaver"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -256,7 +328,7 @@ msgstr "Projekt"
 #: model:ir.cron,cron_name:rating_project.ir_cron_rating_project
 #: model:ir.cron,name:rating_project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Projekt: Send bedømmelse"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -266,7 +338,7 @@ msgstr "Kvartalvis"
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.project_task_view_search
 msgid "Rated tasks"
-msgstr ""
+msgstr "Bedømte opgaver"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating
@@ -292,7 +364,7 @@ msgstr ""
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
 msgid "Rating for tasks"
-msgstr ""
+msgstr "Bedømmelse for opgaver"
 
 #. module: rating_project
 #: selection:project.project,rating_status:0
@@ -305,15 +377,15 @@ msgid "Ratings"
 msgstr "Bedømmelser"
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
-msgid "Ratings for tasks"
-msgstr ""
-
-#. module: rating_project
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
 msgstr ""
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings on tasks"
+msgstr "Bedømmelser på opgaver"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
@@ -339,7 +411,7 @@ msgstr "Opgave fase"
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating_task
 msgid "There is no rating for tasks of this project at the moment."
-msgstr ""
+msgstr "Der er i øjeblikket ingen bedømmelse på opgaver i dette projekt."
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_view_project_rating

@@ -346,7 +346,7 @@ class AccountBankStatement(models.Model):
 class AccountBankStatementLine(models.Model):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
-    _order = "statement_id desc, sequence, id desc"
+    _order = "statement_id desc, date desc, sequence, id desc"
 
     name = fields.Char(string='Label', required=True)
     date = fields.Date(required=True, default=lambda self: self._context.get('date', fields.Date.context_today(self)))
@@ -895,7 +895,7 @@ class AccountBankStatementLine(models.Model):
         total = self.amount
         for aml_rec in payment_aml_rec:
             total -= aml_rec.debit - aml_rec.credit
-            aml_rec.write({'statement_line_id': self.id})
+            aml_rec.with_context(check_move_validity=False).write({'statement_line_id': self.id})
             counterpart_moves = (counterpart_moves | aml_rec.move_id)
 
         # Create move line(s). Either matching an existing journal entry (eg. invoice), in which

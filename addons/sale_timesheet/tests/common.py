@@ -231,6 +231,21 @@ class CommonTest(common.SavepointCase):
             'currency_id': cls.env.ref('base.USD').id,
             'company_id': cls.env.user.company_id.id,
         })
+
+        cls.bank_journal_euro = cls.env['account.journal'].create({
+            'name': 'Sale Journal - Test',
+            'type': 'sale',
+            'code': 'SJT',
+            'currency_id': cls.env.ref('base.EUR').id,
+        })
+
+        cls.bank_journal_usd = cls.env['account.journal'].create({
+            'name': 'Sale Journal - Test US',
+            'type': 'sale',
+            'code': 'SJTU',
+            'currency_id': cls.env.ref('base.USD').id,
+        })
+
         cls.pricelist_eur = cls.env['product.pricelist'].create({
             'name': 'EUR pricelist',
             'active': True,

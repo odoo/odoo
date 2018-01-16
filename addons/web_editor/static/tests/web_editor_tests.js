@@ -4,6 +4,7 @@ odoo.define('web_editor.web_editor_tests', function (require) {
 var FormView = require('web.FormView');
 var testUtils = require('web.test_utils');
 var core = require('web.core');
+var web_editor = require('web_editor.editor');
 
 var _t = core._t;
 
@@ -191,7 +192,7 @@ QUnit.test('field htmlsimple does not crash when commitChanges is called in mode
 QUnit.test('html_frame does not crash when saving in readonly', function (assert) {
     // The 'Save' action may be triggered even in readonly (e.g. when clicking
     // on a button in the form view)
-    assert.expect(0);
+    assert.expect(2);
 
     var form = testUtils.createView({
         View: FormView,
@@ -203,10 +204,13 @@ QUnit.test('html_frame does not crash when saving in readonly', function (assert
                 '</sheet>' +
             '</form>',
         res_id: 1,
-        mockRPC: function (route) {
+        mockRPC: function (route, args) {
+            if (args.method) {
+                assert.step(args.method);
+            }
             if (_.str.startsWith(route, '/test')) {
                 // manually call the callback to simulate that the iframe has
-                // been correctly loaded
+                // been loaded (note: just the content, not the editor)
                 window.odoo[$.deparam(route).callback + '_content'].call();
                 return $.when();
             }
@@ -215,7 +219,109 @@ QUnit.test('html_frame does not crash when saving in readonly', function (assert
     });
 
     form.saveRecord(); // before the fix done in this commit, it crashed here
+    
+    assert.verifySteps(['read']);
+
     form.destroy();
+});
+
+QUnit.test('html_frame does not crash when saving in edit mode (editor not loaded)', function (assert) {
+    // The 'Save' action may be triggered when saving in edit mode very fast
+    // so that the editor may be not loaded, even though the content is!
+    assert.expect(2);
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="display_name"/>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route, args) {
+            if (args.method) {
+                assert.step(args.method);
+            }
+            if (_.str.startsWith(route, '/test')) {
+                // manually call the callback to simulate that the iframe has
+                // been partially loaded (just the content, not the editor)
+                window.odoo[$.deparam(route).callback + '_content']();
+                return $.when();
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    form.$buttons.find('.o_form_button_edit').click();
+    form.$('input').val('trululu').trigger('input');
+    form.$buttons.find('.o_form_button_save').click(); // crash without editor fully loaded
+
+    assert.verifySteps(['read']);
+
+    form.destroy();
+});
+
+QUnit.test('html_frame saving in edit mode (editor and content fully loaded)', function (assert) {
+    var done = assert.async();
+    assert.expect(4);
+
+    var editorBar = new web_editor.Class();
+    var loadDeferred = $.Deferred();
+    var writeDeferred = $.Deferred();
+
+    var form = testUtils.createView({
+        View: FormView,
+        model: 'mass.mailing',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="display_name"/>' +
+                    '<field name="body" widget="html_frame" options="{\'editor_url\': \'/test\'}"/>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 1,
+        mockRPC: function (route, args) {
+            if (args.method) {
+                assert.step(args.method);
+                if (args.method === 'write') {
+                    writeDeferred.resolve();    
+                }
+            }
+            if (_.str.startsWith(route, '/test')) {
+                // manually call the callback to simulate that the iframe has
+                // been fully loaded (content + editor)
+                var callback = $.deparam(route).callback;
+                return loadDeferred.then(function () {
+                    var contentCallback = window.odoo[callback + '_content'];
+                    var editorCallback = window.odoo[callback + '_editor'];
+                    if (editorCallback && contentCallback) {
+                        contentCallback();
+                        editorCallback(editorBar);
+                    }
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    form.$buttons.find('.o_form_button_edit').click();
+    form.$('input').val('trululu').trigger('input');
+    form.$buttons.find('.o_form_button_save').click();
+
+    loadDeferred.resolve(); // simulate late loading of html frame
+
+    assert.strictEqual(form.$('.o_field_char').val(), 'trululu',
+        "should have saved the char field text");
+
+    writeDeferred.then( function () { // html_frame is async with write
+        assert.verifySteps(['read', 'write']);
+        form.destroy();
+        done();
+    });
+
 });
 
 });

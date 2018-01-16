@@ -24,6 +24,22 @@ var utils = {
         }
     },
     /**
+     * Check if the value is a bin_size or not.
+     * If not, compute an approximate size out of the base64 encoded string.
+     *
+     * @param  {string} value original format
+     * @return {string} bin_size (human-readable)
+     */
+    binaryToBinsize: function (value) {
+        if (!this.is_bin_size(value)) {
+            // Computing approximate size out of base64 encoded string
+            // http://en.wikipedia.org/wiki/Base64#MIME
+            return this.human_size(value.length / 1.37);
+        }
+        // already bin_size
+        return value;
+    },
+    /**
      * Confines a value inside an interval
      *
      * @param {number} [val] the value to confine
@@ -132,7 +148,7 @@ var utils = {
             size /= 1024;
             ++i;
         }
-        return size.toFixed(2) + ' ' + units[i];
+        return size.toFixed(2) + ' ' + units[i].trim();
     },
     /**
      * Insert "thousands" separators in the provided number (which is actually
@@ -347,6 +363,23 @@ var utils = {
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
+    },
+    /**
+     * Sort an array in place, keeping the initial order for identical values.
+     *
+     * @param {Array} array
+     * @param {function} iteratee
+     */
+    stableSort: function (array, iteratee) {
+        var stable = array.slice();
+        return array.sort(function stableCompare (a, b) {
+            var order = iteratee(a, b);
+            if (order !== 0) {
+                return order;
+            } else {
+                return stable.indexOf(a) - stable.indexOf(b);
+            }
+        });
     },
     /**
      * @param {any} array

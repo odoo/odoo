@@ -164,11 +164,12 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
 
     var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-    var formUpdate = FormController.prototype.update;
-    FormController.prototype.update = function () {
-        assert.step('update');
-        return formUpdate.apply(this, arguments);
-    };
+    testUtils.patch(FormController, {
+        update: function () {
+            assert.step('update');
+            return this._super.apply(this, arguments);
+        },
+    });
 
     var form = createView({
         View: FormView,
@@ -206,7 +207,7 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
 
     form.destroy();
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-    FormController.prototype.update = formUpdate;
+    testUtils.unpatch(FormController);
 });
 
 QUnit.test('widget field_float_scannable', function (assert) {

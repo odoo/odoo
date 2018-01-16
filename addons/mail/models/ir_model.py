@@ -15,6 +15,12 @@ class IrModel(models.Model):
         help="Whether this model supports messages and notifications.",
     )
 
+    def unlink(self):
+        # Delete followers for models that will be unlinked.
+        query = "DELETE FROM mail_followers WHERE res_model IN %s"
+        self.env.cr.execute(query, [tuple(self.mapped('model'))])
+        return super(IrModel, self).unlink()
+
     @api.multi
     def write(self, vals):
         if self and 'is_mail_thread' in vals:

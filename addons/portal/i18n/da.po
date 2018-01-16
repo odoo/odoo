@@ -12,14 +12,14 @@
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2017
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:27+0000\n"
 "PO-Revision-Date: 2017-10-02 11:27+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +54,29 @@ msgid ""
 "<p>\n"
 "${object.wizard_id.welcome_message or ''}"
 msgstr ""
+"\n"
+"<p>\n"
+"    Kære ${object.user_id.name or ''},\n"
+"</p>\n"
+"<p>\n"
+"    Hermed fremsendes adgang til ${user.company_id.name}'s ${object.wizard_id.portal_id.name}.\n"
+"</p>\n"
+"<p>\n"
+"    Herunder finder du dine kontooplysninger:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Brugernavn: ${object.user_id.login or ''}</li>\n"
+"    <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
+"\t<li>Database: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
+"</ul>\n"
+"<p>\n"
+"\tDu kan indtaste eller ændre din adgangskode via følgende URL:\n"
+"</p>\n"
+"<ul>\n"
+"    <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
+"</ul>\n"
+"<p>\n"
+"${object.wizard_id.welcome_message or ''}"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -114,7 +137,7 @@ msgstr "Virksomhedsnavn"
 msgid ""
 "Confirm\n"
 "                                <span class=\"fa fa-long-arrow-right\"/>"
-msgstr ""
+msgstr "Bekræft"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user_partner_id
@@ -267,7 +290,7 @@ msgstr "Næste"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:38
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
+msgstr "Ups! Noget gik galt. Prøv at genindlæse siden og log ind."
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
@@ -370,7 +393,7 @@ msgstr "Vej"
 #: code:addons/portal/static/src/xml/portal_signature.xml:25
 #, python-format
 msgid "Thank You !"
-msgstr ""
+msgstr "Tak !"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard_portal_id
@@ -574,7 +597,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Your Contact Details"
-msgstr ""
+msgstr "Dine Kontaktoplysninger"
 
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_layout
@@ -585,7 +608,7 @@ msgstr "Dine oplysninger:"
 #. module: portal
 #: model:ir.ui.view,arch_db:portal.portal_my_home
 msgid "Your Documents"
-msgstr ""
+msgstr "Dine Dokumenter"
 
 #. module: portal
 #. openerp-web

@@ -3,18 +3,18 @@
 # * account_voucher
 # 
 # Translators:
-# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Gustavo Valverde <g.valverde02@gmail.com>, 2017
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Daniel Blanco <daniel@blancomartin.com.ar>, 2017
 # David Perez <david@closemarketing.es>, 2017
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
 # Javier Ramirez <elbomba887@gmail.com>, 2017
 # RGB Consulting <odoo@rgbconsulting.com>, 2017
 # Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Antonio Trueba <atgayol@gmail.com>, 2017
 # Rafael Blasco <rafabn@antiun.com>, 2017
 # Ivan Nieto <ivan.n.s@tuta.io>, 2017
@@ -42,8 +42,8 @@ msgid ""
 " * The 'Cancelled' status is used when user cancel voucher."
 msgstr ""
 "* El estado 'Borrador' se usa cuando un usuario está introduciendo un nuevo y no confirmado comprobante. \n"
-"* 'Pro-forma' se establece cuando el comprobante está en estado pro-forma. El comprobante aún no tiene un número de comprobante. \n"
-"* El estado 'Asentado' se usa cuando el usuario confirma el comprobante, asignándole un número de comprobante y creándose los asientos contables. \n"
+"* 'Proforma' se establece cuando el comprobante está en estado pro-forma. El comprobante aún no tiene un número de comprobante. \n"
+"* El estado 'Validado' se usa cuando el usuario confirma el comprobante, asignándole un número de comprobante y creándose los asientos contables. \n"
 "* El estado 'Cancelado' se usa cuando el usuario cancela el comprobante."
 
 #. module: account_voucher
@@ -70,7 +70,7 @@ msgstr "Comprobantes contables"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_price_subtotal
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_account_analytic_id
@@ -302,7 +302,7 @@ msgstr "Pagado"
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_partner_id
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 msgid "Partner"
-msgstr "Contacto"
+msgstr "Empresa"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
@@ -342,19 +342,19 @@ msgstr "Por favor, defina una secuencia para el diario."
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted"
-msgstr "Contabilizado"
+msgstr "Validado"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_sale
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter_vendor
 msgid "Posted Vouchers"
-msgstr "Comprobantes asentados"
+msgstr "Comprobantes validados"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
 msgid "Pro-forma"
-msgstr "Pro-forma"
+msgstr "Proforma"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_line_product_id
@@ -406,7 +406,7 @@ msgstr "Recibo de ventas"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr "Recibo de ventas"
+msgstr "Recibos de ventas"
 
 #. module: account_voucher
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_filter
@@ -452,12 +452,12 @@ msgstr "Impuesto"
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_amount
 msgid "Tax Amount"
-msgstr "Monto Impuesto"
+msgstr "Importe impuesto"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_tax_correction
 msgid "Tax Correction"
-msgstr ""
+msgstr "Corrección del impuesto"
 
 #. module: account_voucher
 #: model:ir.model.fields,help:account_voucher.field_account_voucher_paid
@@ -489,7 +489,7 @@ msgstr "Total"
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree
 #: model:ir.ui.view,arch_db:account_voucher.view_voucher_tree_purchase
 msgid "Total Amount"
-msgstr "Monto Total"
+msgstr "Importe total"
 
 #. module: account_voucher
 #: model:ir.model.fields,field_description:account_voucher.field_account_voucher_voucher_type

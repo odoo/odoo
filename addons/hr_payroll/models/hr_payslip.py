@@ -311,7 +311,10 @@ class HrPayslip(models.Model):
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
-        structure_ids = contracts.get_all_structures()
+        if len(contracts) == 1 and payslip.struct_id:
+            structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
+        else:
+            structure_ids = contracts.get_all_structures()
         #get the rules of the structure and thier children
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence

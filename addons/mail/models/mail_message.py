@@ -846,6 +846,9 @@ class Message(models.Model):
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
             ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+
+        notif_partners._notify_by_chat(self)
+
         channels_sudo._notify(self)
 
         # Discard cache, because child / parent allow reading and therefore

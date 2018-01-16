@@ -116,6 +116,9 @@
                                                         <td width="20%">
                                                             <t t-if="o.picking_type_id.code != 'incoming'">
                                                                 <span t-esc="ml.location_id.display_name"/>
+                                                                <t t-if="ml.package_id">
+                                                                    - <span t-field="ml.package_id"/>
+                                                                </t>
                                                             </t>
                                                         </td>
                                                         <td width="50%">
@@ -135,12 +138,9 @@
                                                         <td width="30%" align="right">
                                                             <div>
                                                                 <span t-field="ml.location_dest_id"/>
-                                                            </div>
-                                                            <div t-if="ml.result_package_id or ml.result_package_id">
-                                                                <span t-field="ml.package_id"/>
-                                                                <span t-if="ml.result_package_id and not ml.package_id" class="fa fa-dropbox"/>
-                                                                <span t-if="ml.result_package_id and ml.package_id">&#8594;</span>
-                                                                <span t-field="ml.result_package_id"/>
+                                                                <t t-if="ml.result_package_id">
+                                                                    - <span t-field="ml.result_package_id"/>
+                                                                </t>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -152,6 +152,25 @@
                                         </td>
                                     </tr>
                               </tbody>
+                            </table>
+                            <table class="table table-condensed" t-if="o.entire_package_ids and o.picking_type_entire_packs">
+                                <thead>
+                                    <tr>
+                                        <th width="25%">Package</th>
+                                        <th width="25%" class="text-center">Barcode</th>
+                                        <th width="25%" class="text-left">Source</th>
+                                        <th width="25%" class="text-right">Destination</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="o.entire_package_ids.sorted(key=lambda p: p.name)" t-as="package">
+                                        <t t-set="package" t-value="package.with_context({'picking_id':o.id})" />
+                                        <td><span t-field="package.name"/></td>
+                                        <td><img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', package.name, 600, 100)" style="width:300px    ;height:50px"/></td>
+                                        <td><span t-field="package.current_source_location_id"/></td>
+                                        <td><span t-field="package.current_destination_location_id"/></td>
+                                    </tr>
+                                </tbody>
                             </table>
                             <p t-if="o.state in ['draft', 'waiting', 'confirmed']">
                                 You do not have any products reserved for this picking.  Please click the 'Reserve' button

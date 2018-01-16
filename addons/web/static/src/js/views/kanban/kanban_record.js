@@ -36,7 +36,6 @@ var KanbanRecord = Widget.extend({
         this.options = options;
         this.editable = options.editable;
         this.deletable = options.deletable;
-        this.draggable = options.draggable;
         this.read_only_mode = options.read_only_mode;
         this.qweb = options.qweb;
         this.subWidgets = {};

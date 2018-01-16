@@ -112,7 +112,6 @@ class TestWorkOrderProcess(common.TransactionCase):
         self.assertEqual(product_table_leg.qty_available, 19)
         self.assertEqual(product_table_sheet.qty_available, 19)
 
-    @unittest.skip('failing test: is up to date?')
     def test_00b_workorder_process(self):
         """ Testing consume quants and produced quants with workorder """
         dining_table = self.env.ref("mrp.product_product_computer_desk")
@@ -120,11 +119,18 @@ class TestWorkOrderProcess(common.TransactionCase):
         product_table_leg = self.env.ref('mrp.product_product_computer_desk_leg')
         product_bolt = self.env.ref('mrp.product_product_computer_desk_bolt')
 
+        bom = self.env['mrp.bom'].browse(self.ref("mrp.mrp_bom_desk"))
+        bom.routing_id = self.ref('mrp.mrp_routing_1')
+
+        bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_sheet).operation_id = bom.routing_id.operation_ids[0]
+        bom.bom_line_ids.filtered(lambda p: p.product_id == product_table_leg).operation_id = bom.routing_id.operation_ids[1]
+        bom.bom_line_ids.filtered(lambda p: p.product_id == product_bolt).operation_id = bom.routing_id.operation_ids[2]
+
         production_table = self.env['mrp.production'].create({
             'product_id': dining_table.id,
             'product_qty': 2.0,
             'product_uom_id': dining_table.uom_id.id,
-            'bom_id': self.ref("mrp.mrp_bom_desk")
+            'bom_id': bom.id,
         })
 
         # Set tracking lot on finish and consume products.
@@ -185,11 +191,11 @@ class TestWorkOrderProcess(common.TransactionCase):
         finished_lot = self.env['stock.production.lot'].create({'product_id': production_table.product_id.id})
         workorders[0].write({'final_lot_id': finished_lot.id, 'qty_producing': 1.0})
         workorders[0].button_start()
-        workorders[0].active_move_lot_ids[0].write({'lot_id': lot_sheet.id, 'quantity_done': 1})
+        workorders[0].active_move_line_ids[0].write({'lot_id': lot_sheet.id, 'qty_done': 1})
         self.assertEqual(workorders[0].state, 'progress')
         workorders[0].record_production()
 
-        move_table_sheet = production_table.move_raw_ids.filtered(lambda x : x.product_id == product_table_sheet)
+        move_table_sheet = production_table.move_raw_ids.filtered(lambda p: p.product_id == product_table_sheet)
         self.assertEqual(move_table_sheet.quantity_done, 1)
 
         # --------------------------------------------------------------
@@ -197,9 +203,9 @@ class TestWorkOrderProcess(common.TransactionCase):
         # ---------------------------------------------------------
         workorders[1].button_start()
         workorders[1].qty_producing = 1.0
-        workorders[1].active_move_lot_ids[0].write({'lot_id': lot_leg.id, 'quantity_done': 4})
+        workorders[1].active_move_line_ids[0].write({'lot_id': lot_leg.id, 'qty_done': 4})
         workorders[1].record_production()
-        move_leg = production_table.move_raw_ids.filtered(lambda x : x.product_id == product_table_leg)
+        move_leg = production_table.move_raw_ids.filtered(lambda p: p.product_id == product_table_leg)
         #self.assertEqual(workorders[1].state, 'done')
         self.assertEqual(move_leg.quantity_done, 4)
 
@@ -208,9 +214,9 @@ class TestWorkOrderProcess(common.TransactionCase):
         # ---------------------------------------------------------
         workorders[2].button_start()
         workorders[2].qty_producing = 1.0
-        move_lot = workorders[2].active_move_lot_ids[0]
-        move_lot.write({'lot_id': lot_bolt.id, 'quantity_done': 4})
-        move_table_bolt = production_table.move_raw_ids.filtered(lambda x : x.product_id.id == product_bolt.id)
+        move_lot = workorders[2].active_move_line_ids[0]
+        move_lot.write({'lot_id': lot_bolt.id, 'qty_done': 4})
+        move_table_bolt = production_table.move_raw_ids.filtered(lambda p: p.product_id.id == product_bolt.id)
         workorders[2].record_production()
         self.assertEqual(move_table_bolt.quantity_done, 4)
 
@@ -222,9 +228,9 @@ class TestWorkOrderProcess(common.TransactionCase):
         # Check consume quants and produce quants after posting inventory
         # ---------------------------------------------------------------
         production_table.post_inventory()
-        self.assertEqual(sum(move_table_sheet.quant_ids.mapped('qty')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
-        self.assertEqual(sum(move_leg.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
-        self.assertEqual(sum(move_table_bolt.quant_ids.mapped('qty')), 4, "Wrong quantity of consumed product %s" % move_table_bolt.product_id.name)
+        self.assertEqual(sum(move_table_sheet.mapped('quantity_done')), 1, "Wrong quantity of consumed product %s" % move_table_sheet.product_id.name)
+        self.assertEqual(sum(move_leg.mapped('quantity_done')), 4, "Wrong quantity of consumed product %s" % move_leg.product_id.name)
+        self.assertEqual(sum(move_table_bolt.mapped('quantity_done')), 4, "Wrong quantity of consumed product %s" % move_table_bolt.product_id.name)
 
     def test_01_without_workorder(self):
         """ Testing consume quants and produced quants without workorder """

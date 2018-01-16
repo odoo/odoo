@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2017
 # Alejandro Santana <alejandrosantana@anubia.es>, 2017
 # Jose Manuel <admin@jaboweb.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Jose Manuel <admin@jaboweb.com>, 2017\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +28,8 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
+"Cambiar la forma en que el sistema calcula el campo completo de la calle en "
+"función de los diferentes subcampos"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -60,6 +63,12 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
+"Formato a utilizar para las calle de este país.\n"
+"\n"
+"Puede utilizar código python para el formato de todos los campos de la calle (por ejemplo, utilice '%(street_name)s, %(street_number)s' si quiere mostrar el nombre de la calle, seguido de una coma y el número de la calle)\n"
+"%(street_name)s: el nombre de la calle\n"
+"%(street_number)s: el número de la casa\n"
+"%(street_number2)s: el número complementario de la casa"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_number
@@ -71,7 +80,7 @@ msgstr "Número Exterior"
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country_street_format
 msgid "Street Format"
-msgstr ""
+msgstr "Formato de la calle"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company_street_name
@@ -90,11 +99,11 @@ msgstr "Nombre de la Calle..."
 #. module: base_address_extended
 #: model:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
 msgid "Street format..."
-msgstr ""
+msgstr "Formato de la calle ..."
 
 #. module: base_address_extended
 #: code:addons/base_address_extended/models/base_address_extended.py:60
 #: code:addons/base_address_extended/models/base_address_extended.py:126
 #, python-format
 msgid "Unrecognized field %s in street format."
-msgstr ""
+msgstr "Campo desconocido %s en el formato de la calle."

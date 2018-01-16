@@ -363,7 +363,7 @@ class IrModelFields(models.Model):
                 raise ValueError(selection)
         except Exception:
             _logger.info('Invalid selection list definition for fields.selection', exc_info=True)
-            raise UserError(_("The Selection Options expression is not a valid Pythonic expression."
+            raise UserError(_("The Selection Options expression is not a valid Pythonic expression. "
                               "Please provide an expression in the [('key','Label'), ...] format."))
 
     @api.constrains('name', 'state')
@@ -854,6 +854,8 @@ class IrModelFields(models.Model):
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+        elif field_data['ttype'] == 'monetary' and not self.pool.loaded:
+            return
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])

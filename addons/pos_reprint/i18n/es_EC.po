@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2015-11-27 06:01+0000\n"
 "Last-Translator: Rick Hunter <rick_hunter_ec@yahoo.com>\n"
 "Language-Team: Spanish (Ecuador) (http://www.transifex.com/odoo/odoo-9/"
@@ -21,15 +21,17 @@ msgstr ""
 
 #. module: pos_reprint
 #. openerp-web
-#: code:addons/pos_reprint/static/src/js/reprint.js:24
+#: code:addons/pos_reprint/static/src/xml/reprint.xml:13
+#, python-format
+msgid "Back"
+msgstr ""
+
+#. module: pos_reprint
+#. openerp-web
+#: code:addons/pos_reprint/static/src/js/reprint.js:38
 #, python-format
 msgid "Nothing to Print"
 msgstr "Nada que imprimir"
-
-#. module: pos_reprint
-#: model:ir.model.fields,field_description:pos_reprint.field_pos_config_iface_reprint
-msgid "Receipt Reprinting"
-msgstr "Reimprimir documento"
 
 #. module: pos_reprint
 #. openerp-web
@@ -39,23 +41,8 @@ msgid "Reprint Receipt"
 msgstr "Reimprimir recibo"
 
 #. module: pos_reprint
-#: model:ir.ui.view,arch_db:pos_reprint.view_pos_config_form
-msgid "Reprinting"
-msgstr "Reimprimir"
-
-#. module: pos_reprint
 #. openerp-web
-#: code:addons/pos_reprint/static/src/js/reprint.js:25
+#: code:addons/pos_reprint/static/src/js/reprint.js:39
 #, python-format
 msgid "There is no previous receipt to print."
 msgstr "No existe documento previo que imprimir."
-
-#. module: pos_reprint
-#: model:ir.model.fields,help:pos_reprint.field_pos_config_iface_reprint
-msgid "This allows you to reprint a previously printed receipt."
-msgstr "Esto permite reimprimir nuevamente un documento previo."
-
-#. module: pos_reprint
-#: model:ir.model,name:pos_reprint.model_pos_config
-msgid "pos.config"
-msgstr "Configuración POS "

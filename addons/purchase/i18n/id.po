@@ -438,6 +438,14 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr "<strong>Referensi Order Anda:</strong>"
 
 #. module: purchase
+#: code:addons/purchase/models/stock.py:83
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr "Peringatan dapat diterapkan pada produk atau pelanggan (Pembelian)"
@@ -1177,7 +1185,7 @@ msgstr "Terbaru"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "No Bill to Receive"
-msgstr "Tidak Ada Tagihan yang dapat Diterima"
+msgstr "Selesai"
 
 #. module: purchase
 #: selection:product.template,purchase_line_warn:0
@@ -1207,7 +1215,7 @@ msgstr "Catatan"
 #. module: purchase
 #: selection:purchase.order,invoice_status:0
 msgid "Nothing to Bill"
-msgstr "Tidak Ada yang bisa Ditagih"
+msgstr "Belum"
 
 #. module: purchase
 #: selection:product.template,purchase_method:0
@@ -2238,7 +2246,7 @@ msgstr "Volume"
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: selection:purchase.order,invoice_status:0
 msgid "Waiting Bills"
-msgstr "Menunggu Tagihan"
+msgstr "Siap Difakturkan"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_warehouse

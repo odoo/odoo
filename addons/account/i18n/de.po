@@ -31,7 +31,6 @@
 # Malte Jansen <work@maltejansen.de>, 2017
 # Renzo Meister <info@jamotion.ch>, 2017
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
-# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # Maik Steinfeld <info@streward.de>, 2017
 # Christopher Westburry <cricsus99@gmail.com>, 2017
 # Markus Mattes <mmattes87@gmail.com>, 2017
@@ -44,13 +43,16 @@
 # David Lehov <KHottend@gmx.de>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
 # Katharina Moritz <kmo@e2f.com>, 2017
+# Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
+# Mark Lorenz <bandworm@gmail.com>, 2017
+# Pascal Künzli <p.kuenzli@pk-its.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Katharina Moritz <kmo@e2f.com>, 2017\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"Last-Translator: Pascal Künzli <p.kuenzli@pk-its.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,6 +224,16 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Sehr geehrte(r) ${object.partner_id.name},</p>\n"
+"<p>Wir haben Ihre Zahlung dankend erhalten.<br/>Anbei übersenden wir Ihnen die Zahlungsbestätigung <strong>${(object.name or '').replace('/','-')}</strong> für <strong>${object.amount} ${object.currency_id.name}</strong> von ${object.company_id.name}.</p>\n"
+"<p>Wir Rückfragen stehen wir jederzeit zur Verfügung.</p>\n"
+"<p>Mit freundlichen Grüßen,\n"
+"% if user and user.signature:\n"
+"${user.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -1237,11 +1249,6 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr "Konto-Sachbearbeiter"
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Auswertung Alter der Forderungen"
@@ -1390,7 +1397,7 @@ msgstr "Finanzberichte"
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Rounding"
-msgstr ""
+msgstr "Kontorundung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template_account_src_id
@@ -1413,7 +1420,7 @@ msgstr "Konto-Schlagwort"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr ""
+msgstr "Konto Anmerkungen"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_tax_form
@@ -1430,7 +1437,7 @@ msgstr "Umsatzsteuer-Vorlage"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "TaxCloud-Konto"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -1574,6 +1581,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Finanzen"
@@ -1696,7 +1704,7 @@ msgstr "Gutschrift erstellen"
 #. module: account
 #: selection:account.cash.rounding,strategy:0
 msgid "Add a rounding line"
-msgstr ""
+msgstr "Rundungszeile hinzufügen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_has_second_line
@@ -1945,7 +1953,6 @@ msgstr "Erlaubt die Verwendung der Kostenrechnung."
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2000,7 +2007,7 @@ msgstr "bezahlter Betrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_rounding
 msgid "Amount Rounding"
-msgstr ""
+msgstr "Betragsrundung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -2361,7 +2368,7 @@ msgstr "Bank"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank &amp; Cash"
-msgstr ""
+msgstr "Bank &amp; Kasse"
 
 #. module: account
 #: code:addons/account/models/company.py:163
@@ -2437,7 +2444,7 @@ msgstr "Vorlage für die Zahlungsabstimmungsbuchung"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_account_setup_bank_data_done
 msgid "Bank Setup Marked As Done"
-msgstr ""
+msgstr "Bank-Konfiguration als erledigt markiert"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -2483,7 +2490,7 @@ msgstr "Ausgleich Bankkonto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "Bank-Konfiguration als erledigt markiert"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
@@ -2499,7 +2506,7 @@ msgstr "Bankauszug"
 #: code:addons/account/models/account_journal_dashboard.py:39
 #, python-format
 msgid "Bank: Balance"
-msgstr ""
+msgstr "Bank: Kontostand"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_base
@@ -2536,7 +2543,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Deposits"
-msgstr ""
+msgstr "Stapelbuchung"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -3027,7 +3034,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "Kontrollen"
+msgstr "Schecks"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -4015,6 +4022,28 @@ msgstr "Tag(e) nach der Rechnungserstellung"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Sehr geehrte Damen und Herren,\n"
+"\n"
+"unsere Aufzeichnungen zeigen, dass einige Zahlungen auf Ihrem Konto noch unbeglichen sind. Details finden Sie unten.\n"
+"Wurde der Betrag zwischenzeitlich bezahlt, betrachten Sie diese Nachricht als gegenstandslos. Ansonsten weisen Sie den unten angegeben Betrag zur Zahlung an uns an. Wenn Sie Fragen zu Ihrem Konto haben, sprechen Sie uns bitte an.\n"
+"\n"
+"Vielen Dank für Ihre Kooperation.\n"
+"\n"
+"Mit freundlichen Grüßen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -6151,6 +6180,13 @@ msgid "Journals"
 msgstr "Journale"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
+
+#. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "July"
 msgstr "Juli"
@@ -8224,7 +8260,7 @@ msgstr "Eigenschaften"
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
 #: model:ir.ui.menu,name:account.product_product_menu_purchasable
 msgid "Purchasable Products"
-msgstr ""
+msgstr "Bestellbare Produkte"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -8770,13 +8806,6 @@ msgstr "Verkauf"
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
 msgstr "Umsatzsteuer"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "Verkauf/Einkauf Journal"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -9709,10 +9738,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
+"Technisches Feld, um den Steuerausgleich bei EÜR nachzuhalten. Dies wird "
+"benötigt, wenn das Ursprungsdokument storniert wird. Dann wird eine "
+"entsprechende Stornobuchung auch im Journal erstellt."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -10675,6 +10707,7 @@ msgid "Total"
 msgstr "Total"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Gesamtbetrag"
@@ -10867,20 +10900,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
-msgstr ""
+msgstr "Noch nicht definiert"
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Unverteilte Gewinne/Verluste"
@@ -11208,7 +11233,7 @@ msgstr "Lieferantenrechnung"
 #: code:addons/account/models/account_invoice.py:442
 #, python-format
 msgid "Vendor Bill - %s"
-msgstr ""
+msgstr "Lieferantenrechnung - %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:189

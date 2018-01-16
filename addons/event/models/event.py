@@ -44,7 +44,7 @@ class EventType(models.Model):
         help="It will select this default maximum value when you choose this event")
     auto_confirm = fields.Boolean(
         'Automatically Confirm Registrations', default=True,
-        help="Events and registrations will automatically be confirmed"
+        help="Events and registrations will automatically be confirmed "
              "upon creation, easing the flow for simple events.")
     # location
     is_online = fields.Boolean(
@@ -290,6 +290,12 @@ class EventEvent(models.Model):
         if vals.get('organizer_id'):
             self.message_subscribe([vals['organizer_id']])
         return res
+
+    @api.multi
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {}, name=_("%s (copy)") % (self.name))
+        return super(EventEvent, self).copy(default)
 
     @api.one
     def button_draft(self):

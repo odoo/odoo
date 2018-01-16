@@ -3,7 +3,7 @@
 # * project
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Rona Lin <ssauapw@qq.com>, 2017
@@ -31,8 +31,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -160,7 +160,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr "# 到截止天数"
+msgstr "# 到截止日期的天数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -956,6 +956,11 @@ msgid "Active"
 msgstr "有效"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr "活动"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
@@ -1601,7 +1606,7 @@ msgstr "仪表板"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Days"
-msgstr "天数"
+msgstr "天"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_date_deadline
@@ -2662,6 +2667,11 @@ msgstr "附件数量"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr "目标"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
@@ -2789,7 +2799,7 @@ msgid "Planner"
 msgstr "计划"
 
 #. module: project
-#: code:addons/project/models/project.py:925
+#: code:addons/project/models/project.py:887
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -2924,6 +2934,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_layout
 #: model:ir.ui.view,arch_db:project.portal_my_home
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "项目"

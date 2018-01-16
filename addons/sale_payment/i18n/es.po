@@ -7,17 +7,17 @@
 # Alejandro Die Sanchis <marketing@domatix.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
-# maitaoriana <maitaoriana@gmail.com>, 2017
 # Miguel Orueta <mo@landoo.es>, 2017
 # Eduardo Magdalena <emagdalena@close2circle.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# Manuel Isaac <manuel.aih@hotmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-07 15:45+0000\n"
 "PO-Revision-Date: 2017-11-07 15:45+0000\n"
-"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
+"Last-Translator: Manuel Isaac <manuel.aih@hotmail.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,19 +29,19 @@ msgstr ""
 #: code:addons/sale_payment/models/payment.py:111
 #, python-format
 msgid "<%s> transaction (%s) failed: <%s>"
-msgstr ""
+msgstr "<%s> transacción (%s) falló : <%s>"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:118
 #, python-format
 msgid "<%s> transaction (%s) invalid state: %s"
-msgstr ""
+msgstr "<%s> transacción (%s) estado inválido : %s"
 
 #. module: sale_payment
 #: code:addons/sale_payment/models/payment.py:126
 #, python-format
 msgid "<%s> transaction (%s) order confirmation failed: <%s>"
-msgstr ""
+msgstr "<%s> transacción (%s) confirmación de orden fallida : <%s>"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -51,7 +51,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/> Pagar Ahora"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
 msgid "<i class=\"fa fa-check-circle\"/> Done"
-msgstr ""
+msgstr "Realizado"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
@@ -79,27 +79,27 @@ msgstr "<strong>Transacciones</strong>"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
 msgid "Amount of pending transactions"
-msgstr ""
+msgstr "Cantidad de transacciones pendientes"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
 msgid "Amount of transactions to capture"
-msgstr ""
+msgstr "Cantidad de transacciones para capturar"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
 msgid "Authorized Payment Transactions"
-msgstr ""
+msgstr "Transacciones de pago autorizadas"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payment"
-msgstr ""
+msgstr "En espera de pago"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Awaiting Payments"
-msgstr ""
+msgstr "En espera de pagos"
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:52
@@ -124,17 +124,17 @@ msgstr "Número de transacciones de pago"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
 msgid "Number of pending transactions"
-msgstr ""
+msgstr "Cantidad de transacciones pendientes"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
 msgid "Number of transactions to capture"
-msgstr ""
+msgstr "Cantidad de transacciones para capturar"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_success
 msgid "Order successfully paid."
-msgstr ""
+msgstr "Orden pagada satisfactoriamente."
 
 #. module: sale_payment
 #: code:addons/sale_payment/controllers/payment.py:50
@@ -156,7 +156,7 @@ msgstr "Pagar con"
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
 msgid "Payment Acquirer"
-msgstr "Método de pago"
+msgstr "Medio de pago"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_payment_transaction
@@ -166,17 +166,17 @@ msgstr "Transacción de pago"
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payment to Capture"
-msgstr ""
+msgstr "Pago a Capturar"
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Pagos a Capturar"
 
 #. module: sale_payment
 #: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
 msgid "Pending Payment Transactions"
-msgstr ""
+msgstr "Transacciones de Pago Pendientes"
 
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_sale_order
@@ -186,7 +186,7 @@ msgstr "Presupuesto"
 #. module: sale_payment
 #: model:ir.model,name:sale_payment.model_crm_team
 msgid "Sales Channel"
-msgstr "Canal de Ventas"
+msgstr "Canal de ventas"
 
 #. module: sale_payment
 #: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
@@ -197,17 +197,17 @@ msgstr "Pedido de venta"
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid ""
 "There was an error processing your payment: impossible to validate order."
-msgstr ""
+msgstr "Hubo un error al procesar su pago: No es posible validar la orden. "
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order state."
-msgstr ""
+msgstr "Hubo un error al procesar su pago: Estado de orden no válido."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error
 msgid "There was an error processing your payment: invalid order."
-msgstr ""
+msgstr "Hubo un error al procesar su pago: Orden no válida."
 
 #. module: sale_payment
 #: model:ir.ui.view,arch_db:sale_payment.portal_order_error

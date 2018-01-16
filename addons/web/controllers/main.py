@@ -17,6 +17,7 @@ import operator
 import os
 import re
 import sys
+import tempfile
 import time
 import zlib
 
@@ -24,6 +25,7 @@ import werkzeug
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
+from collections import OrderedDict
 from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
 
@@ -41,6 +43,7 @@ from odoo.http import content_disposition, dispatch_rpc, request, \
     serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
+from odoo.service import db
 
 _logger = logging.getLogger(__name__)
 
@@ -155,10 +158,10 @@ def module_installed(environment):
     # TODO The following code should move to ir.module.module.list_installed_modules()
     Modules = environment['ir.module.module']
     domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = {
-        module.name: module.dependencies_id.mapped('name')
+    modules = OrderedDict(
+        (module.name, module.dependencies_id.mapped('name'))
         for module in Modules.search(domain)
-    }
+    )
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
@@ -608,7 +611,7 @@ class WebClient(http.Controller):
     def version_info(self):
         return odoo.service.common.exp_version()
 
-    @http.route('/web/tests', type='http', auth="none")
+    @http.route('/web/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
@@ -740,12 +743,15 @@ class Database(http.Controller):
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
         try:
-            data = base64.b64encode(backup_file.read())
-            dispatch_rpc('db', 'restore', [master_pwd, name, data, str2bool(copy)])
+            with tempfile.NamedTemporaryFile(delete=False) as data_file:
+                backup_file.save(data_file)
+            db.restore_db(name, data_file.name, str2bool(copy))
             return http.local_redirect('/web/database/manager')
         except Exception as e:
             error = "Database restore error: %s" % (str(e) or repr(e))
             return self._render_template(error=error)
+        finally:
+            os.unlink(data_file.name)
 
     @http.route('/web/database/change_password', type='http', auth="none", methods=['POST'], csrf=False)
     def change_password(self, master_pwd, master_pwd_new):

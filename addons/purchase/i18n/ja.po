@@ -7,9 +7,9 @@
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
-# kent_ocean <ke.tanabe@gmail.com>, 2017
 # Takahiro MURAKAMI <murakami@date-yakkyoku.com>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# kent_ocean <ke.tanabe@gmail.com>, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -113,7 +113,7 @@ msgstr "行数"
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users_purchase_order_count
 msgid "# of Purchase Order"
-msgstr "発注数"
+msgstr "購買オーダ数"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
@@ -259,7 +259,7 @@ msgstr "<strong>弊社オーダ参照:</strong>"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong>Product</strong>"
-msgstr "<strong>製品</strong>"
+msgstr "<strong>プロダクト</strong>"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -316,9 +316,17 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/stock.py:83
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
-msgstr "製品または取引先に警告設定可 (購買)"
+msgstr "プロダクトまたは取引先に警告設定可(購買)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_invoice_purchase_id
@@ -334,12 +342,12 @@ msgstr "全て"
 #. module: purchase
 #: selection:res.company,po_lock:0
 msgid "Allow to edit purchase orders"
-msgstr "発注の編集を許可"
+msgstr "購買オーダの編集を許可"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
 msgid "Allows you to specify an analytic account on purchase order lines."
-msgstr "購買発注明細に分析勘定を指定することができます。"
+msgstr "購買オーダ明細に分析勘定を指定することができます。"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_account_analytic_id
@@ -428,7 +436,7 @@ msgstr "請求書受領済"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr "メッセージをブロック"
+msgstr "阻止メッセージ"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:73
@@ -502,7 +510,7 @@ msgstr "クリックして見積フォームから注文書を作成"
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "Click to create a request for quotation."
-msgstr ""
+msgstr "クリックして見積依頼を作成してください。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -968,7 +976,7 @@ msgstr "発注のメッセージ"
 #: model:ir.model.fields,field_description:purchase.field_product_product_purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template_purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr "発注明細のメッセージ"
+msgstr "購買オーダ明細のメッセージ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_double_validation_amount
@@ -996,7 +1004,7 @@ msgstr "月別購買"
 msgid ""
 "Most propositions of purchase orders are created automatically\n"
 "                by Odoo based on inventory needs."
-msgstr ""
+msgstr "購買オーダ提案の大部分は、在庫所要にもとづき自動作成することが可能です。"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
@@ -1107,7 +1115,7 @@ msgstr "オーダ参照"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_state
 msgid "Order Status"
-msgstr "発注ステータス"
+msgstr "オーダステータス"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1199,19 +1207,19 @@ msgstr "調達規則"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_id
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Product"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr "製品カテゴリ"
+msgstr "プロダクトカテゴリ"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_category
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_category_id
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Product Category"
-msgstr "製品カテゴリ"
+msgstr "プロダクトカテゴリ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
@@ -1221,24 +1229,24 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
 msgid "Product Quantity"
-msgstr "製品数量"
+msgstr "プロダクト数量"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_product_tmpl_id
 msgid "Product Template"
-msgstr "製品テンプレート"
+msgstr "プロダクトテンプレート"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_uom
 msgid "Product Unit of Measure"
-msgstr "製品単位"
+msgstr "プロダクト単位"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
-msgstr "製品バリアント"
+msgstr "プロダクトバリアント"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -1247,7 +1255,7 @@ msgstr "製品バリアント"
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Products"
-msgstr "製品"
+msgstr "プロダクト"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_price_standard
@@ -1275,7 +1283,7 @@ msgstr "購買契約"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr "発注分析"
+msgstr "購買分析"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1288,7 +1296,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
 msgid "Purchase Analytics"
-msgstr ""
+msgstr "購買分析"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -1299,7 +1307,7 @@ msgstr "購買請求"
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lead
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_po_lead
 msgid "Purchase Lead Time"
-msgstr "発注リードタイム"
+msgstr "購買リードタイム"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:54
@@ -1327,7 +1335,7 @@ msgstr "注文 #"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Order Fiscal Position"
-msgstr ""
+msgstr "購買オーダ会計ポジション"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -1338,13 +1346,13 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr "発注明細"
+msgstr "購買オーダ明細"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr "発注明細"
+msgstr "購買オーダ明細"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company_po_lock
@@ -1375,12 +1383,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
-msgstr "発注"
+msgstr "購買オーダ"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
 msgid "Purchase Orders #"
-msgstr ""
+msgstr "購買オーダ番号"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_graph
@@ -1391,7 +1399,7 @@ msgstr "発注統計"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Purchase orders that have been invoiced."
-msgstr ""
+msgstr "請求書受領済の購買オーダ"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1420,7 +1428,7 @@ msgstr "購買"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr "発注"
+msgstr "購買オーダ"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_dest_address_id
@@ -1581,7 +1589,7 @@ msgstr "ピッキングの戻し"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "遅れを避けるため早めに入荷を予定"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_date_planned
@@ -1630,7 +1638,7 @@ msgstr "付番"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_config_settings_view_form_account
 msgid "Set analytic accounts in purchase orders"
-msgstr ""
+msgstr "購買オーダに分析勘定を設定"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1754,9 +1762,7 @@ msgid ""
 "The quotation contains the history of the discussion/negotiation\n"
 "                you had with your vendor. Once confirmed, a request for\n"
 "                quotation is converted into a purchase order."
-msgstr ""
-"見積には、ベンダーとのディスカッション/交渉の履歴が含まれています。\n"
-"一度確認されると、見積依頼が購入注文に変換されます。"
+msgstr "見積依頼には仕入先とのディスカッション/交渉の履歴が含まれます。見積依頼は確認をもち購買オーダに変換されます。"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2053,12 +2059,12 @@ msgstr "%s の警告です。"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on the Purchase Order"
-msgstr "発注時に警告"
+msgstr "購買オーダにて警告"
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning when Purchasing this Product"
-msgstr "この製品の支払時に警告"
+msgstr "プロダクト購買時に警告"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings_group_warning_purchase

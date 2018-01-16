@@ -11,7 +11,7 @@
     <xpath expr="//div[hasclass('oe_structure')]" position="after">
         <section class="container" id="team">
             <t t-set="is_publisher" t-value="request.env['res.users'].has_group('website.group_website_publisher')" />
-            <t t-set="employees_domain" t-value="is_publisher and [] or [('website_published', '=', True)]" />
+            <t t-set="employees_domain" t-value="[] if is_publisher else [('website_published', '=', True)]" />
             <t t-set="employees" t-value="request.env['hr.employee'].search(employees_domain)" />
             <div class="col-sm-12 text-center" t-if="len(employees)">
                 <h2>Our Team</h2>

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,63 +41,87 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr ""
 
 #. module: payment
+#: code:addons/payment/models/payment_acquirer.py:112
+#, python-format
+msgid "<i>Cancel,</i> Your payment has been cancelled."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:108
+#, python-format
+msgid "<i>Done,</i> Your online payment has been successfully processed. Thank you for your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:116
+#, python-format
+msgid "<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order."
+msgstr ""
+
+#. module: payment
+#: code:addons/payment/models/payment_acquirer.py:104
+#, python-format
+msgid "<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet."
+msgstr ""
+
+#. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:76
-#: code:addons/payment/static/src/js/payment_form.js:219
+#: code:addons/payment/static/src/js/payment_form.js:77
+#: code:addons/payment/static/src/js/payment_form.js:229
 #, python-format
 msgid "<p>Please fill all the inputs required.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:180
+#: code:addons/payment/static/src/js/payment_form.js:190
 #, python-format
 msgid "<p>Please select a payment method.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:274
+#: code:addons/payment/static/src/js/payment_form.js:287
 #, python-format
 msgid "<p>Please select the option to add a new payment method.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:315
+#: code:addons/payment/static/src/js/payment_form.js:328
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:108
-#: code:addons/payment/static/src/js/payment_form.js:120
-#: code:addons/payment/static/src/js/payment_form.js:254
-#: code:addons/payment/static/src/js/payment_form.js:267
+#: code:addons/payment/static/src/js/payment_form.js:109
+#: code:addons/payment/static/src/js/payment_form.js:121
+#: code:addons/payment/static/src/js/payment_form.js:264
+#: code:addons/payment/static/src/js/payment_form.js:277
 #, python-format
 msgid "<p>We are not able to add your payment method at the moment.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:298
-#: code:addons/payment/static/src/js/payment_form.js:333
+#: code:addons/payment/static/src/js/payment_form.js:311
+#: code:addons/payment/static/src/js/payment_form.js:346
 #, python-format
 msgid "<p>We are not able to delete your payment method at the moment.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:155
-#: code:addons/payment/static/src/js/payment_form.js:161
+#: code:addons/payment/static/src/js/payment_form.js:162
+#: code:addons/payment/static/src/js/payment_form.js:168
 #, python-format
 msgid "<p>We are not able to redirect you to the payment form.</p>"
 msgstr ""
 
 #. module: payment
 #. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:169
+#: code:addons/payment/static/src/js/payment_form.js:179
 #, python-format
 msgid "<p>We're unable to process your payment.</p>"
 msgstr ""
@@ -251,8 +275,7 @@ msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
+msgid "Authorize.net"
 msgstr ""
 
 #. module: payment
@@ -1168,7 +1191,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_save_token
-msgid "This option allows customers to save their credit card as a payment token and to reuse it for a later purchase.If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you issue an invoice."
+msgid "This option allows customers to save their credit card as a payment token and to reuse it for a later purchase. If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you issue an invoice."
 msgstr ""
 
 #. module: payment

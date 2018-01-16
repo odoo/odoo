@@ -12,7 +12,7 @@
 # Artur Komishenko <Archi1792@gmail.com>, 2017
 # Mekan Bash <tmbashimov@gmail.com>, 2017
 # Русский «kolobok2048» Ивашка <kolobok2048@gmail.com>, 2017
-# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Collex100 <manyatovskiy@gmail.com>, 2017
 # Gennady Marchenko <gennadym@gmail.com>, 2017
 # Max Belyanin <maxbelyanin@gmail.com>, 2017
 # Denis Baranov <baranov@itlibertas.com>, 2017
@@ -30,13 +30,17 @@
 # KingOPl Slav <87slava13@gmail.com>, 2017
 # Andrey Skabelin <inactive+a.skabelin@transifex.com>, 2017
 # Doc Doc <vladkk94@gmail.com>, 2017
+# Артём Инжиянц <artem.inzhyyants@gmail.com>, 2017
+# Aidos Kakimzhanov <aidos.kakimzhan@gmail.com>, 2017
+# Dmitry sky <d.v.selitsky@gmail.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Doc Doc <vladkk94@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"Last-Translator: Yuriy Ney <k_wizard@mail.ru>, 2017\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -561,7 +565,7 @@ msgstr "<span>Сверить</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>Отчетность</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -696,7 +700,7 @@ msgstr "<strong>Код заказчика:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Customer: </strong>"
-msgstr ""
+msgstr "<strong>Заказчик: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -1180,11 +1184,6 @@ msgid "Account"
 msgstr "Счёт"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "Счёт: сальдовая ведомость"
@@ -1518,6 +1517,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Бухгалтерский учёт"
@@ -1606,7 +1606,7 @@ msgstr "Действия"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Other Currencies"
-msgstr ""
+msgstr "Активировать другие валюты"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1753,7 +1753,7 @@ msgstr "Все проводки"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_all_partner_invoices
 msgid "All Invoices"
-msgstr ""
+msgstr "Все Счета"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_all_lines_reconciled
@@ -1884,7 +1884,6 @@ msgstr "Позволяет использовать аналитический �
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -2093,7 +2092,7 @@ msgstr "Теги аналитики"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr ""
+msgstr "Аналитика"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
@@ -2173,12 +2172,12 @@ msgstr "Связанные шаблоны счета"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "Хотя бы один входящий"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "Хотя бы один исходящий"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2215,7 +2214,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatic Import"
-msgstr ""
+msgstr "Автоматический импорт"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -2422,7 +2421,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_account_setup_bank_data_done
 msgid "Bank setup marked as done"
-msgstr ""
+msgstr "Настройка банка отмечена, как завершённая."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_statement_line_id
@@ -2612,7 +2611,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "CSV Import"
-msgstr ""
+msgstr "Импорт CSV"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_visible
@@ -2929,6 +2928,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " credit notes made from this journal"
 msgstr ""
+"Установите это, если не хотите сквозную нумерацию счетов и кредитных авизо, "
+"относящихся к этому журналу "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_update_posted
@@ -3687,7 +3688,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_id
 msgid "Credit Note Entry Sequence"
-msgstr ""
+msgstr "Начальный номер кредитных авизо"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3698,7 +3699,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence_number_next
 msgid "Credit Notes: Next Number"
-msgstr ""
+msgstr "Последующий номер кредитного авизо"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard_credit_account_id
@@ -3944,6 +3945,28 @@ msgid "Deactivate setup bar on the dashboard"
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Здравствуйте!\n"
+"\n"
+"Согласно нашим данным, у Вас есть неоплаченные счета от нашей компании. Подробности указаны в данном письме.\n"
+"Если сумма уже оплачена, просто проигнорируйте это оповещение. В противном случае, пожалуйста, произведите указанные платежи.\n"
+"Если у Вас есть какие-либо замечания, пожалуйста, свяжитесь с нами.\n"
+"\n"
+"Благодарим за сотрудничество.\n"
+"С наилучшими пожеланиями,"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
 #: model:ir.ui.view,arch_db:account.report_financial
 #: model:ir.ui.view,arch_db:account.report_generalledger
@@ -3991,7 +4014,7 @@ msgstr "декабрём"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr ""
+msgstr "Назначенная нумерация для кредитных обязательств"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_default_credit_account_id
@@ -6086,6 +6109,13 @@ msgid "Journals"
 msgstr "Журналы"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
+
+#. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "July"
 msgstr "Июль"
@@ -6103,12 +6133,12 @@ msgstr "Обоснование"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "Канбан Доска"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "График Канбан Доски"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_journal_form
@@ -6495,7 +6525,7 @@ msgstr "Судебный спор"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:29
 #, python-format
 msgid "Load more"
-msgstr ""
+msgstr "Загрузить еще"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company_fiscalyear_lock_date
@@ -6625,6 +6655,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
+"Вручную: Оплачено наличными, чеком или любым другим способом вне Odoo.\n"
+"Электронно: Оплачено автоматически с помощью платёжного агента, путём запроса перевода с карты, сохранённой покупателем при приобретении или подписке онлайн (признак оплаты).\n"
+"Пакетное списание: Объединяет чеки нескольких покупателей за раз, генерируя пакетное списание для отправки в ваш банк. Когда расшифровывается выписка банка в Odoo, вам предлагается сопоставить перевод  с пакетным списанием. Задействуйте эту возможность в Настройки."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_id
@@ -6645,6 +6678,9 @@ msgid ""
 "Check:Pay bill by check and print it from Odoo.\n"
 "SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
 msgstr ""
+"Вручную: Счет на оплату оплачен наличными ил любым другим способом вне Odoo.\n"
+"Чек: Счет на оплату оплачен чеком и распечатан из Odoo.\n"
+"Перевод SEPA: Счет на оплату оплачен через файл перевода SEPA, направленный в ваш банк. Задействуйте эту возможность в Настройках."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -8693,13 +8729,6 @@ msgid "Sale Tax"
 msgstr "Налог с Продаж"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "Журнал продаж/покупок"
-
-#. module: account
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
 #: model:ir.ui.menu,name:account.menu_finance_receivables
@@ -8980,7 +9009,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_active
 msgid "Set active to false to hide the Journal without removing it."
-msgstr ""
+msgstr "Переключите \"активный\" в \"ЛОЖЬ\", для сокрытия Журнала без его удаления"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_active
@@ -9600,6 +9629,8 @@ msgstr "Техническое поле используется в методе
 #: model:ir.model.fields,help:account.field_account_journal_account_setup_bank_data_done
 msgid "Technical field used in the special view for the setup bar step."
 msgstr ""
+"Техническое поле, используемое в специальном представлении для шага "
+"установки панели"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_abstract_payment_payment_method_code
@@ -9632,13 +9663,13 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"Техническое поле, используемое для отслеживания выравнивания налоговой "
-"кассовой базы. Это необходимо при отмене источника: он будет публиковать "
-"обратную запись в журнале, чтобы отменить эту часть."
+"Технические поле используется для отслеживания согласования налога на "
+"наличной основе. Это необходимо при отмене источника: он будет размещать "
+"обратную запись в журнале, чтобы отменить эту часть тоже."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -9995,11 +10026,13 @@ msgstr "Наименование которое будет использова�
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
 msgstr ""
+"Последующий номер будет использован для нумерации следующего кредитного "
+"авизо"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_number_next
 msgid "The next sequence number will be used for the next invoice."
-msgstr ""
+msgstr "Последующий номер будет использован для нумерации следующего счета"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line_currency_id
@@ -10307,6 +10340,8 @@ msgid ""
 "This field contains the information related to the numbering of the credit "
 "note entries of this journal."
 msgstr ""
+"Это поле содержит информацию о нумерации записей о кредитных авизо в этом "
+"журнале"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_id
@@ -10582,6 +10617,7 @@ msgid "Total"
 msgstr "Всего"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Итоговая сумма"
@@ -10773,20 +10809,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "Нераспределенная Прибыль/Убытки"

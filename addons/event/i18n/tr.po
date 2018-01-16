@@ -377,6 +377,12 @@ msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopya)"
+
+#. module: event
 #: model:event.event,description:event.event_0
 msgid ""
 "1 business room: to discuss implementation methodologies, best sales "
@@ -747,7 +753,7 @@ msgstr "İletişim"
 #: model:ir.model.fields,field_description:event.field_event_event_company_id
 #: model:ir.model.fields,field_description:event.field_event_registration_company_id
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: event
 #: code:addons/event/models/event.py:475
@@ -1079,7 +1085,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
 
@@ -1660,7 +1666,7 @@ msgstr "Taslağa Ayarla"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Set To Unconfirmed"
-msgstr "Onaylanmamışa Ayarla"
+msgstr "Onaysız Olarak Ayarla"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_configuration
@@ -1833,7 +1839,7 @@ msgstr "Onaysız"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_unconfirmed
 msgid "Unconfirmed Seat Reservations"
-msgstr "Onaylanmamış Ayrılan Koltuklar"
+msgstr "Onaylanmamış Rezerve Koltuklar"
 
 #. module: event
 #: model:event.event,description:event.event_3

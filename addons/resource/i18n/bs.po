@@ -81,7 +81,7 @@ msgstr "Dan u sedmici"
 #: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "Zadani radni sati"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
@@ -99,6 +99,8 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
+"Definišite radne sati i vremensku tabelu koji mogu biti zakazani vašim "
+"projektnim članovima."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
@@ -137,19 +139,19 @@ msgstr "Petak"
 #: code:addons/resource/models/resource.py:74
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "Petak veče"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:73
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "Petak jutro"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "Globalne odsutnosti"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -238,13 +240,13 @@ msgstr "Detalji o odsustvu"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Mjesec odsutnosti"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Leaves"
-msgstr ""
+msgstr "Odsutnosti"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
@@ -260,13 +262,13 @@ msgstr "Ponedjeljak"
 #: code:addons/resource/models/resource.py:66
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "Ponedeljak veče"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:65
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "Ponedeljak jutro"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -322,7 +324,7 @@ msgstr "Odsustva resursa"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "Miksin resursa"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -385,7 +387,7 @@ msgstr "Pretraži radno vrijeme"
 #: code:addons/resource/models/res_company.py:23
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "Standardno 40 sati/sedmično"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -405,7 +407,7 @@ msgstr "Datum početka"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Starting Date of Leave by Month"
-msgstr ""
+msgstr "Početni datum odsutnosti po mjesecima"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -415,13 +417,13 @@ msgstr "Nedjelja"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "Test model resursa"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "Faktor efikasnosti ne može biti jednak 0."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -432,6 +434,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Ovo polje se koristi prilikom računanja očekivanog trajanja radnog naloga na"
+" ovom radnom centru. Na primjer, ako radni nalog traje jedan sat a faktor "
+"efikasnosti je 100%, onda će očekivano trajanje iznositi 1 sat. Ako je "
+"faktor efikasnosti 200%, očekivano trajanje će iznositi 30 minuta."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -442,18 +448,18 @@ msgstr "Četvrtak"
 #: code:addons/resource/models/resource.py:72
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "Četvrtak veče"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:71
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "Četvrtak jutro"
 
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "Vremenska efikasnost mora biti pozitivna"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
@@ -466,6 +472,8 @@ msgid ""
 "Timezone used when encoding the leave. It is used to correctlylocalize leave"
 " hours when computing time intervals."
 msgstr ""
+"Vremenska zona prilikom enkodiranja odsutnosti. Koristi se za pravilno "
+"lokalizovanje sati odsutnosti kada se računaju vremenski intervali."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -476,13 +484,13 @@ msgstr "Utorak"
 #: code:addons/resource/models/resource.py:68
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "Utorak veče"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:67
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "Utorak jutro"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -509,13 +517,13 @@ msgstr "Srijeda"
 #: code:addons/resource/models/resource.py:70
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "Srijeda veče"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:69
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "Srijeda jutro"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -525,7 +533,7 @@ msgstr "Detalji rada"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "Radni resursi"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -552,7 +560,7 @@ msgstr "Radni sati"
 #: code:addons/resource/models/resource.py:60
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "Radni sati %s"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search

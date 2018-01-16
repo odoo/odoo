@@ -258,7 +258,7 @@ class TestTranslation(TransactionCase):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
 
         category_no = category.with_context({})
-        self.assertEqual(category_no.name, 'Customers', "Duplication erased original untranslated value")
+        self.assertEqual(category_no.name, 'Clients (copie)', "Duplication should set untranslated value")
 
         category_fr = category.with_context({'lang': 'fr_FR'})
         self.assertEqual(category_fr.name, 'Clients (copie)', "Did not used default value for translated value")

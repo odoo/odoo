@@ -31,8 +31,8 @@
 # alvaro hdz <alaherma@gmail.com>, 2017
 # Nicole Kist <nki@odoo.com>, 2017
 # Ana Juaristi <ajuaristio@gmail.com>, 2017
-# Miguel Orueta <mo@landoo.es>, 2017
 # Daniel Santibáñez Polanco <dansanti@gmail.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
 # Gafic SLP Albert Cabedo (GAFIC, SLP) <albertgafic@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Pierre-Antoine Magnet <pma@odoo.com>, 2017
@@ -131,6 +131,8 @@ msgstr "<i class=\"fa fa-eye-slash\"/>Ocultar"
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
 msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>Cómo gestionar precios con impuestos "
+"incluidos"
 
 #. module: point_of_sale
 #. openerp-web
@@ -262,7 +264,7 @@ msgstr "<strong>Balance Inicial</strong>:<br/>"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "<strong>Statement Name</strong>:<br/>"
-msgstr "<strong>Declaración Nombre </strong>:<br/>"
+msgstr "<strong>Nombre del Estado </strong>:<br/>"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
@@ -291,7 +293,7 @@ msgstr "? Dando click en \"Confirmar\" validara el pago."
 #: code:addons/point_of_sale/static/src/js/screens.js:1242
 #, python-format
 msgid "A Customer Name Is Required"
-msgstr "Se requiere el nombre de cliente"
+msgstr "Un Nombre de Cliente es Requerido"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_users_pos_security_pin
@@ -468,7 +470,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment_amount
 #: model:ir.ui.view,arch_db:point_of_sale.report_statement
 msgid "Amount"
-msgstr "Monto"
+msgstr "Importe"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_amount_authorized_diff
@@ -489,7 +491,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:160
 #, python-format
 msgid "Another session is already opened for this point of sale."
-msgstr ""
+msgstr "Otra sesión ya está abierta para este punto de venta."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -540,12 +542,12 @@ msgstr "Métodos de pago disponibles"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_available_pricelist_ids
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Pricelists"
-msgstr ""
+msgstr "Listas de Precio Disponibles"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_account_journal_search_inherit_point_of_sale
 msgid "Available for Point of Sale"
-msgstr ""
+msgstr "Disponible para Punto de Venta"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
@@ -556,7 +558,7 @@ msgstr "Disponible en PdV"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template_available_in_pos
 msgid "Available in Point of Sale"
-msgstr ""
+msgstr "Disponible en TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_average_price
@@ -608,7 +610,7 @@ msgstr "Lector de códigos de barras"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Base Amount"
-msgstr "Monto Base"
+msgstr "Importe base"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -800,7 +802,7 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_product_product_available_in_pos
 #: model:ir.model.fields,help:point_of_sale.field_product_template_available_in_pos
 msgid "Check if you want this product to appear in the Point of Sale"
-msgstr "Marque esta casilla si quiere que este producto aparezca en el TPV"
+msgstr "Seleccionar si quiere que este producto aparezca en el Punto de Venta"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_uom_categ_is_pos_groupable
@@ -845,7 +847,7 @@ msgstr "Categorías hijas"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose a pricelist for the Point Of Sale"
-msgstr ""
+msgstr "Seleccionar una Lista de Precio para el Punto de Venta"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1432,7 +1434,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_invoicing
 msgid "Enables invoice generation from the Point of Sale."
-msgstr ""
+msgstr "Habilita la generación de facturas desde el Punto de Venta."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard_end_date
@@ -1474,7 +1476,7 @@ msgid ""
 msgstr ""
 "Error: El usuario del TPV debe pertenecer a la misma compañía que el TPV. "
 "Probablemente está intentando cargar el TPV como administrador en un entorno"
-" multi-compañía, con la cuenta de administrador establecida en la compañía "
+" multicompañía, con la cuenta de administrador establecida en la compañía "
 "equivocada."
 
 #. module: point_of_sale
@@ -2045,7 +2047,7 @@ msgstr "Método"
 #: model:product.product,name:point_of_sale.product_product_consumable
 #: model:product.template,name:point_of_sale.product_product_consumable_product_template
 msgid "Miscellaneous"
-msgstr "Miscelánea"
+msgstr "Varios"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
@@ -2653,14 +2655,14 @@ msgstr "Por favor seleccione el Cliente"
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 msgid "PoS Categories"
-msgstr ""
+msgstr "Categorías TPV"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_pos_categ_id
 #: model:ir.ui.view,arch_db:point_of_sale.product_template_form_view
 msgid "PoS Category"
-msgstr ""
+msgstr "Categoría TPV"
 
 #. module: point_of_sale
 #: model:stock.picking.type,name:point_of_sale.picking_type_posout
@@ -3011,7 +3013,7 @@ msgstr "Leer balanza"
 #: code:addons/point_of_sale/static/src/js/tour.js:14
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>? <i>Click here</i>."
-msgstr "Listo para lanzar su <b>punto de venta</b>? <i>De clic aquí</i>."
+msgstr "¿Listo para lanzar su <b>punto de venta</b>? <i>Empiece aquí</i>."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -3558,12 +3560,12 @@ msgstr "Impuesto"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Tax Amount"
-msgstr "Monto Impuesto"
+msgstr "Importe impuesto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_tax_included
 msgid "Tax Display"
-msgstr "Pantalla de impuestos"
+msgstr "Mostrar impuestos"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3586,12 +3588,12 @@ msgstr ""
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
 msgid "Tax-Excluded Prices"
-msgstr "Precios Excluidos de Impuestos"
+msgstr "Precios sin impuestos"
 
 #. module: point_of_sale
 #: selection:pos.config,iface_tax_included:0
 msgid "Tax-Included Prices"
-msgstr "Precios Incluidos de Impuestos"
+msgstr "Precios con impuestos"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_amount_tax
@@ -3839,7 +3841,7 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)."
 msgstr ""
-"No hay una cuenta contable por cobrar definida para hacer el pago de esta "
+"No hay una cuenta contable a cobrar definida para hacer el pago de la "
 "empresa: \"%s\" (id: %d)."
 
 #. module: point_of_sale
@@ -4144,7 +4146,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_journal_journal_user
 msgid "Use in Point of Sale"
-msgstr ""
+msgstr "Utilizar en el TPV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_sale_pricelist

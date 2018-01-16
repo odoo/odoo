@@ -10,10 +10,10 @@
 # Giota Dandidou <giotadandidou@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -190,7 +190,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Αρχειοθετημένα"
+msgstr "Αρχειοθετήθηκαν"
 
 #. module: delivery
 #: selection:delivery.carrier,delivery_type:0
@@ -387,7 +387,7 @@ msgstr "Περιβάλλον"
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
-msgstr ""
+msgstr "Σφάλμα: δεν υπάρχει πλέγμα αντιστοίχισης."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -601,6 +601,8 @@ msgstr ""
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
+"Κανένας κανόνας τιμής δεν ταιριάζει με αυτήν την εντολή, το κόστος παράδοσης"
+" δεν μπορεί να υπολογιστεί."
 
 #. module: delivery
 #: model:product.product,name:delivery.product_product_delivery_normal
@@ -651,8 +653,12 @@ msgid "Packing Operation"
 msgstr "Λειτουργία Συσκευασίας"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_stock_quant_package
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
+msgid "Physical Package"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
 msgstr "Φυσικά Πακέτα"
 

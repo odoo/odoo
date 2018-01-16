@@ -21,7 +21,7 @@ class FleetVehicle(models.Model):
     company_id = fields.Many2one('res.company', 'Company')
     license_plate = fields.Char(required=True, help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle')
+    driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')

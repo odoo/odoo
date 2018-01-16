@@ -689,22 +689,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             current[i] = ','.join(xml_ids) or False
                             continue
 
-                        # recursively export the fields that follow name
-                        fields2 = [(p[1:] if p and p[0] == name else []) for p in fields]
+                        # recursively export the fields that follow name; use
+                        # 'display_name' where no subfield is exported
+                        fields2 = [(p[1:] or ['display_name'] if p and p[0] == name else [])
+                                   for p in fields]
                         lines2 = value._export_rows(fields2)
                         if lines2:
                             # merge first line with record's main line
                             for j, val in enumerate(lines2[0]):
                                 if val or isinstance(val, bool):
                                     current[j] = val
-                            # check value of current field
-                            if not current[i] and not isinstance(current[i], bool):
-                                # assign xml_ids, and forget about remaining lines
-                                xml_ids = [item[1] for item in value.name_get()]
-                                current[i] = ','.join(xml_ids)
-                            else:
-                                # append the other lines at the end
-                                lines += lines2[1:]
+                            # append the other lines at the end
+                            lines += lines2[1:]
                         else:
                             current[i] = False
 
@@ -1655,7 +1651,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     order = '"%s" %s' % (order_field, '' if len(order_split) == 1 else order_split[1])
                     orderby_terms.append(order)
             elif order_field in aggregated_fields:
-                orderby_terms.append(order_part)
+                order_split[0] = '"' + order_field + '"'
+                orderby_terms.append(' '.join(order_split))
             else:
                 # Cannot order by a field that will not appear in the results (needs to be grouped or aggregated)
                 _logger.warn('%s: read_group order by `%s` ignored, cannot sort on empty columns (not grouped/aggregated)',
@@ -3825,7 +3822,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if vals['lang'] == old.env.lang and field.translate is True:
-                        vals['source'] = old_wo_lang[name]
+                        # force a source if the new_val was not changed by copy override
+                        if new_val == old[name]:
+                            vals['source'] = old_wo_lang[name]
                         # the value should be the new value (given by copy())
                         vals['value'] = new_val
                     Translation.create(vals)

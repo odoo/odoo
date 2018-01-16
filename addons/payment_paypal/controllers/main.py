@@ -31,7 +31,7 @@ class PaypalController(http.Controller):
     def _parse_pdt_response(self, response):
         """ Parse a text response for a PDT verification.
 
-            :param response str: text response, structured in the following way:
+            :param str response: text response, structured in the following way:
                 STATUS\nkey1=value1\nkey2=value2...\n
              or STATUS\nError message...\n
             :rtype tuple(str, dict)
@@ -45,7 +45,7 @@ class PaypalController(http.Controller):
         for line in lines:
             split = line.split('=', 1)
             if len(split) == 2:
-                pdt_post[split[0]] = urls.url_unquote_plus(split[1]).decode('utf8')
+                pdt_post[split[0]] = urls.url_unquote_plus(split[1])
             else:
                 _logger.warning('Paypal: error processing pdt response: %s', line)
 
@@ -63,7 +63,7 @@ class PaypalController(http.Controller):
 
         Once data is validated, process it. """
         res = False
-        new_post = dict(post, cmd='_notify-validate')
+        new_post = dict(post, cmd='_notify-validate', charset='utf-8')
         reference = post.get('item_number')
         tx = None
         if reference:
@@ -78,7 +78,7 @@ class PaypalController(http.Controller):
         validate_url = paypal_urls['paypal_form_url']
         urequest = requests.post(validate_url, new_post)
         urequest.raise_for_status()
-        resp = urequest.content
+        resp = urequest.text
         if pdt_request:
             resp, post = self._parse_pdt_response(resp)
         if resp in ['VERIFIED', 'SUCCESS']:

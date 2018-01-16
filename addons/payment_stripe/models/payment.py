@@ -2,6 +2,7 @@
 
 import logging
 import requests
+import pprint
 
 from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -227,11 +228,12 @@ class PaymentTokenStripe(models.Model):
 
     @api.model
     def stripe_create(self, values):
-        res = {}
+        token = values.get('stripe_token')
+        description = None
         payment_acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
-        url_token = 'https://%s/tokens' % payment_acquirer._get_stripe_api_url()
-        url_customer = 'https://%s/customers' % payment_acquirer._get_stripe_api_url()
+        # when asking to create a token on Stripe servers
         if values.get('cc_number'):
+            url_token = 'https://%s/tokens' % payment_acquirer._get_stripe_api_url()
             payment_params = {
                 'card[number]': values['cc_number'].replace(' ', ''),
                 'card[exp_month]': str(values['cc_expiry'][:2]),
@@ -244,27 +246,56 @@ class PaymentTokenStripe(models.Model):
                               params=payment_params,
                               headers=STRIPE_HEADERS)
             token = r.json()
-            if token.get('id'):
-                customer_params = {
-                    'source': token['id'],
-                    'description': values['cc_holder_name']
-                }
-                if values.get('partner_id'):
-                    partner = self.env['res.partner'].browse(values['partner_id'])
-                    customer_params['email'] = partner.email and partner.email.strip()
-                r = requests.post(url_customer,
-                                  auth=(payment_acquirer.stripe_secret_key, ''),
-                                  params=customer_params,
-                                  headers=STRIPE_HEADERS)
-                customer = r.json()
-                res = {
-                    'acquirer_ref': customer['id'],
-                    'name': 'XXXXXXXXXXXX%s - %s' % (values['cc_number'][-4:], values['cc_holder_name'])
-                }
-            elif token.get('error'):
-                raise UserError(token['error']['message'])
+            description = values['cc_holder_name']
+        else:
+            partner_id = self.env['res.partner'].browse(values['partner_id'])
+            description = 'Partner: %s (id: %s)' % (partner_id.name, partner_id.id)
+
+        if not token:
+            raise Exception('stripe_create: No token provided!')
+
+        res = self._stripe_create_customer(token, description, payment_acquirer.id)
 
         # pop credit card info to info sent to create
-        for field_name in ["cc_number", "cvc", "cc_holder_name", "cc_expiry", "cc_brand"]:
+        for field_name in ["cc_number", "cvc", "cc_holder_name", "cc_expiry", "cc_brand", "stripe_token"]:
             values.pop(field_name, None)
         return res
+
+
+    def _stripe_create_customer(self, token, description=None, acquirer_id=None):
+        if token['object'] != 'token':
+            _logger.error('payment.token.stripe_create_customer: Cannot create a customer for object type "%s"', token.get('object'))
+            raise Exception('We are unable to process your credit card information.')
+
+        if token['type'] != 'card':
+            _logger.error('payment.token.stripe_create_customer: Cannot create a customer for token type "%s"', token.get('type'))
+            raise Exception('We are unable to process your credit card information.')
+
+        if token.get('error'):
+            _logger.error('payment.token.stripe_create_customer: Token error:\n%s', pprint.pformat(token['error']))
+            raise Exception(token['error']['message'])
+
+        payment_acquirer = self.env['payment.acquirer'].browse(acquirer_id or self.acquirer_id.id)
+        url_customer = 'https://%s/customers' % payment_acquirer._get_stripe_api_url()
+
+        customer_params = {
+            'source': token['id'],
+            'description': description or token["card"]["name"]
+        }
+
+        r = requests.post(url_customer,
+                        auth=(payment_acquirer.stripe_secret_key, ''),
+                        params=customer_params,
+                        headers=STRIPE_HEADERS)
+        customer = r.json()
+
+        if customer.get('error'):
+            _logger.error('payment.token.stripe_create_customer: Customer error:\n%s', pprint.pformat(customer['error']))
+            raise Exception(customer['error']['message'])
+
+        values = {
+            'acquirer_ref': customer['id'],
+            'name': 'XXXXXXXXXXXX%s - %s' % (token['card']['last4'], customer_params["description"])
+        }
+
+        return values

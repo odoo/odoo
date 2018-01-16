@@ -101,26 +101,26 @@ class PaymentAcquirer(models.Model):
         help='Message displayed after having done the payment process.')
     pending_msg = fields.Html(
         'Pending Message', translate=True,
-        default='<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.',
+        default=lambda s: _('<i>Pending,</i> Your online payment has been successfully processed. But your order is not validated yet.'),
         help='Message displayed, if order is in pending state after having done the payment process.')
     done_msg = fields.Html(
         'Done Message', translate=True,
-        default='<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.',
+        default=lambda s: _('<i>Done,</i> Your online payment has been successfully processed. Thank you for your order.'),
         help='Message displayed, if order is done successfully after having done the payment process.')
     cancel_msg = fields.Html(
         'Cancel Message', translate=True,
-        default='<i>Cancel,</i> Your payment has been cancelled.',
+        default=lambda s: _('<i>Cancel,</i> Your payment has been cancelled.'),
         help='Message displayed, if order is cancel during the payment process.')
     error_msg = fields.Html(
         'Error Message', translate=True,
-        default='<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.',
+        default=lambda s: _('<i>Error,</i> Please be aware that an error occurred during the transaction. The order has been confirmed but will not be paid. Do not hesitate to contact us if you have any questions on the status of your order.'),
         help='Message displayed, if error is occur during the payment process.')
     save_token = fields.Selection([
         ('none', 'Never'),
         ('ask', 'Let the customer decide'),
         ('always', 'Always')],
         string='Save Cards', default='none',
-        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase."
+        help="This option allows customers to save their credit card as a payment token and to reuse it for a later purchase. "
              "If you manage subscriptions (recurring invoicing), you need it to automatically charge the customer when you "
              "issue an invoice.")
     token_implemented = fields.Boolean('Saving Card Data supported', compute='_compute_feature_support', search='_search_is_tokenized')
@@ -416,14 +416,9 @@ class PaymentAcquirer(models.Model):
         # TDE FIXME: remove that brol
         if self.module_id and self.module_state != 'installed':
             self.module_id.button_immediate_install()
-            context = dict(self._context, active_id=self.ids[0])
             return {
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'payment.acquirer',
-                'type': 'ir.actions.act_window',
-                'res_id': self.ids[0],
-                'context': context,
+                'type': 'ir.actions.client',
+                'tag': 'reload',
             }
 
 class PaymentIcon(models.Model):
@@ -442,15 +437,17 @@ class PaymentIcon(models.Model):
     @api.model
     def create(self, vals):
         if 'image' in vals:
-            vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-            vals['image'] = image_resize_image(vals['image'], size=(64,64))
+            image = ustr(vals['image'] or '').encode('utf-8')
+            vals['image_payment_form'] = image_resize_image(image, size=(45,30))
+            vals['image'] = image_resize_image(image, size=(64,64))
         return super(PaymentIcon, self).create(vals)
 
     @api.multi
     def write(self, vals):
         if 'image' in vals:
-           vals['image_payment_form'] = image_resize_image(vals['image'], size=(45,30))
-           vals['image'] = image_resize_image(vals['image'], size=(64,64))
+            image = ustr(vals['image'] or '').encode('utf-8')
+            vals['image_payment_form'] = image_resize_image(image, size=(45,30))
+            vals['image'] = image_resize_image(image, size=(64,64))
         return super(PaymentIcon, self).write(vals)
 
 class PaymentTransaction(models.Model):

@@ -117,7 +117,9 @@ class ProductProduct(models.Model):
         """ Changes the Standard Price of Product and creates an account move accordingly."""
         AccountMove = self.env['account.move']
 
-        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.user.company_id.id)])
+        quant_locs = self.env['stock.quant'].sudo().read_group([('product_id', 'in', self.ids)], ['location_id'], ['location_id'])
+        quant_loc_ids = [loc['location_id'][0] for loc in quant_locs]
+        locations = self.env['stock.location'].search([('usage', '=', 'internal'), ('company_id', '=', self.env.user.company_id.id), ('id', 'in', quant_loc_ids)])
 
         product_accounts = {product.id: product.product_tmpl_id.get_product_accounts() for product in self}
 
@@ -234,3 +236,16 @@ class ProductCategory(models.Model):
         'account.account', 'Stock Valuation Account', company_dependent=True,
         domain=[('deprecated', '=', False)],
         help="When real-time inventory valuation is enabled on a product, this account will hold the current value of the products.",)
+
+    @api.onchange('property_cost_method')
+    def onchange_property_valuation(self):
+        if not self._origin:
+            # don't display the warning when creating a product category
+            return
+        return {
+            'warning': {
+                'title': _("Warning"),
+                'message': _("Changing your cost method is an important change that will impact your inventory valuation. Are you sure you want to make that change?"),
+            }
+        }
+

@@ -176,14 +176,14 @@ class TestSaleStock(TestSale):
 
         # Check invoice
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" after picking return' % self.so.invoice_status)
-        self.assertEqual(self.so.order_line[0].qty_delivered, 3.0, 'Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
+        self.assertAlmostEqual(self.so.order_line[0].qty_delivered, 3.0, 'Sale Stock: delivered quantity should be 3.0 instead of "%s" after picking return' % self.so.order_line[0].qty_delivered)
         # let's do an invoice with refunds
         adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
             'advance_payment_method': 'all',
         })
         adv_wiz.with_context(open_invoices=True).create_invoices()
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
-        self.assertEqual(self.inv_2.invoice_line_ids[0].quantity, 2.0, 'Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids[0].quantity)
+        self.assertAlmostEqual(self.inv_2.invoice_line_ids[0].quantity, 2.0, 'Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids[0].quantity)
         self.assertEqual(self.so.invoice_status, 'no', 'Sale Stock: so invoice_status should be "no" instead of "%s" after invoicing the return' % self.so.invoice_status)
 
     def test_03_sale_stock_delivery_partial(self):
@@ -273,3 +273,33 @@ class TestSaleStock(TestSale):
         })
         # a single picking should be created for the new delivery
         self.assertEquals(len(self.so.picking_ids), 2)
+
+    def test_05_confirm_cancel_confirm(self):
+        """ Confirm a sale order, cancel it, set to quotation, change the
+        partner, confirm it again: the second delivery order should have
+        the new partner.
+        """
+        item1 = self.products['prod_order']
+        partner1 = self.partner.id
+        partner2 = self.env.ref('base.res_partner_2').id
+        so1 = self.env['sale.order'].create({
+            'partner_id': partner1,
+            'order_line': [(0, 0, {
+                'name': item1.name,
+                'product_id': item1.id,
+                'product_uom_qty': 1,
+                'product_uom': item1.uom_id.id,
+                'price_unit': item1.list_price,
+            })],
+        })
+        so1.action_confirm()
+        self.assertEqual(len(so1.picking_ids), 1)
+        self.assertEqual(so1.picking_ids.partner_id.id, partner1)
+        so1.action_cancel()
+        so1.action_draft()
+        so1.partner_id = partner2
+        so1.partner_shipping_id = partner2  # set by an onchange
+        so1.action_confirm()
+        self.assertEqual(len(so1.picking_ids), 2)
+        picking2 = so1.picking_ids.filtered(lambda p: p.state != 'cancel')
+        self.assertEqual(picking2.partner_id.id, partner2)

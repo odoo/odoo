@@ -1,26 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_contract
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-12 13:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Dutch (Belgium) (http://www.transifex.com/odoo/odoo-9/"
-"language/nl_BE/)\n"
-"Language: nl_BE\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Dutch (Belgium) (https://www.transifex.com/odoo/teams/41243/nl_BE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nl_BE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr_contract
-#: model:ir.model,name:hr_contract.model_base_action_rule
-msgid "Action Rules"
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span>/ month</span>"
 msgstr ""
 
 #. module: hr_contract
@@ -34,9 +39,19 @@ msgid "Advantages..."
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
-msgid "Basic Salary of the employee"
+#: selection:hr.contract,state:0
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,help:hr_contract.action_hr_contract
+msgid "Click here to create new contracts."
 msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
+msgid "Company"
+msgstr "Bedrijf"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
@@ -50,8 +65,13 @@ msgid "Contract Reference"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Terms"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5678
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_5898
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -78,6 +98,12 @@ msgid "Contract expired"
 msgstr ""
 
 #. module: hr_contract
+#: code:addons/hr_contract/models/hr_contract.py:100
+#, python-format
+msgid "Contract start date must be less than contract end date."
+msgstr ""
+
+#. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
 msgid "Contract to Renew"
 msgstr ""
@@ -92,19 +118,24 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_tree
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Contracts"
-msgstr "Contracten"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_uid
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_uid
 msgid "Created by"
-msgstr "Gemaakt door"
+msgstr "Aangemaakt door"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_create_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_create_date
 msgid "Created on"
-msgstr "Gemaakt op"
+msgstr "Aangemaakt op"
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_currency_id
+msgid "Currency"
+msgstr "Valuta"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
@@ -119,6 +150,11 @@ msgid "Current Employee"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Delete"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr ""
@@ -130,9 +166,9 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Duration"
-msgstr "Duur"
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Edit Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -143,18 +179,37 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Contract"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
+msgid "Employee's monthly gross wage."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
+msgid "Employee's working schedule."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
-msgstr "Einddatum"
+msgstr ""
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! Contract start-date must be less than contract end-date."
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
+msgid "End date of the contract (if it's a fixed-term contract)."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
+msgid "End of Trial Period"
 msgstr ""
 
 #. module: hr_contract
@@ -174,13 +229,10 @@ msgid "Group By"
 msgstr "Groeperen op"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_close
-msgid "HR Contract: set as close"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.contract_set_as_pending
-msgid "HR Contract: set as pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
+msgid "HR Contract: update state"
 msgstr ""
 
 #. module: hr_contract
@@ -195,14 +247,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
-msgid "In kilometers"
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Important Messages"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Information"
-msgstr "Informatie"
+#: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
+msgid "In kilometers"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
@@ -216,14 +268,14 @@ msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
-msgid "Job Title"
+msgid "Job Position"
 msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type___last_update
 msgid "Last Modified on"
-msgstr "Laatst Aangepast op"
+msgstr "Laatst gewijzigd op"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_write_uid
@@ -253,15 +305,20 @@ msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Monthly Advantages in Cash"
+msgstr ""
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "New"
-msgstr "Nieuw"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_notes
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Notes"
-msgstr "Opmerkingen"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_children
@@ -269,9 +326,9 @@ msgid "Number of Children"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.filters,name:hr_contract.contract_open
-msgid "Open Contracts"
-msgstr ""
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Other Information"
+msgstr "Overige informatie"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_place_of_birth
@@ -281,11 +338,11 @@ msgstr ""
 #. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "Running"
-msgstr "Lopend"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Salary and Advantages"
+msgid "Salary Information"
 msgstr ""
 
 #. module: hr_contract
@@ -302,12 +359,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
-msgstr "Volgorde"
+msgstr "Reeks"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
 msgid "Start Date"
-msgstr "Begindatum"
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
+msgid "Start date of the contract."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "State"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
@@ -327,36 +394,6 @@ msgid "To Renew"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
-msgid "Trial End Date"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Trial Period Duration"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
-msgid "Trial Start Date"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Unread Messages"
-msgstr "Ongelezen berichten"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use employee work schedule"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_base_action_rule_trg_date_resource_field_id
-msgid "Use the user's working schedule."
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
 msgstr ""
@@ -372,71 +409,11 @@ msgid "Wage"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Work Permit"
-msgstr ""
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
 msgid "Working Schedule"
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Vereist actie"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Datum laatste bericht voor dit record."
-
-#~ msgid "Followers"
-#~ msgstr "Volgers"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Volgers (Kanalen)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Volgers (Partners)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr ""
-#~ "Als dit is ingeschakeld, zijn er nieuwe berichten die uw aandacht vragen."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
-
-#~ msgid "Important Messages"
-#~ msgstr "Belangrijke berichten"
-
-#~ msgid "Is Follower"
-#~ msgstr "Is Volger"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Datum laatste bericht"
-
-#~ msgid "Messages"
-#~ msgstr "Berichten"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Berichten en communicatiehistoriek"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Aantal acties"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Aantal berichten die actie vereisen"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Aantal ongelezen berichten"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Teller ongelezen berichten"
-
-#~ msgid "Website Messages"
-#~ msgstr "Websiteberichten"
-
-#~ msgid "Website communication history"
-#~ msgstr "Websitecommunicatiehistoriek"

@@ -19,8 +19,8 @@ class HrContract(models.Model):
     public_transport_employee_amount = fields.Monetary('Paid by the employee (Monthly)')
     thirteen_month = fields.Monetary(compute='_compute_holidays_advantages', string='13th Month',
         help="Yearly gross amount the employee receives as 13th month bonus.")
-    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Double Holidays',
-        help="Yearly gross amount the employee receives as double holidays bonus.")
+    double_holidays = fields.Monetary(compute='_compute_holidays_advantages', string='Holiday Bonus',
+        help="Yearly gross amount the employee receives as holidays bonus.")
     warrant_value_employee = fields.Monetary(compute='_compute_warrants_cost', string="Warrant value for the employee")
 
     # Employer costs fields
@@ -67,7 +67,7 @@ class HrContract(models.Model):
         help="Number of days of paid leaves the employee gets per year.")
     holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
-    wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', sting="Wage update with holidays retenues")
+    wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', string="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",
         help="Monthly net amount the employee receives.")
     retained_net_amount = fields.Monetary(sting="Net Retained",
@@ -94,7 +94,7 @@ class HrContract(models.Model):
             elif contract.transport_mode == 'public_transport':
                 contract.transport_employer_cost = contract.public_transport_reimbursed_amount
             elif contract.transport_mode == 'others':
-                contract.transport_employer_cost == contract.others_reimbursed_amount
+                contract.transport_employer_cost = contract.others_reimbursed_amount
 
     @api.depends('commission_on_target')
     def _compute_warrants_cost(self):
@@ -116,7 +116,7 @@ class HrContract(models.Model):
                 contract.transport_employer_cost
             )
 
-    @api.depends('yearly_cost_before_charges', 'social_security_contributions',
+    @api.depends('yearly_cost_before_charges', 'social_security_contributions', 'wage',
         'social_security_contributions', 'double_holidays', 'warrants_cost', 'meal_voucher_paid_by_employer')
     def _compute_final_yearly_costs(self):
         for contract in self:
@@ -176,6 +176,16 @@ class HrContract(models.Model):
             contract.double_holidays = contract.wage * 0.92
             contract.thirteen_month = contract.wage
 
+    @api.onchange('transport_mode')
+    def _onchange_transport_mode(self):
+        if self.transport_mode != 'company_car':
+            self.fuel_card = 0
+            self.company_car_total_depreciated_cost = 0
+        if self.transport_mode != 'others':
+            self.others_reimbursed_amount = 0
+        if self.transport_mode != 'public_transports':
+            self.public_transport_reimbursed_amount = 0
+
     @api.onchange('mobile', 'mobile_plus')
     def _onchange_mobile(self):
         if self.mobile_plus and not self.mobile:
@@ -205,7 +215,7 @@ class HrContract(models.Model):
             - 12.0 * contract.transport_employer_cost \
             - (1.326 / 1.05 * 12.0) * contract.commission_on_target \
             - 220.0 * contract.meal_voucher_paid_by_employer
-        gross = remaining_for_gross / (12.0 * 0.05 + 13.0 + 13.0 * 0.3507 + 0.92)
+        gross = remaining_for_gross / (13.0 + 13.0 * 0.3507 + 0.92)
         return gross
 
 
@@ -215,23 +225,23 @@ class HrEmployee(models.Model):
     spouse_fiscal_status = fields.Selection([
         ('without income', 'Without Income'),
         ('with income', 'With Income')
-    ], string='Tax status for spouse')
-    disabled = fields.Boolean(string="Disabled", help="If the employee is declared disabled by law")
-    disabled_spouse_bool = fields.Boolean(string='Disabled Spouse', help='if recipient spouse is declared disabled by law')
-    disabled_children_bool = fields.Boolean(string='Disabled Children', help='if recipient children is/are declared disabled by law')
-    resident_bool = fields.Boolean(string='Nonresident', help='if recipient lives in a foreign country')
-    disabled_children_number = fields.Integer('Number of disabled children')
-    dependent_children = fields.Integer(compute='_compute_dependent_children', string='Considered number of dependent children')
-    other_dependent_people = fields.Boolean(string="Other Dependent People", help="If other people are dependent on the employee")
-    other_senior_dependent = fields.Integer('# seniors (>=65)', help="Number of seniors dependent on the employee, including the disabled ones")
-    other_disabled_senior_dependent = fields.Integer('# disabled seniors (>=65)')
-    other_juniors_dependent = fields.Integer('# people (<65)', help="Number of juniors dependent on the employee, including the disabled ones")
-    other_disabled_juniors_dependent = fields.Integer('# disabled people (<65)')
-    dependent_seniors = fields.Integer(compute='_compute_dependent_people', string="Considered number of dependent seniors")
-    dependent_juniors = fields.Integer(compute='_compute_dependent_people', string="Considered number of dependent juniors")
-    spouse_net_revenue = fields.Float(string="Spouse Net Revenue", help="Own professional income, other than pensions, annuities or similar income")
+    ], string='Tax status for spouse', groups="hr.group_hr_user")
+    disabled = fields.Boolean(string="Disabled", help="If the employee is declared disabled by law", groups="hr.group_hr_user")
+    disabled_spouse_bool = fields.Boolean(string='Disabled Spouse', help='if recipient spouse is declared disabled by law', groups="hr.group_hr_user")
+    disabled_children_bool = fields.Boolean(string='Disabled Children', help='if recipient children is/are declared disabled by law', groups="hr.group_hr_user")
+    resident_bool = fields.Boolean(string='Nonresident', help='if recipient lives in a foreign country', groups="hr.group_hr_user")
+    disabled_children_number = fields.Integer('Number of disabled children', groups="hr.group_hr_user")
+    dependent_children = fields.Integer(compute='_compute_dependent_children', string='Considered number of dependent children', groups="hr.group_hr_user")
+    other_dependent_people = fields.Boolean(string="Other Dependent People", help="If other people are dependent on the employee", groups="hr.group_hr_user")
+    other_senior_dependent = fields.Integer('# seniors (>=65)', help="Number of seniors dependent on the employee, including the disabled ones", groups="hr.group_hr_user")
+    other_disabled_senior_dependent = fields.Integer('# disabled seniors (>=65)', groups="hr.group_hr_user")
+    other_juniors_dependent = fields.Integer('# people (<65)', help="Number of juniors dependent on the employee, including the disabled ones", groups="hr.group_hr_user")
+    other_disabled_juniors_dependent = fields.Integer('# disabled people (<65)', groups="hr.group_hr_user")
+    dependent_seniors = fields.Integer(compute='_compute_dependent_people', string="Considered number of dependent seniors", groups="hr.group_hr_user")
+    dependent_juniors = fields.Integer(compute='_compute_dependent_people', string="Considered number of dependent juniors", groups="hr.group_hr_user")
+    spouse_net_revenue = fields.Float(string="Spouse Net Revenue", help="Own professional income, other than pensions, annuities or similar income", groups="hr.group_hr_user")
     spouse_other_net_revenue = fields.Float(string="Spouse Other Net Revenue",
-        help='Own professional income which is exclusively composed of pensions, annuities or similar income')
+        help='Own professional income which is exclusively composed of pensions, annuities or similar income', groups="hr.group_hr_user")
 
     @api.constrains('spouse_fiscal_status', 'spouse_net_revenue', 'spouse_other_net_revenue')
     def _check_spouse_revenue(self):

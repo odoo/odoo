@@ -108,7 +108,7 @@ class Pricelist(models.Model):
         """
         self.ensure_one()
         if not date:
-            date = self._context.get('date') or fields.Date.today()
+            date = self._context.get('date') or fields.Date.context_today(self)
         if not uom_id and self._context.get('uom'):
             uom_id = self._context['uom']
         if uom_id:

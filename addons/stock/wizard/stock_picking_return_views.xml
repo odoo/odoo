@@ -20,6 +20,7 @@
                         <tree editable="top" create="0">
                             <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
                             <field name="quantity"/>
+                            <field name="uom_id" readonly="1" groups="product.group_uom"/>
                         </tree>
                     </field>
                 </group>

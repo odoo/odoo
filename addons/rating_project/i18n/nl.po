@@ -7,13 +7,14 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Melroy van den Berg <webmaster1989@gmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -193,13 +194,13 @@ msgstr "Automatische kanban status"
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback request for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
-"Wijzig automatisch de kanban fase wanneer de klant reageert op de feedback van dit stadium.\n"
-" * Een goede beoordeling van de klant update de kanban fase naar 'klaar voor nieuw fase' (groen bolletje). \n"
-"* Een gemiddelde of slechte beoordeling zet de kanban fase naar 'geblokkeerd' (rood bolletje).\n"
+"Wijzig automatisch de kanban status wanneer de klant reageert op de reactie aanvraag voor deze fase.\n"
+"* Een positieve beoordeling van de klant updatet de kanban fase naar 'klaar voor volgende fase' (groen bolletje).\n"
+"* Een gemiddelde of slechte beoordeling updatet de kanban fase naar 'geblokkeerd' (rood bolletje).\n"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_project_report
@@ -210,8 +211,8 @@ msgstr "Klantenbeoordelingen"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
-msgid "Customer Ratings from task"
-msgstr "Klantbeoordeling vanuit taak"
+msgid "Customer Ratings on tasks"
+msgstr "Klantbeoordeling op taken"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -282,6 +283,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Indien ingesteld en als het behoordelingsconfiguratie van het project staat "
+"op 'Beoordelen wanneer de fase veranderd', dan wordt er een e-mail verzonden"
+" naar de klant zodra de taak deze stap bereikt."
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.rating_rating_view_search_project
@@ -387,15 +391,15 @@ msgid "Ratings"
 msgstr "Beoordelingen"
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
-msgid "Ratings for tasks"
-msgstr "Beoordeling voor taken"
-
-#. module: rating_project
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
 msgstr "Beoordelingen van %s"
+
+#. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings on tasks"
+msgstr "Beoordelingen op taken"
 
 #. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form

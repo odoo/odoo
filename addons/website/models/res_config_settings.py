@@ -13,6 +13,7 @@ class ResConfigSettings(models.TransientModel):
     def _default_website(self):
         return self.env['website'].search([], limit=1)
 
+    # FIXME: Set website_id to ondelete='cascade' in master
     website_id = fields.Many2one('website', string="website", default=_default_website, required=True)
     website_name = fields.Char('Website Name', related='website_id.name')
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang')

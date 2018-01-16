@@ -9,11 +9,11 @@
 # Shark McGnark <peculiarcheese@gmail.com>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Melanie Bernard <mbe@odoo.com>, 2017
 # Eloïse Stilmant <est@odoo.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
 # Quentin THEURET <odoo@kerpeo.com>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Loic <loic.richard2@gmail.com>, 2017
@@ -27,10 +27,10 @@
 # Florian Hatat <mininet@wanadoo.fr>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:54+0000\n"
-"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -273,7 +273,6 @@ msgstr "Date de création (jour)"
 
 #. module: im_livechat
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
-#: model:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 msgid "Creation date (hour)"
 msgstr "Date de création (heure)"
 
@@ -482,11 +481,6 @@ msgid "Last Modified on"
 msgstr "Dernière modification le"
 
 #. module: im_livechat
-#: model:ir.model,name:im_livechat.model_mail_channel_partner
-msgid "Last Seen Many2many"
-msgstr "Dernier vu manyémany"
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule_write_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_write_uid
 msgid "Last Updated by"
@@ -513,6 +507,11 @@ msgstr "Congé"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Leave Channel"
 msgstr "Quitter le canal"
+
+#. module: im_livechat
+#: model:ir.model,name:im_livechat.model_mail_channel_partner
+msgid "Listeners of a Channel"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.menu_livechat_root
@@ -961,13 +960,6 @@ msgstr "ex. Bonjour, comment puis-je vous aider?"
 #: model:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
 msgstr "ex: VotreSiteWeb.com"
-
-#. module: im_livechat
-#. openerp-web
-#: code:addons/im_livechat/static/src/xml/im_livechat_backend.xml:10
-#, python-format
-msgid "fa-comments"
-msgstr ""
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_ir_autovacuum

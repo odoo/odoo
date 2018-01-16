@@ -40,8 +40,7 @@ def migrate_tags_on_taxes(cr, registry):
             ('type_tax_use', '=', tax_template.type_tax_use),
             ('description', '=', tax_template.description)
         ])
-        if len(tax_id.ids) == 1:
-            tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
+        tax_id.sudo().write({'tag_ids': [(6, 0, tax_template.tag_ids.ids)]})
 
 def preserve_existing_tags_on_taxes(cr, registry, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
@@ -291,7 +290,8 @@ class AccountChartTemplate(models.Model):
             tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
+        # Ensure, even if individually, that everything is translated according to the company's language.
+        tmp1, tmp2 = self.with_context(lang=company.partner_id.lang)._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
@@ -770,7 +770,7 @@ class WizardMultiChartsAccounts(models.TransientModel):
             if company_id:
                 company = self.env['res.company'].browse(company_id)
                 currency_id = company.on_change_country(company.country_id.id)['value']['currency_id']
-                res.update({'currency_id': currency_id})
+                res.update({'currency_id': currency_id.id})
 
         chart_templates = account_chart_template.search([('visible', '=', True)])
         if chart_templates:
@@ -857,6 +857,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
+        # Ensure everything is translated consitingly to the company's language, not the user's one.
+        self = self.with_context(lang=self.company_id.partner_id.lang)
         if not self.env.user._is_admin():
             raise AccessError(_("Only administrators can change the settings"))
 
@@ -911,13 +913,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
 
         # write values of default taxes for product as super user and write in the config
         IrDefault = self.env['ir.default']
-        IrConfig = self.env['ir.config_parameter']
         if self.sale_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_sale_tax_id", taxes_ref[self.sale_tax_id.id])
         if self.purchase_tax_id and taxes_ref:
             IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
-            IrConfig.sudo().set_param("account.default_purchase_tax_id", taxes_ref[self.purchase_tax_id.id])
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)

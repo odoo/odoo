@@ -20,13 +20,14 @@
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: Philipp Hug <philipp@hug.cx>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Bülent Tiknas <btiknas@googlemail.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgid " (copy)"
 msgstr " (Kopie)"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:538
+#: code:addons/account_asset/models/account_asset.py:540
 #, python-format
 msgid " (grouped)"
 msgstr "(gruppiert)"
@@ -101,7 +102,7 @@ msgstr "Anlagenkonto zum Buchen der Anlage zu ihren Anschaffungskosten."
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:41
+#: code:addons/account_asset/static/src/js/account_asset.js:52
 #, python-format
 msgid "Accounting entries waiting for manual verification"
 msgstr ""
@@ -118,7 +119,7 @@ msgid "Additional Options"
 msgstr "Zusätzliche Optionen"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:595
+#: code:addons/account_asset/models/account_asset.py:597
 #, python-format
 msgid "Amount"
 msgstr "Betrag"
@@ -422,7 +423,7 @@ msgid "Cumulative Depreciation"
 msgstr "Kumulierte Abschreibung"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:595
+#: code:addons/account_asset/models/account_asset.py:597
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_currency_id
 #, python-format
 msgid "Currency"
@@ -552,7 +553,7 @@ msgid "Depreciation board modified"
 msgstr "Abschreibungsspiegel verändert"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:598
+#: code:addons/account_asset/models/account_asset.py:600
 #, python-format
 msgid "Depreciation line posted."
 msgstr "Abschreibungszeile gebucht."
@@ -580,7 +581,7 @@ msgid "Disposal Moves"
 msgstr "Veräußerungsbuchungen"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:577
+#: code:addons/account_asset/models/account_asset.py:579
 #, python-format
 msgid "Document closed."
 msgstr "Dokument geschlossen"
@@ -824,7 +825,7 @@ msgid "One Entry Every"
 msgstr "Eine Buchung alle"
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:597
+#: code:addons/account_asset/models/account_asset.py:599
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_asset_partner_id
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_partner_id
 #, python-format
@@ -849,7 +850,7 @@ msgstr "Abschreibungspositionen buchen"
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:38
+#: code:addons/account_asset/static/src/js/account_asset.js:49
 #: model:ir.model.fields,field_description:account_asset.field_account_asset_depreciation_line_move_posted_check
 #: model:ir.model.fields,field_description:account_asset.field_asset_asset_report_move_check
 #: model:ir.ui.view,arch_db:account_asset.view_asset_asset_report_search
@@ -1005,12 +1006,22 @@ msgstr ""
 "vollständig abschreibt."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_invoice.py:52
+#: code:addons/account_asset/models/account_invoice.py:62
 #, python-format
 msgid ""
 "The number of depreciations or the period length of your asset category "
 "cannot be null."
 msgstr ""
+
+#. module: account_asset
+#: code:addons/account_asset/models/account_asset.py:482
+#, python-format
+msgid ""
+"This depreciation is already linked to a journal entry! Please post or "
+"delete it."
+msgstr ""
+"Diese Abschreibung ist bereits mit einem Journal verknüpft! Bitte buchen "
+"oder löschen Sie es."
 
 #. module: account_asset
 #: model:ir.ui.view,arch_db:account_asset.view_asset_depreciation_confirmation_wizard
@@ -1042,7 +1053,7 @@ msgstr "Typ"
 
 #. module: account_asset
 #. openerp-web
-#: code:addons/account_asset/static/src/js/account_asset.js:44
+#: code:addons/account_asset/static/src/js/account_asset.js:55
 #, python-format
 msgid "Unposted"
 msgstr "Nicht gebucht"
@@ -1090,13 +1101,13 @@ msgid "You cannot delete a document that contains posted entries."
 msgstr "Sie dürfen ein Dokument mit gebuchten Posten nicht löschen."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:606
+#: code:addons/account_asset/models/account_asset.py:608
 #, python-format
 msgid "You cannot delete posted depreciation lines."
 msgstr "Sie dürfen gebuchte Abschreibungspositionen nicht löschen."
 
 #. module: account_asset
-#: code:addons/account_asset/models/account_asset.py:608
+#: code:addons/account_asset/models/account_asset.py:610
 #, python-format
 msgid "You cannot delete posted installment lines."
 msgstr "Sie dürfen gebuchte Zuschreibungen nicht löschen."

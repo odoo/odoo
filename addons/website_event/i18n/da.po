@@ -10,14 +10,14 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
 # JonathanStein <jstein@image.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:54+0000\n"
 "PO-Revision-Date: 2017-09-20 09:54+0000\n"
-"Last-Translator: Laerke Mathiasen <lhm@flexerp.dk>, 2017\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "<b>Antal</b>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<b>Ticket Type</b>"
-msgstr ""
+msgstr "<b>Billettype</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -99,11 +99,14 @@ msgid ""
 "                        Sold Out\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Udsolgt\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "<span itemprop=\"name\">Event Registration</span>"
-msgstr ""
+msgstr "<span itemprop=\"name\">Tilmelding til arrangement</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
@@ -112,6 +115,9 @@ msgid ""
 "                        Free\n"
 "                    </span>"
 msgstr ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Gratis\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -178,7 +184,7 @@ msgstr "Alle begivenheder"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr ""
+msgstr "Stil spørgsmål til deltagere, når til tilmelder sig online"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -365,7 +371,7 @@ msgstr "Arangementer"
 msgid ""
 "Find out what people see and say about this event,\n"
 "                            and join the conversation."
-msgstr ""
+msgstr "Find ud af hvad folk siger om dette arrangement og følg samtalen."
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:54
@@ -389,7 +395,7 @@ msgstr "Lokation"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "N/A"
-msgstr ""
+msgstr "(Ikke angivet)"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -517,7 +523,7 @@ msgstr "Tilmeld nu"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Registration for this event is now closed"
-msgstr ""
+msgstr "Tilmelding er nu lukket for dette arrangement"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -537,7 +543,7 @@ msgstr "Vis alle kommende arrangementer"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Social Stream"
-msgstr ""
+msgstr "Sociale medier"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -559,7 +565,7 @@ msgstr "Denne måned"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket Type #"
-msgstr ""
+msgstr "Billettype nr. "
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:35
@@ -571,6 +577,7 @@ msgstr "I dag"
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
+"Brug top-menuen <i>'Indhold'</i> for at oprette dit første arrangement."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
@@ -585,17 +592,17 @@ msgstr "Vis på Google Maps"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
-msgstr ""
+msgstr "Vi er glade for at bekræfte din tilmelding til vores arrangement"
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
 msgid "Website Home"
-msgstr ""
+msgstr "Hjemmeside"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Website Menu"
-msgstr ""
+msgstr "Hjemmesidens menu"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
@@ -614,6 +621,7 @@ msgid ""
 "                        It gives confidence in your\n"
 "                        events."
 msgstr ""
+"Skriv et citat fra en deltager her. Det giver tillid til dine arrangementer."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete

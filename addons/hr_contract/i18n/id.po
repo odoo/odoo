@@ -5,14 +5,12 @@
 # Translators:
 # Bonny Useful <bonny.useful@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
+# Ryanto The <ry.the77@gmail.com>, 2017
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2017
+# Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Ngalim Siregar <ngalim.siregar@gmail.com>, 2017
-# Deddy Ddr <deddy.ddr@gmail.com>, 2017
-# Febrasari Almania <febrasari.almania@gmail.com>, 2017
 # Muhammad Herdiansyah <herdiansyah@openmailbox.org>, 2017
-# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2017
 # Gusti Rini <gustirini@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -41,12 +39,12 @@ msgstr "<span>/ bulan</span>"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
 msgid "Advantages"
-msgstr "Keuntungan"
+msgstr "Fasilitas"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Advantages..."
-msgstr "Keuntungan..."
+msgstr "Fasilitas..."
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -111,12 +109,12 @@ msgstr "Kontrak telah berakhir"
 #: code:addons/hr_contract/models/hr_contract.py:100
 #, python-format
 msgid "Contract start date must be less than contract end date."
-msgstr "Tanggal mulai kontrak harus kurang dari tanggal akhir kontrak."
+msgstr "Tanggal mulai kontrak harus lebih awal dari tanggal akhir kontrak."
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
 msgid "Contract to Renew"
-msgstr "Kontrak untuk diperbarui"
+msgstr "Kontrak untuk Diperbarui"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
@@ -178,7 +176,7 @@ msgstr "Nama Tampilan"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Edit Contract"
-msgstr ""
+msgstr "Ubah Kontrak"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -195,32 +193,32 @@ msgstr "Kontrak Karyawan"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
 msgid "Employee's monthly gross wage."
-msgstr ""
+msgstr "Gaji bruto bulanan karyawan."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
 msgid "Employee's working schedule."
-msgstr ""
+msgstr "Jam kerja karyawan."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
-msgstr "Tanggal berakhir"
+msgstr "Tanggal Berakhir"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
 msgid "End date of the contract (if it's a fixed-term contract)."
-msgstr ""
+msgstr "Tanggal berakhir kontrak (jika kontrak bersifat tetap)."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
 msgid "End date of the trial period (if there is one)."
-msgstr ""
+msgstr "Tanggal berakhir masa percobaan (jika ada)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
 msgid "End of Trial Period"
-msgstr ""
+msgstr "Tanggal Percobaan Berakhir"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -231,24 +229,24 @@ msgstr "Berakhir"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_type_sequence
 msgid "Gives the sequence when displaying a list of Contract."
-msgstr ""
+msgstr "Peroleh penomoran ketika menampilkan daftar Kontrak."
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
-msgstr "Dikelompokkan berdasarkan"
+msgstr "Dikelompokkan menurut"
 
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
 #: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
-msgstr ""
+msgstr "Kontrak HR: perbarui status"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle_distance
 msgid "Home-Work Dist."
-msgstr "Rumah-kerja Dist."
+msgstr "Jarak Rumah-Tempat Kerja"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_id
@@ -259,7 +257,7 @@ msgstr "ID"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Important Messages"
-msgstr "Pesan penting"
+msgstr "Pesan Penting"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee_vehicle_distance
@@ -279,7 +277,7 @@ msgstr "Pekerjaan"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
 msgid "Job Position"
-msgstr "Posisi"
+msgstr "Posisi Pekerjaan"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -307,17 +305,17 @@ msgstr "Kontrak Terbaru  Karyawan"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
 msgid "Medical Exam"
-msgstr "Uji kesehatan"
+msgstr "Pemeriksaan Kesehatan"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_medic_exam
 msgid "Medical Examination Date"
-msgstr "Tanggal Pemeriksaan  Medis"
+msgstr "Tanggal Pemeriksaan Kesehatan"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Monthly Advantages in Cash"
-msgstr ""
+msgstr "Gaji dan Fasilitas"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -353,7 +351,7 @@ msgstr "Sedang berjalan"
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Salary Information"
-msgstr ""
+msgstr "Informasi Gaji"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -369,7 +367,7 @@ msgstr "Pencarian Jenis Kontrak"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_sequence
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
 msgid "Sequence"
-msgstr "Urutan"
+msgstr "Penomoran"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_start
@@ -379,12 +377,12 @@ msgstr "Tanggal Mulai"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
 msgid "Start date of the contract."
-msgstr ""
+msgstr "Tanggal mulai kontrak."
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "State"
-msgstr "Pernyataan"
+msgstr "Status"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
@@ -394,36 +392,36 @@ msgstr "Status"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract_state
 msgid "Status of the contract"
-msgstr ""
+msgstr "Status kontrak"
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
-msgstr "memperbarui"
+msgstr "Akan Diperbarui"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
-msgstr "Visa berakhir tanggal"
+msgstr "Visa Berakhir Tanggal"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_no
 msgid "Visa No"
-msgstr "Visa No"
+msgstr "No. Visa"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_wage
 msgid "Wage"
-msgstr "Upah"
+msgstr "Gaji Dasar"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
-msgstr "Ijin Kerja"
+msgstr "No. Ijin Kerja"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
 msgid "Working Schedule"
-msgstr "Bekerja jadwal"
+msgstr "Jadwal Kerja"

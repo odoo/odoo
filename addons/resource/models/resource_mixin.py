@@ -31,6 +31,16 @@ class ResourceMixin(models.AbstractModel):
             values['resource_id'] = resource.id
         return super(ResourceMixin, self).create(values)
 
+    @api.multi
+    def copy_data(self, default=None):
+        if default is None:
+            default = {}
+        resource = self.resource_id.copy()
+        default['resource_id'] = resource.id
+        default['company_id'] = resource.company_id.id
+        default['resource_calendar_id'] = resource.calendar_id.id
+        return super(ResourceMixin, self).copy_data(default)
+
     def get_work_days_count(self, from_datetime, to_datetime, calendar=None):
         """ Return the number of work days for the resource, taking into account
         leaves. An optional calendar can be given in case multiple calendars can

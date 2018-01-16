@@ -216,6 +216,66 @@ QUnit.test('chatter is not rendered in mode === create', function (assert) {
     form.destroy();
 });
 
+QUnit.test('chatter rendering inside the sheet', function (assert) {
+    assert.expect(4);
+
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                    '<notebook>' +
+                        '<page>' +
+                            '<div class="oe_chatter">' +
+                                '<field name="message_ids" widget="mail_thread"/>' +
+                            '</div>' +
+                        '</page>' +
+                    '</notebook>' +
+                '</sheet>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (route === "/web/dataset/call_kw/partner/message_get_suggested_recipients") {
+                return $.when({2: []});
+            }
+            return this._super(route, args);
+        },
+        intercepts: {
+            get_messages: function (event) {
+                event.stopPropagation();
+                event.data.callback($.when([]));
+            },
+            get_bus: function (event) {
+                event.stopPropagation();
+                event.data.callback(new Bus());
+            },
+        },
+    });
+
+    assert.strictEqual(form.$('.o_chatter').length, 1,
+        "chatter should be displayed");
+
+    form.$buttons.find('.o_form_button_create').click();
+
+    assert.strictEqual(form.$('.o_chatter').length, 0,
+        "chatter should not be displayed");
+
+    form.$('.o_field_char').val('coucou').trigger('input');
+    form.$buttons.find('.o_form_button_save').click();
+
+    assert.strictEqual(form.$('.o_chatter').length, 1,
+        "chatter should be displayed");
+
+    // check if chatter buttons still work
+    form.$('.o_chatter_button_new_message').click();
+    assert.strictEqual(form.$('.o_chat_composer:visible').length, 1,
+        "chatter should be opened");
+
+    form.destroy();
+});
+
 QUnit.test('kanban activity widget with no activity', function (assert) {
     assert.expect(4);
 
@@ -493,7 +553,6 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
             done();
         });
 });
-
 
 QUnit.test('chatter: post a message and switch in edit mode', function (assert) {
     assert.expect(5);
@@ -1191,8 +1250,9 @@ QUnit.module('FieldMany2ManyTagsEmail', {
 });
 
 QUnit.test('fieldmany2many tags email', function (assert) {
-    assert.expect(11);
+    assert.expect(13);
     var done = assert.async();
+    var nameGottenIds = [[12], [12, 14]];
 
     this.data.partner.records[0].timmy = [12, 14];
 
@@ -1212,7 +1272,11 @@ QUnit.test('fieldmany2many tags email', function (assert) {
             mode: 'edit',
         },
         mockRPC: function (route, args) {
-            if (args.method ==='read' && args.model === 'partner_type') {
+            if (route === "/web/dataset/call_kw/partner_type/name_get") {
+                assert.deepEqual(args.args[0], nameGottenIds.shift(),
+                    "partner with email should be name_get'ed");
+            }
+            else if (args.method ==='read' && args.model === 'partner_type') {
                 assert.step(args.args[0]);
                 assert.deepEqual(args.args[1] , ['display_name', 'email'], "should read the email");
             }

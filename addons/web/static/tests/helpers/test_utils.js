@@ -411,11 +411,16 @@ function dragAndDrop($el, $to, options) {
     elementCenter.top += $el.outerHeight()/2;
 
     var toOffset = $to.offset();
+    toOffset.top += $to.outerHeight()/2;
     toOffset.left += $to.outerWidth()/2;
-    if (position === 'center') {
-        toOffset.top += $to.outerHeight()/2;
+    if (position === 'top') {
+        toOffset.top -= $to.outerHeight()/2;
     } else if (position === 'bottom') {
-        toOffset.top += $to.outerHeight();
+        toOffset.top += $to.outerHeight()/2;
+    } else if (position === 'left') {
+        toOffset.left -= $to.outerWidth()/2;
+    } else if (position === 'right') {
+        toOffset.left += $to.outerWidth()/2;
     }
 
     $el.trigger($.Event("mousedown", {
@@ -528,6 +533,51 @@ function removeSrcAttribute($el, widget) {
     });
 }
 
+var patches = {};
+/**
+ * Patches a given Class with the given properties.
+ *
+ * @param {Class} Klass
+ * @param {Object} props
+ */
+function patch (Klass, props) {
+    var patchID = _.uniqueId('patch_');
+    Klass.__patchID = patchID;
+    patches[patchID] = {
+        Klass: Klass,
+        otherPatchedProps: [],
+        ownPatchedProps: [],
+    };
+    _.each(props, function (value, key) {
+        if (Klass.prototype.hasOwnProperty(key)) {
+            patches[patchID].ownPatchedProps.push({
+                key: key,
+                initialValue: Klass.prototype[key],
+            });
+        } else {
+            patches[patchID].otherPatchedProps.push(key);
+        }
+    });
+    Klass.include(props);
+}
+/**
+ * Unpatches a given Class.
+ *
+ * @param {Class} Klass
+ */
+function unpatch(Klass) {
+    var patchID = Klass.__patchID;
+    var patch = patches[patchID];
+    _.each(patch.ownPatchedProps, function (p) {
+        Klass[p.key] = p.initialValue;
+    });
+    _.each(patch.otherPatchedProps, function (key) {
+        delete Klass.prototype[key];
+    });
+    delete patches[patchID];
+    delete Klass.__patchID;
+}
+
 // Loading static files cannot be properly simulated when their real content is
 // really needed. This is the case for static XML files so we load them here,
 // before starting the qunit test suite.
@@ -543,17 +593,19 @@ return $.when(
         QUnit.start();
     }, 0);
     return {
-        intercept: intercept,
-        observe: observe,
-        createView: createView,
+        addMockEnvironment: addMockEnvironment,
         createAsyncView: createAsyncView,
         createModel: createModel,
-        addMockEnvironment: addMockEnvironment,
+        createView: createView,
         dragAndDrop: dragAndDrop,
+        intercept: intercept,
+        observe: observe,
+        patch: patch,
+        removeSrcAttribute: removeSrcAttribute,
+        triggerKeypressEvent: triggerKeypressEvent,
         triggerMouseEvent: triggerMouseEvent,
         triggerPositionalMouseEvent: triggerPositionalMouseEvent,
-        triggerKeypressEvent: triggerKeypressEvent,
-        removeSrcAttribute: removeSrcAttribute,
+        unpatch: unpatch,
     };
 });
 

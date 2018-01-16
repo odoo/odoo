@@ -60,6 +60,7 @@ var ListRenderer = BasicRenderer.extend({
         this.hasSelectors = params.hasSelectors;
         this.selection = [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
+        this.editable = params.editable;
     },
 
     //--------------------------------------------------------------------------
@@ -261,7 +262,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // We register modifiers on the <td> element so that it gets the correct
         // modifiers classes (for styling)
-        var modifiers = this._registerModifiers(node, record, $td);
+        var modifiers = this._registerModifiers(node, record, $td, _.pick(options, 'mode'));
         // If the invisible modifiers is true, the <td> element is left empty.
         // Indeed, if the modifiers was to change the whole cell would be
         // rerendered anyway.
@@ -276,6 +277,7 @@ var ListRenderer = BasicRenderer.extend({
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
             var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            this._handleAttributes(widget.$el, node);
             return $td.append(widget.$el);
         }
         var name = node.attrs.name;
@@ -286,6 +288,7 @@ var ListRenderer = BasicRenderer.extend({
             escape: true,
             isPassword: 'password' in node.attrs,
         });
+        this._handleAttributes($td, node);
         return $td.html(formattedValue);
     },
     /**

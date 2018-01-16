@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2016-05-15 18:50+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Venezuela) (http://www.transifex.com/odoo/odoo-9/"
@@ -20,7 +20,7 @@ msgstr ""
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Last questions</strong>"
+msgid "<strong>Questions</strong>"
 msgstr ""
 
 #. module: website_event_questions
@@ -81,6 +81,7 @@ msgstr "Mostrar nombre"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_event
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_event_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Event"
@@ -88,17 +89,27 @@ msgstr "Evento"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_answer_id
-msgid "Event answer id"
+msgid "Event Answer"
 msgstr ""
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_id
-msgid "Event id"
+#: model:ir.model,name:website_event_questions.model_event_type
+msgid "Event Category"
 msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_registration_id
-msgid "Event registration id"
+msgid "Event Registration"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_type_id
+msgid "Event Type"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
+msgid "General Questions"
 msgstr ""
 
 #. module: website_event_questions
@@ -169,6 +180,7 @@ msgid "Personal"
 msgstr ""
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_question_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_form
@@ -177,14 +189,14 @@ msgid "Question"
 msgstr "Pregunta"
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
-msgid "Question id"
+#: code:addons/website_event_questions/models/event.py:78
+#, python-format
+msgid "Question should belong to either event category or event but not both"
 msgstr ""
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
-#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
+#: model:ir.model.fields,field_description:website_event_questions.field_event_type_question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
@@ -196,6 +208,11 @@ msgstr "Preguntas"
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_pivot
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Questions Analysis"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_type_use_questions
+msgid "Questions to Attendees"
 msgstr ""
 
 #. module: website_event_questions
@@ -213,6 +230,11 @@ msgstr "Secuencia"
 #. module: website_event_questions
 #: model:event.answer,name:website_event_questions.event_suggestion_0_1
 msgid "Silver"
+msgstr ""
+
+#. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
+msgid "Specific Questions"
 msgstr ""
 
 #. module: website_event_questions

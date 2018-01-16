@@ -13,7 +13,7 @@
 # Jarnhold Nattestad <nattestads@gmail.com>, 2017
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2017
 # Visti Kristensen <visti@vkdata.dk>, 2017
-# Laerke Mathiasen <lhm@flexerp.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 # JonathanStein <jstein@image.dk>, 2017
 msgid ""
 msgstr ""
@@ -115,7 +115,7 @@ msgid ""
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo CRM with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/crm.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
@@ -132,6 +132,105 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_team = user.env['crm.team'].search([], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Automatisk login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p style=\"color:#875A7B;margin:0\" >Hurra!</p><br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Din Odoo CRM er oppe at køre.</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold; \">Hvad nu?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Prøv at oprette et kundemne ved at sende en e-mail til </span>\n"
+"                                        <a href=\"mailto:${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_team.alias_id.name_get()[0][1] if last_created_team.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                        </a>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Se dine salgsmuligheder i din salgstragt ved blot at trække og slippe kortene fra en kolonne til en anden</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                Gennemgå </span>\n"
+"                                <span><a href=\"/web#view_type=list&model=crm.lead&action=crm.crm_lead_all_leads\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">CRM planner</span></a></span>\n"
+"                                <span> for at aktivere flere funktioner</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_crm')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Fordel automatisk dine kundeemner til dine sælgere med kundeemne scoring, </span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Hold kontakten med dine potentielle kunder med effektive e-mail kampagner</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Få vigtig viden baseret på undersøgelser,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Få smart rapportering og præcise oversigter,\n"
+"                                    </span>\n"
+"                                </p>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Og meget mere...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Brug for hjælp?</span>\n"
+"                                <span style=\"font-style:italic;\">Du er ikke alene</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Vi vil med glæde hjælpe dig undervejs. Kontakt os gennem vores\n"
+"                                <a href=\"https://www.odoo.com/help\">support formular</a> hvis du har nogen spørgsmål.\n"
+"                               Du kan også finde ud af, hvordan du får det bedste ud af Odoo med vores\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/crm.html\">\n"
+"                                <span style=\"text-decoration:underline;\">brugerdokumentation</span></a>\n"
+"                                </span><span> eller med vores </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API dokumentation</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Nyd din oplevelse med Odoo,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>The Odoo Team<br/>PS: Folk elsker Odoo, tjek </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">hvad de siger om det.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.email_template_opportunity_reminder_mail
@@ -400,6 +499,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &gt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Importér en fil</strong><br/>\n"
+"                                        <span class=\"small\">Anbefalet hvis &gt;50 poster</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -410,6 +514,11 @@ msgid ""
 "                                        <span class=\"small\">&gt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Importér</strong><br/>\n"
+"                                        <span class=\"small\">&gt; 200 kontakter</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -420,6 +529,11 @@ msgid ""
 "                                        <span class=\"small\"/>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong>Abonnementer</strong><br/>\n"
+"                                        <span class=\"small\"/>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -430,6 +544,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Opret manuelt</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 200 kontakter</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -440,6 +559,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;50 items</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> Opret manuelt</strong><br/>\n"
+"                                        <span class=\"small\">Anbefalet hvis &lt;50 poster</span>\n"
+"                                    </span>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -872,7 +996,7 @@ msgstr "Tilføj funktioner"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before creating an opportunity"
-msgstr ""
+msgstr "Tilføj et kvalifikationstrin før du opretter en salgsmulighed"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -942,7 +1066,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_amount
 msgid "Amount of quotations to invoice"
-msgstr ""
+msgstr "Antal tilbud til fakturering"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_form_view_leads
@@ -1077,7 +1201,7 @@ msgstr "Bedre synlighed på team aktiviteter"
 #: code:addons/crm/models/crm_lead.py:381
 #, python-format
 msgid "Boom! Team record for the past 30 days."
-msgstr ""
+msgstr "Boom! Team rekord for de sidste 30 dage."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -1557,7 +1681,7 @@ msgstr "Oprettelsesmåned"
 #. module: crm
 #: model:ir.actions.server,name:crm.action_your_pipeline
 msgid "Crm: My Pipeline"
-msgstr ""
+msgstr "Crm: Min Pipeline"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_company_currency
@@ -1592,7 +1716,7 @@ msgstr "Kunde"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings_module_web_clearbit
 msgid "Customer Autocomplete"
-msgstr ""
+msgstr "Kunde autoudfyldning"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:1126
@@ -1935,7 +2059,7 @@ msgstr "Forventede omsætninger"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_dashboard_graph_period_pipeline
 msgid "Expected to Close"
-msgstr ""
+msgstr "Forventet at Lukke"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_opportunity_report_view_search
@@ -2397,7 +2521,7 @@ msgstr "Sidst opdateret den"
 #: model:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Forsinkede Aktiviteter"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:882
@@ -2569,7 +2693,7 @@ msgstr "Liste over mulige smertepunkter efter segment / profil"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Look up company information (name, logo, etc.)"
-msgstr ""
+msgstr "Slå virksomhedsinformation op (navn, logo etc.)"
 
 #. module: crm
 #. openerp-web
@@ -2932,7 +3056,7 @@ msgstr "Antal værelser"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_opportunities_count
 msgid "Number of open opportunities"
-msgstr ""
+msgstr "Antal åbne salgsmuligheder"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -3013,12 +3137,12 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunities"
-msgstr ""
+msgstr "Åbne Salgsmuligheder"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Open Opportunity"
-msgstr ""
+msgstr "Åben Salgsmulighed"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -3309,7 +3433,7 @@ msgstr ""
 #: code:addons/crm/models/crm_team.py:231
 #, python-format
 msgid "Pipeline: Expected Revenue"
-msgstr ""
+msgstr "Pipeline: Forventet Omsætning"
 
 #. module: crm
 #: model:web.planner,tooltip_planner:crm.planner_crm
@@ -3466,6 +3590,8 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under "
 "<b>CRM</b> app."
 msgstr ""
+"Klar til at øge dit salg? Din <b>Pipeline</b> kan findes her, under "
+"<b>CRM</b> app'en."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
@@ -3514,7 +3640,7 @@ msgstr "Krav"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "Restore"
-msgstr ""
+msgstr "Gendan"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4117,6 +4243,8 @@ msgstr "Dette er standardkonfigurationen, der er ikke noget at konfigurere"
 msgid ""
 "This opportunity has <b>no activity planned</b>. <i>Click to check them.</i>"
 msgstr ""
+"Denne salgsmulighed har <b>ikke nogen aktiviteter planlagt</b>. <i>Klik for "
+"at tjekke dem.</i>"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage_probability
@@ -4228,13 +4356,13 @@ msgstr "Ikke tildelt"
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Lead"
-msgstr ""
+msgstr "Ikke-tildelt Kundeemne"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_unassigned_leads_count
 #: model:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Unassigned Leads"
-msgstr ""
+msgstr "Ikke-tildelte Kundeemner"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4464,7 +4592,7 @@ msgstr "Website"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead_website
 msgid "Website of the contact"
-msgstr ""
+msgstr "Kontaktens hjemmeside"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4514,7 +4642,7 @@ msgstr ""
 msgid ""
 "When sending mails, the default email address is taken from the sales "
 "channel."
-msgstr ""
+msgstr "Når der sendes mails, tages standardmailadressen fra salgskanalen."
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -4613,13 +4741,13 @@ msgstr "Du skal angive filter for dit valg"
 #: code:addons/crm/models/crm_lead.py:385
 #, python-format
 msgid "You just beat your personal record for the past 30 days."
-msgstr ""
+msgstr "Du har lige slået din personlige rekord for de seneste 30 dage."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:387
 #, python-format
 msgid "You just beat your personal record for the past 7 days."
-msgstr ""
+msgstr "Du har lige slået din personlige rekord for de seneste 7 dage."
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.crm_case_form_view_salesteams_opportunity
@@ -4765,7 +4893,7 @@ msgstr "eller"
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

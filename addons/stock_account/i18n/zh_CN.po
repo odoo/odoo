@@ -3,7 +3,7 @@
 # * stock_account
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -54,7 +54,7 @@ msgstr "会计信息"
 msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
-msgstr ""
+msgstr "影响收货作业的到岸成本，以及拆分它们来更新成本价"
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
@@ -73,7 +73,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:409
+#: code:addons/stock_account/models/stock.py:452
 #, python-format
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on"
@@ -81,7 +81,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:411
+#: code:addons/stock_account/models/stock.py:454
 #, python-format
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
@@ -102,6 +102,14 @@ msgid "Change Standard Price"
 msgstr "更改标准价"
 
 #. module: stock_account
+#: code:addons/stock_account/models/product.py:243
+#, python-format
+msgid ""
+"Changing your cost method is an important change that will impact your "
+"inventory valuation. Are you sure you want to make that change?"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
 msgid ""
 "Choose the accounting date at which you want to value the stock moves "
@@ -114,7 +122,7 @@ msgid "Click to create a stock movement."
 msgstr "点击创建库存移动"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:480
+#: code:addons/stock_account/models/stock.py:523
 #, python-format
 msgid ""
 "Configuration error. Please configure the price difference account on the "
@@ -135,7 +143,7 @@ msgstr "成本方法"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Costing"
-msgstr ""
+msgstr "成本"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_cost_method
@@ -152,7 +160,7 @@ msgstr "对方科目"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
 msgid "Counter-Part Account Required"
-msgstr ""
+msgstr "对方科目必填"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -197,12 +205,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.actions.act_window,help:stock_account.product_valuation_action
 msgid "If there are products, you will see its name and valuation."
-msgstr ""
+msgstr "如果是产品， 你将回看到它的名称和估价"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
 msgid "Include landed costs in product cost"
-msgstr ""
+msgstr "在产品成本包含到岸成本"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -331,7 +339,7 @@ msgstr "产品模板"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.product_valuation_action
 msgid "Product Valuation"
-msgstr ""
+msgstr "产品估价"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
@@ -379,7 +387,7 @@ msgstr "标准价格"
 #: code:addons/stock_account/models/product.py:150
 #, python-format
 msgid "Standard Price changed  - %s"
-msgstr ""
+msgstr "标准价格已变更  - %s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -464,7 +472,7 @@ msgid "Templates for Account Chart"
 msgstr "科目表模板"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:435
+#: code:addons/stock_account/models/stock.py:478
 #, python-format
 msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
@@ -472,15 +480,40 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#: code:addons/stock_account/models/stock.py:309
+#, python-format
+msgid ""
+"The move lines are not in a consistent state: some are entering and other "
+"are leaving the company. "
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:320
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they are doing an "
+"intercompany in a single step while they should go through the intercompany "
+"transit location."
+msgstr ""
+
+#. module: stock_account
+#: code:addons/stock_account/models/stock.py:318
+#, python-format
+msgid ""
+"The move lines are not in a consistent states: they do not share the same "
+"origin or destination company."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
 msgid "To Refund (update SO/PO)"
-msgstr ""
+msgstr "退款 (更新 SO/PO)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
 msgid "Total Value"
-msgstr "价值合计"
+msgstr "值合计"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move_to_refund
@@ -526,13 +559,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_template_valuation
 msgid "Valuation"
-msgstr "计价"
+msgstr "估价"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product_stock_value
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_value
 msgid "Value"
 msgstr "值"
+
+#. module: stock_account
+#: code:addons/stock_account/models/product.py:242
+#, python-format
+msgid "Warning"
+msgstr "警告"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -592,7 +631,7 @@ msgid ""
 msgstr "在进行产品实时库存计价时，此科目记录产品的当前估值。"
 
 #. module: stock_account
-#: code:addons/stock_account/models/stock.py:407
+#: code:addons/stock_account/models/stock.py:450
 #, python-format
 msgid ""
 "You don't have any stock journal defined on your product category, check if "
@@ -601,7 +640,7 @@ msgstr "没有在产品种类中设置库存日记账，检查是否安装科目
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:130
-#: code:addons/stock_account/models/stock.py:413
+#: code:addons/stock_account/models/stock.py:456
 #, python-format
 msgid ""
 "You don't have any stock valuation account defined on your product category."

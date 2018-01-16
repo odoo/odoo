@@ -9,10 +9,10 @@
 # Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-02 11:26+0000\n"
-"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Adrian Munteanu <adrian.munteanu@itconstruction.ro>, 2017\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -359,6 +359,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
+"Fiecare transportator (de exemplu, UPS) poate avea mai multe metode de "
+"livrare (de exemplu, UPS Express, UPS Standard) cu un set de reguli de "
+"prețuri atașate la fiecare metodă."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_prod_environment
@@ -629,6 +632,11 @@ msgid "Packing Operation"
 msgstr "Operație ambalare"
 
 #. module: delivery
+#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
+msgid "Physical Package"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
 msgid "Physical Packages"
 msgstr "Pachete fizice"
@@ -774,11 +782,6 @@ msgid "Stock Move"
 msgstr "Mișcare stoc"
 
 #. module: delivery
-#: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
-msgid "Stock Quant Package"
-msgstr ""
-
-#. module: delivery
 #: model:product.product,name:delivery.product_product_delivery_poste
 #: model:product.template,name:delivery.product_product_delivery_poste_product_template
 msgid "The Poste"
@@ -791,6 +794,9 @@ msgid ""
 "                according to your settings; on the sales order (based on the\n"
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
+"Aceste metode permit calcularea automată a prețului de livrare în funcție de"
+" setările dvs.; cu privire la comanda de vânzări (în baza cotei) sau la "
+"factură (în baza ordinelor de livrare)."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner_property_delivery_carrier_id

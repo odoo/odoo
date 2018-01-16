@@ -28,17 +28,18 @@
 # Sergio Hevia <sah@talleresbernesga.com>, 2017
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
-# Rojas Pablo <rojaspablo88@gmail.com>, 2017
+# Pablo Rojas <rojaspablo88@gmail.com>, 2017
 # Pierre-Antoine Magnet <pma@odoo.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Jorge <jcamacho@trey.es>, 2017
+# Many Feathers <many-feathers@hotmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Jorge <jcamacho@trey.es>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Many Feathers <many-feathers@hotmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,6 +120,15 @@ msgstr ""
 "(p.ej. nombre del negocio, localización) tiende a improvisar la "
 "clasificación en el motor de búsqueda y constantemente incrementar su "
 "trafico. Hazlo:"
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid ""
+",\n"
+"                                                      the #1"
+msgstr ""
+",\n"
+"                                                      el #1"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
@@ -1133,7 +1143,7 @@ msgstr "URL del adjunto"
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Attract new leads"
-msgstr "Atraer nuevos prospectos"
+msgstr "Atraer nuevas iniciativas"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_auto_redirect_lang
@@ -1350,7 +1360,7 @@ msgid ""
 "Community &amp; Enterprise users: apply a redirection from your Domain "
 "Manager platform"
 msgstr ""
-"Usuarios de Enterprise &amp; Community: aplicar una redirección desde la "
+"Usuarios de Enterprise y Community: aplicar una redirección desde la "
 "plataforma Domain Manager"
 
 #. module: website
@@ -1476,11 +1486,6 @@ msgstr "Crear menú"
 #: model:ir.ui.view,arch_db:website.page_404
 msgid "Create Page"
 msgstr "Crear página"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Create a"
-msgstr "Crea una"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1669,7 +1674,7 @@ msgstr "Nombre a Mostrar"
 #: code:addons/website/static/src/js/editor/snippets.options.js:89
 #, python-format
 msgid "Do you want to edit the company data ?"
-msgstr "Quiere editar la información de compañía?"
+msgstr "¿Quiere editar la información de la compañía?"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.view_website_form
@@ -1818,7 +1823,7 @@ msgstr "Fin"
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_comparisons
 msgid "Enterprise package"
-msgstr "Paquete empresarial"
+msgstr "Paquete Enterprise"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.http_error_debug
@@ -2250,7 +2255,7 @@ msgstr "Cómo obtener mi ID de seguimiento"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7239
+#: model:ir.model.fields,field_description:website.field_website_menu_id_7241
 #: model:ir.model.fields,field_description:website.field_website_page_id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_redirect_id
@@ -2413,7 +2418,7 @@ msgstr "Parece que tu archivo está siendo llamado por"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:209
+#: code:addons/website/static/src/js/content/website_root.js:212
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
@@ -2944,6 +2949,11 @@ msgid "Open Source ERP"
 msgstr "ERP de código abierto"
 
 #. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Open Source eCommerce"
+msgstr "Comercio electrónico de código abierto"
+
+#. module: website
 #: model:ir.ui.view,arch_db:website.user_navbar
 msgid "Optimize SEO"
 msgstr "Optimizar SEO"
@@ -3163,6 +3173,11 @@ msgid ""
 msgstr ""
 "Publique contenido en otras personas blogs, foros, sitios web, que están "
 "relacionados con su entorno."
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Powered by"
+msgstr "Con tecnología de"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.kanban_contain
@@ -4520,8 +4535,8 @@ msgid ""
 "You have many blocks available: References, Quotes Slider, Twitter "
 "Scroller,etc."
 msgstr ""
-"Tienes unos cuantos bloques disponibles: Referencias, Desplazamiento de las "
-"cotizaciones, Desplazador de Twitter, etc."
+"Tiene unos cuantos bloques disponibles: Referencias, visor de presupuestos, "
+"panel de Twitter, etc."
 
 #. module: website
 #. openerp-web
@@ -4703,11 +4718,6 @@ msgid "found(s)"
 msgstr "encontrado(s)"
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "free website"
-msgstr "web gratuita"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
@@ -4882,11 +4892,6 @@ msgstr "website.published.mixin"
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "will help you:"
 msgstr "Te ayudará:"
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "with"
-msgstr "con"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.500

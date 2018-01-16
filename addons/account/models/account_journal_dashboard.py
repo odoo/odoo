@@ -201,18 +201,19 @@ class account_journal(models.Model):
             (number_draft, sum_draft) = self._count_results_and_sum_amounts(query_results_drafts, currency)
             (number_late, sum_late) = self._count_results_and_sum_amounts(late_query_results, currency)
 
+        difference = currency.round(last_balance-account_sum) + 0.0
         return {
             'number_to_reconcile': number_to_reconcile,
-            'account_balance': formatLang(self.env, account_sum, currency_obj=self.currency_id or self.company_id.currency_id),
-            'last_balance': formatLang(self.env, last_balance, currency_obj=self.currency_id or self.company_id.currency_id),
-            'difference': (last_balance-account_sum) and formatLang(self.env, last_balance-account_sum, currency_obj=self.currency_id or self.company_id.currency_id) or False,
+            'account_balance': formatLang(self.env, currency.round(account_sum) + 0.0, currency_obj=currency),
+            'last_balance': formatLang(self.env, currency.round(last_balance) + 0.0, currency_obj=currency),
+            'difference': formatLang(self.env, difference, currency_obj=currency) if difference else False,
             'number_draft': number_draft,
             'number_waiting': number_waiting,
             'number_late': number_late,
-            'sum_draft': formatLang(self.env, sum_draft or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
-            'sum_waiting': formatLang(self.env, sum_waiting or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
-            'sum_late': formatLang(self.env, sum_late or 0.0, currency_obj=self.currency_id or self.company_id.currency_id),
-            'currency_id': self.currency_id and self.currency_id.id or self.company_id.currency_id.id,
+            'sum_draft': formatLang(self.env, currency.round(sum_draft) + 0.0, currency_obj=currency),
+            'sum_waiting': formatLang(self.env, currency.round(sum_waiting) + 0.0, currency_obj=currency),
+            'sum_late': formatLang(self.env, currency.round(sum_late) + 0.0, currency_obj=currency),
+            'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
         }

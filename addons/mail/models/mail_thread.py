@@ -1371,6 +1371,8 @@ class MailThread(models.AbstractModel):
         mail module, and should not contain security or generic html cleaning.
         Indeed those aspects should be covered by the html_sanitize method
         located in tools. """
+        if not body:
+            return body, attachments
         root = lxml.html.fromstring(body)
         postprocessed = False
         to_remove = []
@@ -1406,7 +1408,7 @@ class MailThread(models.AbstractModel):
         # Content-Type: multipart/related;
         #   boundary="_004_3f1e4da175f349248b8d43cdeb9866f1AMSPR06MB343eurprd06pro_";
         #   type="text/html"
-        if not message.is_multipart() or message.get('content-type', '').startswith("text/"):
+        if message.get_content_maintype() == 'text':
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')
@@ -2148,7 +2150,7 @@ class MailThread(models.AbstractModel):
                         new_channels.setdefault(header_follower.channel_id.id, set()).add(new_subtype.id)
 
         # add followers coming from res.users relational fields that are tracked
-        to_add_users = self.env['res.users'].sudo().browse([values[name] for name in user_field_lst if values.get(name)])
+        to_add_users = self.env['res.users'].sudo().browse([values[name] for name in user_field_lst if values.get(name)]).filtered(lambda u: u.partner_id.active)
         for partner in to_add_users.mapped('partner_id'):
             new_partners.setdefault(partner.id, None)
 

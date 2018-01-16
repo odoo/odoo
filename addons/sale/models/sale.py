@@ -645,6 +645,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):
             for group_name, group_method, group_data in groups:
+                if group_name == 'customer':
+                    continue
                 group_data['has_button_access'] = True
 
         return groups
@@ -847,6 +849,18 @@ class SaleOrderLine(models.Model):
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
+
+        # Prevent writing on a locked SO.
+        protected_fields = self._get_protected_fields()
+        if 'done' in self.mapped('order_id.state') and any(f in values.keys() for f in protected_fields):
+            fields = self.env['ir.model.fields'].search([
+                ('name', 'in', protected_fields), ('model', '=', self._name)
+            ])
+            raise UserError(
+                _('It is forbidden to modify the following fields in a locked order:\n%s')
+                % '\n'.join(fields.mapped('field_description'))
+            )
+
         result = super(SaleOrderLine, self).write(values)
         return result
 
@@ -1071,7 +1085,7 @@ class SaleOrderLine(models.Model):
             if operator in ('ilike', 'like', '=', '=like', '=ilike'):
                 domain = expression.AND([
                     args or [],
-                    ['|', ('order_id.name', operator, name), ('product_id.name', operator, name)]
+                    ['|', ('order_id.name', operator, name), ('name', operator, name)]
                 ])
                 return self.search(domain, limit=limit).name_get()
         return super(SaleOrderLine, self).name_search(name, args, operator, limit)
@@ -1136,6 +1150,12 @@ class SaleOrderLine(models.Model):
 
         return product[field_name] * uom_factor * cur_factor, currency_id.id
 
+    def _get_protected_fields(self):
+        return [
+            'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
+            'tax_id', 'analytic_tag_ids'
+        ]
+
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
     def _onchange_discount(self):
         self.discount = 0.0
@@ -1186,9 +1206,12 @@ class SaleOrderLine(models.Model):
             domain,
             ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
         )
-
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
+        # Force recompute for the "unlink last line" case: if remove the last AAL link to the SO, the read_group
+        # will give no value for the qty of the SOL, so we need to reset it to 0.0
         value_to_write = {}
+        if self._context.get('sale_analytic_force_recompute'):
+            value_to_write = dict.fromkeys([sol for sol in self], 0.0)
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
         for item in data:
             if not item['product_uom_id']:
                 continue

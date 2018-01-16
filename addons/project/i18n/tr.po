@@ -15,13 +15,14 @@
 # Fırat Kaya <firat.kaya@mechsoft.com.tr>, 2017
 # Esin Kandemir <esaykandemir@gmail.com>, 2017
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Levent Karakaş <levent@mektup.at>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Levent Karakaş <levent@mektup.at>, 2018\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -996,6 +997,11 @@ msgid "Active"
 msgstr "Aktif"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr "Aktiviteler"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
@@ -1408,13 +1414,13 @@ msgstr "Şirketler"
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account_company_uom_id
 #: model:ir.model.fields,field_description:project.field_project_project_company_uom_id
 msgid "Company UOM"
-msgstr "Firma Ölçü Birimi"
+msgstr "Şirket Ölçü Birimi"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_config
@@ -1602,7 +1608,7 @@ msgstr "Bu görevin mevcut aşaması"
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr "Mevcutta planlanan herhangi bir etkinlik yok."
+msgstr "Mevcutta planlanan herhangi bir aktivite yok."
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -2661,7 +2667,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
 msgid "My Next Activities"
-msgstr ""
+msgstr "Yapacaklarım"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -2787,6 +2793,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
 msgid "Number of documents attached"
 msgstr "Ekli belge sayısı"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr "Amaçlar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2936,7 +2947,7 @@ msgid "Planner"
 msgstr "Planlayıcı"
 
 #. module: project
-#: code:addons/project/models/project.py:925
+#: code:addons/project/models/project.py:887
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3073,6 +3084,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_layout
 #: model:ir.ui.view,arch_db:project.portal_my_home
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Projeler"

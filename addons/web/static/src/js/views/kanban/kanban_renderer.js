@@ -94,7 +94,7 @@ var KanbanRenderer = BasicRenderer.extend({
         this._super.apply(this, arguments);
 
         this.widgets = [];
-        this.qweb = new QWeb(session.debug, {_s: session.origin});
+        this.qweb = new QWeb(session.debug, {_s: session.origin}, false);
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
@@ -141,15 +141,23 @@ var KanbanRenderer = BasicRenderer.extend({
      *
      * @param {string} localID the column id
      * @param {Object} columnState
+     * @param {Object} [options]
+     * @param {boolean} [options.openQuickCreate] if true, directly opens the
+     *   QuickCreate widget in the updated column
      *
      * @returns {Deferred}
      */
-    updateColumn: function (localID, columnState) {
+    updateColumn: function (localID, columnState, options) {
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
         var index = _.findIndex(this.widgets, {db_id: localID});
         var column = this.widgets[index];
         this.widgets[index] = newColumn;
-        return newColumn.insertAfter(column.$el).then(column.destroy.bind(column));
+        return newColumn.insertAfter(column.$el).then(function () {
+            if (options && options.openQuickCreate) {
+                newColumn.addQuickCreate();
+            }
+            column.destroy();
+        });
     },
     /**
      * Updates a given record with its new state.
@@ -235,6 +243,10 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         });
 
+        // remove previous sorting
+        if(this.$el.sortable('instance') !== undefined) {
+            this.$el.sortable('destroy');
+        }
         if (this.groupedByM2O) {
             // Enable column sorting
             this.$el.sortable({
@@ -249,7 +261,10 @@ var KanbanRenderer = BasicRenderer.extend({
                 stop: function () {
                     var ids = [];
                     self.$('.o_kanban_group').each(function (index, u) {
-                        ids.push($(u).data('id'));
+                        // Ignore 'Undefined' column
+                        if (_.isNumber($(u).data('id'))) {
+                            ids.push($(u).data('id'));
+                        }
                     });
                     self.trigger_up('resequence_columns', {ids: ids});
                 },
@@ -323,13 +338,18 @@ var KanbanRenderer = BasicRenderer.extend({
         var groupByFieldInfo = state.fieldsInfo.kanban[state.groupedBy[0]];
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
-        // - is readonly
+        // - is readonly (on the field attrs or in the view)
         var draggable = true;
         if (groupByFieldAttrs) {
             if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
                 draggable = false;
             } else if (groupByFieldAttrs.readonly !== undefined) {
                 draggable = !(groupByFieldAttrs.readonly);
+            }
+        }
+        if (groupByFieldInfo) {
+            if (draggable && groupByFieldInfo.readonly !== undefined) {
+                draggable = !(groupByFieldInfo.readonly);
             }
         }
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');

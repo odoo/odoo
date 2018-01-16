@@ -608,7 +608,7 @@ var ActionManager = Widget.extend({
                 });
         }
 
-        return $.when(action_loaded || null).done(function() {
+        return $.when(action_loaded || null).then(function() {
             if (self.inner_widget && self.inner_widget.do_load_state) {
                 return self.inner_widget.do_load_state(state, warm);
             }
@@ -941,7 +941,7 @@ var ActionManager = Widget.extend({
             });
         });
     },
-    ir_actions_act_url: function (action) {
+    ir_actions_act_url: function (action, options) {
         var url = action.url;
         if (session.debug && url && url.length && url[0] === '/') {
             url = $.param.querystring(url, {debug: session.debug});
@@ -952,6 +952,7 @@ var ActionManager = Widget.extend({
             return $.Deferred(); // The action is finished only when the redirection is done
         } else {
             window.open(url, '_blank');
+            options.on_close();
         }
         return $.when();
     },

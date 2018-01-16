@@ -3,7 +3,7 @@
 # * mail
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # niulin lnc. <admin@niulin.net>, 2017
@@ -32,13 +32,14 @@
 # Crazee ZHANG <15702414328@163.com>, 2017
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# ShiGang Chen <jjfxb@live.cn>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 08:59+0000\n"
-"PO-Revision-Date: 2017-10-24 08:59+0000\n"
-"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: ShiGang Chen <jjfxb@live.cn>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +147,7 @@ msgstr "这个频道是私有的. 只有被邀请的人才可以参与."
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_days
 msgid "# Days"
-msgstr ""
+msgstr "# 日期"
 
 #. module: mail
 #: model:mail.template,subject:mail.mail_template_data_notification_email_default
@@ -173,7 +174,7 @@ msgstr "%d 消息"
 #: code:addons/mail/static/src/js/activity.js:32
 #, python-format
 msgid "%d days overdue"
-msgstr ""
+msgstr "超期%d 天"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:248
@@ -216,16 +217,9 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:51
+#: code:addons/mail/static/src/xml/activity.xml:49
 #, python-format
 msgid ", due on"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:45
-#, python-format
-msgid ", on"
 msgstr ""
 
 #. module: mail
@@ -402,7 +396,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong> Feedback</strong>"
-msgstr ""
+msgstr "<strong> 反馈</strong>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -414,7 +408,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
-msgstr ""
+msgstr "<strong>推荐的活动</strong>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias_alias_defaults
@@ -635,7 +629,7 @@ msgstr "添加频道"
 #: code:addons/mail/static/src/xml/client_action.xml:60
 #, python-format
 msgid "Add a private channel"
-msgstr ""
+msgstr "添加私人频道"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -762,7 +756,7 @@ msgstr "应用"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:47
+#: code:addons/mail/static/src/xml/activity.xml:45
 #: model:ir.model.fields,field_description:mail.field_mail_activity_user_id
 #, python-format
 msgid "Assigned to"
@@ -895,7 +889,7 @@ msgstr "电话"
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/followers.js:341
-#: code:addons/mail/static/src/xml/activity.xml:67
+#: code:addons/mail/static/src/xml/activity.xml:65
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #: model:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -1125,7 +1119,7 @@ msgstr "恭喜，你的收件箱没有需要处理的邮件。"
 #: code:addons/mail/static/src/js/client_action.js:647
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr ""
+msgstr "恭喜，你的收件箱是空的！"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1182,10 +1176,7 @@ msgid "Create Date"
 msgstr "创建日期"
 
 #. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:41
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_search
-#, python-format
 msgid "Created By"
 msgstr "创建人"
 
@@ -1211,6 +1202,8 @@ msgid "Created by"
 msgstr "创建人"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/activity.xml:41
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_create_date
@@ -1227,6 +1220,7 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:mail.field_mail_test_simple_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_create_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite_create_date
+#, python-format
 msgid "Created on"
 msgstr "创建时间"
 
@@ -1418,7 +1412,7 @@ msgstr "私信"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:83
+#: code:addons/mail/static/src/xml/activity.xml:81
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
@@ -1477,7 +1471,7 @@ msgstr "显示一个关联单据的选项 ，用该模板打开撰写向导"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_res_name
 msgid "Display name of the related document."
-msgstr ""
+msgstr "相关单据的显示名称"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_auto_delete_message
@@ -1495,28 +1489,28 @@ msgstr "单据关注者"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_res_name
 msgid "Document Name"
-msgstr ""
+msgstr "单据名称"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:81
+#: code:addons/mail/static/src/xml/activity.xml:79
 #, python-format
 msgid "Done"
 msgstr "完成"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:79
+#: code:addons/mail/static/src/xml/activity.xml:77
 #, python-format
 msgid "Done & Schedule Next"
-msgstr ""
+msgstr "完成 & 安排下一次"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:296
 #, python-format
 msgid "Download this PDF"
-msgstr ""
+msgstr "下载此PDF"
 
 #. module: mail
 #. openerp-web
@@ -1525,7 +1519,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/thread.xml:308
 #, python-format
 msgid "Download this attachment"
-msgstr ""
+msgstr "下载此附件"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_date_deadline
@@ -1537,7 +1531,7 @@ msgstr "截止日期"
 #: code:addons/mail/static/src/js/activity.js:38
 #, python-format
 msgid "Due in %d days"
-msgstr ""
+msgstr "截至 %d 天"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1546,7 +1540,7 @@ msgstr "动态定位符生成器"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:64
+#: code:addons/mail/static/src/xml/activity.xml:62
 #, python-format
 msgid "Edit"
 msgstr "编辑"
@@ -1593,7 +1587,7 @@ msgstr "Email配置"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_test_simple_email_from
 msgid "Email From"
-msgstr ""
+msgstr "邮件来自"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -2096,17 +2090,17 @@ msgstr "群组"
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle by Emails"
-msgstr ""
+msgstr "用邮件处理"
 
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle in Odoo"
-msgstr ""
+msgstr "在odoo内处理"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr ""
+msgstr "提及"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -2403,7 +2397,7 @@ msgid ""
 msgstr "错误的表达式，必须是符合文法的python字典定义，例如： \"{'field': 'value'}\""
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:1791
+#: code:addons/mail/models/mail_thread.py:1792
 #, python-format
 msgid ""
 "Invalid record set: should be called as model (without records) or on "
@@ -2769,7 +2763,7 @@ msgstr "侦听器"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "频道的收听者"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
@@ -2861,13 +2855,13 @@ msgstr "邮件被创建，以通知现有的邮件消息的人"
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
 #: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
-msgstr ""
+msgstr "Mail: Email 队列管理器"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:832
 #, python-format
 msgid "Mailbox unavailable - %s"
-msgstr ""
+msgstr "信箱不可用- %s"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -2876,7 +2870,7 @@ msgstr "邮件退订"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:61
+#: code:addons/mail/static/src/xml/activity.xml:59
 #, python-format
 msgid "Mark Done"
 msgstr "标记完成"
@@ -3159,12 +3153,12 @@ msgstr "子类型适用的模型：如果 假，子类型适用于所有模型"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_model
 msgid "Models"
-msgstr "型号"
+msgstr "模型"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
 msgid "Module Uninstallation"
-msgstr ""
+msgstr "模块卸载"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -3379,7 +3373,7 @@ msgstr "下一活动类型"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_has_recommended_activities
 msgid "Next activities available"
-msgstr ""
+msgstr "下一活动可用"
 
 #. module: mail
 #. openerp-web
@@ -3394,7 +3388,7 @@ msgstr "无计划的活动."
 #: code:addons/mail/static/src/xml/systray.xml:47
 #, python-format
 msgid "No discussion yet..."
-msgstr ""
+msgstr "还没有讨论..."
 
 #. module: mail
 #. openerp-web
@@ -4062,7 +4056,7 @@ msgstr "计划的活动"
 #: code:addons/mail/static/src/xml/thread.xml:282
 #, python-format
 msgid "Play this video"
-msgstr ""
+msgstr "播放此视频"
 
 #. module: mail
 #. openerp-web
@@ -4172,7 +4166,7 @@ msgstr "公共频道"
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
 #: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
-msgstr ""
+msgstr "发布者: 更新通知"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:179
@@ -4255,7 +4249,7 @@ msgstr "相关的单据模型"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_res_model
 msgid "Related Document Model Name"
-msgstr ""
+msgstr "相关的单据模型名称"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -4763,7 +4757,7 @@ msgstr "系统通知"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_has_recommended_activities
 msgid "Technical field for UX purpose"
-msgstr ""
+msgstr "用于UX目的技术字段"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.wizard_email_template_preview
@@ -4830,8 +4824,9 @@ msgstr ""
 "在收到此别名的电子邮件时创建记录的所有者。如果此字段未设置，系统将尝试根据发件人(发件人)地址查找正确的所有者，或者如果没有找到该地址的系统用户，将使用管理员帐户。"
 
 #. module: mail
-#: code:addons/mail/models/mail_message.py:575
-#: code:addons/mail/models/mail_message.py:670
+#: code:addons/mail/models/mail_activity.py:165
+#: code:addons/mail/models/mail_message.py:579
+#: code:addons/mail/models/mail_message.py:674
 #, python-format
 msgid ""
 "The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n"
@@ -4861,7 +4856,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
 msgid "This"
-msgstr ""
+msgstr "此"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_image
@@ -5035,7 +5030,7 @@ msgstr "可惜 这个电子邮件别名已经被使用，请选择一个不一�
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_unicode_source
 msgid "Unicode Character"
-msgstr ""
+msgstr "Unicode 字符"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_account_analytic_account_message_unread
@@ -5233,7 +5228,7 @@ msgstr "使用模板"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use your own email servers"
-msgstr ""
+msgstr "使用你自己的邮件服务器"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
@@ -5253,7 +5248,7 @@ msgstr "用户"
 #: code:addons/mail/static/src/xml/extended_chat_window.xml:8
 #, python-format
 msgid "User name"
-msgstr ""
+msgstr "用户名"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
@@ -5285,7 +5280,7 @@ msgstr "视图"
 #: code:addons/mail/models/mail_thread.py:668
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "视图 %s"
 
 #. module: mail
 #. openerp-web
@@ -5337,7 +5332,7 @@ msgstr "谁能关注群的活动?"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/activity.xml:77
+#: code:addons/mail/static/src/xml/activity.xml:75
 #, python-format
 msgid "Write Feedback"
 msgstr "写反馈"
@@ -5471,7 +5466,7 @@ msgid "Your template should define email_from"
 msgstr "你的模板需要定义email_from"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:965
+#: code:addons/mail/models/mail_thread.py:966
 #, python-format
 msgid "alias %s: %s"
 msgstr ""
@@ -5546,9 +5541,15 @@ msgid "has been"
 msgstr ""
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:271
+#: code:addons/mail/models/mail_alias.py:282
 #, python-format
 msgid "incorrectly configured alias"
+msgstr "不正确配置的别名"
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:278
+#, python-format
+msgid "incorrectly configured alias (unknown reference record)"
 msgstr ""
 
 #. module: mail
@@ -5681,19 +5682,19 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:254
 #, python-format
 msgid "restricted to channel members"
-msgstr ""
+msgstr "仅限于频道成员"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:276
+#: code:addons/mail/models/mail_alias.py:287
 #, python-format
 msgid "restricted to followers"
-msgstr ""
+msgstr "仅限于关注者"
 
 #. module: mail
-#: code:addons/mail/models/mail_alias.py:280
+#: code:addons/mail/models/mail_alias.py:291
 #, python-format
 msgid "restricted to known authors"
-msgstr ""
+msgstr "仅限于已知的作者"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
@@ -5705,7 +5706,7 @@ msgstr "销售"
 #: code:addons/mail/models/mail_thread.py:935
 #: code:addons/mail/models/mail_thread.py:938
 #: code:addons/mail/models/mail_thread.py:943
-#: code:addons/mail/models/mail_thread.py:965
+#: code:addons/mail/models/mail_thread.py:966
 #, python-format
 msgid "skipping"
 msgstr "跳过"
@@ -5718,7 +5719,7 @@ msgid "this document"
 msgstr "此单据"
 
 #. module: mail
-#: code:addons/mail/models/mail_thread.py:965
+#: code:addons/mail/models/mail_thread.py:966
 #, python-format
 msgid "unknown error"
 msgstr "未知错误"

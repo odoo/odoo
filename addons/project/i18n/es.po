@@ -34,14 +34,14 @@
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017
 # juani_aizean <juani@aizean.com>, 2017
 # Sergio Hevia <sah@talleresbernesga.com>, 2017
-# Fernando San Martin Woerner <fsnmartin@gmail.com>, 2017
+# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -1015,6 +1015,11 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr "Actividades"
+
+#. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
@@ -1621,7 +1626,7 @@ msgstr "Etapa actual de esta tarea"
 #. module: project
 #: model:ir.actions.act_window,help:project.project_task_action_activity
 msgid "Currently there are not any activity scheduled."
-msgstr ""
+msgstr "Actualmente no hay ninguna actividad planificada."
 
 #. module: project
 #: code:addons/project/models/project.py:818
@@ -2597,7 +2602,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Manage your resources with Gantt charts"
-msgstr ""
+msgstr "Gestione sus recursos con diagramas Gantt"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2611,8 +2616,8 @@ msgid ""
 "Managing a group of people, a team or a department (example: R&amp;D team, "
 "HR Department, etc.)"
 msgstr ""
-"Gestione un grupo de gente, un equipo o un departamento (ejemplo: R&amp;D "
-"team, HR Department, etc.)"
+"Gestione un grupo de personas, un equipo o un departamento (ejemplo: "
+"departamento de RRHH, etc.)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2815,6 +2820,11 @@ msgstr "Número de documentos adjuntos"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr "Objetivos"
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
@@ -2961,7 +2971,7 @@ msgid "Planner"
 msgstr "Agenda"
 
 #. module: project
-#: code:addons/project/models/project.py:925
+#: code:addons/project/models/project.py:887
 #, python-format
 msgid ""
 "Please remove existing tasks in the project linked to the accounts you want "
@@ -3098,6 +3108,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_layout
 #: model:ir.ui.view,arch_db:project.portal_my_home
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr "Proyectos"
@@ -3110,7 +3121,7 @@ msgstr "Proyectos y tareas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings_module_rating_project
 msgid "Rating on Tasks"
-msgstr ""
+msgstr "Valoración en las tareas"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_1
@@ -3308,7 +3319,7 @@ msgstr "Búsqueda"
 #: code:addons/project/controllers/portal.py:92
 #, python-format
 msgid "Search <span class=\"nolabel\"> (in Content)</span>"
-msgstr ""
+msgstr "Buscar <span class=\"nolabel\"> (en Contenido)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -3319,19 +3330,19 @@ msgstr "Buscar proyecto"
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "Buscar en todos"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "Buscar en clientes"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "Buscar en mensajes"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
@@ -3448,7 +3459,7 @@ msgstr "La especificación de la tarea escrita"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Split your tasks to organize your work into sub-milestones"
-msgstr ""
+msgstr "Divida sus tareas para organizar su trabajo en objetivos menores"
 
 #. module: project
 #. openerp-web
@@ -3536,7 +3547,7 @@ msgstr "Contador de sub-tareas"
 #: model:ir.model.fields,field_description:project.field_res_config_settings_group_subtask_project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Sub-tasks"
-msgstr "Sub-tarea"
+msgstr "Subtareas"
 
 #. module: project
 #: sql_constraint:project.tags:0
@@ -3574,7 +3585,7 @@ msgstr "Tarea"
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
 msgid "Task -"
-msgstr ""
+msgstr "Tarea -"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_tasks
@@ -3590,7 +3601,7 @@ msgstr "Tarea bloqueada"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Task Management"
-msgstr ""
+msgstr "Gestión de tareas"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_new
@@ -3601,7 +3612,7 @@ msgstr "Tarea abierta"
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_task_pipe
 msgid "Task Pipe"
-msgstr "Tubería de tareas"
+msgstr "Flujo de tareas"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -3823,12 +3834,12 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_projects
 msgid "There are no projects."
-msgstr ""
+msgstr "No hay proyectos."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "There are no tasks."
-msgstr ""
+msgstr "No hay tareas."
 
 #. module: project
 #. openerp-web
@@ -3937,7 +3948,7 @@ msgstr "Estimación de tiempo en las tareas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Gestión del tiempo"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -4021,7 +4032,7 @@ msgstr "Siga la satisfacción de los clientes en tareas"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track time spent on projects and tasks"
-msgstr ""
+msgstr "Haga seguimiento del tiempo empleado en proyectos y tareas"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -4038,7 +4049,7 @@ msgstr "Mensajes sin leer"
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtask Project"
-msgstr ""
+msgstr "Gestionar subtareas de proyecto"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_label_tasks
@@ -4165,8 +4176,8 @@ msgstr "Espere. Experto"
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
 msgstr ""
-"Busca una mejor forma de <b>gestionar sus proyectos</b>? <i>Aquí "
-"empieza.</i>"
+"¿Busca una mejor forma de <b>gestionar sus proyectos</b>? <i>Empiece "
+"aquí.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_cc

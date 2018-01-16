@@ -226,9 +226,6 @@ var AbstractView = Class.extend({
                     return;
                 }
 
-                attrs.limit = attrs.mode === "tree" ? 80 :
-                         (attrs.widget === 'many2many_tags' ? 1000 : 40);
-
                 if (attrs.Widget.prototype.useSubview && !attrs.__no_fetch && !attrs.views[attrs.mode]) {
                     var context = {};
                     var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
@@ -244,12 +241,30 @@ var AbstractView = Class.extend({
                             for (var viewName in views) {
                                 attrs.views[viewName] = views[viewName];
                             }
+                            self._setSubViewLimit(attrs);
                         }));
+                } else {
+                    self._setSubViewLimit(attrs);
                 }
             });
         }
         return $.when.apply($, defs);
-    }
+    },
+    /**
+     * We set here the limit for the number of records fetched (in one page).
+     * This method is only called for subviews, not for main views.
+     *
+     * @private
+     * @param {Object} attrs
+     */
+    _setSubViewLimit: function (attrs) {
+        var view = attrs.views && attrs.views[attrs.mode];
+        var limit = view && view.arch.attrs.limit && parseInt(view.arch.attrs.limit);
+        if (!limit && attrs.widget === 'many2many_tags') {
+            limit = 1000;
+        }
+        attrs.limit = limit || 40;
+    },
 });
 
 return AbstractView;

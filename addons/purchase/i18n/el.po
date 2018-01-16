@@ -315,6 +315,14 @@ msgid "<strong>Your Order Reference:</strong>"
 msgstr ""
 
 #. module: purchase
+#: code:addons/purchase/models/stock.py:83
+#, python-format
+msgid ""
+"A sale order that generated this purchase order has been deleted. Check if "
+"an action is needed."
+msgstr ""
+
+#. module: purchase
 #: model:res.groups,name:purchase.group_warning_purchase
 msgid "A warning can be set on a product or a customer (Purchase)"
 msgstr ""
@@ -427,7 +435,7 @@ msgstr "Ληφθέντα Τιμολόγια"
 #: selection:product.template,purchase_line_warn:0
 #: selection:res.partner,purchase_warn:0
 msgid "Blocking Message"
-msgstr "Μπλοκαρισμένο Μήνυμα"
+msgstr "Μήνυμα Αποκλεισμού"
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:73
@@ -1226,7 +1234,7 @@ msgstr "Κατηγορία Είδους"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Εικόνα Είδους"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report_unit_quantity
@@ -1621,6 +1629,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+"Εάν επιλέξετε την \"Προειδοποίηση\" θα ειδοποιήσει το χρήστη με το μήνυμα.\n"
+"Εάν επιλέξετε το \"Μήνυμα αποκλεισμού\" η διαδικασία θα διακοπεί και θα εμφανιστεί ένα μήνυμα. Γράψτε το μήνυμα στο επόμενο πεδίο."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1835,11 +1845,13 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Αυτή η προεπιλεγμένη τιμή εφαρμόζεται σε κάθε νέο είδος που δημιουργήθηκε. "
+"Αυτό μπορεί να αλλάξει στη φόρμα λεπτομερειών του είδους."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note will show up on purchase orders."
-msgstr ""
+msgstr "Αυτή η σημείωση θα εμφανίζεται στις εντολές αγοράς."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:203

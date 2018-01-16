@@ -113,7 +113,7 @@ var StatementRenderer = Widget.extend(FieldManagerMixin, {
         if (state.valuenow === state.valuemax && !this.$('.done_message').length) {
             var dt = Date.now()-this.time;
             var $done = $(qweb.render("reconciliation.done", {
-                'duration': moment(dt).utc().format(time.strftime_to_moment_format(_t.database.parameters.time_format)),
+                'duration': moment(dt).utc().format(time.getLangTimeFormat()),
                 'number': state.valuenow,
                 'timePerTransaction': Math.round(dt/1000/state.valuemax),
                 'context': state.context,
@@ -363,7 +363,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                     .attr("data-content", qweb.render('reconciliation.line.mv_line.details', {'line': line}));
             }
 
-            if ((state.balance.amount !== 0 || line.partial_reconcile) && props.length === 1 &&
+            if ((state.balance.amount_currency !== 0 || line.partial_reconcile) && props.length === 1 &&
                     line.already_paid === false &&
                     (
                         (state.st_line.amount > 0 && state.st_line.amount < props[0].amount) ||
@@ -425,7 +425,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 }
             });
         }
-        this.$('.create .add_line').toggle(!!state.balance.amount);
+        this.$('.create .add_line').toggle(!!state.balance.amount_currency);
     },
 
     //--------------------------------------------------------------------------

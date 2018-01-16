@@ -28,6 +28,20 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
+ * Convert binary to bin_size
+ * 
+ * @param {string} value base64 representation of the binary (might be already a bin_size!)
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored) 
+ * @param {Object} [options] additional options (note: this parameter is ignored)
+ * 
+ * @returns {string} bin_size (which is human-readable)
+ */
+function formatBinary(value, field, options) {
+    return utils.binaryToBinsize(value);
+}
+
+/**
  * @todo Really? it returns a jQuery element...  We should try to avoid this and
  * let DOM utility functions handle this directly. And replace this with a
  * function that returns a string so we can get rid of the forceString.
@@ -97,8 +111,7 @@ function formatDate(value, field, options) {
             value = value.clone().add(session.getTZOffset(value), 'minutes');
         }
     }
-    var l10n = core._t.database.parameters;
-    var date_format = time.strftime_to_moment_format(l10n.date_format);
+    var date_format = time.getLangDateFormat();
     return value.format(date_format);
 }
 
@@ -122,11 +135,7 @@ function formatDateTime(value, field, options) {
     if (!options || !('timezone' in options) || options.timezone) {
         value = value.clone().add(session.getTZOffset(value), 'minutes');
     }
-    var l10n = core._t.database.parameters;
-    var date_format = time.strftime_to_moment_format(l10n.date_format);
-    var time_format = time.strftime_to_moment_format(l10n.time_format);
-    var datetime_format = date_format + ' ' + time_format;
-    return value.format(datetime_format);
+    return value.format(time.getLangDatetimeFormat());
 }
 
 /**
@@ -291,11 +300,15 @@ function formatMonetary(value, field, options) {
         currency = session.get_currency(currency_id);
     }
 
+    var digits = (currency && currency.digits) || options.digits;
+    if (options.field_digits === true) {
+        digits = field.digits || digits;
+    }
     var formatted_value = formatFloat(value, field, {
-        digits:  (currency && currency.digits) || options.digits,
+        digits: digits,
     });
 
-    if (!currency) {
+    if (!currency || options.noSymbol) {
         return formatted_value;
     }
     if (currency.position === "after") {
@@ -349,7 +362,7 @@ function parseDate(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
+    var datePattern = time.getLangDateFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
     var date;
     if (options && options.isUTC) {
@@ -388,8 +401,8 @@ function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
-        timePattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
+    var datePattern = time.getLangDateFormat(),
+        timePattern = time.getLangTimeFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
         timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
     var pattern1 = datePattern + ' ' + timePattern;
@@ -562,7 +575,7 @@ function parseMany2one(value) {
 
 return {
     format: {
-        binary: _.identity, // todo
+        binary: formatBinary,
         boolean: formatBoolean,
         char: formatChar,
         date: formatDate,

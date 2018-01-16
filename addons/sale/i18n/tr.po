@@ -5,13 +5,14 @@
 # Translators:
 # Murat Kaplan <muratk@projetgrup.com>, 2017
 # Ediz Duman <neps1192@gmail.com>, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2017\n"
+"Last-Translator: Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -425,6 +426,8 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Satış siparişlerinde bir paket türünü seçebilme ve paket başına birim "
+"sayısının çoklu katı olan bir miktarı zorlayabilme."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -562,6 +565,9 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Satışlarınızı iki çeşit indirim programı ile artırın: Promosyonlar ve kupon kodları.\n"
+"Belirli koşullar belirlenebilir (ürünler, müşteriler, minimum satın alma miktarı, dönem).\n"
+"Ödüller indirim olarak kullanılabilir (% veya tutar) veya ücretsiz ürün önerileri yapılabilir."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -644,7 +650,7 @@ msgstr "Şirketler"
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1224,7 +1230,7 @@ msgstr ""
 #: code:addons/sale/models/sales_team.py:96
 #, python-format
 msgid "Invoices: Untaxed Total"
-msgstr "Faturalar: Vergisiz Toplam"
+msgstr "Faturalar: Vergi Hariç Toplam"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
@@ -1318,7 +1324,7 @@ msgstr "Müşterileriniin online kayıt olup ödeme yapmasına imkan tanıyın"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Line subtotals in sales orders"
-msgstr ""
+msgstr "Satış siparişlerinde satır alt toplamları"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1390,7 +1396,7 @@ msgstr "Satış Sipariş Satırı için Mesaj"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_multi_sales_price
 msgid "Multiple Sales Prices per Product"
-msgstr ""
+msgstr "Ürün Başına Birden Çok Satış Fiyatı"
 
 #. module: sale
 #: selection:res.config.settings,multi_sales_price_method:0
@@ -1492,7 +1498,7 @@ msgstr "Sipariş onayı ve ürünlerin müşteriye sevkiyatı arasındaki gün s
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr ""
+msgstr "Faturalandırılacak tekliflerin sayısı"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
@@ -1979,7 +1985,7 @@ msgstr "Teklifler"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr ""
+msgstr "Teklifler & Siparişler"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -2176,7 +2182,7 @@ msgstr "Satış Fiyatı"
 #: code:addons/sale/models/sales_team.py:94
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr "Satış: Vergisiz Toplam"
+msgstr "Satış: Vergi Hariç Toplam"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_user_id
@@ -2209,7 +2215,7 @@ msgstr "Bölüm"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_layout
 msgid "Sections on Sales Orders"
-msgstr ""
+msgstr "Satış Siparişinde Bölümler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_access_token
@@ -2262,6 +2268,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Bir e-postanın gönderilmesi, bir ürünle ilgili belirli bilgileri veya "
+"içeriği paylaşmanız gerekiyorsa (talimatlar, kurallar, bağlantılar, medya "
+"vb.) Faydalıdır. E-posta şablonunu ürün detay formundan oluşturun ve "
+"ayarlayın (Satış sekmesinde)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2360,7 +2370,7 @@ msgstr "Herkese açık olan Fiyat ve İndirimleri Müşteriye göster"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
-msgstr ""
+msgstr "Siparişlerde standart şartlar ve koşulları göster"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
@@ -2386,7 +2396,7 @@ msgstr "İmza yok."
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sort products in sections with subtotals and page-breaks"
-msgstr ""
+msgstr "Ürünleri alt toplamlarla ve sayfa sonlarıyla bölümler halinde düzenle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
@@ -2504,6 +2514,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"Dikkat ! Siparişlerde görebileceğiniz karlılık basit karlılıktır.\n"
+"(Siparişteki Ürün Satış Fiyatı - Ürün Kartındaki Standart Maliyet) formülü ile hesaplanır."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:149
@@ -2550,6 +2562,9 @@ msgid ""
 "must be set in the Sales tab of the product detail form. 2) Price computed "
 "from formulas: must be set in the pricelist form."
 msgstr ""
+"Fiyat listelerini yönetmenin iki yolu vardır: 1) Ürün başına birden fazla "
+"fiyat: Ürün kartındaki satışlar sekmesinden ayarlanır. 2) Formüllerden "
+"hesaplanan fiyat: Fiyat listesinden ayarlanır."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:74
@@ -2564,8 +2579,8 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr "Faturalandırılabilir satır yok."
+msgid "There is no invoiceable line."
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2583,6 +2598,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
+"Bu varsayılan değer, oluşturulan yeni ürünlere uygulanır. Bu ayar ürün "
+"kartından değiştirilebilir."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2726,12 +2743,12 @@ msgstr "Okunmamış Mesajlar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Vergisiz Tutar"
+msgstr "Vergi Hariç Tutar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
 msgid "Untaxed Total"
-msgstr "Vergisiz Toplam"
+msgstr "Vergi Hariç Toplam"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale

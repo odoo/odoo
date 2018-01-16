@@ -13,7 +13,9 @@ class StockMoveLine(models.Model):
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
     production_id = fields.Many2one('mrp.production', 'Production Order')
     lot_produced_id = fields.Many2one('stock.production.lot', 'Finished Lot')
-    lot_produced_qty = fields.Float('Quantity Finished Product', help="Informative, not used in matching")
+    lot_produced_qty = fields.Float(
+        'Quantity Finished Product', digits=dp.get_precision('Product Unit of Measure'),
+        help="Informative, not used in matching")
     done_wo = fields.Boolean('Done for Work Order', default=True, help="Technical Field which is False when temporarily filled in in work order")  # TDE FIXME: naming
     done_move = fields.Boolean('Move Done', related='move_id.is_done', store=True)  # TDE FIXME: naming
 
@@ -190,12 +192,18 @@ class StockMove(models.Model):
 
     def _generate_consumed_move_line(self, qty_to_add, final_lot, lot=False):
         if lot:
-            ml = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
+            move_lines = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
         else:
-            ml = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
-        if ml:
-            new_quantity_done = (ml.qty_done + qty_to_add)
-            if new_quantity_done >= ml.product_uom_qty:
+            move_lines = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
+        for ml in move_lines:
+            rounding = ml.product_uom_id.rounding
+            if float_compare(qty_to_add, 0, precision_rounding=rounding) <= 0:
+                break
+            quantity_to_process = min(qty_to_add, ml.product_uom_qty - ml.qty_done)
+            qty_to_add -= quantity_to_process
+
+            new_quantity_done = (ml.qty_done + quantity_to_process)
+            if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
                 ml.write({'qty_done': new_quantity_done, 'lot_produced_id': final_lot.id})
             else:
                 new_qty_reserved = ml.product_uom_qty - new_quantity_done
@@ -204,11 +212,26 @@ class StockMove(models.Model):
                            'lot_produced_id': final_lot.id}
                 ml.copy(default=default)
                 ml.with_context(bypass_reservation_update=True).write({'product_uom_qty': new_qty_reserved, 'qty_done': 0})
-        else:
+
+        if float_compare(qty_to_add, 0, precision_rounding=self.product_uom.rounding) > 0:
+            # Search for a sub-location where the product is available. This might not be perfectly
+            # correct if the quantity available is spread in several sub-locations, but at least
+            # we should be closer to the reality. Anyway, no reservation is made, so it is still
+            # possible to change it afterwards.
+            quants = self.env['stock.quant']._gather(self.product_id, self.location_id, lot_id=lot, strict=False)
+            available_quantity = self.product_id.uom_id._compute_quantity(
+                self.env['stock.quant']._get_available_quantity(
+                    self.product_id, self.location_id, lot_id=lot, strict=False
+                ), self.product_uom
+            )
+            location_id = False
+            if float_compare(qty_to_add, available_quantity, precision_rounding=self.product_uom.rounding) < 0:
+                location_id = quants.filtered(lambda r: r.quantity > 0)[-1:].location_id
+
             vals = {
                 'move_id': self.id,
                 'product_id': self.product_id.id,
-                'location_id': self.location_id.id,
+                'location_id': location_id.id if location_id else self.location_id.id,
                 'location_dest_id': self.location_dest_id.id,
                 'product_uom_qty': 0,
                 'product_uom_id': self.product_uom.id,

@@ -16,6 +16,7 @@ class WebsitePayment(http.Controller):
         values = {
             'pms': payment_tokens,
             'acquirers': acquirers,
+            'error_message': [kwargs['error']] if kwargs.get('error') else False,
             'return_url': return_url,
             'bootstrap_formatting': True,
             'partner_id': partner.id

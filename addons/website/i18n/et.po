@@ -7,14 +7,15 @@
 # Ahto Reinaru <ahto.reinaru@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
 # Rivo Zängov <eraser@eraser.ee>, 2017
+# Eneli Õigus <enelioigus@gmail.com>, 2017
 # Egon Raamat <egon@avalah.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: Wanradt Koell <wanradt@gmail.com>, 2017\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
@@ -65,7 +66,7 @@ msgstr "&nbsp;"
 #: code:addons/website/static/src/xml/website.gallery.xml:51
 #, python-format
 msgid "&times;"
-msgstr ""
+msgstr "&korda;"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.edit_website_pages
@@ -78,7 +79,7 @@ msgstr ""
 #: code:addons/website/models/website.py:743
 #, python-format
 msgid "(copy)"
-msgstr ""
+msgstr "(kopeeri)"
 
 #. module: website
 #. openerp-web
@@ -92,6 +93,13 @@ msgstr ""
 msgid ""
 "(e.g. business name, location) tends to improve your ranking in search "
 "engines and consequently increases your traffic. Do it:"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid ""
+",\n"
+"                                                      the #1"
 msgstr ""
 
 #. module: website
@@ -769,6 +777,10 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
+"Koodiserveri toimingut saab teostada internetilehel, kasutades spetsiaalset "
+"kontrollerit. Internetilehe aadress on <base>/website/action/<website_path>."
+" Aktiveerige see väli, et kasutaja saaks teha seda toimingut. Kui väli on "
+"mitteaktiivne, siis toimingut ei saa veebisaidi kaudu käivitada."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_text_block
@@ -1106,7 +1118,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page_field_parent
 msgid "Child Field"
-msgstr "Tütarväli"
+msgstr "Alamväli"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu_child_id
@@ -1311,11 +1323,6 @@ msgid "Create Page"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "Create a"
-msgstr ""
-
-#. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Create a Google Project and Get a Key"
 msgstr ""
@@ -1384,7 +1391,7 @@ msgstr "Vaikimisi"
 #. module: website
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Vaikimis ligipääsu õigused"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_default_lang_id
@@ -1742,7 +1749,7 @@ msgstr "Fikseeritud"
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
 msgid "Float"
-msgstr ""
+msgstr "Ujukomaarv"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.snippet_options
@@ -2058,7 +2065,7 @@ msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_id
-#: model:ir.model.fields,field_description:website.field_website_menu_id_7239
+#: model:ir.model.fields,field_description:website.field_website_menu_id_7241
 #: model:ir.model.fields,field_description:website.field_website_page_id
 #: model:ir.model.fields,field_description:website.field_website_published_mixin_id
 #: model:ir.model.fields,field_description:website.field_website_redirect_id
@@ -2209,7 +2216,7 @@ msgstr ""
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:209
+#: code:addons/website/static/src/js/content/website_root.js:212
 #, python-format
 msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
@@ -2627,7 +2634,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Objectives"
-msgstr ""
+msgstr "Eesmärgid"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.layout_footer_copyright
@@ -2719,6 +2726,11 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.show_website_info
 msgid "Open Source ERP"
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Open Source eCommerce"
 msgstr ""
 
 #. module: website
@@ -2929,6 +2941,11 @@ msgstr ""
 msgid ""
 "Post content on other people blogs, forums, websites, that are related to "
 "your environment."
+msgstr ""
+
+#. module: website
+#: model:ir.ui.view,arch_db:website.layout_footer_copyright
+msgid "Powered by"
 msgstr ""
 
 #. module: website
@@ -3496,7 +3513,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_act_server_website_url
 msgid "The full URL to access the server action through the website."
-msgstr ""
+msgstr "Täispikk URL serverile internetilehe kaudu ligipääsemiseks."
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.403
@@ -3899,7 +3916,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website.view_server_action_search_website
 msgid "Website"
-msgstr "Veebisait"
+msgstr "Internetileht"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_module_website
@@ -3947,7 +3964,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_path
 msgid "Website Path"
-msgstr ""
+msgstr "Internetilehe teekond"
 
 #. module: website
 #: model:ir.model,name:website.model_website_redirect
@@ -4002,7 +4019,7 @@ msgstr "Veebilehe URL"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_act_server_website_url
 msgid "Website Url"
-msgstr ""
+msgstr "Internetilehe Url"
 
 #. module: website
 #: model:ir.ui.view,arch_db:website.s_faq_collapse
@@ -4112,7 +4129,7 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Tere tulemast"
 
 #. module: website
 #. openerp-web
@@ -4381,11 +4398,6 @@ msgid "found(s)"
 msgstr ""
 
 #. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "free website"
-msgstr ""
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.seo.xml:28
 #, python-format
@@ -4557,11 +4569,6 @@ msgstr ""
 #. module: website
 #: model:ir.ui.view,arch_db:website.website_planner
 msgid "will help you:"
-msgstr ""
-
-#. module: website
-#: model:ir.ui.view,arch_db:website.layout_footer_copyright
-msgid "with"
 msgstr ""
 
 #. module: website

@@ -11,13 +11,14 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Volluta <volluta@tutanota.com>, 2017
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# Melroy van den Berg <webmaster1989@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
+"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +79,7 @@ msgstr ""
 "<p>Beste ${object.partner_id.name}\n"
 "% set access_action = object.with_context(force_website=True).get_access_action()\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
-"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set doc_name = 'prijsnotering' if object.state in ('draft', 'sent') else 'bestelbevestiging'\n"
 "% set pay_sign_name =  object.get_portal_confirmation_action()\n"
 "% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name\n"
 "% set access_url = is_online and object.get_mail_url() or ''\n"
@@ -90,12 +91,12 @@ msgstr ""
 "<p>\n"
 "Hier is\n"
 "% if ctx.get('proforma')\n"
-"in de bijlage, uw pro-forma factuur\n"
+"in bijlage, uw pro-forma factuur\n"
 "% else\n"
 "de ${doc_name} <strong>${object.name}</strong>\n"
 "% endif\n"
 "% if object.origin:\n"
-"(with reference: ${object.origin} )\n"
+"(met referentie: ${object.origin} )\n"
 "% endif\n"
 "met een totaal van <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
 "van ${object.company_id.name}.\n"
@@ -106,7 +107,7 @@ msgstr ""
 "    <center>\n"
 "        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
 "        <br/><br/><br/>\n"
-"        <span style=\"color:#888888\">(of open de toegevoegde PDF)</span>\n"
+"        <span style=\"color:#888888\">(of open de bijgevoegde PDF)</span>\n"
 "    </center>\n"
 "    <br/>\n"
 "% endif\n"
@@ -558,6 +559,9 @@ msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
 msgstr ""
+"Mogelijkheid om een verpakkingstype in verkooporders te selecteren en een "
+"hoeveelheid te forceren die een veelvoud is van het aantal eenheden per "
+"verpakking."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -695,6 +699,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Verhoog uw verkopen met twee soorten kortingsprogramma's: promoties en "
+"coupon codes. Specifieke condities kunnen worden ingesteld (producten, "
+"klanten, minimaal bestel bedrag, periode). Beloningen kunnen kortingen (% of"
+" bedrag) of gratis producten zijn."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
@@ -1475,7 +1483,7 @@ msgstr "Bevestigde orders vastzetten"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Locked"
-msgstr "Gesloten Inkooporder"
+msgstr "Gesloten verkooporder"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1708,7 +1716,7 @@ msgstr "Orderdatum"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Order Line Sections"
-msgstr "Orderregel secties"
+msgstr "Orderregelsecties"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_order_line
@@ -1725,7 +1733,7 @@ msgstr "Bestel maand"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 msgid "Order Number"
-msgstr "Order Nummer"
+msgstr "Ordernummer"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_name
@@ -1733,12 +1741,12 @@ msgstr "Order Nummer"
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
-msgstr "Order referentie"
+msgstr "Orderreferentie"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_state
 msgid "Order Status"
-msgstr "Order status"
+msgstr "Orderstatus"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:218
@@ -2409,6 +2417,10 @@ msgid ""
 "content about a product (instructions, rules, links, media, etc.). Create "
 "and set the email template from the product detail form (in Sales tab)."
 msgstr ""
+"Het verzenden van een e-mail is handig als u specifieke informatie of inhoud"
+" over een product wilt delen (instructies, regels, links, media, etc.). Maak"
+" en stel een e-mailsjabloon in op het productformulier (in het tabblad "
+"Verkoop)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
@@ -2464,7 +2476,7 @@ msgstr "Instellingen"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Setup default terms and conditions in your sales settings ..."
-msgstr ""
+msgstr "Stel de algemene verkoopvoorwaarden in bij uw verkoopinstellingen ..."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2613,7 +2625,7 @@ msgstr "BTW gebruikt voor aanbetalingen"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_module_sale_payment
 msgid "Technical field implied by user choice of online_confirmation"
-msgstr ""
+msgstr "Technisch veld welke bepaald wordt door keuze van online_bevestiging"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_note
@@ -2720,8 +2732,8 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr "Er is geen factureerbare lijn."
+msgid "There is no invoiceable line."
+msgstr "Er is geen facturabele regel."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error

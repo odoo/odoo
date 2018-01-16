@@ -159,7 +159,7 @@ msgstr "Factuurregel"
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
-msgstr "Facturatie"
+msgstr "Boekhouding"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_config_settings_use_security_lead
@@ -168,6 +168,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Foutmarge op een leverdatum beloofd aan klanten. Producten worden ingepland "
+"voor verwerving en levering, zo veel dagen eerder dan de werkelijk beloofde "
+"datum om zo onverwachte vertragingen te kunnen opvangen in de supply chain."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -185,7 +188,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Verschuif geplande leverdatum vooruit met"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:174
@@ -242,6 +245,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Het handmatig reserveren van producten in uitgaande leveringen of het "
+"uitvoeren van de planner wordt geadviseerd om de prioriteiten te beheren bij"
+" lange levertijden of als een product frequent niet op voorraad is. "
+"Standaard draait de planner elke 24 uur."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id

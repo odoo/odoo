@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-# Copyright (C) Rooms For (Hong Kong) Limited T/A OSCG
+# Copyright (C) Quartile Limited
 
 {
     'name': 'Japan - Accounting',
@@ -26,8 +26,8 @@ need to use these at all under normal circumstances.
 [1] See https://github.com/odoo/odoo/pull/6470 for detail.
 
     """,
-    'author': 'Rooms For (Hong Kong) Limited T/A OSCG',
-    'website': 'http://www.openerp-asia.net/',
+    'author': 'Quartile Limited',
+    'website': 'https://www.odoo-asia.com/',
     'depends': ['account'],
     'data': [
         'data/l10n_jp_chart_data.xml',

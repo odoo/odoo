@@ -1,27 +1,141 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale_timesheet
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-09-10 15:21+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
-"language/nb/)\n"
-"Language: nb\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Jan Pedro Tumusok <jpt@eyenetworks.no>, 2017\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_res_company
-msgid "Companies"
-msgstr "Firmaer"
+#: code:addons/sale_timesheet/models/account_invoice.py:32
+#: code:addons/sale_timesheet/models/project.py:26
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    Click to record timesheets.\n"
+"                </p><p>\n"
+"                    You can register and track your workings hours by project every\n"
+"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    customers if required.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"\n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    Klikk for å registrere timelister.\n"
+"                </p><p>\n"
+"                    Du kan registrere og spore arbeidstimer per prosjekt hver dag.\n"
+"                    Hver time brukt på et prosjekt blir en kostnad som kan faktureres kunder\n"
+" etter behov.\n"
+"                </p>\n"
+"            "
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "<b>Total</b>"
+msgstr "<b>Totalt</b>"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
+msgid "<span class=\"o_label\">Overview</span>"
+msgstr "<span class=\"o_label\">Oversikt</span>"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Analytisk linje"
+
+#. module: sale_timesheet
+#: selection:account.analytic.line,timesheet_invoice_type:0
+msgid "Billable Fixed"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billable Hours"
+msgstr ""
+
+#. module: sale_timesheet
+#: selection:account.analytic.line,timesheet_invoice_type:0
+msgid "Billable Time"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_type
+msgid "Billable Type"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Billable fixed"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Billable time"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
+msgid "Billing Rate"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
+#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
+msgid "By Billing Rate"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Cost"
+msgstr "Kostnad"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_report_cost_revenue
+#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_report_cost_revenue
+msgid "Costs and Revenues"
+msgstr ""
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Create a new project but no task"
+msgstr "Opprett nytt prosjekt, men ingen oppgaver"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Create a task in a new project"
+msgstr "Opprett oppgave i nytt prosjekt"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Create a task in an existing project"
+msgstr "Opprett oppgave i eksisterende prosjekt"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Don't create task"
+msgstr "Ikke opprett oppgave"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -29,14 +143,133 @@ msgid "Employee"
 msgstr "Ansatt"
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Fixed"
+msgstr "Fast"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Fixed Price Projects"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
+msgid "Fixed price services"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Hours"
+msgstr "Timer"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_invoice
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
+msgid "Invoice"
+msgstr "Faktura"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_policy
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_policy
+msgid "Invoice based on"
+msgstr "Faktura basert på"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
+msgid "Invoice created from the timesheet"
+msgstr "Faktura opprettet fra timeliste"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Invoiced"
+msgstr "Fakturert"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_is_service
+msgid "Is a Service"
+msgstr "Er en tjeneste"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
+msgid "Milestone services"
+msgstr ""
+
+#. module: sale_timesheet
+#: selection:product.template,service_policy:0
+msgid "Milestones (manually set quantities on order)"
+msgstr "Milepæler (sett antall på ordrer manuelt)"
+
+#. module: sale_timesheet
+#: selection:account.analytic.line,timesheet_invoice_type:0
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "No task found"
+msgstr "Ingen oppgaver funnet"
+
+#. module: sale_timesheet
+#: selection:account.analytic.line,timesheet_invoice_type:0
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Non Billable"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Non Billable Hours"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Non billable"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
+msgid "Number of timesheets"
+msgstr "Antall timelister"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_service_tracking
+msgid ""
+"On Sales order confirmation, this product can generate a project and/or "
+"task. From those, you can track the service you are selling."
+msgstr ""
+"Ved bekreftet salgsordre kan dette produktet generere et prosjekt og/eller "
+"en oppgave. Fra disse kan du igjen spore tjenesten du selger."
+
+#. module: sale_timesheet
+#: selection:product.template,service_policy:0
+msgid "Ordered quantities"
+msgstr "Bestilte antall"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:45
+#, python-format
+msgid "Overview"
+msgstr "Oversikt"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
 msgid "Product Template"
 msgstr "Produktmal"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_fixed
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_milestone
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_time_based
+msgid "Products"
+msgstr "Produkter"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Profitability"
+msgstr "Lønnsomhet"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_project
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
 msgid "Project"
-msgstr ""
+msgstr "Prosjekt"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_project_id
@@ -44,61 +277,233 @@ msgid "Project associated to this sale"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Project(s) Overview"
+msgstr "Prosjektoversikt"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:107
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_ids
+#, python-format
+msgid "Projects"
+msgstr "Prosjekter"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_project_ids
+msgid "Projects used in this sales order."
+msgstr "Prosjekter brukt i denne salgsordren."
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
+msgid "Quotation"
+msgstr "Pristilbud"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Rates"
+msgstr "Rater"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_revenue
+msgid "Revenue"
+msgstr "Omsetning"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project_sale_line_id
+msgid ""
+"Sale order line from which the project has been created. Used for "
+"tracability."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
 msgstr "Salgsordre"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+msgid "Sales Order Item"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order_line
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project_sale_line_id
 msgid "Sales Order Line"
 msgstr "Salgsordrelinje"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_is_service
 msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right "
-"unit of measure in your employees."
+"Sales Order item should generate a task and/or a project, depending on the "
+"product settings."
 msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
+msgid ""
+"Select a non billable project on which tasks can be created. This setting "
+"must be set for each company."
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_tracking
+msgid "Service Tracking"
+msgstr "Tjenestesporing"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Setup your fixed price services"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Setup your milestone services"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Setup your time-based services"
+msgstr "Sett opp timebaserte tjenester"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_task
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_task_id
+msgid "Task"
+msgstr "Oppgave"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:234
+#, python-format
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Oppgave opprettet (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
+msgid "Task generated by the sales order item"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:109
+#: code:addons/sale_timesheet/controllers/main.py:141
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#, python-format
+msgid "Tasks"
+msgstr "Oppgaver"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_ids
+msgid "Tasks associated to this sale"
+msgstr "Oppgaver tilknyttet dette salget"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "There is no timesheet for now."
+msgstr "Det er ingen timelister så langt."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:237
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Denne oppgaven ble opprettet fra: <a href=# data-oe-model=sale.order data-"
+"oe-id=%d>%s</a> (%s)"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Time and material"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Time by people"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
+msgid "Time-based services"
+msgstr "Tidsbaserte tjenester"
+
+#. module: sale_timesheet
+#. openerp-web
+#: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:143
+#: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
+#, python-format
+msgid "Timesheet"
+msgstr "Timeliste"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
-#, fuzzy
-msgid "Timesheet UoM"
-msgstr "Timelister"
+msgstr "Timelistekostnad"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "Timelisteaktiviteter"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Timelisteaktiviteter tilknyttet dette salget"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
+#: code:addons/sale_timesheet/controllers/main.py:101
+#: code:addons/sale_timesheet/controllers/main.py:130
+#: code:addons/sale_timesheet/models/account_invoice.py:26
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_ids
+#: model:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#, python-format
 msgid "Timesheets"
 msgstr "Timelister"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_timesheet.py:128
+#: code:addons/sale_timesheet/models/project.py:20
+#, python-format
+msgid "Timesheets of %s"
+msgstr "%ss timelister"
+
+#. module: sale_timesheet
+#: selection:product.template,service_policy:0
+msgid "Timesheets on tasks"
+msgstr "Timelister på oppgaver"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "To invoice"
+msgstr "Å fakturere"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:32
 #, python-format
 msgid ""
-"You can use only one product on timesheet within the same sale order. You "
-"should split your order to include only one contract based on time and "
-"material."
+"You can not modify already invoiced timesheets (linked to a Sales order "
+"items invoiced on Time and material)."
 msgstr ""
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "Analytisk linje"
+#: code:addons/sale_timesheet/models/project.py:74
+#, python-format
+msgid ""
+"You cannot delete a task related to a Sales Order. You can only archive this"
+" task."
+msgstr ""
+"Du kan ikke slette en oppgave tilknyttet en salgsordre. Du kan bare arkivere"
+" oppgaven."
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
+msgid "per hour"
+msgstr "per time"

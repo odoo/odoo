@@ -102,7 +102,7 @@ class AccountAnalyticLine(models.Model):
                 if so_line.product_id.invoice_policy == 'delivery':
                     values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
                     values['timesheet_invoice_type'] = 'billable_time' if so_line.product_id.service_type == 'timesheet' else 'billable_fixed'
-                elif so_line.product_id.invoice_policy == 'order':
+                elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type == 'timesheet':
                     quantity_hour = unit_amount
                     if so_line.product_uom.category_id == timesheet_uom.category_id:
                         quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
@@ -123,5 +123,7 @@ class AccountAnalyticLine(models.Model):
                     # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
                     if so_line.invoice_status == 'invoiced':
                         values['timesheet_invoice_id'] = so_line.invoice_lines[0].invoice_id.id
+                elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type != 'timesheet':
+                    values['timesheet_invoice_type'] = 'billable_fixed'
             timesheet.write(values)
         return True

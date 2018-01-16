@@ -3,6 +3,7 @@
 
 from odoo import _, api, exceptions, fields, models, modules
 from odoo.tools import pycompat
+from odoo.addons.base.res.res_users import is_selection_groups
 
 
 class Users(models.Model):
@@ -62,11 +63,14 @@ class Users(models.Model):
     @api.multi
     def write(self, vals):
         write_res = super(Users, self).write(vals)
+        sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
+        elif sel_groups:
+            self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
         return write_res
 
     def _create_welcome_message(self):
@@ -121,7 +125,7 @@ class Users(models.Model):
 
     @api.model
     def activity_user_count(self):
-        query = """SELECT m.name, count(*), act.res_model as model,
+        query = """SELECT m.id, count(*), act.res_model as model,
                         CASE
                             WHEN now()::date - act.date_deadline::date = 0 Then 'today'
                             WHEN now()::date - act.date_deadline::date > 0 Then 'overdue'
@@ -130,16 +134,18 @@ class Users(models.Model):
                     FROM mail_activity AS act
                     JOIN ir_model AS m ON act.res_model_id = m.id
                     WHERE user_id = %s
-                    GROUP BY m.name, states, act.res_model;
+                    GROUP BY m.id, states, act.res_model;
                     """
         self.env.cr.execute(query, [self.env.uid])
         activity_data = self.env.cr.dictfetchall()
+        model_ids = [a['id'] for a in activity_data]
+        model_names = {n[0]:n[1] for n in self.env['ir.model'].browse(model_ids).name_get()}
 
         user_activities = {}
         for activity in activity_data:
             if not user_activities.get(activity['model']):
                 user_activities[activity['model']] = {
-                    'name': activity['name'],
+                    'name': model_names[activity['id']],
                     'model': activity['model'],
                     'icon': modules.module.get_module_icon(self.env[activity['model']]._original_module),
                     'total_count': 0, 'today_count': 0, 'overdue_count': 0, 'planned_count': 0,

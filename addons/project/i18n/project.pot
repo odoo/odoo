@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:39+0000\n"
+"PO-Revision-Date: 2018-01-10 07:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -102,7 +102,7 @@ msgid "\n"
 "                                <span>We would be delighted to assist you along the way. Contact us through our\n"
 "                                <a href=\"https://www.odoo.com/help\">support form</a> if you have any question.\n"
 "                                You can also discover how to get the best out of Odoo Project with our </span>\n"
-"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation/user/11.0/project.html\">\n"
 "                                <span style=\"text-decoration:underline;\">User Documentation</span></a>\n"
 "                                </span><span> or with our </span>\n"
 "                                <a target=\"_blank\" href=\"https://www.odoo.com/documentation\">\n"
@@ -763,6 +763,11 @@ msgid "Active"
 msgstr ""
 
 #. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
+msgid "Activities"
+msgstr ""
+
+#. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
@@ -962,6 +967,7 @@ msgid "Be aware of the team’s productivity and time: try to keep meetings to o
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:29
 #: model:project.task,legend_blocked:project.project_task_15
 #: model:project.task,legend_blocked:project.project_task_16
 #: model:project.task,legend_blocked:project.project_task_18
@@ -988,6 +994,7 @@ msgstr ""
 #: model:project.task.type,legend_blocked:project.project_stage_data_1
 #: model:project.task.type,legend_blocked:project.project_stage_data_2
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "Blocked"
 msgstr ""
 
@@ -1898,6 +1905,7 @@ msgid "Improve collaboration with customers"
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:35
 #: model:project.task,legend_normal:project.project_task_1
 #: model:project.task,legend_normal:project.project_task_10
 #: model:project.task,legend_normal:project.project_task_11
@@ -1946,6 +1954,7 @@ msgstr ""
 #: model:project.task.type,legend_normal:project.project_stage_data_2
 #: model:project.task.type,name:project.project_stage_1
 #: selection:report.project.task.user,state:0
+#, python-format
 msgid "In Progress"
 msgstr ""
 
@@ -2354,6 +2363,11 @@ msgstr ""
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
+msgid "Objectives"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.view,arch_db:project.project_planner
 msgid "Odoo Project is a super fast and easy way to make your activities and tasks visible to\n"
 "                        everyone in your company. Follow how things progress, see when things are stuck, know\n"
 "                        who's in charge, all in one place."
@@ -2458,7 +2472,7 @@ msgid "Planner"
 msgstr ""
 
 #. module: project
-#: code:addons/project/models/project.py:925
+#: code:addons/project/models/project.py:887
 #, python-format
 msgid "Please remove existing tasks in the project linked to the accounts you want to delete."
 msgstr ""
@@ -2587,6 +2601,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.portal_layout
 #: model:ir.ui.view,arch_db:project.portal_my_home
 #: model:ir.ui.view,arch_db:project.portal_my_projects
+#: model:ir.ui.view,arch_db:project.project_planner
 #: model:ir.ui.view,arch_db:project.view_project
 msgid "Projects"
 msgstr ""
@@ -2602,6 +2617,7 @@ msgid "Rating on Tasks"
 msgstr ""
 
 #. module: project
+#: code:addons/project/models/project.py:32
 #: model:project.task,legend_done:project.project_task_1
 #: model:project.task,legend_done:project.project_task_12
 #: model:project.task,legend_done:project.project_task_15
@@ -2631,6 +2647,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_0
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
+#, python-format
 msgid "Ready for Next Stage"
 msgstr ""
 

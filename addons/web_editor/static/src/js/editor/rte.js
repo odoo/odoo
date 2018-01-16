@@ -405,7 +405,7 @@ var RTEWidget = Widget.extend({
             var $el = $(el);
 
             $el.find('[class]').filter(function () {
-                if (!this.className.match(/\S/)) {
+                if (!this.getAttribute('class').match(/\S/)) {
                     this.removeAttribute('class');
                 }
             });

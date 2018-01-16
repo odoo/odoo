@@ -184,7 +184,7 @@ class StockMove(models.Model):
 
         :return: True if the move is entering the company else False
         """
-        for move_line in self.move_line_ids:
+        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id):
             if not move_line.location_id._should_be_valued() and move_line.location_dest_id._should_be_valued():
                 return True
         return False
@@ -195,7 +195,7 @@ class StockMove(models.Model):
 
         :return: True if the move is leaving the company else False
         """
-        for move_line in self.move_line_ids:
+        for move_line in self.move_line_ids.filtered(lambda ml: not ml.owner_id):
             if move_line.location_id._should_be_valued() and not move_line.location_dest_id._should_be_valued():
                 return True
         return False
@@ -204,7 +204,7 @@ class StockMove(models.Model):
     def _run_fifo(self, move, quantity=None):
         move.ensure_one()
         # Find back incoming stock moves (called candidates here) to value this move.
-        valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
+        valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
         valued_quantity = 0
         for valued_move_line in valued_move_lines:
             valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
@@ -263,7 +263,7 @@ class StockMove(models.Model):
     def _run_valuation(self, quantity=None):
         self.ensure_one()
         if self._is_in():
-            valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued())
+            valued_move_lines = self.move_line_ids.filtered(lambda ml: not ml.location_id._should_be_valued() and ml.location_dest_id._should_be_valued() and not ml.owner_id)
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
@@ -288,7 +288,7 @@ class StockMove(models.Model):
                 })
             self.write(vals)
         elif self._is_out():
-            valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued())
+            valued_move_lines = self.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
             valued_quantity = sum(valued_move_lines.mapped('qty_done'))
             self.env['stock.move']._run_fifo(self, quantity=quantity)
             if self.product_id.cost_method in ['standard', 'average']:

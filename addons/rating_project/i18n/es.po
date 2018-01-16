@@ -11,10 +11,10 @@
 # Miquel Torner <miq@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
 "Last-Translator: Miquel Torner <miq@odoo.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -123,7 +123,7 @@ msgstr "Estado kanban automático"
 #. module: rating_project
 #: model:ir.model.fields,help:rating_project.field_project_task_type_auto_validation_kanban_state
 msgid ""
-"Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
+"Automatically modify the kanban state when the customer replies to the feedback request for this stage.\n"
 " * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
 " * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
@@ -137,8 +137,8 @@ msgstr "Calificación de clientes"
 
 #. module: rating_project
 #: model:ir.actions.act_window,name:rating_project.rating_rating_action_task
-msgid "Customer Ratings from task"
-msgstr ""
+msgid "Customer Ratings on tasks"
+msgstr "Valoración del cliente en las tareas"
 
 #. module: rating_project
 #: model:ir.actions.act_window,help:rating_project.rating_rating_action_task
@@ -228,7 +228,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "No rating"
-msgstr ""
+msgstr "Sin valoración"
 
 #. module: rating_project
 #: selection:project.project,rating_status_period:0
@@ -245,7 +245,7 @@ msgstr ""
 #. module: rating_project
 #: selection:project.project,rating_status:0
 msgid "Periodical Rating"
-msgstr ""
+msgstr "Valoración periódica"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_project
@@ -307,20 +307,20 @@ msgid "Ratings"
 msgstr "Valoraciones"
 
 #. module: rating_project
-#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
-msgid "Ratings for tasks"
-msgstr ""
-
-#. module: rating_project
 #: code:addons/rating_project/models/project.py:107
 #, python-format
 msgid "Ratings of %s"
 msgstr ""
 
 #. module: rating_project
+#: model:ir.actions.act_window,name:rating_project.rating_rating_action_view_project_rating_task
+msgid "Ratings on tasks"
+msgstr "Valoraciones en las tareas"
+
+#. module: rating_project
 #: model:ir.ui.view,arch_db:rating_project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "Configurar plantillas de email para etapas"
 
 #. module: rating_project
 #: model:ir.model,name:rating_project.model_project_task

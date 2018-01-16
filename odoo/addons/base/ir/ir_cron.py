@@ -5,7 +5,7 @@ import threading
 import time
 import psycopg2
 import pytz
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 import odoo
@@ -15,6 +15,7 @@ from odoo.exceptions import UserError
 _logger = logging.getLogger(__name__)
 
 BASE_VERSION = odoo.modules.load_information_from_description_file('base')['version']
+MAX_FAIL_TIME = timedelta(hours=5)  # chosen with a fair roll of the dice
 
 
 class BadVersion(Exception):
@@ -170,7 +171,7 @@ class ir_cron(models.Model):
                 (version,) = cr.fetchone()
                 cr.execute("SELECT COUNT(*) FROM ir_module_module WHERE state LIKE %s", ['to %'])
                 (changes,) = cr.fetchone()
-                if not version or changes:
+                if version is None:
                     raise BadModuleState()
                 elif version != BASE_VERSION:
                     raise BadVersion()
@@ -180,6 +181,19 @@ class ir_cron(models.Model):
                                   AND active AND nextcall <= (now() at time zone 'UTC')
                               ORDER BY priority""")
                 jobs = cr.dictfetchall()
+
+            if changes:
+                if not jobs:
+                    raise BadModuleState()
+                # nextcall is never updated if the cron is not executed,
+                # it is used as a sentinel value to check whether cron jobs
+                # have been locked for a long time (stuck)
+                parse = fields.Datetime.from_string
+                oldest = min([parse(job['nextcall']) for job in jobs])
+                if datetime.now() - oldest > MAX_FAIL_TIME:
+                    odoo.modules.reset_modules_state(db_name)
+                else:
+                    raise BadModuleState()
 
             for job in jobs:
                 lock_cr = db.cursor()
@@ -201,7 +215,7 @@ class ir_cron(models.Model):
                         _logger.debug("Job `%s` already executed by another process/thread. skipping it", job['cron_name'])
                         continue
                     # Got the lock on the job row, run its code
-                    _logger.debug('Starting job `%s`.', job['cron_name'])
+                    _logger.info('Starting job `%s`.', job['cron_name'])
                     job_cr = db.cursor()
                     try:
                         registry = odoo.registry(db_name)

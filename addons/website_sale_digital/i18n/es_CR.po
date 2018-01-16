@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2016-01-14 10:09+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Costa Rica) (http://www.transifex.com/odoo/odoo-9/"
@@ -38,28 +38,26 @@ msgid "Alice's Adventures in Wonderland - Lewis Caroll"
 msgstr ""
 
 #. module: website_sale_digital
-#: code:addons/website_sale_digital/product.py:29
-#: code:addons/website_sale_digital/product.py:56
+#: code:addons/website_sale_digital/models/product.py:23
+#: code:addons/website_sale_digital/models/product.py:54
 #, python-format
 msgid "Digital Attachments"
 msgstr ""
 
 #. module: website_sale_digital
-#: code:addons/website_sale_digital/product.py:22
-#, python-format
-msgid "Digital Content"
+#: model:ir.model.fields,field_description:website_sale_digital.field_ir_attachment_product_downloadable
+#: model:ir.model.fields,field_description:website_sale_digital.field_mrp_document_product_downloadable
+msgid "Downloadable from product portal"
 msgstr ""
 
 #. module: website_sale_digital
-#: model:ir.ui.view,arch_db:website_sale_digital.orders_followup_downloads
+#: model:ir.ui.view,arch_db:website_sale_digital.portal_order_page_downloads
 msgid "Downloads <span class=\"caret\"/>"
 msgstr ""
 
 #. module: website_sale_digital
 #: model:ir.model.fields,field_description:website_sale_digital.field_product_product_attachment_count
 #: model:ir.model.fields,field_description:website_sale_digital.field_product_template_attachment_count
-#: model:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
-#: model:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
 msgid "File"
 msgstr "Archivo"
 
@@ -74,6 +72,12 @@ msgid "Novel by Lewis Caroll."
 msgstr ""
 
 #. module: website_sale_digital
+#: model:ir.ui.view,arch_db:website_sale_digital.product_product_view_form_inherit_digital
+#: model:ir.ui.view,arch_db:website_sale_digital.product_template_view_form_inherit_digital
+msgid "Portal Files"
+msgstr ""
+
+#. module: website_sale_digital
 #: model:ir.model,name:website_sale_digital.model_product_product
 msgid "Product"
 msgstr "Producto"
@@ -82,3 +86,8 @@ msgstr "Producto"
 #: model:ir.model,name:website_sale_digital.model_product_template
 msgid "Product Template"
 msgstr "Plantilla de producto"
+
+#. module: website_sale_digital
+#: model:ir.model,name:website_sale_digital.model_ir_attachment
+msgid "ir.attachment"
+msgstr ""

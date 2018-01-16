@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2016-01-13 08:54+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Spanish (Bolivia) (http://www.transifex.com/odoo/odoo-9/"
@@ -163,8 +163,8 @@ msgid ""
 "                        The introduction exercises have been created to help "
 "you discover Odoo in an easy way. Their main objective is to present the "
 "different applications, menus, view types, shortcuts, field types, wizards, "
-"actions, etc.  It will help you to discover how to navigate in Odoo!<br/></"
-"br>\n"
+"actions, etc.  It will help you to discover how to navigate in Odoo!<br/><br/"
+">\n"
 "                        Therefore, the Introduction is compulsory for "
 "everyone, even if you need to learn a specific module given on an other "
 "date. This obligation has been made to make sure that you are not lost if "
@@ -248,7 +248,7 @@ msgid ""
 "                <td style=\"width:50%;\">\n"
 "                    <strong>CRM & Sales management:</strong>\n"
 "                    <ul>\n"
-"                        <li>From an opportunity to a sale order</li>\n"
+"                        <li>From an opportunity to a sales order</li>\n"
 "                        <li>Claims</li>\n"
 "                        <li>Aftersale communication</li>\n"
 "                    </ul>\n"
@@ -453,7 +453,7 @@ msgid ""
 "                        <li>Work with purchase requisitions to ask different "
 "vendors to submit quotations</li>\n"
 "                    </ul>\n"
-"                    <strong>About Holidays:</strong>\n"
+"                    <strong>About Leaves:</strong>\n"
 "                    <ul>\n"
 "                        <li>Track the number of vacation days accrued by "
 "each employee</li>\n"
@@ -477,7 +477,7 @@ msgid ""
 "                    <ul>\n"
 "                        <li>Contracts</li>\n"
 "                        <li>Invoicing methods\n"
-"                            <li>Sale orders</li>\n"
+"                            <li>Sales orders</li>\n"
 "                            <li>Timesheets</li>\n"
 "                            <li>Expenses</li>\n"
 "                        </li>\n"
@@ -581,7 +581,7 @@ msgid ""
 "                    From the sales perspective, you will have a "
 "manufacturing order generated based on a request coming from a customer "
 "without any manual operation. This integration of those two aplications "
-"allows you to perform the following flow in an automated way: Sale order –> "
+"allows you to perform the following flow in an automated way: Sales order –> "
 "Stock level verification –> Production of the missing units –> Receival in "
 "stock of the finished goods –> Delivery to the customer.\n"
 "                </td>\n"
@@ -811,7 +811,13 @@ msgid "Body"
 msgstr ""
 
 #. module: product_email_template
+#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
+msgid "Email"
+msgstr ""
+
+#. module: product_email_template
 #: model:ir.ui.view,arch_db:product_email_template.email_template_form_simplified
+#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
 msgid "Email Template"
 msgstr ""
 
@@ -821,16 +827,6 @@ msgid "Invoice"
 msgstr "Factura"
 
 #. module: product_email_template
-#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Invoice Confirmation Email"
-msgstr ""
-
-#. module: product_email_template
-#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
-msgid "Miscellaneous"
-msgstr "Varios"
-
-#. module: product_email_template
 #: model:mail.template,subject:product_email_template.product_online_training_email_template
 #: model:product.product,name:product_email_template.product_online_training
 #: model:product.template,name:product_email_template.product_online_training_product_template
@@ -838,6 +834,7 @@ msgid "Online Training"
 msgstr ""
 
 #. module: product_email_template
+#: model:ir.model.fields,field_description:product_email_template.field_product_product_email_template_id
 #: model:ir.model.fields,field_description:product_email_template.field_product_template_email_template_id
 msgid "Product Email Template"
 msgstr ""
@@ -848,6 +845,12 @@ msgid "Product Template"
 msgstr "Plantilla de producto"
 
 #. module: product_email_template
+#: model:ir.ui.view,arch_db:product_email_template.product_template_form_view
+msgid "Send a product-specific email once the invoice is paid"
+msgstr ""
+
+#. module: product_email_template
+#: model:ir.model.fields,help:product_email_template.field_product_product_email_template_id
 #: model:ir.model.fields,help:product_email_template.field_product_template_email_template_id
 msgid ""
 "When validating an invoice, an email will be sent to the customer based on "

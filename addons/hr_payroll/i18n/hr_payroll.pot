@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -228,7 +228,7 @@ msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7732
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7804
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr ""
@@ -953,7 +953,6 @@ msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payslip_run
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
 msgid "Payslip Batches"
@@ -999,6 +998,11 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_name
 msgid "Payslip Name"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_payslip_run
+msgid "Payslip Run"
 msgstr ""
 
 #. module: hr_payroll
@@ -1205,7 +1209,7 @@ msgstr ""
 
 #. module: hr_payroll
 #: code:addons/hr_payroll/models/hr_payslip.py:396
-#: code:addons/hr_payroll/models/hr_payslip.py:445
+#: code:addons/hr_payroll/models/hr_payslip.py:446
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr ""
@@ -1223,12 +1227,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_list_form
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_view
 msgid "Salary Structures"
-msgstr ""
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
-msgid "Salary Structures Hierarchy"
 msgstr ""
 
 #. module: hr_payroll
@@ -1448,7 +1446,7 @@ msgid "You must select employee(s) to generate payslip(s)."
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/models/hr_payslip.py:516
+#: code:addons/hr_payroll/models/hr_payslip.py:517
 #, python-format
 msgid "You must set a contract to create a payslip line."
 msgstr ""

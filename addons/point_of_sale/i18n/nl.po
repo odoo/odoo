@@ -284,6 +284,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
+"Een globale unieke identifier voor deze PoS configuratie, gebruikt om "
+"conflicten te voorkomen in cliënt gegenereerde data."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_login_number
@@ -411,6 +413,9 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
+"Alle beschikbare betaalmethodes moeten dezelfde valuta hebben als het "
+"bedrijf of als het dagboek op dit moment van verkoop, indien u de "
+"boekhouding applicatie gebruikt."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:243
@@ -839,6 +844,8 @@ msgid ""
 "Choose a specific tax regime at the order depending on the kind of customer "
 "(tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Kies een specifiek belastingstelsel bij de bestelling, afhankelijk van de "
+"soort klant (belastingvrij, op locatie versus afhalen, enz.)."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2005,6 +2012,11 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
+"Maak meerdere prijslijsten beschikbaar in de kassa. U kan een prijslijst ook"
+" toewijzen aan specifieke klanten vanuit het contact formulier (onder het "
+"tabblad verkopen). Om geldig te zijn moet de prijslijst hier opgelijst zijn "
+"als beschikbare prijslijst. Anders is de standaard prijslijst van "
+"toepassing."
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -2343,7 +2355,7 @@ msgstr "Ordernummer reeks"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Interface"
-msgstr "Order interface"
+msgstr "Orderinterface"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_sequence_line_id
@@ -2366,17 +2378,17 @@ msgstr "Bestel maand"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot_order_id
 msgid "Order Ref"
-msgstr "Order referentie"
+msgstr "Orderreferentie"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Order Reference"
-msgstr "Order referentie"
+msgstr "Orderreferentie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_sequence_number
 msgid "Order Sequence Number"
-msgstr "Order volgnummer"
+msgstr "Ordervolgnummer"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:498
@@ -2434,7 +2446,7 @@ msgstr "Kassa orderregels"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr "Kassa Orders"
+msgstr "Kassa orders"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
@@ -3373,7 +3385,7 @@ msgstr "Instellingen"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_iface_customer_facing_display
 msgid "Show checkout to customers with a remotely-connected screen."
-msgstr ""
+msgstr "Toon checkout aan klanten met een extern verbonden scherm."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_group_pricelist_item
@@ -3936,6 +3948,8 @@ msgid ""
 "This is useful for restaurants with onsite and take-away services that imply"
 " specific tax rates."
 msgstr ""
+"Dit is handig voor restaurants met op locatie- en afhaaldiensten die "
+"specifieke belastingtarieven impliceren."
 
 #. module: point_of_sale
 #. openerp-web
@@ -3946,6 +3960,9 @@ msgid ""
 "all the unsaved data and exit the point of sale. This operation cannot be "
 "undone."
 msgstr ""
+"Deze handeling vernietigd alle onbetaalde orders in uw browser. U verliest "
+"alle niet bewaarde data en verlaat de kassa. Deze handeling kan niet "
+"ongedaan gemaakt worden. "
 
 #. module: point_of_sale
 #. openerp-web
@@ -4225,7 +4242,7 @@ msgstr "BTW:"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:650
 #, python-format
 msgid "Validate"
-msgstr "Controleer"
+msgstr "Bevestig"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
@@ -4274,6 +4291,9 @@ msgid ""
 "accounting journal for all the orders not invoiced. Invoices are recorded in"
 " accounting separately."
 msgstr ""
+"Wanneer u een sessie sluit wordt er een boeking gegenereerd in het volgende "
+"boekhoudjournaal voor alle niet gefactureerde bestellingen. Facturen worden "
+"afzonderlijk geboekt in de boekhouding."
 
 #. module: point_of_sale
 #. openerp-web
@@ -4559,7 +4579,7 @@ msgstr "b.v. bedrijfsadres, website"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "e.g. Return Policy, Thanks for shopping with us!"
-msgstr ""
+msgstr "b.v. terugstuurbeleid, bedankt om bij ons te kopen!"
 
 #. module: point_of_sale
 #. openerp-web

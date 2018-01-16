@@ -267,3 +267,31 @@ class TestInventory(TransactionCase):
         move_stock_pack._action_done()
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.pack_location), 0)
+
+    def test_inventory_7(self):
+        """ Check that duplicated quants create a single inventory line.
+        """
+        owner1 = self.env['res.partner'].create({'name': 'test_inventory_7'})
+        vals = {
+            'product_id': self.product1.id,
+            'product_uom_id': self.uom_unit.id,
+            'owner_id': owner1.id,
+            'location_id': self.stock_location.id,
+            'quantity': 1,
+            'reserved_quantity': 0,
+        }
+        self.env['stock.quant'].create(vals)
+        self.env['stock.quant'].create(vals)
+        self.assertEqual(len(self.env['stock.quant']._gather(self.product1, self.stock_location)), 2.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product1, self.stock_location), 2.0)
+        
+        inventory = self.env['stock.inventory'].create({
+            'name': 'product1',
+            'filter': 'product',
+            'location_id': self.stock_location.id,
+            'product_id': self.product1.id,
+        })
+        inventory.action_start()
+        self.assertEqual(len(inventory.line_ids), 1)
+        self.assertEqual(inventory.line_ids.theoretical_qty, 2)
+

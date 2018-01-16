@@ -8,7 +8,7 @@
             <input type="hidden" name="import_id"/>
             <div class="oe_import_box col-sm-9">
                 <div class="col-sm-12">
-                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/10.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
+                    <p>Select a CSV or Excel file to import. <a href="https://www.odoo.com/documentation/user/11.0/general/base_import/import_faq.html" target="new" class="pull-right">Help</a></p>
                 </div>
                 <div class="col-sm-10">
                     <div class="input-group">
@@ -61,6 +61,15 @@
                     <input type="checkbox" id="oe_import_tracking"/>
                     <label for="oe_import_tracking">
                         Track history during import
+                    </label>
+                </div>
+                <div title="If the model uses parent/child relations, computing the 
+                    parent / child relation occurs on every line, and lead to a slower import.
+                    Defering it can speed up import."
+                    class="oe_import_deferparentstore">
+                    <input type="checkbox" id="oe_import_deferparentstore" checked="checked"/>
+                    <label for="oe_import_deferparentstore">
+                        Defer parent/child computation
                     </label>
                 </div>
                 <input type="checkbox" class="oe_import_has_header"
