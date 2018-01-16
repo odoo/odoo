@@ -416,13 +416,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
     _consume_tour: function (tour_name, error) {
         delete this.active_tooltips[tour_name];
         //display rainbow at the end of any tour
-        if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name
-         && this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
+        if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
+            this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
             var $rainbow_message = $('<strong>' +
                                 '<b>Good job!</b>' +
                                 ' You went through all steps of this tour.' +
                                 '</strong>');
-            new RainbowMan({message: $rainbow_message, click_close: false}).appendTo(this.$body);
+            new RainbowMan({message: $rainbow_message}).appendTo(this.$body);
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));

@@ -149,8 +149,9 @@
         <script type="text/javascript" src="/web/static/src/js/core/domain.js"></script>
         <script type="text/javascript" src="/web/static/src/js/core/pyeval.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/action_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_act_window.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_report.js"/>
         <script type="text/javascript" src="/web/static/src/js/chrome/control_panel.js"></script>
-        <script type="text/javascript" src="/web/static/src/js/chrome/view_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
         <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
@@ -158,6 +159,7 @@
         <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/report_service.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
         <script type="text/javascript" src="/web/static/src/js/services/notification_manager.js"></script>
         <script type="text/javascript" src="/web/static/src/js/widgets/auto_complete.js"></script>
@@ -235,7 +237,6 @@
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_renderer.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
 
-        <script type="text/javascript" src="/web/static/src/js/report/qwebactionmanager.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
         <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
         <link rel="stylesheet" type="text/less" href="/web/static/src/less/report_backend.less"/>
@@ -489,6 +490,7 @@
                 <script type="text/javascript" src="/web/static/tests/core/util_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/core/widget_tests.js"></script>
 
+                <script type="text/javascript" src="/web/static/tests/chrome/action_manager_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/search_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/chrome/pager_tests.js"></script>
 
@@ -534,6 +536,7 @@
                 <t t-call="web.js_tests_assets"/>
                 <script type="text/javascript" src="/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js"></script>
 
+                <script type="text/javascript" src="/web/static/tests/chrome/action_manager_mobile_tests.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/kanban_mobile_tests.js"></script>
             </t>
 

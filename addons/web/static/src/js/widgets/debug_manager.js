@@ -10,7 +10,6 @@ var field_utils = require('web.field_utils');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var utils = require('web.utils');
-var ViewManager = require('web.ViewManager');
 var WebClient = require('web.WebClient');
 var Widget = require('web.Widget');
 
@@ -332,42 +331,35 @@ DebugManager.include({
         );
     },
     update: function (tag, descriptor, widget) {
-        switch (tag) {
-        case 'action':
-            if (this._view_manager) {
-                this._view_manager.off('switch_mode', this);
-            }
-            if (!(widget instanceof ViewManager)) {
-                this._active_view = null;
-                this._view_manager = null;
-                break;
-            }
-            this._view_manager = widget;
-            widget.on('switch_mode', this, function () {
-                this.update('view', null, widget);
-            });
-        case 'view':
-            this._active_view = widget.active_view;
+        if (tag === 'action' || tag === 'view') {
+            this._controller = widget;
         }
-
         return this._super(tag, descriptor).then(function () {
             this.$dropdown.find(".o_debug_leave_section").before(QWeb.render('WebClient.DebugManager.View', {
-                manager: this,
                 action: this._action,
-                view: this._active_view,
                 can_edit: this._can_edit_views,
-                searchview: this._view_manager && this._view_manager.searchview,
+                controller: this._controller,
+                manager: this,
+                searchview: this._controller && this._controller.searchView,
+                view: this._controller && _.findWhere(this._action.views, {
+                    type: this._controller.viewType,
+                }),
             }));
         }.bind(this));
     },
 
     get_metadata: function() {
-        var ds = this._view_manager.dataset;
-        if (!this._active_view.controller.getSelectedIds().length) {
+        var self = this;
+        var selectedIDs = this._controller.getSelectedIds();
+        if (!selectedIDs.length) {
             console.warn(_t("No metadata available"));
             return;
         }
-        ds.call('get_metadata', [this._active_view.controller.getSelectedIds()]).done(function(result) {
+        this._rpc({
+            model: this._action.res_model,
+            method: 'get_metadata',
+            args: [selectedIDs],
+        }).done(function(result) {
             var metadata = result[0];
             metadata.creator = field_utils.format.many2one(metadata.create_uid);
             metadata.lastModifiedBy = field_utils.format.many2one(metadata.write_uid);
@@ -376,7 +368,7 @@ DebugManager.include({
             var modificationDate = field_utils.parse.datetime(metadata.write_date);
             metadata.write_date = field_utils.format.datetime(modificationDate);
             new Dialog(this, {
-                title: _.str.sprintf(_t("Metadata (%s)"), ds.model),
+                title: _.str.sprintf(_t("Metadata (%s)"), self._action.res_model),
                 size: 'medium',
                 $content: QWeb.render('WebClient.DebugViewLog', {
                     perm : metadata,
@@ -400,11 +392,12 @@ DebugManager.include({
             return [value, displayed];
         };
 
-        var renderer = this._active_view.controller.renderer;
-        var fields = self._active_view.fields_view.fields;
-        var fieldsInfo = self._active_view.fields_view.fieldsInfo.form;
-        var fieldNamesInView = renderer.state.getFieldNames();
-        var fieldsValues = renderer.state.data;
+        var renderer = this._controller.renderer;
+        var state = renderer.state;
+        var fields = state.fields;
+        var fieldsInfo = state.fieldsInfo.form;
+        var fieldNamesInView = state.getFieldNames();
+        var fieldsValues = state.data;
         var modifierDatas = {};
         _.each(fieldNamesInView, function (fieldName) {
             modifierDatas[fieldName] = _.find(renderer.allModifiersData, function (modifierdata) {
@@ -416,14 +409,14 @@ DebugManager.include({
                 var modifierData = modifierDatas[fieldName];
                 var invisibleOrReadOnly;
                 if (modifierData) {
-                    var evaluatedModifiers = modifierData.evaluatedModifiers[renderer.state.id];
+                    var evaluatedModifiers = modifierData.evaluatedModifiers[state.id];
                     invisibleOrReadOnly = evaluatedModifiers.invisible || evaluatedModifiers.readonly;
                 }
                 var fieldInfo = fields[fieldName];
                 var valueDisplayed = display(fieldInfo, fieldsValues[fieldName]);
                 var value = valueDisplayed[0];
                 var displayed = valueDisplayed[1];
-                 // ignore fields which are empty, invisible, readonly, o2m
+                // ignore fields which are empty, invisible, readonly, o2m
                 // or m2m
                 if (!value || invisibleOrReadOnly || fieldInfo.type === 'one2many' ||
                     fieldInfo.type === 'many2many' || fieldInfo.type === 'binary' ||
@@ -479,7 +472,7 @@ DebugManager.include({
                         model: 'ir.default',
                         method: 'set',
                         args: [
-                            self._active_view.fields_view.model,
+                            self._controller.fields_view.model,
                             fieldToSet,
                             value,
                             allUsers,
@@ -502,7 +495,7 @@ DebugManager.include({
         var dialog = new Dialog(this, { title: _t("Fields View Get") });
         dialog.opened().then(function () {
             $('<pre>').text(utils.json_node_to_xml(
-                self._active_view.controller.renderer.arch, true)
+                self._controller.renderer.arch, true)
             ).appendTo(dialog.$el);
         });
         dialog.open();
@@ -788,30 +781,80 @@ if (config.debug) {
     SystrayMenu.Items.push(DebugManager);
 
     WebClient.include({
-        current_action_updated: function(action) {
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        current_action_updated: function (action, controller) {
             this._super.apply(this, arguments);
-            var action_descr = action && action.action_descr;
-            var action_widget = action && action.widget;
-            var debug_manager = _.find(this.systray_menu.widgets, function(item) {return item instanceof DebugManager; });
-            debug_manager.update('action', action_descr, action_widget);
+            var debugManager = _.find(this.systray_menu.widgets, function(item) {
+                return item instanceof DebugManager;
+            });
+            debugManager.update('action', action, controller && controller.widget);
+        },
+    });
+
+    ActionManager.include({
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * Returns the action of the controller currently opened in a dialog,
+         * i.e. a target='new' action, if any.
+         *
+         * @returns {Object|null}
+         */
+        getCurrentActionInDialog: function () {
+            if (this.currentDialogController) {
+                return this.actions[this.currentDialogController.actionID];
+            }
+            return null;
+        },
+        /**
+         * Returns the controller currently opened in a dialog, if any.
+         *
+         * @returns {Object|null}
+         */
+        getCurrentControllerInDialog: function () {
+            return this.currentDialogController;
         },
     });
 
     Dialog.include({
+        //--------------------------------------------------------------------------
+        // Public
+        //--------------------------------------------------------------------------
+
+        /**
+         * @override
+         */
         open: function() {
             var self = this;
-
-            var parent = self.getParent();
-            if (parent instanceof ActionManager && parent.dialog_widget) {
-                // Instantiate the DebugManager and insert it into the DOM once dialog is opened
-                this.opened(function() {
-                    self.debug_manager = new DebugManager(self);
-                    var $header = self.$modal.find('.modal-header:first');
-                    return self.debug_manager.prependTo($header).then(function() {
-                        self.debug_manager.update('action', parent.dialog_widget.action, parent.dialog_widget);
-                    });
-                });
-            }
+            // if the dialog is opened by the ActionManager, instantiate a
+            // DebugManager and insert it into the DOM once the dialog is opened
+            // (delay this with a setTimeout(0) to ensure that the internal
+            // state, i.e. the current action and controller, of the
+            // ActionManager is set to properly update the DebugManager)
+            this.opened(function() {
+                setTimeout(function () {
+                    var parent = self.getParent();
+                    if (parent instanceof ActionManager) {
+                        var action = parent.getCurrentActionInDialog();
+                        if (action) {
+                            var controller = parent.getCurrentControllerInDialog();
+                            self.debugManager = new DebugManager(self);
+                            var $header = self.$modal.find('.modal-header:first');
+                            return self.debugManager.prependTo($header).then(function () {
+                                self.debugManager.update('action', action, controller.widget);
+                            });
+                        }
+                    }
+                }, 0);
+            });
 
             return this._super.apply(this, arguments);
         },

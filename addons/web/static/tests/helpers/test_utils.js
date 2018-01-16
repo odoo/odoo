@@ -10,9 +10,11 @@ odoo.define('web.test_utils', function (require) {
  * instance of a view, appended in the dom, ready to be tested.
  */
 
+var ActionManager = require('web.ActionManager');
 var ajax = require('web.ajax');
 var basic_fields = require('web.basic_fields');
 var config = require('web.config');
+var ControlPanel = require('web.ControlPanel');
 var core = require('web.core');
 var dom = require('web.dom');
 var session = require('web.session');
@@ -59,6 +61,72 @@ function observe(widget) {
 }
 
 /**
+ * create and return an instance of ActionManager with all rpcs going through a
+ * mock method using the data, actions and archs objects as sources.
+ *
+ * @param {Object} [params]
+ * @param {Object} [params.actions] the actions given to the mock server
+ * @param {Object} [params.archs] this archs given to the mock server
+ * @param {Object} [params.data] the business data given to the mock server
+ * @param {boolean} [params.debug]
+ * @param {function} [params.mockRPC]
+ * @returns {ActionManager}
+ */
+var createActionManager = function (params) {
+    params = params || {};
+    var $target = $('#qunit-fixture');
+    if (params.debug) {
+        $target = $('body');
+    }
+
+    var widget = new Widget();
+    // when 'document' addon is installed, the sidebar does a 'search_read' on
+    // model 'ir_attachment' each time a record is open, so we monkey-patch
+    // 'mockRPC' to mute those RPCs, so that the tests can be written uniformly,
+    // whether or not 'document' is installed
+    var mockRPC = params.mockRPC;
+    _.extend(params, {
+        mockRPC: function (route, args) {
+            if (args.model === 'ir.attachment') {
+                return $.when([]);
+            }
+            if (mockRPC) {
+                return mockRPC.apply(this, arguments);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+    addMockEnvironment(widget, _.defaults(params, {debounce: false}));
+    intercept(widget, 'call_service', function (event) {
+        if (event.data.service === 'report') {
+            var state = widget._rpc({route: '/report/check_wkhtmltopdf'});
+            event.data.callback(state);
+        }
+    }, true);
+    widget.appendTo($target);
+    widget.$el.addClass('o_web_client');
+
+    // make sure images and iframes do not trigger a GET on the server
+    // AAB; this should be done in addMockEnvironment
+    $target.on('DOMNodeInserted.removeSRC', function () {
+        removeSrcAttribute($(this), widget);
+    });
+
+    var userContext = params.context && params.context.user_context || {};
+    var actionManager = new ActionManager(widget, userContext);
+
+    var originalDestroy = ActionManager.prototype.destroy;
+    actionManager.destroy = function () {
+        actionManager.destroy = originalDestroy;
+        $target.off('DOMNodeInserted.removeSRC');
+        widget.destroy();
+    };
+    actionManager.appendTo(widget.$el);
+
+    return actionManager;
+};
+
+/**
  * create a view synchronously.  This method uses the createAsyncView method.
  * Most views are synchronous, so the deferred can be resolved immediately and
  * this method will work.
@@ -87,8 +155,7 @@ function createView(params) {
  *
  * It returns the instance of the view, properly created, with all rpcs going
  * through a mock method using the data object as source, and already loaded/
- * started (with a do_search).  The buttons/pager should also be created, if
- * appropriate.
+ * started.
  *
  * Most views can be tested synchronously (@see createView), but some view have
  * external dependencies (like lazy loaded libraries). In that case, it is
@@ -145,9 +212,9 @@ function createAsyncView(params) {
 
     // reproduce the DOM environment of views
     var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
-    var $control_panel = $('<div>').addClass('o_control_panel').appendTo($web_client);
+    var controlPanel = new ControlPanel(widget);
+    controlPanel.appendTo($web_client);
     var $content = $('<div>').addClass('o_content').appendTo($web_client);
-    var $view_manager = $('<div>').addClass('o_view_manager_content').appendTo($content);
 
     return view.getController(widget).then(function (view) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
@@ -159,29 +226,21 @@ function createAsyncView(params) {
             widget.destroy();
             $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
+
+        // link the view to the control panel
+        view.set_cp_bus(controlPanel.get_bus());
+
         // render the view in a fragment as they must be able to render correctly
         // without being in the DOM
         var fragment = document.createDocumentFragment();
         return view.appendTo(fragment).then(function () {
-            dom.append($view_manager, fragment, {
+            dom.append($content, fragment, {
                 callbacks: [{widget: view}],
                 in_DOM: true,
             });
             view.$el.on('click', 'a', function (ev) {
                 ev.preventDefault();
             });
-        }).then(function () {
-            var $buttons = $('<div>');
-            view.renderButtons($buttons);
-            $buttons.contents().appendTo($control_panel);
-
-            var $sidebar = $('<div>');
-            view.renderSidebar($sidebar);
-            $sidebar.contents().appendTo($control_panel);
-
-            var $pager = $('<div>');
-            view.renderPager($pager);
-            $pager.contents().appendTo($control_panel);
 
             return view;
         });
@@ -250,6 +309,7 @@ function addMockEnvironment(widget, params) {
         console.log('%c[debug] debug mode activated', 'color: blue; font-weight: bold;', url);
     }
     var mockServer = new Server(params.data, {
+        actions: params.actions,
         archs: params.archs,
         currentDate: params.currentDate,
         debug: params.debug,
@@ -334,6 +394,14 @@ function addMockEnvironment(widget, params) {
             var result = mockServer.performRpc(event.data.args[0], event.data.args[1]);
             event.data.callback(result);
         }
+    });
+
+    intercept(widget, 'load_action', function (event) {
+        mockServer.performRpc('/web/action/load', {
+            kwargs: {action_id: event.data.actionID},
+        }).then(function (action) {
+            event.data.on_success(action);
+        });
     });
 
     intercept(widget, "load_views", function (event) {
@@ -617,6 +685,7 @@ return $.when(
     }, 0);
     return {
         addMockEnvironment: addMockEnvironment,
+        createActionManager: createActionManager,
         createAsyncView: createAsyncView,
         createModel: createModel,
         createParent: createParent,

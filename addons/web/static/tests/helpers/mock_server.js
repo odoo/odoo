@@ -12,6 +12,7 @@ var MockServer = Class.extend({
      * @constructor
      * @param {Object} data
      * @param {Object} options
+     * @param {Object[]} [options.actions=[]]
      * @param {Object} [options.archs={}] dict of archs with keys being strings like
      *    'model,id,viewType'
      * @param {boolean} [options.debug=false] logs RPCs if set to true
@@ -47,6 +48,7 @@ var MockServer = Class.extend({
 
         this.currentDate = options.currentDate || moment().format("YYYY-MM-DD");
 
+        this.actions = options.actions || [];
         this.archs = options.archs || {};
     },
 
@@ -430,6 +432,23 @@ var MockServer = Class.extend({
             });
         }
         return modelFields;
+    },
+    /**
+     * Simulate a call to the '/web/action/load' route
+     *
+     * @private
+     * @param {Object} kwargs
+     * @param {integer} kwargs.action_id
+     * @returns {Object}
+     */
+    _mockLoadAction: function (kwargs) {
+        var action = _.findWhere(this.actions, {id: parseInt(kwargs.action_id)});
+        if (!action) {
+            // when the action doesn't exist, the real server doesn't crash, it
+            // simply returns false
+            console.warn("No action found for ID " + event.data.actionID);
+        }
+        return action || false;
     },
     /**
      * Simulate a 'load_views' operation
@@ -943,7 +962,7 @@ var MockServer = Class.extend({
     _performRpc: function (route, args) {
         switch (route) {
             case '/web/action/load':
-                return $.when(this._mockLoadAction(args));
+                return $.when(this._mockLoadAction(args.kwargs));
 
             case '/web/dataset/search_read':
                 return $.when(this._mockSearchReadController(args));

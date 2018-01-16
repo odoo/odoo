@@ -422,7 +422,7 @@ var ServiceProvider = {
     },
     _call_service: function (event) {
         var service = this.services[event.data.service];
-        var args = event.data.args.concat(event.target);
+        var args = (event.data.args || []).concat(event.target);
         var result = service[event.data.method].apply(service, args);
         event.data.callback(result);
     },

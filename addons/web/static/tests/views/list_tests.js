@@ -150,7 +150,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree delete="0"><field name="foo"/></tree>',
         });
 
@@ -261,7 +261,7 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '<field name="m2o" invisible="1"/>' +
                 '</tree>',
-            mockRPC: function (route, args) {
+            mockRPC: function (route) {
                 assert.step(_.last(route.split('/')));
                 return this._super.apply(this, arguments);
             },
@@ -765,7 +765,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
         });
 
@@ -795,7 +795,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 if (route === '/web/dataset/call_kw/ir.attachment/search_read') {
@@ -1686,7 +1686,7 @@ QUnit.module('Views', {
                         "'switch_view' event has been triggered");
                 },
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -2031,7 +2031,7 @@ QUnit.module('Views', {
                     '<field name="bar"/>' +
                 '</tree>',
             intercepts: {
-                warning: function (ev) {
+                warning: function () {
                     warnings++;
                 },
             },
@@ -2070,14 +2070,13 @@ QUnit.module('Views', {
             arch: '<tree><field name="name"/></tree>',
         });
 
-        testUtils.intercept(list, "switch_view", function (event) {
-            assert.deepEqual(event.data, {
-                    'model': 'event',
-                    'res_id': '2-20170808020000',
-                    'view_type': 'form',
-                    'mode': 'readonly'
-                },
-                "should trigger switch to the form view for the record virtual id");
+        testUtils.intercept(list, 'switch_view', function (event) {
+            assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                mode: 'readonly',
+                model: 'event',
+                res_id: '2-20170808020000',
+                view_type: 'form',
+            }, "should trigger a switch_view event to the form view for the record virtual id");
         });
         list.$('td:contains(virtual)').click();
 
@@ -2092,7 +2091,7 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
-            mockRPC: function (route, args) {
+            mockRPC: function (route) {
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
@@ -2220,7 +2219,7 @@ QUnit.module('Views', {
                 print: [],
             },
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
         });
 

@@ -31,7 +31,6 @@ odoo.define('web.ControlPanelMixin', function (require) {
  *         },
  *         _updateControlPanel: function () {
  *             this.update_control_panel({
- *                 breadcrumbs: this.action_manager.get_breadcrumbs(),
  *                 cp_content: {
  *                    $buttons: this.$buttons,
  *                 },
@@ -51,7 +50,9 @@ var ControlPanelMixin = {
      * @param {Object} [options] see web.ControlPanel.update() for a description
      */
     update_control_panel: function(cp_status, options) {
-        this.cp_bus.trigger("update", cp_status || {}, options || {});
+        if (this.cp_bus) {
+            this.cp_bus.trigger("update", cp_status || {}, options || {});
+        }
     },
 };
 
@@ -88,7 +89,6 @@ var ControlPanel = Widget.extend({
     start: function() {
         // Exposed jQuery nodesets
         this.nodes = {
-            $breadcrumbs: this.$('.breadcrumb'),
             $buttons: this.$('.o_cp_buttons'),
             $pager: this.$('.o_cp_pager'),
             $searchview: this.$('.o_cp_searchview'),
@@ -106,10 +106,6 @@ var ControlPanel = Widget.extend({
         this._toggle_visibility(false);
 
         return this._super();
-    },
-    destroy: function() {
-        this._clear_breadcrumbs_handlers();
-        return this._super.apply(this, arguments);
     },
     /**
      * @return {Object} the Bus the ControlPanel is listening on
@@ -143,9 +139,7 @@ var ControlPanel = Widget.extend({
 
             // Render the breadcrumbs
             if (status.breadcrumbs) {
-                this._clear_breadcrumbs_handlers();
-                this.$breadcrumbs = this._render_breadcrumbs(status.breadcrumbs);
-                new_cp_content.$breadcrumbs = this.$breadcrumbs;
+                this.$('.breadcrumb').html(this._render_breadcrumbs(status.breadcrumbs));
             }
 
             // Detach control_panel old content and attach new elements
@@ -239,21 +233,10 @@ var ControlPanel = Widget.extend({
             .toggleClass('active', is_last);
         if (!is_last) {
             $bc.click(function () {
-                self.trigger("on_breadcrumb_click", bc.action, bc.index);
+                self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }
         return $bc;
-    },
-    /**
-     * Private function that removes event handlers attached on the currently
-     * displayed breadcrumbs.
-     */
-    _clear_breadcrumbs_handlers: function () {
-        if (this.$breadcrumbs) {
-            _.each(this.$breadcrumbs, function ($bc) {
-                $bc.off();
-            });
-        }
     },
     /**
      * Private function that updates the SearchView's visibility and extend the
