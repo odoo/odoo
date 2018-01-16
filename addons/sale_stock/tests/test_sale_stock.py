@@ -51,7 +51,7 @@ class TestSaleStock(TestSale):
         pick_2 = self.so.picking_ids[0]
         pick_2.force_assign()
         pick_2.pack_operation_product_ids.write({'qty_done': 1})
-        self.assertIsNone(pick_2.do_new_transfer(), 'Sale Stock: second picking should be final without need for a backorder')
+        self.assertTrue(pick_2.do_new_transfer(), 'Sale Stock: second picking should be final without need for a backorder')
         self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" after complete delivery')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
@@ -98,7 +98,7 @@ class TestSaleStock(TestSale):
         pick = self.so.picking_ids
         pick.force_assign()
         pick.pack_operation_product_ids.write({'qty_done': 2})
-        self.assertIsNone(pick.do_new_transfer(), 'Sale Stock: complete delivery should not need a backorder')
+        self.assertTrue(pick.do_new_transfer(), 'Sale Stock: complete delivery should not need a backorder')
         del_qties = [sol.qty_delivered for sol in self.so.order_line]
         del_qties_truth = [2.0 if sol.product_id.type in ['product', 'consu'] else 0.0 for sol in self.so.order_line]
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after partial delivery')
