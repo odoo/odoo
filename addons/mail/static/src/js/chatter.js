@@ -111,7 +111,7 @@ var ChatterComposer = composer.BasicComposer.extend({
             .done(function (suggested_recipients) {
                 var thread_recipients = suggested_recipients[self.context.default_res_id];
                 _.each(thread_recipients, function (recipient) {
-                    var parsed_email = utils.parse_email(recipient[1]);
+                    var parsed_email = recipient[1] && utils.parse_email(recipient[1]);
                     if (_.indexOf(email_addresses, parsed_email[1]) === -1) {
                         self.suggested_partners.push({
                             checked: true,
@@ -188,8 +188,8 @@ var ChatterComposer = composer.BasicComposer.extend({
                     context: {
                         force_email: true,
                         ref: "compound_context",
-                        default_name: parsed_email[0],
-                        default_email: parsed_email[1],
+                        default_name: parsed_email && parsed_email[0],
+                        default_email: parsed_email && parsed_email[1],
                     },
                     title: _t("Please complete partner's informations"),
                     disable_multiple_selection: true,
