@@ -134,8 +134,6 @@ ActionManager.include({
                     return self.do_action('report.client_action', client_action_options);
                 }
             });
-        } else {
-            return self._super(action, options);
         }
     }
 });
