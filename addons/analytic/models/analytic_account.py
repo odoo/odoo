@@ -27,6 +27,7 @@ class AccountAnalyticTag(models.Model):
     active = fields.Boolean(default=True, help="Set active to false to hide the Analytic Tag without removing it.")
     active_analytic_distribution = fields.Boolean('Analytic Distribution')
     analytic_distribution_ids = fields.One2many('account.analytic.distribution', 'tag_id', string="Analytic Accounts")
+    company_id = fields.Many2one('res.company', string='Company')
 
 class AccountAnalyticGroup(models.Model):
     _name = 'account.analytic.group'
@@ -41,6 +42,7 @@ class AccountAnalyticGroup(models.Model):
     parent_right = fields.Integer('Right Parent', index=True)
     children_ids = fields.One2many('account.analytic.group', 'parent_id', string="Childrens")
     complete_name = fields.Char('Complete Name', compute='_compute_complete_name', store=True)
+    company_id = fields.Many2one('res.company', string='Company')
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
