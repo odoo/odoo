@@ -153,7 +153,7 @@ class Message(models.Model):
         """ Remove all needactions of the current partner. If channel_ids is
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
-        if domain is None:
+        if not domain:
             query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
             args = [(partner_id,)]
             if channel_ids:
