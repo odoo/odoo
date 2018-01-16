@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 15:42+0000\n"
-"PO-Revision-Date: 2015-09-18 15:42+0000\n"
+"POT-Creation-Date: 2018-01-16 15:58+0000\n"
+"PO-Revision-Date: 2018-01-16 15:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,12 +16,251 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_ch
-#: model:ir.actions.client,name:l10n_ch.action_client_l10n_ch_menu
-msgid "Open Account Dashboard Menu"
+#: model:ir.model,name:l10n_ch.model_res_bank
+msgid "Bank"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_company_l10n_ch_isr_print_bank_location
+#: model:ir.model.fields,help:l10n_ch.field_res_config_settings_l10n_ch_isr_print_bank_location
+msgid "Boolean option field indicating whether or not the alternate layout (the one printing bank name and address) must be used when generating an ISR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_sent
+msgid "Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_valid
+msgid "Boolean value. True iff all the data required to generate the ISR are present"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_bank_l10n_ch_postal_chf
+msgid "CHF ISR reference"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.cash.rounding,name:l10n_ch.cash_rounding_5_centime
+msgid "Coinage 0.05"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_currency_name
+msgid "Currency"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_bank_l10n_ch_postal_eur
+msgid "EUR ISR reference"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_mail_template
+msgid "Email Templates"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.actions.report,name:l10n_ch.l10n_ch_isr_report
+msgid "ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.ui.view,arch_db:l10n_ch.l10n_ch_isr_report_template
+msgid "ISR for invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_number_spaced
+msgid "ISR number split in blocks of 5 characters (right-justified), to generate ISR report."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.ui.view,arch_db:l10n_ch.isr_invoice_search_view
+msgid "ISR reference number"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/mail_compose_message.py:23
+#, python-format
+msgid "ISR sent"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_number
+msgid "L10N Ch Isr Number"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_number_spaced
+msgid "L10N Ch Isr Number Spaced"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_optical_line
+msgid "L10N Ch Isr Optical Line"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_postal
+msgid "L10N Ch Isr Postal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_postal_formatted
+msgid "L10N Ch Isr Postal Formatted"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_sent
+msgid "L10N Ch Isr Sent"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_invoice_l10n_ch_isr_valid
+msgid "L10N Ch Isr Valid"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank_l10n_ch_postal
+msgid "L10N Ch Postal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_optical_line
+msgid "Optical reading line, as it will be printed on ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_postal_formatted
+msgid "Postal reference of the bank, formated with '-' and without the padding zeros, to generate ISR report."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.ui.view,arch_db:l10n_ch.isr_invoice_form
+msgid "Print ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company_l10n_ch_isr_print_bank_location
+msgid "Print bank location"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings_l10n_ch_isr_print_bank_location
+msgid "Print bank on ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid "Print the coordinates of your bank under the 'Payment for' title of the ISR.\n"
+"                                Your address will be moved to the 'in favour of' section."
 msgstr ""
 
 #. module: l10n_ch
 #: model:ir.ui.menu,name:l10n_ch.account_reports_ch_statements_menu
-msgid "Swiss Statements"
+msgid "Switzerland"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.group,name:l10n_ch.tax_group_tva_0
+msgid "TVA 0%"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.group,name:l10n_ch.tax_group_tva_25
+msgid "TVA 2.5%"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.group,name:l10n_ch.tax_group_tva_37
+msgid "TVA 3.7%"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.group,name:l10n_ch.tax_group_tva_38
+msgid "TVA 3.8%"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.group,name:l10n_ch.tax_group_tva_77
+msgid "TVA 7.7%"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.group,name:l10n_ch.tax_group_tva_8
+msgid "TVA 8%"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank_l10n_ch_postal
+msgid "The ISR number of the company within the bank"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_currency_name
+msgid "The name of this invoice's currency"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_postal
+msgid "The postal reference identifying the bank managing this ISR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_bank_l10n_ch_postal_chf
+msgid "The postal reference of the bank, used to generate ISR payment slips in CHF."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_bank_l10n_ch_postal_eur
+msgid "The postal reference of the bank, used to generate ISR payment slips in EUR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_invoice_l10n_ch_isr_number
+msgid "The reference number associated with this invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/account_invoice.py:154
+#, python-format
+msgid "You cannot generate an ISR yet.\n"
+"\n"
+"                                   For this, you need to :\n"
+"\n"
+"                                   - set a valid postal account number (or an IBAN referencing one) for your company\n"
+"\n"
+"                                   - define its bank\n"
+"\n"
+"                                   - associate this bank with a postal reference for the currency used in this invoice\n"
+"\n"
+"                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_config_settings
+msgid "res.config.settings"
 msgstr ""
 
