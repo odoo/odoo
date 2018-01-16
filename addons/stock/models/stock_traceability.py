@@ -29,11 +29,10 @@ class MrpStockReport(models.TransientModel):
                     lambda m: m.lot_id.id == move_line.lot_id.id)
             # if MTS
             else:
-                if move_line.location_id.usage == 'internal':
+                if move_line:
                     res |= self.env['stock.move.line'].search([
                         ('product_id', '=', move_line.product_id.id),
                         ('lot_id', '=', move_line.lot_id.id),
-                        ('location_dest_id', '=', move_line.location_id.id),
                         ('id', '!=', move_line.id),
                         ('date', '<', move_line.date),
                     ])
@@ -147,18 +146,6 @@ class MrpStockReport(models.TransientModel):
         return data
 
     @api.model
-    def get_traceability(self, level, line_id=False, model=False, model_obj=False):
-        final_vals = []
-        if model == 'stock.move.line':
-            moves = self.get_move_lines(model_obj)
-        for move in moves:
-            unfoldable = False
-            if move.consume_line_ids:
-                unfoldable = True
-            final_vals += self.make_dict_move(level, parent_id=line_id, move_line=move, unfoldable=unfoldable)
-        return final_vals
-
-    @api.model
     def final_vals_to_lines(self, final_vals, level):
         lines = []
         for data in final_vals:
@@ -196,12 +183,15 @@ class MrpStockReport(models.TransientModel):
         final_vals = []
         if model and line_id:
             move_line = self.env[model].browse(model_id)
-            move_lines, dummy = self._get_linked_move_lines(move_line)
+            move_lines, is_used = self._get_linked_move_lines(move_line)
             if move_lines:
                 final_vals += self.get_produced_or_consumed_vals(move_lines, level, model=model, parent_id=line_id)
             else:
-                final_vals += self.get_traceability(level, line_id=line_id, model=model, model_obj=move_line)
-                final_vals = self.make_dict_move(level, parent_id=line_id, move_line=move_line) + final_vals
+                lines = self.get_move_lines(move_line)
+                if is_used:
+                    move_line |= lines
+                for line in move_line:
+                    final_vals += self.make_dict_move(level, parent_id=line_id, move_line=line)
         else:
             for move_line in obj_ids:
                 unfoldable = bool(move_line.produce_line_ids or move_line.consume_line_ids)
