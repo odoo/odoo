@@ -720,6 +720,7 @@
     </template>
 
     <template id="wizard_checkout" name="Wizard Checkout">
+        <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
         <ul class="wizard pull-right">
             <li t-att-class="step==10 and 'text-primary' or 'text-muted'" id="step10">
                 <t t-if="step&gt;10 and step&lt;50">
