@@ -271,17 +271,13 @@ class Lang(models.Model):
 
     @classmethod
     def _check_setup_lang(cls, lang, fallback):
-        cr = cls.pool.cursor()
-
-        self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
-        if self.search_count([('code', '=', lang), ('active', '=', True)]) == 0:
-            if lang.lower() != fallback.lower() and self.search_count([('code', '=', fallback), ('active', '=', True)]) != 0:
-                lang = fallback
-            else:
-                lang = 'en_US'
-
-        cr.close()
-
+        with cls.pool.cursor() as cr:
+            self = api.Environment(cr, SUPERUSER_ID, {})[cls._name]
+            if self.search_count([('code', '=', lang), ('active', '=', True)]) == 0:
+                if lang.lower() != fallback.lower() and self.search_count([('code', '=', fallback), ('active', '=', True)]) != 0:
+                    lang = fallback
+                else:
+                    lang = 'en_US'
         return lang
 
 
