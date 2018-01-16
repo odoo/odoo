@@ -467,7 +467,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
     },
 
     /**
-     * create account_id, tax_id, analytic_account_id, label and amount field
+     * create account_id, tax_id, analytic_account_id, analytic_tag_ids, label and amount fields
      *
      * @private
      * @param {object} state - statement line
@@ -490,6 +490,10 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             relation: 'account.analytic.account',
             type: 'many2one',
             name: 'analytic_account_id',
+        }, {
+            relation: 'account.analytic.tag',
+            type: 'many2many',
+            name: 'analytic_tag_ids',
         }, {
             type: 'char',
             name: 'label',
@@ -516,6 +520,9 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.analytic_account_id = new relational_fields.FieldMany2One(self,
                 'analytic_account_id', record, {mode: 'edit'});
 
+            self.fields.analytic_tag_ids = new relational_fields.FieldMany2ManyTags(self,
+                'analytic_tag_ids', record, {mode: 'edit'});
+
             self.fields.label = new basic_fields.FieldChar(self,
                 'label', record, {mode: 'edit'});
 
@@ -528,6 +535,7 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
             self.fields.journal_id.appendTo($create.find('.create_journal_id .o_td_field'));
             self.fields.tax_id.appendTo($create.find('.create_tax_id .o_td_field'));
             self.fields.analytic_account_id.appendTo($create.find('.create_analytic_account_id .o_td_field'));
+            self.fields.analytic_tag_ids.appendTo($create.find('.create_analytic_tag_ids .o_td_field'));
             self.fields.label.appendTo($create.find('.create_label .o_td_field'))
                 .then(addRequiredStyle.bind(self, self.fields.label));
             self.fields.amount.appendTo($create.find('.create_amount .o_td_field'))
