@@ -3,7 +3,6 @@ odoo.define('mail.systray', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
-var framework = require('web.framework');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
@@ -175,6 +174,9 @@ var ActivityMenu = Widget.extend({
         return self._rpc({
             model: 'res.users',
             method: 'activity_user_count',
+            kwargs: {
+                context: session.user_context,
+            },
         }).then(function (data) {
             self.activities = data;
             self.activityCounter = _.reduce(data, function(total_count, p_data){ return total_count + p_data.total_count; }, 0);
