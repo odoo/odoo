@@ -17,6 +17,7 @@ class TestStockValuation(TransactionCase):
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',
+            'default_code': 'prda',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
         self.product2 = self.env['product.product'].create({
@@ -42,6 +43,11 @@ class TestStockValuation(TransactionCase):
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
             'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+        })
+        self.expense_account = Account.create({
+            'name': 'Expense Account',
+            'code': 'Expense Account',
+            'user_type_id': self.env.ref('account.data_account_type_expenses').id,
         })
         self.stock_journal = self.env['account.journal'].create({
             'name': 'Stock Journal',
@@ -75,6 +81,33 @@ class TestStockValuation(TransactionCase):
         return self.env['account.move.line'].search([
             ('account_id', '=', self.stock_valuation_account.id),
         ], order='date, id')
+
+    def test_realtime(self):
+        """ Stock moves update stock value with product x cost price,
+        price change updates the stock value based on current stock level.
+        """
+        # Enter 10 products while price is 5.0
+        self.product1.standard_price = 5.0
+        move1 = self.env['stock.move'].create({
+            'name': 'IN 10 units @ 10.00 per unit',
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product1.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 10.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+        move1.move_line_ids.qty_done = 10.0
+        move1._action_done()
+
+        # Set price to 6.0
+        self.product1.do_change_standard_price(6.0, self.expense_account.id)
+        stock_aml, price_change_aml = self._get_stock_valuation_move_lines()
+        self.assertEqual(stock_aml.debit, 50)
+        self.assertEqual(price_change_aml.debit, 10)
+        self.assertEqual(price_change_aml.ref, 'prda')
+        self.assertEqual(price_change_aml.product_id, self.product1)
 
     def test_fifo_perpetual_1(self):
         self.product1.product_tmpl_id.cost_method = 'fifo'
