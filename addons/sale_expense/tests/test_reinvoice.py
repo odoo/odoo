@@ -13,6 +13,13 @@ class TestReInvoice(TestExpenseCommon, TestCommonSaleNoChart):
 
         cls.setUpExpenseProducts()
 
+        # partner and SO
+        cls.partner_customer = cls.env['res.partner'].create({
+            'name': 'Ze Client',
+            'email': 'client@agrolait.com',
+            'property_account_payable_id': cls.account_payable.id,
+        })
+
         cls.sale_order = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
             'partner_id': cls.partner_customer_usd.id,
             'partner_invoice_id': cls.partner_customer_usd.id,
