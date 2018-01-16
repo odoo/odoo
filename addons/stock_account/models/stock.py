@@ -202,7 +202,6 @@ class StockMove(models.Model):
 
     @api.model
     def _run_fifo(self, move, quantity=None):
-        _logger.warn("TOURNICOTI") #TODO OCO
         move.ensure_one()
         # Find back incoming stock moves (called candidates here) to value this move.
         valued_move_lines = move.move_line_ids.filtered(lambda ml: ml.location_id._should_be_valued() and not ml.location_dest_id._should_be_valued() and not ml.owner_id)
@@ -458,7 +457,7 @@ class StockMove(models.Model):
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
+    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id): #TODO OCO c'est ici dedans qu'il va falloir bidouiller, je pense !
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -513,6 +512,7 @@ class StockMove(models.Model):
             'debit': -credit_value if credit_value < 0 else 0,
             'account_id': credit_account_id,
         }
+
         res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         if credit_value != debit_value:
             # for supplier returns of product in average costing method, in anglo saxon mode
@@ -534,6 +534,53 @@ class StockMove(models.Model):
                 'account_id': price_diff_account.id,
             }
             res.append((0, 0, price_diff_line))
+
+        #TODO OCO ce qui suit est ajouté => bouger ça dans une méthode, c'est moche comme ça :p
+        if self._is_out() and self.company_id.anglo_saxon_accounting and self._get_related_invoices():
+
+            product_accounts = self.product_id.product_tmpl_id._get_product_accounts()
+            interim_output_account = product_accounts['stock_output'] #TODO OCO, c'est aussi le debit_account_id. Je rajoute une condition, ou ... ? => un message d'erreur ??
+            interim_output_invoice_move_lines = self.env['account.move.line'].search([('move_id', 'in', self._get_related_invoices().mapped('move_id.id')), ('account_id', '=', interim_output_account.id)])
+            #TODO OCO en cas de factures multiples pour un même mouvement de stock, je pense que ça va foirer, il faut encore un peu affiner
+            #Pour corriger ça, pas trop le choix, on va devoir boucler je pense :/
+            # En triant les invoice lines des invoices qui nous intéressent par date croissante
+            # chaque fois, on regarde la quantité du produit qui correspond
+            # on considère aussi tous les moves précédents liés à la même SO ? (du coup, il faudra bouger dans les SO, je le crains)
+            # on commence réellement notre itération sur la facture à partir de laquelle, il reste des choses non-envoyées
+            # à partir de là, on va chaque fois ajouté à un compteur le montant correspondant à la quantité restant sur l'invoice, en décrémentant de cette quantité un compteur initialisé à celle de self
+            # Dès que ce compteur est à 0, on a dans notre accumulateur la valeur sur les invoices faites de notre mouvement de stock
+            # ATTENTION: s'il n'y a plus d'invoice à un moment donné (c'est possible, après tout)
+            interim_output_invoice_balance = sum(interim_output_invoice_move_lines.mapped('balance'))
+            difference_with_invoice = self.company_id.currency_id.round(debit_line_vals['debit'] + interim_output_invoice_balance) #balance = debit-credit, so we are doing + debit - credit
+
+            if not self.company_id.currency_id.is_zero(difference_with_invoice):
+                balancing_output_line_vals = {
+                    'name': _('Effective inventory valuation correction'),
+                    'product_id': self.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': self.product_id.uom_id.id,
+                    'ref': self.picking_id.name,
+                    'partner_id': partner_id,
+                    'credit': difference_with_invoice > 0 and difference_with_invoice or 0,
+                    'debit': difference_with_invoice < 0 and -difference_with_invoice or 0,
+                    'account_id': debit_account_id,
+                }
+
+                balancing_output_counterpart_line_vals = {
+                    'name': _('Effective inventory valuation correction'),
+                    'product_id': self.product_id.id,
+                    'quantity': qty,
+                    'product_uom_id': self.product_id.uom_id.id,
+                    'ref': self.picking_id.name,
+                    'partner_id': partner_id,
+                    'credit': difference_with_invoice < 0 and -difference_with_invoice or 0,
+                    'debit': difference_with_invoice > 0 and difference_with_invoice or 0,
+                    'account_id': product_accounts['expense'].id,
+                }
+
+                res.append((0, 0, balancing_output_line_vals))
+                res.append((0, 0, balancing_output_counterpart_line_vals))
+
         return res
 
     def _create_account_move_line(self, credit_account_id, debit_account_id, journal_id):
@@ -591,8 +638,8 @@ class StockMove(models.Model):
         if self.company_id.anglo_saxon_accounting:
             self.reconcile_valuation_with_invoices()
 
-    def _get_related_invoices(self): # To be overridden in purchase and sale
-        return self.env['account.invoice'] #TODO OCO overrider
+    def _get_related_invoices(self): # To be overridden in purchase and sale_stock
+        return self.env['account.invoice']
 
     def reconcile_valuation_with_invoices(self):
         self.ensure_one()
