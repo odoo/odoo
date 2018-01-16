@@ -94,7 +94,6 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
 
     _update_control_panel: function () {
         this.update_control_panel({
-            breadcrumbs: this.action_manager.get_breadcrumbs(),
             cp_content: {
                 $buttons: this.$buttons,
             },

@@ -164,7 +164,7 @@ QUnit.module('Views', {
             groupBy: ['bar'],
             intercepts: {
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -384,7 +384,7 @@ QUnit.module('Views', {
             groupBy: ['bar'],
             intercepts: {
                 env_updated: function (event) {
-                    assert.strictEqual(event.data.ids.length, nbRecords,
+                    assert.strictEqual(event.data.env.ids.length, nbRecords,
                         "should update the env with the records ids");
                 },
             }
@@ -666,7 +666,7 @@ QUnit.module('Views', {
             },
             intercepts: {
                 switch_view: function (event) {
-                    assert.deepEqual(event.data, {
+                    assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
                         mode: 'readonly',
                         model: 'partner',
                         res_id: 1,
@@ -733,7 +733,7 @@ QUnit.module('Views', {
             },
             intercepts: {
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -977,7 +977,7 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
             intercepts: {
                 env_updated: function (event) {
-                    assert.deepEqual(envIDs, event.data.ids,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -1659,7 +1659,7 @@ QUnit.module('Views', {
             },
             intercepts: {
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -1823,7 +1823,7 @@ QUnit.module('Views', {
             },
             intercepts:{
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },

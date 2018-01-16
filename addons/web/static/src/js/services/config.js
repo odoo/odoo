@@ -10,14 +10,19 @@ odoo.define('web.config', function (require) {
  * this file someday.
  */
 
+var debugParam = $.deparam($.param.querystring()).debug;
+var debug = false;
+if (debugParam !== undefined) {
+    debug = debugParam === 'assets' ? 'assets' : true;
+}
+
 var config = {
     /**
-     * debug is a boolean flag.  It is only considered true if the flag is set
-     * in the url
+     * debug can be either a boolean, or the special value 'assets'
      *
-     * @type Boolean
+     * @type boolean|string
      */
-    debug: ($.deparam($.param.querystring()).debug !== undefined),
+    debug: debug,
     device: {
         /**
          * touch is a boolean, true if the device supports touch interaction

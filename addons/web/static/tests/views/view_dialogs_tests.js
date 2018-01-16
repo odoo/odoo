@@ -51,7 +51,7 @@ QUnit.module('Views', {
         });
 
         testUtils.intercept(parent, 'env_updated', function () {
-            throw new Error("The environment should not be propagated to the view manager");
+            throw new Error("The environment should not be propagated to the action manager");
         });
 
 

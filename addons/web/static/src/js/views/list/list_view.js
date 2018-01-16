@@ -30,7 +30,7 @@ var ListView = BasicView.extend({
      *
      * @param {Object} viewInfo
      * @param {Object} params
-     * @param {boolean} params.sidebar
+     * @param {boolean} params.hasSidebar
      * @param {boolean} [params.hasSelectors=true]
      */
     init: function (viewInfo, params) {
@@ -40,7 +40,7 @@ var ListView = BasicView.extend({
         var mode = arch.attrs.editable && !params.readonly ? "edit" : "readonly";
 
         this.controllerParams.editable = arch.attrs.editable;
-        this.controllerParams.hasSidebar = params.sidebar;
+        this.controllerParams.hasSidebar = params.hasSidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.noLeaf = !!this.loadParams.context.group_by_no_leaf;
         this.controllerParams.mode = mode;

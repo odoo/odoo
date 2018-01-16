@@ -155,14 +155,9 @@
                 overflow: auto;
                 position: relative;
 
-                .o_view_manager_content {
+                > .o_view_controller {
                     .o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
                     height: 100%;
-
-                    .o_view_manager_content {
-                        position: static;  // Reset position for nested view managers
-                        height: auto;  // reset height inheritance for nested view managers
-                    }
                 }
             }
         }

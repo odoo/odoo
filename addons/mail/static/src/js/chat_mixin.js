@@ -46,7 +46,7 @@ var ChatMixin = {
             options: options,
             callback: function(messages) { result = messages;}
         });
-        return result ? result : $.when();
+        return result ? result : $.when([]);
     },
     _joinChannel: function(channel_id) {
         var result;

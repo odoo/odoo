@@ -177,8 +177,6 @@
     </div>
 </form>
 
-<div t-name="ActionManager" class="o_content"/>
-
 <t t-name="ControlPanel">
     <div class="o_control_panel">
         <ol class="breadcrumb"/>
@@ -201,9 +199,9 @@
     </div>
 </t>
 
-<t t-name="ViewManager.switch-buttons">
+<t t-name="ControlPanel.SwitchButtons">
     <t t-foreach="views" t-as="view">
-        <button type="button" t-att-accesskey="view.accesskey"
+        <button type="button" t-att-accesskey="view.accessKey"
             t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
             t-att-aria-label="view.type"
             t-att-data-view-type="view.type" t-att-title="view.label"/>
@@ -259,14 +257,14 @@
         <li class="divider"/>
         <t t-if="view.type === 'form'">
             <li><a href="#" data-action="set_defaults">Set Defaults</a></li>
-            <t t-if="view.controller.getSelectedIds().length === 1">
+            <t t-if="controller.getSelectedIds().length === 1">
                 <li><a href="#" data-action="get_metadata">View Metadata</a></li>
             </t>
         </t>
         <li><a href="#" data-action="fvg">Fields View Get</a></li>
         <t t-if="can_edit">
             <li>
-              <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">
+              <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id">
                 <t t-if="view.type == 'form'">Edit Form view</t>
                 <t t-elif="view.type == 'list'">Edit List view</t>
                 <t t-elif="view.type == 'kanban'">Edit Kanban view</t>
@@ -277,7 +275,7 @@
                 <t t-else="1">Edit view, type: <t t-esc="_.str.capitalize(view.type)"/></t>
               </a>
             </li>
-            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.fields_view.view_id">Edit Search view</a></li>
+            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id">Edit SearchView</a></li>
         </t>
     </t>
 </t>
