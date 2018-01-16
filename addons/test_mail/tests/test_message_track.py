@@ -40,7 +40,7 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         self.assertEqual(self.record.message_ids, self.env['mail.message'])
 
     def test_message_track_no_subtype(self):
-        """ Update some tracked fields not linked to some subtype -> message with onchange + always tracked values """
+        """ Update some tracked fields not linked to some subtype -> message with onchange """
         customer = self.env['res.partner'].create({'name': 'Customer', 'email': 'cust@example.com'})
         self.record.write({
             'name': 'Test2',
@@ -59,12 +59,11 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         # verify tracked value
         self.assertTracking(
             self.record.message_ids,
-            [('email_from', 'char', False, False),  # always tracked field
-             ('customer_id', 'many2one', False, customer)  # onchange tracked field
+            [('customer_id', 'many2one', False, customer)  # onchange tracked field
              ])
 
     def test_message_track_subtype(self):
-        """ Update some tracked fields linked to some subtype -> message with onchange + always tracked values """
+        """ Update some tracked fields linked to some subtype -> message with onchange """
         self.record.message_subscribe(
             partner_ids=[self.user_admin.partner_id.id],
             subtype_ids=[self.env.ref('test_mail.st_mail_test_full_umbrella_upd').id]
@@ -87,12 +86,11 @@ class TestTracking(common.BaseFunctionalTest, common.MockEmails):
         # verify tracked value
         self.assertTracking(
             self.record.message_ids,
-            [('email_from', 'char', False, 'noone@example.com'),  # always tracked field
-             ('umbrella_id', 'many2one', False, umbrella)  # onchange tracked field
+            [('umbrella_id', 'many2one', False, umbrella)  # onchange tracked field
              ])
 
     def test_message_track_template(self):
-        """ Update some tracked fields linked to some template -> message with onchange + always tracked values """
+        """ Update some tracked fields linked to some template -> message with onchange """
         self.record.write({'mail_template': self.env.ref('test_mail.mail_test_full_tracking_tpl').id})
         self.assertEqual(self.record.message_ids, self.env['mail.message'])
 
