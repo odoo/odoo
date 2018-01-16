@@ -28,9 +28,9 @@
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form">
                 <header>
-                    <button name="submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit"/>
+                    <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,reported,done"/>
-                    <button name="view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
+                    <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box">
@@ -739,7 +739,7 @@
             <field name="state">code</field>
             <field name="code">
 if records:
-    action = records.submit_expenses()
+    action = records.action_submit_expenses()
             </field>
         </record>
 
