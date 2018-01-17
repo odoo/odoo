@@ -48,6 +48,32 @@ class TestMailFeatures(TestMail):
         self.assertEqual(na_emp1_new, na_emp1_base + 1)
         self.assertEqual(na_emp2_new, na_emp2_base)
 
+    @mute_logger('openerp.addons.mail.models.mail_mail')
+    def test_mark_all_as_read(self):
+        portal_partner = self.user_portal.partner_id.sudo(self.user_portal.id)
+
+        # mark all as read clear needactions
+        self.group_pigs.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[portal_partner.id])
+        portal_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        na_count = portal_partner.get_needaction_count()
+        self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
+
+        # mark all as read also clear inaccessible needactions
+        new_msg = self.group_pigs.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[portal_partner.id])
+        needaction_accessible = len(portal_partner.env['mail.message'].search([['needaction', '=', True]]))
+        self.assertEqual(needaction_accessible, 1, "a new message to a partner is readable to that partner")
+
+        new_msg.sudo().partner_ids = self.env['res.partner']
+        needaction_length = len(portal_partner.env['mail.message'].search([['needaction', '=', True]]))
+        self.assertEqual(needaction_length, 0, "removing access of a message make it not readable")
+
+        na_count = portal_partner.get_needaction_count()
+        self.assertEqual(na_count, 1, "message not accessible is currently still counted")
+
+        portal_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        na_count = portal_partner.get_needaction_count()
+        self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
+
 
 class TestMessagePost(TestMail):
 
