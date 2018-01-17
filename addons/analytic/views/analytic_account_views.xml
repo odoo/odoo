@@ -24,6 +24,7 @@
                         <group>
                             <field name="name"/>
                             <field name="active_analytic_distribution" groups="analytic.group_analytic_accounting"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <field name="analytic_distribution_ids" nolabel="1" widget="one2many_list"
                             attrs="{'invisible': [('active_analytic_distribution', '=', False)]}" groups="analytic.group_analytic_accounting">
@@ -61,6 +62,7 @@
                         </group>
                         <group>
                             <field name="description"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </sheet>
                 </form>
