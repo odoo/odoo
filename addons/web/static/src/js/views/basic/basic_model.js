@@ -3092,16 +3092,13 @@ var BasicModel = AbstractModel.extend({
             id: {type: 'integer'},
         }, params.fields);
 
-        // datapoint context is extended by fields widgets
-        var context = _.extend({}, params.context);
-
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: context,
+            context: params.context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],
