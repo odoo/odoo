@@ -838,7 +838,7 @@
                     <header style="min-height:31px;">
                         <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
                         <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
-                        <span><field name="stage_id" widget="statusbar" clickable="True"/></span>
+                        <span><field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/></span>
                     </header>
                     <sheet>
                         <field name="total" invisible="1"/>
