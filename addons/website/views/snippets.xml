@@ -221,7 +221,7 @@
 </template>
 
 <template id="s_well" name="Well">
-    <div class="well s_well pt32 pb32">
+    <div class="well s_well_default s_well_md">
         <p>Explain the benefits you offer. Don't write about products or services here, write about solutions.</p>
     </div>
 </template>
@@ -917,7 +917,7 @@
         data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]"/>
 
     <div data-js="sizing_y"
-        data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr, .well">
+        data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
     </div>
 
     <div data-js="sizing_x"
@@ -935,18 +935,19 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-expand"/>Size</a>
             <ul class="dropdown-menu">
-                <li data-select-class="well-sm"><a href="#">Small</a></li>
-                <li data-select-class="well-md"><a href="#">Medium</a></li>
-                <li data-select-class="well-lg"><a href="#">Large</a></li>
+                <li data-select-class="s_well_sm"><a href="#">Small</a></li>
+                <li data-select-class="s_well_md"><a href="#">Medium</a></li>
+                <li data-select-class="s_well_lg"><a href="#">Large</a></li>
             </ul>
         </li>
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-paint-brush"/>Style</a>
             <ul class="dropdown-menu">
-                <li data-select-class="s_well"><a href="#">Default</a></li>
                 <li data-select-class="s_well_outline"><a href="#">Outline</a></li>
                 <li data-select-class="s_well_shadow"><a href="#">Shadow</a></li>
                 <li data-select-class="s_well_flat"><a href="#">Flat</a></li>
+                <li class="divider"/>
+                <li data-select-class="s_well_default"><a href="#">Default</a></li>
             </ul>
         </li>
     </div>
