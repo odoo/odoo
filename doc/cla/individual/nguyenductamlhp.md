@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-nguyenductamlhp odo@odoo.com https://github.com/nguyenductamlhp
+Nguyen Duc Tam nguyenductamlhp@gmail.com https://github.com/nguyenductamlhp
