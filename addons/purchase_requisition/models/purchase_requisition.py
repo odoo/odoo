@@ -452,3 +452,15 @@ class ProcurementRule(models.Model):
                 ('requisition_id', '=', values['supplier'].purchase_requisition_id.id),
             )
         return domain
+
+
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+
+    requisition_line_ids = fields.One2many('purchase.requisition.line', 'move_dest_id')
+
+    def _get_upstream_documents_and_responsibles(self):
+        if self.requisition_line_ids:
+            return [(requisition_line.requisition_id, requisition_line.requisition_id.user_id) for requisition_line in self.requisition_line_ids if requisition_line.state not in ('done', 'cancel')]
+        else:
+            return super(StockMove, self)._get_upstream_documents_and_responsibles()
