@@ -2374,7 +2374,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
-                    var def = self._readUngroupedList(list).then(function (list) {
+                    var def = self._readUngroupedList(list).then(function () {
                         return $.when(
                             self._fetchX2ManysBatched(list),
                             self._fetchReferencesBatched(list)
@@ -2403,6 +2403,7 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
         list = this._applyX2ManyOperations(list);
+        this._sortList(list);
         var x2mRecords = [];
 
         // step 1: collect ids
