@@ -36,13 +36,13 @@ class AccountMove(models.Model):
                _('An error occured when computing the inalterability. Impossible to get the unique previous posted journal entry.'))
 
         #build and return the hash
-        return self._compute_hash(prev_move.l10n_fr_hash if prev_move else '')
+        return self._compute_hash(prev_move.l10n_fr_hash if prev_move else u'')
 
     def _compute_hash(self, previous_hash):
         """ Computes the hash of the browse_record given as self, based on the hash
         of the previous record in the company's securisation sequence given as parameter"""
         self.ensure_one()
-        hash_string = sha256(previous_hash + self.l10n_fr_string_to_hash)
+        hash_string = sha256((previous_hash + self.l10n_fr_string_to_hash).encode('utf-8'))
         return hash_string.hexdigest()
 
     def _compute_string_to_hash(self):
@@ -63,7 +63,7 @@ class AccountMove(models.Model):
                     values[k] = _getattrstring(line, field)
             #make the json serialization canonical
             #  (https://tools.ietf.org/html/draft-staykov-hu-json-canonical-form-00)
-            move.l10n_fr_string_to_hash = dumps(values, sort_keys=True, encoding="utf-8",
+            move.l10n_fr_string_to_hash = dumps(values, sort_keys=True,
                                                 ensure_ascii=True, indent=None,
                                                 separators=(',',':'))
 
@@ -118,7 +118,7 @@ class AccountMove(models.Model):
 
         if not moves:
             raise UserError(_('There isn\'t any journal entry flagged for data inalterability yet for the company %s. This mechanism only runs for journal entries generated after the installation of the module France - Certification CGI 286 I-3 bis.') % self.env.user.company_id.name)
-        previous_hash = ''
+        previous_hash = u''
         start_move_info = []
         for move in moves:
             if move.l10n_fr_hash != move._compute_hash(previous_hash=previous_hash):
