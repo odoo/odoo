@@ -10,7 +10,7 @@
                 <t t-set="domainClass" t-value="'o_stock_reports_domain_line_1'"/>
             </t>
             <t t-set="column" t-value="0" />
-            <tr t-att-data-type="a['type']" t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-data-lot_id="a['lot_id']" t-att-class="trclass">
+            <tr t-att-data-type="a['type']" t-att-data-unfold="a['unfoldable']" t-att-data-parent_id="a['parent_id']" t-att-data-id="a['id']" t-att-data-model_id="a['model_id']" t-att-data-model="a['model']" t-att-data-lot_name="a['lot_name']" t-att-data-lot_id="a['lot_id']" t-att-class="trclass">
                 <t t-set="tdclass" t-value="''" />
                 <t t-set="spanclass" t-value="''" />
                 <t t-set="span_color" t-value="'color: #666666;'"/>
@@ -36,8 +36,8 @@
                                 <a t-att-data-active-id="a['res_id']" t-att-data-res-model="a['res_model']" class="o_stock_reports_web_action"><t t-raw="c" /></a>
                             </span>
                         </t>
-                        <t t-elif="a['lot_id'] == c and env.context.get('model') == 'stock.picking'">
-                            <span t-att-class="spanclass">
+                        <t t-elif="a['lot_name'] == c">
+                            <span>
                                 <a class="o_stock_report_lot_action"><t t-raw="c"/></a>
                             </span>
                         </t>
