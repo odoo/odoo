@@ -45,5 +45,5 @@ class QWeb(orm.AbstractModel):
         compress = request and not request.debug and getattr(request, 'website', None) and request.website.compress_html
         if compress and element.getparent().tag not in self.PRESERVE_WHITESPACE:
             # No need to recurse because those tags children are not html5 parser friendly
-            tail = self.re_remove_spaces.sub(' ', tail.rstrip())
+            tail = self.re_remove_spaces.sub(' ', tail)
         return super(QWeb, self).render_tail(tail, element, qwebcontext)
