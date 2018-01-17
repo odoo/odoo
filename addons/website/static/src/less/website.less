@@ -671,6 +671,41 @@ div.carousel {
 }
 
 
+// "Panel" Snippet
+
+.s_panel {
+    margin-bottom: 0;
+    .panel-body {
+        color: initial;
+        p, ul, ol {
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.o-create-panel-variant-classes(@name, @color, @complementary: contrast(@color, @text-color, #FFF, 60%)) {
+    .panel-@{name} {
+        .panel-variant(@color; @complementary; @color; @color);
+    }
+}
+
+.o-create-panel-variant-classes(alpha, @color-alpha);
+.o-create-panel-variant-classes(beta, @color-beta);
+.o-create-panel-variant-classes(gamma, @color-gamma);
+.o-create-panel-variant-classes(delta, @color-delta);
+.o-create-panel-variant-classes(epsilon, @color-epsilon);
+
+.o-create-panel-variant-classes(~'black', @gray-base);
+.o-create-panel-variant-classes(~'gray-darker', @gray-darker);
+.o-create-panel-variant-classes(~'gray-dark', @gray-dark);
+.o-create-panel-variant-classes(~'gray', @gray);
+.o-create-panel-variant-classes(~'gray-light', @gray-light);
+.o-create-panel-variant-classes(~'gray-lighter', @gray-lighter);
+.o-create-panel-variant-classes(~'white', @gray-white);
+
+
 #wrapwrap .o_header_affix {
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;

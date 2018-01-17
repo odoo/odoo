@@ -227,15 +227,12 @@
 </template>
 
 <template id="s_panel" name="Panel">
-    <div class="panel panel-default o_panel s_panel">
+    <div class="panel panel-default s_panel pt32 pb32">
         <div class="panel-heading ">
             <h3 class="panel-title">Feature Title</h3>
         </div>
         <div class="panel-body">
-            <p>
-                Panels are a great tool to compare offers or to emphasize on
-                key features. To compare products, use the inside columns.
-            </p>
+            <p>Panels are a great tool to compare offers or to emphasize on key features. To compare products, use the inside columns.</p>
         </div>
     </div>
 </template>
@@ -839,6 +836,19 @@
             </ul>
         </li>
     </div>
+
+    <div data-js="colorpicker" 
+        data-color-prefix="panel-" 
+        data-selector=".s_panel.panel"
+        data-palette-exclude="transparent_grayscale"
+        data-palette-title="Panel Color">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>    
 
     <div data-selector=".s_title" data-target="h1, h2, h3, h4, h5, h6">
         <li class="divider"></li>
