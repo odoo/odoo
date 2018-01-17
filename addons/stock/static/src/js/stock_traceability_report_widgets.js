@@ -34,13 +34,12 @@ var ReportWidget = Widget.extend({
     },
     actionOpenLot: function(e) {
         var $el = $(e.target).parents('tr');
-        var lot_id = $el.data('lot_id');
         this.do_action({
             type: 'ir.actions.client',
             tag: 'stock_report_generic',
-            name: $el.data('lot_id'),
+            name: $el.data('lot_name'),
             context: {
-                active_id : lot_id,
+                active_id : $el.data('lot_id'),
                 active_model : 'stock.production.lot',
                 url: '/stock/output_format/stock/active_id'
             },
@@ -49,7 +48,6 @@ var ReportWidget = Widget.extend({
     updownStream: function(e) {
         var $el = $(e.target).parents('tr');
         var string = "Traceability Report";
-        console.log($el.data('lot_id'));
         this.do_action({
             type: "ir.actions.client",
             tag: 'stock_report_generic',
@@ -58,7 +56,7 @@ var ReportWidget = Widget.extend({
                 active_id : $el.data('model_id'),
                 active_model : $el.data('model'),
                 auto_unfold: true,
-                lot_id: $el.data('lot_id') !== undefined && $el.data('lot_id').toString(),
+                lot_name: $el.data('lot_name') !== undefined && $el.data('lot_name').toString(),
                 url: '/stock/output_format/stock/active_id'
             },
         });
@@ -89,7 +87,7 @@ var ReportWidget = Widget.extend({
         $(e.target).parents('tr').find('span.o_stock_reports_foldable').replaceWith(QWeb.render("unfoldable", {lineId: active_id}));
         $(e.target).parents('tr').toggleClass('o_stock_reports_unfolded');
     },
-    autounfold: function(target, lot_id) {
+    autounfold: function(target, lot_name) {
         var self = this;
         var $CurretElement;
         $CurretElement = $(target).parents('tr').find('td.o_stock_reports_unfoldable');
@@ -112,8 +110,8 @@ var ReportWidget = Widget.extend({
                 _.each(lines, function (line) { // Render each line
                     $cursor.after(QWeb.render("report_mrp_line", {l: line}));
                     $cursor = $cursor.next();
-                    if ($cursor && line.unfoldable && line.lot_id == lot_id) {
-                        self.autounfold($cursor.find(".fa-caret-right"), lot_id);
+                    if ($cursor && line.unfoldable && line.lot_name == lot_name) {
+                        self.autounfold($cursor.find(".fa-caret-right"), lot_name);
                     }
                 });
             });
