@@ -149,7 +149,7 @@ class Message(models.Model):
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
         delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
-        if domain is None and delete_mode:
+        if not domain and delete_mode:
             query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
             args = [(partner_id,)]
             if channel_ids:
