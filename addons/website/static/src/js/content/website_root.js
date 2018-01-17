@@ -43,8 +43,16 @@ var WebsiteRoot = BodyManager.extend({
     }),
     custom_events: _.extend({}, BodyManager.prototype.custom_events || {}, {
         animation_start_demand: '_onAnimationStartDemand',
+        ready_to_clean_for_save: '_onAnimationStopDemand',
     }),
 
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.animations = [];
+    },
     /**
      * @override
      */
@@ -108,6 +116,7 @@ var WebsiteRoot = BodyManager.extend({
      * registry has been instantiated outside of the class and is simply
      * returned here.
      *
+     * @private
      * @override
      */
     _getRegistry: function () {
@@ -118,6 +127,7 @@ var WebsiteRoot = BodyManager.extend({
      * `selector` key of one of the registered animations
      * (@see Animation.selector).
      *
+     * @private
      * @param {boolean} [editableMode=false] - true if the page is in edition mode
      * @param {jQuery} [$from]
      *        only initialize the animations whose `selector` matches the
@@ -138,15 +148,29 @@ var WebsiteRoot = BodyManager.extend({
                 var $snippet = $(el);
                 var animation = $snippet.data('snippet-view');
                 if (animation) {
+                    self.animations = _.without(self.animations, animation);
                     animation.destroy();
                 }
                 animation = new Animation(self, editableMode);
+                self.animations.push(animation);
                 $snippet.data('snippet-view', animation);
                 return animation.attachTo($snippet);
             });
             return $.when.apply($, defs);
         });
         return $.when.apply($, defs);
+    },
+    /**
+     * Destroys all animation instances. Especially needed before saving while
+     * in edition mode for example.
+     *
+     * @private
+     */
+    _stopAnimations: function () {
+        _.each(this.animations, function (animation) {
+            animation.destroy();
+        });
+        this.animations = [];
     },
 
     //--------------------------------------------------------------------------
@@ -164,6 +188,15 @@ var WebsiteRoot = BodyManager.extend({
         this._startAnimations(ev.data.editableMode, ev.data.$target)
             .done(ev.data.onSuccess)
             .fail(ev.data.onFailure);
+    },
+    /**
+     * Called when the root is notified that the animations have to be
+     * stopped.
+     *
+     * @private
+     */
+    _onAnimationStopDemand: function () {
+        this._stopAnimations();
     },
     /**
      * @todo review

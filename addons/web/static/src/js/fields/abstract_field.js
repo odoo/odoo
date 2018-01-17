@@ -45,11 +45,6 @@ var AbstractField = Widget.extend({
     },
 
     /**
-     * fields can extend the context, e.g. binary fields add {bin_size: true}
-     */
-    context: null,
-
-    /**
     * An object representing fields to be fetched by the model eventhough not present in the view
     * This object contains "field name" as key and an object as value.
     * That value object must contain the key "type"

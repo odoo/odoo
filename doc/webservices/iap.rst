@@ -82,8 +82,9 @@ Overview
     The Credits
 
     Every service provided through the In-App platform can be used by the
-    clients with tokens or *credits*. The monetary value of a credit depends
-    on the service and is decided by the provider. This could be:
+    clients with tokens or *credits*. The credits are an integer unit and
+    their monetary value depends on the service and is decided by the
+    provider. This could be:
 
     * for an sms service: 1 credit = 1 sms,
     * for an add service: 1 credit = 1 add,
@@ -210,13 +211,19 @@ The credit packages are essentially a product with 4 characteristics.
 * Credits: the amount of credits the client is entitled to when buying the package,
 * Price: the price in *EUROS* for the time being (USD support is planned).
 
-.. image:: images/package.png
-    :align: center
-
 .. note:: 
     
+    Odoo takes a 25% commission on all package sales. Adjust your selling price accordingly.
+
+
+.. note::
+
     Depending on the strategy, the price per credit can vary from one
     package to another.
+
+
+.. image:: images/package.png
+    :align: center
 
 .. _iap-odoo-app:
 
@@ -427,10 +434,12 @@ Capture
 
     :param TransactionToken token:
     :param ServiceKey key:
+    :param int credit_to_capture: (new - 15 Jan 2018) optional parameter to capture a smaller amount of credits than authorized
     :raises: :class:`~odoo.exceptions.AccessError`
 
 .. code-block:: python
-
+  :emphasize-lines: 8
+   
     r2 = requests.post(ODOO + '/iap/1/capture', json={
         'jsonrpc': '2.0',
         'id': None,
@@ -438,6 +447,7 @@ Capture
         'params': {
             'token': tx,
             'key': SERVICE_KEY,
+            'credit_to_capture': credit or False,
         }
     }).json()
     if 'error' in r:
@@ -575,9 +585,9 @@ Charging
         credits = int(MAXIMUM_POWER * factor)
         with charge(request.env, SERVICE_KEY, user_account, credits) as transaction:
             # TODO: allow other targets
-            transaction.credit = credits * 0.85 
+            transaction.credit = max(credits, 2)
             # Sales ongoing one the energy price,
-            # only 85% of the price will be charged/captured.
+            # a maximum of 2 credits will be charged/captured.
             self.env['systems.planets'].search([
                 ('grid', '=', 'M-10'),
                 ('name', '=', 'Alderaan'),
