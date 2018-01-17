@@ -56,9 +56,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         so_line_ordered_global_project.product_id_change()
         sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_ordered_global_project.id)])
+        project_serv1 = self.env['project.project'].search([('sale_line_id', '=', so_line_ordered_project_only.id)])
 
         self.assertEqual(sale_order.tasks_count, 1, "One task should have been created on SO confirmation")
-        self.assertTrue(sale_order.project_ids, "A project should have been created by the SO, when confirmed.")
+        self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one from SO line 2 'task in global project'")
+        self.assertEqual(sale_order.analytic_account_id, project_serv1.analytic_account_id, "The created project should be linked to the analytic account of the SO")
 
         # create invoice
         sale_order.action_invoice_create()
@@ -102,7 +104,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         })
         self.assertEqual(sale_order.invoice_status, 'upselling', 'Sale Timesheet: "invoice on order" timesheets should not modify the invoice_status of the so')
 
-        # add so line with produdct "create task in new project". (project will be the one from SO)
+        # add so line with produdct "create task in new project".
         so_line_ordered_task_new_project = self.env['sale.order.line'].create({
             'name': self.product_order_timesheet3.name,
             'product_id': self.product_order_timesheet3.id,
@@ -111,17 +113,16 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_order_timesheet3.list_price,
             'order_id': sale_order.id,
         })
-        task_serv3 = self.env['project.task'].search([('sale_line_id', '=', so_line_ordered_task_new_project.id)])
-        project_serv2 = self.env['project.project'].search([('sale_line_id', '=', so_line_ordered_project_only.id)])
+
         self.assertEqual(sale_order.invoice_status, 'to invoice', 'Sale Timesheet: Adding a new service line (so line) should put the SO in "to invocie" state.')
         self.assertEqual(sale_order.tasks_count, 2, "Two tasks (1 per SO line) should have been created on SO confirmation")
+        self.assertEqual(len(sale_order.project_ids), 2, "No new project should have been created by the SO, when selling 'new task in new project' product, since it reuse the one from 'project only'.")
 
         # create invoice
         invoice_id = sale_order.action_invoice_create()
         invoice = self.env['account.invoice'].browse(invoice_id)
         self.assertEqual(len(sale_order.invoice_ids), 2, "A second invoice should have been created from the SO")
         self.assertTrue(float_is_zero(invoice.amount_total - so_line_ordered_task_new_project.price_unit * 3, precision_digits=2), 'Sale: invoice generation on timesheets product is wrong')
-        self.assertEqual(project_serv2, task_serv3.project_id, "When creating task in new project, the task should be in SO project (if already exists), otherwise it created one.")
 
     def test_timesheet_delivery(self):
         """ Test timesheet invoicing with 'invoice on delivery' timetracked products
@@ -160,22 +161,24 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
 
         # confirm SO
         sale_order.action_confirm()
-        task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
-        task_serv3 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
-        project_serv3 = self.env['project.project'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
+        task_serv1 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_global_project.id)])
+        task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
+        project_serv2 = self.env['project.project'].search([('sale_line_id', '=', so_line_deliver_task_project.id)])
 
-        self.assertEqual(task_serv2.project_id, self.project_global, "Sale Timesheet: task should be created in global project")
-        self.assertTrue(task_serv2, "Sale Timesheet: on SO confirmation, a task should have been created in global project")
-        self.assertTrue(task_serv3, "Sale Timesheet: on SO confirmation, a task should have been created in a new project")
+        self.assertEqual(task_serv1.project_id, self.project_global, "Sale Timesheet: task should be created in global project")
+        self.assertTrue(task_serv1, "Sale Timesheet: on SO confirmation, a task should have been created in global project")
+        self.assertTrue(task_serv2, "Sale Timesheet: on SO confirmation, a task should have been created in a new project")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: "invoice on delivery" should not need to be invoiced on so confirmation')
-        self.assertEqual(sale_order.analytic_account_id, task_serv3.project_id.analytic_account_id, "SO should have create a project")
+        self.assertEqual(sale_order.analytic_account_id, task_serv2.project_id.analytic_account_id, "SO should have create a project")
         self.assertEqual(sale_order.tasks_count, 2, "Two tasks (1 per SO line) should have been created on SO confirmation")
+        self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one from SO line 1 'task in global project'")
+        self.assertEqual(sale_order.analytic_account_id, project_serv2.analytic_account_id, "The created project should be linked to the analytic account of the SO")
 
         # let's log some timesheets
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': task_serv2.project_id.id,  # global project
-            'task_id': task_serv2.id,
+            'project_id': task_serv1.project_id.id,  # global project
+            'task_id': task_serv1.id,
             'unit_amount': 10.5,
             'employee_id': self.employee_manager.id,
         })
@@ -191,8 +194,8 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         # log some timesheets again
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': task_serv2.project_id.id,  # global project
-            'task_id': task_serv2.id,
+            'project_id': task_serv1.project_id.id,  # global project
+            'task_id': task_serv1.id,
             'unit_amount': 39.5,
             'employee_id': self.employee_user.id,
         })
@@ -214,12 +217,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'price_unit': self.product_delivery_timesheet4.list_price,
             'order_id': sale_order.id,
         })
-        self.assertEqual(project_serv3, task_serv3.project_id, "SO should not have create a second project, since so line 3 already create one project for the SO")
+        self.assertEqual(len(sale_order.project_ids), 2, "No new project should have been created by the SO, when selling 'project only' product, since it reuse the one from 'new task in new project'.")
 
         # let's log some timesheets on the project
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
-            'project_id': project_serv3.id,  # global project
+            'project_id': project_serv2.id,  # global project
             'unit_amount': 7,
             'employee_id': self.employee_user.id,
         })
@@ -258,6 +261,10 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         self.assertTrue(sale_order.project_ids, "Sales Order should have create a project")
         self.assertEqual(sale_order.invoice_status, 'no', 'Sale Timesheet: manually product should not need to be invoiced on so confirmation')
 
+        project_serv2 = so_line_manual_only_project.project_id
+        self.assertTrue(project_serv2, "A second project is created when selling 'project only' after SO confirmation.")
+        self.assertEqual(sale_order.analytic_account_id, project_serv2.analytic_account_id, "The created project should be linked to the analytic account of the SO")
+
         # let's log some timesheets (on task and project)
         timesheet1 = self.env['account.analytic.line'].create({
             'name': 'Test Line',
@@ -274,6 +281,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'employee_id': self.employee_manager.id,
         })
 
+        self.assertEqual(len(sale_order.project_ids), 2, "One project should have been created by the SO, when confirmed + the one coming from SO line 1 'task in global project'.")
         self.assertEqual(so_line_manual_global_project.task_id.sale_line_id, so_line_manual_global_project, "Task from a milestone product should be linked to its SO line too")
         self.assertEqual(timesheet1.timesheet_invoice_type, 'billable_fixed', "Milestone timesheet goes in billable fixed category")
         self.assertTrue(float_is_zero(so_line_manual_global_project.qty_delivered, precision_digits=2), "Milestone Timesheeting should not incremented the delivered quantity on the SO line")
