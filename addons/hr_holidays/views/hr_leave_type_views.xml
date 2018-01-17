@@ -128,4 +128,12 @@
         <field name="search_view_id" ref="view_hr_holidays_status_search"/>
     </record>
 
+    <menuitem
+        id="menu_hr_holidays_configuration"
+        name="Configuration"
+        parent="menu_hr_holidays_root"
+        sequence="100"
+        groups="hr_holidays.group_hr_holidays_manager"
+        action="open_view_holiday_status"/>
+
 </odoo>
