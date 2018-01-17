@@ -662,6 +662,43 @@ div.carousel {
 .o-create-panel-variant-classes(~'white', @gray-white);
 
 
+// "HR" Snippet
+
+.s_hr {
+
+    line-height: 0;
+
+    hr {
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        border-top-color: inherit;
+        margin: 0;
+    }
+
+    // Width
+    .s_hr_small { width: 25%;  }
+    .s_hr_half  { width: 50%;  }
+    .s_hr_full  { width: 100%; }
+
+    // Style
+    .s_hr_dashed { border-top-style: dashed; }
+    .s_hr_double { border-top-style: double; }
+    .s_hr_dotted { border-top-style: dotted; }
+    .s_hr_solid  { border-top-style: solid;  }
+
+    // Thickness
+    .s_hr_thickness(5);
+    .s_hr_thickness(@n, @i:1px) when (@i =< @n) {
+        .s_hr_@{i} {
+            border-top-width: (@i * 1);
+        }
+        .s_hr_thickness(@n, (@i + 1));
+    }
+
+}
+
+
 #wrapwrap .o_header_affix {
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;

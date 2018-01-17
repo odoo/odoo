@@ -241,6 +241,12 @@
     <a href="#" class="btn btn-primary">Read more</a>
 </template>
 
+<template id="s_hr" name="Separator">
+    <section class="s_hr pt32 pb32">
+        <hr class="s_hr_1px s_hr_solid s_hr_full"/>
+    </section>
+</template>
+
 <template id="s_share" name="Share">
     <div class="oe_share s_share">
         <h3>
@@ -704,6 +710,7 @@
                     <t t-snippet="website.s_btn" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
                     <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
+                    <t t-snippet="website.s_hr" t-thumbnail="/website/static/src/img/blocks/block_hr.png"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
                     <t t-snippet="website.s_facebook_page" t-thumbnail="/website/static/src/img/blocks/facebook_page.png"/>
                 </div>
@@ -838,6 +845,37 @@
         </li>
     </div>    
 
+    <div data-selector=".s_hr" data-target="hr">
+        <li class="divider"></li>
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-minus"/>Thickness</a>
+            <ul class="dropdown-menu">
+                <t t-foreach="range(1,6)" t-as="s_hr_thickness">
+                    <li t-attf-data-select-class="s_hr_{{s_hr_thickness}}px">
+                        <a href="#"><t t-esc="s_hr_thickness"/>px</a>
+                    </li>
+                </t>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-pencil"/>Style</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_hr_solid"><a href="#">Solid</a></li>
+                <li data-select-class="s_hr_dashed"><a href="#">Dashed</a></li>
+                <li data-select-class="s_hr_dotted"><a href="#">Dotted</a></li>
+                <li data-select-class="s_hr_double"><a href="#">Double</a></li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-arrows-h"/>Width</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_hr_small"><a href="#">Small</a></li>
+                <li data-select-class="s_hr_half"><a href="#">Half</a></li>
+                <li data-select-class="s_hr_full"><a href="#">Full</a></li>
+            </ul>
+        </li>
+    </div>
+
     <div data-selector=".s_title" data-target="h1, h2, h3, h4, h5, h6">
         <li class="divider"></li>
         <li class="dropdown-submenu">
@@ -914,8 +952,8 @@
     </div>
 
     <div data-js='content'
-        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .btn"
-        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share, .btn"
+        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .btn, .s_hr"
+        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share, .btn, .s_hr"
         data-drop-in=".content">
     </div>
 
@@ -938,11 +976,6 @@
                 <li data-select-class="s_well_default"><a href="#">Default</a></li>
             </ul>
         </li>
-    </div>
-
-    <div data-js='separator'
-        data-selector="hr"
-        data-drop-in=".oe_structure, [data-oe-type=html]">
     </div>
 
     <div data-js="parallax" data-selector=".parallax">
