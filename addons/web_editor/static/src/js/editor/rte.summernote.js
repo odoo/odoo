@@ -236,6 +236,7 @@ eventHandler.modules.popover.button.update = function ($container, oStyle) {
 
             $container.find('button[data-event="imageShape"][data-value="fa-spin"]').toggleClass("active", $(oStyle.image).hasClass("fa-spin"));
             $container.find('button[data-event="imageShape"][data-value="shadow"]').toggleClass("active", $(oStyle.image).hasClass("shadow"));
+            $container.find('.btn-group:has(button[data-event="imageShape"])').removeClass("hidden");
 
         } else {
 
