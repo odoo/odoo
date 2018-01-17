@@ -183,11 +183,20 @@ table.table_desc tr td {
     color: #666;
 }
 .s_comparisons {
-    .panel small {
-        color: inherit;
+    .panel {
+        margin-bottom: 0;
+        text-align: center;
     }
-    .text-muted {
-        color: @text-muted;
+    .panel-heading {
+        .bg-black-25;
+    }
+    .panel-body {
+        .s_comparisons_currency,
+        .s_comparisons_price,
+        .s_comparisons_decimal {
+            display: inline-block;
+            vertical-align: middle;
+        }
     }
 }
 
