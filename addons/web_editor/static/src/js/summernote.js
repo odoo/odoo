@@ -917,6 +917,10 @@ range.WrappedRange.prototype.isOnImg = function () {
     return nb === 1 && image;
 };
 range.WrappedRange.prototype.deleteContents = function (towrite) {
+    if (this.sc === this.ec && this.so === this.eo) {
+        return this;
+    }
+
     var prevBP = dom.removeBetween(this.sc, this.so, this.ec, this.eo, towrite);
 
     $(dom.node(prevBP.sc)).trigger("click"); // trigger click to disable and reanable editor and image handler
