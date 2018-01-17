@@ -84,7 +84,7 @@ class TestTimesheetHolidays(TestTimesheet):
             'number_of_days_temp': number_of_days,
         })
         holiday.sudo().action_validate()
-        self.assertEquals(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day)')
+        self.assertEquals(len(holiday.timesheet_ids), number_of_days, 'Number of generated timesheets should be the same as the leave duration (1 per day between %s and %s)' % (fields.Datetime.to_string(self.leave_start_datetime), fields.Datetime.to_string(self.leave_end_datetime)))
 
         # manager refuse the leave
         holiday.sudo().action_refuse()
