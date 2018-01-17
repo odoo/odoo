@@ -567,6 +567,74 @@ div.carousel {
     }
 }
 
+
+// "Button" Snippet
+
+.btn {
+    padding: 12px 36px;
+    &.btn-lg { .button-size(18px; 48px; @font-size-large;     @line-height-large; @btn-border-radius-large); }
+    &.btn-sm { .button-size(8px;  24px; @font-size-small;     @line-height-small; @btn-border-radius-small); }
+    &.btn-xs { .button-size(4px;  12px; @font-size-small - 2; @line-height-small; @btn-border-radius-small); }
+    &.s_btn_3d {
+        border: 0;
+        .button-3d-color(@color) {
+            #gradient > .vertical(lighten(@color, 10%), @color, 0%, 100%);
+            box-shadow: 0 6px 0 darken(@color, 15%), 0px 3px 15px rgba(0,0,0,.25), inset 0px 1px 0px rgba(255,255,255,.25), inset 0px 0px 3px rgba(255,255,255,.5);
+            &:hover,
+            &:focus {
+                background: @color;  
+            }
+        };
+        &.btn-default { .button-3d-color(@gray-lighter); }
+        &.btn-primary { .button-3d-color(@brand-primary); }
+        &.btn-info    { .button-3d-color(@brand-info); }
+        &.btn-success { .button-3d-color(@brand-success); }
+        &.btn-warning { .button-3d-color(@brand-warning); }
+        &.btn-danger  { .button-3d-color(@brand-danger); }
+        &.btn-alpha   { .button-3d-color(@color-alpha); }
+        &.btn-beta    { .button-3d-color(@color-beta); }
+        &.btn-gamma   { .button-3d-color(@color-gamma); }
+        &.btn-delta   { .button-3d-color(@color-delta); }
+        &.btn-epsilon { .button-3d-color(@color-epsilon); }
+    }
+    &.s_btn_outline,
+    &.s_btn_rounded_outline {
+        border-width: 2px;
+        .button-bordered-color(@color;) {
+            .button-variant(@color; transparent; @color);
+            &:hover,
+            &:focus {
+                background-color: @color;
+                border-color: @color;
+                color: contrast(@color);
+                .box-shadow(none);
+            }
+        }
+        &.btn-default { .button-bordered-color(@gray); }
+        &.btn-primary { .button-bordered-color(@brand-primary); }
+        &.btn-info    { .button-bordered-color(@brand-info); }
+        &.btn-success { .button-bordered-color(@brand-success); }
+        &.btn-warning { .button-bordered-color(@brand-warning); }
+        &.btn-danger  { .button-bordered-color(@brand-danger); }
+        &.btn-alpha   { .button-bordered-color(@color-alpha); }
+        &.btn-beta    { .button-bordered-color(@color-beta); }
+        &.btn-gamma   { .button-bordered-color(@color-gamma); }
+        &.btn-delta   { .button-bordered-color(@color-delta); }
+        &.btn-epsilon { .button-bordered-color(@color-epsilon); }
+    }
+    &.s_btn_flat {
+        border: 0;
+        border-radius: 0;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+    &.s_btn_rounded,
+    &.s_btn_rounded_outline {
+        border-radius: 30px;
+    }
+}
+
+
 #wrapwrap .o_header_affix {
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;

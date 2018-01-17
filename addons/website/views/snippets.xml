@@ -243,6 +243,10 @@
     </div>
 </template>
 
+<template id="s_btn" name="Button">
+    <a href="#" class="btn btn-primary">Read more</a>
+</template>
+
 <template id="s_image_floating" name="Image Floating">
     <div class="o_image_floating o_margin_l pull-right s_image_floating">
         <div class="o_container">
@@ -714,6 +718,7 @@
                     <i class="fa fa-indent"/> Inner content
                 </div>
                 <div class="o_panel_body">
+                    <t t-snippet="website.s_btn" t-thumbnail="/website/static/src/img/blocks/block_button.png"/>
                     <t t-snippet="website.s_well" t-thumbnail="/website/static/src/img/blocks/block_well.png"/>
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
                     <t t-snippet="website.s_image_floating" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
@@ -914,8 +919,8 @@
     </div>
 
     <div data-js='content'
-        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .o_image_floating"
-        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share"
+        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .btn, .o_image_floating"
+        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share, .btn"
         data-drop-in=".content">
     </div>
 
