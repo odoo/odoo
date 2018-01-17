@@ -414,7 +414,13 @@ var LineRenderer = Widget.extend(FieldManagerMixin, {
                 this._renderCreate(state);
             }
             var data = this.model.get(this.handleCreateRecord).data;
+
             this.model.notifyChanges(this.handleCreateRecord, state.createForm);
+            this.model.notifyChanges(this.handleCreateRecord, {analytic_tag_ids: {operation: 'REPLACE_WITH', ids: []}});
+            _.each(state.createForm.analytic_tag_ids, function (tag) {
+                self.model.notifyChanges(self.handleCreateRecord, {analytic_tag_ids: {operation: 'ADD_M2M', ids: tag}});
+            });
+
             var record = this.model.get(this.handleCreateRecord);
             _.each(this.fields, function (field, fieldName) {
                 if (self._avoidFieldUpdate[fieldName]) return;
