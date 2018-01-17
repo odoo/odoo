@@ -635,6 +635,42 @@ div.carousel {
 }
 
 
+// "Well" Snippet
+
+.s_well {
+    .clearfix;
+    padding: 20px;
+    margin-bottom: 0;
+    p, ul, ol {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    &.well-sm {
+        padding: 10px;
+        font-size: @font-size-small;
+    }
+    &.well-lg {
+        padding: 30px;
+        font-size: @font-size-large;
+    }
+    &.s_well_border {
+        background-color: transparent;
+        border-color: @text-color;
+        .box-shadow(none);
+    }
+    &.s_well_shadow {
+        border: 0;
+        .box-shadow(0 1px 1px rgba(0,0,0,0.2));
+    }
+    &.s_well_flat {
+        border: 0;
+        border-radius: 0;
+        .box-shadow(none);
+    }
+}
+
+
 #wrapwrap .o_header_affix {
     .o-position-absolute(0, 0, auto, 0);
     position: fixed;

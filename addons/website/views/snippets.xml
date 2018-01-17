@@ -221,11 +221,8 @@
 </template>
 
 <template id="s_well" name="Well">
-    <div class="well s_well clearfix">
-        <p>
-            Explain the benefits you offer. Don't write about products or
-            services here, write about solutions.
-        </p>
+    <div class="well s_well pt32 pb32">
+        <p>Explain the benefits you offer. Don't write about products or services here, write about solutions.</p>
     </div>
 </template>
 
@@ -910,7 +907,7 @@
         data-drop-in=":not(p).oe_structure, :not(p)[data-oe-type=html]"/>
 
     <div data-js="sizing_y"
-        data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr">
+        data-selector="section, .row:not(.s_no_resize_cols) > [class*='col-md-'], :not(.o_gallery > .container) > .carousel, .parallax, hr, .well">
     </div>
 
     <div data-js="sizing_x"
@@ -922,6 +919,26 @@
         data-selector="blockquote, .well, .s_panel, .o_facebook_page, .oe_share, .btn, .o_image_floating"
         data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .oe_share, .btn"
         data-drop-in=".content">
+    </div>
+
+    <div data-selector=".well">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-expand"/>Size</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="well-sm"><a href="#">Small</a></li>
+                <li data-select-class="well-md"><a href="#">Medium</a></li>
+                <li data-select-class="well-lg"><a href="#">Large</a></li>
+            </ul>
+        </li>
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-paint-brush"/>Style</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_well"><a href="#">Default</a></li>
+                <li data-select-class="s_well_outline"><a href="#">Outline</a></li>
+                <li data-select-class="s_well_shadow"><a href="#">Shadow</a></li>
+                <li data-select-class="s_well_flat"><a href="#">Flat</a></li>
+            </ul>
+        </li>
     </div>
 
     <div data-js='separator'
