@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
 <template id="s_cover" name="Cover">
-    <section class="s_text_block_image_fw oe_img_bg oe_custom_bg pt64 pb64" style="background-image: url(/web/image/website.s_cover_default_image); background-position: 50% 100%">
+    <section class="s_text_block_image_fw parallax oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_cover_default_image');" data-scroll-background-ratio="1">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 bg-black-25 pt32 pb32">
-                    <h2 style="font-size:62px">Headline</h2>
-                    <h4>With a great subtitle</h4>
-                    <p>Write one or two paragraphs describing your product, services or a specific feature. To be successful your content needs to be useful to your readers.</p>
+                <div class="col-md-12 text-center s_padding_default">
+                    <h1 style="font-size: 62px;">Catchy Headline</h1>
+                    <h2 class="lead">Click to customize this text.</h2>
+                    <p class="pb16">Write one or two paragraphs describing your <b>product</b>, <b>services</b> or a <b>specific feature</b>.<br/> To be successful your content needs to be useful to your readers.</p>
+                    <a href="/page/aboutus" class="btn btn-primary">About us</a>
+                    <a href="/page/contactus" class="btn btn-alpha ml8">Contact us</a>
                 </div>
             </div>
         </div>
@@ -823,7 +826,7 @@
     </div>
 
     <div data-js="colorpicker"
-        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_text_block [class*='col-md-'], .s_three_columns [class*='col-md-'], .s_comparisons .panel"
+        data-selector="section, :not(.o_gallery > .container) > .carousel, .s_text_block_image_fw [class*='col-md-'], .s_text_block [class*='col-md-'], .s_three_columns [class*='col-md-'], .s_comparisons .panel"
         data-exclude=".parallax">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
@@ -907,7 +910,7 @@
         </li>
     </div>
 
-    <div data-selector=".s_text_block [class*='col-md-'], .s_three_columns [class*='col-md-']">
+    <div data-selector=".s_text_block_image_fw [class*='col-md-'], .s_text_block [class*='col-md-'], .s_three_columns [class*='col-md-']">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-arrows-alt"/>Spacing</a>
             <ul class="dropdown-menu">
