@@ -37,6 +37,45 @@ class TestMailFeatures(TestMail):
 
     @mute_logger('openerp.addons.mail.models.mail_mail')
     def test_mark_all_as_read(self):
+        emp_partner = self.user_employee.partner_id.sudo(self.user_employee.id)
+
+        group_private = self.env['mail.channel'].with_context({
+            'mail_create_nolog': True,
+            'mail_create_nosubscribe': True,
+            'mail_channel_noautofollow': True,
+        }).create({
+            'name': 'Private',
+            'description': 'Private James R.',
+            'public': 'private',
+            'alias_name': 'private',
+            'alias_contact': 'followers'}
+        ).with_context({'mail_create_nosubscribe': False})
+
+        # mark all as read clear needactions
+        group_private.message_post(body='Test', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        emp_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        na_count = emp_partner.get_needaction_count()
+        self.assertEqual(na_count, 0, "mark all as read should conclude all needactions")
+
+        # mark all as read also clear inaccessible needactions
+        new_msg = group_private.message_post(body='Zest', message_type='comment', subtype='mail.mt_comment', partner_ids=[emp_partner.id])
+        needaction_accessible = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
+        self.assertEqual(needaction_accessible, 1, "a new message to a partner is readable to that partner")
+
+        new_msg.sudo().partner_ids = self.env['res.partner']
+        emp_partner.env['mail.message'].search([['needaction', '=', True]])
+        needaction_length = len(emp_partner.env['mail.message'].search([['needaction', '=', True]]))
+        self.assertEqual(needaction_length, 1, "message should still be readable when notified")
+
+        na_count = emp_partner.get_needaction_count()
+        self.assertEqual(na_count, 1, "message not accessible is currently still counted")
+
+        emp_partner.env['mail.message'].mark_all_as_read(channel_ids=[], domain=[])
+        na_count = emp_partner.get_needaction_count()
+        self.assertEqual(na_count, 0, "mark all read should conclude all needactions even inacessible ones")
+
+    @mute_logger('openerp.addons.mail.models.mail_mail')
+    def test_mark_all_as_read_share(self):
         portal_partner = self.user_portal.partner_id.sudo(self.user_portal.id)
 
         # mark all as read clear needactions
@@ -52,7 +91,7 @@ class TestMailFeatures(TestMail):
 
         new_msg.sudo().partner_ids = self.env['res.partner']
         needaction_length = len(portal_partner.env['mail.message'].search([['needaction', '=', True]]))
-        self.assertEqual(needaction_length, 0, "removing access of a message make it not readable")
+        self.assertEqual(needaction_length, 1, "message should still be readable when notified")
 
         na_count = portal_partner.get_needaction_count()
         self.assertEqual(na_count, 1, "message not accessible is currently still counted")
