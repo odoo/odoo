@@ -19,6 +19,7 @@ QUnit.module('Views', {
                     product_id: {string: "Product", type: "many2one", relation: 'product', store: true},
                     non_stored_m2o: {string: "Non Stored M2O", type: "many2one", relation: 'product'},
                     customer: {string: "Customer", type: "many2one", relation: 'customer', store: true},
+                    computed_field: {string: "Computed and not stored", compute:true},
                 },
                 records: [
                     {
@@ -28,6 +29,7 @@ QUnit.module('Views', {
                         date: '2016-12-14',
                         product_id: 37,
                         customer: 1,
+                        computed_field: 19,
                     }, {
                         id: 2,
                         foo: 1,
@@ -35,6 +37,7 @@ QUnit.module('Views', {
                         date: '2016-10-26',
                         product_id: 41,
                         customer: 2,
+                        computed_field: 23,
                     }, {
                         id: 3,
                         foo: 17,
@@ -42,12 +45,14 @@ QUnit.module('Views', {
                         date: '2016-12-15',
                         product_id: 41,
                         customer: 2,
+                        computed_field: 26,
                     }, {id: 4,
                         foo: 2,
                         bar: false,
                         date: '2016-04-11',
                         product_id: 41,
                         customer: 1,
+                        computed_field: 19,
                     },
                 ]
             },
@@ -118,6 +123,23 @@ QUnit.module('Views', {
 
         // this is important for export functionality.
         assert.strictEqual(pivot.title, _t("Untitled"), "should have a valid title");
+        pivot.destroy();
+    });
+
+    QUnit.test('pivot view add computed fields explicitly defined as measure', function (assert) {
+        assert.expect(1);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="computed_field" type="measure"/>' +
+                '</pivot>',
+        });
+
+        // this is important for export functionality.
+        assert.equal(pivot.measures.computed_field.name,'computed_field', "measures contains the field 'computed_field'");
         pivot.destroy();
     });
 
