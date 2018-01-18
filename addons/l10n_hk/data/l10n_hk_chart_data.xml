@@ -6,7 +6,7 @@
         <field name="name">Fixed Assets</field>
         <field name="code">11</field>
         <field name="reconcile" eval="False" />
-        <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_1110" model="account.account.template">
@@ -55,21 +55,21 @@
         <field name="name">Utility &amp; Rental Deposit</field>
         <field name="code">1241</field>
         <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_receivable" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_1242" model="account.account.template">
-        <field name="name">Prepayments</field>
+        <field name="name">Supplier Prepayments</field>
         <field name="code">1242</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_receivable" />
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_1245" model="account.account.template">
         <field name="name">Sundry Deposits</field>
         <field name="code">1245</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_receivable" />
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_1246" model="account.account.template">
@@ -117,8 +117,8 @@
     <record id="l10n_hk_2210" model="account.account.template">
         <field name="name">Accruals</field>
         <field name="code">2210</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_payable" />
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_2211" model="account.account.template">
@@ -129,24 +129,24 @@
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_2212" model="account.account.template">
-        <field name="name">Receipt in Advance</field>
+        <field name="name">Receipt in Advance (Customer Prepayments)</field>
         <field name="code">2212</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_payable" />
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_2214" model="account.account.template">
         <field name="name">Provision for Taxation</field>
         <field name="code">2214</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_payable" />
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_2215" model="account.account.template">
         <field name="name">Proposed Dividend</field>
         <field name="code">2215</field>
-        <field name="reconcile" eval="True" />
-        <field name="user_type_id" ref="account.data_account_type_payable" />
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
         <field name="chart_template_id" ref="l10n_hk_chart_template" />
     </record>
     <record id="l10n_hk_2216" model="account.account.template">
