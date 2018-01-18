@@ -50,7 +50,7 @@ from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
 from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
-                   Collector, LastOrderedSet, OrderedSet, pycompat
+                   Collector, LastOrderedSet, OrderedSet, pycompat, groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
@@ -2978,6 +2978,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         inverse_vals = {}
         inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
         unknown_names = []
+        inverse_fields = []
         protected_fields = []
         for key, val in vals.items():
             if key in bad_names:
@@ -2992,7 +2993,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 inherited_vals[field.related_field.model_name][key] = val
             elif field.inverse:
                 inverse_vals[key] = val
-                protected_fields.append(field)
+                inverse_fields.append(field)
+                protected_fields.extend(self._field_computed.get(field, [field]))
 
         if unknown_names:
             _logger.warning("%s.write() with unknown fields: %s",
@@ -3021,8 +3023,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 self.modified(set(inverse_vals) - set(store_vals))
                 for record in self:
                     record._cache.update(record._convert_to_cache(inverse_vals, update=True))
-                for key in inverse_vals:
-                    self._fields[key].determine_inverse(self)
+
+                # in case several fields use the same inverse method, call it once
+                for fields in groupby(attrgetter('inverse'), inverse_fields):
+                    fields[0].determine_inverse(self)
+
                 self.modified(set(inverse_vals) - set(store_vals))
 
                 # check Python constraints for inversed fields
@@ -3174,6 +3179,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         inverse_vals = {}
         inherited_vals = defaultdict(dict)      # {modelname: {fieldname: value}}
         unknown_names = []
+        inverse_fields = []
         protected_fields = []
         for key, val in vals.items():
             if key in bad_names:
@@ -3188,7 +3194,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 inherited_vals[field.related_field.model_name][key] = val
             elif field.inverse:
                 inverse_vals[key] = val
-                protected_fields.append(field)
+                inverse_fields.append(field)
+                protected_fields.extend(self._field_computed.get(field, [field]))
 
         if unknown_names:
             _logger.warning("%s.create() with unknown fields: %s",
@@ -3209,8 +3216,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         with self.env.protecting(protected_fields, record):
             # put the values of inverse fields in cache, and inverse them
             record._cache.update(record._convert_to_cache(inverse_vals))
-            for key in inverse_vals:
-                self._fields[key].determine_inverse(record)
+
+            # in case several fields use the same inverse method, call it once
+            for fields in groupby(attrgetter('inverse'), inverse_fields):
+                fields[0].determine_inverse(record)
+
             record.modified(set(inverse_vals) - set(store_vals))
 
             # check Python constraints for inversed fields
@@ -3302,10 +3312,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             # check Python constraints
             self._validate_fields(vals)
-
-            # recompute fields
-            if self.env.recompute and self._context.get('recompute', True):
-                self.recompute()
 
         self.check_access_rule('create')
 

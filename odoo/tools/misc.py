@@ -1062,6 +1062,13 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
 
+def groupby(key, elems):
+    """ Return a partition of ``elems`` based on ``key(elem)``. """
+    groups = defaultdict(list)
+    for elem in elems:
+        groups[key(elem)].append(elem)
+    return groups.values()
+
 def unique(it):
     """ "Uniquifier" for the provided iterable: will output each element of
     the iterable once.
