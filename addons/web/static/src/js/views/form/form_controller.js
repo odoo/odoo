@@ -106,7 +106,8 @@ var FormController = BasicController.extend({
      * @todo convert to new style
      */
     on_attach_callback: function () {
-        this.renderer.setTabindexWidgets();
+        var state = this.model.get(this.handle);
+        this.renderer.setTabindexWidgets(state);
         this.autofocus();
     },
     /**
@@ -571,8 +572,9 @@ var FormController = BasicController.extend({
         event.stopPropagation();
         if (this.mode !== 'readonly' && this.$buttons && this.$buttons.find('.o_form_button_save').length) {
             return this.$buttons.find('.o_form_button_save').focus();
-        } else if (this.mode === 'readonly' && this.$buttons && this.$buttons.find('.o_form_button_edit')) {
-            return this.$buttons.find('.o_form_button_edit').focus();
+        } else if (this.mode === 'readonly' && this.$buttons && (this.$buttons.find('.o_form_button_create') || this.$buttons.find('.o_form_button_edit'))) {
+            var $button = this.$buttons.find('.o_form_button_create') || this.$buttons.find('.o_form_button_edit');
+            return $button.focus();
         } else {
             return this.renderer.focusFirstButton();
         }

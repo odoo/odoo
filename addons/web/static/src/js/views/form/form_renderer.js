@@ -226,14 +226,11 @@ var FormRenderer = BasicRenderer.extend({
      * which can be navigated through TAB key, this tabindexWidgets will also contain header buttons,
      * when user press TAB key then we will pick widget from this list instead of allFieldWidgets list.
      */
-    setTabindexWidgets: function () {
+    setTabindexWidgets: function (state) {
         var self = this;
-        this.tabindexWidgets[this.state.id] = [];
-        _.each(this.tabindexFieldWidgets[this.state.id], function (widget) {
-            self.tabindexWidgets[self.state.id].push(widget);
-        });
-        _.each(this.tabindexButtons[this.state.id], function (widget) {
-            self.tabindexWidgets[self.state.id].push(widget);
+        this._super.apply(this, arguments);
+        _.each(this.tabindexButtons[state.id], function (widget) {
+            self.tabindexWidgets[state.id].push(widget);
         });
     },
     /**
@@ -855,7 +852,7 @@ var FormRenderer = BasicRenderer.extend({
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
-            self.setTabindexWidgets();
+            self.setTabindexWidgets(self.state);
         }, function () {
             $form.remove();
         });

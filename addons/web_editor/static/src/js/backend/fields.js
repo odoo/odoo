@@ -49,10 +49,13 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         }
         // on IE an error may occur when creating range on not displayed element
         try {
-            return this.$textarea.focusInEnd();
+            this.$textarea.focusInEnd();
         } catch (e) {
-            return this.$textarea.focus();
+            this.$textarea.focus();
         } finally {
+            if (this.$content.is(":focus")) { //Strange but we need to do it to set autofocus on this
+                this.$content.trigger('blur');
+            }
             this.$content.trigger('mouseup');
         }
         return true;
@@ -74,6 +77,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             this._isDirty = true;
         }
         this._super.apply(this, arguments);
+    },
+    getFocusableElement: function () {
+        return this.$textarea.is(":visible") ? this.$textarea : (this.$content || $());
     },
     /**
      * @override

@@ -133,6 +133,13 @@ var BasicRenderer = AbstractRenderer.extend({
             dom.setSelectionRange(field.getFocusableElement().get(0), {start: offset, end: offset});
         }
     },
+    setTabindexWidgets: function (state) {
+        var self = this;
+        this.tabindexWidgets[state.id] = [];
+        _.each(this.tabindexFieldWidgets[state.id], function (widget) {
+            self.tabindexWidgets[state.id].push(widget);
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -534,7 +541,7 @@ var BasicRenderer = AbstractRenderer.extend({
         this.allFieldWidgets[record.id].push(widget);
 
         // Note: Can be moved to _render method in then callback to find tabindex widgets from allFieldWidgets
-        if (widget.tabindex !== -1 && !widget.noTabindex) {
+        if (node.attrs.tabindex !== '-1' && !widget.noTabindex) {
             this.tabindexFieldWidgets[record.id].push(widget);
         }
 

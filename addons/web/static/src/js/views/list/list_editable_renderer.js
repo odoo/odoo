@@ -350,7 +350,9 @@ ListRenderer.include({
         // Toggle selected class here so that style is applied at the end
         $row.toggleClass('o_selected_row', editMode);
 
-        return $.when.apply($, defs);
+        return $.when.apply($, defs).then(function() {
+            self.setTabindexWidgets(record);
+        });
     },
     /**
      * This method is called whenever we click/move outside of a row that was
@@ -654,6 +656,7 @@ ListRenderer.include({
         var self = this;
         return this._selectRow(rowIndex).then(function () {
             var record = self.state.data[rowIndex];
+            // TODO: MSH: We should consider tabindexWidgets here
             if (!record || fieldIndex >= (self.allFieldWidgets[record.id] || []).length) {
                 return $.Deferred().reject();
             }
