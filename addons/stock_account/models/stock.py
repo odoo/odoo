@@ -457,7 +457,7 @@ class StockMove(models.Model):
         journal_id = accounts_data['stock_journal'].id
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id): #TODO OCO c'est ici dedans qu'il va falloir bidouiller, je pense !
+    def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -596,7 +596,9 @@ class StockMove(models.Model):
             self.reconcile_valuation_with_invoices()
 
     def _get_related_invoices(self): # To be overridden in purchase and sale_stock
-        #TODO OCO DOC not in ('draft', 'cancel')
+        """ This method is overrided in both purchase and sale_stock modules to adapt
+        to the way they mix stock moves with invoices.
+        """
         return self.env['account.invoice']
 
     def reconcile_valuation_with_invoices(self):

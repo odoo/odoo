@@ -19,42 +19,6 @@ class AccountInvoice(models.Model):
 
         return rslt
 
-    def finalize_invoice_move_lines(self, move_lines):
-        rslt = super(AccountInvoice, self).finalize_invoice_move_lines(move_lines)
-
-        #TODO OCO si j'ai raison et que tout vient bien d'un bug dans stock_account, à priori, il ne faudra pas tout ceci.
-        if self.type == 'out_invoice':
-            products_valuation_map = {}
-            for generated_line_tuple in rslt:
-                generated_line = generated_line_tuple[2]
-                line_product = generated_line['product_id'] and self.env['product.product'].browse(generated_line['product_id']) or False
-
-                if not line_product:
-                    continue
-
-                interim_output_account = line_product.product_tmpl_id._get_product_accounts()['stock_output']
-
-                if generated_line['account_id'] == interim_output_account.id:
-                    line_qty = generated_line['quantity']
-                    line_balance = generated_line['debit'] or -generated_line['credit']
-
-                    line_data = products_valuation_map.get(line_product, None)
-                    if  line_data != None:
-                        line_qty += line_data[0]
-                        line_balance += line_data[1]
-
-                    products_valuation_map[line_product] = (line_qty, line_balance)
-
-            for product, (product_qty, product_valuation) in products_valuation_map.items():
-                shipped_qty = sum(self._get_related_stock_moves().mapped('product_qty'))
-
-                # TODO OCO self.move_id.line_ids est vide car les aml ne sont pas postées ><
-                #>> un iterable en plus en param, pas le choix :/
-                #rslt += self.move_id.line_ids.get_aml_data_to_fully_reconcile_out_invoices_with_stock_valuation(interim_output_account, product, self.commercial_partner_id.id, shipped_qty, product_qty, product_valuation)
-
-        return rslt
-
-
 
 class AccountInvoiceLine(models.Model):
     _inherit = "account.invoice.line"
