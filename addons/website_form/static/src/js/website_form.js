@@ -15,7 +15,7 @@ odoo.define('website_form.animation', function (require) {
 
         start: function() {
             var self = this;
-            qweb.add_template('/website_form/static/src/xml/website_form.xml');
+            this.templates_loaded = ajax.loadXML('/website_form/static/src/xml/website_form.xml', qweb);
             this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
 
             // Initialize datetimepickers
@@ -218,7 +218,10 @@ odoo.define('website_form.animation', function (require) {
             if (status != 'success') {  // Restore send button behavior if result is an error
                 this.$target.find('.o_website_form_send').on('click',function(e) {self.send(e);});
             }
-            this.$target.find('#o_website_form_result').replaceWith(qweb.render("website_form.status_" + status))
+            var $result = this.$('#o_website_form_result');
+            this.templates_loaded.done(function () {
+                $result.replaceWith(qweb.render("website_form.status_" + status));
+            });
         },
     });
 });
