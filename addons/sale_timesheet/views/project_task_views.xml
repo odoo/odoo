@@ -23,6 +23,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="display_name" filter_domain="[('name','=',self)]" string="Exact name"/>
+                <field name="sale_line_id"/>
             </xpath>
         </field>
     </record>
