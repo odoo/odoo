@@ -429,6 +429,31 @@ it uses the values of other *fields*, it should specify those fields using
             record.discount_value = discount
             record.total = record.value - discount
 
+.. versionadded:: 12.0
+
+* stored computed fields are read-only by default. If the ``readonly``
+  parameter is set to ``False``, the field is recomputed only if a dependency
+  changes and no value is given.::
+
+    taxes = fields.Integer(default=20)
+    amount = fields.Integer(
+        compute='_compute_amount', readonly=False, store=True)
+    amount_with_taxes = fields.Integer(
+        compute='_compute_amount_with_taxes', readonly=False, store=True)
+
+    @api.multi
+    @api.depends('amount_with_taxes', 'taxes')
+    def _compute_amount(self):
+        for record in self:
+            record.amount = record.amount_with_taxes * (1 - record.taxes/100)
+
+    @api.multi
+    @api.depends('amount', 'taxes')
+    def _compute_amount_with_taxes(self):
+        for record in self:
+            record.amount_with_taxes = record.amount * (1 + record.taxes/100)
+
+
 Related fields
 ''''''''''''''
 
@@ -443,12 +468,12 @@ onchange: updating UI on the fly
 --------------------------------
 
 When a user changes a field's value in a form (but hasn't saved the form yet),
-it can be useful to automatically update other fields based on that value
-e.g. updating a final total when the tax is changed or a new invoice line is
-added.
+it can be useful to automatically update other fields based on that value.
 
 * computed fields are automatically checked and recomputed, they do not need
   an ``onchange``
+* ``onchange`` is used only if the change does not apply on the model,
+  computed fields are generally a better way to do
 * for non-computed fields, the :func:`~odoo.api.onchange` decorator is used
   to provide new field values::
 
@@ -475,7 +500,7 @@ added.
 
     ``onchange`` methods work on virtual records assignment on these records
     is not written to the database, just used to know which value to send back
-    to the client
+    to the client. But, in fact, computed fields are preferred.
 
 Low-level SQL
 -------------
@@ -1102,6 +1127,7 @@ Porting from the old API to the new API
 * **remove** all ``onchange`` methods on computed fields. Computed fields are
   automatically re-computed when one of their dependencies is changed, and
   that is used to auto-generate ``onchange`` by the client
+* check all ``onchange`` and replace them by computed fields if possible
 * the decorators :func:`~odoo.api.model` and :func:`~odoo.api.multi` are
   for bridging *when calling from the old API context*, for internal or pure
   new-api (e.g. compute) they are useless

@@ -384,6 +384,53 @@ class MultiComputeInverse(models.Model):
             record.write({'foo': '/'.join([record.bar1, record.bar2, record.bar3])})
 
 
+class ComputeReadWrite(models.Model):
+    """
+    Model for stored read-write computed fields.
+    """
+    _name = 'test_new_api.compute_read_write'
+
+    author = fields.Many2one('res.users', default=lambda self: self.env.user)
+    introduction = fields.Char(compute='_compute_introduction', readonly=False, store=True)
+
+    body = fields.Text()
+    parent_id = fields.Many2one('test_new_api.compute_read_write',
+                                compute='_compute_parent', readonly=False, store=True)
+    fullname = fields.Char(compute='_compute_fullname', readonly=False, store=True)
+
+    taxes = fields.Integer(default=20)
+    amount1 = fields.Integer(compute='_compute_amount1', readonly=False, store=True, default=100)
+    amount2 = fields.Integer(compute='_compute_amount2', readonly=False, store=True)
+
+    @api.depends('author.name', 'create_date')
+    def _compute_introduction(self):
+        for record in self:
+            record.introduction = "%s said this on %s." % (record.author.name, record.create_date)
+
+    @api.depends('author')
+    def _compute_parent(self):
+        for record in self:
+            record.parent_id = self.search([('id', '=', len(record.body or ""))])
+
+    @api.depends('amount2', 'taxes')
+    def _compute_amount1(self):
+        for record in self:
+            record.amount1 = record.amount2 - record.taxes
+
+    @api.depends('amount1', 'taxes')
+    def _compute_amount2(self):
+        for record in self:
+            record.amount2 = record.amount1 + record.taxes
+
+    @api.depends('parent_id.fullname')
+    def _compute_fullname(self):
+        for record in self:
+            if not record.parent_id:
+                record.fullname = "%s" % record.id
+            else:
+                record.fullname = "%s / %s" % (record.parent_id.fullname or "", record.id)
+
+
 class CompanyDependent(models.Model):
     _name = 'test_new_api.company'
 

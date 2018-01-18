@@ -7,7 +7,6 @@ from odoo.exceptions import AccessError, UserError, except_orm
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr, pycompat
 
-
 class TestFields(common.TransactionCase):
 
     def test_00_basics(self):
@@ -305,6 +304,19 @@ class TestFields(common.TransactionCase):
         self.assertEqual(record.bar, 'Ho')
         self.assertCountEqual(log, ['inverse'])
 
+        # create/write on both field should only invoke the inverse method
+        log.clear()
+        record = model.create({'foo': 'Hi', 'bar': 'Ho'})
+        self.assertEqual(record.foo, 'Ho')
+        self.assertEqual(record.bar, 'Ho')
+        self.assertCountEqual(log, ['inverse'])
+
+        log.clear()
+        record.write({'foo': 'Hi', 'bar': 'Hu'})
+        self.assertEqual(record.foo, 'Hu')
+        self.assertEqual(record.bar, 'Hu')
+        self.assertCountEqual(log, ['inverse'])
+
         # Test compatibility multiple compute/inverse fields
         log = []
         model = self.env['test_new_api.multi_compute_inverse'].with_context(log=log)
@@ -379,6 +391,68 @@ class TestFields(common.TransactionCase):
         # messages in discussion
         discussion.participants += self.env.user
         self.env['test_new_api.message'].create({'discussion': discussion.id, 'body': 'Whatever'})
+
+    def test_16_rw_stored(self):
+        """ test readwrite stored computed fields """
+        model = self.env['test_new_api.compute_read_write']
+
+        # simple computed
+        record = model.create({})
+        self.assertEqual(
+            record.introduction,
+            "%s said this on %s." % (record.author.name, record.create_date),
+        )
+
+        record.write({'introduction': 'Defaced'})
+        self.assertEqual(record.introduction, 'Defaced')
+
+        record.write({'author': record.author.id})
+        self.assertEqual(
+            record.introduction,
+            "%s said this on %s." % (record.author.name, record.create_date),
+        )
+
+        record = model.create({'introduction': 'No intro'})
+        self.assertEqual(record.introduction, 'No intro')
+
+        # guess parent record, and test recursively defined field
+        record1 = model.create({'body': 'A' * record.id})
+        self.assertEqual(record1.parent_id, record)
+
+        record2 = model.create({'body': 'A' * record1.id})
+        self.assertEqual(record2.parent_id, record1)
+
+        record3 = model.create({'body': 'A' * record2.id})
+        self.assertEqual(record3.parent_id, record2)
+
+        expected = "%s / %s / %s / %s" % (record.id, record1.id, record2.id, record3.id)
+        self.assertEqual(record3.fullname, expected)
+
+        # this should recompute parent_id, then fullname
+        record3.parent_id = record3.parent_id.parent_id
+        self.assertEqual(record3.parent_id, record1)
+
+        expected = "%s / %s / %s" % (record.id, record1.id, record3.id)
+        self.assertEqual(record3.fullname, expected)
+
+        # mutually dependent fields
+        record = model.create({'amount1': 100, 'taxes': 20})
+        self.assertEqual(record.amount2, 120)
+
+        # a default value exists for amount1, don't compute on create
+        record = model.create({'amount2': 130, 'taxes': 20})
+        self.assertEqual(record.amount1, 100)
+        self.assertEqual(record.amount2, 130)
+
+        # set amount2 only, this should compute amount1
+        record.write({'amount2': 140})
+        self.assertEqual(record.amount1, 120)
+        self.assertEqual(record.amount2, 140)
+
+        # set both amount1 and amount2, don't recompute
+        record.write({'amount1': 100, 'amount2': 150})
+        self.assertEqual(record.amount1, 100)
+        self.assertEqual(record.amount2, 150)
 
     def test_20_float(self):
         """ test float fields """
