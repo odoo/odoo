@@ -258,7 +258,7 @@ class AccountInvoice(models.Model):
         rslt = super(AccountInvoice, self)._get_related_stock_moves()
 
         if self.type in ('in_invoice', 'in_refund'):
-            rslt += self.mapped('invoice_line_ids.purchase_line_id.move_ids')
+            rslt += self.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done')
 
         return rslt
 
