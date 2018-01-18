@@ -249,6 +249,20 @@
     </div>
 </template>
 
+<template id="s_rating" name="Rating">
+    <div class="s_rating row">
+        <div class="col-md-12 s_rating_stars s_rating_3 s_rating_1x">
+            <h5>Quality</h5>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <i class="fa fa-1x"/>
+            <div class="s_rating_bar"/>
+        </div>
+    </div>
+</template>
+
 <template id="s_facebook_page" name="Facebook Page">
     <div class="o_facebook_page">
         <div class="o_facebook_alert alert alert-info">
@@ -711,6 +725,7 @@
                     <t t-snippet="website.s_panel" t-thumbnail="/website/static/src/img/blocks/block_panel.png"/>
                     <t t-snippet="website.s_hr" t-thumbnail="/website/static/src/img/blocks/block_hr.png"/>
                     <t t-snippet="website.s_share" t-thumbnail="/website/static/src/img/blocks/block_share.png"/>
+                    <t t-snippet="website.s_rating" t-thumbnail="/website/static/src/img/blocks/block_rating.png"/>
                     <t t-snippet="website.s_facebook_page" t-thumbnail="/website/static/src/img/blocks/facebook_page.png"/>
                 </div>
             </div>
@@ -951,8 +966,8 @@
     </div>
 
     <div data-js='content'
-        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .s_share, .btn, .s_hr"
-        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .s_share, .btn, .s_hr"
+        data-selector="blockquote, .well, .s_panel, .o_facebook_page, .s_share, .btn, .s_hr, .s_rating"
+        data-drop-near="p, h1, h2, h3, blockquote, .well, .o_facebook_page, .s_panel, .s_share, .btn, .s_hr, .s_rating"
         data-drop-in=".content">
     </div>
 
@@ -976,6 +991,43 @@
             </ul>
         </li>
     </div>
+
+    <div data-selector=".s_rating [class*='col-md-']">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Icon</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_rating_stars"><a href="#"><i class="fa fa-star"/> Stars</a></li>
+                <li data-select-class="s_rating_squares"><a href="#"><i class="fa fa-square"/> Squares</a></li>
+                <li data-select-class="s_rating_hearts"><a href="#"><i class="fa fa-heart"/> Hearts</a></li>
+                <li data-select-class="s_rating_bar"><a href="#"><i class="fa fa-tasks"/> Progress Bar</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-selector=".s_rating [class*='col-md-']">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Value</a>
+            <ul class="dropdown-menu">
+                <li data-select-class=""><a href="#">0</a></li>
+                <li data-select-class="s_rating_1"><a href="#">1/5</a></li>
+                <li data-select-class="s_rating_2"><a href="#">2/5</a></li>
+                <li data-select-class="s_rating_3"><a href="#">3/5</a></li>
+                <li data-select-class="s_rating_4"><a href="#">4/5</a></li>
+                <li data-select-class="s_rating_5"><a href="#">5/5</a></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-selector=".s_rating [class*='col-md-']">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#">Size</a>
+            <ul class="dropdown-menu">
+                <li data-select-class="s_rating_1x"><a href="#">Small</a></li>
+                <li data-select-class="s_rating_2x"><a href="#">Medium</a></li>
+                <li data-select-class="s_rating_3x"><a href="#">Big</a></li>
+            </ul>
+        </li>
+    </div>    
 
     <div data-js="parallax" data-selector=".parallax">
         <li class="dropdown-submenu">
