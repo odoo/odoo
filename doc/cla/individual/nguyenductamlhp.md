@@ -1,4 +1,4 @@
-Vietnam, 2018-01-16
+Vietnam, 2018-01-16,
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
