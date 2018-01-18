@@ -18,6 +18,7 @@ var config = require('web.config');
 var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
 var Loading = require('web.Loading');
 var mixins = require('web.mixins');
 var NotificationManager = require('web.NotificationManager');
@@ -46,7 +47,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
 
         // notifications, warnings and effects
         notification: function (e) {
-            if(this.notification_manager) {
+            if (this.notification_manager) {
                 this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
             }
         },
@@ -201,8 +202,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         };
     },
     set_action_manager: function () {
+        var self = this;
         this.action_manager = new ActionManager(this, session.user_context);
-        return this.action_manager.appendTo(this.$('.o_main_content'));
+        var fragment = document.createDocumentFragment();
+        return this.action_manager.appendTo(fragment).then(function () {
+            dom.append(self.$('.o_main_content'), fragment, {
+                in_DOM: true,
+                callbacks: [{widget: self.action_manager}],
+            });
+        });
     },
     set_notification_manager: function () {
         this.notification_manager = new NotificationManager(this);
