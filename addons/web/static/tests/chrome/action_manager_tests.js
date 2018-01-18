@@ -87,6 +87,11 @@ QUnit.module('ActionManager', {
             res_model: 'pony',
             type: 'ir.actions.act_window',
             views: [[false, 'list'], [false, 'form']],
+        }, {
+            id: 9,
+            name: 'A Client Action',
+            tag: 'ClientAction',
+            type: 'ir.actions.client',
         }];
 
         this.archs = {
@@ -772,6 +777,59 @@ QUnit.module('ActionManager', {
         assert.verifySteps([]);
 
         actionManager.destroy();
+    });
+
+    QUnit.test('change a param of an ir.actions.client in the url', function (assert) {
+        assert.expect(7);
+
+        var ClientAction = Widget.extend(ControlPanelMixin, {
+            className: 'o_client_action',
+            init: function (parent, action) {
+                this._super.apply(this, arguments);
+                var context = action.context;
+                this.a = context.params && context.params.a || 'default value';
+            },
+            start: function () {
+                assert.step('start');
+                this.$el.text(this.a);
+                this.trigger_up('push_state', {
+                    controllerID: this.controllerID,
+                    state: {a: this.a},
+                });
+            },
+        });
+        core.action_registry.add('ClientAction', ClientAction);
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+
+        // execute the client action
+        actionManager.doAction(9);
+
+        assert.strictEqual(actionManager.$('.o_client_action').text(), 'default value',
+            "should have rendered the client action");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should be one controller in the breadcrumbs");
+
+        // update param 'a' in the url
+        actionManager.loadState({
+            action: 9,
+            a: 'new value',
+        });
+
+        assert.strictEqual(actionManager.$('.o_client_action').text(), 'new value',
+            "should have rerendered the client action with the correct param");
+        assert.strictEqual($('.o_control_panel .breadcrumb li').length, 1,
+            "there should still be one controller in the breadcrumbs");
+
+        // should have executed the client action twice
+        assert.verifySteps(['start', 'start']);
+
+        actionManager.destroy();
+        delete core.action_registry.map.ClientAction;
     });
 
     QUnit.module('Concurrency management');

@@ -45,11 +45,15 @@ ActionManager.include({
      */
     loadState: function (state) {
         var action;
-        var options = {pushState: false};
+        var options = {
+            clear_breadcrumbs: true,
+            pushState: false,
+        };
         if (state.action) {
             var currentController = this.getCurrentController();
             var currentAction = currentController && this.actions[currentController.actionID];
-            if (currentAction && currentAction.id === state.action) {
+            if (currentAction && currentAction.id === state.action &&
+                currentAction.type === 'ir.actions.act_window') {
                 // the action to load is already the current one, so update it
                 this._closeDialog(true); // there may be a currently opened dialog, close it
                 currentAction.env.currentId = state.id;
