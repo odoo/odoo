@@ -3,6 +3,7 @@ odoo.define('web.calendar_tests', function (require) {
 
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
+var Dialog = require('web.Dialog');
 var fieldUtils = require('web.field_utils');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
@@ -1649,6 +1650,57 @@ QUnit.module('Views', {
             "should create only one event");
 
         calendar.destroy();
+    });
+
+    QUnit.test('create an event (async dialog) [REQUIRE FOCUS]', function (assert) {
+        assert.expect(3);
+
+        var def = $.Deferred();
+        testUtils.patch(Dialog, {
+            open: function () {
+                var _super = this._super.bind(this);
+                def.then(_super);
+                return this;
+            },
+        });
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // create an event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.strictEqual($('.modal').length, 0,
+            "should not have opened the dialog yet");
+
+        def.resolve();
+
+        assert.strictEqual($('.modal').length, 1,
+            "should have opened the dialog");
+        assert.strictEqual($('.modal input')[0], document.activeElement,
+            "should focus the input in the dialog");
+
+        calendar.destroy();
+        testUtils.unpatch(Dialog);
     });
 });
 

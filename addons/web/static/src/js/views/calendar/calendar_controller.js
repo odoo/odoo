@@ -215,7 +215,9 @@ var CalendarController = AbstractController.extend({
         if(!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
             this.quick = new QuickCreate(this, true, options, data, event.data);
             this.quick.open();
-            this.quick.focus();
+            this.quick.opened(function () {
+                self.quick.focus();
+            });
             return;
         }
 
