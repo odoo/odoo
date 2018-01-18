@@ -306,13 +306,41 @@ table.table_desc tr td {
     }
 }
 
-.s_faq_collapse .container .panel {
-    background-color: inherit;
-    border : 1px solid rgba(0, 0, 0, 0.15);
-    .panel-body {
-        border-top: none;
-        border-bottom-left-radius: (@panel-border-radius - 1);
-        border-bottom-right-radius: (@panel-border-radius - 1);
+
+// "Collapse" Snippet
+
+.s_faq_collapse {
+    .panel {
+        background-color: inherit;
+        .panel-heading {
+            padding: 0;
+            .panel-title {
+                margin: 0;
+            }
+            a {
+                display: inline-block;
+                width: 100%;
+                padding: 12px 0;
+                &:before {
+                    content:'\f056';
+                    font-family: 'FontAwesome';
+                    display: inline-block;
+                    margin: 0 8px 0 12px;
+                    color: inherit;
+                }
+                &.collapsed:before {
+                    content:'\f055';
+                    font-family: 'FontAwesome';
+                }
+            }
+        }
+    }
+    .panel-group .panel-heading + .panel-collapse > .panel-body {
+        padding: @grid-gutter-width;
+    }
+    .panel-body p:last-child,
+    .panel-body ul:last-child {
+        margin-bottom: 0;
     }
 }
 

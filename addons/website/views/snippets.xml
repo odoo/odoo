@@ -447,61 +447,50 @@
 </template>
 
 <template id="s_faq_collapse" name="FAQ">
-    <section class="s_faq_collapse">
+    <section class="s_faq_collapse pt48 pb24">
         <div class="container">
-            <h2 class="page-header"> General Terms and Conditions / Service Policies </h2>
-            <div class="panel-group" role="tablist">
-                <div class="panel">
-                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
-                        <h4 class="panel-title">
-                            Terms of service
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body bg-white-50">
-                            <p>
-                                These terms of service ("Terms", "Agreement") are an agreement between the website
-                                ("Website operator", "us", "we" or "our") and you ("User", "you" or "your").
-                            </p>
-                            <p>
-                                This Agreement sets forth the general terms and conditions of your use of this website
-                                and any of its products or services (collectively, "Website" or "Services").
-                            </p>
-                        </div>
-                    </div>
+            <div class="row">
+                <div class="col-md-12 pb24">
+                    <h2>FAQ</h2>
                 </div>
-                <div class="panel">
-                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
-                        <h4 class="panel-title">
-                            Links to other websites
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body bg-white-50">
-                            <p>
-                                Although this Website may be linked to other websites, we are not, directly or
-                                indirectly, implying any approval, association, sponsorship, endorsement, or
-                                affiliation with any linked website, unless specifically stated herein.
-                            </p>
-                            <p>
-                                You should carefully review the legal statements and other conditions of use of
-                                any website which you access through a link from this Website. Your linking to
-                                any other off-site pages or other websites is at your own risk.
-                            </p>
+                <div class="col-md-12 pb24">
+                    <div class="panel-group" role="tablist">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a href="#collapseOne" class="" data-toggle="collapse">Terms of service</a>
+                                </h4>
+                            </div>
+                            <div class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <p>These terms of service ("Terms", "Agreement") are an agreement between the website ("Website operator", "us", "we" or "our") and you ("User", "you" or "your"). This Agreement sets forth the general terms and conditions of your use of this website and any of its products or services (collectively, "Website" or "Services").</p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-heading bg-gray-lighter" role="tab" data-toggle="collapse">
-                        <h4 class="panel-title">
-                            Use Of Cookies
-                        </h4>
-                    </div>
-                    <div class="panel-collapse collapse" role="tabpanel">
-                        <div class="panel-body bg-white-50">
-                            <p>Website may use cookies to personalize and facilitate maximum navigation of the
-                                User by this site. The User may configure his / her browser to notify and
-                                reject the installation of the cookies sent by us.</p>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a href="#collapseTwo" class="collapsed" data-toggle="collapse">Links to other Websites</a>
+                                </h4>
+                            </div>
+                            <div class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>Although this Website may be linked to other websites, we are not, directly or indirectly, implying any approval, association, sponsorship, endorsement, or affiliation with any linked website, unless specifically stated herein.</p>
+                                    <p>You should carefully review the legal statements and other conditions of use of any website which you access through a link from this Website. Your linking to any other off-site pages or other websites is at your own risk.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a href="#collapseThree" class="collapsed" data-toggle="collapse">Use of Cookies</a>
+                                </h4>
+                            </div>
+                            <div class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <p>Website may use cookies to personalize and facilitate maximum navigation of the User by this site. The User may configure his / her browser to notify and reject the installation of the cookies sent by us.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -844,7 +833,7 @@
 
     <div data-js="colorpicker" 
         data-color-prefix="panel-" 
-        data-selector=".s_panel.panel"
+        data-selector=".s_panel.panel, .s_faq_collapse .panel"
         data-palette-exclude="transparent_grayscale"
         data-palette-title="Panel Color">
         <li class="dropdown-submenu">
