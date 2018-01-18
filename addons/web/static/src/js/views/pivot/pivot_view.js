@@ -68,8 +68,9 @@ var PivotView = AbstractView.extend({
             // the measure should be allowed.  However, be careful if you define
             // a measure in your pivot view: non stored functional fields will
             // probably not work (their aggregate will always be 0).
-            if (field.type === 'measure' && !(field.name in measures)) {
-                measures[field.name] = field;
+
+            if (field.attrs.type === 'measure' && !(field.attrs.name in measures)) {
+                measures[field.attrs.name] = fields[field.attrs.name];
             }
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);
@@ -96,6 +97,7 @@ var PivotView = AbstractView.extend({
         this.controllerParams.groupableFields = groupableFields;
         // retrieve form and list view ids from the action to open those views
         // when a data cell of the pivot view is clicked
+
         this.controllerParams.views = [
             _findView(params.action && params.action.views, 'list'),
             _findView(params.action && params.action.views, 'form'),
