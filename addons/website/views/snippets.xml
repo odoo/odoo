@@ -128,29 +128,23 @@
 </template>
 
 <template id="s_features" name="Features">
-    <section class="s_features pt16 pb16">
+    <section class="s_features pt48 pb24">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 text-center">
-                    <span class="fa fa-suitcase fa-5x"></span>
-                    <div>
-                        <h3 class="mt8 mb0">First Feature</h3>
-                        <p class="text-muted">Tell what's the value for the<br/>customer for this feature.</p>
-                    </div>
+                <div class="col-md-4 pb24 text-center">
+                    <i class="fa fa-3x fa-gear img-circle bg-alpha"/>
+                    <h3>First Feature</h3>
+                    <p>Tell what's the value for the <br/>customer for this feature.</p>
                 </div>
-                <div class="col-md-4 text-center">
-                    <span class="fa fa-lock fa-5x"></span>
-                    <div>
-                        <h3 class="mt8 mb0">Second Feature</h3>
-                        <p class="text-muted">Write what the customer would like to know,<br/>not what you want to show.</p>
-                    </div>
+                <div class="col-md-4 pb24 text-center">
+                    <i class="fa fa-3x fa-lock img-circle bg-beta"/>
+                    <h3>Second Feature</h3>
+                    <p>Write what the customer would like to know, <br/>not what you want to show.</p>
                 </div>
-                <div class="col-md-4 text-center">
-                    <span class="fa fa-heart fa-5x"></span>
-                    <div>
-                        <h3 class="mt8 mb0">Third Feature</h3>
-                        <p class="text-muted">A small explanation of this great<br/>feature, in clear words.</p>
-                    </div>
+                <div class="col-md-4 pb24 text-center">
+                    <i class="fa fa-3x fa-leaf img-circle bg-primary"/>
+                    <h3>Third Feature</h3>
+                    <p>A small explanation of this great <br/>feature, in clear words.</p>
                 </div>
             </div>
         </div>
@@ -544,52 +538,64 @@
 </template>
 
 <template id="s_feature_grid" name="Feature Grid">
-    <section class="s_feature_grid pt16">
+    <section class="s_feature_grid pt48 pb24">
         <div class="container">
             <div class="row">
-                <div class="col-md-5 col-md-offset-1">
+                <div class="col-md-6 pb24">
                     <div class="row">
-                        <div class="col-md-12 pb16">
-                            <h3 class="mb0">List of Features</h3>
-                            <h5 class="text-muted">Add a great slogan</h5>
+                        <div class="col-md-12 pb48">
+                            <h2>First list of Features</h2>
+                            <h5 class="text-primary">Add a great slogan.</h5>
                         </div>
-                        <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-comment pull-left mb16"></span>
-                            <h4 class="mt0 mb0">Change Icons</h4>
-                            <p>Click on the icon to adapt it to your feature</p><br/>
+                        <div class="col-md-12 pb24">
+                            <i class="fa fa-2x fa-font-awesome img-circle bg-primary s_feature_grid_icon"/>
+                            <div class="s_feature_grid_content">
+                                <h4>Change Icons</h4>
+                                <p>Double click an icon to replace it with one of your choice.</p>
+                            </div>
                         </div>
-                        <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-columns pull-left mb16"></span>
-                            <h4 class="mt0 mb0">Duplicate</h4>
-                            <p>Duplicate blocks to add more features.</p><br/>
+                        <div class="col-md-12 pb24">
+                            <i class="fa fa-2x fa-files-o img-circle bg-primary s_feature_grid_icon"/>
+                            <div class="s_feature_grid_content">
+                                <h4>Duplicate</h4>
+                                <p>Duplicate blocks and columns to add more features.</p>
+                            </div>
                         </div>
-                        <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-user pull-left mb16"></span>
-                            <h4 class="mt0 mb0">Delete Blocks</h4>
-                            <p>Select and delete blocks to remove some features.</p><br/>
+                        <div class="col-md-12 pb24">
+                            <i class="fa fa-2x fa-trash img-circle bg-primary s_feature_grid_icon"/>
+                            <div class="s_feature_grid_content">
+                                <h4>Delete Blocks</h4>
+                                <p>Select and delete blocks to remove some features.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-6 pb24">
                     <div class="row">
-                        <div class="col-md-12 pb16">
-                            <h3 class="mb0">Second List</h3>
-                            <h5 class="text-muted">Add a great slogan</h5>
+                        <div class="col-md-12 pb48">
+                            <h2>Second list of Features</h2>
+                            <h5 class="text-gray-light">Add a great slogan.</h5>
                         </div>
-                        <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-magic pull-left mb16"></span>
-                            <h4 class="mt0 mb0">Great Value</h4>
-                            <p>Tell features the visitor would like to know, not what you'd like to say.</p>
+                        <div class="col-md-12 pb24">
+                            <i class="fa fa-2x fa-magic img-rounded bg-gray-lighter s_feature_grid_icon"/>
+                            <div class="s_feature_grid_content">
+                                <h4>Great Value</h4>
+                                <p>Turn every feature into a benefit for your reader.</p>
+                            </div>
                         </div>
-                        <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-bolt pull-left mb16"></span>
-                            <h4 class="mt0 mb0">Change Background</h4>
-                            <p>From the main container, you can change the background to highlight features.</p>
+                        <div class="col-md-12 pb24">
+                            <i class="fa fa-2x fa-eyedropper img-rounded bg-gray-lighter s_feature_grid_icon"/>
+                            <div class="s_feature_grid_content">
+                                <h4>Edit Styles</h4>
+                                <p>You can edit colors and background to highlight features.</p>
+                            </div>
                         </div>
-                        <div class="col-md-12">
-                            <span style="min-width: 45px" class="fa fa-2x fa-picture-o pull-left mb16"></span>
-                            <h4 class="mt0 mb0">Sample images</h4>
-                            <p>All these icons are licensed under creative commons so that you can use them.</p>
+                        <div class="col-md-12 pb24">
+                            <i class="fa fa-2x fa-picture-o img-rounded bg-gray-lighter s_feature_grid_icon"/>
+                            <div class="s_feature_grid_content">
+                                <h4>Sample Icons</h4>
+                                <p>All these icons are completely free for commercial use.</p>
+                            </div>
                         </div>
                     </div>
                 </div>

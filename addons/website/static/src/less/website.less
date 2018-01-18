@@ -143,6 +143,117 @@ font[style*='background'], font[class*='bg-'] {
     }
 }
 
+
+// Icons
+
+.fa-size-generator(@base-size) {
+        text-align: center;
+        display: inline-block;
+        vertical-align: middle;
+    &,
+    &.fa-1x {
+        width: (@base-size + 20px);
+        height: (@base-size + 20px);
+        line-height: (@base-size + 20px);
+    }
+    &.fa-2x {
+        width: (@base-size + 40px);
+        height: (@base-size + 40px);
+        line-height: (@base-size + 40px);
+    }
+    &.fa-3x {
+        width: (@base-size + 60px);
+        height: (@base-size + 60px);
+        line-height: (@base-size + 60px);
+    }
+    &.fa-4x {
+        width: (@base-size + 80px);
+        height: (@base-size + 80px);
+        line-height: (@base-size + 80px);
+    }
+    &.fa-5x {
+        width: (@base-size + 100px);
+        height: (@base-size + 100px);
+        line-height: (@base-size + 100px);
+    }
+}
+
+
+// "Features" snippet
+
+.s_features,
+.s_features_grid { 
+    .fa {
+        &.img-circle,
+        &.img-rounded,
+        &.img-square,
+        &.img-thumbnail,
+        &.shadow {
+            .fa-size-generator(30px);
+        }
+        &.img-thumbnail {
+            padding: 0;
+            border: 0;
+            border-radius: inherit;
+            // Monkey - Would be better to get the bgcolor in JS
+            &.bg-alpha { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @color-alpha; }
+            &.bg-beta  { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @color-beta;  }
+            &.bg-gamma { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @color-gamma; }
+            &.bg-delta { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @color-delta; }
+            &.bg-epsilon { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @color-epsilon; }
+            &.bg-primary { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @brand-primary; }
+            &.bg-info { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @brand-info; }
+            &.bg-sucess { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @brand-success; }
+            &.bg-warning { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @brand-warning; }
+            &.bg-danger { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @brand-danger; }
+            &.bg-gray-lighter { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @gray-lighter; }
+            &.bg-gray-light { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @gray-light; }
+            &.bg-gray { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @gray; }
+            &.bg-gray-dark { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @gray-dark; }
+            &.bg-gray-darker { box-shadow: 0 0 0 5px currentColor, 0 0 0 10px @gray-darker; }
+        }
+        &.img-circle {
+            border-radius: 50%;
+        }
+        &.img-rounded {
+            border-radius: @border-radius-base;
+        }
+        &.shadow {
+            // Monkey - Would be better to get the bgcolor in JS
+            &.bg-alpha { border-bottom: 5px solid darken(@color-alpha, 15%); }
+            &.bg-beta { border-bottom: 5px solid darken(@color-beta, 15%); }
+            &.bg-gamma { border-bottom: 5px solid darken(@color-gamma, 15%); }
+            &.bg-delta { border-bottom: 5px solid darken(@color-delta, 15%); }
+            &.bg-epsilon { border-bottom: 5px solid darken(@color-epsilon, 15%); }
+            &.bg-primary { border-bottom: 5px solid darken(@brand-primary, 15%); }
+            &.bg-info { border-bottom: 5px solid darken(@brand-info, 15%); }
+            &.bg-success { border-bottom: 5px solid darken(@brand-success, 15%); }
+            &.bg-warning { border-bottom: 5px solid darken(@brand-warning, 15%); }
+            &.bg-danger { border-bottom: 5px solid darken(@brand-danger, 15%); }
+            &.bg-gray-lighter { border-bottom: 5px solid darken(@gray-lighter, 15%); }
+            &.bg-gray-light { border-bottom: 5px solid darken(@gray-light, 15%); }
+            &.bg-gray { border-bottom: 5px solid darken(@gray, 15%); }
+            &.bg-gray-dark { border-bottom: 5px solid darken(@gray-dark, 15%); }
+            &.bg-gray-darker { border-bottom: 5px solid darken(@gray-darker, 15%); }
+        }
+    }
+}
+
+
+// "Features Grid" Snippet
+   
+.s_feature_grid {
+    .s_feature_grid_content {
+        overflow: hidden;
+    }
+    .s_feature_grid_icon {
+    .fa-size-generator(40px);
+        margin-right: @grid-gutter-width/2;
+        float: left;
+    }
+}
+
+
 // Table Snippet
 .table_desc {
     margin: 0 0 20px 0;
@@ -173,11 +284,6 @@ table.table_desc tr td {
     }
 }
 
-// Other snippet styles
-// To prevent paragraph text coming below the feature grid icon / image
-.s_feature_grid p {
-    overflow: auto;
-}
 
 .s_comparisons .panel .list-group-item:not(.active) {
     color: #666;
