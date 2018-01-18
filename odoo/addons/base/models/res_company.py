@@ -131,7 +131,7 @@ class Company(models.Model):
 
     @api.depends('partner_id', 'partner_id.image')
     def _compute_logo_web(self):
-        for company in self:
+        for company in self.with_context(bin_size=False):
             company.logo_web = tools.image_resize_image(company.partner_id.image, (180, None))
 
     @api.onchange('state_id')
