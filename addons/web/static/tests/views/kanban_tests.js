@@ -33,9 +33,10 @@ QUnit.module('Views', {
                     state: { string: "State", type: "selection", selection: [["abc", "ABC"], ["def", "DEF"], ["ghi", "GHI"]]},
                     date: {string: "Date Field", type: 'date'},
                     datetime: {string: "Datetime Field", type: 'datetime'},
+                    image: {string: "Image", type: "binary"},
                 },
                 records: [
-                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: []},
+                    {id: 1, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA=='},
                     {id: 2, bar: true, foo: "blip", int_field: 9, qux: 13, product_id: 5, state: "def", category_ids: [6]},
                     {id: 3, bar: true, foo: "gnap", int_field: 17, qux: -3, product_id: 3, state: "ghi", category_ids: [7]},
                     {id: 4, bar: false, foo: "blip", int_field: -4, qux: 9, product_id: 5, state: "ghi", category_ids: []},
@@ -2338,6 +2339,32 @@ QUnit.module('Views', {
             assert.strictEqual($quickCreateGroup[0], $groups[0],
                 "quick create should have been added in the first column");
         }
+    });
+
+    QUnit.test('test displaying image', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                      '<field name="id"/>' +
+                      '<field name="image"/>' +
+                      '<templates><t t-name="kanban-box"><div>' +
+                          '<img t-att-src="kanban_image(\'partner\', \'image\', record.id.raw_value)"/>' +
+                      '</div></t></templates>' +
+                  '</kanban>',
+        });
+
+        var imageOnRecord = kanban.$('img[src*="/web/image"][src*="&id=1"]');
+        assert.strictEqual(imageOnRecord.length, 1, "partner with image display image");
+
+        var placeholders = kanban.$('img[src$="/web/static/src/img/placeholder.png"]');
+        assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
+            "partner with image should displaiy");
+
+        kanban.destroy();
     });
 });
 
