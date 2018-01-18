@@ -5,10 +5,10 @@ from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
-class TestTimesheet(TransactionCase):
+class TestCommonTimesheet(TransactionCase):
 
     def setUp(self):
-        super(TestTimesheet, self).setUp()
+        super(TestCommonTimesheet, self).setUp()
 
         self.project_customer = self.env['project.project'].create({
             'name': 'Project X',
@@ -59,6 +59,9 @@ class TestTimesheet(TransactionCase):
             'name': 'User Empl Officer',
             'user_id': self.user_manager.id,
         })
+
+
+class TestTimesheet(TestCommonTimesheet):
 
     def test_log_timesheet(self):
         """ Test when log timesheet : check analytic account, user and employee are correctly set. """
