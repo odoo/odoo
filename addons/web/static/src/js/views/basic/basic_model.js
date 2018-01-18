@@ -2641,7 +2641,7 @@ var BasicModel = AbstractModel.extend({
                 var relRecordAdded = [];
                 var relRecordUpdated = [];
                 _.each(list._changes, function (change) {
-                    if (change.operation === 'ADD') {
+                    if (change.operation === 'ADD' && change.id) {
                         relRecordAdded.push(self.localData[change.id]);
                     } else if (change.operation === 'UPDATE' && !self.isNew(change.id)) {
                         // ignore new records that would have been updated
@@ -2700,6 +2700,10 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            if (!relRecord) {
+                                commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
+                                continue;
+                            }
                             changes = this._generateChanges(relRecord, options);
                             if (changes.id) {
                                 // the subrecord already exists in db
