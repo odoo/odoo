@@ -169,21 +169,7 @@
         sequence="11"
         groups="base.group_no_one"
     />
-    <record id="action_hr_salary_rule_category_tree_view" model="ir.actions.act_window">
-        <field name="name">Salary Rule Categories Hierarchy</field>
-        <field name="res_model">hr.salary.rule.category</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="hr_salary_rule_category_tree_view"/>
-    </record>
-    <menuitem
-        id="menu_hr_salary_rule_category_tree_view"
-        action="action_hr_salary_rule_category_tree_view"
-        parent="menu_hr_payroll_configuration"
-        sequence="12"
-        groups="base.group_no_one"
-    />
-
+    
     <!--
     Contribution Register
     -->
