@@ -398,7 +398,6 @@
                             <field name="date_invoice"/>
                             <field name="date_due" attrs="{'readonly': ['|',('payment_term_id','!=',False), ('state','=','paid')]}" force_save="1"/>
                             <field name="move_name" invisible="1"/>
-                            <field name="user_id" groups="base.group_user"/>
                             <label for="currency_id" groups="base.group_multi_currency"/>
                             <div groups="base.group_multi_currency">
                                 <field name="currency_id" options="{'no_create': True, 'no_open': True}" class="oe_inline"/>
@@ -418,7 +417,7 @@
                                     <field name="name" tabindex="-1"/>
                                     <field name="company_id" invisible="1"/>
                                     <field name="account_id" groups="account.group_account_user"
-                                        domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]"/>
+                                        domain="[('company_id', '=', parent.company_id), ('internal_type', '=', 'other'), ('deprecated', '=', False)]" tabindex="-1"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                                         domain="[('company_id', '=', parent.company_id)]"
                                         context="{'default_partner_id': parent.partner_id}"/>
@@ -484,6 +483,7 @@
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
                                     <field name="name"/>
+                                    <field name="user_id" groups="base.group_user"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">
