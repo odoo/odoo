@@ -23,9 +23,6 @@ return AbstractWebClient.extend({
     show_application: function() {
         var self = this;
 
-        // Allow to call `on_attach_callback` and `on_detach_callback` when needed
-        this.action_manager.is_in_DOM = true;
-
         this.toggle_bars(true);
         this.set_title();
         this.update_logo();
