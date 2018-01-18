@@ -6,8 +6,7 @@ from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install','-at_install')
 class StripeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -15,8 +14,7 @@ class StripeCommon(PaymentAcquirerCommon):
         self.stripe = self.env.ref('payment.payment_acquirer_stripe')
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install','-at_install')
 class StripeTest(StripeCommon):
 
     @unittest.skip("Stripe test disabled: We do not want to overload Stripe with runbot's requests")

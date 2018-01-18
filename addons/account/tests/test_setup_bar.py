@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestSetupBar(AccountingTestCase):
 
     def test_initial_balance_step(self):

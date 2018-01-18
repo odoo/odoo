@@ -44,6 +44,7 @@ except ImportError:
 import odoo
 from odoo import api
 
+
 _logger = logging.getLogger(__name__)
 
 # The odoo library is supposed already configured.
@@ -69,32 +70,6 @@ def get_db_name():
 DB = get_db_name()
 
 
-def at_install(flag):
-    """ Sets the at-install state of a test, the flag is a boolean specifying
-    whether the test should (``True``) or should not (``False``) run during
-    module installation.
-
-    By default, tests are run right after installing the module, before
-    starting the installation of the next module.
-    """
-    def decorator(obj):
-        obj.at_install = flag
-        return obj
-    return decorator
-
-def post_install(flag):
-    """ Sets the post-install state of a test. The flag is a boolean
-    specifying whether the test should or should not run after a set of
-    module installations.
-
-    By default, tests are *not* run after installation of all modules in the
-    current installation set.
-    """
-    def decorator(obj):
-        obj.post_install = flag
-        return obj
-    return decorator
-
 class TreeCase(unittest.TestCase):
     def __init__(self, methodName='runTest'):
         super(TreeCase, self).__init__(methodName)
@@ -113,7 +88,20 @@ class TreeCase(unittest.TestCase):
         for c1, c2 in izip_longest(n1, n2):
             self.assertEqual(c1, c2, msg)
 
-class BaseCase(TreeCase):
+
+class MetaCase(type):
+    """ Metaclass of test case classes to assign default 'test_tags':
+        'at_install' and the name of the module.
+    """
+    def __init__(cls, name, bases, attrs):
+        super(MetaCase, cls).__init__(name, bases, attrs)
+        # assign default test tags
+        if cls.__module__.startswith('odoo.addons.'):
+            module = cls.__module__.split('.')[2]
+            cls.test_tags = {'at_install', 'standard', module}
+
+
+class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
     """
     Subclass of TestCase for common OpenERP-specific code.
 
@@ -211,6 +199,7 @@ class BaseCase(TreeCase):
         # turns out this thing may not be quite as useful as we thought...
         def assertItemsEqual(self, a, b, msg=None):
             self.assertCountEqual(a, b, msg=None)
+
 
 class TransactionCase(BaseCase):
     """ TestCase in which each test method is run in its own transaction,
@@ -1244,3 +1233,47 @@ def record_to_values(fields, record):
             v = [(1, r.id, {}) for r in v]
         r[f] = v
     return r
+
+
+def tagged(*tags):
+    """
+    A decorator to tag TestCase objects
+    Tags are stored in a set that can be accessed from a 'test_tags' attribute
+    A tag prefixed by '-' will remove the tag e.g. to remove the 'at_install' tag
+    By default, all Test classes from odoo.tests.common have a test_tags
+    attribute that defaults to 'at_install' and also the module technical name
+    When using class inheritance, the tags are NOT inherited.
+    """
+    def tags_decorator(obj):
+        if not hasattr(obj, 'test_tags'):
+            obj.test_tags = set()
+        to_set = {t for t in tags if not t.startswith('-')}
+        to_unset = {t[1:] for t in tags if t.startswith('-')}
+        obj.test_tags.update(to_set)
+        obj.test_tags -= to_unset
+        return obj
+    return tags_decorator
+
+
+def tag_test_selector(test, spec):
+    """ Return True if the test has the tags requested in spec
+        spec is a str with comma separated tags selector (usualy from config)
+    """
+    clean_conf_tags = {t.strip() for t in spec.split(',') if t.strip() != ''} or {'standard'}
+    to_exclude = {t[1:] for t in clean_conf_tags if t.startswith('-')}
+    to_include = {t.replace('+', '') for t in clean_conf_tags if not t.startswith('-')}
+
+    # handle the case where a tag is in to_include and to_exclude
+    to_include.difference_update(to_exclude)
+
+     # at_install and standard for tests that does not inherit from TransactionCase (for example a unittest)
+    tags = getattr(test, 'test_tags', set(['standard', 'at_install']))
+    inter_no_test = to_exclude.intersection(tags)
+    if inter_no_test:
+        _logger.debug("Test '{}' deselected because of following tag(s): '{}'".format(test, inter_no_test))
+        return False
+    inter_to_test = to_include.intersection(tags)
+    if not inter_to_test:
+        _logger.debug("Test '{}' deselected because it was not tagged with '{}'".format(test, to_include))
+        return False
+    return True
