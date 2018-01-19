@@ -37,6 +37,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.sale_order.action_confirm()
         self.sale_order.order_line._compute_product_updatable()
 
+        self.sale_order.action_confirm()
+        self.sale_order.order_line._compute_product_updatable()
         self.assertFalse(sale_order_line.product_updatable)
         self.assertEqual(self.sale_order.invoice_status, 'no', 'Sale Service: there should be nothing to invoice after validation')
 
@@ -111,7 +113,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'unit_amount': 16,
             'employee_id': self.employee_manager.id,
         })
-        self.assertEqual(self.sale_order.order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
+        self.assertEqual(sale_order_line.qty_delivered, 2, 'Sale: uom conversion of timesheets is wrong')
 
         self.env['account.analytic.line'].create({
             'name': 'Test Line',
@@ -123,8 +125,9 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.sale_order.action_invoice_create()
         self.assertEqual(self.sale_order.invoice_status, 'invoiced', 'Sale Timesheet: "invoice on delivery" timesheets should not modify the invoice_status of the so')
 
+
     def test_task_so_line_assignation(self):
-        # create SO and confirm it
+        # create SO line and confirm it
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
@@ -174,23 +177,17 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             task_serv2.write({'sale_line_id': False})
 
     def test_delivered_quantity(self):
-        # create SO and confirm it
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
-        })
+        # create SO line and confirm it
         so_line_deliver_new_task_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet3.name,
             'product_id': self.product_delivery_timesheet3.id,
             'product_uom_qty': 10,
             'product_uom': self.product_delivery_timesheet3.uom_id.id,
             'price_unit': self.product_delivery_timesheet3.list_price,
-            'order_id': sale_order.id,
+            'order_id': self.sale_order.id,
         })
         so_line_deliver_new_task_project.product_id_change()
-        sale_order.action_confirm()
+        self.sale_order.action_confirm()
         task_serv2 = self.env['project.task'].search([('sale_line_id', '=', so_line_deliver_new_task_project.id)])
 
         # add a timesheet
