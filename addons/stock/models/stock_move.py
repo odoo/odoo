@@ -1000,8 +1000,16 @@ class StockMove(models.Model):
 
         moves = self.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_todo = self.env['stock.move']
-        # Create extra moves where necessary
+
+        # Cancel moves where necessary ; we should do it before creating the extra moves because
+        # this operation could trigger a merge of moves.
         for move in moves:
+            if move.quantity_done <= 0:
+                if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0:
+                    move._action_cancel()
+
+        # Create extra moves where necessary
+        for move in moves.filtered(lambda m: m.state != 'cancel'):
             # Here, the `quantity_done` was already rounded to the product UOM by the `do_produce` wizard. However,
             # it is possible that the user changed the value before posting the inventory by a value that should be
             # rounded according to the move's UOM. In this specific case, we chose to round up the value, because it
@@ -1010,10 +1018,6 @@ class StockMove(models.Model):
             # FIXME: move rounding to move line
             # rounding = move.product_uom.rounding
             # move.quantity_done = float_round(move.quantity_done, precision_rounding=rounding, rounding_method ='UP')
-            if move.quantity_done <= 0:
-                if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0:
-                    move._action_cancel()
-                continue
             moves_todo |= move
             moves_todo |= move._create_extra_move()
         # Split moves where necessary and move quants
