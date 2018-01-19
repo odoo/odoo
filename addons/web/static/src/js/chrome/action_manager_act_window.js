@@ -25,6 +25,13 @@ ActionManager.include({
         switch_view: '_onSwitchView',
     }),
 
+    on_attach_callback: function() {
+        this._super.apply(this, arguments);
+        // Set focus to search view once it is added in DOM
+        if (this.searchview) {
+            this.searchview.setInputFocus();
+        }
+    },
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
