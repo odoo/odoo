@@ -214,6 +214,15 @@ class MaintenanceEquipment(models.Model):
         return super(MaintenanceEquipment, self).write(vals)
 
     @api.model
+    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
+        """ mail.thread override so user_id which has no special access allowance is not
+            automatically subscribed.
+        """
+        if auto_follow_fields is None:
+            auto_follow_fields = []
+        return super(MaintenanceEquipment, self)._message_get_auto_subscribe_fields(updated_fields, auto_follow_fields)
+
+    @api.model
     def _read_group_category_ids(self, categories, domain, order):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
