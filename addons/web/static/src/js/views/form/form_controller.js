@@ -152,6 +152,13 @@ var FormController = BasicController.extend({
     renderSidebar: function ($node) {
         if (this.hasSidebar) {
             var otherItems = [];
+            var record = this.model.get(this.handle);
+            if (this.is_action_enabled('edit') && 'active' in record.fields) {
+                otherItems.push({
+                    label: record.data.active ? _t('Archive') : _t('Restore'),
+                    callback: this._onToggleActiveRecord.bind(this),
+                });
+            }
             if (this.is_action_enabled('delete')) {
                 otherItems.push({
                     label: _t('Delete'),
@@ -175,7 +182,6 @@ var FormController = BasicController.extend({
                 actions: _.extend(this.toolbarActions, {other: otherItems}),
             });
             this.sidebar.appendTo($node);
-
             // Show or hide the sidebar according to the view mode
             this._updateSidebar();
         }
@@ -351,6 +357,13 @@ var FormController = BasicController.extend({
     _updateSidebar: function () {
         if (this.sidebar) {
             this.sidebar.do_toggle(this.mode === 'readonly');
+            if (this.mode === 'readonly') {
+                var record = this.model.get(this.handle);
+                if (this.is_action_enabled('edit') && 'active' in record.fields) {
+                    this.sidebar.items.other[0].label = record.data.active ? _t('Archive') : _t('Restore');
+                }
+                this.sidebar.redraw();
+            }
         }
     },
 
@@ -552,6 +565,23 @@ var FormController = BasicController.extend({
     _onSave: function (ev) {
         ev.stopPropagation(); // Prevent x2m lines to be auto-saved
         this.saveRecord();
+    },
+    /**
+     * Call toggle_active method
+     *
+     * @private
+     */
+    _onToggleActiveRecord: function () {
+        var self = this;
+        return this._rpc({
+                model: this.modelName,
+                method: 'toggle_active',
+                args: [this.model.get(this.handle).res_id],
+            }).then(function () {
+                return self.reload();
+            }).then(function () {
+                self.sidebar.redraw();
+            });
     },
     /**
      * This method is called when someone tries to sort a column, most likely

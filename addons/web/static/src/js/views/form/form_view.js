@@ -41,6 +41,10 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
+
+        if ('active' in this.loadParams.fields && !('active' in this.loadParams.fieldsInfo.form)) {
+            this.loadParams.fieldsInfo.form.active = {};
+        }
     },
 
     //--------------------------------------------------------------------------

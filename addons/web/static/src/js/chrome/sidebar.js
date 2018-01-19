@@ -47,7 +47,25 @@ var Sidebar = Widget.extend({
     start: function () {
         this._super.apply(this, arguments);
         this.$el.addClass('btn-group');
-        this._redraw();
+        this.redraw();
+    },
+    /**
+     * Method that renders the sidebar when there is a data update
+     *
+     * @private
+     */
+    redraw: function () {
+        this.$el.html(QWeb.render('Sidebar', {widget: this}));
+
+        // Hides Sidebar sections when item list is empty
+        this.$('.o_dropdown').each(function () {
+            if (!$(this).find('li').length) {
+                $(this).hide();
+            }
+        });
+        this.$("[title]").tooltip({
+            delay: { show: 500, hide: 0}
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -61,7 +79,7 @@ var Sidebar = Widget.extend({
      */
     updateEnv: function (env) {
         this.env = env;
-        this._redraw();
+        this.redraw();
     },
 
     //--------------------------------------------------------------------------
@@ -166,24 +184,6 @@ var Sidebar = Widget.extend({
                     });
                 });
             }
-        });
-    },
-    /**
-     * Method that renders the sidebar when there is a data update
-     *
-     * @private
-     */
-    _redraw: function () {
-        this.$el.html(QWeb.render('Sidebar', {widget: this}));
-
-        // Hides Sidebar sections when item list is empty
-        this.$('.o_dropdown').each(function () {
-            if (!$(this).find('li').length) {
-                $(this).hide();
-            }
-        });
-        this.$("[title]").tooltip({
-            delay: { show: 500, hide: 0}
         });
     },
 

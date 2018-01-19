@@ -42,12 +42,23 @@ Sidebar.include({
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    redraw: function () {
+        this._super.apply(this, arguments);
+        this.$('.o_sidebar_add_attachment .o_form_binary_form')
+            .change(this._onAddAttachment.bind(this));
+        this.$('.o_sidebar_delete_attachment')
+            .click(this._onDeleteAttachment.bind(this));
+    },
     /**
      * @override
      */
     updateEnv: function (env) {
         this.env = env;
-        this._updateAttachments().then(this._redraw.bind(this));
+        this._updateAttachments().then(this.redraw.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -83,17 +94,6 @@ Sidebar.include({
             a.write_date_string = field_utils.format.datetime(a.write_date, 'write_date', self.env.context.params);
         });
         this.items.files = attachments;
-    },
-    /**
-     * @private
-     * @override
-     */
-    _redraw: function () {
-        this._super.apply(this, arguments);
-        this.$('.o_sidebar_add_attachment .o_form_binary_form')
-            .change(this._onAddAttachment.bind(this));
-        this.$('.o_sidebar_delete_attachment')
-            .click(this._onDeleteAttachment.bind(this));
     },
     /**
      * Update the attachments to be displayed in the attachment section
@@ -152,6 +152,7 @@ Sidebar.include({
      * @param  {Event} event
      */
     _onDeleteAttachment: function (event) {
+        debugger
         event.preventDefault();
         var self = this;
         var $event = $(event.currentTarget);
@@ -163,7 +164,7 @@ Sidebar.include({
                     args: [parseInt($event.attr('data-id'), 10)],
                 })
                 .then(self._updateAttachments.bind(self))
-                .then(self._redraw.bind(self));
+                .then(self.redraw.bind(self));
             }
         };
         Dialog.confirm(this, _t("Do you really want to delete this attachment ?"), options);
@@ -181,7 +182,7 @@ Sidebar.include({
         if (uploadErrors.length) {
             this.do_warn(_t('Uploading Error'), uploadErrors[0].error);
         }
-        this._updateAttachments().then(this._redraw.bind(this));
+        this._updateAttachments().then(this.redraw.bind(this));
         framework.unblockUI();
     }
 });

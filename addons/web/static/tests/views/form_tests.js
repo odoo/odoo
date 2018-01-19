@@ -1650,6 +1650,69 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('"archive" and "restore" a record', function (assert) {
+        assert.expect(3);
+
+        var partner = this.data.partner;
+        partner.fields.active = {string: "active", type: "boolean"};
+        this.data['ir.attachment'] = {
+            fields: {
+                res_model: {type: "char"},
+                res_id: {type: "integer"},
+                type: {type: "char"},
+            },
+            records: []
+        };
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'toggle_active') {
+                    assert.ok(args.args[0] === 1, "should call 'toggle_active' action");
+                    partner.records[0].active = !partner.records[0].active;
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.sidebar.$('a:contains(Restore)').length === 1, "should contains a 'Restore' action");
+        form.sidebar.$('a:contains(Restore)').trigger('click');
+        assert.ok(form.sidebar.$('a:contains(Archive)').length === 1, "should contains a 'Archive' action");
+        form.destroy();
+    });
+
+    QUnit.test('hide "archive" button if the field active does not exist', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                        '<field name="foo"/>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {sidebar: true},
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'ir.attachment') {
+                    return $.when([]);
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.ok(form.sidebar.$('a:contains(Restore),a:contains(Archive)').length === 0, "should not contains a 'Archive' action");
+        form.destroy();
+    });
+
     QUnit.test('buttons in footer are moved to $buttons if necessary', function (assert) {
         // not sure about this test...
         assert.expect(2);
