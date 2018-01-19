@@ -1113,9 +1113,9 @@ class Lead(models.Model):
         return [new_group] + groups
 
     @api.model
-    def message_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, res_ids, default=None):
         leads = self.sudo().browse(res_ids)
-        aliases = self.env['crm.team'].message_get_reply_to(leads.mapped('team_id').ids, default=default)
+        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped('team_id').ids, default=default)
         return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
 
     @api.multi
