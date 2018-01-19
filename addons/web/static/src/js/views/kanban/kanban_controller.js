@@ -229,6 +229,7 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onButtonClicked: function (event) {
+        event.stopPropagation();
         var self = this;
         var attrs = event.data.attrs;
         var record = event.data.record;
