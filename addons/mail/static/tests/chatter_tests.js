@@ -418,6 +418,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
         displayed_author: "John Doe",
         id: 1,
         is_note: false,
+        is_discussion: true,
         is_starred: false,
         model: 'partner',
         res_id: 2,
@@ -467,6 +468,7 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
                     displayed_author: "Me",
                     id: msg_id,
                     is_note: event.data.message.subtype === 'mail.mt_note',
+                    is_discussion: event.data.message.subtype === 'mail.mt_comment',
                     is_starred: false,
                     model: 'partner',
                     res_id: 2,
@@ -615,6 +617,7 @@ QUnit.test('chatter: post a message and switch in edit mode', function (assert) 
                     displayed_author: "Me",
                     id: 42,
                     is_note: event.data.message.subtype === 'mail.mt_note',
+                    is_discussion: event.data.message.subtype === 'mail.mt_comment',
                     is_starred: false,
                     model: 'partner',
                     res_id: 2,
@@ -686,6 +689,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         displayed_author: "John Doe",
         id: 1,
         is_note: false,
+        is_discussion: true,
         is_starred: false,
         model: 'partner',
         res_id: 2,
@@ -934,6 +938,7 @@ QUnit.test('form activity widget: mark as done and remove', function (assert) {
                     displayed_author: "John Doe",
                     id: 1,
                     is_note: true,
+                    is_discussion: false,
                 });
                 route = '/web/dataset/call_kw/mail.activity/unlink';
                 args.method = 'unlink';

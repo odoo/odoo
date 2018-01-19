@@ -27,6 +27,7 @@ QUnit.module('mail', {}, function () {
             displayed_author: "John Doe",
             id: 1,
             is_note: false,
+            is_discussion: true,
             is_starred: false,
             model: 'partner',
             res_id: 2

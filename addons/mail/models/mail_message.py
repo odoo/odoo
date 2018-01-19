@@ -404,6 +404,7 @@ class Message(models.Model):
                     'id': 59,
                     'subject': False
                     'is_note': True # only if the subtype is internal
+                    'is_discussion': False # only if the message is a discussion (subtype == discussion)
                 }
         """
         message_values = self.read([
@@ -417,13 +418,15 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add subtype data (is_note flag, subtype_description). Do it as sudo
+        # add subtype data (is_note flag, is_discussion flag , subtype_description). Do it as sudo
         # because portal / public may have to look for internal subtypes
         subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
-        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description'])
+        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
+        xml_comment_id = self.env.ref('mail.mt_comment').id
         for message in message_values:
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
+            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == xml_comment_id
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
