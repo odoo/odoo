@@ -91,18 +91,6 @@
         <a href="${ctx['button_access']['url']}" style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">${ctx['button_access']['title']}</a>
         % endif
 
-        % if ctx.get('has_button_follow'):
-        % if ctx.get('has_button_access'):
-           |
-        % endif
-        <a href="${ctx['button_follow']['url']}" style="color: #875A7B; text-decoration: none !important;">${ctx['button_follow']['title']}</a>
-        % elif ctx.get('has_button_unfollow'):
-        % if ctx.get('has_button_access'):
-           |
-        % endif
-        <a href="${ctx['button_unfollow']['url']}" style="color: #875A7B; text-decoration: none !important;">${ctx['button_unfollow']['title']}</a>
-        % endif
-
         % if ctx.get('actions'):
         % for action in ctx['actions']:
         |
