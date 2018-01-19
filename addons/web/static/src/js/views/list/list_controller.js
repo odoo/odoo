@@ -64,8 +64,7 @@ var ListController = BasicController.extend({
         // TODO: this method should be synchronous...
         var self = this;
         if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchView = this.getParent().searchview; // fixme
-            var searchData = searchView.build_search_data();
+            var searchData = this.searchView.build_search_data();
             var userContext = this.getSession().user_context;
             var results = pyeval.eval_domains_and_contexts({
                 domains: searchData.domains,
