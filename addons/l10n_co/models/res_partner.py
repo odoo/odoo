@@ -12,7 +12,7 @@ class ResPartner(models.Model):
                                               ('foreign_id_card', 'Cedula de Extranjeria'),
                                               ('external_id', 'ID del Exterior')], string='Document Type',
                                              help='Indicates to what document the information in here belongs to.')
-    l10n_co_verification_code = fields.Char(compute='_compute_verification_code', string='VC',
+    l10n_co_verification_code = fields.Char(compute='_compute_verification_code', string='VC',  # todo remove this field in master
                                             help='Redundancy check to verify the vat number has been typed in correctly.')
 
     @api.depends('vat')
