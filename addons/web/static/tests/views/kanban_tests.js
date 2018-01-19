@@ -1716,6 +1716,42 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('button executes action and check domain', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        data.partner.fields.active = {string: "Active", type: "boolean", default: true};
+        for (var k in this.data.partner.records) {
+            data.partner.records[k].active = true;
+        }
+
+        var kanban = createView({
+            View: KanbanView,
+            model: "partner",
+            data: data,
+            arch:
+                '<kanban>' +
+                    '<templates><div t-name="kanban-box">' +
+                        '<field name="foo"/>' +
+                        '<field name="active"/>' +
+                        '<button type="object" name="a1" />' +
+                        '<button type="object" name="toggle_active" />' +
+                    '</div></templates>' +
+                '</kanban>',
+        });
+
+        testUtils.intercept(kanban, 'execute_action', function (event) {
+            data.partner.records[0].active = false;
+            event.data.on_closed();
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 1, "should display 'yop' record");
+        kanban.$('.o_kanban_record:contains(yop) button[data-name="toggle_active"]').click();
+        assert.strictEqual(kanban.$('.o_kanban_record:contains(yop)').length, 0, "should remove 'yop' record from the view");
+
+        kanban.destroy();
+    });
+
     QUnit.test('rendering date and datetime', function (assert) {
         assert.expect(2);
 

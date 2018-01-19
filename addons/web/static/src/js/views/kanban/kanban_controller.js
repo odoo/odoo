@@ -10,6 +10,7 @@ odoo.define('web.KanbanController', function (require) {
 var BasicController = require('web.BasicController');
 var Context = require('web.Context');
 var core = require('web.core');
+var Domain = require('web.Domain');
 var view_dialogs = require('web.view_dialogs');
 
 var _t = core._t;
@@ -228,10 +229,24 @@ var KanbanController = BasicController.extend({
                 resIDs: record.res_ids,
             },
             on_closed: function () {
+                var recordModel = self.model.localData[record.id];
+                var group = self.model.localData[recordModel.parentID];
+                var parent = self.model.localData[group.parentID];
+
                 self.model.reload(record.id).then(function (db_id) {
                     var data = self.model.get(db_id);
                     var kanban_record = event.target;
                     kanban_record.update(data);
+
+                    // Check if we still need to display the record
+                    var domain = parent ? parent.domain : group.domain;
+                    if ('active' in data.data && _.pluck(domain, 0).indexOf('active') === -1) {
+                        domain = [['active', '=', true]].concat(domain);
+                    }
+                    var visible = new Domain(domain).compute(data.evalContext);
+                    if (!visible) {
+                        kanban_record.destroy();
+                    }
                 });
             },
         });
