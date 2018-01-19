@@ -138,7 +138,7 @@ var ListController = BasicController.extend({
                     callback: this._onToggleArchiveState.bind(this, true)
                 });
                 other.push({
-                    label: _t("Unarchive"),
+                    label: _t("Restore"),
                     callback: this._onToggleArchiveState.bind(this, false)
                 });
             }
@@ -462,7 +462,7 @@ var ListController = BasicController.extend({
         event.data.callback(env);
     },
     /**
-     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
+     * Called when clicking on 'Archive' or 'Restore' in the sidebar.
      *
      * @private
      * @param {boolean} archive

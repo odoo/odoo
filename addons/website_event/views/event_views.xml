@@ -30,7 +30,7 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <button name="toggle_active" position="before">
+            <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
                 <button name="website_publish_button"
                         type="object"
@@ -38,7 +38,7 @@
                         icon="fa-globe">
                     <field name="website_published" widget="website_button"/>
                 </button>
-            </button>
+            </div>
             <label for="is_online" position="after">
                 <field name="website_menu"/>
                 <label for="website_menu" string="Website Menu"/>

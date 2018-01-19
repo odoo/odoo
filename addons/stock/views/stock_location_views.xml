@@ -22,9 +22,6 @@
                             icon="fa-filter" name="%(act_product_location_open)d" type="action"
                             context="{'location_id': active_id}"
                             />
-                   <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                        <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                    </button>
                 </div>
                 <label for="name" class="oe_edit_only"/>
                 <h1><field name="name"/></h1>
@@ -171,11 +168,7 @@
             <field name="model">stock.location.path</field>
             <field name="arch" type="xml">
                 <form string="Location Paths">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="stock.group_adv_location">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
+                    <div class="oe_button_box" name="button_box"></div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -231,11 +224,7 @@
             <field name="arch" type="xml">
                 <form string="Route">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="stock.group_adv_location">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <div class="oe_button_box" name="button_box"></div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>

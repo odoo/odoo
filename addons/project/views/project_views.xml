@@ -103,6 +103,7 @@
                 <form string="Project">
                 <sheet string="Project">
                     <field name="analytic_account_id" invisible="1" required="0"/>
+                    <field name="active" invisible="1"/>
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
@@ -113,12 +114,6 @@
                         </button>
                         <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
                             <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
-                        </button>
-                        <button name="toggle_active" type="object"
-                                confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
-                                class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -414,6 +409,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
+                    <field name="active" invisible="1"/>
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
@@ -431,11 +427,6 @@
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
                             <field name="rating_count" string="Rating" widget="statinfo"/>
-                        </button>
-                        <button name="toggle_active" type="object" groups="base.group_user"
-                                class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
                         </button>
                     </div>
                     <field name="kanban_state" widget="state_selection"/>
@@ -677,7 +668,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr="//button[@name='toggle_active']" position="before">
+                <xpath expr="//div[@name='button_box']" position="inside">
                     <button class="oe_stat_button" type="object" name="projects_action"
                         icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
                         <field string="Projects" name="project_count" widget="statinfo"/>

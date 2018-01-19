@@ -27,11 +27,7 @@
             <field name="arch" type="xml">
                 <form string="Forum">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a forum automatically (un)archives its posts. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <div class="oe_button_box" name="button_box"></div>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name"/>
@@ -146,11 +142,7 @@
             <field name="arch" type="xml">
                 <form string="Forum Post">
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" confirm="(Un)archiving a post automatically (un)archives its answers. Do you want to proceed?" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <div class="oe_button_box" name="button_box"></div>
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" placeholder="Name"/>

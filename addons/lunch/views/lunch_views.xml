@@ -584,13 +584,7 @@
                     <header>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object"
-                                class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
+                        <div class="oe_button_box" name="button_box"></div>
                         <group>
                             <group>
                                 <field name='name'/>
@@ -660,13 +654,7 @@
             <field name="model">lunch.alert</field>
             <field name="arch" type="xml">
                 <form>
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object"
-                            class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"
-                                options='{"terminology": "archive"}'/>
-                        </button>
-                    </div>
+                    <div class="oe_button_box" name="button_box"></div>
                     <group>
                         <group string="Schedule Date">
                             <field name="alert_type"/>

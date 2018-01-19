@@ -170,7 +170,7 @@
                             name="%(action_view_change_product_quantity)d"
                             attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <button name="toggle_active" position="before">
+                    <div name="button_box" position="inside">
                         <button class="oe_stat_button"
                                name="%(product_open_quants)d"
                                icon="fa-building-o"
@@ -223,7 +223,7 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                    </button>
+                    </div>
                 </data>
             </field>
         </record>
@@ -238,7 +238,7 @@
                     <header position="inside" >
                         <button name="%(action_view_change_product_quantity)d" string="Update Qty On Hand" type="action" attrs="{'invisible': [('type', '!=', 'product')]}"/>
                     </header>
-                    <button name="toggle_active" position="before">
+                    <div name="button_box" position="inside">
                         <button type="object"
                             name="action_open_quants"
                             attrs="{'invisible':[('type', '!=', 'product')]}"
@@ -292,7 +292,7 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                    </button>
+                    </div>
 
                     <!-- change attrs of fields added in view_template_property_form
                     to restrict the display for templates -->

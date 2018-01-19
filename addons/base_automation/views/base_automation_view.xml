@@ -15,13 +15,6 @@
                         attrs="{'invisible':[('binding_model_id','=',False)]}"
                         help="Remove the contextual action related to this server action"/>
                 </xpath>
-                <div class="oe_title" position="before">
-                    <div class="oe_button_box" name="button_box">
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button"/>
-                        </button>
-                    </div>
-                </div>
                 <xpath expr="//group[@name='action_wrapper']" position="inside">
                     <group>
                         <field name="trigger"/>

@@ -594,12 +594,12 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="arch" type="xml">
-                <button name="toggle_active" position="before">
+                <div name="button_box" position="inside">
                    <button class="oe_stat_button" name="%(purchase.action_purchase_line_product_tree)d"
                        type="action" icon="fa-shopping-cart" attrs="{'invisible': [('purchase_ok', '=', False)]}">
                        <field string="Purchases" name="purchase_count" widget="statinfo"/>
                    </button>
-                </button>
+                </div>
             </field>
         </record>
 
