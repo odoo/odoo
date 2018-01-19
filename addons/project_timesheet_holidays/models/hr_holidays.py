@@ -60,7 +60,7 @@ class Holidays(models.Model):
             work_hours_data = [item for item in holiday.employee_id.iter_work_hours_count(fields.Datetime.from_string(holiday.date_from), fields.Datetime.from_string(holiday.date_to))]
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 self.env['account.analytic.line'].create({
-                    'name': "%s (%s/%s)" % (holiday.name, index + 1, len(work_hours_data)),
+                    'name': "%s (%s/%s)" % (holiday.name or '', index + 1, len(work_hours_data)),
                     'project_id': holiday_project.id,
                     'task_id': holiday_task.id,
                     'account_id': holiday_project.analytic_account_id.id,
@@ -77,6 +77,7 @@ class Holidays(models.Model):
     def action_refuse(self):
         """ Remove the timesheets linked to the refused holidays """
         result = super(Holidays, self).action_refuse()
-        self.mapped('timesheet_ids').write({'holiday_id': False})
-        self.mapped('timesheet_ids').unlink()
+        timesheets = self.sudo().mapped('timesheet_ids')
+        timesheets.write({'holiday_id': False})
+        timesheets.unlink()
         return result
