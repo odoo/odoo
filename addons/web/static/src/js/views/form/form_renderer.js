@@ -4,7 +4,7 @@ odoo.define('web.FormRenderer', function (require) {
 var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
-var dom = require('web.dom');
+var ButtonWidget = require('web.ButtonWidget');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -20,7 +20,14 @@ var FormRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        this.formviewInPopup = params.formviewInPopup;
         this.idsForLabels = {};
+        core.bus.on('dialog_closed', this, function () {
+            // Hacky Fix: Note: This is going to be bind on each formview, this will create issue when dialog is closed, it will be trigerred for all formviews
+            if (this.$el.is(':visible')) {
+                this.trigger_up('navigation_move', {direction: 'current'});
+            }
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -37,7 +44,7 @@ var FormRenderer = BasicRenderer.extend({
         }
         var focusWidget = this.defaultFocusField;
         if (!focusWidget || !focusWidget.isFocusable()) {
-            var widgets = this.allFieldWidgets[this.state.id];
+            var widgets = (!_.isEmpty(this.tabindexWidgets) &&  this.tabindexWidgets[this.state.id]) || this.allFieldWidgets[this.state.id];
             for (var i = 0; i < (widgets ? widgets.length : 0); i++) {
                 var widget = widgets[i];
                 if (widget.isFocusable()) {
@@ -132,6 +139,47 @@ var FormRenderer = BasicRenderer.extend({
             .removeAttr('disabled');
     },
     /**
+     * Sets focus to first header button, if there is no header button then
+     * sets focus to next widget i.e. do iteration cycle on all widgets from last widget to first widget
+     * if view is in readonly mode then set focus to control buttons i.e. Create/Edit
+     */
+    focusFirstButton: function () {
+        var firstButtonWidget = this.getFirstButtonWidget();
+        if (firstButtonWidget) {
+            return firstButtonWidget.activate();
+        } else if (this.mode !== 'readonly') {
+            return this._activateNextWidget(this.state, -1);
+        } else {
+            return this.trigger_up('focus_control_button');
+        }
+    },
+    /**
+     * Will return first header button from tabindexWidgets list for current record.
+     */
+    getFirstButtonWidget: function () {
+        var recordWidgets = this.tabindexWidgets[this.state.id] || [];
+        var firstButtonWidget = _.find(recordWidgets, function (widget) {
+            // FIXME: widget.__node, we may remove __node in future
+            return widget.__node.tag === 'button'
+                && (widget.__node.attrs.class.indexOf('oe_highlight') !== -1
+                || widget.__node.attrs.class.indexOf('btn-primary') !== -1)
+                && widget.$el.is(':visible')
+                && !widget.$el.hasClass('o_readonly_modifier');
+        });
+        return firstButtonWidget;
+    },
+    /**
+     * Will return last field widget from tabindeWidgets list for current record.
+     */
+    getLastFieldWidget: function () {
+        var lastTabindexField = _.chain(this.tabindexWidgets[this.state.id]).filter(function (widget) {
+            return !(widget.$el.is(':hidden') || widget.$el.hasClass('o_readonly_modifier')) && widget.__node.tag === 'field';
+        })
+        .last()
+        .value();
+        return lastTabindexField;
+    },
+    /**
      * returns the active tab pages for each notebook
      *
      * @todo currently, this method is unused...
@@ -174,6 +222,18 @@ var FormRenderer = BasicRenderer.extend({
         });
     },
     /**
+     * This method will prepare tabindexWidgets list which contains all widgets per record
+     * which can be navigated through TAB key, this tabindexWidgets will also contain header buttons,
+     * when user press TAB key then we will pick widget from this list instead of allFieldWidgets list.
+     */
+    setTabindexWidgets: function (state) {
+        var self = this;
+        this._super.apply(this, arguments);
+        _.each(this.tabindexButtons[state.id], function (widget) {
+            self.tabindexWidgets[state.id].push(widget);
+        });
+    },
+    /**
      * @override method from AbstractRenderer
      * @param {Object} state a valid state given by the model
      * @param {Object} params
@@ -200,40 +260,6 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Add a tooltip on a button
-     *
-     * @private
-     * @param {Object} node
-     * @param {jQuery} $button
-     */
-    _addButtonTooltip: function (node, $button) {
-        var self = this;
-        $button.tooltip({
-            delay: { show: 1000, hide: 0 },
-            title: function () {
-                return qweb.render('WidgetButton.tooltip', {
-                    debug: config.debug,
-                    state: self.state,
-                    node: node,
-                });
-            },
-        });
-    },
-    /**
-     * @private
-     * @param {jQueryElement} $el
-     * @param {Object} node
-     */
-    _addOnClickAction: function ($el, node) {
-        var self = this;
-        $el.click(function () {
-            self.trigger_up('button_clicked', {
-                attrs: node.attrs,
-                record: self.state,
-            });
-        });
-    },
-    /**
      * @private
      * @param {string} name
      * @returns {string}
@@ -245,6 +271,40 @@ var FormRenderer = BasicRenderer.extend({
             this.idsForLabels[name] = idForLabel;
         }
         return idForLabel;
+    },
+    /**
+     * It will returns the last visible widget from tabindexWidgets list for current record.
+     *
+     * @private
+     * @returns {Class} Widget returns last widget
+     */
+    _getLastWidget: function () {
+        var lastTabindexWidget = _.chain(this.tabindexWidgets[this.state.id]).filter(function (widget) {
+            return !(widget.$el.is(':hidden') || widget.$el.hasClass('o_readonly_modifier'));
+        })
+        .last()
+        .value();
+        return lastTabindexWidget;
+    },
+    /**
+     * This method called every time when navigation move next is performed,
+     * returns the widget that is next to current active widget.
+     *
+     * @private
+     * @param {Integer} currentIndex current widget index
+     * @param {Array} recordWidgets Array of all record widgets
+     * @returns {Class} Widget returns widget
+     */
+    _getNextTabindexWidget: function (currentIndex, recordWidgets) {
+        if (recordWidgets.length === currentIndex) {
+            currentIndex -= recordWidgets.length-1; // If we are on last widget index then move user back to first widget
+        }
+        for (var i = currentIndex; i < recordWidgets.length; i++) {
+            var widget = recordWidgets[i];
+            if (widget && widget.$el.is(':visible') && !widget.$el.hasClass('o_readonly_modifier')) { // check it is visible and not readonly
+                return widget;
+            }
+        }
     },
     /**
      * @override
@@ -336,18 +396,20 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderHeaderButton: function (node) {
-        var $button = $('<button>')
-                        .text(node.attrs.string)
-                        .addClass('btn btn-sm btn-default');
-        this._addOnClickAction($button, node);
-        this._handleAttributes($button, node);
-        this._registerModifiers(node, this.state, $button);
-
-        // Display tooltip
-        if (config.debug || node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+        var widget = new ButtonWidget(this, node, this.state);
+        // Prepare widget rendering and save the related deferred
+        var def = widget._widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
         }
-        return $button;
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, this.state, widget.$el);
+        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') !== -1
+            || node.attrs.class.indexOf('oe_highlight') !== -1
+            || node.attrs.class.indexOf('oe_stat_button') !== -1)) {
+            this.tabindexButtons[this.state.id].push(widget);
+        }
+        return widget.$el;
     },
     /**
      * @private
@@ -496,23 +558,17 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderStatButton: function (node) {
-        var $button = $('<button>').addClass('btn btn-sm oe_stat_button');
-        if (node.attrs.icon) {
-            $('<div>')
-                .addClass('fa fa-fw o_button_icon')
-                .addClass(node.attrs.icon)
-                .appendTo($button);
+        var widget = new ButtonWidget(this, node, this.state);
+        // Prepare widget rendering and save the related deferred
+        var def = widget._widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
         }
-        if (node.attrs.string) {
-            $('<span>')
-                .text(node.attrs.string)
-                .appendTo($button);
-        }
-        $button.append(_.map(node.children, this._renderNode.bind(this)));
-        this._addOnClickAction($button, node);
-        this._handleAttributes($button, node);
-        this._registerModifiers(node, this.state, $button);
-        return $button;
+        widget.$el.append(_.map(node.children, this._renderNode.bind(this)));
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, this.state, widget.$el);
+
+        return widget.$el;
     },
     /**
      * @private
@@ -547,22 +603,21 @@ var FormRenderer = BasicRenderer.extend({
      * @returns {jQueryElement}
      */
     _renderTagButton: function (node) {
-        var $button = dom.renderButton({
-            attrs: _.omit(node.attrs, 'icon', 'string'),
-            icon: node.attrs.icon,
-            text: (node.attrs.string || '').replace(/_/g, ''),
-        });
-        $button.append(_.map(node.children, this._renderNode.bind(this)));
-        this._addOnClickAction($button, node);
-        this._handleAttributes($button, node);
-        this._registerModifiers(node, this.state, $button);
-
-        // Display tooltip
-        if (config.debug || node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+        var widget = new ButtonWidget(this, node, this.state);
+        // Prepare widget rendering and save the related deferred
+        var def = widget._widgetRenderAndInsert(function () {});
+        if (def.state() === 'pending') {
+            this.defs.push(def);
         }
-
-        return $button;
+        widget.$el.append(_.map(node.children, this._renderNode.bind(this)));
+        this._handleAttributes(widget.$el, node);
+        this._registerModifiers(node, this.state, widget.$el);
+        if (node.attrs.class && (node.attrs.class.indexOf('btn-primary') !== -1
+            || node.attrs.class.indexOf('oe_highlight') !== -1
+            || node.attrs.class.indexOf('oe_stat_button') !== -1)) {
+            this.tabindexButtons[this.state.id].push(widget);
+        }
+        return widget.$el;
     },
     /**
      * @private
@@ -788,11 +843,16 @@ var FormRenderer = BasicRenderer.extend({
         // render the form and evaluate the modifiers
         var defs = [];
         this.defs = defs;
+        this.tabindexButtons = {};
+        if (this.tabindexButtons[this.state.id] === undefined) {
+            this.tabindexButtons[this.state.id] = [];
+        }
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
 
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
+            self.setTabindexWidgets(self.state);
         }, function () {
             $form.remove();
         });
@@ -865,20 +925,73 @@ var FormRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * This method will do navigation on widgets based on direction(next, previous etc.),
+     * will not allow to proceed further if field is required, direction is next and user did not fill field,
+     * if direction is next then move user to next widget and if direction is previous then on previous widget,
+     * if direction is next and next widget is button(i.e. current widget is last field widget)
+     * then first set focus to Save button if form is in edit mode,
+     * once record is saved and mode is readonly then navigate user to header buttons,
+     * if user is on last wiget and press TAB if mode is edit then navigate user to first widget to do widget iteration cycle,
+     * else on control buttons i.e. Create/Edit,
+     * if direction is current the keep user to current widget, do not move user to next or previous widget,
+     * if SHIFT + ENTER is pressed then save the document and navigate focus to control buttons i.e. Create/Edit
+     * if user press ESCAPE key then discard document.
+     *
      * @override
      * @private
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
         ev.stopPropagation();
+        var lastWidget = this._getLastWidget();
+        var lastFieldWidget = this.getLastFieldWidget();
 
-        var index;
+        var index = this.tabindexWidgets[this.state.id].indexOf(ev.data.target);
+        if (index === -1) {
+            index = this.lastTabindex; // Get widget based on last saved tabindex
+        }
         if (ev.data.direction === "next") {
-            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
-            this._activateNextFieldWidget(this.state, index);
+            if (ev.data.required_error) {
+                return this._activateWidget(this.state, index, {inc: 1});
+            }
+            var recordWidgets = this.tabindexWidgets[this.state.id] || [];
+            var nextWidget = this._getNextTabindexWidget(index + 1, recordWidgets);
+            // If user presses TAB on last field and next widget is button then first move user to Save button
+            if (lastFieldWidget && _.isEqual(ev.data.target, lastFieldWidget)) {
+                return this.trigger_up('focus_control_button');
+            }
+            // If widget is last but it is not field widget then move user to first widget(re-traversal)
+            if (_.isEqual(ev.data.target, lastWidget) && !_.isEqual(ev.data.target, lastFieldWidget)) {
+                var activatedWidget = this._activateNextWidget(this.state, index);
+                if (activatedWidget === -1 && this.mode === 'readonly') {
+                    return this.trigger_up('focus_control_button');
+                }
+                return activatedWidget;
+            } else if (nextWidget && !_.isEqual(nextWidget, ev.data.target)) {
+                // Checking nextWidget is not current active widget for speical case where we have single field widget in form
+                return this._activateNextWidget(this.state, index);
+            } else {
+                return this.trigger_up('focus_control_button');
+            }
         } else if (ev.data.direction === "previous") {
-            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
-            this._activatePreviousFieldWidget(this.state, index);
+            if (_.isEqual(this.getFirstButtonWidget(), ev.data.target)) {
+                this.trigger_up('focus_control_button');
+            } else {
+                this._activatePreviousWidget(this.state, index);
+            }
+        } else if (ev.data.direction === 'current') {
+            this._activateWidget(this.state, index, {inc: 1});
+        } else if (ev.data.direction === "cancel") {
+            this.trigger_up('discard_changes', {
+                onSuccess: _.bind(function () {
+                    if (this.state.res_id) { // Set focus to Edit button, in new record we will do history_back
+                        this.trigger_up('focus_control_button');
+                    }
+                }, this)
+            });
+        } else if (ev.data.direction === 'next_line' && ev.data.shift_key && !this.formviewInPopup) {
+            ev.stopPropagation();
+            this.trigger_up('shift_enter_pressed');
         }
     },
     /**

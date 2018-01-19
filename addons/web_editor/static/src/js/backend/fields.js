@@ -39,6 +39,28 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
     //--------------------------------------------------------------------------
 
     /**
+     * Will set focus on textarea, if it fails then set focus on content editable div
+     *
+     * @returns {boolean}
+     */
+    activate: function () {
+        if (!this.$textarea) {
+            return false;
+        }
+        // on IE an error may occur when creating range on not displayed element
+        try {
+            this.$textarea.focusInEnd();
+        } catch (e) {
+            this.$textarea.focus();
+        } finally {
+            if (this.$content.is(":focus")) { //Strange but we need to do it to set autofocus on this
+                this.$content.trigger('blur');
+            }
+            this.$content.trigger('mouseup');
+        }
+        return true;
+    },
+    /**
      * Summernote doesn't notify for changes done in code mode. We override
      * commitChanges to manually switch back to normal mode before committing
      * changes, so that the widget is aware of the changes done in code mode.
@@ -55,6 +77,9 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
             this._isDirty = true;
         }
         this._super.apply(this, arguments);
+    },
+    getFocusableElement: function () {
+        return this.$textarea.is(":visible") ? this.$textarea : (this.$content || $());
     },
     /**
      * @override
@@ -128,13 +153,25 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      * @private
      */
     _renderEdit: function () {
+        var self = this;
         this.$textarea = $('<textarea>');
         this.$textarea.appendTo(this.$el);
         this.$textarea.summernote(this._getSummernoteConfig());
+
+        // Forcefully stop tab/untab, Do nothing on tab and Untab, maybe we can override plugin method or we can pass special config and avoid tab/untab
+        $.summernote.options.keyMap.pc['TAB'] = $.summernote.options.keyMap.mac['TAB'] = false;
+        $.summernote.options.keyMap.pc['SHIFT+TAB'] = $.summernote.options.keyMap.mac['SHIFT+TAB'] = false;
+
         this.$content = this.$('.note-editable:first');
         this.$content.html(this._textToHtml(this.value));
         // trigger a mouseup to refresh the editor toolbar
         this.$content.trigger('mouseup');
+
+        // Note: fix: Forcefully call autofocus as mouseup of this.$content will set focus on current widget
+        setTimeout(function () {
+            self.getParent() && self.getParent().autofocus();
+        }, 0);
+
         if (this.nodeOptions['style-inline']) {
             transcoder.styleToClass(this.$content);
         }
@@ -217,7 +254,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
 var FieldTextHtml = AbstractField.extend({
     template: 'web_editor.FieldTextHtml',
     supportedFieldTypes: ['html'],
-
+    noTabindex: true,
     start: function () {
         var self = this;
 

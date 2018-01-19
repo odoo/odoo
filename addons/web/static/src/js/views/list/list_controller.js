@@ -7,6 +7,7 @@ odoo.define('web.ListController', function (require) {
  * and bind all extra buttons/pager in the control panel.
  */
 
+var Framework = require('web.framework');
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
@@ -43,6 +44,12 @@ var ListController = BasicController.extend({
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
         this.selectedRecords = []; // there is no selected record by default
+        var searchView = this.getParent().searchview;
+        if (searchView) {
+            searchView.off('search_widget_down').on('search_widget_down', this, function (event) {
+                this.renderer.keyNavigation(event, 'down');
+            });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -110,13 +117,40 @@ var ListController = BasicController.extend({
      * editable rows are saved once left and clicking on the "Save" button does
      * induce the leaving of the current row.
      *
+     * Note: When focus comes to Create button tip will be displayed(tip will be displayed on keyboard focus only)
+     * and when press ESCAPE key, will do history back i.e. move to previous view.
+     *
      * @override
      * @param {jQuery} $node
      */
     renderButtons: function ($node) {
+        var self = this;
         if (!this.noLeaf && this.hasButtons) {
+            var mouseClicked = false;
             this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+            // Note: Intentionally kept separate event binding on same element due to test case
+            this.$buttons.find('.o_list_button_add')
+            .on('mousedown', function () {
+                mouseClicked = true;
+            })
+            .on('focus', function () {
+                if (mouseClicked) {
+                    $(this).tooltip('hide');
+                    mouseClicked = false;
+                    return;
+                }
+                Framework.showFocusTip({attachTo: this, message: _t('Press ENTER to Create'), trigger: 'focus'});
+            })
+            .on('keydown', function (event) {
+                if (event.which === $.ui.keyCode.ENTER || event.which == $.ui.keyCode.ESCAPE) {
+                    $(this).tooltip('hide'); //forcefully hide tooltip as firefox doesn't hide it when element get hidden
+                }
+                if (event.which == $.ui.keyCode.ESCAPE) {
+                    self.trigger_up('history_back');
+                }
+            });
+
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
             this.$buttons.appendTo($node);
         }

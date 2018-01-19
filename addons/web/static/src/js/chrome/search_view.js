@@ -249,6 +249,15 @@ var SearchView = Widget.extend({
                     break;
             }
         },
+        'keydown .o_searchview_input': function (e) {
+            // Move to previous view if searchview is not in modal and autocomplete is closed and user press Escape key
+            if (!this.$el.closest('.modal').length && this.autocomplete && !this.autocomplete.$el.is(':visible') && e.which == $.ui.keyCode.ESCAPE) {
+                this.trigger_up('switch_to_previous_view');
+            }
+            if (this.autocomplete && !this.autocomplete.$el.is(':visible') && e.which == $.ui.keyCode.DOWN) {
+                this.trigger('search_widget_down', e);
+            }
+        },
     },
     defaults: _.extend({}, Widget.prototype.defaults, {
         hidden: false,
@@ -424,6 +433,9 @@ var SearchView = Widget.extend({
         if (this.$buttons)  {
             this.$buttons.toggle(this.visible_filters);
         }
+    },
+    setInputFocus: function () {
+        this.$('.o_searchview_input').focus();
     },
     /**
      * Sets up search view's view-wide auto-completion widget

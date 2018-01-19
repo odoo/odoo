@@ -40,6 +40,7 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
+        this.rendererParams.formviewInPopup = params.formview_in_popup;
     },
 
     //--------------------------------------------------------------------------

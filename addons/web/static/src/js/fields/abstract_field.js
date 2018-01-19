@@ -30,33 +30,14 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
-var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
-var Widget = require('web.Widget');
+var ViewWidget = require('web.ViewWidget');
 
-var AbstractField = Widget.extend({
-    cssLibs: [],
-    jsLibs: [],
-    events: {
-        'keydown': '_onKeydown',
-    },
-    custom_events: {
-        navigation_move: '_onNavigationMove',
-    },
-
+var AbstractField = ViewWidget.extend({
     /**
      * fields can extend the context, e.g. binary fields add {bin_size: true}
      */
     context: null,
-
-    /**
-    * An object representing fields to be fetched by the model eventhough not present in the view
-    * This object contains "field name" as key and an object as value.
-    * That value object must contain the key "type"
-    * see FieldBinaryImage for an example.
-    */
-    fieldDependencies: {},
-
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
@@ -90,14 +71,11 @@ var AbstractField = Widget.extend({
      * @param {string} [options.mode=readonly] should be 'readonly' or 'edit'
      */
     init: function (parent, name, record, options) {
-        this._super(parent);
+        this._super(parent, record);
         options = options || {};
 
         // 'name' is the field name displayed by this widget
         this.name = name;
-
-        // the datapoint fetched from the model
-        this.record = record;
 
         // the 'field' property is a description of all the various field properties,
         // such as the type, the comodel (relation), ...
@@ -192,46 +170,11 @@ var AbstractField = Widget.extend({
             return self._render();
         });
     },
-    /**
-     * Loads the libraries listed in this.jsLibs and this.cssLibs
-     *
-     * @override
-     */
-    willStart: function () {
-        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
-    },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Activates the field widget. By default, activation means focusing and
-     * selecting (if possible) the associated focusable element. The selecting
-     * part can be disabled.  In that case, note that the focused input/textarea
-     * will have the cursor at the very end.
-     *
-     * @param {Object} [options]
-     * @param {boolean} [options.noselect=false] if false and the input
-     *   is of type text or textarea, the content will also be selected
-     * @param {Event} [options.event] the event which fired this activation
-     * @returns {boolean} true if the widget was activated, false if the
-     *                    focusable element was not found or invisible
-     */
-    activate: function (options) {
-        if (this.isFocusable()) {
-            var $focusable = this.getFocusableElement();
-            $focusable.focus();
-            if ($focusable.is('input[type="text"], textarea')) {
-                $focusable[0].selectionStart = $focusable[0].selectionEnd = $focusable[0].value.length;
-                if (options && !options.noselect) {
-                    $focusable.select();
-                }
-            }
-            return true;
-        }
-        return false;
-    },
     /**
      * This function should be implemented by widgets that are not able to
      * notify their environment when their value changes (maybe because their
@@ -246,22 +189,18 @@ var AbstractField = Widget.extend({
      */
     commitChanges: function () {},
     /**
-     * Returns the main field's DOM element (jQuery form) which can be focused
-     * by the browser.
+     * A field widget element is blank or not.
      *
-     * @returns {jQuery} main focusable element inside the widget
-     */
-    getFocusableElement: function () {
-        return $();
-    },
-    /**
-     * Returns true iff the widget has a visible element that can take the focus
+     * This function should override by widgets and return true/false
+     * after checking widget element is blank or not
+     *
+     * Note: Checking element value is blank varies by widgets
+     * InputField will check input is blank or not while date field will check datepicker.$input
      *
      * @returns {boolean}
      */
-    isFocusable: function () {
-        var $focusable = this.getFocusableElement();
-        return $focusable.length && $focusable.is(':visible');
+    isBlank: function () {
+        return false;
     },
     /**
      * this method is used to determine if the field value is set to a meaningful
@@ -443,69 +382,21 @@ var AbstractField = Widget.extend({
         });
         return def;
     },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
     /**
-     * Intercepts navigation keyboard events to prevent their default behavior
-     * and notifies the view so that it can handle it its own way.
+     * Stops to navigate further if required field is blank,
+     * isBlank method will check whether field is blank or not.
      *
-     * Note: the navigation keyboard events are stopped so that potential parent
-     * abstract field does not trigger the navigation_move event a second time.
-     * However, this might be controversial, we might wanna let the event
-     * continue its propagation and flag it to say that navigation has already
-     * been handled (TODO ?).
-     *
-     * @private
-     * @param {KeyEvent} ev
-     */
-    _onKeydown: function (ev) {
-        switch (ev.which) {
-            case $.ui.keyCode.TAB:
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {
-                    direction: ev.shiftKey ? 'previous' : 'next',
-                });
-                break;
-            case $.ui.keyCode.ENTER:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'next_line'});
-                break;
-            case $.ui.keyCode.ESCAPE:
-                this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
-                break;
-            case $.ui.keyCode.UP:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'up'});
-                break;
-            case $.ui.keyCode.RIGHT:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'right'});
-                break;
-            case $.ui.keyCode.DOWN:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'down'});
-                break;
-            case $.ui.keyCode.LEFT:
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {direction: 'left'});
-                break;
-        }
-    },
-    /**
-     * Updates the target data value with the current AbstractField instance.
-     * This allows to consider the parent field in case of nested fields. The
-     * field which triggered the event is still accessible through ev.target.
-     *
+     * @override
      * @private
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
-        ev.data.target = this;
-    },
+        if (ev.data.direction === 'next' && this.isBlank() && this.$el.hasClass('o_required_modifier')) {
+            this.$el.toggleClass('o_field_invalid', true);
+            ev.data.required_error = true;
+        }
+        return this._super.apply(this, arguments);
+    }
 });
 
 return AbstractField;
