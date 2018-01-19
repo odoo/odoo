@@ -441,6 +441,50 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create when first column is folded', function (assert) {
+        assert.expect(6);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+        });
+
+        assert.notOk(kanban.$('.o_kanban_group:first').hasClass('o_column_folded'),
+            "first column should not be folded");
+
+        // fold the first column
+        kanban.$('.o_kanban_group:first .o_kanban_toggle_fold').click();
+
+        assert.ok(kanban.$('.o_kanban_group:first').hasClass('o_column_folded'),
+            "first column should be folded");
+
+        // click on 'Create' to open the quick create in the first column
+        kanban.$buttons.find('.o-kanban-button-new').click();
+
+        assert.notOk(kanban.$('.o_kanban_group:first').hasClass('o_column_folded'),
+            "first column should no longer be folded");
+        var $quickCreate = kanban.$('.o_kanban_group:first .o_kanban_quick_create');
+        assert.strictEqual($quickCreate.length, 1,
+            "should have added a quick create element in first column");
+
+        // fold again the first column
+        kanban.$('.o_kanban_group:first .o_kanban_toggle_fold').click();
+
+        assert.ok(kanban.$('.o_kanban_group:first').hasClass('o_column_folded'),
+            "first column should be folded");
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 0,
+            "there should be no more quick create");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create and edit in grouped mode', function (assert) {
         assert.expect(6);
 
