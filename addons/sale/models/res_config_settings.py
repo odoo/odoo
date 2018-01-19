@@ -39,11 +39,13 @@ class ResConfigSettings(models.TransientModel):
     group_show_price_subtotal = fields.Boolean(
         "Show subtotal",
         implied_group='sale.group_show_price_subtotal',
-        group='base.group_portal,base.group_user,base.group_public')
+        group='base.group_portal,base.group_user,base.group_public',
+        compute='_compute_group_show_price', store=True, readonly=False)
     group_show_price_total = fields.Boolean(
         "Show total",
         implied_group='sale.group_show_price_total',
-        group='base.group_portal,base.group_user,base.group_public')
+        group='base.group_portal,base.group_user,base.group_public',
+        compute='_compute_group_show_price', store=True, readonly=False)
     group_proforma_sales = fields.Boolean(string="Pro-Forma Invoice", implied_group='sale.group_proforma_sales',
         help="Allows you to send pro-forma invoice.")
     sale_show_tax = fields.Selection([
@@ -85,23 +87,14 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange('multi_sales_price', 'multi_sales_price_method')
     def _onchange_sale_price(self):
         if self.multi_sales_price and not self.multi_sales_price_method:
-            self.update({
-                'multi_sales_price_method': 'percentage',
-            })
+            self.multi_sales_price_method = 'percentage'
         self.sale_pricelist_setting = self.multi_sales_price and self.multi_sales_price_method or 'fixed'
 
-    @api.onchange('sale_show_tax')
-    def _onchange_sale_tax(self):
-        if self.sale_show_tax == "subtotal":
-            self.update({
-                'group_show_price_total': False,
-                'group_show_price_subtotal': True,
-            })
-        else:
-            self.update({
-                'group_show_price_total': True,
-                'group_show_price_subtotal': False,
-            })
+    @api.depends('sale_show_tax')
+    def _compute_group_show_price(self):
+        for record in self:
+            record.group_show_price_total = (record.sale_show_tax != "subtotal")
+            record.group_show_price_subtotal = (record.sale_show_tax == "subtotal")
 
     @api.onchange('sale_pricelist_setting')
     def _onchange_sale_pricelist_setting(self):

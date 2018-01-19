@@ -9,9 +9,13 @@ from odoo import api, fields, models, _
 class CrmTeam(models.Model):
     _inherit = 'crm.team'
 
-    use_quotations = fields.Boolean(string='Quotations', help="Check this box if you send quotations to your customers rather than confirming orders straight away. "
-                                                              "This will add specific action buttons to your dashboard.")
-    use_invoices = fields.Boolean('Set Invoicing Target', help="Check this box to set an invoicing target for this sales channel.")
+    use_quotations = fields.Boolean(string='Quotations',
+        compute='_compute_use_quotations_invoices', store=True, readonly=False,
+        help="Check this box if you send quotations to your customers rather than confirming orders straight away. "
+             "This will add specific action buttons to your dashboard.")
+    use_invoices = fields.Boolean('Set Invoicing Target',
+        compute='_compute_use_quotations_invoices', store=True, readonly=False,
+        help="Check this box to set an invoicing target for this sales channel.")
     invoiced = fields.Integer(
         compute='_compute_invoiced',
         string='Invoiced This Month', readonly=True,
@@ -113,17 +117,15 @@ class CrmTeam(models.Model):
             action['context'] = {'search_default_team_id': self.id}
             return action
 
+    @api.depends('team_type')
+    def _compute_use_quotations_invoices(self):
+        for team in self:
+            team.use_quotations = team.use_invoices = (team.team_type == 'sales')
+
     @api.onchange('team_type')
     def _onchange_team_type(self):
-        if self.team_type == 'sales':
-            self.use_quotations = True
-            self.use_invoices = True
-            # do not override dashboard_graph_model 'crm.opportunity.report' if crm is installed
-            if not self.dashboard_graph_model:
-                self.dashboard_graph_model = 'sale.report'
-        else:
-            self.use_quotations = False
-            self.use_invoices = False
+        # do not override dashboard_graph_model 'crm.opportunity.report' if crm is installed
+        if not(self.team_type == 'sales' and self.dashboard_graph_model):
             self.dashboard_graph_model = 'sale.report'
         return super(CrmTeam, self)._onchange_team_type()
 

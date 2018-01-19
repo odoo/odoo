@@ -159,7 +159,8 @@ class SaleOrder(models.Model):
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all', track_visibility='always')
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term')
-    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position')
+    fiscal_position_id = fields.Many2one('account.fiscal.position', oldname='fiscal_position', string='Fiscal Position',
+        compute='_compute_fiscal_position_id', store=True, readonly=False)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env['res.company']._company_default_get('sale.order'))
     team_id = fields.Many2one('crm.team', 'Sales Channel', change_default=True, default=_get_default_team, oldname='section_id')
 
@@ -198,14 +199,11 @@ class SaleOrder(models.Model):
             return 'sale.mt_order_sent'
         return super(SaleOrder, self)._track_subtype(init_values)
 
-    @api.multi
-    @api.onchange('partner_shipping_id', 'partner_id')
-    def onchange_partner_shipping_id(self):
-        """
-        Trigger the change of fiscal position when the shipping address is modified.
-        """
-        self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
-        return {}
+    @api.depends('partner_shipping_id', 'partner_id')
+    def _compute_fiscal_position_id(self):
+        AFP = self.env['account.fiscal.position']
+        for order in self:
+            order.fiscal_position_id = AFP.get_fiscal_position(self.partner_id.id, self.partner_shipping_id.id)
 
     @api.multi
     @api.onchange('partner_id')
