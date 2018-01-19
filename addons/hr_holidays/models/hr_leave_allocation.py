@@ -288,12 +288,3 @@ class HolidaysAllocation(models.Model):
             })
 
         return [new_group] + groups
-
-    @api.multi
-    def _message_notification_recipients(self, message, recipients):
-        result = super(HolidaysAllocation, self)._message_notification_recipients(message, recipients)
-        title = _("See Allocation")
-        for res in result:
-            if result[res].get('button_access'):
-                result[res]['button_access']['title'] = title
-        return result
