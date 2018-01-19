@@ -557,6 +557,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     updateProposition: function (handle, values) {
+        var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
         if (!prop) {
@@ -571,10 +572,12 @@ var StatementModel = BasicModel.extend({
                             prop.analytic_tag_ids.push(value.ids);
                         }
                         break;
-                    default:
+                    case "FORGET":
+                        var id = self.localData[value.ids[0]].ref;
                         prop.analytic_tag_ids = _.filter(prop.analytic_tag_ids, function (val) {
-                            return val.id !== value.ids.id;
+                            return val.id !== id;
                         });
+                        break;
                 }
             } else {
                 prop[fieldName] = values[fieldName];
