@@ -694,7 +694,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
     transfer_account_id = fields.Many2one('account.account.template', required=True, string='Transfer Account',
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
-    purchase_tax_rate = fields.Float(string='Purchase Tax(%)')
+    purchase_tax_rate = fields.Float(string='Purchase Tax(%)',
+        compute='_compute_purchase_tax_rate', store=True, readonly=False)
     complete_tax_set = fields.Boolean('Complete Set of Taxes',
         help="This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use "
             "the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete")
@@ -713,9 +714,10 @@ class WizardMultiChartsAccounts(models.TransientModel):
             result.append(chart_template.id)
         return result
 
-    @api.onchange('sale_tax_rate')
+    @api.depends('sale_tax_rate')
     def onchange_tax_rate(self):
-        self.purchase_tax_rate = self.sale_tax_rate or False
+        for record in self:
+            record.purchase_tax_rate = record.sale_tax_rate
 
     @api.onchange('chart_template_id')
     def onchange_chart_template_id(self):

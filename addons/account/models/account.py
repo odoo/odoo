@@ -68,6 +68,7 @@ class AccountAccount(models.Model):
         help='Last time the invoices & payments matching was performed on this account. It is set either if there\'s not at least '\
         'an unreconciled debit and an unreconciled credit Or if you click the "Done" button.')
     reconcile = fields.Boolean(string='Allow Reconciliation', default=False,
+        compute='_compute_reconcile', store=True, readonly=False,
         help="Check this box if this account allows invoices & payments matching of journal items.")
     tax_ids = fields.Many2many('account.tax', 'account_account_tax_default_rel',
         'account_id', 'tax_id', string='Default Taxes')
@@ -75,7 +76,7 @@ class AccountAccount(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env['res.company']._company_default_get('account.account'))
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
-    group_id = fields.Many2one('account.group')
+    group_id = fields.Many2one('account.group', compute='_compute_group_id', store=True, readonly=False)
 
     opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
     opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
@@ -174,25 +175,23 @@ class AccountAccount(models.Model):
         accounts = self.search(domain + args, limit=limit)
         return accounts.name_get()
 
-    @api.onchange('internal_type')
-    def onchange_internal_type(self):
-        self.reconcile = self.internal_type in ('receivable', 'payable')
+    @api.depends('internal_type')
+    def _compute_reconcile(self):
+        for account in self:
+            account.reconcile = account.internal_type in ('receivable', 'payable')
 
-    @api.onchange('code')
-    def onchange_code(self):
+    @api.depends('code')
+    def _compute_group_id(self):
         AccountGroup = self.env['account.group']
-
-        group = False
-        code_prefix = self.code
-
-        # find group with longest matching prefix
-        while code_prefix:
-            matching_group = AccountGroup.search([('code_prefix', '=', code_prefix)], limit=1)
-            if matching_group:
-                group = matching_group
-                break
-            code_prefix = code_prefix[:-1]
-        self.group_id = group
+        for account in self:
+            # find group with longest matching prefix
+            code_prefix = account.code
+            while code_prefix:
+                matching_group = AccountGroup.search([('code_prefix', '=', code_prefix)], limit=1)
+                if matching_group:
+                    account.group_id = matching_group
+                    break
+                code_prefix = code_prefix[:-1]
 
     @api.multi
     @api.depends('name', 'code')
@@ -777,6 +776,7 @@ class AccountTax(models.Model):
     account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account', ondelete='restrict',
         help="Account that will be set on invoice tax lines for invoices. Leave empty to use the expense account.", oldname='account_collected_id')
     refund_account_id = fields.Many2one('account.account', domain=[('deprecated', '=', False)], string='Tax Account on Credit Notes', ondelete='restrict',
+        compute='_compute_refund_account_id', store=True, readonly=False,
         help="Account that will be set on invoice tax lines for credit notes. Leave empty to use the expense account.", oldname='account_paid_id')
     description = fields.Char(string='Label on Invoices', translate=True)
     price_include = fields.Boolean(string='Included in Price', default=False,
@@ -852,9 +852,10 @@ class AccountTax(models.Model):
         if self.amount_type in ('percent', 'division') and self.amount != 0.0 and not self.description:
             self.description = "{0:.4g}%".format(self.amount)
 
-    @api.onchange('account_id')
-    def onchange_account_id(self):
-        self.refund_account_id = self.account_id
+    @api.depends('account_id')
+    def _compute_refund_account_id(self):
+        for tax in self:
+            tax.refund_account_id = tax.account_id
 
     @api.onchange('price_include')
     def onchange_price_include(self):
@@ -1040,7 +1041,7 @@ class AccountReconcileModel(models.Model):
 
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain=[('deprecated', '=', False)])
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.")
-    label = fields.Char(string='Journal Item Label')
+    label = fields.Char(string='Journal Item Label', compute='_compute_label', store=True, readonly=False)
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('percentage', 'Percentage of balance')
@@ -1060,6 +1061,7 @@ class AccountReconcileModel(models.Model):
     second_tax_id = fields.Many2one('account.tax', string='Second Tax', ondelete='restrict', domain=[('type_tax_use', '=', 'purchase')])
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
 
-    @api.onchange('name')
-    def onchange_name(self):
-        self.label = self.name
+    @api.depends('name')
+    def _compute_label(self):
+        for model in self:
+            model.label = model.name

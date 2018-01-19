@@ -115,10 +115,6 @@ class AccountBankStatement(models.Model):
             return last_bnk_stmt.balance_end
         return 0
 
-    @api.multi
-    def _set_opening_balance(self, journal_id):
-        self.balance_start = self._get_opening_balance(journal_id)
-
     @api.model
     def _default_opening_balance(self):
         #Search last bank statement and set current opening balance as closing balance of previous one
@@ -136,7 +132,8 @@ class AccountBankStatement(models.Model):
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
     date = fields.Date(required=True, states={'confirm': [('readonly', True)]}, index=True, copy=False, default=fields.Date.context_today)
     date_done = fields.Datetime(string="Closed On")
-    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]}, default=_default_opening_balance)
+    balance_start = fields.Monetary(string='Starting Balance', states={'confirm': [('readonly', True)]},
+        default=_default_opening_balance, compute='_compute_balance_start', store=True, readonly=False)
     balance_end_real = fields.Monetary('Ending Balance', states={'confirm': [('readonly', True)]})
     state = fields.Selection([('open', 'New'), ('confirm', 'Validated')], string='Status', required=True, readonly=True, copy=False, default='open')
     currency_id = fields.Many2one('res.currency', compute='_compute_currency', oldname='currency', string="Currency")
@@ -159,9 +156,10 @@ class AccountBankStatement(models.Model):
     cashbox_end_id = fields.Many2one('account.bank.statement.cashbox', string="Ending Cashbox")
     is_difference_zero = fields.Boolean(compute='_is_difference_zero', string='Is zero', help="Check if difference is zero.")
 
-    @api.onchange('journal_id')
-    def onchange_journal_id(self):
-        self._set_opening_balance(self.journal_id.id)
+    @api.depends('journal_id')
+    def _compute_balance_start(self):
+        for stmt in self:
+            stmt.balance_start = self._get_opening_balance(stmt.journal_id.id)
 
     @api.multi
     def _balance_check(self):
