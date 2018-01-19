@@ -649,7 +649,7 @@ class JsonRequest(WebRequest):
                 _logger.exception("Exception during JSON request handling.")
             error = {
                     'code': 200,
-                    'message': "Odoo Server Error",
+                    'message': exception.value or "Odoo Server Error",
                     'data': serialize_exception(exception)
             }
             if isinstance(exception, AuthenticationError):
