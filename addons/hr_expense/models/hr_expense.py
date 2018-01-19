@@ -272,7 +272,7 @@ class HrExpense(models.Model):
                 'expense_id': expense.id,
                 'partner_id': partner_id,
                 'tax_ids': [(6, 0, expense.tax_ids.ids)],
-                'currency_id': expense.currency_id if different_currency else False,
+                'currency_id': expense.currency_id.id if different_currency else False,
             }
             move_line_values.append(move_line_src)
             total_amount -= move_line_src['debit']
