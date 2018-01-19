@@ -180,7 +180,6 @@ Best Regards,'''))
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.user.company_id
-        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -271,7 +270,7 @@ Best Regards,'''))
             default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
-                raise UserError(_("No miscellaneous journal could be found. Please create one before proceeding."))
+                raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
