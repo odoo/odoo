@@ -47,6 +47,11 @@
         padding: 4px @odoo-horizontal-padding;
         margin-bottom: 0px;
 
+        &.o_mail_not_discussion {
+            background-color: @mail-thread-note;
+            border-bottom: 1px solid @gray-lighter-dark;
+        }
+
         .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
             margin-right: 10px;
@@ -109,11 +114,7 @@
                 text-align: justify;
             }
 
-            &.o_mail_note {
-                background-color: @mail-thread-note;
-                padding-left: @grid-gutter-width*0.3;
-                border-bottom: 1px solid @gray-lighter-dark;
-            }
+            
 
             .o_mail_subject {
                 font-style: italic;
