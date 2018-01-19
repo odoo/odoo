@@ -167,8 +167,11 @@ class account_journal(models.Model):
             # optimization to read sum of balance from account_move_line
             account_ids = tuple(ac for ac in [self.default_debit_account_id.id, self.default_credit_account_id.id] if ac)
             if account_ids:
-                amount_field = 'balance' if (not self.currency_id or self.currency_id == self.company_id.currency_id) else 'amount_currency'
-                query = """SELECT sum(%s) FROM account_move_line WHERE account_id in %%s AND date <= %%s;""" % (amount_field,)
+                amount_field = 'aml.balance' if (not self.currency_id or self.currency_id == self.company_id.currency_id) else 'aml.amount_currency'
+                query = """SELECT sum(%s) FROM account_move_line aml
+                           LEFT JOIN account_move move ON aml.move_id = move.id
+                           WHERE aml.account_id in %%s
+                           AND move.date <= %%s AND move.state = 'posted';""" % (amount_field,)
                 self.env.cr.execute(query, (account_ids, fields.Date.today(),))
                 query_results = self.env.cr.dictfetchall()
                 if query_results and query_results[0].get('sum') != None:
