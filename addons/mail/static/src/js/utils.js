@@ -100,15 +100,17 @@ function inline (node, transform_children) {
 
 // Parses text to find email: Tagada <address@mail.fr> -> [Tagada, address@mail.fr] or False
 function parse_email (text) {
-    var result = text.match(/(.*)<(.*@.*)>/);
-    if (result) {
-        return [_.str.trim(result[1]), _.str.trim(result[2])];
+    if (text){
+        var result = text.match(/(.*)<(.*@.*)>/);
+        if (result) {
+            return [_.str.trim(result[1]), _.str.trim(result[2])];
+        }
+        result = text.match(/(.*@.*)/);
+        if (result) {
+            return [_.str.trim(result[1]), _.str.trim(result[1])];
+        }
+        return [text, false];
     }
-    result = text.match(/(.*@.*)/);
-    if (result) {
-        return [_.str.trim(result[1]), _.str.trim(result[1])];
-    }
-    return [text, false];
 }
 
 // Replaces textarea text into html text (add <p>, <a>)

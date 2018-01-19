@@ -258,7 +258,7 @@ var Chatter = Widget.extend(chat_mixin, {
                     var suggested_partners = [];
                     var thread_recipients = result[self.context.default_res_id];
                     _.each(thread_recipients, function (recipient) {
-                        var parsed_email = utils.parse_email(recipient[1]);
+                        var parsed_email = recipient[1] && utils.parse_email(recipient[1]);
                         suggested_partners.push({
                             checked: true,
                             partner_id: recipient[0],
