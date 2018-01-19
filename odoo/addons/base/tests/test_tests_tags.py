@@ -273,7 +273,7 @@ class TestSelectorSelection(TransactionCase):
         tags = TagsSelector('-slow,-standard')
         self.assertFalse(tags.check(multiple_tags_standard_obj))
 
-        tags = TagsSelector('stantard,-slow')
+        tags = TagsSelector('standard,-slow')
         self.assertFalse(tags.check(multiple_tags_standard_obj))
 
         tags = TagsSelector('slow,-standard')
