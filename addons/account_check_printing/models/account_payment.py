@@ -46,9 +46,17 @@ class AccountPayment(models.Model):
 
     check_amount_in_words = fields.Char(string="Amount in Words")
     check_manual_sequencing = fields.Boolean(related='journal_id.check_manual_sequencing')
-    check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
-        help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
-             "or if the current numbering is wrong, you can change it in the journal configuration page.")
+    
+    #MODIFICADO POR TRESCLOUD
+    #Se redefine el check_number como char para que sea compatible con nuestro fork de odoo 
+    #check_number = fields.Integer(string="Check Number", readonly=True, copy=False,
+    #    help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
+    #         "or if the current numbering is wrong, you can change it in the journal configuration page.")
+    check_number = fields.Char(string='Check Number', size=64, default=0,
+                               states={'draft':[('readonly',False)]}, track_visibility='onchange', 
+                               help='Number of the check corresponding to this payment. If your pre-printed check are not already numbered, '
+                                    'you can manage the numbering in the journal configuration page.')
+
 
     def _get_check_amount_in_words(self, amount):
         # TODO: merge, refactor and complete the amount_to_text and amount_to_text_en classes
