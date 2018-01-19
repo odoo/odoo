@@ -229,7 +229,6 @@ var LivechatButton = Widget.extend({
             date: moment(time.str_to_datetime(data.date)),
             is_needaction: false,
             is_note: data.is_note,
-            is_discussion: data.is_discussion,
             customer_email_data: []
         };
 
