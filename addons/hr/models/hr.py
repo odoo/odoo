@@ -206,7 +206,7 @@ class Employee(models.Model):
     def _sync_user(self, user):
         return dict(
             name=user.name,
-            image=user.image,
+            image=user.with_context(bin_size=False).image,
             work_email=user.email,
         )
 
