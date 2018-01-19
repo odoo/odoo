@@ -44,8 +44,8 @@ class AccountAssetCategory(models.Model):
         ('manual', 'Based on Purchase Date')],
         string='Depreciation Dates', default='manual', required=True,
         help='The way to compute the date of the first depreciation.\n'
-             '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.\n'
-             '  * Based on purchase date: The depreciation journal entries will start on the purchase day.')
+             '  * Based on last day of purchase period: The depreciation dates will be based on the last day of the purchase month or the purchase year (depending on the periodicity of the depreciations).\n'
+             '  * Based on purchase date: The depreciation dates will be based on the purchase date.')
 
     @api.onchange('account_asset_id')
     def onchange_account_asset(self):
@@ -112,12 +112,12 @@ class AccountAssetAsset(models.Model):
     type = fields.Selection(related="category_id.type", string='Type', required=True)
     date_first_depreciation = fields.Selection([
         ('last_day_period', 'Based on Last Day of Purchase Period'),
-        ('manual', 'Manual')],
+        ('manual', 'Based on Purchase Date')],
         string='Depreciation Dates', default='manual',
         readonly=True, states={'draft': [('readonly', False)]}, required=True,
         help='The way to compute the date of the first depreciation.\n'
-             '  * Based on the last day of period: The depreciation dates will be based on the last day of the purchase month or the last day of the fiscal year if the depreciation periods are in years.\n'
-             '  * Manual: The first depreciation date will be based on a date defined manually which, by default, is the purchase day.\n')
+             '  * Based on last day of purchase period: The depreciation dates will be based on the last day of the purchase month or the purchase year (depending on the periodicity of the depreciations).\n'
+             '  * Based on purchase date: The depreciation dates will be based on the purchase date.\n')
     first_depreciation_manual_date = fields.Date(
         string='First Depreciation Date',
         readonly=True, states={'draft': [('readonly', False)]},
