@@ -98,8 +98,8 @@ class Partner(models.Model):
 
         # custom values
         custom_values = dict()
-        if message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_email_values'):
-            custom_values = self.env[message.model].browse(message.res_id).message_get_email_values(message)
+        if message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_specific_email_values'):
+            custom_values = self.env[message.model].browse(message.res_id)._notify_specific_email_values(message)
 
         mail_values = {
             'mail_message_id': message.id,
@@ -120,11 +120,11 @@ class Partner(models.Model):
             # cache so should not impact performances.
             mail_message_id = mail_values.get('mail_message_id')
             message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
-            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_recipient_values'):
+            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_email_recipients'):
                 tig = self.env[message.model].browse(message.res_id)
-                recipient_values = tig.message_get_recipient_values(notif_message=message, recipient_ids=email_chunk)
+                recipient_values = tig._notify_email_recipients(message, email_chunk)
             else:
-                recipient_values = self.env['mail.thread'].message_get_recipient_values(notif_message=None, recipient_ids=email_chunk)
+                recipient_values = self.env['mail.thread']._notify_email_recipients(message, email_chunk)
             create_values = {
                 'body_html': body,
                 'subject': subject,
@@ -177,10 +177,10 @@ class Partner(models.Model):
         base_mail_values = self._notify_prepare_email_values(message)
 
         # classify recipients: actions / no action
-        if message.model and message.res_id and hasattr(self.env[message.model], '_message_notification_recipients'):
-            recipients = self.env[message.model].browse(message.res_id)._message_notification_recipients(message, self)
+        if message.model and message.res_id and hasattr(self.env[message.model], '_notify_classify_recipients'):
+            recipients = self.env[message.model].browse(message.res_id)._notify_classify_recipients(message, self)
         else:
-            recipients = self.env['mail.thread']._message_notification_recipients(message, self)
+            recipients = self.env['mail.thread']._notify_classify_recipients(message, self)
 
         emails = self.env['mail.mail']
         recipients_nbr, recipients_max = 0, 50

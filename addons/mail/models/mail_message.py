@@ -699,14 +699,14 @@ class Message(models.Model):
     @api.model
     def _get_reply_to(self, values):
         """ Return a specific reply_to: alias of the document through
-        message_get_reply_to or take the email_from """
+        _notify_get_reply_to or take the email_from """
         model, res_id, email_from = values.get('model', self._context.get('default_model')), values.get('res_id', self._context.get('default_res_id')), values.get('email_from')  # ctx values / defualt_get res ?
-        if model and hasattr(self.env[model], 'message_get_reply_to'):
-            # return self.env[model].browse(res_id).message_get_reply_to([res_id], default=email_from)[res_id]
-            return self.env[model].message_get_reply_to([res_id], default=email_from)[res_id]
+        if model and hasattr(self.env[model], '_notify_get_reply_to'):
+            # return self.env[model].browse(res_id)._notify_get_reply_to([res_id], default=email_from)[res_id]
+            return self.env[model]._notify_get_reply_to([res_id], default=email_from)[res_id]
         else:
-            # return self.env['mail.thread'].message_get_reply_to(default=email_from)[None]
-            return self.env['mail.thread'].message_get_reply_to([None], default=email_from)[None]
+            # return self.env['mail.thread']._notify_get_reply_to(default=email_from)[None]
+            return self.env['mail.thread']._notify_get_reply_to([None], default=email_from)[None]
 
     @api.model
     def _get_message_id(self, values):
