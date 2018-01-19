@@ -14,7 +14,7 @@ def sample(population):
             random.randint(0, min(len(population), 5)))
 
 
-@tagged('stantard', 'at_install')
+@tagged('standard', 'at_install')
 class TestModulesLoading(unittest.TestCase):
     def setUp(self):
         self.mods = [str(i) for i in range(1000)]

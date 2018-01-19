@@ -6,7 +6,7 @@ from odoo.addons.http_routing.models.ir_http import slugify, unslug
 from odoo.tests.common import tagged
 
 
-@tagged('stantard', 'at_install')
+@tagged('standard', 'at_install')
 class TestUnslug(unittest.TestCase):
 
     def test_unslug(self):
