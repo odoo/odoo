@@ -20,7 +20,7 @@ class MrpStockReport(models.TransientModel):
     _name = 'stock.traceability.report'
 
     @api.model
-    def get_move_lines(self, move_lines):
+    def _get_move_lines(self, move_lines):
         res = self.env['stock.move.line']
         for move_line in move_lines:
             # if MTO
@@ -37,7 +37,7 @@ class MrpStockReport(models.TransientModel):
                         ('date', '<', move_line.date),
                     ])
         if res:
-            res |= self.get_move_lines(res)
+            res |= self._get_move_lines(res)
         return res
 
     @api.model
@@ -47,10 +47,9 @@ class MrpStockReport(models.TransientModel):
         rec_id = kw and kw['model_id'] or context.get('active_id')
         level = kw and kw['level'] or 1
         lines = []
-        res = []
         move_line = self.env['stock.move.line']
         if rec_id and model in ('stock.production.lot', 'stock.move.line'):
-            lines = self.env['stock.move.line'].search([
+            lines = move_line.search([
                 ('lot_id', '=', context.get('lot_name') or rec_id),
                 ('state', '=', 'done'),
                 ('move_id.returned_move_ids', '=', False),
@@ -62,18 +61,18 @@ class MrpStockReport(models.TransientModel):
                         move_line |= is_used
                 lines = move_line
         elif rec_id and model in ('stock.picking', 'mrp.production'):
-            res = self.env[model].browse(rec_id)
+            record = self.env[model].browse(rec_id)
             if model == 'stock.picking':
-                lines = res.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+                lines = record.move_lines.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
             else:
-                lines = res.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
-        res = self._lines(line_id, model_id=rec_id, model=model, level=level, obj_ids=lines)
-        final_vals = sorted(res, key=lambda v: v['date'], reverse=True)
-        lines = self.final_vals_to_lines(final_vals, level)
+                lines = record.move_finished_ids.mapped('move_line_ids').filtered(lambda m: m.lot_id and m.state == 'done')
+        move_line_vals = self._lines(line_id, model_id=rec_id, model=model, level=level, move_lines=lines)
+        final_vals = sorted(move_line_vals, key=lambda v: v['date'], reverse=True)
+        lines = self._final_vals_to_lines(final_vals, level)
         return lines
 
     @api.model
-    def get_links(self, move_line):
+    def _get_reference(self, move_line):
         res_model = ''
         ref = ''
         res_id = False
@@ -101,9 +100,10 @@ class MrpStockReport(models.TransientModel):
             usage = 'out'
         return usage
 
-    def make_dict_move(self, level, parent_id, move_line, unfoldable=False):
-        res_model, res_id, ref = self.get_links(move_line)
+    def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
+        res_model, res_id, ref = self._get_reference(move_line)
         dummy, is_used = self._get_linked_move_lines(move_line)
+        unfoldable = False if not move_line.lot_id else unfoldable
         data = [{
             'level': level,
             'unfoldable': unfoldable,
@@ -112,43 +112,20 @@ class MrpStockReport(models.TransientModel):
             'is_used': bool(is_used),
             'usage': self._get_usage(move_line),
             'model_id': move_line.id,
-            'model':'stock.move.line',
+            'model': 'stock.move.line',
             'product_id': move_line.product_id.display_name,
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
             'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
-            'location_source': move_line.location_id.name,
-            'location_destination': move_line.location_dest_id.name,
+            'location_source': move_line.location_id.name if not unfoldable or level == 1 else False,
+            'location_destination': move_line.location_dest_id.name if not unfoldable or level == 1 else False,
             'reference_id': ref,
             'res_id': res_id,
             'res_model': res_model}]
         return data
 
-    def make_dict_head(self, level, parent_id, model=False, move_line=False):
-        res_model, res_id, ref = self.get_links(move_line)
-        data = []
-        if model == 'stock.move.line':
-            data = [{
-                'level': level,
-                'unfoldable': False if not move_line.lot_id else True,
-                'date': move_line.move_id.date,
-                'model_id': move_line.id,
-                'usage': self._get_usage(move_line),
-                'parent_id': parent_id,
-                'model': model or 'stock.move.line',
-                'product_id': move_line.product_id.display_name,
-                'lot_name': move_line.lot_id.name,
-                'lot_id': move_line.lot_id.id,
-                'product_qty_uom': str(move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.product_id.uom_id, rounding_method='HALF-UP')) + ' ' + move_line.product_id.uom_id.name,
-                'location_source': move_line.location_id.name if not move_line.lot_id else False,
-                'location_destination': move_line.location_dest_id.name if not move_line.lot_id else False,
-                'reference_id': ref,
-                'res_id': res_id,
-                'res_model': res_model}]
-        return data
-
     @api.model
-    def final_vals_to_lines(self, final_vals, level):
+    def _final_vals_to_lines(self, final_vals, level):
         lines = []
         for data in final_vals:
             lines.append({
@@ -160,11 +137,9 @@ class MrpStockReport(models.TransientModel):
                 'is_used': data.get('is_used', False),
                 'lot_name': data.get('lot_name', False),
                 'lot_id': data.get('lot_id', False),
-                'type': 'line',
                 'reference': data.get('reference_id', False),
                 'res_id': data.get('res_id', False),
                 'res_model': data.get('res_model', False),
-                'name': _(data.get('lot_name', False)),
                 'columns': [data.get('reference_id', False),
                             data.get('product_id', False),
                             data.get('date', False),
@@ -182,62 +157,34 @@ class MrpStockReport(models.TransientModel):
         return False, False
 
     @api.model
-    def _lines(self, line_id=None, model_id=False, model=False, level=0, obj_ids=[], **kw):
+    def _lines(self, line_id=None, model_id=False, model=False, level=0, move_lines=[], **kw):
         final_vals = []
+        lines = move_lines or []
         if model and line_id:
             move_line = self.env[model].browse(model_id)
             move_lines, is_used = self._get_linked_move_lines(move_line)
             if move_lines:
-                final_vals += self.get_produced_or_consumed_vals(move_lines, level, model=model, parent_id=line_id)
+                lines = move_lines
             else:
-                lines = self.get_move_lines(move_line)
                 if is_used:
-                    move_line |= lines
+                    # Traceability in case of consumed in.
+                    move_line |= self._get_move_lines(move_line)
                 for line in move_line:
-                    final_vals += self.make_dict_move(level, parent_id=line_id, move_line=line)
-        else:
-            for move_line in obj_ids:
-                unfoldable = bool(move_line.produce_line_ids or move_line.consume_line_ids)
-                final_vals += self.make_dict_move(level, parent_id=line_id, move_line=move_line, unfoldable=unfoldable)
-        return final_vals
-
-    @api.model
-    def get_produced_or_consumed_vals(self, move_lines, level, model, parent_id):
-        final_vals = []
-        for line in move_lines:
-            final_vals += self.make_dict_head(level, model=model, parent_id=parent_id, move_line=line)
+                    final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line)
+        for line in lines:
+            unfoldable = bool(line.produce_line_ids or line.consume_line_ids)
+            final_vals += self._make_dict_move(level, parent_id=line_id, move_line=line, unfoldable=unfoldable)
         return final_vals
 
     def get_pdf_lines(self, line_data=[]):
-        final_vals = []
         lines = []
         for line in line_data:
             model = self.env[line['model_name']].browse(line['model_id'])
-            dummy, move_line = self._get_linked_move_lines(model)
-            if line.get('unfoldable') and move_line:
-                    final_vals += self.make_dict_head(line['level'], model=line['model_name'], parent_id=line['id'], move_line=model)
-            else:
-                if line['model_name'] == 'stock.move.line':
-                    final_vals += self.make_dict_move(line['level'], parent_id=line['id'], move_line=model)
-        for data in final_vals:
-            lines.append({
-                'id': autoIncrement(),
-                'model': data['model'],
-                'model_id': data['model_id'],
-                'parent_id': data['parent_id'],
-                'type': 'line',
-                'name': _(data.get('lot_name')),
-                'columns': [data.get('reference_id'),
-                            data.get('product_id'),
-                            data.get('date'),
-                            data.get('lot_name'),
-                            data.get('location_source', False),
-                            data.get('location_destination', False),
-                            data.get('product_qty_uom', 0)],
-                'level': data['level'],
-                'unfoldable': data['unfoldable'],
-            })
-
+            unfoldable = False
+            if line.get('unfoldable'):
+                unfoldable = True
+            final_vals = self._make_dict_move(line['level'], parent_id=line['id'], move_line=model, unfoldable=unfoldable)
+            lines.append(self._final_vals_to_lines(final_vals, line['level'])[0])
         return lines
 
     def get_pdf(self, line_data=[]):
