@@ -197,15 +197,13 @@ class Channel(models.Model):
         return groups
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
+    def _notify_specific_email_values(self, message):
         self.ensure_one()
-        res = super(Channel, self).message_get_email_values(notif_mail=notif_mail)
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers.update(safe_eval(res['headers']))
-            except Exception:
-                pass
+        res = super(Channel, self)._notify_specific_email_values(message)
+        try:
+            headers = safe_eval(res.get('headers', dict()))
+        except Exception:
+            headers = {}
         headers['Precedence'] = 'list'
         # avoid out-of-office replies from MS Exchange
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
@@ -229,14 +227,14 @@ class Channel(models.Model):
         return super(Channel, self).message_receive_bounce(email, partner, mail_id=mail_id)
 
     @api.multi
-    def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+    def _notify_email_recipients(self, message, recipient_ids):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
                 'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
                 'recipient_ids': [],
             }
-        return super(Channel, self).message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
+        return super(Channel, self)._notify_email_recipients(message, recipient_ids)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
