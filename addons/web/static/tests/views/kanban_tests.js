@@ -546,6 +546,80 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create several records on slow network', function (assert) {
+        assert.expect(6);
+
+        var self = this;
+        var def;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test" on_create="quick_create">' +
+                        '<field name="bar"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates></kanban>',
+            groupBy: ['bar'],
+            mockRPC: function (route, args) {
+                var result = this._super.apply(this, arguments);
+                if (args.method === 'name_create') {
+                    return result.then(function (result) {
+                        // simulate a dynamic default value for foo based on display_name,
+                        // so that we can check that the record has been fetched before
+                        // being displayed
+                        var newRec = _.findWhere(self.data.partner.records, {id: result[0]});
+                        newRec.foo = newRec.display_name;
+                        return result;
+                    });
+                }
+                if (args.method === 'read') {
+                    return $.when(def).then(_.constant(result));
+                }
+                return result;
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 1,
+            "first column should contain one record");
+
+        // click to add a record, and add two in a row (first one will be delayed)
+        kanban.$('.o_kanban_header .o_kanban_quick_add i').first().click();
+
+        assert.strictEqual(kanban.$('.o_kanban_quick_create').length, 1,
+            "the quick create should be open");
+
+        def = $.Deferred();
+        kanban.$('.o_kanban_quick_create input')
+            .val('new partner 1')
+            .trigger($.Event('keypress', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+        var firstDef = def;
+        def = null;
+        kanban.$('.o_kanban_quick_create input')
+            .val('new partner 2')
+            .trigger($.Event('keypress', {
+                which: $.ui.keyCode.ENTER,
+                keyCode: $.ui.keyCode.ENTER,
+            }));
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 2,
+            "first column should now contain two records");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record:first').text(),
+            'new partner 2', "new record should have been fetched");
+
+        firstDef.resolve();
+
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record').length, 3,
+            "first column should now contain three records");
+        assert.strictEqual(kanban.$('.o_kanban_group:first .o_kanban_record:first').text(),
+            'new partner 1', "new record should have been fetched");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create fail in grouped', function (assert) {
         assert.expect(7);
 
