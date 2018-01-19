@@ -179,31 +179,15 @@ class Partner(models.Model):
         emails = self.env['mail.mail']
         recipients_nbr, recipients_max = 0, 50
         for email_type, recipient_template_values in recipients.items():
-            if recipient_template_values['followers']:
+            if recipient_template_values['recipients']:
                 # generate notification email content
-                template_fol_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
-                template_fol_values['has_button_follow'] = False
+                template_fol_values = dict(base_template_ctx, **recipient_template_values)
                 fol_values = {
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
                     'body': base_template.render(template_fol_values, engine='ir.qweb'),
                 }
                 # send email
-                new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['followers'], **base_mail_values)
-                # update notifications
-                self._notify_udpate_notifications(new_emails)
-
-                emails |= new_emails
-                recipients_nbr += new_recipients_nbr
-            if recipient_template_values['not_followers']:
-                # generate notification email content
-                template_not_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_follow to none
-                template_not_values['has_button_unfollow'] = False
-                not_values = {
-                    'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
-                    'body': base_template.render(template_not_values, engine='ir.qweb'),
-                }
-                # send email
-                new_emails, new_recipients_nbr = self._notify_send(not_values['body'], not_values['subject'], recipient_template_values['not_followers'], **base_mail_values)
+                new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
                 # update notifications
                 self._notify_udpate_notifications(new_emails)
 

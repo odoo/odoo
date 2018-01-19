@@ -83,20 +83,6 @@
                 style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
             <t t-esc="button_access['title']"/>
         </a>
-        <t t-if="has_button_follow">
-            <t t-if="has_button_access"> | </t>
-            <a t-att-href="button_follow['url']"
-                    style="color: #875A7B; text-decoration: none !important;">
-                <t t-esc="button_follow['title']"/>
-            </a>
-        </t>
-        <t t-if="has_button_unfollow">
-            <t t-if="has_button_access or has_button_follow"> | </t>
-            <a t-att-href="button_unfollow['url']"
-                    style="color: #875A7B; text-decoration: none !important;">
-                <t t-esc="button_unfollow['title']"/>
-            </a>
-        </t>
         <t t-if="actions">
             <t t-foreach="actions" t-as="action">
                 |
