@@ -252,7 +252,7 @@ var SearchView = Widget.extend({
         'keydown .o_searchview_input': function (e) {
             // Move to previous view if searchview is not in modal and autocomplete is closed and user press Escape key
             if (!this.$el.closest('.modal').length && this.autocomplete && !this.autocomplete.$el.is(':visible') && e.which == $.ui.keyCode.ESCAPE) {
-                this.trigger_up('switch_to_previous_view');
+                this.trigger_up('history_back');
             }
             if (this.autocomplete && !this.autocomplete.$el.is(':visible') && e.which == $.ui.keyCode.DOWN) {
                 this.trigger('search_widget_down', e);

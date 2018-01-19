@@ -101,6 +101,12 @@ var AbstractController = Widget.extend(ControlPanelMixin, {
         }
         return this._super.apply(this, arguments);
     },
+    on_attach_callback: function() {
+        // Set focus to search view once it is added in DOM
+        if (this.searchView) {
+            this.searchView.setInputFocus();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
