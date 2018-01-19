@@ -69,11 +69,14 @@ class WebsiteEventTrackController(http.Controller):
     def event_agenda(self, event, tag=None, **post):
         local_tz = pytz.timezone(event.date_tz or 'UTC')
         days_tracks = collections.defaultdict(lambda: [])
+        days_first_track = {}
         for track in event.track_ids.sorted(lambda track: (track.date, bool(track.location_id))):
             if not track.date:
                 continue
             date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
             days_tracks[str(date)[:10]].append(track)
+            # keep track with right timezone for the day
+            days_first_track.setdefault(str(date)[:10], track.new({"date":date}))
 
         days = {}
         tracks_by_days = {}
@@ -83,6 +86,7 @@ class WebsiteEventTrackController(http.Controller):
 
         return request.render("website_event_track.agenda", {
             'event': event,
+            'days_first_track': days_first_track,
             'days': days,
             'tracks_by_days': tracks_by_days,
             'tag': tag
