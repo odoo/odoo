@@ -228,3 +228,10 @@ class view(osv.osv):
                     'active': v.active,
                 })
         return result
+
+    def get_default_lang_code(self, cr, uid, context):
+        website_id = context['website_id']
+        if website_id:
+            return self.pool['website'].browse(cr, uid, website_id, context=context).default_lang_code
+        else:
+            return super(view, self).get_default_lang_code(cr, uid, context=context)

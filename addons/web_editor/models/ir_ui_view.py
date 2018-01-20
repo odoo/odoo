@@ -35,12 +35,18 @@ class view(osv.osv):
     def extract_embedded_fields(self, cr, uid, arch, context=None):
         return arch.xpath('//*[@data-oe-model != "ir.ui.view"]')
 
+
+    def get_default_lang_code(self, cr, uid, context=None):
+        return False
+
     def save_embedded_field(self, cr, uid, el, context=None):
         Model = self.pool[el.get('data-oe-model')]
         field = el.get('data-oe-field')
 
         converter = self.pool['ir.qweb'].get_converter_for(el.get('data-oe-type'))
         value = converter.from_html(cr, uid, Model, Model._fields[field], el)
+        if context and not context.get('lang'):
+            context['lang'] = self.get_default_lang_code(cr, uid, context=context)
 
         if value is not None:
             # TODO: batch writes?
