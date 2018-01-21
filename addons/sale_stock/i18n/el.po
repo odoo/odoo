@@ -27,17 +27,19 @@ msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
 msgstr ""
+"\n"
+"Υπάρχουν διαθέσιμα %s %s σε όλες τις αποθήκες."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr ""
+msgstr "<strong>Αναφορά Πελάτη:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterms:</strong>"
-msgstr ""
+msgstr "<strong>Διεθνείς Εμπορικοί Όροι:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -56,6 +58,11 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"Από προεπιλογή, το Odoo υπολογίζει την αναμενόμενη ημερομηνία παράδοσης με "
+"αυτόν τον τρόπο: ημερομηνία παραγγελίας + υψηλότερη ώρα παράδοσης ειδών του "
+"πελάτη. Με αυτήν την επιλογή, μπορείτε να ορίσετε μια συγκεκριμένη "
+"ημερομηνία παράδοσης για τις παραγγελίες αντί να ρυθμίσετε τους χρόνους "
+"παράδοσης στα είδη."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -158,6 +165,10 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Περιθώριο σφάλματος για ημερομηνίες που συμφωνήθηκαν με πελάτες. Τα προϊόντα"
+" θα προγραμματιστούν για προμήθεια και αποστολή πολλές μέρες πριν την "
+"πραγματική ημερομηνία που είχε υποσχεθεί, ώστε να αντιμετωπιστούν τυχόν μη "
+"αναμενόμενες καθυστερήσεις στην εφοδιαστική αλυσίδα."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -176,13 +187,13 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Προχωρήστε τις αναμενόμενες ημερομηνίες παράδοσης από"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
-msgstr ""
+msgstr "Ανεπαρκές Απόθεμα!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
@@ -233,6 +244,11 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Η χειρωνακτική δέσμευση των ειδών στις παραγγελίες παράδοσης ή η εκτέλεση "
+"του χρονοπρογραμματιστή συνιστάται για την καλύτερη διαχειρίση των "
+"προτεραιοτήτων σε περίπτωση μεγάλων χρόνων παράδοσης στους πελάτες ή/και "
+"συχνών ελείψεων αποθεμάτων. Από προεπιλογή, ο χρονοπρογραμματιστής "
+"εκτελείται αυτόματα κάθε 24 ώρες."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -242,12 +258,12 @@ msgstr "Διαδρομή"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Διαδρομές για Γραμμή Παραγγελίας"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Γραμμή Πώλησης"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
@@ -282,7 +298,7 @@ msgstr "Στατιστικά Παραγγελιών"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company_security_lead
 msgid "Sales Safety Days"
-msgstr ""
+msgstr "Ημέρες Ασφάλειας Πωλήσεων"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -292,7 +308,7 @@ msgstr "Προγραμματίστε τις παραδόσεις νωρίτερ�
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_security_lead
 msgid "Security Lead Time"
-msgstr ""
+msgstr "Χρόνος Ασφάλειας Παράδοσης"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_use_security_lead
@@ -352,12 +368,18 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Αυτό επιτρέπει την εφαρμογή μιας ειδικής διαδρομής στις γραμμές παραγγελίας "
+"(π.χ. Απευθείας παράδοση σε πελάτη, παραγωγή-κατά-παραγγελία) σε περίπτωση "
+"ασυνήθιστου σεναρίου παραγγελίας. Για να είναι διαθέσιμες στις παραγγελίες "
+"πώλησης, οι διαδρομές πρέπει να έχουν επιλέξει την επιλογή 'Γραμμή "
+"Παραγγελίας' στη φόρμα εγκατάστασης."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:273
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
+"Αυτό το είδος είναι συσκευασμένο με %.2f %s. Θα πρέπει να πουλήσετε %.2f %s."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -393,6 +415,8 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
 msgstr ""
+"Μειώνετε την παραγγελθείσα ποσότητα! Μην ξεχάσετε να ενημερώσετε με μη "
+"αυτόματο τρόπο τη σειρά παραλαβής, αν χρειαστεί."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:166
@@ -400,6 +424,8 @@ msgstr ""
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
 msgstr ""
+"Σκοπεύετε να πωλήσετε το %s %s αλλά έχετε μόνο %s %s διαθέσιμο στην αποθήκη "
+"%s."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
