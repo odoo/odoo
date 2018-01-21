@@ -9,10 +9,10 @@
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 # Luke <cialuo@qq.com>, 2017
 # Yuan Xulei <hi@yxl.name>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # Li Xiang <lvx5013@foxmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -166,6 +166,8 @@ msgid ""
 "${(object.name or '').replace('/','_')}${object.state == 'draft' and "
 "'_draft' or ''}"
 msgstr ""
+"${(object.name or ‘’).replace(‘/‘,’_’)}${object.state == ‘draft’ and "
+"‘_draft’ or ‘’}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -274,6 +276,78 @@ msgid ""
 "                </html>\n"
 "            "
 msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a target=“_blank” href=“https://www.odoo.com”>Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -283,7 +357,7 @@ msgstr "<i class=\"fa fa-arrow-circle-right\"/>同意 ＆amp; 签名"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-check-circle\"/> Signed"
-msgstr "已签名"
+msgstr "<i class=“fa fa-check-circle”/> 已签名"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -401,7 +475,7 @@ msgstr "<STRONG>到期日期：</STRONG>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr "<strong>财政状况标记:</strong>"
+msgstr "<strong>财政状况备注：</ strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -475,29 +549,29 @@ msgstr "<strong>单价</strong>"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
-msgstr "<strong>你的参照:</strong>"
+msgstr "<strong>您的参考：</ strong>"
 
 #. module: sale
 #: selection:res.config.settings,sale_pricelist_setting:0
 msgid "A single sales price per product"
-msgstr "每个产品单一销售价格"
+msgstr "每个产品的单个销售价格"
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
-msgstr "可以为产品和客户设置警告信息(销售)"
+msgstr "可以在产品或客户上设置警告（销售）"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Ability to select a package type in sales orders and to force a quantity "
 "that is a multiple of the number of units per package."
-msgstr "在销售订单中选择包类型的能力，并强制每个包的单位数的倍数。"
+msgstr "能够选择销售订单中的包装类型，并强制为每个包装数量的倍数。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "Accept &amp; Sign"
-msgstr "接受和签署"
+msgstr "同意 &amp; 签名"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -572,12 +646,12 @@ msgstr "发票金额"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr "以发票金额"
+msgstr "未开票金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "发票金额"
+msgstr "未开票金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
@@ -742,7 +816,7 @@ msgstr "  计算运输成本并用bpost装运"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr "按订单计算运费"
+msgstr "计算订单的运输成本"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_config
@@ -768,7 +842,7 @@ msgstr "联系人"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_coupon
 msgid "Coupons & Promotions"
-msgstr "优惠券和促销"
+msgstr "优惠券&促销"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -921,7 +995,7 @@ msgstr "当前销售订单的发运地址"
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr "存款"
+msgstr "定金"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
@@ -938,7 +1012,7 @@ msgstr "说明"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Design standardized offers"
-msgstr " 设计规范提供"
+msgstr "设计标准化的优惠"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
@@ -1029,7 +1103,7 @@ msgstr "%s%%预付定金"
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
-msgstr "在从销售订单中创建发票时会进行首付款。不能复制在复制销售订单。"
+msgstr "从销售订单创建发票时，将进行预付款。 复制销售订单时不会复制它们。"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
@@ -1089,7 +1163,7 @@ msgstr "未来的活动"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr "得到的产品或客户订单的警告"
+msgstr "获取产品或客户的订单警告"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
@@ -1125,7 +1199,7 @@ msgstr "ID"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr "如果一个销售订单已冻结（完成状态），你就不能手动修改它。但你仍然可以开具发票或交付。"
+msgstr "如果销售被锁定，您不能再修改它。 但是，您仍然可以开发票或交付。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_product_image
@@ -1133,7 +1207,7 @@ msgid ""
 "Image of the product variant (Big-sized image of product template if false)."
 " It is automatically resized as a 1024x1024px image, with aspect ratio "
 "preserved."
-msgstr "产品变体的图像(如果为False,采用大尺寸图像模板). 它保持图像的宽高比,并自动调整图像大小为1024 x 1024px."
+msgstr "产品变体的图像（产品模板的大图像，如果为false）。 它会自动调整大小为一个1024x1024的图像，保留宽高比。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1214,12 +1288,12 @@ msgid ""
 "Invoice revenue for the current month. This is the amount the sales channel "
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
-msgstr "本月发票收入。这是量的销售渠道，本月已开具发票。它用于计算看板视图中当前和目标收入的累进比率。"
+msgstr "当月的发票收入。 这是销售渠道本月开具的发票金额。 它用于计算当前和目标收入在看板视图上的进展比率。"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
 msgid "Invoice what is delivered"
-msgstr " 发货发票"
+msgstr " 已发货发票"
 
 #. module: sale
 #: selection:res.config.settings,default_invoice_policy:0
@@ -1355,7 +1429,7 @@ msgstr "最后更新时间"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr "晚活动"
+msgstr "晚期活动"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
@@ -1366,7 +1440,7 @@ msgstr "布局序列"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr "让你的客户登录查看他们的证件"
+msgstr "让您的客户登录查看他们的文档"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1482,7 +1556,7 @@ msgstr "名称"
 #: code:addons/sale/models/sale.py:277 code:addons/sale/models/sale.py:279
 #, python-format
 msgid "New"
-msgstr "新建"
+msgstr "创建"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
@@ -1498,12 +1572,12 @@ msgstr "否"
 #: selection:product.template,sale_line_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "No Message"
-msgstr "没消息"
+msgstr "没有消息"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr "不再编辑订单一旦确认"
+msgstr "一旦确认，不能再编辑订单"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
@@ -1511,8 +1585,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"请注意，一旦报价成为销售订单，它将被移动。\n"
-"从报价单销售订单列表。"
+"请注意，一旦报价成为销售订单，它将被\n"
+"                 从报价清单移动到销售订单清单。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1520,8 +1594,8 @@ msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
-"请注意，一旦报价成为销售订单，它将被移动。\n"
-"从报价单销售订单列表。"
+"请注意，一旦报价成为销售订单，它将被\n"
+"从报价单移动到销售订单列表。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1547,12 +1621,12 @@ msgstr "订单被确认和产品交付给客户之间的天数"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
 msgid "Number of quotations to invoice"
-msgstr "发票报价单"
+msgstr "待开票报价单数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "发票销售单"
+msgstr "待开票销售订单数量"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
@@ -1570,19 +1644,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_payment
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_portal_confirmation
 msgid "Online Signature & Payment"
-msgstr "网上签名与付款"
+msgstr "在线签名与付款"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_portal_confirmation_options
 msgid "Online Signature & Payment options"
-msgstr "网上签名和付款选项"
+msgstr "在线签名和付款选项"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/sale.js:32
 #, python-format
 msgid "Only Integer Value should be valid."
-msgstr "仅整型数值是有效的。"
+msgstr "只允许整数值"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:209
@@ -1732,7 +1806,7 @@ msgstr "其他信息"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "样本发票"
+msgstr "形式发票"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
@@ -1759,12 +1833,12 @@ msgstr "付款"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Acquirers"
-msgstr "收单"
+msgstr "付款收单机构"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
 msgid "Payment Terms"
-msgstr "付款条款"
+msgstr "付款条件"
 
 #. module: sale
 #: model:res.groups,name:sale.group_sale_layout
@@ -1775,7 +1849,7 @@ msgstr "个性化销售订单和发票报告"
 #: code:addons/sale/models/sale.py:353
 #, python-format
 msgid "Please define an accounting sales journal for this company."
-msgstr "请确定该公司会计销售分类帐。"
+msgstr "请为该公司定义一个会计销售日记帐。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:916
@@ -1854,7 +1928,7 @@ msgstr "打印"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "样本发票"
+msgstr "形式发票"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -1909,7 +1983,7 @@ msgstr "产品变体"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Product used for down payments"
-msgstr "用于预付款的产品"
+msgstr "用于预付定金的产品"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_template_action
@@ -2005,7 +2079,7 @@ msgstr "报价单已确认"
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
-msgstr "报价单送出"
+msgstr "报价单已发送"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:101
@@ -2036,7 +2110,7 @@ msgstr "报价单分析"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "Quotations Sent"
-msgstr "报价单送出"
+msgstr "报价单已发送"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_quote
@@ -2109,7 +2183,7 @@ msgstr "销售预付款发票"
 #: model:ir.ui.view,arch_db:sale.view_order_product_pivot
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales Analysis"
-msgstr "销售分析表"
+msgstr "销售分析"
 
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
@@ -2135,7 +2209,7 @@ msgstr "销售渠道"
 #. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr "销售完成"
+msgstr "销售已完成"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -2163,7 +2237,7 @@ msgstr "销售订单"
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
-msgstr "销售订单已经确认"
+msgstr "销售订单已确认"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -2184,12 +2258,12 @@ msgstr "销售订单明细"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines ready to be invoiced"
-msgstr "销售订单行已经被开票"
+msgstr "已开票销售订单行"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "销售订单明细与我的销售订单"
+msgstr "与我的销售订单相关的销售订单行"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:102
@@ -2251,7 +2325,7 @@ msgstr "搜索销售订单"
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
 msgid "Section"
-msgstr "部分"
+msgstr "章节"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_layout
@@ -2290,7 +2364,7 @@ msgstr "可在每个包装中多个单位销售产品"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "发送样本发票"
+msgstr "发送形式发票"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2300,7 +2374,7 @@ msgstr "一旦发票支付发送一个特定产品的电子邮件"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send by Email"
-msgstr "以邮件发送"
+msgstr "通过电子邮件发送"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2324,24 +2398,24 @@ msgstr "服务"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 msgid "Set Invoicing Target"
-msgstr " 集进销存目标"
+msgstr "设置发票目标"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/sale.js:25
 #, python-format
 msgid "Set an invoicing target: "
-msgstr "设置一个开票目标:"
+msgstr "设置开票目标："
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
-msgstr "每一套产品，多种价格自动折扣，等"
+msgstr "设置每个产品的多个价格，自动折扣等"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to sell variants"
-msgstr "产品的属性（如颜色、大小）出售的种类"
+msgstr "设置产品属性（例如颜色，大小）以销售变体"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2402,7 +2476,7 @@ msgstr "给客户显示公开的价格和折扣"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
-msgstr "显示标准条款；下订单条件"
+msgstr "显示标准条款和 订单条件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
@@ -2465,7 +2539,7 @@ msgstr "小计"
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
 "sales channel estimates to be able to invoice this month."
-msgstr "当月发票收入目标。这是销售渠道估计这个月可以开具的发票金额。"
+msgstr "本月发票收入目标。 这是销售渠道估计能够在这个月发票的金额。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_show_tax
@@ -2504,7 +2578,7 @@ msgstr "税"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
-msgstr "存款的税金"
+msgstr "定金税金"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings_module_sale_payment
@@ -2895,7 +2969,7 @@ msgstr "天"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "report.sale.report_saleproforma"
-msgstr ""
+msgstr "report.sale.report_saleproforma"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -2905,4 +2979,4 @@ msgstr "res.config.settings"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_layout_category
 msgid "sale.layout_category"
-msgstr ""
+msgstr "sale.layout_category"

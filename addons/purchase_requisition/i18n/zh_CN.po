@@ -3,22 +3,23 @@
 # * purchase_requisition
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
 # Talway <9010446@qq.com>, 2017
+# fausthuang <faust_huang@hotmail.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # Yuan Xulei <hi@yxl.name>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
-# Jeff Yu <jeff.yu@elico-corp.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:53+0000\n"
 "PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Jeff Yu <jeff.yu@elico-corp.com>, 2017\n"
+"Last-Translator: Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -241,7 +242,7 @@ msgstr "终止月份"
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid ""
 "Example of purchase agreements include call for tenders and blanket orders."
-msgstr "采购协议的例子，包含招标和总括订单。"
+msgstr "采购协议的例子包括招标和一揽子订单。"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
@@ -249,7 +250,7 @@ msgid ""
 "For a blanket order, you can record an agreement for a specifc period\n"
 "            (e.g. a year) and you order products within this agreement, benefiting\n"
 "            from the negociated prices."
-msgstr "对于总括订单，你可以记录一个特殊时期内协议。（例如，一年）你可以在这个协议内预定产品，有助于得到好的价格。"
+msgstr "对于一揽子订单，您可以记录特定期限（例如一年）的协议，并且您在本协议内订购产品，从协商价格中受益。"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -270,7 +271,11 @@ msgid ""
 "            and generate the creation of RfQs to vendors. Once the tenders have\n"
 "            been registered, you can review and compare them and you can\n"
 "            validate some and cancel others."
-msgstr "在招标中，你可以记录你需要的产品，来产生一个RfQ给到供应商。一旦招标登记了，你可以查看和比较，这样就可以批准和取消它。"
+msgstr ""
+"在招标中，您可以记录您需要购买的产品\n"
+"             并为供应商创建RfQ。 一旦投标了\n"
+"             已经注册，你可以查看和比较他们，你可以\n"
+"             验证一些并取消其他。"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -427,7 +432,7 @@ msgstr "采购订单"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
 msgid "Purchase Orders with requisition"
-msgstr "具有请购的采购单"
+msgstr "包含请购的采购单"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition
@@ -482,7 +487,7 @@ msgstr "询价单"
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr "询价单细节"
+msgstr "询价单明细"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -527,8 +532,8 @@ msgid ""
 "\n"
 "                    Select multiple RFQ: allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"选择一个RFQ(专用的）：当一个采购订单确认的，就可以取消余下的采购订单。\n"
-"选择多个ＲＦＱ：就是允许多个采购订单。当一个采购订单确认的，不可以取消余下的采购订单。"
+"选择一个RFQ(独家）：当一个采购订单确认的，就可以取消余下的采购订单。\n"
+"选择多个RFQ：就是允许多个采购订单。当一个采购订单确认的，不可以取消余下的采购订单。"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type_sequence
@@ -565,17 +570,17 @@ msgstr "条款和条件"
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_schedule_date
 msgid ""
 "The expected and scheduled delivery date where all the products are received"
-msgstr "预期的产品交付日"
+msgstr "所有产品收到的预期和预定交货日期"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned"
-msgstr "未分派"
+msgstr "未分配"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
 msgid "Unassigned  Requisition"
-msgstr "未指派的申请"
+msgstr "未分配的申请"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line_price_unit
@@ -611,7 +616,7 @@ msgstr "仓库"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:88
 #, python-format
 msgid "You cannot confirm call because there is no product line."
-msgstr "你不能确认招标，因为没有产品行"
+msgstr "你不能确认，因为没有产品行"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/models/purchase_requisition.py:105
@@ -619,7 +624,7 @@ msgstr "你不能确认招标，因为没有产品行"
 msgid ""
 "You have to cancel or validate every RfQ before closing the purchase "
 "requisition."
-msgstr "你可以在关闭采购需求前，取消或批准每个ＲＦＱ，"
+msgstr "在关闭采购申请之前，您必须取消或验证每个RfQ。"
 
 #. module: purchase_requisition
 #: model:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

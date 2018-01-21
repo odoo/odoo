@@ -4,7 +4,8 @@
 # 
 # Translators:
 # liAnGjiA <liangjia@qq.com>, 2017
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # 钟小华 <mackz@sina.com>, 2017
 msgid ""
@@ -28,7 +29,7 @@ msgstr ""
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
-msgstr ""
+msgstr "选中此框以确保在该国创建的每个地址在该国的城市列表中都有一个“城市”。"
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
@@ -38,6 +39,7 @@ msgstr "城市"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
 #: model:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model:ir.ui.view,arch_db:base_address_city.view_city_tree
 msgid "City"
@@ -56,7 +58,6 @@ msgstr "联系人"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
 msgid "Country"
 msgstr "国家"
 
@@ -82,6 +83,9 @@ msgid ""
 "                your partner records. Note that an option can be set on each country separately\n"
 "                to enforce any address of it to have a city in this list."
 msgstr ""
+"显示和管理所有可以分配到的城市列表\n"
+"                 你的伙伴记录。 请注意，可以在每个国家单独设置一个选项\n"
+"                 执行任何地址在这个列表中有一个城市。"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
@@ -123,7 +127,7 @@ msgstr "搜索城市"
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
 msgid "State"
-msgstr "状态"
+msgstr "省份"
 
 #. module: base_address_city
 #: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode

@@ -173,7 +173,7 @@ msgstr ": Grootboek"
 #: code:addons/account/models/account.py:539
 #, python-format
 msgid ": Refund"
-msgstr ": Credit nota"
+msgstr ": Creditfactuur"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
@@ -422,7 +422,7 @@ msgstr ""
 "% if object.state=='paid':\n"
 "    <p>Deze factuur is al betaald.</p>\n"
 "% else:\n"
-"    <p>Gelieve de betaling zo spoedig mogelijk te voldoen.</p>\n"
+"    Graag de betaling zo spoedig mogelijk te voldoen.</p>\n"
 "% endif\n"
 "\n"
 "<p>Vriendelijk bedankt,</p>\n"
@@ -1134,8 +1134,7 @@ msgid ""
 "<strong>Validate the bill</strong><br/> after encoding the products and "
 "taxes."
 msgstr ""
-"Bevestig de factuur</strong><br/> na het invoeren van de producten en "
-"belastingen."
+"Bevestig de factuur</strong><br/> na het invoeren van de producten en BTW."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -1226,7 +1225,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of common taxes and their rates."
-msgstr "Een lijst van vaak voorkomende belastingen en hun tarieven."
+msgstr "Een lijst van vaak voorkomende BTW en hun tarieven."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1775,7 +1774,7 @@ msgstr "Toevoegen"
 #: model:ir.ui.view,arch_db:account.invoice_form
 #: model:ir.ui.view,arch_db:account.view_account_invoice_refund
 msgid "Add Credit Note"
-msgstr "Voeg credit nota toe"
+msgstr "Voeg creditfactuur toe"
 
 #. module: account
 #: selection:account.cash.rounding,strategy:0
@@ -2243,7 +2242,7 @@ msgstr "Kostenplaatslabels"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Analytics"
-msgstr "Analytics"
+msgstr "Kostenplaatsen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
@@ -2289,7 +2288,7 @@ msgstr "Alleen toepassen als partner een BTW nummer heeft."
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Apply right VAT rates for digital products sold in EU"
-msgstr "Pas juiste belastingen toe voor digitale producten verkocht in de EU"
+msgstr "Pas juiste BTW toe voor digitale producten verkocht in de EU"
 
 #. module: account
 #: selection:res.company,fiscalyear_last_month:0
@@ -2453,7 +2452,7 @@ msgstr "Bank"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Bank &amp; Cash"
-msgstr "Bank &amp; Cash"
+msgstr "Bank &amp; Kas"
 
 #. module: account
 #: code:addons/account/models/company.py:163
@@ -2741,7 +2740,7 @@ msgstr "Per product"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product_category
 msgid "By Product Category"
-msgstr "Op product categorie"
+msgstr "Op productcategorie"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_salespersons
@@ -3125,7 +3124,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
-msgstr "Controles"
+msgstr "Cheques"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_children_tax_ids
@@ -3413,7 +3412,7 @@ msgstr "E-mail opstellen"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Compute tax rates based on U.S. ZIP codes"
-msgstr "Bereken belastingen gebaseerd op V.S. postcodes"
+msgstr "Bereken BTW gebaseerd op V.S. postcodes"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_counterpart
@@ -3837,7 +3836,7 @@ msgstr "Credit mutatie"
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #, python-format
 msgid "Credit Note"
-msgstr "Creditnota"
+msgstr "Creditfactuur"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:440
@@ -4229,7 +4228,7 @@ msgstr "Standaard BTW"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied to local transactions"
-msgstr "Standaard belastingen toegepast op lokale transacties"
+msgstr "Standaard BTW toegepast op lokale transacties"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4905,7 +4904,7 @@ msgstr "Fiscale toewijzing"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Fiscal Periods"
-msgstr "Fiscale perioden"
+msgstr "Boekjaar"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -6777,7 +6776,7 @@ msgstr "MEM"
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Mail your invoices in one-click using"
-msgstr "Mail uw facturen in één klik met gebruik van"
+msgstr "E-mail uw facturen in één klik met gebruik van"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -6793,12 +6792,12 @@ msgstr "Hoofd titel 1 (vet, onderstreept)"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings_currency_id
 msgid "Main currency of the company."
-msgstr "Hoofd valuta van het bedrijf."
+msgstr "Hoofdvaluta van het bedrijf."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Main currency of your company"
-msgstr "Hoofd valuta van uw bedrijf"
+msgstr "Hoofdvaluta van uw bedrijf"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -7423,7 +7422,7 @@ msgid ""
 "                for miscellaneous operations."
 msgstr ""
 "Odoo maakt automatisch een journaalpost per financieel document:\n"
-"factuur, creditnota, inkoopfactuur, bankafschrift, enz. U zult dus\n"
+"factuur, creditfactuur, inkoopfactuur, bankafschrift, enz. U zult dus\n"
 "alleen voor alle andere een seperate journaalpost willen maken;\n"
 "denk aan openingsbalans, memoriaalboekingen"
 
@@ -8189,7 +8188,7 @@ msgstr "Maak factuurregels aan."
 #: code:addons/account/models/account_move.py:157
 #, python-format
 msgid "Please define a sequence for the credit notes"
-msgstr "Gelieve een sequentie te definiëren voor de credit notas"
+msgstr "U dient een reeks te definiëren voor de creditfacturen"
 
 #. module: account
 #: code:addons/account/models/account_move.py:162
@@ -8327,7 +8326,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
-msgstr "Print controles om je leveranciers te betalen"
+msgstr "Print cheques om je leveranciers te betalen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_line_product_id
@@ -9321,7 +9320,7 @@ msgstr "Toon volledige boekhoudkundige opties"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show active taxes"
-msgstr "Toon actieve belastingen"
+msgstr "Toon actieve BTW"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9331,7 +9330,7 @@ msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Show inactive taxes"
-msgstr "Toon inactieve belastingen"
+msgstr "Toon inactieve BTW"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_show_on_dashboard
@@ -9413,7 +9412,7 @@ msgstr "Kassa beginsaldo"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "State"
-msgstr "Staat / Provincie"
+msgstr "Status"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_parent_state
@@ -9571,13 +9570,13 @@ msgstr "BTW rekening voor credits"
 #: model:ir.model.fields,field_description:account.field_account_tax_tax_adjustment
 #: model:ir.model.fields,field_description:account.field_account_tax_template_tax_adjustment
 msgid "Tax Adjustment"
-msgstr "Belasting aanpassing"
+msgstr "BTW aanpassing"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.tax_adjustments_form
 #: model:ir.ui.menu,name:account.menu_action_tax_adjustment
 msgid "Tax Adjustments"
-msgstr "Belasting aanpassing"
+msgstr "BTW aanpassing"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
@@ -9768,8 +9767,7 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts &amp; legal statements for your "
 "country"
 msgstr ""
-"Belastingen, fiscale posities, grootboekschema &amp; legale afschriften voor"
-" uw land"
+"BTW, fiscale posities, grootboekschema &amp; legale afschriften voor uw land"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_balance
@@ -10292,7 +10290,7 @@ msgstr "De naam die gebruikt wordt voor de boekingen."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_refund_sequence_number_next
 msgid "The next sequence number will be used for the next credit note."
-msgstr "De volgende reeksnummer wordt gebruikt voor de volgende credit nota."
+msgstr "De volgende reeks wordt gebruikt voor de volgende creditfactuur."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal_sequence_number_next
@@ -10472,7 +10470,7 @@ msgstr "Er was een fout met het verwerken van deze pagina."
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
-msgstr "Deze belastingen worden ingesteld in elk nieuw aangemaakt product."
+msgstr "Deze BTW worden ingesteld in elk nieuw aangemaakt product."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_template_user_type_id
@@ -10967,7 +10965,8 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_invoice_amount_total_signed
 msgid ""
 "Total amount in the currency of the invoice, negative for credit notes."
-msgstr "Totaalbedrag in de valuta van de factuur, negatief bij creditnotas."
+msgstr ""
+"Totaalbedrag in de valuta van de factuur, negatief bij creditfacturen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner_credit
@@ -11298,8 +11297,8 @@ msgid ""
 "                                with the invoice. You will not be able to modify the credit note."
 msgstr ""
 "Gebruik deze optie indien  u een factuur wilt annuleren, welke niet gemaakt had\n"
-"                                    mogen worden. de creditnota wordt aangemaakt, goedgekeurd en afgeletterd\n"
-"                                    met de factuur. U heeft niet de mogelijkheid om de creditnota te bewerken."
+"                                    mogen worden. de creditfactuur wordt aangemaakt, goedgekeurd en afgeletterd\n"
+"                                    met de factuur. U heeft niet de mogelijkheid om de creditfactuur te bewerken."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_type_include_initial_balance
@@ -11967,7 +11966,7 @@ msgstr "U moet een startdatum ingeven."
 #: code:addons/account/models/account_invoice.py:1582
 #, python-format
 msgid "You must first select a partner!"
-msgstr "Gelieve eerst een klant te selecteren!"
+msgstr "U dient eerst een klant te selecteren!"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:26

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"POT-Creation-Date: 2018-01-08 10:30+0000\n"
+"PO-Revision-Date: 2018-01-08 10:30+0000\n"
 "Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -105,9 +105,7 @@ msgstr "<i class=\"fa fa-eye-slash\"/>Verberg"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
-msgstr ""
-"<i class=\"fa fa-fw fa-arrow-right\"/>Hoe prijzen inclusief belastingen "
-"beheren"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Hoe prijzen inclusief BTW beheren"
 
 #. module: point_of_sale
 #. openerp-web
@@ -328,8 +326,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config_receipt_header
 msgid "A short text that will be inserted as a header in the printed receipt."
-msgstr ""
-"Een korte tekst die ingevoegd wordt als hoofding op het afgedrukte ticket."
+msgstr "Een korte tekst die wordt afgedrukt in de kop van de kassabon."
 
 #. module: point_of_sale
 #. openerp-web
@@ -395,7 +392,7 @@ msgstr "Een algemene korting toevoegen"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Add a custom message to header and footer"
-msgstr "Voeg een aangepaste tekst doe aan de hoofding en het voeteinde"
+msgstr "Voeg een aangepaste tekst doe aan de kop- en voettekst"
 
 #. module: point_of_sale
 #. openerp-web
@@ -901,7 +898,7 @@ msgstr "Cliënt"
 #: code:addons/point_of_sale/static/src/js/chrome.js:461
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the PosBox"
-msgstr "Cliënt scherm niet ondersteund. Gelieve de PosBox te updaten"
+msgstr "Cliënt scherm niet ondersteund. U dient de PosBox te updaten"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1323,6 +1320,15 @@ msgid "Do you want to open cash registers?"
 msgstr "Wilt u de kasregisters openen?"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Don't turn this option on if you take orders on smartphones or tablets. Such"
+" devices already benefit from a native keyboard."
+msgstr ""
+"Schakel deze optie niet in als u bestellingen via smartphones of tablets "
+"opneemt. Dergelijke apparaten beschikken al van een eigen toetsenbord."
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
 msgstr "Gereed"
@@ -1335,15 +1341,6 @@ msgid ""
 msgstr ""
 "Zet deze optie niet aan als u orders opneemt op smartphones of tablets.\n"
 " Deze apparaten hebben al het voordeel van een toetsenbord functie."
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid ""
-"Don’t turn this option on if you take orders on smartphones or tablets. Such"
-" devices already benefit from a native keyboard."
-msgstr ""
-"Zet deze optie niet aan als u orders opneemt op smartphones of tablets. Deze"
-" apparaten hebben al het voordeel van een toetsenbord functie."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1582,7 +1579,7 @@ msgstr "Geef klant beloning, gratis testproducten, enz."
 #: model:ir.model.fields,help:point_of_sale.field_pos_category_sequence
 msgid "Gives the sequence order when displaying a list of product categories."
 msgstr ""
-"Geeft de volgorde weer waarin de product categorieën worden weergegeven."
+"Geeft de volgorde weer waarin de productcategorieën worden weergegeven."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_module_pos_discount
@@ -1659,7 +1656,7 @@ msgstr "Kop"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_is_header_or_footer
 msgid "Header & Footer"
-msgstr "Kop- & voetstuk"
+msgstr "Kop- & voettekst"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category_id
@@ -2944,7 +2941,7 @@ msgstr "Productprijzen"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "Product Product Categories"
-msgstr "Product Product categorieën"
+msgstr "Product Productcategorieën"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order_product_qty
@@ -3440,7 +3437,7 @@ msgstr "Startdatum"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Start selling from a default product category"
-msgstr "Start met het verkopen vanuit een standaard product categorie"
+msgstr "Start met het verkopen vanuit een standaard productcategorie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_cash_register_balance_start
@@ -3479,7 +3476,7 @@ msgstr "Voorraadlocatie"
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Stock location used for the inventory"
-msgstr "Stocklocatie gebruikt voor het magazijn"
+msgstr "Voorraadlocatie gebruikt voor het magazijn"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4144,17 +4141,22 @@ msgstr "Onbekende Barcode"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2023
+#: code:addons/point_of_sale/static/src/js/screens.js:2061
 #, python-format
 msgid "Unknown Error"
 msgstr "Onbekende fout"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1324
+#: code:addons/point_of_sale/static/src/js/screens.js:1337
 #, python-format
 msgid "Unsupported File Format"
 msgstr "Bestandsformaat niet ondersteund"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "Unused"
+msgstr "Niet gebruikt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_existing_lots
@@ -4379,7 +4381,7 @@ msgid ""
 "Please first close this one to use this point of sale."
 msgstr ""
 "U kan niet de sessie van een andere gebruiker gebruiken. Deze sessie is van "
-"%s. Gelieve deze sessie eerst af te sluiten om deze kassa te gebruiken."
+"%s. U dient deze sessie eerst af te sluiten om deze kassa te gebruiken."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:18
@@ -4437,7 +4439,7 @@ msgstr "U moet een logo of lay-out instellen voor uw bedrijf."
 #: code:addons/point_of_sale/wizard/pos_details.py:50
 #, python-format
 msgid "You have to set your reports's header and footer layout."
-msgstr "U moet uw rapporten hun hoofding en footer lay-out instellen."
+msgstr "U dienst u kop- en voettekst van uw documenten in te stellen."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.product_product_action
