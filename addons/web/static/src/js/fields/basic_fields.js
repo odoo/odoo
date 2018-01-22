@@ -1094,7 +1094,6 @@ var AbstractFieldBinary = AbstractField.extend({
         },
         'click .o_clear_file_button': 'on_clear',
     }),
-    context: { bin_size: true },
     init: function (parent, name, record) {
         this._super.apply(this, arguments);
         this.fields = record.fields;

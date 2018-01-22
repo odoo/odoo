@@ -207,6 +207,7 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onButtonClicked: function (event) {
+        event.stopPropagation();
         var self = this;
         var attrs = event.data.attrs;
         var record = event.data.record;
@@ -388,13 +389,18 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} event
+     * @param {boolean} [event.data.openQuickCreate=false] if true, opens the
+     *   QuickCreate in the toggled column (it assumes that we are opening it)
      */
     _onToggleColumn: function (event) {
         var self = this;
         var column = event.target;
         this.model.toggleGroup(column.db_id).then(function (db_id) {
             var data = self.model.get(db_id);
-            self.renderer.updateColumn(db_id, data);
+            var options = {
+                openQuickCreate: !!event.data.openQuickCreate,
+            };
+            self.renderer.updateColumn(db_id, data, options);
             self._updateEnv();
         });
     },
