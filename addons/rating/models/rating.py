@@ -163,8 +163,9 @@ class RatingMixin(models.AbstractModel):
     def write(self, values):
         """ If the rated ressource name is modified, we should update the rating res_name too. """
         result = super(RatingMixin, self).write(values)
-        if self._rec_name in values:
-            self.rating_ids._compute_res_name()
+        for r in self:
+            if r._rec_name in values:
+                r.rating_ids._compute_res_name()
         return result
 
     def unlink(self):
