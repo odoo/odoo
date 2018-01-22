@@ -43,11 +43,10 @@ try:
             else:
                 _logger.warning(_('Unable to format %s:\n%s') % number, e)
                 return number
-        if always_international and phone_nbr.country_code != country_phone_code:
+        if always_international or phone_nbr.country_code != country_phone_code:
             phone_fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL
         else:
             phone_fmt = phonenumbers.PhoneNumberFormat.NATIONAL
-
         return phonenumbers.format_number(phone_nbr, phone_fmt)
 
 except ImportError:

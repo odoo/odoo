@@ -9,6 +9,7 @@ import werkzeug.urls
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 from odoo.tools.translate import _
 
@@ -153,6 +154,9 @@ class GoogleDrive(models.Model):
             a length of 1 element only (batch processing is not supported in the code, though nothing really prevent it)
           :return: the config id and config name
         '''
+        # TO DO in master: fix my signature and my model
+        if isinstance(res_model, pycompat.string_types):
+            res_model = self.env['ir.model'].search([('model', '=', res_model)]).id
         if not res_id:
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
