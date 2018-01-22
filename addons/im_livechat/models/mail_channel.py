@@ -134,8 +134,5 @@ class MailChannel(models.Model):
 
     # Rating Mixin
 
-    def rating_get_parent_model_name(self, values):
-        return 'im_livechat.channel'
-
-    def rating_get_parent_id(self):
-        return self.livechat_channel_id.id
+    def rating_get_parent(self):
+        return 'livechat_channel_id'

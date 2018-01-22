@@ -1044,11 +1044,8 @@ class Task(models.Model):
     def rating_apply(self, rate, token=None, feedback=None, subtype=None):
         return super(Task, self).rating_apply(rate, token=token, feedback=feedback, subtype="project.mt_task_rating")
 
-    def rating_get_parent_model_name(self, vals):
-        return 'project.project'
-
-    def rating_get_parent_id(self):
-        return self.project_id.id
+    def rating_get_parent(self):
+        return 'project_id'
 
 
 class ProjectTags(models.Model):
