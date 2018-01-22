@@ -663,6 +663,63 @@
     </section>
 </template>
 
+<template id="s_tabs" name="Tabs">                
+    <section class="s_tabs">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#myTab01" aria-controls="myTab01" role="tab" data-toggle="tab">Description</a></li>
+                        <li role="presentation"><a href="#myTab02" aria-controls="myTab02" role="tab" data-toggle="tab">Details</a></li>
+                        <li role="presentation"><a href="#myTab03" aria-controls="myTab03" role="tab" data-toggle="tab">Shipping</a></li>
+                        <li role="presentation"><a href="#myTab04" aria-controls="myTab04" role="tab" data-toggle="tab">Review</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="myTab01">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3 class="mt0">Description</h3>
+                                    <p>A great way to catch your reader's attention is to tell a story. Everything you consider writing can be told as a story.</p> 
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="myTab02">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3 class="mt0">Details</h3>
+                                    <p><b>Great stories have personality.</b> Consider telling a great story that provides personality. Writing a story with personality for potential clients will assists with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="myTab03">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3 class="mt0">Shipping</h3>
+                                    <p><b>Great stories are for everyone even when only written for just one person.</b> If you try to write with a wide general audience in mind, your story will ring false and be bland. No one will be interested. Write for one person. If it’s genuine for the one, it’s genuine for the rest.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="myTab04">
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <h3 class="mt0">Review</h3>
+                                    <p>Text</p>
+                                    <blockquote class="">
+                                    <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                    <footer>
+                                        Jane DOE, CEO of <b>MyCompany</b>
+                                    </footer>
+                                </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="s_parallax" name="Parallax">
     <section class="parallax s_parallax oe_img_bg pt96 pb96"
         style="background-image: url(/web/image/website.s_background_image_04);"
@@ -774,6 +831,7 @@
                     <t t-snippet="website.s_references" t-thumbnail="/website/static/src/img/blocks/block_references.png"/>
                     <t t-snippet="website.s_faq_collapse" t-thumbnail="/website/static/src/img/blocks/block_faq.png"/>
                     <t t-snippet="website.s_feature_grid" t-thumbnail="/website/static/src/img/blocks/block_feature_grid.png"/>
+                    <t t-snippet="website.s_tabs" t-thumbnail="/website/static/src/img/blocks/block_tabs.png"/>
                 </div>
             </div>
 
@@ -1131,6 +1189,12 @@
     <div data-js='collapse'
          data-selector='.panel-group > .panel:has(> .panel-collapse)'
          data-drop-in='.panel-group:has(> .panel > .panel-collapse)'>
+    </div>
+
+    <div data-js="s_tabs" data-selector=".s_tabs">
+        <li class="divider"></li>
+        <li data-add-tab="true"><a href="#"><i class="fa fa-plus-circle"/>Add Tab</a></li>
+        <li data-remove-tab="true"><a href="#" ><i class="fa fa-trash-o"/>Remove Tab</a></li>
     </div>
 
     <div data-js="menu_data"

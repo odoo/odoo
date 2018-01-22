@@ -735,6 +735,48 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
+options.registry.s_tabs = options.Class.extend({
+
+    start: function () {
+        this.$target.on('click', 'a', function () {
+            activateTab($(this));
+        });
+        
+        function activateTab($link) {
+            var tabid = $link.attr('href');
+            tabid = tabid.replace('#', '');
+            $('.tab-pane').removeClass('active in');
+            $('.tab-content #' + tabid).addClass('active in');
+        }
+        activateTab(this.$('li.active > a'));
+    },
+
+    unique_id: function () {
+        return "myTab" + new Date().valueOf();
+    },
+
+    addTab: function (type, value, $li) {
+        if (type !== 'click') return;
+        var self = this;
+        self.id = self.unique_id();
+        self.$target.find('li.active').after(function() {
+            return '<li role="presentation"><a href="#' + self.id + '" aria-controls="' + self.id + '" role="tab" data-toggle="tab">Tab</a></li>';
+        });
+        self.$target.find('.tab-pane.active').after(function() {
+            return '<div role="tabpanel" class="tab-pane oe_structure" id="' + self.id + '"><div class="row"><div class="col-md-12"><p>Your content...</p></div></div></div>';
+        });
+    },
+
+    removeTab: function (type, value, $li) {
+        if (type !== 'click') return;
+        var self = this;
+        self.$target.find('.active').remove();
+        self.$target.find('.nav-tabs li:first-child').addClass('active');
+        self.$target.find('.tab-content .tab-pane:first-child').addClass('active');
+    },
+
+});
+
 options.registry.gallery = options.Class.extend({
     xmlDependencies: ['/website/static/src/xml/website.gallery.xml'],
 
