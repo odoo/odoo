@@ -916,14 +916,14 @@ class ProcurementRule(models.Model):
         for line in po.order_line:
             if line.product_id == product_id and line.product_uom == product_id.uom_po_id:
                 if line._merge_in_existing_line(product_id, product_qty, product_uom, location_id, name, origin, values):
-                    vals = self._get_po_line_values(product_id, product_qty, product_uom, location_id, name, origin, values, partner, po, line)
+                    vals = self._update_po_line(product_id, product_qty, product_uom, values, partner, line)
                     po_line = line.write(vals)
                     break
         if not po_line:
             vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
             self.env['purchase.order.line'].create(vals)
 
-    def _get_po_line_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, partner, po, line):
+    def _update_po_line(self, product_id, product_qty, product_uom, values, partner, line):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         seller = product_id._select_seller(
             partner_id=partner,
