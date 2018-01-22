@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 
 
-class TestTimesheet(TransactionCase):
+class TestCommonTimesheet(TransactionCase):
 
     def setUp(self):
-        super(TestTimesheet, self).setUp()
+        super(TestCommonTimesheet, self).setUp()
 
         self.project_customer = self.env['project.project'].create({
             'name': 'Project X',
@@ -58,6 +58,9 @@ class TestTimesheet(TransactionCase):
             'name': 'User Empl Officer',
             'user_id': self.user_manager.id,
         })
+
+
+class TestTimesheet(TestCommonTimesheet):
 
     def test_log_timesheet(self):
         """ Test when log timesheet : check analytic account, user and employee are correctly set. """
@@ -115,3 +118,42 @@ class TestTimesheet(TransactionCase):
             'employee_id': self.empl_employee2.id,
         })
         self.assertEquals(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
+
+    def test_transfert_project(self):
+        """ Test transfert task with timesheet to another project """
+        Timesheet = self.env['account.analytic.line']
+        # create a second project
+        self.project_customer2 = self.env['project.project'].create({
+            'name': 'Project NUMBER DEUX',
+            'allow_timesheets': True,
+        })
+        # employee 1 log some timesheet on task 1
+        Timesheet.create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'my first timesheet',
+            'unit_amount': 4,
+        })
+
+        timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
+        timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
+        self.assertEquals(timesheet_count1, 1, "One timesheet in project 1")
+        self.assertEquals(timesheet_count2, 0, "No timesheet in project 2")
+        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+
+        # change project of task 1
+        self.task1.write({
+            'project_id': self.project_customer2.id
+        })
+
+        timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
+        timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
+        self.assertEquals(timesheet_count1, 0, "No timesheet in project 1")
+        self.assertEquals(timesheet_count2, 1, "One timesheet in project 2")
+        self.assertEquals(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+
+        # it is forbidden to set a task with timesheet without project
+        with self.assertRaises(UserError):
+            self.task1.write({
+                'project_id': False
+            })

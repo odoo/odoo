@@ -125,6 +125,8 @@ class MrpProductProduce(models.TransientModel):
                 raise UserError(_('You need to provide a lot for the finished product'))
             existing_move_line = produce_move.move_line_ids.filtered(lambda x: x.lot_id == self.lot_id)
             if existing_move_line:
+                if self.product_id.tracking == 'serial':
+                    raise UserError(_('You cannot produce the same serial number twice.'))
                 existing_move_line.product_uom_qty += self.product_qty
                 existing_move_line.qty_done += self.product_qty
             else:
@@ -181,27 +183,25 @@ class MrpProductProduceLine(models.TransientModel):
 
     @api.onchange('lot_id')
     def _onchange_lot_id(self):
+        """ When the user is encoding a produce line for a tracked product, we apply some logic to
+        help him. This onchange will automatically switch `qty_done` to 1.0.
+        """
         res = {}
         if self.product_id.tracking == 'serial':
             self.qty_done = 1
         return res
 
-    @api.constrains('lot_id')
-    def _check_lot_id(self):
-        for ml in self:
-            if ml.product_id.tracking == 'serial':
-                produce_lines_to_check = ml.product_produce_id.produce_line_ids.filtered(lambda l: l.product_id == ml.product_id and l.lot_id)
-                message = produce_lines_to_check._check_for_duplicated_serial_numbers()
-                if message:
-                    raise ValidationError(message)
-
-    def _check_for_duplicated_serial_numbers(self):
-        if self.mapped('lot_id'):
-            lots_map = [(ml.product_id.id, ml.lot_id.name) for ml in self]
-            recorded_serials_counter = Counter(lots_map)
-            for (product_id, lot_id), occurrences in recorded_serials_counter.items():
-                if occurrences > 1 and lot_id is not False:
-                    return _('You cannot consume the same serial number twice. Please correct the serial numbers encoded.')
+    @api.onchange('qty_done')
+    def _onchange_qty_done(self):
+        """ When the user is encoding a produce line for a tracked product, we apply some logic to
+        help him. This onchange will warn him if he set `qty_done` to a non-supported value.
+        """
+        res = {}
+        if self.product_id.tracking == 'serial':
+            if float_compare(self.qty_done, 1.0, precision_rounding=self.move_id.product_id.uom_id.rounding) != 0:
+                message = _('You can only process 1.0 %s for products with unique serial number.') % self.product_id.uom_id.name
+                res['warning'] = {'title': _('Warning'), 'message': message}
+        return res
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
