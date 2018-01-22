@@ -107,7 +107,7 @@ class ProductAttributeLine(models.Model):
         # search on a m2o and one on a m2m, probably this will quickly become
         # difficult to compute - check if performance optimization is required
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
+            new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)] + args
         else:
             new_args = args
         return super(ProductAttributeLine, self).name_search(name=name, args=new_args, operator=operator, limit=limit)
