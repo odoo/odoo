@@ -208,7 +208,9 @@
             .o_kanban_record_headings {
                 line-height: 1.2;
                 .o-flex(1, 1, auto);
-
+                // Ensure long word doesn't break out of container
+                word-wrap: break-word;
+                overflow: hidden;
             }
         }
 
