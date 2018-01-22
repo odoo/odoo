@@ -1441,4 +1441,17 @@
     </button>
 </t>
 
+<t t-name="web.FlashMessages">
+    <div>
+        <t t-foreach="widget.flashes" t-as="msg">
+            <div class="alert alert-info alert-dismissible"
+                 style="margin-bottom: 0; border-radius: 0"
+                 role="alert">
+                <button type="button" class="close" data-dismiss="alert" t-att-data-msg-index="msg_index" aria-label="Close" t-translation="off"><span aria-hidden="true">&amp;times;</span></button>
+                <p><t t-esc="msg"/></p>
+            </div>
+        </t>
+    </div>
+</t>
+
 </templates>

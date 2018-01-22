@@ -270,6 +270,10 @@ class WebRequest(object):
         """
         return self.httprequest.session
 
+    @lazy_property
+    def flashes(self):
+        return self.session.pop('_flashes', None) or []
+
     def __enter__(self):
         _request_stack.push(self)
         return self
@@ -1178,6 +1182,23 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
                 except IOError:
                     pass
 
+    def flash(self, message):
+        """ Sets up a "flash" message for the current user.
+
+        Flash messages get shown once the next time the user reloads their
+        client.
+
+        This is currently only shown in the back-end making it useful to
+        notify users of things on log-in.
+
+        .. todo::
+
+            * add website support for flashes
+            * have notifications fetch flashes (?)
+        """
+        flashes = self.get('_flashes', [])
+        flashes.append(message)
+        self['_flashes'] = flashes
 
 def session_gc(session_store):
     if random.random() < 0.001:

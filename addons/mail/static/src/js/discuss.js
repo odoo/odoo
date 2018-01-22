@@ -11,6 +11,7 @@ var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
+var FlashMessages = require('web.FlashMessages');
 var pyeval = require('web.pyeval');
 var SearchView = require('web.SearchView');
 var session = require('web.session');
@@ -234,9 +235,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         this.extendedComposer.on('post_message', this, this._onPostMessage);
         this.extendedComposer.on('input_focused', this, this._onComposerFocused);
         this._renderButtons();
+        this.flash_messages = new FlashMessages();
 
         var defs = [];
         defs.push(this._renderThread());
+        defs.push(this.flash_messages.prependTo(this.$('.o_mail_chat_content')));
         defs.push(this.basicComposer.appendTo(this.$('.o_mail_chat_content')));
         defs.push(this.extendedComposer.appendTo(this.$('.o_mail_chat_content')));
         defs.push(this._renderSearchView());

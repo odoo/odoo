@@ -485,6 +485,8 @@ class Home(http.Controller):
             old_uid = request.uid
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
+                if uid == odoo.SUPERUSER_ID and request.params['password'] == 'admin':
+                    request.session.flash(_("Your administrator password is the default (admin), if this is any sort of production database you may want to change that for security reasons."))
                 request.params['login_success'] = True
                 return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             request.uid = old_uid
