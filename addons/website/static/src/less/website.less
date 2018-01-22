@@ -13,15 +13,13 @@ font[style*='background'], font[class*='bg-'] {
 // Padding
 
 .s_padding_none { padding: 0; }
-.s_padding_default { padding: @grid-gutter-width / 2; }
+.s_padding_default { padding: 16px; }
 
-.s_padding_xs { padding: @grid-gutter-width / 6; }
-.s_padding_sm { padding: @grid-gutter-width / 3; }
-
-.s_padding_md { padding: @grid-gutter-width; }
-
-.s_padding_lg { padding: @grid-gutter-width * 1.5; }
-.s_padding_xl { padding: @grid-gutter-width * 2; }
+.s_padding_xs { padding: 8px;  }
+.s_padding_sm { padding: 16px; }
+.s_padding_md { padding: 32px; }
+.s_padding_lg { padding: 48px; }
+.s_padding_xl { padding: 64px; }
 
 
 // Odoo image background classes
@@ -337,106 +335,108 @@ table.table_desc tr td {
 }
 
 // carousel
-.carousel-inner {
-    height: 100%;
-    .item {
+
+.carousel {
+    overflow: hidden;
+    .carousel-inner {
         height: 100%;
+        .item {
+            height: 100%;
+        }
     }
     .carousel-control {
         cursor: pointer;
-        span {
-            top: 50%;
-            position: absolute;
-            margin-top: -8px;
+        background-image: none;
+        opacity: 1;
+        font-size: inherit;
+        > * {
+            .o-position-absolute(@top: 50%);
+            margin-top: -30px;
+            .fa-size-generator(20px);
+            .box-shadow(0 1px 1px rgba(0,0,0,.2));
+            text-shadow: none;
+        }
+        &.left > * { left: 0; padding-right: 5px; }
+        &.right > * { right: 0; padding-left: 5px; }
+    }
+    .carousel-indicators {
+        margin-bottom: 0;
+        li {
+            .box-shadow(0 1px 1px rgba(0,0,0,.2));
+            &:hover:not(.active) {
+                background-color: @gray-light;
+            }
         }
     }
-}
-.carousel .carousel-control {
-    &.left {
-        left: -10px;
-        * {
-            position: absolute;
-            top: 50%;
-            z-index: 5;
-            right: 50%;
-        }
+    .carousel-img img,
+    .carousel-content {
+        max-height: 95%;
     }
-    &.right {
-        right: -10px;
-        * {
-            position: absolute;
-            top: 50%;
-            z-index: 5;
-            left: 50%;
-        }
-    }
-}
-.quotecarousel {
-    padding-bottom: 16px;
-}
-div.carousel .container {
-    > .carousel-caption {
-        .o-position-absolute(@right: 50%, @left: 50%);
-        bottom: 20px;
-        > div {
-            position: absolute;
-            text-align: left;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.4);
+    .container {
+        > .carousel-caption {
+            .o-position-absolute(@right: 50%, @left: 50%);
             bottom: 20px;
-        }
-    }
-    > .carousel-image {
-        .o-position-absolute(@top: 5%, @bottom: 5%);
-        max-height: 90%;
-        margin: 0 auto;
-    }
-    .item.text_image .container {
-        > .carousel-caption {
-            left: 10%;
             > div {
-                right: 50%;
-                margin-right: -20%;
-                max-width: 550px;
+                position: absolute;
+                text-align: left;
+                padding: 20px;
+                background: rgba(0, 0, 0, 0.4);
+                bottom: 20px;
             }
         }
         > .carousel-image {
-            right: 10%;
-            left: 50%;
+            .o-position-absolute(@top: 5%, @bottom: 5%);
+            max-height: 90%;
+            margin: 0 auto;
         }
-    }
-    .item.image_text .container {
-        > .carousel-caption {
-            right: 10%;
-            > div {
+        .item.text_image .container {
+            > .carousel-caption {
+                left: 10%;
+                > div {
+                    right: 50%;
+                    margin-right: -20%;
+                    max-width: 550px;
+                }
+            }
+            > .carousel-image {
+                right: 10%;
                 left: 50%;
-                margin-left: -20%;
-                max-width: 550px;
             }
         }
-        > .carousel-image {
-            right: 50%;
-            left: 10%;
+        .item.image_text .container {
+            > .carousel-caption {
+                right: 10%;
+                > div {
+                    left: 50%;
+                    margin-left: -20%;
+                    max-width: 550px;
+                }
+            }
+            > .carousel-image {
+                right: 50%;
+                left: 10%;
+            }
         }
-    }
-    .item.text_only .container {
-        > .carousel-caption {
-            left: 10%;
-            right: 10%;
-            top: 10%;
-            bottom: auto;
-            > div {
-                text-align: center;
-                background: transparent;
+        .item.text_only .container {
+            > .carousel-caption {
+                left: 10%;
+                right: 10%;
+                top: 10%;
                 bottom: auto;
-                width: 100%;
+                > div {
+                    text-align: center;
+                    background: transparent;
+                    bottom: auto;
+                    width: 100%;
+                }
             }
-        }
-        > .carousel-image {
-            display: none !important;
+            > .carousel-image {
+                display: none !important;
+            }
         }
     }
 }
+
 
 // Gallery
 .o_gallery {
@@ -601,22 +601,6 @@ div.carousel .container {
     }
 }
 
-div.carousel {
-    .carousel-indicators li {
-        box-shadow: 0 0 0 1px grey;
-        &:hover:not(.active) {
-            background-color: @color-white-50;
-        }
-    }
-    span.carousel-img img,
-    div.carousel-content {
-        max-height: 95%;
-        padding: 10px;
-    }
-    .carousel-control {
-        cursor: pointer;
-    }
-}
 
 // Parallax Theme
 .parallax {

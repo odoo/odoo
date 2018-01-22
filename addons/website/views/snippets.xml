@@ -18,29 +18,82 @@
 </template>
 
 <template id="s_banner" name="Slider">
-    <div id="myCarousel" class="carousel slide s_banner" data-interval="10000">
+    <div id="myCarousel" class="s_banner carousel slide" data-interval="10000">
         <!-- Indicators -->
-        <ol class="carousel-indicators hidden">
-            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"/>
+            <li data-target="#myCarousel" data-slide-to="1"/>
+            <li data-target="#myCarousel" data-slide-to="2"/>
         </ol>
+        <!-- Content -->
         <div class="carousel-inner">
-            <div class="item oe_img_bg active bg-alpha pt48 pb48">
+            <!-- Slide #01 -->
+            <div class="item active oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_banner_default_image_1');">
                 <div class="container">
                     <div class="row content">
-                        <div class="carousel-content col-md-4 col-md-offset-1 mt64">
-                            <h2>Your Slide Title</h2>
-                            <h4>Click to customize this text</h4>
-                            <p><a href="/contactus" class="btn btn-warning btn-large">Contact us</a></p>
+                        <div class="carousel-content col-md-6">
+                            <h2 style="font-size: 62px;">Slide Title</h2>
+                            <h4 class="lead">Click to customize this text.</h4>
+                            <p class="mb16">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
+                            <a href="/aboutus" class="btn btn-beta btn-sm s_btn_flat">About us</a>
+                            <a href="/contactus" class="btn btn-alpha btn-sm s_btn_flat ml8">Contact us</a>
                         </div>
-                        <div class="carousel-img col-md-6 col-md-offset-1 hidden-sm hidden-xs">
-                            <img class="img-responsive" src="/web/image/website.s_banner_default_image" alt="Slider Odoo Image"/>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide #02 -->
+            <div class="item oe_img_bg pt64 pb64" style="background-image: url('/web/image/website.s_banner_default_image_2');">
+                <div class="container">
+                    <div class="row content">
+                        <div class="carousel-content col-md-6 bg-black-50 text-center col-md-offset-3 s_padding_md">
+                            <h2 style="font-size: 62px;">- Slide Title -</h2>
+                            <h4 class="lead">Explain the benefits you offer.</h4>
+                            <p class="mb16">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
+                            <a href="/aboutus" class="btn btn-info s_btn_rounded">Read more</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Slide #03 -->
+            <div class="item oe_img_bg pt96 pb96" style="background-image: url('/web/image/website.s_banner_default_image_3');">
+                <div class="container">
+                    <div class="row content">
+                        <div class="carousel-content col-md-6 col-md-offset-6">
+                            <h2 style="font-size: 62px;">Slide Title</h2>
+                            <h4 class="lead">Click to customize this text.</h4>
+                            <p class="mb16">Use this snippet to presents your content in a slideshow-like format.<br/> Don't write about products or services here, write about solutions.</p>
+                            <div class="s_share">
+                                <h5>Share</h5>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={url}" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-2x fa-facebook-square"/>
+                                </a>
+                                <a href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-2x fa-twitter-square"/>
+                                </a>
+                                <a href="http://www.linkedin.com/shareArticle?mini=true&amp;url={url}&amp;title={title}&amp;" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-2x fa-linkedin-square"/>
+                                </a>
+                                <a href="https://plus.google.com/share?url={url}" class="s_share_google" target="_blank">
+                                    <i class="fa fa-2x fa-google-plus-square"></i>
+                                </a>
+                                <a href="mailto:?body={url}&amp;subject={title}">
+                                    <i class="fa fa-2x fa-envelope-square"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="carousel-control left hidden" data-target="#myCarousel" data-slide="prev" style="width: 10%"><i class="fa fa-chevron-left"></i></div>
-        <div class="carousel-control right hidden" data-target="#myCarousel" data-slide="next" style="width: 10%"><i class="fa fa-chevron-right"></i></div>
+        <!-- Controls -->
+        <div class="carousel-control left" data-target="#myCarousel" data-slide="prev">
+            <i class="fa fa-2x fa-chevron-left bg-white" aria-hidden="true"/>
+            <span class="sr-only">Previous</span>
+        </div>
+        <div class="carousel-control right" data-target="#myCarousel" data-slide="next">
+            <i class="fa fa-2x fa-chevron-right bg-white" aria-hidden="true"/>
+            <span class="sr-only">Next</span>
+        </div>
     </div>
 </template>
 
@@ -910,7 +963,7 @@
         </li>
     </div>
 
-    <div data-selector=".s_text_block_image_fw [class*='col-md-'], .s_text_block [class*='col-md-'], .s_three_columns [class*='col-md-']">
+    <div data-selector=".s_text_block_image_fw [class*='col-md-'], .s_text_block [class*='col-md-'], .s_three_columns [class*='col-md-'], .s_banner .carousel-content">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-arrows-alt"/>Spacing</a>
             <ul class="dropdown-menu">
