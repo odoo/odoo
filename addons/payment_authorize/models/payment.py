@@ -126,7 +126,7 @@ class PaymentAcquirerAuthorize(models.Model):
         for field_name in mandatory_fields:
             if not data.get(field_name):
                 error[field_name] = 'missing'
-        if data['cc_expiry'] and datetime.now().strftime('%y%M') > datetime.strptime(data['cc_expiry'], '%M / %y').strftime('%y%M'):
+        if data['cc_expiry'] and datetime.now().strftime('%y%m') > datetime.strptime(data['cc_expiry'], '%m / %y').strftime('%y%m'):
             return False
         return False if error else True
 

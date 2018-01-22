@@ -374,10 +374,11 @@ var RTEWidget = Widget.extend({
      * @param {boolean} internal_history
      */
     historyRecordUndo: function ($target, event, internal_history) {
+        $target = $($target);
         var rng = range.create();
         var $editable = $(rng && rng.sc).closest('.o_editable');
         if (!rng || !$editable.length) {
-            $editable = $($target).closest('.o_editable');
+            $editable = $target.closest('.o_editable');
             rng = range.create($target.closest('*')[0],0);
         } else {
             rng = $editable.data('range') || rng;
