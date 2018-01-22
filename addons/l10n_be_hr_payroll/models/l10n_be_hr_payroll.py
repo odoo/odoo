@@ -76,7 +76,7 @@ class HrContract(models.Model):
         default=lambda self: self.get_attribute('eco_checks', 'default_value'),
         help="Yearly amount the employee receives in the form of eco vouchers.")
 
-    @api.depends('holidays', 'wage')
+    @api.depends('holidays', 'wage', 'final_yearly_costs')
     def _compute_wage_with_holidays(self):
         for contract in self:
             if contract.holidays > 20.0:
