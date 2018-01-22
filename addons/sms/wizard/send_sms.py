@@ -70,7 +70,7 @@ class SendSMS(models.TransientModel):
             no_phone_partners = []
             for partner in partners:
                 default_field_name = 'mobile' if partner.mobile else 'phone'
-                number = self._sms_sanitization(partner, self.env.context('field_name') or default_field_name)
+                number = self._sms_sanitization(partner, self.env.context.get('field_name') or default_field_name)
                 if number:
                     phone_numbers.append(number)
                 else:
