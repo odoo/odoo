@@ -250,7 +250,9 @@
                         </div>
                         <div class="panel-body">
                             <b>Date</b><br/>
-                            <span t-field="track.date" t-options='{"hide_seconds":"True"}'/><br/>
+                            <span t-field="track.date" t-options='{"hide_seconds":"True"}'/>
+                            <t t-if="event.date_tz">(<span t-field="event.date_tz"/>)</t>
+                            <br/>
                             <b>Duration</b><br/>
                             <span t-field="track.duration" t-options='{"widget": "duration", "unit": "hour", "round": "minute"}'/><br/>
                             <b>Location</b><br/>
