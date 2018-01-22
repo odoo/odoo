@@ -302,10 +302,6 @@ ActionManager.include({
      * @returns {Object}
      */
     _generateActionEnv: function (action, options) {
-        var actionGroupBy = action.context.group_by || [];
-        if (typeof actionGroupBy === 'string') {
-            actionGroupBy = [actionGroupBy];
-        }
         var resID = options.resID || action.res_id;
         return {
             modelName: action.res_model,
@@ -313,7 +309,7 @@ ActionManager.include({
             currentId: resID || undefined,
             domain: [],
             context: action.context || {},
-            groupBy: actionGroupBy,
+            groupBy: [],
         };
     },
     /**
@@ -444,10 +440,11 @@ ActionManager.include({
             throw new Error(_.str.sprintf(_t("Failed to evaluate search criterions")+": \n%s",
                             JSON.stringify(results.error)));
         }
+        var groupBy = results.group_by.length ? results.group_by : (action.context.group_by || []);
         return {
             context: results.context,
             domain: results.domain,
-            groupBy: results.group_by,
+            groupBy: (typeof groupBy === 'string') ? [groupBy] : groupBy,
         };
     },
     /**
