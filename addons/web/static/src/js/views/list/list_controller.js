@@ -44,39 +44,6 @@ var ListController = BasicController.extend({
         this.noLeaf = params.noLeaf;
         this.selectedRecords = []; // there is no selected record by default
     },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Calculate the active domain of the list view. This should be done only
-     * if the header checkbox has been checked. This is done by evaluating the
-     * search results, and then adding the dataset domain (i.e. action domain).
-     *
-     * @todo This is done only for the data export.  The full mechanism is wrong,
-     * this method should be private, most of the code in the sidebar should be
-     * moved to the controller, and we should not use the getParent method...
-     *
-     * @returns {Deferred<array[]>} a deferred that resolve to the active domain
-     */
-    getActiveDomain: function () {
-        // TODO: this method should be synchronous...
-        var self = this;
-        if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchData = this.searchView.build_search_data();
-            var userContext = this.getSession().user_context;
-            var results = pyeval.eval_domains_and_contexts({
-                domains: searchData.domains,
-                contexts: [userContext].concat(searchData.contexts),
-                group_by_seq: searchData.groupbys || []
-            });
-            var record = self.model.get(self.handle, {raw: true});
-            return $.when(record.getDomain().concat(results.domain || []));
-        } else {
-            return $.Deferred().resolve();
-        }
-    },
     /**
      * Returns the list of currently selected res_ids (with the check boxes on
      * the left)

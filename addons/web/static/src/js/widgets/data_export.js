@@ -254,7 +254,7 @@ var DataExport = Dialog.extend({
         }).eq(0).change();
         waitFor.push(got_fields);
 
-        waitFor.push(this.getParent().getActiveDomain().then(function (domain) {
+        waitFor.push(this.getActiveDomain().then(function (domain) {
             if (domain === undefined) {
                 self.ids_to_export = self.getParent().getSelectedIds();
                 self.domain = self.record.domain;
@@ -286,6 +286,24 @@ var DataExport = Dialog.extend({
 
             self.$export_format_inputs = $fmts.find('input');
             self.$export_format_inputs.first().prop('checked', true);
+        }
+    },
+    getActiveDomain: function () {
+        // TODO: this method should be synchronous...
+        var self = this;
+        if (this.$('thead .o_list_record_selector input').prop('checked')) {
+            var searchView = this.getParent().searchview;
+            var searchData = searchView.build_search_data();
+            var userContext = this.getSession().user_context;
+            var results = pyeval.eval_domains_and_contexts({
+                domains: searchData.domains,
+                contexts: [userContext].concat(searchData.contexts),
+                group_by_seq: searchData.groupbys || []
+            });
+            var record = self.model.get(self.handle, {raw: true});
+            return $.when(record.getDomain().concat(results.domain || []));
+        } else {
+            return $.Deferred().resolve();
         }
     },
     show_exports_list: function() {
