@@ -11,3 +11,8 @@ class ResConfigSettings(models.TransientModel):
     module_rating_project = fields.Boolean(string="Rating on Tasks")
     module_project_forecast = fields.Boolean(string="Forecasts")
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
+    project_time_mode_id = fields.Many2one(
+        'product.uom', related='company_id.project_time_mode_id', string='Project Time Unit',
+        help="This will set the unit of measure used in projects and tasks.\n"
+             "If you use the timesheet linked to projects, don't "
+             "forget to setup the right unit of measure in your employees.")

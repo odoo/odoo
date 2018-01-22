@@ -56,6 +56,10 @@
                                     <div class="text-muted">
                                         Track time spent on projects and tasks
                                     </div>
+                                    <div class="row mt16" attrs="{'invisible':['|', ('module_hr_timesheet', '=', False), ('project_time_mode_id', '!=', False)]}">
+                                        <label for="project_time_mode_id" class="col-md-3 o_light_label"/>
+                                        <field name="project_time_mode_id" options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-6 o_setting_box">
