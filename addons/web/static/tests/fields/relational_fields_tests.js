@@ -6201,6 +6201,38 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('nested x2many default values', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree editable="top">' +
+                            '<field name="partner_ids" widget="many2many_tags"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.model === 'partner' && args.method === 'default_get') {
+                    return $.when({turtles: [[0, 0, {
+                        partner_ids: [[6, 0, [4]]],
+                    }]]});
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual(form.$('.o_list_view .o_field_many2manytags[name="partner_ids"] .badge').length, 1,
+            "m2mtags should contain one tag");
+        assert.strictEqual(form.$('.o_list_view .o_field_many2manytags[name="partner_ids"] .o_badge_text').text(),
+            'aaa', "tag name should have been correctly loaded");
+
+        form.destroy();
+    });
+
     QUnit.test('one2many (who contains display_name) with tree view and without form view', function (assert) {
         assert.expect(1);
 
