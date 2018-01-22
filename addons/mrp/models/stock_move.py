@@ -195,6 +195,12 @@ class StockMove(models.Model):
             move_lines = self.move_line_ids.filtered(lambda ml: ml.lot_id == lot and not ml.lot_produced_id)
         else:
             move_lines = self.move_line_ids.filtered(lambda ml: not ml.lot_id and not ml.lot_produced_id)
+
+        # Sanity check: if the product is a serial number and `lot` is already present in the other
+        # consumed move lines, raise.
+        if lot and self.product_id.tracking == 'serial' and lot in self.move_line_ids.filtered(lambda ml: ml.qty_done).mapped('lot_id'):
+            raise UserError(_('You cannot consume the same serial number twice. Please correct the serial numbers encoded.'))
+
         for ml in move_lines:
             rounding = ml.product_uom_id.rounding
             if float_compare(qty_to_add, 0, precision_rounding=rounding) <= 0:
