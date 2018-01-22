@@ -520,14 +520,15 @@ class MassMailing(models.Model):
         self.ensure_one()
         mass_mailing_copy = self.copy()
         if mass_mailing_copy:
+            context = dict(self.env.context)
+            context['form_view_initial_mode'] = 'edit'
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.mass_mailing',
                 'res_id': mass_mailing_copy.id,
-                'context': self.env.context,
-                'flags': {'initial_mode': 'edit'},
+                'context': context,
             }
         return False
 
