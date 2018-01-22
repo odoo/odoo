@@ -438,6 +438,25 @@ table.table_desc tr td {
 }
 
 
+// Quotes Slider
+.s_quotes_slider {
+    blockquote {
+        padding: @grid-gutter-width;
+        border-left-color: @brand-primary;
+        img { 
+            max-width: 40px;
+            margin-right: 5px;
+            .img-circle;
+        }
+        footer {
+            background-color: transparent;
+            &:before { 
+                content:"";
+            }
+        }
+    }
+}
+
 // Gallery
 .o_gallery {
     &.o_grid, &.o_masonry {

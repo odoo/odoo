@@ -669,58 +669,74 @@
         data-scroll-background-ratio="1.6"><div class="oe_structure"/></section>
 </template>
 
-<template id="s_parallax_slider" name="Parallax Slider">
-    <section class="parallax s_parallax_slider oe_custom_bg oe_img_bg"
-             style="background-image: url(/web/image/website.s_parallax_slider_default_image);"
-            data-scroll-background-ratio="1.6">
-        <div><div><div class="oe_structure">
-                <div id="myQuoteCarousel" class="carousel quotecarousel slide mb0" data-interval="10000">
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators mb0">
-                        <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
-                    </ol>
-                    <div class="carousel-inner">
-
-                        <div class="item text_only active">
-                            <div class="container">
-                                <div class="content">
-
-                                    <div class="row">
-                                        <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
-                                            <p>
-                                                Write a quote here from one of your customers. Quotes are a
-                                                great way to build confidence in your products or services.
-                                            </p>
-                                            <small>Author of this quote</small>
-                                        </blockquote>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="item text_only">
-                            <div class="container">
-                                <div class="content">
-
-                                    <div class="row">
-                                        <blockquote class="mt48 mb16 col-md-4 col-md-offset-4">
-                                            <p>
-                                                Odoo provides essential platform for our project management.
-                                                Things are better organized and more visible with it.
-                                            </p>
-                                            <small>John Doe, CEO</small>
-                                        </blockquote>
-                                    </div>
-
-                                </div>
-                            </div>
-
+<template id="s_quotes_slider" name="Quotes Slider">
+    <section class="s_quotes_slider">
+        <div id="myQuoteCarousel" class="carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myQuoteCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="1"></li>
+                <li data-target="#myQuoteCarousel" data-slide-to="2"></li>
+            </ol>
+            <!-- Content -->
+            <div class="carousel-inner">
+                <div class="item text_only active bg-gray-lighter pt64 pb64">
+                    <div class="container">
+                        <div class="content">
+                            <figure class="row">
+                                <blockquote class="col-md-6 col-md-offset-3 bg-white">
+                                    <p>Write a quote here from one of your customers. Quotes are a great way to build confidence in your products or services.</p>
+                                    <footer>
+                                        <img class="img" src="/web/image/website.s_quotes_slider_demo_image_3" alt=""/>
+                                        <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                                    </footer>
+                                </blockquote>
+                            </figure>
                         </div>
                     </div>
                 </div>
-        </div></div></div>
+                <div class="item text_only oe_img_bg pt64 pb64" style="background-image: url('/web/image/website.s_quotes_slider_demo_image_1'); background-position: 50% 50%;">
+                    <div class="container">
+                        <div class="content">
+                            <figure class="row">
+                                <blockquote class="col-md-6 bg-white">
+                                    <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                                    <footer>
+                                        <img class="img" src="/web/image/website.s_quotes_slider_demo_image_4" alt=""/>
+                                        <span>— John DOE, CEO of <b>MyCompany</b></span>
+                                    </footer>
+                                </blockquote>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+                <div class="item text_only oe_img_bg pt64 pb64" style="background-image: url('/web/image/website.s_quotes_slider_demo_image_2'); background-position: 50% 50%;">
+                    <div class="container">
+                        <div class="content">
+                            <figure class="row">
+                                <blockquote class="col-md-6 col-md-offset-6 bg-white">
+                                    <p>Odoo provides essential platform for our project management. Things are better organized and more visible with it.</p>
+                                    <footer>
+                                        <img class="img" src="/web/image/website.s_quotes_slider_demo_image_5" alt=""/>
+                                        <span>— Jane DOE, CEO of <b>MyCompany</b></span>
+                                    </footer>
+                                </blockquote>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Controls -->
+            <div class="carousel-control left" data-target="#myQuoteCarousel" data-slide="prev">
+                <i class="fa fa-1x fa-chevron-left bg-white" aria-hidden="true"/>
+                <span class="sr-only">Previous</span>
+            </div>
+            <div class="carousel-control right" data-target="#myQuoteCarousel" data-slide="next">
+                <i class="fa fa-1x fa-chevron-right bg-white" aria-hidden="true"/>
+                <span class="sr-only">Next</span>
+            </div>
+        </div>
+
     </section>
 </template>
 
@@ -767,7 +783,7 @@
                 </div>
                 <div class="o_panel_body">
                     <t t-snippet="website.s_parallax" t-thumbnail="/website/static/src/img/blocks/block_parallax.png"/>
-                    <t t-snippet="website.s_parallax_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
+                    <t t-snippet="website.s_quotes_slider" t-thumbnail="/website/static/src/img/blocks/block_quotes_slider.png"/>
                 </div>
             </div>
 
