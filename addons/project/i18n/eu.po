@@ -140,21 +140,26 @@ msgid ""
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
 msgstr ""
+"\n"
+"<p>Kaixo ${object.partner_id.name or 'customer'},</p>\n"
+"<p>Eskerrik asko zure kontsultagatik.<br /></p>\n"
+"<p>Galderarik baduzu, esan iezaguzu mesedez.</p>\n"
+"<p>Agur t'erdi,</p>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_opening_days
 msgid "# Days to Assign"
-msgstr ""
+msgstr "# Egun egokitzeko"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_closing_days
 msgid "# Days to Close"
-msgstr ""
+msgstr "# Egun ixteko"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
 msgid "# Days to Deadline"
-msgstr ""
+msgstr "# Egun epemugara"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner_task_count
@@ -165,7 +170,7 @@ msgstr "Ataza kop."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_no_of_days
 msgid "# Working Days"
-msgstr ""
+msgstr "# Lanegun"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -185,22 +190,26 @@ msgid ""
 "(Un)archiving a project automatically (un)archives its tasks and issues. Do "
 "you want to proceed?"
 msgstr ""
+"Proiektu bat automatikoki (des)artxibatzeak, bere zereginak eta arazoak "
+"(des)artxibatzen ditu. Jarraitu nahi duzu?"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "- The Odoo Team"
-msgstr ""
+msgstr "- Odoo taldea"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "1. Learn about Tasks, Issues and Timesheets."
-msgstr ""
+msgstr "1. Ikasi Zeregin, Arazo eta Denbora-orriei buruz"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "2. Now, take some time to list <strong>the Projects you'll need:</strong>"
 msgstr ""
+"2. Orain, hartu denbora zerrendatzeko <strong>behar dituzun "
+"Proiektuak:</strong>"
 
 #. module: project
 #. openerp-web
@@ -210,13 +219,15 @@ msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
 msgstr ""
+"<b>Esleitu zeregina</b> norbaiti. <i>Erabiltzaile berria sortu eta gonbidatu"
+" dezakezu hau egin ahala.</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:83
 #, python-format
 msgid "<b>Click the save button</b> to apply your changes to the task."
-msgstr ""
+msgstr "<b>Egin klik Gorde botoia</b> zure aldaketak zereginari aplikatzeko."
 
 #. module: project
 #. openerp-web
@@ -224,6 +235,8 @@ msgstr ""
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
 msgstr ""
+"<b>Arrastatu &amp; jaregin zereginak</b> zutabeen artean haiekin lanean "
+"zabiltzala."
 
 #. module: project
 #. openerp-web
@@ -232,18 +245,20 @@ msgstr ""
 msgid ""
 "<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"
 msgstr ""
+"<b>Gonbidatu lankideak</b> e-postaz.<br/><i>Sartu e-posta helbide bat "
+"lerroko.</i>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b>Izarra jarri zereginei</b> taldearen lehentasunak markatzeko."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<i class=\"fa fa-user\"/> Person Responsible"
-msgstr ""
+msgstr "<i class=\"fa fa-user\"/> Pertsona arduraduna"
 
 #. module: project
 #: code:addons/project/models/project.py:122
@@ -255,37 +270,44 @@ msgid ""
 "                        documents to your project.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                        Dokumentuak zure proiektuko zeregin eta arazoei eransten zaizkie.</p><p>\n"
+"                        Mezuak bidali edo gehitu barne-oharrak eranskinekin\n"
+"                        dokumentuak lotzeko zure proiektuekin.\n"
+"                    </p>"
 
 #. module: project
 #: code:addons/project/models/project.py:150
 #, python-format
 msgid "<p class=\"oe_view_nocontent_create\">Click to create a new project.</p>"
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">Egin klik proiektu berria "
+"sortzeko.</p>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible':[('use_tasks', '=', False)]}\">as </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-arrow-circle-o-down\"/> Install now"
-msgstr ""
+msgstr "<span class=\"fa fa-arrow-circle-o-down\"/> Instalatu orain"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> Webguneko zuzeneko txata"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-comment-o\"/> Website Live Chat on"
-msgstr ""
+msgstr "<span class=\"fa fa-comment-o\"/> Webguneko zuzeneko txata"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<span class=\"fa fa-envelope-o\"/> Email Our Project Expert"
-msgstr ""
+msgstr "<span class=\"fa fa-envelope-o\"/> E-postaz idatzi gure Proiektu Adituari"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -293,6 +315,8 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-down\"/> The <strong> Wrong Way</strong> to use"
 " projects:"
 msgstr ""
+"<span class=\"fa fa-thumbs-o-down\"/> <strong> Modu okerra</strong> "
+"proietuak erabiltzeko:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -300,11 +324,13 @@ msgid ""
 "<span class=\"fa fa-thumbs-o-up\"/> The <strong>Right Way</strong> to use "
 "projects:"
 msgstr ""
+"<span class=\"fa fa-thumbs-o-up\"/><strong>Modu egokia</strong> proiektuak "
+"erabiltzeko:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Documents</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Dokumentuak</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -314,6 +340,10 @@ msgid ""
 "                                            <strong> Screen Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-laptop\"/>\n"
+"                                            <strong> Pantailaren pertsonalizazioa</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -323,6 +353,10 @@ msgid ""
 "                                            <strong> From your Mobile phone</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-mobile\"/>\n"
+"                                            <strong> Zure mugikorretik</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -332,6 +366,10 @@ msgid ""
 "                                            <strong> Create Custom Reports</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-pencil-square-o\"/>\n"
+"                                            <strong> Sortu pertsonalizatutako txostenak</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -341,6 +379,10 @@ msgid ""
 "                                            <strong> Via Chrome extension</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-puzzle-piece\"/>\n"
+"                                            <strong> Chromeren luzapenak</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -350,6 +392,10 @@ msgid ""
 "                                            <strong> Workflow Customization</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-sitemap\"/>\n"
+"                                            <strong> Lan-fluxuaren pertsonalizazioa</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -359,6 +405,10 @@ msgid ""
 "                                            <strong> Directly in Odoo</strong>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-tasks\"/>\n"
+"                                            <strong> Zuzenean Odoon</strong>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -369,6 +419,11 @@ msgid ""
 "                                            <span class=\"small\">Check Workload</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> 1. ariketa</strong><br/>\n"
+"                                            <span class=\"small\">Egiaztatu lan-karga</span>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -379,6 +434,11 @@ msgid ""
 "                                            <span class=\"small\">Delay to close an Issue</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                            <span class=\"fa fa-thumb-tack\"/>\n"
+"                                            <strong> 2. ariketa</strong><br/>\n"
+"                                            <span class=\"small\">Atzerapena Arazo bat ixteko</span>\n"
+"                                        </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -388,6 +448,10 @@ msgid ""
 "                                        <strong> Tasks</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-check-square-o\"/>\n"
+"                                        <strong> Zereginak</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -397,6 +461,10 @@ msgid ""
 "                                        <strong> Timesheets</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-clock-o\"/>\n"
+"                                        <strong> Denbora-orriak</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -406,6 +474,10 @@ msgid ""
 "                                        <strong> Issues</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa fa-exclamation-circle\"/>\n"
+"                                        <strong> Arazoak</strong>\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_config_settings
@@ -422,6 +494,9 @@ msgid ""
 "                                    We have special options for unlimited number of customizations !\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Jarri gurekin harremanetan zure hautagaitza pertsonalizatzeko:</strong><br/>\n"
+"                                    Aukera bereziak ditugu milaka pertsonalizazio egiteko !\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -429,6 +504,8 @@ msgid ""
 "<span><strong>We are here to help you:</strong> if you don't succeed in achieving your favorite KPIs, contact us and we can help you create your custom reports.\n"
 "                                    </span>"
 msgstr ""
+"<span><strong>Zu laguntzeko gaude:</strong> ez baduzu lortzen zure gustuko KPIetara iristea, jarri gurekin harremanetan eta pertsonalizatutako txostenak sortzen lagunduko dizugu.\n"
+"                                    </span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -436,6 +513,8 @@ msgid ""
 "<strong> Adjourn (5 min)</strong>\n"
 "                                Conclude the meeting with upbeat statements and positive input on project accomplishments. Always reinforce teamwork and encourage all member to watch out for each other to ensure the project is successful."
 msgstr ""
+"<strong> Etenaldia (5 min)</strong>\n"
+"                                Amaitu bilera adierazpen optimisak egiten eta proiektuetan lortutako emaitzen ekarpen positiboak egiten. Talde-lanaren alde hitz egin eta animatu kide guztiei bata bestea laguntzeko proiektua arrakastatsua izan dadin."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -443,6 +522,8 @@ msgid ""
 "<strong> Critical items (10 min)</strong>\n"
 "                                Upon completing the project status review session, summarize the critical items."
 msgstr ""
+"<strong> Artikulu garrantzitsuak (10 min)</strong>\n"
+"                                Proiektuen egoeraren berrikuspena amaitzeko, artikulu garrantzituen laburpena egin."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -1542,7 +1623,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 #, python-format
 msgid "Discard"
-msgstr ""
+msgstr "Baztertu"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_display_name
@@ -2529,7 +2610,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_alias_user_id
 msgid "Owner"
-msgstr ""
+msgstr "Jabea"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_config_settings_module_pad
@@ -2605,7 +2686,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_privacy_visibility
 msgid "Privacy"
-msgstr ""
+msgstr "Pribatutasuna"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3023,7 +3104,7 @@ msgstr ""
 #. module: project
 #: sql_constraint:project.tags:0
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "Etiketaren izena existitzen da jada!"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -3431,7 +3512,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Use Timesheets"
-msgstr ""
+msgstr "Erabili Denbora-orriak"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3569,7 +3650,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Welcome"
-msgstr ""
+msgstr "Ongi etorri"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3623,12 +3704,12 @@ msgstr ""
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
 msgid "Workload"
-msgstr ""
+msgstr "Lan-karga"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write date"
-msgstr ""
+msgstr "Data idatzi"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.task_type_edit
@@ -3674,7 +3755,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "You can save your reports to easily reuse it later"
-msgstr ""
+msgstr "Zure txostenak gorde ditzakezu gero erraz berrerabiltzeko"
 
 #. module: project
 #: code:addons/project/models/project.py:70
@@ -3688,47 +3769,47 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Activities"
-msgstr ""
+msgstr "Zure Jarduerak"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Objectives"
-msgstr ""
+msgstr "Zure Helburuak"
 
 #. module: project
 #: model:mail.template,subject:project.mail_template_data_module_install_project
 msgid "Your Odoo Project application is up and running"
-msgstr ""
+msgstr "Zure Odooko Proiektu aplikazioa martxan dago"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects"
-msgstr ""
+msgstr "Zure proiektuak"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "Your Projects:"
-msgstr ""
+msgstr "Zure proiektuak:"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
 msgid "activate a sample project"
-msgstr ""
+msgstr "aktibatu adibideko proiektua"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "and activate:"
-msgstr ""
+msgstr "eta aktibatu:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr ""
+msgstr "adib. Bulegoko Jaia"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "etc.."
-msgstr ""
+msgstr "etab."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -3753,13 +3834,13 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "send us an email"
-msgstr ""
+msgstr "bidaliguzu e-posta mezu bat"
 
 #. module: project
 #: code:addons/project/models/project.py:466
 #, python-format
 msgid "tasks"
-msgstr ""
+msgstr "zereginak"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
