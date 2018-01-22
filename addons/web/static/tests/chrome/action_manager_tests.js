@@ -18,11 +18,11 @@ QUnit.module('ActionManager', {
                     bar: {string: "Bar", type: "many2one", relation: 'partner'},
                 },
                 records: [
-                    {id: 1, display_name: "First record", foo: "yop"},
-                    {id: 2, display_name: "Second record", foo: "blip"},
-                    {id: 3, display_name: "Third record", foo: "gnap"},
-                    {id: 4, display_name: "Fourth record", foo: "plop"},
-                    {id: 5, display_name: "Fifth record", foo: "zoup"},
+                    {id: 1, display_name: "First record", foo: "yop", bar: 2},
+                    {id: 2, display_name: "Second record", foo: "blip", bar: 1},
+                    {id: 3, display_name: "Third record", foo: "gnap", bar: 1},
+                    {id: 4, display_name: "Fourth record", foo: "plop", bar: 2},
+                    {id: 5, display_name: "Fifth record", foo: "zoup", bar: 2},
                 ],
             },
             pony: {
@@ -2219,6 +2219,47 @@ QUnit.module('ActionManager', {
             "there should be one controller in the breadcrumbs");
         assert.strictEqual($('.o_control_panel .breadcrumb li:last').text(), 'Partners',
             "breadcrumbs should contain the name of the current action");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('honor group_by specified in actions context', function (assert) {
+        assert.expect(5);
+
+        _.findWhere(this.actions, {id: 3}).context = "{'group_by': 'bar'}";
+        this.archs['partner,false,search'] = '<search>'+
+            '<group>'+
+                '<filter name="foo" string="foo" context="{\'group_by\': \'foo\'}"/>' +
+            '</group>'+
+        '</search>';
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+        });
+        actionManager.doAction(3);
+
+        assert.strictEqual(actionManager.$('.o_list_view_grouped').length, 1,
+            "should be grouped");
+        assert.strictEqual(actionManager.$('.o_group_header').length, 2,
+            "should be grouped by 'bar' (two groups) at first load");
+
+        // groupby 'bar' using the searchview
+        $('.o_control_panel .o_searchview_more').click(); // open search view sub menus
+        $('.o_control_panel .o_cp_right button:contains(Group By)').click(); // open groupby dropdown
+        $('.o_control_panel .o_group_by_menu a:first').click(); // click on 'Foo'
+
+        assert.strictEqual(actionManager.$('.o_group_header').length, 5,
+            "should be grouped by 'foo' (five groups)");
+
+        // remove the groupby in the searchview
+        $('.o_control_panel .o_searchview .o_facet_remove').click();
+
+        assert.strictEqual(actionManager.$('.o_list_view_grouped').length, 1,
+            "should still be grouped");
+        assert.strictEqual(actionManager.$('.o_group_header').length, 2,
+            "should be grouped by 'bar' (two groups) at reload");
 
         actionManager.destroy();
     });
