@@ -3652,6 +3652,10 @@ var BasicModel = AbstractModel.extend({
                             // Also keep data if we only reload groups' own data
                             delete updatedProps.data;
                         }
+                        // set the limit such that all previously loaded records
+                        // (e.g. if we are coming back to the kanban view from a
+                        // form view) are reloaded
+                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         _.extend(oldGroup, updatedProps);
                         newGroup = oldGroup;
                     } else if (!newGroup.openGroupByDefault) {
