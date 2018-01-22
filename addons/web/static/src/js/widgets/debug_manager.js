@@ -446,7 +446,7 @@ DebugManager.include({
                         $defaults.parent().addClass('o_form_invalid');
                         return;
                     }
-                    var allUsers = d.$el.find('#formview_default_all').is(':checked');
+                    var selfUser = d.$el.find('#formview_default_self').is(':checked');
                     var condition = d.$el.find('#formview_default_conditions').val();
                     var value = _.find(self.fields, function (field) {
                         return field.name === fieldToSet;
@@ -458,7 +458,7 @@ DebugManager.include({
                             self._active_view.fields_view.model,
                             fieldToSet,
                             value,
-                            allUsers,
+                            selfUser,
                             true,
                             condition || false,
                         ],
