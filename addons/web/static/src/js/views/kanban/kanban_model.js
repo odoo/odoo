@@ -22,6 +22,7 @@ var KanbanModel = BasicModel.extend({
      * @returns {Deferred<string>} resolves to the local id of the new record
      */
     addRecordToGroup: function (groupID, resId) {
+        var self = this;
         var group = this.localData[groupID];
         var new_record = this._makeDataPoint({
             res_id: resId,
@@ -31,15 +32,16 @@ var KanbanModel = BasicModel.extend({
             viewType: group.viewType,
             parentID: groupID,
         });
-        group.data.unshift(new_record.id);
-        group.res_ids.unshift(resId);
-        group.count++;
-
-        // update the res_ids and count of the parent
-        this.localData[group.parentID].count++;
-        this._updateParentResIDs(group);
 
         return this._fetchRecord(new_record).then(function (result) {
+            group.data.unshift(new_record.id);
+            group.res_ids.unshift(resId);
+            group.count++;
+
+            // update the res_ids and count of the parent
+            self.localData[group.parentID].count++;
+            self._updateParentResIDs(group);
+
             return result.id;
         });
     },

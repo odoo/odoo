@@ -7,12 +7,12 @@ var core = require('web.core');
 var time = require('web.time');
 var Widget = require('web.Widget');
 var local_storage = require('web.local_storage');
+var websiteRootInstance = require('website.WebsiteRoot.instance');
 
 var _t = core._t;
 var page_widgets = {};
 
-$(document).ready(function () {
-
+(function () {
     var widget_parent = $('body');
 
 
@@ -23,7 +23,7 @@ $(document).ready(function () {
             // then return fix formate string else timeago
             display_str = "";
         if (datetime_obj && new Date().getTime() - datetime_obj.getTime() > 7 * 24 * 60 * 60 * 1000) {
-            display_str = datetime_obj.toDateString();
+            display_str = moment(datetime_obj).format('ll');
         } else {
             display_str = moment(datetime_obj).fromNow();
         }
@@ -216,7 +216,7 @@ $(document).ready(function () {
             });
         });
     }
-});
+})();
 
 return {
     page_widgets: page_widgets,

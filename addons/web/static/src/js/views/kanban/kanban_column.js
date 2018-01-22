@@ -167,6 +167,13 @@ var KanbanColumn = Widget.extend({
      * Adds the quick create record to the top of the column.
      */
     addQuickCreate: function () {
+        if (this.folded) {
+            // first open the column, and then add the quick create
+            this.trigger_up('column_toggle_fold', {
+                openQuickCreate: true,
+            });
+            return;
+        }
         if (this.quickCreateWidget) {
             return;
         }
