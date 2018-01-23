@@ -43,6 +43,10 @@
     &.o_graph_linechart {
         > svg {
             height: 75px;
+            // Display cut bullets to full bullets
+            g.nvd3.nv-wrap.nv-line clipPath {
+                display: none;
+            }
 
             // X axis
             g.nv-x.nv-axis {

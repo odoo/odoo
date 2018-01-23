@@ -2096,7 +2096,7 @@ var JournalDashboardGraph = AbstractField.extend({
                     self.chart.forceY([0]);
                     self.chart.options({
                         x: function (d, u) { return u; },
-                        margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
+                        margin: {'left': 0, 'right': 0, 'top': 5, 'bottom': 0},
                         showYAxis: false,
                         showLegend: false,
                     });
