@@ -5,12 +5,10 @@ var BasicRenderer = require('web.BasicRenderer');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
-var quick_create = require('web.kanban_quick_create');
+var ColumnQuickCreate = require('web.kanban_column_quick_create');
 var QWeb = require('web.QWeb');
 var session = require('web.session');
 var utils = require('web.utils');
-
-var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 
 var qweb = core.qweb;
 
