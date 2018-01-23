@@ -67,4 +67,6 @@ class WebsiteSaleDelivery(WebsiteSale):
                     'carrier_id': carrier_id,
                     'new_amount_delivery': order.delivery_price,
                     'new_amount_untaxed': order.amount_untaxed,
-                    'new_amount_tax': order.amount_tax}
+                    'new_amount_tax': order.amount_tax,
+                    'new_amount_total': order.amount_total,
+            }

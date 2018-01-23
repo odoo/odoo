@@ -18,7 +18,7 @@ odoo.define('website_sale_delivery.checkout', function (require) {
             $amount_delivery.text(result.new_amount_delivery);
             $amount_untaxed.text(result.new_amount_untaxed);
             $amount_tax.text(result.new_amount_tax);
-            $amount_total.text(result.new_amount_delivery + result.new_amount_untaxed + result.new_amount_tax);
+            $amount_total.text(result.new_amount_total);
             $carrier_badge.children('span').text(result.new_amount_delivery);
             $carrier_badge.removeClass('hidden');
             $compute_badge.addClass('hidden');
