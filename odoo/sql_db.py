@@ -351,7 +351,7 @@ class Cursor(object):
     def before(self, event, func):
         """
         Register an "before" event handler.
-        :param event: the event, either `'commit'` or `'rollback'`
+        :param event: the event, either `commit` or `rollback`
         :param func: a callable object, called with no argument after the event occurs
         """
         self._event_handlers["before_" + event].append(func)
