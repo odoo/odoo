@@ -70,6 +70,8 @@ VIES_WSDL_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl'
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    base_vat_check_status = fields.Selection(selection=[('verified', 'Verified'), ('wrong', 'Wrong'), ('unknown', 'Unknown')], string='VAT Verification Status', compute='_compute_base_vat_check_status', store=True, default='unknown')
+
     @api.model
     def compact_vat_number(self, vat):
         """ Returns the vat number given in parameter, with all non-alphanumeric
@@ -126,7 +128,7 @@ class ResPartner(models.Model):
             response = client.service.checkVat(country_code, vat_number)
             return response['valid'] and response or False
 
-        except WebFault as e:
+        except Exception as e:
             if type(e) is WebFault and e.fault.faultstring == 'INVALID_INPUT':
                 return False
             return None
@@ -144,49 +146,66 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.constrains('vat')
-    def check_vat(self):
-        if self.env.context.get('company_id'):
-            company = self.env['res.company'].browse(self.env.context['company_id'])
-        else:
-            company = self.env.user.company_id
-
-        if company.vat_check_vies:
-            # force full VIES online check
-            check_func = self.vies_vat_check
-        else:
-            # quick and partial off-line checksum validation
-            check_func = self.simple_vat_check
-
-        # quick and partial off-line checksum validation
+    @api.depends('vat', 'commercial_partner_country_id', 'parent_id.vat', 'parent_id.commercial_partner_country_id')
+    def _compute_base_vat_check_status(self):
         for partner in self:
-            if not partner.vat or (partner.parent_id and partner.vat == partner.parent_id.vat):
-                continue
-            #check with country code as prefix of the TIN
-            vat_country, vat_number = self._split_vat(partner.vat)
-            if not check_func(vat_country, vat_number):
-                #if fails, check with country code from country
-                country_code = partner.commercial_partner_country_id.code
-                if country_code:
-                    check_rslt = check_func(country_code.lower(), partner.vat)
-                    if  check_rslt == False:
-                        msg = partner._construct_constraint_msg(country_code.lower())
-                        raise ValidationError(msg)
-                    elif check_rslt == None:
-                        return {'warning': {'title':'test', 'message':"caramba! encore raté"}}
+            if self.env.context.get('company_id'):
+                company = self.env['res.company'].browse(self.env.context['company_id'])
+            else:
+                company = self.env.user.company_id
 
+            check_rslt = None
+            if partner.vat:
+                if partner.parent_id and partner.vat == partner.parent_id.vat:
+                    partner.base_vat_check_status = partner.parent_id.base_vat_check_status
+                    _logger.warn("GOOD "+partner.name)
+                    continue
+                elif company.vat_check_vies:
+                    _logger.warn("BAD"+partner.name)
+                    check_rslt = partner._check_vat(self.vies_vat_check)
 
-    def _construct_constraint_msg(self, country_code):
-        self.ensure_one()
-        vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
-        vat_no = _ref_vat.get(country_code) or vat_no
+            if check_rslt == None:
+                partner.base_vat_check_status = 'unknown'
+            else:
+                partner.base_vat_check_status = check_rslt and 'verified' or 'wrong'
+
+    @api.constrains('vat', 'commercial_partner_country_id')
+    def vat_constraint(self):
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
         else:
             company = self.env.user.company_id
-        if company.vat_check_vies:
-            return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or does not respect the expected format %s.') % (self.vat, self.name, vat_no)
-        return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
+
+        for record in self:
+            if company.vat_check_vies:
+                record_vat_country_code = self._split_vat(record.vat)[0]
+                commercial_partner_country_code = record.commercial_partner_country_id and record.commercial_partner_country_id.code.lower() or False
+                vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
+                vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
+
+                if record.vat and record.base_vat_check_status == 'wrong':
+                    raise ValidationError(_('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or does not respect the expected format %s.') % (record.vat, record.name, vat_no))
+
+            elif record.vat and not record._check_vat(simple_vat_check):
+                _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (record.vat, record.name, vat_no)
+
+    @api.onchange('vat', 'commercial_partner_country_id', 'parent_id.vat', 'parent_id.commercial_partner_country_id')
+    def _onchange_base_vat_check_status(self):
+        if self.base_vat_check_status == 'unknown':
+            return {'warning':{'message':_("The VAT number could not be verified as the VIES service did not respond. You can try again by re-saving the contact."), 'title':_('VIES unavailable')}}
+
+    def _check_vat(self, check_func):
+        _logger.warn("Papa a vu le fifi de lolo " + self.name)
+        #check with country code as prefix of the TIN
+        vat_country, vat_number = self._split_vat(self.vat)
+        check_rslt = check_func(vat_country, vat_number)
+        if not check_rslt:
+            #if fails, check with country code from country
+            country_code = self.commercial_partner_country_id.code
+            if country_code:
+                check_rslt = check_func(country_code.lower(), self.vat)
+
+        return check_rslt
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
