@@ -5,19 +5,8 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="replace">
-                </xpath>
-
-                <xpath expr="//label[@for='street']" position="before">
-                    <field name="base_vat_vies_status" invisible="1"/>
-                        <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'failed')]}"/>
-                        <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', False)]}"/>
-                        <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'passed')]}"/>
-                        <label string="VAT" style="font-weight: bold;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
-                        <div class="o_row" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}">
-                            <field name="vat" string="VAT" style="color:Orange;"/>
-                            <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_vies_status" class="oe_read_only btn-default"/>
-                        </div>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="string">VAT</attribute>
                 </xpath>
             </field>
         </record>
@@ -27,19 +16,8 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_short_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='vat']" position="replace">
-                </xpath>
-
-                <xpath expr="//label[@for='street']" position="before">
-                    <field name="base_vat_vies_status" invisible="1"/>
-                        <field name="vat" string="VAT" style="color:Red;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'failed')]}"/>
-                        <field name="vat" string="VAT" attrs="{'invisible': [('base_vat_vies_status', '!=', False)]}"/>
-                        <field name="vat" string="VAT" style="color:Green;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'passed')]}"/>
-                        <label string="VAT" style="font-weight: bold;" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}"/>
-                        <div class="o_row" attrs="{'invisible': [('base_vat_vies_status', '!=', 'exception')]}">
-                            <field name="vat" string="VAT" style="color:Orange;"/>
-                            <button id="base_vat_recheck_vies" string="Recheck" type="object" name="compute_base_vat_vies_status" class="oe_read_only btn-default"/>
-                        </div>
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="string">VAT</attribute>
                 </xpath>
             </field>
         </record>
