@@ -15,6 +15,12 @@ class AccountConfigSettings(models.TransientModel):
     _name = 'account.config.settings'
     _inherit = 'res.config.settings'
 
+    def _default_fiscalyear_last_day(self):
+        return self.env.user.company_id.fiscalyear_last_day or 31
+
+    def _default_fiscalyear_last_month(self):
+        return self.env.user.company_id.fiscalyear_last_month or 12
+
     @api.one
     @api.depends('company_id')
     def _get_currency_id(self):
@@ -70,8 +76,10 @@ class AccountConfigSettings(models.TransientModel):
              the sales and purchase rates or use the usual m2o fields. This last choice assumes that
              the set of tax defined for the chosen template is complete''')
 
-    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
-    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month', default=12)
+    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day',
+        default=lambda self: self._default_fiscalyear_last_day())
+    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')],
+        related='company_id.fiscalyear_last_month', default=lambda self: self._default_fiscalyear_last_month())
     period_lock_date = fields.Date(string="Lock Date for Non-Advisers", related='company_id.period_lock_date', help="Only users with the 'Adviser' role can edit accounts prior to and inclusive of this date. Use it for period locking inside an open fiscal year, for example.")
     fiscalyear_lock_date = fields.Date(string="Lock Date", related='company_id.fiscalyear_lock_date', help="No users, including Advisers, can edit accounts prior to and inclusive of this date. Use it for fiscal year locking for example.")
 
