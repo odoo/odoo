@@ -743,6 +743,51 @@ class TestSinglePicking(TestStockCommon):
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
         self.assertEqual(backorder.state, 'confirmed')
 
+    def test_backorder_3(self):
+        """ Check the good behavior of creating a backorder for an available move on a picking with
+        two available moves.
+        """
+        delivery_order = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': delivery_order.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+        })
+
+        # make some stock
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, pack_location, 2)
+        self.env['stock.quant']._update_available_quantity(self.productA, pack_location, 2)
+
+        # assign to partially available
+        delivery_order.action_confirm()
+        delivery_order.action_assign()
+        self.assertEqual(delivery_order.state, 'assigned')
+
+        delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
+        delivery_order.do_transfer()
+
+        backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
+        self.assertEqual(backorder.state, 'confirmed')
+
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
         simulates the delivery of 2 item while the initial stock move had to move 1 and there's
