@@ -383,10 +383,11 @@ class Cursor(object):
     def commit(self):
         """ Perform an SQL `COMMIT`
         """
-        for func in self._pop_event_handlers()['before_commit']:
+        event_handlers = self._pop_event_handlers()
+        for func in event_handlers['before_commit']:
             func()
         result = self._cnx.commit()
-        for func in self._pop_event_handlers()['commit']:
+        for func in event_handlers['commit']:
             func()
         return result
 
@@ -394,10 +395,11 @@ class Cursor(object):
     def rollback(self):
         """ Perform an SQL `ROLLBACK`
         """
-        for func in self._pop_event_handlers()['before_rollback']:
+        event_handlers = self._pop_event_handlers()
+        for func in event_handlers['before_rollback']:
             func()
         result = self._cnx.rollback()
-        for func in self._pop_event_handlers()['rollback']:
+        for func in event_handlers['rollback']:
             func()
         return result
 
