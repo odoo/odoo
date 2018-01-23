@@ -251,16 +251,18 @@ class link_tracker_click(models.Model):
                 'create_date': datetime.date.today(),
                 'ip': ip,
                 'country_id': country_record.id,
-                'mail_stat_id': stat_id
             }
 
             if stat_id:
                 mail_stat = self.env['mail.mail.statistics'].search([('id', '=', stat_id)])
+                # It could happen that the related ID is no longer available, but we still want the link to work
+                if mail_stat.exists():
+                    vals['mail_stat_id'] = stat_id
 
-                if mail_stat.mass_mailing_campaign_id:
-                    vals['mass_mailing_campaign_id'] = mail_stat.mass_mailing_campaign_id.id
+                    if mail_stat.mass_mailing_campaign_id:
+                        vals['mass_mailing_campaign_id'] = mail_stat.mass_mailing_campaign_id.id
 
-                if mail_stat.mass_mailing_id:
-                    vals['mass_mailing_id'] = mail_stat.mass_mailing_id.id
+                    if mail_stat.mass_mailing_id:
+                        vals['mass_mailing_id'] = mail_stat.mass_mailing_id.id
 
             self.create(vals)
