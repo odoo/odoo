@@ -4317,7 +4317,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             The returned recordset has the same prefetch object as ``self``.
 
         """
-        return self.with_env(self.env(user=user))
+        context = dict(self._context, sudo_user=self.env.user)
+        return self.with_env(self.env(user=user, context=context))
 
     def with_context(self, *args, **kwargs):
         """ with_context([context][, **overrides]) -> records
