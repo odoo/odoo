@@ -300,7 +300,7 @@ class Inventory(models.Model):
 class InventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
-    _order = "product_name ,inventory_id, location_name, product_code, prodlot_name"
+    _order = "product_id, inventory_id, location_name, prodlot_name"
 
     inventory_id = fields.Many2one(
         'stock.inventory', 'Inventory',
@@ -309,10 +309,8 @@ class InventoryLine(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         index=True, required=True)
-    product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True, readonly=True)
-    product_code = fields.Char(
-        'Product Code', related='product_id.default_code', store=True)
+    product_name = fields.Char('Product Name')
+    product_code = fields.Char('Product Code')
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True,
@@ -364,6 +362,8 @@ class InventoryLine(models.Model):
         # If no UoM or incorrect UoM put default one from product
         if self.product_id:
             self.product_uom_id = self.product_id.uom_id
+            self.product_name = self.product_id.product_name
+            self.product_code = self.product_id.product_code
             res['domain'] = {'product_uom_id': [('category_id', '=', self.product_id.uom_id.category_id.id)]}
         return res
 
@@ -373,14 +373,8 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
-    @api.multi
-    def write(self, values):
-        values.pop('product_name', False)
-        res = super(InventoryLine, self).write(values)
-
     @api.model
     def create(self, values):
-        values.pop('product_name', False)
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         existings = self.search([
