@@ -70,6 +70,7 @@ class ResConfigSettings(models.TransientModel):
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
+                'code_digits': self.chart_template_id.code_digits,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
                 'currency_id': self.currency_id.id,
                 'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
