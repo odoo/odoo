@@ -163,25 +163,28 @@ class ResPartner(models.Model):
     @api.constrains('vat', 'commercial_partner_country_id')
     def vat_constraint(self):
         company = self.env.context.get('company_id')
-            if not company:
-                company = self.env.user.company_id
+        if not company:
+            company = self.env.user.company_id
 
         for record in self.filtered(lambda x: x.vat):
-            if company.vat_check_vies:
-                record_vat_country_code = self._split_vat(record.vat)[0]
-                commercial_partner_country_code = record.commercial_partner_country_id and record.commercial_partner_country_id.code.lower() or False
-                vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
-                vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
+            record_vat_country_code = self._split_vat(record.vat)[0]
+            commercial_partner_country_code = record.commercial_partner_country_id and record.commercial_partner_country_id.code.lower() or False
+            vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
+            vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
 
+            if company.vat_check_vies:
                 if record.base_vat_vies_check_status == 'wrong':
                     raise ValidationError(_('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or does not respect the expected format %s.') % (record.vat, record.name, vat_no))
-
-            elif not record._check_vat(simple_vat_check):
+            elif not record._check_vat(self.simple_vat_check):
                 raise ValidationError(_('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (record.vat, record.name, vat_no))
 
     @api.onchange('vat', 'commercial_partner_country_id')
     def _onchange_base_vat_vies_check_status(self):
-        if self.vat and self.base_vat_vies_check_status == 'unknown':
+        company = self.env.context.get('company_id')
+        if not company:
+            company = self.env.user.company_id
+
+        if self.vat and company.vat_check_vies and self.base_vat_vies_check_status == 'unknown':
             return {'warning':{'message':_("The VAT number could not be verified as the VIES service did not respond. You can try again by re-saving the contact."), 'title':_('VIES unavailable')}}
 
     def _check_vat(self, check_func):
