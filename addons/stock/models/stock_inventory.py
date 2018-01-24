@@ -290,7 +290,7 @@ class Inventory(models.Model):
 class InventoryLine(models.Model):
     _name = "stock.inventory.line"
     _description = "Inventory Line"
-    _order = "product_name ,inventory_id, location_name, product_code, prodlot_name"
+    _order = "product_id, inventory_id, location_id, prod_lot_id"
 
     inventory_id = fields.Many2one(
         'stock.inventory', 'Inventory',
@@ -300,10 +300,6 @@ class InventoryLine(models.Model):
         'product.product', 'Product',
         domain=[('type', '=', 'product')],
         index=True, required=True)
-    product_name = fields.Char(
-        'Product Name', related='product_id.name', store=True, readonly=True)
-    product_code = fields.Char(
-        'Product Code', related='product_id.default_code', store=True)
     product_uom_id = fields.Many2one(
         'product.uom', 'Product Unit of Measure',
         required=True,
@@ -314,18 +310,11 @@ class InventoryLine(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Location',
         index=True, required=True)
-    # TDE FIXME: necessary ? only in order -> replace by location_id
-    location_name = fields.Char(
-        'Location Name', related='location_id.complete_name', store=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Pack', index=True)
     prod_lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id','=',product_id)]")
-    # TDE FIXME: necessary ? -> replace by location_id
-    prodlot_name = fields.Char(
-        'Serial Number Name',
-        related='prod_lot_id.name', store=True)
     company_id = fields.Many2one(
         'res.company', 'Company', related='inventory_id.company_id',
         index=True, readonly=True, store=True)
@@ -364,14 +353,8 @@ class InventoryLine(models.Model):
             self._compute_theoretical_qty()
             self.product_qty = self.theoretical_qty
 
-    @api.multi
-    def write(self, values):
-        values.pop('product_name', False)
-        res = super(InventoryLine, self).write(values)
-
     @api.model
     def create(self, values):
-        values.pop('product_name', False)
         if 'product_id' in values and 'product_uom_id' not in values:
             values['product_uom_id'] = self.env['product.product'].browse(values['product_id']).uom_id.id
         existings = self.search([
