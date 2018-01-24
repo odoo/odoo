@@ -303,6 +303,22 @@ class IrActionsReport(models.Model):
 
         # Retrieve bodies
         for node in root.xpath(match_klass.format('article')):
+            # Filter out and transform h tags
+            # we need one and only one, to act as a section separator
+            # when splitting the pdf of multiple objects
+            for single_doc in node.xpath('//div[contains(@class, "page")]'):
+                wkhtml_outline_sep = False
+                for htag in single_doc.xpath('./*[starts-with(name(), "h")]'):
+                    if wkhtml_outline_sep and 'o_resid-breaker' not in htag.get('class', ''):
+                        htag.set('class', htag.get('class', '') + ' o_mock-h' + htag.tag[1])
+                        htag.tag = 'span'
+                    if 'o_resid-breaker' in htag.get('class', ''):
+                        wkhtml_outline_sep = True
+                if not wkhtml_outline_sep:
+                    new_h_separator = single_doc.makeelement('h1', {'style': 'font-size:0px', 'class': 'o_resid-breaker'})
+                    new_h_separator.text = 'wkhtmltopdf separator'
+                    single_doc.append(new_h_separator)
+
             body = layout.render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url))
             bodies.append(body)
             oemodelnode = node.find(".//*[@data-oe-model='%s']" % self.model)
