@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
@@ -32,7 +32,9 @@ class TestTimesheetHolidays(TestTimesheet):
         self.employee_working_calendar = self.empl_employee.resource_calendar_id
         # leave dates : from next monday to next wednesday (to avoid crashing tests on weekend, when
         # there is no work days in working calendar)
-        self.leave_start_datetime = datetime.today().replace(hour=7, minute=0) + relativedelta(weeks=0, days=1, weekday=0)
+        # NOTE: second and millisecond can add a working days
+        today = datetime.combine(datetime.today(), time.min)
+        self.leave_start_datetime = today.replace(hour=7) + relativedelta(weeks=0, days=1, weekday=0)
         self.leave_end_datetime = self.leave_start_datetime + relativedelta(days=3)
 
         # all company have those internal project/task (created by default)
@@ -75,7 +77,7 @@ class TestTimesheetHolidays(TestTimesheet):
 
     def test_validate_with_timesheet(self):
         # employee creates a leave request
-        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days+1
+        number_of_days = (self.leave_end_datetime - self.leave_start_datetime).days
         holiday = self.Holidays.sudo(self.user_employee.id).create({
             'name': 'Leave 1',
             'employee_id': self.empl_employee.id,
