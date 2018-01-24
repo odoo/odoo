@@ -156,9 +156,11 @@ def profile(method=None, whitelist=None, blacklist=(None,), files=None,
                     v['report'][call['lineno']]['nb_queries'] += next_call['queries'] - call.get('queries', 0)
                 v['report'][call['lineno']]['delay'] += next_call['time'] - call['time']
 
+            total_nb = 0
             queries = 0
             delay = 0
             for call in v['report'].values():
+                total_nb += call['nb'] if call.get('nb') else 0
                 queries += call['nb_queries']
                 delay += call['delay']
 
@@ -183,7 +185,7 @@ def profile(method=None, whitelist=None, blacklist=(None,), files=None,
                 log.append('\n')
 
             log.append("\nTotal:\n%-10s%-10d%-10s\n\n" % (
-                        str(data['nb']),
+                        str(total_nb),
                         queries,
                         str(round(delay*100000)/100)))
 
