@@ -1459,8 +1459,10 @@ var LinkDialog = Dialog.extend({
 
         var style = this.$('input[name="link_style_color"]:checked').val() || '';
         var size = this.$('select[name="link_style_size"]').val() || '';
+        var monkey = this.$('select[name="link_style_monkey"]').val() || '';
         var classes = (this.data.className || '')
             + ((style && style.length) ? (' btn btn-' + style) : '')
+            + ((monkey && monkey.length) ? (' s_btn_' + monkey) : '')
             + ((size && size.length) ? (' btn-' + size) : '');
         var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
 
