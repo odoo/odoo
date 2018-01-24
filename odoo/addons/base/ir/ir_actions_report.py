@@ -312,8 +312,7 @@ class IrActionsReport(models.Model):
                     if wkhtml_outline_sep and 'o_resid-breaker' not in htag.get('class', ''):
                         htag.set('class', htag.get('class', '') + ' o_mock-h' + htag.tag[1])
                         htag.tag = 'span'
-                    if 'o_resid-breaker' in htag.get('class', ''):
-                        wkhtml_outline_sep = True
+                    wkhtml_outline_sep = True
                 if not wkhtml_outline_sep:
                     new_h_separator = single_doc.makeelement('h1', {'style': 'font-size:0px', 'class': 'o_resid-breaker'})
                     new_h_separator.text = 'wkhtmltopdf separator'
