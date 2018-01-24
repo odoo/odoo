@@ -146,7 +146,7 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.depends('vat', 'commercial_partner_country_id', 'parent_id.vat', 'parent_id.commercial_partner_country_id')
+    @api.depends('vat', 'commercial_partner_country_id')
     def _compute_base_vat_check_status(self):
         for partner in self:
             if self.env.context.get('company_id'):
@@ -161,7 +161,7 @@ class ResPartner(models.Model):
                     _logger.warn("GOOD "+partner.name)
                     continue
                 elif company.vat_check_vies:
-                    _logger.warn("BAD"+partner.name)
+                    _logger.warn("BAD"+partner.name+"   "+str(self.env.context))
                     check_rslt = partner._check_vat(self.vies_vat_check)
 
             if check_rslt == None:
@@ -195,7 +195,6 @@ class ResPartner(models.Model):
             return {'warning':{'message':_("The VAT number could not be verified as the VIES service did not respond. You can try again by re-saving the contact."), 'title':_('VIES unavailable')}}
 
     def _check_vat(self, check_func):
-        _logger.warn("Papa a vu le fifi de lolo " + self.name)
         #check with country code as prefix of the TIN
         vat_country, vat_number = self._split_vat(self.vat)
         check_rslt = check_func(vat_country, vat_number)
