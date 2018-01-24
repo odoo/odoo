@@ -206,7 +206,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects">
+                <tree decoration-bf="message_needaction==True" decoration-muted="active == False" string="Projects" import="0">
                     <field name="sequence" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -221,7 +221,7 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" import="0">
                     <field name="user_id" string="Project Manager"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -285,7 +285,7 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project">
+                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project" import="0">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="color"/>
@@ -521,7 +521,7 @@
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project" import="0">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
@@ -611,7 +611,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks">
+                <tree decoration-bf="message_needaction==True" decoration-danger="date_deadline and (date_deadline&lt;current_date)" string="Tasks" import="0">
                     <field name="message_needaction" invisible="1"/>
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
