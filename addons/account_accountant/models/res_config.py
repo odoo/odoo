@@ -7,7 +7,8 @@ from odoo import fields, models
 class AccountConfigSettings(models.TransientModel):
     _inherit = 'account.config.settings'
 
-    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day', default=31)
+    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day',
+                                         default=lambda self: self._default_fiscalyear_last_day())
     fiscalyear_last_month = fields.Selection([
         (1, 'January'),
         (2, 'February'),
@@ -20,8 +21,10 @@ class AccountConfigSettings(models.TransientModel):
         (9, 'September'),
         (10, 'October'),
         (11, 'November'),
-        (12, 'December')
-        ], related='company_id.fiscalyear_last_month', default=12)
+        (12, 'December')],
+        related='company_id.fiscalyear_last_month',
+        default=lambda self: self._default_fiscalyear_last_month())
+
     period_lock_date = fields.Date(related='company_id.period_lock_date')
     fiscalyear_lock_date = fields.Date(related='company_id.fiscalyear_lock_date')
     use_anglo_saxon = fields.Boolean(string='Anglo-Saxon Accounting', related='company_id.anglo_saxon_accounting')
@@ -33,3 +36,9 @@ class AccountConfigSettings(models.TransientModel):
         'account.journal',
         related='company_id.tax_cash_basis_journal_id',
         string="Tax Cash Basis Journal",)
+
+    def _default_fiscalyear_last_day(self):
+        return self.env.user.company_id.fiscalyear_last_day or 31
+
+    def _default_fiscalyear_last_month(self):
+        return self.env.user.company_id.fiscalyear_last_month or 12
