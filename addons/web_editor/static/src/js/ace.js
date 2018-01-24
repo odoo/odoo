@@ -107,12 +107,11 @@ var ViewEditor = Widget.extend({
      */
     start: function () {
         this.$viewEditor = this.$('#ace-view-editor');
-        this.$editor = this.$(".ace_editor");
         this.$viewList = this.$('#ace-view-list');
         this.$viewID = this.$('#ace-view-id');
-
         this.aceEditor = window.ace.edit(this.$viewEditor[0]);
         this.aceEditor.setTheme("ace/theme/monokai");
+        this.$editor = this.$(".ace_editor");
 
         var refX = 0;
         var resizing = false;
