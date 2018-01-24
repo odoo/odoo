@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Sergei Ruzki sergei.ruzki@gmail.com https://github.com/sergeiruzkiicode
+Sergei Ruzki sergei.ruzki@icode.by https://github.com/sergeiruzkiicode
