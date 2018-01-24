@@ -996,10 +996,6 @@ class TestParentStore(common.TransactionCase):
 
     def setUp(self):
         super(TestParentStore, self).setUp()
-        # pretend the pool has finished loading to avoid deferring parent_store
-        # computation
-        self.patch(self.registry, '_init', False)
-
         # make a tree of categories:
         #   0
         #  /|\

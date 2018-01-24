@@ -809,9 +809,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
 
-        if ids and self._context.get('defer_parent_store_computation'):
-            self._parent_store_compute()
-
         return {'ids': ids, 'messages': messages}
 
     def _add_fake_fields(self, fields):
@@ -2114,7 +2111,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         self.pool.post_init(self._reflect)
 
         cr = self._cr
-        parent_store_compute = False
         update_custom_fields = self._context.get('update_custom_fields', False)
         must_create_table = not tools.table_exists(cr, self._table)
 
@@ -2125,7 +2121,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if self._parent_store:
                 if not tools.column_exists(cr, self._table, 'parent_left'):
                     self._create_parent_columns()
-                    parent_store_compute = True
 
             self._check_removed_columns(log=False)
 
@@ -2153,9 +2148,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         if must_create_table:
             self._execute_sql()
-
-        if parent_store_compute:
-            self._parent_store_compute()
 
     @api.model_cr
     def init(self):
@@ -3344,11 +3336,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         """ Prepare the creation of a record, and return whether its
             parent_left/parent_right fields must be updated after creation.
         """
-        if not self._parent_store or self._context.get('defer_parent_store_computation'):
-            return False
-
-        if self.pool._init:
-            self.pool._init_parent.add(self._name)
+        if not self._parent_store:
             return False
 
         # temporarily put the node at the top-level rightmost position
@@ -3365,12 +3353,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             parent_right fields, in their sibling order. This must be called
             before updating the parent field.
         """
-        if not self._parent_store or self._parent_name not in vals or \
-                self._context.get('defer_parent_store_computation'):
-            return self.browse()
-
-        if self.pool._init:
-            self.pool._init_parent.add(self._name)
+        if not self._parent_store or self._parent_name not in vals:
             return self.browse()
 
         # The parent_left/right computation may take up to 5 seconds. No need to
