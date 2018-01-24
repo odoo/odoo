@@ -90,7 +90,7 @@ class StockMoveLine(models.Model):
     @api.constrains('product_uom_qty')
     def check_reserved_done_quantity(self):
         for move_line in self:
-            if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_rounding=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
+            if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
     @api.onchange('product_id', 'product_uom_id')
