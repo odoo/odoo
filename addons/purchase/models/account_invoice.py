@@ -52,6 +52,7 @@ class AccountInvoice(models.Model):
             'product_id': line.product_id.id,
             'account_id': invoice_line.with_context({'journal_id': self.journal_id.id, 'type': 'in_invoice'})._default_account(),
             'price_unit': line.order_id.currency_id.with_context(date=self.date_invoice).compute(line.price_unit, self.currency_id, round=False),
+            'quantity': qty,
             'discount': 0.0,
             'account_analytic_id': line.account_analytic_id.id,
             'analytic_tag_ids': line.analytic_tag_ids.ids,
