@@ -15,8 +15,10 @@ try:
 
 except ImportError:
     _sms_phonenumbers_lib_imported = False
-    _logger.warning(
-        "The `phonenumbers` Python module is not installed. Try: pip install phonenumbers."
+    _logger.info(
+        "The `phonenumbers` Python module is not available. "
+        "Phone number validation will be skipped. "
+        "Try `pip3 install phonenumbers` to install it."
     )
 
 
