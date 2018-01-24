@@ -68,6 +68,7 @@ class ResConfigSettings(models.TransientModel):
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
+                'code_digits': self.chart_template_id.code_digits,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
