@@ -15,6 +15,11 @@ The service is provided by the In App Purchase Odoo platform.
         'wizard/send_sms_views.xml',
         'views/res_partner_views.xml',
     ],
+    'external_dependencies': {
+        'python': [
+            'phonenumbers',
+        ],
+    },
     'installable': True,
     'auto_install': True,
 }
