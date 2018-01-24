@@ -12,11 +12,6 @@ class TestUi(odoo.tests.HttpCase):
     def test_01_pos_basic_order(self):
         env = self.env
 
-        # By default parent_store computation is deferred until end of
-        # tests. Pricelist items however are sorted based on these
-        # fields, so they need to be computed.
-        env['product.category']._parent_store_compute()
-
         journal_obj = env['account.journal']
         account_obj = env['account.account']
         main_company = env.ref('base.main_company')
