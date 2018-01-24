@@ -39,6 +39,7 @@ var discuss_menu_id;
 var global_unread_counter = 0;
 var pinned_dm_partners = [];  // partner_ids we have a pinned DM with
 var client_action_open = false;
+var isEmojiSupported = isSupportedEmoji();
 
 // Global unread counter and notifications
 //----------------------------------------------------------------------------------
@@ -46,6 +47,16 @@ bus.on("window_focus", null, function() {
     global_unread_counter = 0;
     web_client.set_title_part("_chat");
 });
+
+// check emoji supported by the browser or not
+function isSupportedEmoji () {
+    var canvas = $("<canvas />")[0].getContext("2d");
+    canvas.textBaseline = "top";
+    canvas.font = "20px Arial";
+    var emoji = String.fromCharCode(55357) + String.fromCharCode(56835);
+    canvas.fillText(emoji, 0, 0);
+    return (canvas.getImageData(16, 16, 1, 1).data[0] !== 0);
+};
 
 function notify_incoming_message (msg, options) {
     if (bus.is_odoo_focused() && options.is_displayed) {
@@ -150,7 +161,13 @@ function make_message (data) {
     _.each(_.keys(emoji_substitutions), function (key) {
         var escaped_key = String(key).replace(/([.*+?=^!:${}()|[\]\/\\])/g, '\\$1');
         var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escaped_key + ")(?=\\s|$|</[a-z]*>)", "g");
-        msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+emoji_substitutions[key]+'</span> ');
+        var emoji;
+        if (isEmojiSupported) {
+            emoji = emoji_unicodes[key] ? emoji_unicodes[key] : key;
+        } else {
+            emoji = emoji_substitutions[key];
+        }
+        msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+ emoji +'</span> ');
     });
 
     function property_descr(channel) {
@@ -980,7 +997,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
     },
 
     get_emojis: function() {
-        return emojis;
+        return {emojis: emojis, isEmojiSupported: isEmojiSupported};
     },
 
     get_needaction_counter: function () {

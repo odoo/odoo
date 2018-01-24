@@ -3,109 +3,298 @@
     <data>
 
         <!-- Smileys -->
-        <record id="mail_smiley_normal_smile" model="mail.shortcode">
-            <field name="source">:)</field>
-            <field name="unicode_source">😊</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/normal_smile.png' alt='😊'/&gt;</field>
-            <field name="description">Smile</field>
+        <record id="mail_smiley_grinning_face" model="mail.shortcode">
+            <field name="source">:-D</field>
+            <field name="unicode_source">😀</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/grinning_face.png' alt='😀'/&gt;</field>
+            <field name="description">Grinning Face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_smile" model="mail.shortcode">
-            <field name="source">:D</field>
-            <field name="unicode_source">😄</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smile.png' alt='😄'/&gt;</field>
-            <field name="description">Smile with open mouth</field>
+        <record id="mail_smiley_grinning_face_with_smiling_eyes" model="mail.shortcode">
+            <field name="source">^_^</field>
+            <field name="unicode_source">😁</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/grinning_face_with_smiling_eyes.png' alt='😁'/&gt;</field>
+            <field name="description">Grinning face with smiling eyes</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_laugh" model="mail.shortcode">
+        <record id="mail_smiley_grinning_face_with_big_eyes" model="mail.shortcode">
+            <field name="source">:=D</field>
+            <field name="unicode_source">😃</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/grinning_face_with_big_eyes.png' alt='😃'/&gt;</field>
+            <field name="description">Grinning face with big eyes</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_grinning_squinting_face" model="mail.shortcode">
             <field name="source">xD</field>
             <field name="unicode_source">😆</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/laugh.png' alt='😆'/&gt;</field>
-            <field name="description">Laugh</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/grinning_squinting_face.png' alt='😆'/&gt;</field>
+            <field name="description">Grinning squinting face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_tears_of_joy" model="mail.shortcode">
+        <record id="mail_smiley_smiling_face_with_open_mouth_and_smiling_eyes" model="mail.shortcode">
+            <field name="source">:D</field>
+            <field name="unicode_source">😄</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smiling_face_with_open_mouth_and_smiling_eyes.png' alt='😄'/&gt;</field>
+            <field name="description">Smiling face with open mouth and smiling eyes</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_grinning_face_with_sweat" model="mail.shortcode">
+            <field name="source">:*)</field>
+            <field name="unicode_source">😅</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/grinning_face_with_sweat.png' alt='😅'/&gt;</field>
+            <field name="description">Grinning face with sweat</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_face_with_tears_of_joy" model="mail.shortcode">
             <field name="source">:-)</field>
             <field name="unicode_source">😂</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/tears_of_joy.png' alt='😂'/&gt;</field>
-            <field name="description">Tears of joy</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_with_tears_of_joy.png' alt='😂'/&gt;</field>
+            <field name="description">Face with Tears of joy</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_wink" model="mail.shortcode">
+        <record id="mail_smiley_smiling_face_with_smiling_eyes" model="mail.shortcode">
+            <field name="source">:)</field>
+            <field name="unicode_source">😊</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smiling_face_with_smiling_eyes.png' alt='😊'/&gt;</field>
+            <field name="description">smiling face with smiling eyes</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_smiling_face_with_halo" model="mail.shortcode">
+            <field name="source">O:)</field>
+            <field name="unicode_source">😇</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smiling_face_with_halo.png' alt='😇'/&gt;</field>
+            <field name="description">Smiling face with halo</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_winking_face" model="mail.shortcode">
             <field name="source">;)</field>
             <field name="unicode_source">😉</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/wink.png' alt='😉'/&gt;</field>
-            <field name="description">Wink</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/winking_face.png' alt='😉'/&gt;</field>
+            <field name="description">Winking face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_sunglass" model="mail.shortcode">
-            <field name="source">B)</field>
-            <field name="unicode_source">😎</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sunglass.png' alt='😎'/&gt;</field>
-            <field name="description">Face with sunglass</field>
+        <record id="mail_smiley_relieved_face" model="mail.shortcode">
+            <field name="source">:=)</field>
+            <field name="unicode_source">😌</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/relieved_face.png' alt='😌'/&gt;</field>
+            <field name="description">Relieved face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_stuck" model="mail.shortcode">
-            <field name="source">;p</field>
-            <field name="unicode_source">😜</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/stuck_out_tongue.png' alt='😜'/&gt;</field>
-            <field name="description">Stuck Out Tongue Winking Eye</field>
+        <record id="mail_smiley_smiling_face_with_heart_eyes" model="mail.shortcode">
+            <field name="source">:heart_eyes</field>
+            <field name="unicode_source">😍</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smiling_face_with_heart_eyes.png' alt='😍'/&gt;</field>
+            <field name="description">Smiling face with heart-eyes</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_cheeky" model="mail.shortcode">
+        <record id="mail_smiley_face_blowing_a_kiss" model="mail.shortcode">
+            <field name="source">;-*</field>
+            <field name="unicode_source">😘</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_blowing_a_kiss.png' alt='😘'/&gt;</field>
+            <field name="description">Face blowing a kiss</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_kissing_face" model="mail.shortcode">
+            <field name="source">;*</field>
+            <field name="unicode_source">😗</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/kissing_face.png' alt='😗'/&gt;</field>
+            <field name="description">Kissing face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_kissing_face_with_smiling_eyes" model="mail.shortcode">
+            <field name="source">:*</field>
+            <field name="unicode_source">😙</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/kissing_face_with_smiling_eyes.png' alt='😙'/&gt;</field>
+            <field name="description">Kissing face with smiling eyes</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_kissing_face_with_closed_eyes" model="mail.shortcode">
+            <field name="source">:-*</field>
+            <field name="unicode_source">😚</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/kissing_face_with_closed_eyes.png' alt='😚'/&gt;</field>
+            <field name="description">Kissing face with closed eyes</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_face_savouring_delicious_food" model="mail.shortcode">
             <field name="source">:p</field>
             <field name="unicode_source">😋</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/yum.png' alt='😋'/&gt;</field>
-            <field name="description">Cheeky</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_savouring_delicious_food.png' alt='😋'/&gt;</field>
+            <field name="description">Face savouring delecious food</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_flushed" model="mail.shortcode">
+        <record id="mail_smiley_face_with_tongue" model="mail.shortcode">
+            <field name="source">:-p</field>
+            <field name="unicode_source">😛</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_with_tongue.png' alt='😛'/&gt;</field>
+            <field name="description">Face with tongue</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_squinting_face_with_tongue" model="mail.shortcode">
+            <field name="source">:=p</field>
+            <field name="unicode_source">😝</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/squinting_face_with_tongue.png' alt='😝'/&gt;</field>
+            <field name="description">Squinting face with tongue</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_winking_face_with_tongue" model="mail.shortcode">
+            <field name="source">;p</field>
+            <field name="unicode_source">😜</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/winking_face_with_tongue.png' alt='😜'/&gt;</field>
+            <field name="description">Winking face with tongue</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_smiling_face_with_sunglasses" model="mail.shortcode">
+            <field name="source">B)</field>
+            <field name="unicode_source">😎</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smiling_face_with_sunglasses.png' alt='😎'/&gt;</field>
+            <field name="description">Smiling face with sunglasses</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_smirking_face" model="mail.shortcode">
+            <field name="source">:-/</field>
+            <field name="unicode_source">😏</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/smirking_face.png' alt='😏'/&gt;</field>
+            <field name="description">Smirking face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_unamused_face" model="mail.shortcode">
+            <field name="source">:=(</field>
+            <field name="unicode_source">😒</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/unamused_face.png' alt='😒'/&gt;</field>
+            <field name="description">Unamused face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_disappointed_face" model="mail.shortcode">
+            <field name="source">:(</field>
+            <field name="unicode_source">😞</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/disappointed_face.png' alt='😞'/&gt;</field>
+            <field name="description">Disappointed face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_pensive_face" model="mail.shortcode">
+            <field name="source">u_u</field>
+            <field name="unicode_source">😔</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/pensive_face.png' alt='😔'/&gt;</field>
+            <field name="description">Pensive face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_worried_face" model="mail.shortcode">
+            <field name="source">:-(</field>
+            <field name="unicode_source">😟</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/worried_face.png' alt='😟'/&gt;</field>
+            <field name="description">Worried face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_confused_face" model="mail.shortcode">
+            <field name="source">:/</field>
+            <field name="unicode_source">😕</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/confused.png' alt='😕'/&gt;</field>
+            <field name="description">Confused face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_persevering_face" model="mail.shortcode">
+            <field name="source">&gt;_&lt;</field>
+            <field name="unicode_source">😣</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/persevering_face.png' alt='😣'/&gt;</field>
+            <field name="description">Persevering face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_confounded_face" model="mail.shortcode">
+            <field name="source">:s</field>
+            <field name="unicode_source">😖</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/confounded_face.png' alt='😖'/&gt;</field>
+            <field name="description">Confounded face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_tired_face" model="mail.shortcode">
+            <field name="source">&gt;:(</field>
+            <field name="unicode_source">😫</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/tired_face.png' alt='😫'/&gt;</field>
+            <field name="description">Tired face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_weary_face" model="mail.shortcode">
+            <field name="source">&gt;:-(</field>
+            <field name="unicode_source">😩</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/weary_face.png' alt='😩'/&gt;</field>
+            <field name="description">Weary face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+         <record id="mail_smiley_crying_face" model="mail.shortcode">
+            <field name="source">:*(</field>
+            <field name="unicode_source">😢</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/crying_face.png' alt='😢'/&gt;</field>
+            <field name="description">Crying face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_loudly_crying_face" model="mail.shortcode">
+            <field name="source">;_;</field>
+            <field name="unicode_source">😭</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/loudly_crying_face.png' alt='😭'/&gt;</field>
+            <field name="description">Sob</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_face_with_steam_from_nose" model="mail.shortcode">
+            <field name="source">:triumph</field>
+            <field name="unicode_source">😤</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_with_steam_from_nose.png' alt='😤'/&gt;</field>
+            <field name="description">Face with steam from nose</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_angry_face" model="mail.shortcode">
+            <field name="source">3:(</field>
+            <field name="unicode_source">😠</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/angry_face.png' alt='😠'/&gt;</field>
+            <field name="description">Angry face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_pouting_face" model="mail.shortcode">
+            <field name="source">3:-(</field>
+            <field name="unicode_source">😡</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/pouting_face.png' alt='😡'/&gt;</field>
+            <field name="description">Pouting face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_flushed_face" model="mail.shortcode">
             <field name="source">o_o</field>
             <field name="unicode_source">😳</field>
             <field name="substitution">&lt;img src='/mail/static/src/img/smiley/flushed.png' alt='😳'/&gt;</field>
             <field name="description">Flushed face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_neutral" model="mail.shortcode">
-            <field name="source">:|</field>
-            <field name="unicode_source">😐</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/neutral.png' alt='😐'/&gt;</field>
-            <field name="description">Speechless/Neutral face</field>
-            <field name="shortcode_type">image</field>
-        </record>
-        <record id="mail_smiley_confused" model="mail.shortcode">
-            <field name="source">:/</field>
-            <field name="unicode_source">😕</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/confused.png' alt='😕'/&gt;</field>
-            <field name="description">Confused</field>
-            <field name="shortcode_type">image</field>
-        </record>
-        <record id="mail_smiley_sad" model="mail.shortcode">
-            <field name="source">:(</field>
-            <field name="unicode_source">😞</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sad.png' alt='😞'/&gt;</field>
-            <field name="description">Sad</field>
-            <field name="shortcode_type">image</field>
-        </record>
-        <record id="mail_smiley_scream" model="mail.shortcode">
+        <record id="mail_smiley_face_screaming_in_fear" model="mail.shortcode">
             <field name="source">:@</field>
             <field name="unicode_source">😱</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/scream.png' alt='😱'/&gt;</field>
-            <field name="description">Scream</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_screaming_in_fear.png' alt='😱'/&gt;</field>
+            <field name="description">Face screaming in fear</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_open_mouth" model="mail.shortcode">
-            <field name="source">:O</field>
-            <field name="unicode_source">😮</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/open_mouth.png' alt='😮'/&gt;</field>
-            <field name="description">Open Mouth</field>
+        <record id="mail_smiley_fearful_face" model="mail.shortcode">
+            <field name="source">;-o</field>
+            <field name="unicode_source">😨</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/fearful_face.png' alt='😨'/&gt;</field>
+            <field name="description">Fearful face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_angry" model="mail.shortcode">
-            <field name="source">3:(</field>
-            <field name="unicode_source">😠</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/angry.png' alt='😠'/&gt;</field>
-            <field name="description">Angry</field>
+        <record id="mail_smiley_anxious_face_with_sweat" model="mail.shortcode">
+            <field name="source">:*o</field>
+            <field name="unicode_source">😰</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/anxious_face_with_sweat.png' alt='😰'/&gt;</field>
+            <field name="description">Anxious face with sweat</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_sad_but_relieved_face" model="mail.shortcode">
+            <field name="source">;*o</field>
+            <field name="unicode_source">😥</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sad_but_relieved_face.png' alt='😥'/&gt;</field>
+            <field name="description">Disappointed relieved face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+         <record id="mail_smiley_downcast_face_with_sweat" model="mail.shortcode">
+            <field name="source">*:(</field>
+            <field name="unicode_source">😓</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/downcast_face_with_sweat.png' alt='😓'/&gt;</field>
+            <field name="description">Downcast face with sweat</field>
             <field name="shortcode_type">image</field>
         </record>
         <record id="mail_smiley_evil" model="mail.shortcode">
@@ -115,60 +304,88 @@
             <field name="description">Face with evil</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_monkey_see" model="mail.shortcode">
-            <field name="source">:no_see</field>
-            <field name="unicode_source">🙈</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/monkey_eye.png' alt='🙈'/&gt;</field>
-            <field name="description">No see</field>
+        <record id="mail_smiley_face_without_mouth" model="mail.shortcode">
+            <field name="source">:no_mouth</field>
+            <field name="unicode_source">😶</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_without_mouth.png' alt='😶'/&gt;</field>
+            <field name="description">Face without mouth</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_monkey_hear" model="mail.shortcode">
-            <field name="source">:no_hear</field>
-            <field name="unicode_source">🙉</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/monkey_hear.png' alt='🙉'/&gt;</field>
-            <field name="description">No hear</field>
+        <record id="mail_smiley_neutral_face" model="mail.shortcode">
+            <field name="source">:|</field>
+            <field name="unicode_source">😐</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/neutral.png' alt='😐'/&gt;</field>
+            <field name="description">Speechless/Neutral face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_monkey_speak" model="mail.shortcode">
-            <field name="source">:no_speak</field>
-            <field name="unicode_source">🙊</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/monkey_speak.png' alt='🙊'/&gt;</field>
-            <field name="description">No speak</field>
+        <record id="mail_smiley_expressionless_face" model="mail.shortcode">
+            <field name="source">-_-</field>
+            <field name="unicode_source">😑</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/expressionless_face.png' alt='😑'/&gt;</field>
+            <field name="description">Expressionless face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_bug" model="mail.shortcode">
-            <field name="source">:bug</field>
-            <field name="unicode_source">🐞</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/bug.png' alt='🐞'/&gt;</field>
-            <field name="description">Bug</field>
+        <record id="mail_smiley_grimacing_face" model="mail.shortcode">
+            <field name="source">:grimacing</field>
+            <field name="unicode_source">😬</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/grimacing_face.png' alt='😬'/&gt;</field>
+            <field name="description">Grimacing face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_kitten" model="mail.shortcode">
-            <field name="source">:kitten</field>
-            <field name="unicode_source">😸</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/cat.png' alt='😸'/&gt;</field>
-            <field name="description">Kitten</field>
+        <record id="mail_smiley_hushed_face" model="mail.shortcode">
+            <field name="source">:-o</field>
+            <field name="unicode_source">😯</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/hushed_face.png' alt='😯'/&gt;</field>
+            <field name="description">Hushed face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_heart" model="mail.shortcode">
-            <field name="source">&lt;3</field>
-            <field name="unicode_source">❤</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/heart.png' alt='❤'/&gt;</field>
-            <field name="description">Heart</field>
+        <record id="mail_smiley_face_with_open_mouth" model="mail.shortcode">
+            <field name="source">:O</field>
+            <field name="unicode_source">😮</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/open_mouth.png' alt='😮'/&gt;</field>
+            <field name="description">Face With open Mouth</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_thumbsup" model="mail.shortcode">
-            <field name="source">:+1</field>
-            <field name="unicode_source">👍</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/thumbsup.png' alt='👍'/&gt;</field>
-            <field name="description">Thumbs Up</field>
+        <record id="mail_smiley_anguished_face" model="mail.shortcode">
+            <field name="source">o.o</field>
+            <field name="unicode_source">😧</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/anguished_face.png' alt='😧'/&gt;</field>
+            <field name="description">Anguished face</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_thumbsdown" model="mail.shortcode">
-            <field name="source">:-1</field>
-            <field name="unicode_source">👎</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/thumbsdown.png' alt='👎'/&gt;</field>
-            <field name="description">Thumbs Down</field>
+        <record id="mail_smiley_frowning_face_with_open_mouth" model="mail.shortcode">
+            <field name="source">;O</field>
+            <field name="unicode_source">😦</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/frowning_face_with_open_mouth.png' alt='😦'/&gt;</field>
+            <field name="description">Frowning face with open mouth</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_sleeping_face" model="mail.shortcode">
+            <field name="source">:-z</field>
+            <field name="unicode_source">😴</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sleeping_face.png' alt='😴'/&gt;</field>
+            <field name="description">Sleeping face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_sleepy_face" model="mail.shortcode">
+            <field name="source">:sleepy</field>
+            <field name="unicode_source">😪</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sleepy_face.png' alt='😪'/&gt;</field>
+            <field name="description">Sleepy face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_dizzy_face" model="mail.shortcode">
+            <field name="source">x-o</field>
+            <field name="unicode_source">😵</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/dizzy_face.png' alt='😵'/&gt;</field>
+            <field name="description">Dizzy face</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_face_with_medical_mask" model="mail.shortcode">
+            <field name="source">:mask</field>
+            <field name="unicode_source">😷</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/face_with_medical_mask.png' alt='😷'/&gt;</field>
+            <field name="description">Face with medical mask</field>
             <field name="shortcode_type">image</field>
         </record>
         <record id="mail_smiley_poop" model="mail.shortcode">
@@ -185,18 +402,137 @@
             <field name="description">Ghost</field>
             <field name="shortcode_type">image</field>
         </record>
+        <record id="mail_smiley_raising_hands" model="mail.shortcode">
+            <field name="source">(^o^)</field>
+            <field name="unicode_source">🙌</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/raising_hands.png' alt='🙌'/&gt;</field>
+            <field name="description">Raised hands</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_clapping_hands" model="mail.shortcode">
+            <field name="source">:clap</field>
+            <field name="unicode_source">👏</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/clapping_hands.png' alt='👏'/&gt;</field>
+            <field name="description">clapping_hands</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_thumbsup" model="mail.shortcode">
+            <field name="source">:+1</field>
+            <field name="unicode_source">👍</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/thumbsup.png' alt='👍'/&gt;</field>
+            <field name="description">Thumbs Up</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_thumbsdown" model="mail.shortcode">
+            <field name="source">:-1</field>
+            <field name="unicode_source">👎</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/thumbsdown.png' alt='👎'/&gt;</field>
+            <field name="description">Thumbs Down</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_oncoming_fist" model="mail.shortcode">
+            <field name="source">\m/</field>
+            <field name="unicode_source">👊</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/oncoming_fist.png' alt='👊'/&gt;</field>
+            <field name="description">Oncoming fist</field>
+            <field name="shortcode_type">image</field>
+        </record>
+         <record id="mail_smiley_raised_fist" model="mail.shortcode">
+            <field name="source">:fist</field>
+            <field name="unicode_source">✊</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/raised_fist.png' alt='✊'/&gt;</field>
+            <field name="description">Raised fist</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_victory_hand" model="mail.shortcode">
+            <field name="source">:v</field>
+            <field name="unicode_source">✌</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/victory_hand.png' alt='✌'/&gt;</field>
+            <field name="description">Victory hand</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_ok_hand" model="mail.shortcode">
+            <field name="source">:ok</field>
+            <field name="unicode_source">👌</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/ok_hand.png' alt='👌'/&gt;</field>
+            <field name="description">Ok hand</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_waving_hand" model="mail.shortcode">
+            <field name="source">:wave</field>
+            <field name="unicode_source">👋</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/waving_hand.png' alt='👋'/&gt;</field>
+            <field name="description">Waving hand</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_flexed_biceps" model="mail.shortcode">
+            <field name="source">:muscle</field>
+            <field name="unicode_source">💪</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/flexed_biceps.png' alt='💪'/&gt;</field>
+            <field name="description">Flexed biceps</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_glowing_star" model="mail.shortcode">
+            <field name="source">:glowing_star</field>
+            <field name="unicode_source">🌟</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/glowing_star.png' alt='🌟'/&gt;</field>
+            <field name="description">Glowing star</field>
+            <field name="shortcode_type">image</field>
+        </record>
+         <record id="mail_smiley_sparkles" model="mail.shortcode">
+            <field name="source">:sparkles</field>
+            <field name="unicode_source">✨</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/sparkles.png' alt='✨'/&gt;</field>
+            <field name="description">Sparkles</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_collision" model="mail.shortcode">
+            <field name="source">:collision</field>
+            <field name="unicode_source">💥</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/collision.png' alt='💥'/&gt;</field>
+            <field name="description">Collision</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_fire" model="mail.shortcode">
+            <field name="source">:fire</field>
+            <field name="unicode_source">🔥</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/fire.png' alt='🔥'/&gt;</field>
+            <field name="description">Fire</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_hamburger" model="mail.shortcode">
+            <field name="source">:hamburger</field>
+            <field name="unicode_source">🍔</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/hamburger.png' alt='🍔'/&gt;</field>
+            <field name="description">Hamburger</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_french_fries" model="mail.shortcode">
+            <field name="source">:french_fries</field>
+            <field name="unicode_source">🍟</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/french_fries.png' alt='🍟'/&gt;</field>
+            <field name="description">French fries</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_pizza" model="mail.shortcode">
+            <field name="source">:pizza</field>
+            <field name="unicode_source">🍕</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/pizza.png' alt='🍕'/&gt;</field>
+            <field name="description">Pizza</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_birthday_cake" model="mail.shortcode">
+            <field name="source">:cake</field>
+            <field name="unicode_source">🎂</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/birthday_cake.png' alt='🎂'/&gt;</field>
+            <field name="description">Cake</field>
+            <field name="shortcode_type">image</field>
+        </record>
         <record id="mail_smiley_cookie" model="mail.shortcode">
             <field name="source">:cookie</field>
             <field name="unicode_source">🍪</field>
             <field name="substitution">&lt;img src='/mail/static/src/img/smiley/cookie.png' alt='🍪'/&gt;</field>
             <field name="description">Cookie</field>
-            <field name="shortcode_type">image</field>
-        </record>
-        <record id="mail_smiley_beer" model="mail.shortcode">
-            <field name="source">:beer</field>
-            <field name="unicode_source">🍺</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/beer.png' alt='🍺'/&gt;</field>
-            <field name="description">Beer</field>
             <field name="shortcode_type">image</field>
         </record>
         <record id="mail_smiley_coffee" model="mail.shortcode">
@@ -206,11 +542,74 @@
             <field name="description">Coffee</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_cake" model="mail.shortcode">
-            <field name="source">:cake</field>
-            <field name="unicode_source">🎂</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/cake.png' alt='🎂'/&gt;</field>
-            <field name="description">Cake</field>
+        <record id="mail_smiley_beer" model="mail.shortcode">
+            <field name="source">:beer</field>
+            <field name="unicode_source">🍺</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/beer.png' alt='🍺'/&gt;</field>
+            <field name="description">Beer</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_running_shirt" model="mail.shortcode">
+            <field name="source">:running_shirt</field>
+            <field name="unicode_source">🎽</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/running_shirt.png' alt='🎽'/&gt;</field>
+            <field name="description">Running shirt</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_trophy" model="mail.shortcode">
+            <field name="source">:trophy</field>
+            <field name="unicode_source">🏆</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/trophy.png' alt='🏆'/&gt;</field>
+            <field name="description">Trophy</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_money_bag" model="mail.shortcode">
+            <field name="source">:moneybag</field>
+            <field name="unicode_source">💰</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/money_bag.png' alt='💰'/&gt;</field>
+            <field name="description">Money bag</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_gem_stone" model="mail.shortcode">
+            <field name="source">:gem_stone</field>
+            <field name="unicode_source">💎</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/gem_stone.png' alt='💎'/&gt;</field>
+            <field name="description">Gem_stone</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_christmas_tree" model="mail.shortcode">
+            <field name="source">:christmas</field>
+            <field name="unicode_source">🎄</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/christmas_tree.png' alt='🎄'/&gt;</field>
+            <field name="description">Christmas tree</field>
+            <field name="shortcode_type">image</field>
+        </record>
+         <record id="mail_smiley_wrapped_gift" model="mail.shortcode">
+            <field name="source">:gift</field>
+            <field name="unicode_source">🎁</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/wrapped_gift.png' alt='🎁'/&gt;</field>
+            <field name="description">Wrapped gift</field>
+            <field name="shortcode_type">image</field>
+        </record>
+         <record id="mail_smiley_balloon" model="mail.shortcode">
+            <field name="source">:balloon</field>
+            <field name="unicode_source">🎈</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/balloon.png' alt='🎈'/&gt;</field>
+            <field name="description">Balloon</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_ribbon" model="mail.shortcode">
+            <field name="source">:ribbon</field>
+            <field name="unicode_source">🎀</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/ribbon.png' alt='🎀'/&gt;</field>
+            <field name="description">Ribbon</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_confetti_ball" model="mail.shortcode">
+            <field name="source">:confetti_ball</field>
+            <field name="unicode_source">🎊</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/confetti_ball.png' alt='🎊'/&gt;</field>
+            <field name="description">Confetti ball</field>
             <field name="shortcode_type">image</field>
         </record>
         <record id="mail_smiley_party" model="mail.shortcode">
@@ -220,11 +619,25 @@
             <field name="description">Party</field>
             <field name="shortcode_type">image</field>
         </record>
-        <record id="mail_smiley_trophy" model="mail.shortcode">
-            <field name="source">:trophy</field>
-            <field name="unicode_source">🏆</field>
-            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/trophy.png' alt='🏆'/&gt;</field>
-            <field name="description">Trophy</field>
+        <record id="mail_smiley_heart" model="mail.shortcode">
+            <field name="source">&lt;3</field>
+            <field name="unicode_source">❤</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/heart.png' alt='❤'/&gt;</field>
+            <field name="description">Heart</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_broken_heart" model="mail.shortcode">
+            <field name="source">&lt;\3</field>
+            <field name="unicode_source">💔</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/broken_heart.png' alt='💔'/&gt;</field>
+            <field name="description">Broken heart</field>
+            <field name="shortcode_type">image</field>
+        </record>
+        <record id="mail_smiley_zzz" model="mail.shortcode">
+            <field name="source">:zzz</field>
+            <field name="unicode_source">💤</field>
+            <field name="substitution">&lt;img src='/mail/static/src/img/smiley/zzz.png' alt='💤'/&gt;</field>
+            <field name="description">zzz</field>
             <field name="shortcode_type">image</field>
         </record>
 
