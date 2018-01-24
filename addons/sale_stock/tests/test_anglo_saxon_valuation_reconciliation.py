@@ -5,8 +5,10 @@ import time
 
 from odoo.tools import float_utils
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCase
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def create_sale(self, product):

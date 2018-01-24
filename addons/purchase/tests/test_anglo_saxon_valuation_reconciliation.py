@@ -7,10 +7,10 @@ import time
 
 from odoo.tools import float_utils
 from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCase
+from odoo.tests import tagged
 
-import logging
-_logger = logging.getLogger(__name__)
 
+@tagged('post_install', '-at_install')
 class TestValuationReconciliation(ValuationReconciliationTestCase):
 
     def _create_product_category(self): #overridden to set a price difference account
