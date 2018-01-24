@@ -70,7 +70,7 @@ VIES_WSDL_URL = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl'
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    base_vat_check_status = fields.Selection(selection=[('verified', 'Verified'), ('wrong', 'Wrong'), ('unknown', 'Unknown')], string='VAT Verification Status', compute='_compute_base_vat_check_status', store=True, default='unknown')
+    base_vat_vies_check_status = fields.Selection(selection=[('verified', 'Verified'), ('wrong', 'Wrong'), ('unknown', 'Unknown')], string='VAT Verification Status', compute='_compute_base_vat_vies_check_status', store=True, default='unknown')
 
     @api.model
     def compact_vat_number(self, vat):
@@ -106,7 +106,7 @@ class ResPartner(models.Model):
         return check_func(vat_number)
 
     @api.model
-    def vies_vat_check(self, country_code, vat_number, connection_timeout=5, except_to_simple_check=True):
+    def vies_vat_check(self, country_code, vat_number, connection_timeout=5):
         """ Validates a vat number against  VAT Information Exchange System (VIES)
             (see also http://ec.europa.eu/taxation_customs/vies/).
 
@@ -114,12 +114,6 @@ class ResPartner(models.Model):
                                  VAT number we wish to check
             :param vat_number: the VAT number we wish to check, without its country code
             :param connection_timeout: timeout value to use when contacting VIES, in seconds
-            :param except_to_simple_check: boolean value telling whether or not an
-                                           occuring while contacting VIES should be ignored
-                                           and trigger simple offline verification or not.
-                                           If this parameter is False, the exception
-                                           will be raised, otherwize, it will be caught
-                                           and ignored.
         """
         try:
             # Implemented by directly connecting to the web service instead of
@@ -147,59 +141,61 @@ class ResPartner(models.Model):
         return vat
 
     @api.depends('vat', 'commercial_partner_country_id')
-    def _compute_base_vat_check_status(self):
+    def _compute_base_vat_vies_check_status(self):
         for partner in self:
-            if self.env.context.get('company_id'):
-                company = self.env['res.company'].browse(self.env.context['company_id'])
-            else:
+            company = self.env.context.get('company_id')
+            if not company:
                 company = self.env.user.company_id
 
             check_rslt = None
             if partner.vat:
                 if partner.parent_id and partner.vat == partner.parent_id.vat:
-                    partner.base_vat_check_status = partner.parent_id.base_vat_check_status
-                    _logger.warn("GOOD "+partner.name)
+                    partner.base_vat_vies_check_status = partner.parent_id.base_vat_vies_check_status
                     continue
                 elif company.vat_check_vies:
-                    _logger.warn("BAD"+partner.name+"   "+str(self.env.context))
                     check_rslt = partner._check_vat(self.vies_vat_check)
 
             if check_rslt == None:
-                partner.base_vat_check_status = 'unknown'
+                partner.base_vat_vies_check_status = 'unknown'
             else:
-                partner.base_vat_check_status = check_rslt and 'verified' or 'wrong'
+                partner.base_vat_vies_check_status = check_rslt and 'verified' or 'wrong'
 
     @api.constrains('vat', 'commercial_partner_country_id')
     def vat_constraint(self):
-        if self.env.context.get('company_id'):
-            company = self.env['res.company'].browse(self.env.context['company_id'])
-        else:
-            company = self.env.user.company_id
+        company = self.env.context.get('company_id')
+            if not company:
+                company = self.env.user.company_id
 
-        for record in self:
+        for record in self.filtered(lambda x: x.vat):
             if company.vat_check_vies:
                 record_vat_country_code = self._split_vat(record.vat)[0]
                 commercial_partner_country_code = record.commercial_partner_country_id and record.commercial_partner_country_id.code.lower() or False
                 vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
                 vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
 
-                if record.vat and record.base_vat_check_status == 'wrong':
+                if record.base_vat_vies_check_status == 'wrong':
                     raise ValidationError(_('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or does not respect the expected format %s.') % (record.vat, record.name, vat_no))
 
-            elif record.vat and not record._check_vat(simple_vat_check):
-                _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (record.vat, record.name, vat_no)
+            elif not record._check_vat(simple_vat_check):
+                raise ValidationError(_('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (record.vat, record.name, vat_no))
 
-    @api.onchange('vat', 'commercial_partner_country_id', 'parent_id.vat', 'parent_id.commercial_partner_country_id')
-    def _onchange_base_vat_check_status(self):
-        if self.base_vat_check_status == 'unknown':
+    @api.onchange('vat', 'commercial_partner_country_id')
+    def _onchange_base_vat_vies_check_status(self):
+        if self.vat and self.base_vat_vies_check_status == 'unknown':
             return {'warning':{'message':_("The VAT number could not be verified as the VIES service did not respond. You can try again by re-saving the contact."), 'title':_('VIES unavailable')}}
 
     def _check_vat(self, check_func):
-        #check with country code as prefix of the TIN
+        """ Checks the VAT number of this partner.
+
+        :param check_func: the check function to use on vat. This function must
+                           return True if the number is correct, False if it is not and None if the
+                           result could not be determined
+        """
+        # We first check with the prefix of the TIN as country code
         vat_country, vat_number = self._split_vat(self.vat)
         check_rslt = check_func(vat_country, vat_number)
         if not check_rslt:
-            #if fails, check with country code from country
+            # If it fails, we check with the country code of the commercial partner's country
             country_code = self.commercial_partner_country_id.code
             if country_code:
                 check_rslt = check_func(country_code.lower(), self.vat)
