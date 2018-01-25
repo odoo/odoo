@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 {
-    'name': 'Payment: Website Integration',
-    'category': 'Website',
-    'summary': 'Payment: Website Integration',
+    'name': 'Website Payment',
+    'category': 'Technical Settings',
+    'summary': 'Payment integration with website',
     'version': '1.0',
-    'description': """Bridge module for acquirers and website.""",
+    'description': """
+This is a bridge module which integrates payment acquirers with Website app.
+    """,
     'depends': [
         'website',
         'payment',

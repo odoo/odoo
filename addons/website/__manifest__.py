@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Website Builder',
+    'name': 'Website',
     'category': 'Website',
     'sequence': 50,
-    'summary': 'Build Your Enterprise Website',
+    'summary': 'Build a website fully integrated with your operations',
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': "",

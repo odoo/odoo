@@ -3,7 +3,7 @@
 {
     'name' : 'Invoicing Management',
     'version' : '1.1',
-    'summary': 'Send Invoices and Track Payments',
+    'summary': 'Invoices & Payments',
     'sequence': 30,
     'description': """
 Invoicing & Payments

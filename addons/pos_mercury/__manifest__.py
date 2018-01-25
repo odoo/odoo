@@ -22,7 +22,6 @@ following:
 * Supported cards: Visa, MasterCard, American Express, Discover
     """,
     'depends': ['web', 'barcodes', 'point_of_sale'],
-    'website': '',
     'data': [
         'data/pos_mercury_data.xml',
         'security/ir.model.access.csv',

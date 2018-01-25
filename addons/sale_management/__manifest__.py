@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Sales Management',
+    'name': 'Sales',
     'version': '1.0',
     'category': 'Sales',
     'sequence': 15,
-    'summary': 'Quotations, Sales Orders, Invoicing',
+    'summary': 'Send quotations, follow orders, create invoices',
     'description': """
 Manage sales quotations and orders
 ==================================
