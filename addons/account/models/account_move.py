@@ -924,7 +924,7 @@ class AccountMoveLine(models.Model):
         elif self._context.get('skip_full_reconcile_check') == 'amount_currency_only':
             field = 'amount_residual_currency'
         #target the pair of move in self that are the oldest
-        sorted_moves = sorted(self, key=lambda a: a.date)
+        sorted_moves = sorted(self, key=lambda a: a.date_maturity or a.date)
         debit = credit = False
         for aml in sorted_moves:
             if credit and debit:
