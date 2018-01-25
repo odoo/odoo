@@ -364,15 +364,22 @@ class PosOrder(models.Model):
         for order in self:
             aml = order.statement_ids.mapped('journal_entry_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
+
+            # Reconcile returns first
+            # to avoid mixing up the credit of a payment and the credit of a return
+            # in the receivable account
+            aml_returns = aml.filtered(lambda l: (l.journal_id.type == 'sale' and l.credit) or (l.journal_id.type != 'sale' and l.debit))
             try:
-                aml.reconcile()
+                aml_returns.reconcile()
+                (aml - aml_returns).reconcile()
             except Exception:
                 # There might be unexpected situations where the automatic reconciliation won't
                 # work. We don't want the user to be blocked because of this, since the automatic
                 # reconciliation is introduced for convenience, not for mandatory accounting
                 # reasons.
-                _logger.error('Reconciliation did not work for order %s', order.name)
-                continue
+                # It may be interesting to have the Traceback logged anyway
+                # for debugging and support purposes
+                _logger.exception('Reconciliation did not work for order %s', order.name)
 
     def _default_session(self):
         return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)

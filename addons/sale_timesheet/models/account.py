@@ -42,6 +42,11 @@ class AccountAnalyticLine(models.Model):
         if 'task_id' in values:
             task = self.env['project.task'].sudo().browse(values['task_id'])
             values['so_line'] = task.sale_line_id.id or values.get('so_line', False)
+
+        # Set product_uom_id now so delivered qty is computed in SO line
+        if not 'product_uom_id' in values and all([v in values for v in ['employee_id', 'project_id']]):
+            employee = self.env['hr.employee'].sudo().browse(values['employee_id'])
+            values['product_uom_id'] = employee.company_id.project_time_mode_id.id
         return values
 
     @api.multi

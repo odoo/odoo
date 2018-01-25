@@ -51,6 +51,9 @@ class SaleOrder(models.Model):
         template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
         return template and template.active and template or False
 
+    def _get_default_online_payment(self):
+        return 1 if self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay' else 0
+
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,
@@ -66,7 +69,7 @@ class SaleOrder(models.Model):
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_payment = fields.Selection([
         (0, 'Online Signature'),
-        (1, 'Online Payment')], default=0, string='Confirmation Mode',
+        (1, 'Online Payment')], default=_get_default_online_payment, string='Confirmation Mode',
         help="Choose how you want to confirm an order to launch the delivery process. You can either "
              "request a digital signature or an upfront payment. With a digital signature, you can "
              "request the payment when issuing the invoice.")

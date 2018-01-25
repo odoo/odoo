@@ -3238,92 +3238,7 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._fetchNameGet(dp));
                         record._changes[name] = dp.id;
                     } else if (field.type === 'one2many' || field.type === 'many2many') {
-                        var fieldInfo = record.fieldsInfo[record.viewType][name];
-                        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
-                        var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
-                        var fields = view ? view.fields : fieldInfo.relatedFields;
-                        var viewType = view ? view.type : fieldInfo.viewType;
-
-                        var x2manyList = self._makeDataPoint({
-                            context: record.context,
-                            fieldsInfo: fieldsInfo,
-                            fields: fields,
-                            limit: fieldInfo.limit,
-                            modelName: field.relation,
-                            parentID: record.id,
-                            rawContext: fieldInfo && fieldInfo.context,
-                            relationField: field.relation_field,
-                            res_ids: [],
-                            static: true,
-                            type: 'list',
-                            viewType: viewType,
-                        });
-                        record._changes[name] = x2manyList.id;
-                        x2manyList._changes = [];
-                        var many2ones = {};
-                        var r;
-                        result[name] = result[name] || []; // handle false value
-                        var isCommandList = result[name].length && _.isArray(result[name][0]);
-                        if (!isCommandList) {
-                            result[name] = [[6, false, result[name]]];
-                        }
-                        _.each(result[name], function (value) {
-                            // value is a command
-                            if (value[0] === 0) {
-                                // CREATE
-                                r = self._makeDataPoint({
-                                    modelName: x2manyList.model,
-                                    context: x2manyList.context,
-                                    fieldsInfo: fieldsInfo,
-                                    fields: fields,
-                                    parentID: x2manyList.id,
-                                    viewType: viewType,
-                                });
-                                x2manyList._changes.push({operation: 'ADD', id: r.id});
-                                x2manyList._cache[r.res_id] = r.id;
-
-                                // this is necessary so the fields are initialized
-                                _.each(r.getFieldNames(), function (fieldName) {
-                                    r.data[fieldName] = null;
-                                });
-
-                                r._changes = _.defaults(value[2], r.data);
-                                for (var name in r._changes) {
-                                    if (!r._changes[name]) {
-                                        continue;
-                                    }
-                                    var isFieldInView = name in r.fields;
-                                    if (isFieldInView && r.fields[name].type === 'many2one') {
-                                        var rec = self._makeDataPoint({
-                                            context: r.context,
-                                            modelName: r.fields[name].relation,
-                                            data: {id: r._changes[name]},
-                                            parentID: r.id,
-                                        });
-                                        r._changes[name] = rec.id;
-                                        many2ones[name] = true;
-                                    }
-                                }
-                            }
-                            if (value[0] === 6) {
-                                // REPLACE_WITH
-                                _.each(value[2], function (res_id) {
-                                    x2manyList._changes.push({operation: 'ADD', resID: res_id});
-                                });
-                                var def = self._readUngroupedList(x2manyList).then(function () {
-                                    return $.when(
-                                        self._fetchX2ManysBatched(x2manyList),
-                                        self._fetchReferencesBatched(x2manyList)
-                                    );
-                                });
-                                defs.push(def);
-                            }
-                        });
-
-                        // fetch many2ones display_name
-                        _.each(_.keys(many2ones), function (name) {
-                            defs.push(self._fetchNameGets(x2manyList, name));
-                        });
+                        defs.push(self._processX2ManyCommands(record, name, result[name]));
                     } else {
                         record._changes[name] = self._parseServerValue(field, result[name]);
                     }
@@ -3496,6 +3411,122 @@ var BasicModel = AbstractModel.extend({
         return $.when.apply($, defs).then(function () {
             return record;
         });
+    },
+    /**
+     * Process x2many commands in a default record by transforming the list of
+     * commands in operations (pushed in _changes) and fetch the related
+     * records fields.
+     *
+     * Note that this method can be called recursively.
+     *
+     * @todo in master: factorize this code with the postprocessing of x2many in
+     *  _applyOnChange
+     *
+     * @private
+     * @param {Object} record
+     * @param {string} fieldName
+     * @param {Array[Array]} commands
+     * @returns {Deferred}
+     */
+    _processX2ManyCommands: function (record, fieldName, commands) {
+        var self = this;
+        var defs = [];
+        var field = record.fields[fieldName];
+        var fieldInfo = record.fieldsInfo[record.viewType][fieldName];
+        var view = fieldInfo.views && fieldInfo.views[fieldInfo.mode];
+        var fieldsInfo = view ? view.fieldsInfo : fieldInfo.fieldsInfo;
+        var fields = view ? view.fields : fieldInfo.relatedFields;
+        var viewType = view ? view.type : fieldInfo.viewType;
+
+        var x2manyList = self._makeDataPoint({
+            context: record.context,
+            fieldsInfo: fieldsInfo,
+            fields: fields,
+            limit: fieldInfo.limit,
+            modelName: field.relation,
+            parentID: record.id,
+            rawContext: fieldInfo && fieldInfo.context,
+            relationField: field.relation_field,
+            res_ids: [],
+            static: true,
+            type: 'list',
+            viewType: viewType,
+        });
+        record._changes[fieldName] = x2manyList.id;
+        x2manyList._changes = [];
+        var many2ones = {};
+        var r;
+        commands = commands || []; // handle false value
+        var isCommandList = commands.length && _.isArray(commands[0]);
+        if (!isCommandList) {
+            commands = [[6, false, commands]];
+        }
+        _.each(commands, function (value) {
+            // value is a command
+            if (value[0] === 0) {
+                // CREATE
+                r = self._makeDataPoint({
+                    modelName: x2manyList.model,
+                    context: x2manyList.context,
+                    fieldsInfo: fieldsInfo,
+                    fields: fields,
+                    parentID: x2manyList.id,
+                    viewType: viewType,
+                });
+                x2manyList._changes.push({operation: 'ADD', id: r.id});
+                x2manyList._cache[r.res_id] = r.id;
+
+                // this is necessary so the fields are initialized
+                _.each(r.getFieldNames(), function (fieldName) {
+                    r.data[fieldName] = null;
+                });
+
+                r._changes = _.defaults(value[2], r.data);
+                for (var fieldName in r._changes) {
+                    if (!r._changes[fieldName]) {
+                        continue;
+                    }
+                    var isFieldInView = fieldName in r.fields;
+                    if (isFieldInView) {
+                        var field = r.fields[fieldName];
+                        var fieldType = field.type;
+                        if (fieldType === 'many2one') {
+                            var rec = self._makeDataPoint({
+                                context: r.context,
+                                modelName: field.relation,
+                                data: {id: r._changes[fieldName]},
+                                parentID: r.id,
+                            });
+                            r._changes[fieldName] = rec.id;
+                            many2ones[fieldName] = true;
+                        } else if (_.contains(['one2many', 'many2many'], fieldType)) {
+                            var x2mCommands = commands[0][2][fieldName];
+                            defs.push(self._processX2ManyCommands(r, fieldName, x2mCommands));
+                        }
+                    }
+                }
+            }
+            if (value[0] === 6) {
+                // REPLACE_WITH
+                _.each(value[2], function (res_id) {
+                    x2manyList._changes.push({operation: 'ADD', resID: res_id});
+                });
+                var def = self._readUngroupedList(x2manyList).then(function () {
+                    return $.when(
+                        self._fetchX2ManysBatched(x2manyList),
+                        self._fetchReferencesBatched(x2manyList)
+                    );
+                });
+                defs.push(def);
+            }
+        });
+
+        // fetch many2ones display_name
+        _.each(_.keys(many2ones), function (name) {
+            defs.push(self._fetchNameGets(x2manyList, name));
+        });
+
+        return $.when.apply($, defs);
     },
     /**
      * Reads data from server for all missing fields.

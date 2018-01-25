@@ -120,6 +120,14 @@ odoo.define('payment_stripe.stripe', function(require) {
             }).then(function (data) {
                 try { provider_form[0].innerHTML = data; } catch (e) {};
             });
+        } else if (window.location.href.includes("/my/orders/")) {
+            var create_tx = ajax.jsonRpc('/pay/sale/' + acquirer_id + '/form_tx/', 'call', {
+                so_id: so_id,
+                access_token: access_token,
+                acquirer_id: acquirer_id
+            }).then(function (data) {
+                try { provider_form.innerHTML = data; } catch (e) {};
+            });
         }
         else {
             var create_tx = ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
