@@ -11,6 +11,7 @@ from datetime import datetime
 from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import pycompat, misc
 
@@ -25,7 +26,7 @@ class KarmaError(Forbidden):
 class Forum(models.Model):
     _name = 'forum.forum'
     _description = 'Forum'
-    _inherit = ['mail.thread', 'website.seo.metadata']
+    _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.mixin']
 
     @api.model_cr
     def init(self):
@@ -147,12 +148,21 @@ class Forum(models.Model):
         domain = [('forum_id', '=', self.id), ('state', '=', 'flagged')]
         self.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
+    @api.multi
+    def _compute_website_url(self):
+        super(Forum, self)._compute_website_url()
+        for forum in self:
+            forum.website_url = "/forum/%s" % slug(forum)
+
     @api.model
     def create(self, values):
         return super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
 
     @api.multi
     def write(self, vals):
+        # archiving a forum unpublish it too
+        if 'active' in vals and not vals.get('active'):
+            vals['website_published'] = vals.get('active')
         res = super(Forum, self).write(vals)
         if 'active' in vals:
             # archiving/unarchiving a forum does it on its posts, too
