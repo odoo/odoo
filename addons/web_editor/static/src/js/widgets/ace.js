@@ -192,7 +192,6 @@ var ViewEditor = Widget.extend({
      */
     start: function () {
         this.$viewEditor = this.$('#ace-view-editor');
-        this.$editor = this.$('.ace_editor');
 
         this.$typeSwitcherChoices = this.$('.o_ace_type_switcher_choice');
         this.$typeSwitcherBtn = this.$('.o_ace_type_switcher > .dropdown-toggle');
@@ -210,6 +209,7 @@ var ViewEditor = Widget.extend({
 
         this.aceEditor = window.ace.edit(this.$viewEditor[0]);
         this.aceEditor.setTheme('ace/theme/monokai');
+        this.$editor = this.$('.ace_editor');
 
         var refX = 0;
         var resizing = false;
