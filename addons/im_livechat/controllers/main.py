@@ -89,6 +89,8 @@ class LivechatController(http.Controller):
                 'consumed': True,
                 'feedback': reason,
             }
+            # if logged in user, set its partner on rating
+            values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
             if not channel.rating_ids:
                 res_model_id = request.env['ir.model'].sudo().search([('model', '=', channel._name)], limit=1).id
                 values.update({
@@ -98,13 +100,16 @@ class LivechatController(http.Controller):
                 # find the partner (operator)
                 if channel.channel_partner_ids:
                     values['rated_partner_id'] = channel.channel_partner_ids[0] and channel.channel_partner_ids[0].id or False
-                # if logged in user, set its partner on rating
-                values['partner_id'] = request.env.user.partner_id.id if request.session.uid else False
                 # create the rating
                 rating = Rating.sudo().create(values)
             else:
                 rating = channel.rating_ids[0]
                 rating.write(values)
+
+            if not reason:
+                # post a message without adding followers to the channel. email_from=False avoid to get author from email data
+                body = _("Rating: <img src='/rating/static/src/img/rating_%d.png' alt=':rating_%d' style='height: 20px; width: 20px'>") % (rate, rate)
+                channel.with_context(mail_create_nosubscribe=True).message_post(author_id=values['partner_id'], email_from=False, body=body, message_type='comment', subtype='mail.mt_comment')
             return rating.id
         return False
 
