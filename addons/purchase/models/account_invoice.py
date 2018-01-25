@@ -85,13 +85,11 @@ class AccountInvoice(models.Model):
         self.purchase_id = False
         return {}
 
-    @api.onchange('currency_id', 'date_invoice')
+    @api.onchange('currency_id')
     def _onchange_currency_id(self):
         if self.currency_id:
             for line in self.invoice_line_ids.filtered(lambda r: r.purchase_line_id):
-                if line.purchase_id.currency_id != self.currency_id:
-                    line.price_unit = line.purchase_id.currency_id.with_context(date=self.date_invoice)\
-                        .compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
+                line.price_unit = line.purchase_id.currency_id.with_context(date=self.date_invoice).compute(line.purchase_line_id.price_unit, self.currency_id, round=False)
 
     @api.onchange('invoice_line_ids')
     def _onchange_origin(self):
