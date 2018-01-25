@@ -332,7 +332,7 @@ class MassMailing(models.Model):
     mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
-    mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name')
+    mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
     contact_list_ids = fields.Many2many('mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
