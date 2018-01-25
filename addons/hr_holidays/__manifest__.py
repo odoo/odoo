@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Leave Management',
+    'name': 'Leaves',
     'version': '1.5',
     'category': 'Human Resources',
     'sequence': 27,
-    'summary': 'Leave allocations and leave requests',
-    'website': 'https://www.odoo.com/page/employees',
+    'summary': 'Allocate leaves and follow leave requests',
+    'website': 'https://www.odoo.com/page/leaves',
     'description': """
 Manage leave requests and allocations
 =====================================

@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Membership Management',
+    'name': 'Members',
     'version': '1.0',
     'category': 'Sales',
     'description': """

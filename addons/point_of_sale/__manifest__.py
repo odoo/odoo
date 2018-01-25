@@ -6,7 +6,7 @@
     'version': '1.0.1',
     'category': 'Point Of Sale',
     'sequence': 20,
-    'summary': 'Touchscreen Interface for Shops',
+    'summary': 'Register sales in shops and restaurants with a touchscreen interface',
     'description': "",
     'depends': ['stock_account', 'barcodes', 'web_editor', 'digest'],
     'data': [
@@ -50,5 +50,5 @@
     'installable': True,
     'application': True,
     'qweb': ['static/src/xml/pos.xml'],
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }

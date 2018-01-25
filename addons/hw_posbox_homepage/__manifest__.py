@@ -5,7 +5,7 @@
     'name': 'PosBox Homepage',
     'category': 'Point of Sale',
     'sequence': 6,
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-hardware',
     'summary': 'A homepage for the PosBox',
     'description': """
 PosBox Homepage

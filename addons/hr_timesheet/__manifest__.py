@@ -7,7 +7,7 @@
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
-    'summary': 'Review and approve employees time reports',
+    'summary': 'Track and validate employee time',
     'description': """
 This module implements a timesheet system.
 ==========================================
@@ -19,7 +19,7 @@ Lots of reporting on time and employee tracking are provided.
 It is completely integrated with the cost accounting module. It allows you to set
 up a management by affair.
     """,
-    'website': 'https://www.odoo.com/page/employees',
+    'website': 'https://www.odoo.com/page/timesheet-mobile-app',
     'depends': ['hr', 'analytic', 'project'],
     'data': [
         'security/hr_timesheet_security.xml',

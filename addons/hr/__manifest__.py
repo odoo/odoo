@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Employee Directory',
+    'name': 'Employees',
     'version': '1.1',
     'category': 'Human Resources',
     'sequence': 75,
-    'summary': 'Jobs, Departments, Employees Details',
+    'summary': 'Centralize employee information',
     'description': "",
     'website': 'https://www.odoo.com/page/employees',
     'images': [

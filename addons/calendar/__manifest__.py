@@ -6,7 +6,7 @@
     'version': '1.0',
     'sequence': 130,
     'depends': ['base', 'mail'],
-    'summary': 'Personal & Shared Calendar',
+    'summary': 'Schedule your meetings and send invitations',
     'description': """
 This is a full-featured calendar system.
 ========================================

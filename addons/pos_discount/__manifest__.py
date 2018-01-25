@@ -23,5 +23,5 @@ sale discount to a customer.
         'static/src/xml/discount_templates.xml',
     ],
     'installable': True,
-    'website': 'https://www.odoo.com/page/point-of-sale',
+    'website': 'https://www.odoo.com/page/point-of-sale-shop',
 }
