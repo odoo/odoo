@@ -2545,15 +2545,15 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
         });
 
-        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-default'),
-            "Create button shouldn't be highlighted");
+        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('o_hidden'),
+            "Create button should be hidden");
 
         kanban.$('.o_column_quick_create').click();
         kanban.$('.o_column_quick_create input').val('new column');
         kanban.$('.o_column_quick_create button.o_kanban_add').click();
 
-        assert.ok(kanban.$buttons.find('.o-kanban-button-new').hasClass('btn-primary'),
-            "Create button should now be highlighted");
+        assert.notOk(kanban.$buttons.find('.o-kanban-button-new').hasClass('o_hidden'),
+            "Create button should now be visible");
         kanban.destroy();
     });
 

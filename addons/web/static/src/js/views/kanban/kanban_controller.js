@@ -39,8 +39,6 @@ var KanbanController = BasicController.extend({
 
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
-
-        this.createColumnEnabled = this._isCreateColumnEnabled();
     },
 
     //--------------------------------------------------------------------------
@@ -57,15 +55,6 @@ var KanbanController = BasicController.extend({
             this._updateButtons();
             this.$buttons.appendTo($node);
         }
-    },
-    /**
-     * Override update method to recompute createColumnEnabled.
-     *
-     * @returns {Deferred}
-     */
-    update: function () {
-        this.createColumnEnabled = this._isCreateColumnEnabled();
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -92,18 +81,18 @@ var KanbanController = BasicController.extend({
      * m2o field and group_create action enabled.
      *
      * @private
+     * @param {Object} state the current state
      * @returns {boolean}
      */
-    _isCreateColumnEnabled: function () {
+    _isCreateColumnEnabled: function (state) {
         var groupCreate = this.is_action_enabled('group_create');
         if (!groupCreate) {
             // pre-return to avoid a lot of the following processing
             return false;
         }
-        var state = this.model.get(this.handle, {raw: true});
         var groupByField = state.fields[state.groupedBy[0]];
         var groupedByM2o = groupByField && (groupByField.type === 'many2one');
-        return groupedByM2o;
+        return !!groupedByM2o;
     },
     /**
      * This method calls the server to ask for a resequence.  Note that this
@@ -122,6 +111,16 @@ var KanbanController = BasicController.extend({
         });
     },
     /**
+     * Overrides to update the control panel buttons when the state is updated.
+     *
+     * @override
+     * @private
+     */
+    _update: function () {
+        this._updateButtons();
+        return this._super.apply(this, arguments);
+    },
+    /**
      * In grouped mode, set 'Create' button as btn-default if there is no column
      * (except if we can't create new columns)
      *
@@ -130,12 +129,9 @@ var KanbanController = BasicController.extend({
      */
     _updateButtons: function () {
         if (this.$buttons) {
-            var data = this.model.get(this.handle, {raw: true});
-            var grouped = data.groupedBy.length;
-            var createMuted = grouped && data.data.length === 0 && this.createColumnEnabled;
-            this.$buttons.find('.o-kanban-button-new')
-                .toggleClass('btn-primary', !createMuted)
-                .toggleClass('btn-default', createMuted);
+            var state = this.model.get(this.handle, {raw: true});
+            var createHidden = state.data.length === 0 && this._isCreateColumnEnabled(state);
+            this.$buttons.find('.o-kanban-button-new').toggleClass('o_hidden', createHidden);
         }
     },
 
