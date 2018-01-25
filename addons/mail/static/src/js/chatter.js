@@ -3,6 +3,7 @@ odoo.define('mail.Chatter', function (require) {
 
 var Activity = require('mail.Activity');
 var ChatterComposer = require('mail.ChatterComposer');
+var ActivityComposer = require('mail.ActivityComposer');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
 var utils = require('mail.utils');
@@ -25,6 +26,7 @@ var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
         reload_mail_fields: '_onReloadMailFields',
+        edit_mail_activity: '_onEditMailActivity',
     },
     events: {
         'click .o_chatter_button_new_message': '_onOpenComposerMessage',
@@ -105,6 +107,7 @@ var Chatter = Widget.extend({
         // close the composer if we switch to another record as it is record dependent
         if (this.record.res_id !== record.res_id) {
             this._closeComposer(true);
+            this._closeActivityCompaser(true);
         }
 
         // update the state
@@ -148,10 +151,16 @@ var Chatter = Widget.extend({
      */
     _closeComposer: function (force) {
         if (this.composer && (this.composer.is_empty() || force)) {
-            this.$el.removeClass('o_chatter_composer_active');
-            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
+            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note, .o_chatter_button_schedule_activity').removeClass('o_active');
             this.composer.do_hide();
             this.composer.clear_composer();
+        }
+        this._closeActivityCompaser();
+    },
+    _closeActivityCompaser: function (destroy) {
+        if (this.activityComposer) {
+            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note, .o_chatter_button_schedule_activity').removeClass('o_active');
+            destroy ? this.activityComposer.destroy() : this.activityComposer.do_hide();
         }
     },
     /**
@@ -174,6 +183,7 @@ var Chatter = Widget.extend({
      */
     _openComposer: function (options) {
         var self = this;
+        this._closeActivityCompaser();
         var old_composer = this.composer;
         // create the new composer
         this.composer = new ChatterComposer(this, this.record.model, options.suggested_partners || [], {
@@ -210,10 +220,27 @@ var Chatter = Widget.extend({
             self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
 
             self.$el.addClass('o_chatter_composer_active');
-            self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
+            self.$('.o_chatter_button_new_message, .o_chatter_button_log_note, .o_chatter_button_schedule_activity').removeClass('o_active');
             self.$('.o_chatter_button_new_message').toggleClass('o_active', !self.composer.options.is_log);
             self.$('.o_chatter_button_log_note').toggleClass('o_active', self.composer.options.is_log);
         });
+    },
+    /**
+     * @private
+     * Create new activity composer instance if not already exist or destroyed
+     * activity composer destroyed on next previous page navigation
+     * and hide/show on switch between tab of send message, log note and scheduled activity
+     */
+    _openActivityComposer: function (){
+        this._closeComposer(true);
+        if (!this.activityComposer || this.activityComposer.isDestroyed()) {
+            this.activityComposer = new ActivityComposer(this, this.record);
+            this.activityComposer.insertAfter(this.$('.o_chatter_topbar'));
+            this.$el.addClass('o_chatter_composer_active');
+        } else {
+            this.activityComposer.do_show();
+        }
+        this.$('.o_chatter_button_schedule_activity').addClass('o_active');
     },
     /**
      * @private
@@ -373,6 +400,7 @@ var Chatter = Widget.extend({
         if (this.fields.thread && event.data.thread) {
             fieldNames.push(this.fields.thread.name);
         }
+        this._closeActivityCompaser(true);
         this.trigger_up('reload', {
             fieldNames: fieldNames,
             keepChanges: true,
@@ -380,9 +408,18 @@ var Chatter = Widget.extend({
     },
     /**
      * @private
+     * @param {OdooEvent} event
+     * @param {Event} [event.data.target] jquery mouse event
+     * @param {Object} [event.data.options] odoo action options
+     */
+    _onEditMailActivity: function (event) {
+        this.fields.activity._onEditActivity(event.data.target, event.data.options);
+    },
+    /**
+     * @private
      */
     _onScheduleActivity: function () {
-        this.fields.activity.scheduleActivity(false);
+        this._openActivityComposer();
     },
 });
 

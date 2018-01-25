@@ -405,3 +405,30 @@
         color: #FFFFFF;
     }
 }
+
+.o_activity_composer {
+    padding: 5px 15px 15px 15px;
+    border: 1px solid @gray-lighter-dark;
+    border-top: none;
+    background: @gray-lighter;
+    .o_group {
+        display: flex;
+        background: @gray-lighter;
+    }
+    .o_activity_textarea_container {
+        position: relative;
+        .o_activity_textarea {
+            border-radius: 2px;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .o_activity_full_composer_btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            border: none;
+            opacity: 0.8;
+            margin: 1px;
+        }
+    }
+}
