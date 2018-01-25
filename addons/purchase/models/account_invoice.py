@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.tools.float_utils import float_compare
 
+from odoo.exceptions import UserError
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
@@ -199,7 +200,7 @@ class AccountInvoice(models.Model):
                     if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
 
                         if not acc: #If no price difference account was set at all and we need one, we raise an error
-                            raise UserError("You first need to specify a price difference account for this product before posting entries into it")
+                            raise UserError(_("You first need to specify a price difference account for this product before posting entries into it"))
 
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
