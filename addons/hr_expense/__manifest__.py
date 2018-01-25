@@ -3,7 +3,7 @@
 
 
 {
-    'name': 'Expense Tracker',
+    'name': 'Expenses',
     'version': '2.0',
     'category': 'Human Resources',
     'sequence': 95,
