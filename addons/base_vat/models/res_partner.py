@@ -160,7 +160,7 @@ class ResPartner(models.Model):
             else:
                 partner.base_vat_vies_check_status = check_rslt and 'verified' or 'wrong'
 
-    @api.constrains('vat', 'commercial_partner_id.country_id')
+    @api.constrains('vat', 'commercial_partner_id')
     def vat_constraint(self):
         company = self.env.context.get('company_id')
         if not company:
