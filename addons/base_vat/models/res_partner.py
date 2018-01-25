@@ -140,7 +140,7 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.depends('vat', 'commercial_partner_country_id')
+    @api.depends('vat', 'commercial_partner_id.country_id')
     def _compute_base_vat_vies_check_status(self):
         for partner in self:
             company = self.env.context.get('company_id')
@@ -160,7 +160,7 @@ class ResPartner(models.Model):
             else:
                 partner.base_vat_vies_check_status = check_rslt and 'verified' or 'wrong'
 
-    @api.constrains('vat', 'commercial_partner_country_id')
+    @api.constrains('vat', 'commercial_partner_id.country_id')
     def vat_constraint(self):
         company = self.env.context.get('company_id')
         if not company:
@@ -168,7 +168,7 @@ class ResPartner(models.Model):
 
         for record in self.filtered(lambda x: x.vat):
             record_vat_country_code = self._split_vat(record.vat)[0]
-            commercial_partner_country_code = record.commercial_partner_country_id and record.commercial_partner_country_id.code.lower() or False
+            commercial_partner_country_code = record.commercial_partner_id.country_id and record.commercial_partner_id.country_id.code.lower() or False
             vat_no = "'CC##' (CC=Country Code, ##=VAT Number)"
             vat_no = _ref_vat.get(record_vat_country_code) or _ref_vat.get(commercial_partner_country_code) or vat_no
 
@@ -178,7 +178,7 @@ class ResPartner(models.Model):
             elif not record._check_vat(self.simple_vat_check):
                 raise ValidationError(_('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (record.vat, record.name, vat_no))
 
-    @api.onchange('vat', 'commercial_partner_country_id')
+    @api.onchange('vat', 'commercial_partner_id')
     def _onchange_base_vat_vies_check_status(self):
         company = self.env.context.get('company_id')
         if not company:
@@ -199,7 +199,7 @@ class ResPartner(models.Model):
         check_rslt = check_func(vat_country, vat_number)
         if not check_rslt:
             # If it fails, we check with the country code of the commercial partner's country
-            country_code = self.commercial_partner_country_id.code
+            country_code = self.commercial_partner_id.country_id.code
             if country_code:
                 check_rslt = check_func(country_code.lower(), self.vat)
 
