@@ -34,7 +34,7 @@
     <!-- TDE FIXME: was customize_show=True -->
     <template id="pay_meth_link" inherit_id="portal.portal_layout">
         <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
-            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False)])">
+            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s')])">
                 <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
             </t>
         </xpath>
@@ -120,6 +120,32 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="payment_confirmation_status">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            Your payment has been authorized.
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
     </template>
 
     </data>

@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
-
-from datetime import date
-
-from odoo import tools
+from odoo import fields, tools
 from odoo.modules.module import get_module_resource
 from odoo.tests import common, Form
 
@@ -89,10 +85,10 @@ class TestLifoPrice(common.TransactionCase):
         # Let us send some goods
         out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.env.ref('stock.picking_type_out')
-        out_form.scheduled_date = date.today().strftime('%Y-%m-%d')
         with out_form.move_lines.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
+            move.date_expected = fields.Date.context_today(self.env['stock.move.line'])
         outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment

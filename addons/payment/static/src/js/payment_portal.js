@@ -17,6 +17,7 @@ $(document).ready(function () {
         if (valid_value) {
             $(this).parent('.form-group').addClass('has-success');
             $(this).parent('.form-group').removeClass('has-error');
+            $(this).siblings('.o_invalid_field').remove();
         }
         else {
             $(this).parent('.form-group').addClass('has-error');
@@ -31,6 +32,7 @@ $(document).ready(function () {
         if (valid_value) {
             $(this).parent('.form-group').addClass('has-success');
             $(this).parent('.form-group').removeClass('has-error');
+            $(this).siblings('.o_invalid_field').remove();
         }
         else {
             $(this).parent('.form-group').addClass('has-error');
@@ -46,6 +48,7 @@ $(document).ready(function () {
         if (valid_value) {
             $(this).parent('.form-group').addClass('has-success');
             $(this).parent('.form-group').removeClass('has-error');
+            $(this).siblings('.o_invalid_field').remove();
         }
         else {
             $(this).parent('.form-group').addClass('has-error');

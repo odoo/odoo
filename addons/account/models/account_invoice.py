@@ -1338,6 +1338,7 @@ class AccountInvoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
+        values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
 
         if date:
@@ -1723,6 +1724,7 @@ class AccountPaymentTerm(models.Model):
     def compute(self, value, date_ref=False):
         date_ref = date_ref or fields.Date.today()
         amount = value
+        sign = value < 0 and -1 or 1
         result = []
         if self.env.context.get('currency_id'):
             currency = self.env['res.currency'].browse(self.env.context['currency_id'])
@@ -1730,7 +1732,7 @@ class AccountPaymentTerm(models.Model):
             currency = self.env.user.company_id.currency_id
         for line in self.line_ids:
             if line.value == 'fixed':
-                amt = currency.round(line.value_amount)
+                amt = sign * currency.round(line.value_amount)
             elif line.value == 'percent':
                 amt = currency.round(value * (line.value_amount / 100.0))
             elif line.value == 'balance':
