@@ -109,6 +109,14 @@ var KanbanRenderer = BasicRenderer.extend({
 
         this._setState(state);
     },
+    /**
+     * Called each time the renderer is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        if (this.quickCreate) {
+            this.quickCreate.on_attach_callback();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -284,7 +292,13 @@ var KanbanRenderer = BasicRenderer.extend({
             // Enable column quickcreate
             if (this.createColumnEnabled) {
                 this.quickCreate = new ColumnQuickCreate(this);
-                this.quickCreate.appendTo(fragment);
+                this.quickCreate.appendTo(fragment).then(function () {
+                    // Open it directly if there is no column yet
+                    if (!self.state.data.length) {
+                        self.quickCreate.toggleFold();
+                    }
+                });
+
             }
         }
 

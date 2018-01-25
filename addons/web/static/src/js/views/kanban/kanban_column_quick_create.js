@@ -36,6 +36,14 @@ var ColumnQuickCreate = Widget.extend({
         this.$input = this.$('input');
         return this._super.apply(this, arguments);
     },
+    /**
+     * Called each time the quick create is attached into the DOM
+     */
+    on_attach_callback: function () {
+        if (!this.folded) {
+            this.$input.focus();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public

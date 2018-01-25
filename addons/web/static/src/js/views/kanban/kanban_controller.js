@@ -40,6 +40,12 @@ var KanbanController = BasicController.extend({
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
     },
+    /**
+     * Called each time the kanban view is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        this.renderer.on_attach_callback();
+    },
 
     //--------------------------------------------------------------------------
     // Public
