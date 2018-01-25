@@ -430,7 +430,7 @@ class ir_actions_act_window_view(osv.osv):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
-    _order = 'sequence'
+    _order = 'sequence,id'
     _columns = {
         'sequence': fields.integer('Sequence'),
         'view_id': fields.many2one('ir.ui.view', 'View'),
