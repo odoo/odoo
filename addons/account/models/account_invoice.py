@@ -1735,6 +1735,7 @@ class AccountInvoiceTax(models.Model):
                     'tax_id': tax.tax_id.id,
                     'account_id': tax.account_id.id,
                     'account_analytic_id': tax.account_analytic_id.id,
+                    'analytic_tag_ids': tax.analytic_tag_ids.ids or False,
                 })
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
