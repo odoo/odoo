@@ -286,7 +286,7 @@ var ImageWidget = MediaWidget.extend({
         var img = this.images[0];
         if (!img.isDocument) {
             if (!this.$media.is('img')) {
-                this._replaceMedia($('<img/>', {class: 'img img-responsive'}));
+                this._replaceMedia($('<img/>'));
             }
             this.$media.attr('src', img.src);
         } else {
@@ -409,7 +409,7 @@ var ImageWidget = MediaWidget.extend({
             var $div = $(el);
             if (/gif|jpe|jpg|png/.test($div.data('mimetype'))) {
                 var $img = $('<img/>', {
-                    class: 'img img-responsive',
+                    class: 'img-responsive',
                     src: $div.data('url') || $div.data('src'),
                 });
                 var def = $.Deferred();
