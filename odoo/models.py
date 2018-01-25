@@ -3025,7 +3025,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     record._cache.update(record._convert_to_cache(inverse_vals, update=True))
 
                 # in case several fields use the same inverse method, call it once
-                for fields in groupby(attrgetter('inverse'), inverse_fields):
+                for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
                     fields[0].determine_inverse(self)
 
                 self.modified(set(inverse_vals) - set(store_vals))
@@ -3218,7 +3218,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             record._cache.update(record._convert_to_cache(inverse_vals))
 
             # in case several fields use the same inverse method, call it once
-            for fields in groupby(attrgetter('inverse'), inverse_fields):
+            for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
                 fields[0].determine_inverse(record)
 
             record.modified(set(inverse_vals) - set(store_vals))

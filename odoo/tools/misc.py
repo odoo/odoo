@@ -26,7 +26,7 @@ import unicodedata
 import werkzeug.utils
 import zipfile
 from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
-from itertools import islice, groupby, repeat
+from itertools import islice, groupby as itergroupby, repeat
 from lxml import etree
 
 from .which import which
@@ -869,7 +869,7 @@ def stripped_sys_argv(*strip_args):
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
-    longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
+    longs, shorts = list(tuple(y) for _, y in itergroupby(strip_args, lambda x: x.startswith('--')))
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])
 
     args = sys.argv[:]
@@ -1062,12 +1062,18 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
 
-def groupby(key, elems):
-    """ Return a partition of ``elems`` based on ``key(elem)``. """
+def groupby(iterable, key=None):
+    """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
+        ``key`` is a function computing a key value for each element. This
+        function is similar to ``itertools.groupby``, but aggregates all
+        elements under the same key, not only consecutive elements.
+    """
+    if key is None:
+        key = lambda arg: arg
     groups = defaultdict(list)
-    for elem in elems:
+    for elem in iterable:
         groups[key(elem)].append(elem)
-    return groups.values()
+    return groups.items()
 
 def unique(it):
     """ "Uniquifier" for the provided iterable: will output each element of
