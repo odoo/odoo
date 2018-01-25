@@ -29,8 +29,7 @@ class IrUiMenu(models.Model):
     sequence = fields.Integer(default=10)
     child_id = fields.One2many('ir.ui.menu', 'parent_id', string='Child IDs')
     parent_id = fields.Many2one('ir.ui.menu', string='Parent Menu', index=True, ondelete="restrict")
-    parent_left = fields.Integer(index=True)
-    parent_right = fields.Integer(index=True)
+    parent_path = fields.Char(index=True)
     groups_id = fields.Many2many('res.groups', 'ir_ui_menu_group_rel',
                                  'menu_id', 'gid', string='Groups',
                                  help="If you have groups, the visibility of this menu will be based on these groups. "\
