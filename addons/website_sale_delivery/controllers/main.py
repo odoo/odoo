@@ -65,6 +65,8 @@ class WebsiteSaleDelivery(WebsiteSale):
             return {'status': order.delivery_rating_success,
                     'error_message': order.delivery_message,
                     'carrier_id': carrier_id,
-                    'new_amount_delivery': order.delivery_price,
+                    'new_amount_delivery': order.currency_id.round(order.delivery_price),
                     'new_amount_untaxed': order.amount_untaxed,
-                    'new_amount_tax': order.amount_tax}
+                    'new_amount_tax': order.amount_tax,
+                    'new_amount_total': order.amount_total,
+            }
