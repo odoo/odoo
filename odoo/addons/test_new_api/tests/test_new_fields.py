@@ -992,15 +992,6 @@ class TestMagicFields(common.TransactionCase):
         self.assertEqual(record.write_uid, self.env.user)
 
 
-class Tree(object):
-    def __init__(self, node, *children):
-        self.node = node
-        self.children = children
-
-    def __str__(self):
-        return "%s(%s, %s)" % (self.node.name, self.node.parent_left, self.node.parent_right)
-
-
 class TestParentStore(common.TransactionCase):
 
     def setUp(self):
@@ -1008,105 +999,159 @@ class TestParentStore(common.TransactionCase):
         # pretend the pool has finished loading to avoid deferring parent_store
         # computation
         self.patch(self.registry, '_init', False)
-        self.registry.do_parent_store(self.cr)
 
-    def assertTree(self, tree):
-        self.assertLess(tree.node.parent_left, tree.node.parent_right,
-                        "incorrect node %s" % tree)
-        for child in tree.children:
-            self.assertLess(tree.node.parent_left, child.node.parent_left,
-                            "incorrect parent %s - child %s" % (tree, child))
-            self.assertLess(child.node.parent_right, tree.node.parent_right,
-                            "incorrect parent %s - child %s" % (tree, child))
-        self.assertTrees(*tree.children)
+        # make a tree of categories:
+        #   0
+        #  /|\
+        # 1 2 3
+        #    /|\
+        #   4 5 6
+        #      /|\
+        #     7 8 9
+        Cat = self.env['test_new_api.category']
+        cat0 = Cat.create({'name': '0'})
+        cat1 = Cat.create({'name': '1', 'parent': cat0.id})
+        cat2 = Cat.create({'name': '2', 'parent': cat0.id})
+        cat3 = Cat.create({'name': '3', 'parent': cat0.id})
+        cat4 = Cat.create({'name': '4', 'parent': cat3.id})
+        cat5 = Cat.create({'name': '5', 'parent': cat3.id})
+        cat6 = Cat.create({'name': '6', 'parent': cat3.id})
+        cat7 = Cat.create({'name': '7', 'parent': cat6.id})
+        cat8 = Cat.create({'name': '8', 'parent': cat6.id})
+        cat9 = Cat.create({'name': '9', 'parent': cat6.id})
+        self._cats = Cat.concat(cat0, cat1, cat2, cat3, cat4,
+                                cat5, cat6, cat7, cat8, cat9)
 
-    def assertTrees(self, *trees):
-        for tree in trees:
-            self.assertTree(tree)
-        for tree1, tree2 in pycompat.izip(trees, trees[1:]):
-            self.assertLess(tree1.node.parent_right, tree2.node.parent_left,
-                            "wrong node order: %s < %s" % (tree1, tree2))
+    def cats(self, *indexes):
+        """ Return the given categories. """
+        ids = self._cats.ids
+        return self._cats.browse([ids[index] for index in indexes])
 
-    def test_parent_store(self):
-        """ Test parent_left/parent_right computation. """
-        Category = self.env['test_new_api.category']
+    def assertChildOf(self, category, children):
+        self.assertEqual(category.search([('id', 'child_of', category.ids)]), children)
 
-        def descendants(recs):
-            return Category.search([('id', 'child_of', recs.ids)])
+    def assertParentOf(self, category, parents):
+        self.assertEqual(category.search([('id', 'parent_of', category.ids)]), parents)
 
-        def ascendants(recs):
-            return Category.search([('id', 'parent_of', recs.ids)])
+    def test_base(self):
+        """ Check the initial tree structure. """
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1))
+        self.assertChildOf(self.cats(2), self.cats(2))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(4), self.cats(4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertChildOf(self.cats(7), self.cats(7))
+        self.assertChildOf(self.cats(8), self.cats(8))
+        self.assertChildOf(self.cats(9), self.cats(9))
+        self.assertParentOf(self.cats(0), self.cats(0))
+        self.assertParentOf(self.cats(1), self.cats(0, 1))
+        self.assertParentOf(self.cats(2), self.cats(0, 2))
+        self.assertParentOf(self.cats(3), self.cats(0, 3))
+        self.assertParentOf(self.cats(4), self.cats(0, 3, 4))
+        self.assertParentOf(self.cats(5), self.cats(0, 3, 5))
+        self.assertParentOf(self.cats(6), self.cats(0, 3, 6))
+        self.assertParentOf(self.cats(7), self.cats(0, 3, 6, 7))
+        self.assertParentOf(self.cats(8), self.cats(0, 3, 6, 8))
+        self.assertParentOf(self.cats(9), self.cats(0, 3, 6, 9))
 
-        # create root nodes
-        c = Category.create({'name': 'c'})
-        a = Category.create({'name': 'a'})
-        b = Category.create({'name': 'b'})
-        self.assertTrees(Tree(a), Tree(b), Tree(c))
+    def test_base_compute(self):
+        """ Check the tree structure after computation from scratch. """
+        self.cats()._parent_store_compute()
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1))
+        self.assertChildOf(self.cats(2), self.cats(2))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(4), self.cats(4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertChildOf(self.cats(7), self.cats(7))
+        self.assertChildOf(self.cats(8), self.cats(8))
+        self.assertChildOf(self.cats(9), self.cats(9))
+        self.assertParentOf(self.cats(0), self.cats(0))
+        self.assertParentOf(self.cats(1), self.cats(0, 1))
+        self.assertParentOf(self.cats(2), self.cats(0, 2))
+        self.assertParentOf(self.cats(3), self.cats(0, 3))
+        self.assertParentOf(self.cats(4), self.cats(0, 3, 4))
+        self.assertParentOf(self.cats(5), self.cats(0, 3, 5))
+        self.assertParentOf(self.cats(6), self.cats(0, 3, 6))
+        self.assertParentOf(self.cats(7), self.cats(0, 3, 6, 7))
+        self.assertParentOf(self.cats(8), self.cats(0, 3, 6, 8))
+        self.assertParentOf(self.cats(9), self.cats(0, 3, 6, 9))
 
-        # create nodes d, e, f under b
-        f = Category.create({'name': 'f', 'parent': b.id})
-        d = Category.create({'name': 'd', 'parent': b.id})
-        e = Category.create({'name': 'e', 'parent': b.id})
-        self.assertTrees(Tree(a), Tree(b, Tree(d), Tree(e), Tree(f)), Tree(c))
-        self.assertEqual(descendants(a), a)
-        self.assertEqual(descendants(b), b + d + e + f)
-        self.assertEqual(descendants(c), c)
-        self.assertEqual(descendants(d), d)
-        self.assertEqual(descendants(e), e)
-        self.assertEqual(descendants(f), f)
-        self.assertEqual(ascendants(a), a)
-        self.assertEqual(ascendants(b), b)
-        self.assertEqual(ascendants(c), c)
-        self.assertEqual(ascendants(d), b + d)
-        self.assertEqual(ascendants(e), b + e)
-        self.assertEqual(ascendants(f), b + f)
+    def test_delete(self):
+        """ Delete a node. """
+        self.cats(6).unlink()
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertParentOf(self.cats(0), self.cats(0))
+        self.assertParentOf(self.cats(3), self.cats(0, 3))
+        self.assertParentOf(self.cats(5), self.cats(0, 3, 5))
 
-        # move d, f under c
-        (f + d).write({'parent': c.id})
-        self.assertTrees(Tree(a), Tree(b, Tree(e)), Tree(c, Tree(d), Tree(f)))
-        self.assertEqual(descendants(a), a)
-        self.assertEqual(descendants(b), b + e)
-        self.assertEqual(descendants(c), c + d + f)
-        self.assertEqual(descendants(d), d)
-        self.assertEqual(descendants(e), e)
-        self.assertEqual(descendants(f), f)
-        self.assertEqual(ascendants(a), a)
-        self.assertEqual(ascendants(b), b)
-        self.assertEqual(ascendants(c), c)
-        self.assertEqual(ascendants(d), c + d)
-        self.assertEqual(ascendants(e), b + e)
-        self.assertEqual(ascendants(f), c + f)
+    def test_move_1_0(self):
+        """ Move a node to a root position. """
+        self.cats(6).write({'parent': False})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(6, 9))
 
-        # move b, c under a
-        (b + c).write({'parent': a.id})
-        self.assertTrees(Tree(a, Tree(b, Tree(e)), Tree(c, Tree(d), Tree(f))))
-        self.assertEqual(descendants(a), a + b + c + d + e + f)
-        self.assertEqual(descendants(b), b + e)
-        self.assertEqual(descendants(c), c + d + f)
-        self.assertEqual(descendants(d), d)
-        self.assertEqual(descendants(e), e)
-        self.assertEqual(descendants(f), f)
-        self.assertEqual(ascendants(a), a)
-        self.assertEqual(ascendants(b), a + b)
-        self.assertEqual(ascendants(c), a + c)
-        self.assertEqual(ascendants(d), a + c + d)
-        self.assertEqual(ascendants(e), a + b + e)
-        self.assertEqual(ascendants(f), a + c + f)
+    def test_move_1_1(self):
+        """ Move a node into an empty subtree. """
+        self.cats(6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
 
-        # remove node d
-        d.unlink()
-        self.assertTrees(Tree(a, Tree(b, Tree(e)), Tree(c, Tree(f))))
-        self.assertEqual(descendants(a), a + b + c + e + f)
-        self.assertEqual(descendants(b), b + e)
-        self.assertEqual(descendants(c), c + f)
-        self.assertEqual(descendants(e), e)
-        self.assertEqual(descendants(f), f)
-        self.assertEqual(ascendants(a), a)
-        self.assertEqual(ascendants(b), a + b)
-        self.assertEqual(ascendants(c), a + c)
-        self.assertEqual(ascendants(e), a + b + e)
-        self.assertEqual(ascendants(f), a + c + f)
+    def test_move_1_N(self):
+        """ Move a node into a non-empty subtree. """
+        self.cats(6).write({'parent': self.cats(0).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4, 5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
 
-        # not cycle should occur
+    def test_move_N_0(self):
+        """ Move multiple nodes to root position. """
+        self.cats(5, 6).write({'parent': False})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4))
+        self.assertChildOf(self.cats(3), self.cats(3, 4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(5), self.cats(5))
+        self.assertParentOf(self.cats(9), self.cats(6, 9))
+
+    def test_move_N_1(self):
+        """ Move multiple nodes to an empty subtree. """
+        self.cats(5, 6).write({'parent': self.cats(1).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(1), self.cats(1, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(5), self.cats(0, 1, 5))
+        self.assertParentOf(self.cats(9), self.cats(0, 1, 6, 9))
+
+    def test_move_N_N(self):
+        """ Move multiple nodes to a non- empty subtree. """
+        self.cats(5, 6).write({'parent': self.cats(0).id})
+        self.assertChildOf(self.cats(0), self.cats(0, 1, 2, 3, 4, 5, 6, 7, 8, 9))
+        self.assertChildOf(self.cats(3), self.cats(3, 4))
+        self.assertChildOf(self.cats(5), self.cats(5))
+        self.assertChildOf(self.cats(6), self.cats(6, 7, 8, 9))
+        self.assertParentOf(self.cats(5), self.cats(0, 5))
+        self.assertParentOf(self.cats(9), self.cats(0, 6, 9))
+
+    def test_move_1_cycle(self):
+        """ Move a node to create a cycle. """
         with self.assertRaises(UserError):
-            a.parent = e
+            self.cats(3).write({'parent': self.cats(9).id})
+
+    def test_move_N_cycle(self):
+        """ Move multiple nodes to create a cycle. """
+        with self.assertRaises(UserError):
+            self.cats(1, 3).write({'parent': self.cats(9).id})
