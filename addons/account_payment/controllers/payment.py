@@ -94,9 +94,9 @@ class PaymentPortal(http.Controller):
 
         # proceed to the payment
         res = tx.confirm_invoice_token()
-        if res is not True:
-            params['error'] = res
-            return request.redirect(_build_url_w_params(error_url, params))
-
-        params['success'] = 'pay_invoice'
+        if tx.state != 'authorized' or not tx.acquirer_id.capture_manually:
+            if res is not True:
+                params['error'] = res
+                return request.redirect(_build_url_w_params(error_url, params))
+            params['success'] = 'pay_invoice'
         return request.redirect(_build_url_w_params(success_url, params))
