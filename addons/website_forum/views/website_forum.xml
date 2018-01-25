@@ -51,7 +51,7 @@
 
 <!-- Page Index -->
 <template id="header" name="Forum Index">
-    <t t-call="website_forum.layout">
+    <t t-if="forum.active" t-call="website_forum.layout">
         <div t-if="is_public_user and not forum_welcome_message" class="forum_intro">
             <div t-field="forum.welcome_message"/>
         </div>
@@ -217,6 +217,14 @@
             </div>
         </div>
         <div class="oe_structure"/>
+    </t>
+    <t t-else="" t-call="website_forum.layout">
+        <t t-set='head'>
+            <meta name="robots" content="noindex, nofollow" />
+        </t>
+        <div class="text-center text-muted">
+            <p class="css_editable_hidden"><h2>This forum has been archived.</h2></p>
+        </div>
     </t>
 </template>
 
@@ -387,6 +395,7 @@
         <div class="container">
             <h1 class="mb32">Our forums</h1>
             <div class="row">
+                <div t-if="not forums" class="well">No forum post yet.</div>
                 <div t-foreach="forums" t-as="forum" class="col-sm-3 text-center mb32">
                     <a t-attf-href="/forum/#{ slug(forum) }">
                         <div class="fa fa-5x fa-comment mb16"/>
