@@ -6,34 +6,46 @@ odoo.define('web.kanban_column_quick_create', function (require) {
  * create kanban columns directly from the Kanban view.
  */
 
+var core = require('web.core');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
+
+var _t = core._t;
+var QWeb = core.qweb;
 
 var ColumnQuickCreate = Widget.extend({
     template: 'KanbanView.ColumnQuickCreate',
     events: {
-        'click': 'toggleFold',
-        'click input': '_onInputClicked',
+        'click .o_quick_create_folded': '_onUnfold',
         'click .o_kanban_add': '_onAddClicked',
-        'focusout': '_onFocusout',
+        'click .o_kanban_examples': '_onShowExamples',
         'keydown': '_onKeydown',
         'keypress input': '_onKeypress',
-        'mousedown .o_kanban_add': '_onMousedown',
     },
 
     /**
      * @override
+     * @param {Object} [options]
+     * @param {Object} [options.examples]
      */
-    init: function () {
+    init: function (parent, options) {
         this._super.apply(this, arguments);
+        this.examples = options.examples;
         this.folded = true;
     },
     /**
      * @override
      */
     start: function () {
-        this.$header = this.$('.o_column_header');
-        this.$quick_create = this.$('.o_kanban_quick_create');
+        this.$quickCreateFolded = this.$('.o_quick_create_folded');
+        this.$quickCreateUnfolded = this.$('.o_quick_create_unfolded');
         this.$input = this.$('input');
+
+        // destroy the quick create when the user clicks outside
+        core.bus.on('click', this, this._onWindowClicked);
+
+        this._update();
+
         return this._super.apply(this, arguments);
     },
     /**
@@ -73,6 +85,7 @@ var ColumnQuickCreate = Widget.extend({
     _add: function () {
         var value = this.$input.val().trim();
         if (!value.length) {
+            this._cancel();
             return;
         }
         this.$input.val('');
@@ -95,8 +108,8 @@ var ColumnQuickCreate = Widget.extend({
      * @private
      */
     _update: function () {
-        this.$header.toggle(this.folded);
-        this.$quick_create.toggle(!this.folded);
+        this.$quickCreateFolded.toggle(this.folded);
+        this.$quickCreateUnfolded.toggle(!this.folded);
     },
 
     //--------------------------------------------------------------------------
@@ -112,35 +125,13 @@ var ColumnQuickCreate = Widget.extend({
         this._add();
     },
     /**
-     * Cancels the quick creation when the input loses the focus
-     *
-     * @private
-     */
-    _onFocusout: function () {
-        var hasFocus = this.$(':focus').length > 0;
-        if (hasFocus) {
-            return;
-        }
-        this._cancel();
-    },
-    /**
-     * Stops the propagation of the event to prevent the quick create from
-     * toggling when the user clicks in the input
-     *
-     * @private
-     * @param {MouseEvent} event
-     */
-    _onInputClicked: function (event) {
-        event.stopPropagation();
-    },
-    /**
      * Cancels quick creation on escape keydown event
      *
      * @private
      * @param {KeyEvent} event
      */
     _onKeydown: function (event) {
-        if (event.keyCode === 27) { // escape
+        if (event.keyCode === $.ui.keyCode.ESCAPE) {
             this._cancel();
         }
     },
@@ -151,23 +142,64 @@ var ColumnQuickCreate = Widget.extend({
      * @param {KeyEvent} event
      */
     _onKeypress: function (event) {
-        if (event.keyCode === 13) { // enter
+        if (event.keyCode === $.ui.keyCode.ENTER) {
             this._add();
         }
     },
     /**
-     * In all browsers the 'focus/blur' event is triggered before a button's
-     * 'click' (it's actually triggered by mousedown).
-     * The quick create is hidden on blur of its input but still needs to create
-     * the data when the "Add" button is clicked.
-     * This problem is adressed by suppressing the 'focus/blur' event from the
-     * Add button entirely by preventing the browser's default mousedown handler.
+     * Opens a dialog containing examples of Kanban processes
+     *
+     * @private
+     */
+    _onShowExamples: function () {
+        var self = this;
+        var dialog = new Dialog(this, {
+            $content: $(QWeb.render('KanbanView.ExamplesDialog', {
+                examples: this.examples,
+            })),
+            buttons: [{
+                classes: 'btn-primary pull-right',
+                close: true,
+                text: _t('Got it'),
+            }],
+            size: "large",
+            title: "Kanban Examples",
+        }).open();
+        dialog.on('closed', this, function () {
+            self.$input.focus();
+        });
+    },
+    /**
+     * @private
+     */
+    _onUnfold: function () {
+        if (this.folded) {
+            this.toggleFold();
+        }
+    },
+    /**
+     * When a click happens outside the quick create, we want to close it.
      *
      * @private
      * @param {MouseEvent} event
      */
-    _onMousedown: function (event) {
-        event.preventDefault();
+    _onWindowClicked: function (event) {
+        // ignore clicks if the quick create is not in the dom
+        if (!document.contains(this.el)) {
+            return;
+        }
+
+        // ignore clicks in modals
+        if ($(event.target).closest('.modal').length) {
+            return;
+        }
+
+        // ignore clicks if target is inside the quick create
+        if (this.el.contains(event.target)) {
+            return;
+        }
+
+        this._cancel();
     },
 });
 
