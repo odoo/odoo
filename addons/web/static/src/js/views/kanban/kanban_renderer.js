@@ -97,16 +97,15 @@ var KanbanRenderer = BasicRenderer.extend({
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
-
+        this.examples = params.examples;
         this.recordOptions = _.extend({}, params.record_options, {
             qweb: this.qweb,
             viewType: 'kanban',
         });
-        this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
+        this.columnOptions = _.extend({}, params.column_options);
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
-
         this._setState(state);
     },
     /**
@@ -291,7 +290,9 @@ var KanbanRenderer = BasicRenderer.extend({
 
             // Enable column quickcreate
             if (this.createColumnEnabled) {
-                this.quickCreate = new ColumnQuickCreate(this);
+                this.quickCreate = new ColumnQuickCreate(this, {
+                    examples: this.examples,
+                });
                 this.quickCreate.appendTo(fragment).then(function () {
                     // Open it directly if there is no column yet
                     if (!self.state.data.length) {
@@ -301,7 +302,6 @@ var KanbanRenderer = BasicRenderer.extend({
 
             }
         }
-
     },
     /**
      * Renders an ungrouped kanban view in a fragment.

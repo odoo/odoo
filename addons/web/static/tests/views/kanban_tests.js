@@ -2,6 +2,7 @@ odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
+var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
 var testUtils = require('web.test_utils');
@@ -1636,17 +1637,20 @@ QUnit.module('Views', {
         assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should not be visible");
 
-        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_quick_create_folded').click();
 
         assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should be visible");
 
         // discard the column creation and click it again
-        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_column_quick_create input').trigger($.Event('keydown', {
+            keyCode: $.ui.keyCode.ESCAPE,
+            which: $.ui.keyCode.ESCAPE,
+        }));
         assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should not be visible after discard");
 
-        kanban.$('.o_column_quick_create').click();
+        kanban.$('.o_quick_create_folded').click();
         assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
             "the input should be visible");
 
@@ -1915,14 +1919,14 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
-    QUnit.test('cancel column quick create by pressing ESCAPE', function (assert) {
-        assert.expect(4);
+    QUnit.test('quick create several columns in a row', function (assert) {
+        assert.expect(10);
 
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            arch: '<kanban class="o_kanban_test">' +
+            arch: '<kanban>' +
                         '<field name="product_id"/>' +
                         '<templates><t t-name="kanban-box">' +
                             '<div><field name="foo"/></div>' +
@@ -1931,23 +1935,100 @@ QUnit.module('Views', {
             groupBy: ['product_id'],
         });
 
-        assert.strictEqual(kanban.$('.o_column_quick_create').length, 1, "should have a quick create column");
-        assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
-            "the input should not be visible");
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 2,
+            "should have two columns");
+        assert.strictEqual(kanban.$('.o_column_quick_create').length, 1,
+            "should have a ColumnQuickCreate widget");
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_quick_create_folded:visible').length, 1,
+            "the ColumnQuickCreate should be folded");
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_quick_create_unfolded:visible').length, 0,
+            "the ColumnQuickCreate should be folded");
 
-        kanban.$('.o_column_quick_create').click();
+        // add a new column
+        kanban.$('.o_column_quick_create .o_quick_create_folded').click();
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_quick_create_folded:visible').length, 0,
+            "the ColumnQuickCreate should be unfolded");
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_quick_create_unfolded:visible').length, 1,
+            "the ColumnQuickCreate should be unfolded");
+        kanban.$('.o_column_quick_create input').val('New Column 1');
+        kanban.$('.o_column_quick_create .btn-primary').click();
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 3,
+            "should now have three columns");
 
-        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
-            "the input should be visible");
+        // add another column
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_quick_create_folded:visible').length, 0,
+            "the ColumnQuickCreate should still be unfolded");
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_quick_create_unfolded:visible').length, 1,
+            "the ColumnQuickCreate should still be unfolded");
+        kanban.$('.o_column_quick_create input').val('New Column 2');
+        kanban.$('.o_column_quick_create .btn-primary').click();
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 4,
+            "should now have four columns");
 
-        // discard the column creation by pressing ESCAPE
-        kanban.$('.o_column_quick_create input').trigger($.Event('keydown', {
-            keyCode: $.ui.keyCode.ESCAPE,
-            which: $.ui.keyCode.ESCAPE,
-        }));
+        kanban.destroy();
+    });
 
-        assert.notOk(kanban.$('.o_column_quick_create input').is(':visible'),
-            "the input should not be visible anymore");
+    QUnit.test('quick create column and examples', function (assert) {
+        assert.expect(12);
+
+        kanbanExamplesRegistry.add('test', [{
+            name: "A first example",
+            columns: ["Column 1", "Column 2", "Column 3"],
+            description: "Some description",
+        }, {
+            name: "A second example",
+            columns: ["Col 1", "Col 2"],
+        }]);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban examples="test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        assert.strictEqual(kanban.$('.o_column_quick_create').length, 1,
+            "should have a ColumnQuickCreate widget");
+
+        // open the quick create
+        kanban.$('.o_column_quick_create .o_quick_create_folded').click();
+
+        assert.strictEqual(kanban.$('.o_column_quick_create .o_kanban_examples:visible').length, 1,
+            "should have a link to see examples");
+
+        // click to see the examples
+        kanban.$('.o_column_quick_create .o_kanban_examples').click();
+
+        assert.strictEqual($('.modal .o_kanban_examples_dialog').length, 1,
+            "should have open the examples dialog");
+        assert.strictEqual($('.modal .o_kanban_examples_dialog_nav li').length, 2,
+            "should have two examples (in the menu)");
+        assert.strictEqual($('.modal .o_kanban_examples_dialog_nav a').text(),
+            ' A first example  A second example ', "example names should be correct");
+        assert.strictEqual($('.modal .o_kanban_examples_dialog_content .tab-pane').length, 2,
+            "should have two examples");
+
+        var $firstPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:first');
+        assert.strictEqual($firstPane.find('.o_kanban_examples_group').length, 3,
+            "there should be 3 stages in the first example");
+        assert.strictEqual($firstPane.find('h6').text(), 'Column 1Column 2Column 3',
+            "column titles should be correct");
+        assert.strictEqual($firstPane.find('.o_kanban_examples_description').text().trim(),
+            "Some description", "the correct description should be displayed");
+
+        var $secondPane = $('.modal .o_kanban_examples_dialog_content .tab-pane:nth(1)');
+        assert.strictEqual($secondPane.find('.o_kanban_examples_group').length, 2,
+            "there should be 2 stages in the second example");
+        assert.strictEqual($secondPane.find('h6').text(), 'Col 1Col 2',
+            "column titles should be correct");
+        assert.strictEqual($secondPane.find('.o_kanban_examples_description').text().trim(),
+            "", "there should be no description for the second example");
 
         kanban.destroy();
     });
@@ -2759,35 +2840,6 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_kanban_record:eq(1)').text(), "record1",
                         "records should be correctly ordered");
         assert.strictEqual(nbResequence, 2, "should have resequenced twice");
-        kanban.destroy();
-    });
-
-    QUnit.test('don\'t fold column quick create after creation', function (assert) {
-        assert.expect(2);
-
-        var kanban = createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            arch: '<kanban on_create="quick_create">' +
-                        '<field name="product_id"/>' +
-                        '<templates><t t-name="kanban-box">' +
-                            '<div><field name="foo"/></div>' +
-                        '</t></templates>' +
-                    '</kanban>',
-            groupBy: ['product_id'],
-        });
-
-        // add a new column
-        kanban.$('.o_kanban_group:first .o_kanban_quick_add').click();
-        var $quickCreate = kanban.$('.o_kanban_quick_create');
-        $quickCreate.find('input').val('new partner').trigger('input');
-        $quickCreate.find('button.o_kanban_add').click();
-        assert.strictEqual(this.data.partner.records.length, 5,
-            "should have created a 'new partner' column");
-
-        assert.strictEqual(kanban.$('.o_kanban_add:visible').length, 1,
-            "the add button should still be visible");
         kanban.destroy();
     });
 
