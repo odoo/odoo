@@ -1888,6 +1888,33 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create column should be opened if there is no column', function (assert) {
+        assert.expect(3);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            domain: [['foo', '=', 'norecord']],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_group').length, 0,
+            "there should be no column");
+        assert.strictEqual(kanban.$('.o_column_quick_create').length, 1,
+            "should have a quick create column");
+        assert.ok(kanban.$('.o_column_quick_create input').is(':visible'),
+            "the quick create should be opened");
+
+        kanban.destroy();
+    });
+
     QUnit.test('cancel column quick create by pressing ESCAPE', function (assert) {
         assert.expect(4);
 
