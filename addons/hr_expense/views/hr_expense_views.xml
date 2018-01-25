@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+        <record id="hr_employee_view_form_inherit_expense" model="ir.ui.view">
+            <field name="name">hr.employee.view.form.expense</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Expenses" name="timesheet">
+                        <field name="expense_manager_id"/>   
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
@@ -21,26 +34,13 @@
             </field>
         </record>
 
-        <record id="hr_expense_form_view" model="ir.ui.view">
-            <field name="name">hr.expense.form</field>
+        <record id="hr_expense_view_form_without_header" model="ir.ui.view">
+            <field name="name">hr.expense.view.form</field>
             <field name="model">hr.expense</field>
-            <field eval="25" name="priority"/>
+            <field eval="35" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Expenses" class="o_expense_form">
-                <header invisible="context.get('expense_adding_line')">
-                    <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,reported,done"/>
-                    <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
-                </header>
                 <sheet>
-                    <div class="oe_button_box" invisible="context.get('expense_adding_line')">
-                        <button name="action_get_attachment_view"
-                            class="oe_stat_button"
-                            icon="fa-book"
-                            type="object">
-                            <field name="attachment_number" widget="statinfo" string="Documents"/>
-                        </button>
-                    </div>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -76,7 +76,7 @@
 
                     </group>
                     <div>
-                        <field name="description" placeholder="Notes..."/>
+                        <field name="description" class="oe_inline" placeholder="Notes..."/>
                     </div>
                 </sheet>
                 <div class="oe_chatter">
@@ -84,6 +84,33 @@
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
+            </field>
+        </record>
+
+        <record id="hr_expense_view_form" model="ir.ui.view">
+            <field name="name">hr.expense.view.form</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form_without_header"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/*" position="before">
+                    <header>
+                        <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
+                        <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
+                    </header>
+                </xpath>
+                <xpath expr="/form/sheet/*" position="before">
+                    <div class="oe_button_box">
+                        <button name="action_get_attachment_view"
+                            class="oe_stat_button"
+                            icon="fa-book"
+                            type="object"
+                            attrs="{'invisible': [('attachment_number', '=', 0)]}">
+                            <field name="attachment_number" widget="statinfo" string="Documents" options="{'reload_on_button': true}"/>
+                        </button>
+                    </div>
+                </xpath>
             </field>
         </record>
 
@@ -112,8 +139,8 @@
                                     </div>
                                     <div class="col-xs-6">
                                         <span class="pull-right text-right">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'submit': 'default', 'cancel': 'danger', 'post': 'warning',
-                                            'done': 'success'}}"/>
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'reported': 'primary', 'refused': 'danger', 'done': 'warning',
+                                            'approved': 'success'}}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -160,9 +187,9 @@
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <separator />
                     <filter domain="[('state', '=', 'draft')]" string="To Submit" name="to_report" help="New Expense"/>
-                    <filter domain="[('state', '=', 'reported')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
+                    <filter domain="[('state', '!=', 'draft')]" string="Reported" name="submitted" help="Confirmed Expenses"/>
                     <filter domain="[('state', '=', 'refused')]" string="Refused" name="refused" help="Refused Expenses"/>
-                    <filter domain="[('state', '!=', 'cancel')]" string="Not Refused" name="uncancelled" help="Actual expense sheets, not the refused ones"/>
+                    <filter domain="['|', ('state', '=', 'approved'), ('state', '=', 'done')]" string="Approved" name="approved" help="Actual expense sheets, not the refused ones"/>
                     <separator />
                     <filter string="My Team Expenses" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
                     <filter string="My Expenses" name="my_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
@@ -196,7 +223,7 @@
         </record>
 
         <record id="hr_expense_actions_my_unsubmitted" model="ir.actions.act_window">
-            <field name="name">My Expenses to Submit</field>
+            <field name="name">My Expenses</field>
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
@@ -347,7 +374,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,pivot</field>
             <field name="context">{
-                'search_default_uncancelled': 1,
+                'search_default_approved': 1,
                 }
             </field>
         </record>
@@ -387,7 +414,8 @@
                         <button name="action_get_attachment_view"
                             class="oe_stat_button"
                             icon="fa-book"
-                            type="object">
+                            type="object"
+                            attrs="{'invisible': [('attachment_number', '=', 0)]}">
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
                     </div>
@@ -401,15 +429,15 @@
                         <group>
                             <field name="employee_id"/>
                             <field name="payment_mode"/>
-                            <field name="responsible_id" invisible="1"/>
+                            <field name="user_id"/>
                             <field name="address_id" invisible="1"/>
                             <field name="department_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                      <notebook>
-                        <page string="Expense Lines">
-                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'not_delete': True, 'reload_on_button': True, 'no_create': True}" context="{'expense_adding_line': True}">
+                        <page string="Expense">
+                        <field name="expense_line_ids" nolabel="1" widget="many2many" domain="[('state', '=', 'draft')]" options="{'reload_on_button': True}" context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'expense_adding_line': True}">
                             <tree decoration-danger="is_refused">
                                 <field name="date"/>
                                 <field name="name"/>
@@ -418,13 +446,12 @@
                                 <field name="message_unread" invisible="1"/>
                                 <field name="attachment_number" string=" "/>
                                 <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>
-                                <field name="tax_ids" widget="many2many_tags"/>
+                                <field name="tax_ids" widget="many2many_tags" groups="account.group_account_user"/>
                                 <field name="currency_id" invisible="1"/>
                                 <field name="total_amount"/>
                                 <field name="company_currency_id" invisible="1"/>
                                 <field name="total_amount_company" groups="base.group_multi_currency"/>
                                 <field name="is_refused" invisible="True"/>
-                                <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="reported, refused" string="Refuse" context="{'hr_expense_refuse_model':'hr.expense'}" type="action" groups="hr_expense.group_hr_expense_user, account.group_account_user" icon="fa-times" attrs="{'invisible': ['|', ('is_refused', '=', True),('state', 'in', ['done'])]}"/>
                            </tree>
                         </field>
                         <field name="currency_id" invisible="1"/>
@@ -722,7 +749,7 @@
         </record>
 
         <record id="hr_expense_submit_action_server" model="ir.actions.server">
-            <field name="name">Expense: Submit To Manager</field>
+            <field name="name">Submit To Manager</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_expense"/>
             <field name="binding_model_id" ref="model_hr_expense"/>
@@ -752,8 +779,6 @@ if records:
 
         <menuitem id="menu_hr_expense_reports" name="Reporting" sequence="4" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_manager"/>
         <menuitem id="menu_hr_expense_all_expenses" name="Expenses Analysis" sequence="0" parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>
-        <menuitem id="menu_hr_expense_sheet_all_all" name="Expenses Reports Analysis" sequence="4" parent="menu_hr_expense_reports"
-            action="action_hr_expense_sheet_all_all" groups="hr_expense.group_hr_expense_manager"/>
 
         <menuitem id="menu_hr_expense_configuration" name="Configuration" parent="menu_hr_expense_root"
             sequence="100"/>
