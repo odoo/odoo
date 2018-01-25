@@ -67,17 +67,15 @@ class FormatAddressMixin(models.AbstractModel):
 class PartnerCategory(models.Model):
     _description = 'Partner Tags'
     _name = 'res.partner.category'
-    _order = 'parent_left, name'
+    _order = 'name'
     _parent_store = True
-    _parent_order = 'name'
 
     name = fields.Char(string='Tag Name', required=True, translate=True)
     color = fields.Integer(string='Color Index')
     parent_id = fields.Many2one('res.partner.category', string='Parent Category', index=True, ondelete='cascade')
     child_ids = fields.One2many('res.partner.category', 'parent_id', string='Child Tags')
     active = fields.Boolean(default=True, help="The active field allows you to hide the category without removing it.")
-    parent_left = fields.Integer(string='Left parent', index=True)
-    parent_right = fields.Integer(string='Right parent', index=True)
+    parent_path = fields.Char(index=True)
     partner_ids = fields.Many2many('res.partner', column1='category_id', column2='partner_id', string='Partners')
 
     @api.constrains('parent_id')

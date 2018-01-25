@@ -13,13 +13,11 @@ class Category(models.Model):
     _order = 'name'
     _parent_store = True
     _parent_name = 'parent'
-    _parent_order = 'name'
 
     name = fields.Char(required=True)
     color = fields.Integer('Color Index')
     parent = fields.Many2one('test_new_api.category', ondelete='cascade')
-    parent_left = fields.Integer("Left Parent", index=True)
-    parent_right = fields.Integer("Right Parent", index=True)
+    parent_path = fields.Char(index=True)
     root_categ = fields.Many2one(_name, compute='_compute_root_categ')
     display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name')
     dummy = fields.Char(store=False)

@@ -791,7 +791,6 @@ class Menu(models.Model):
     _description = "Website Menu"
 
     _parent_store = True
-    _parent_order = 'sequence'
     _order = "sequence, id"
 
     def _default_sequence(self):
@@ -806,8 +805,7 @@ class Menu(models.Model):
     website_id = fields.Many2one('website', 'Website')  # TODO: support multiwebsite once done for ir.ui.views
     parent_id = fields.Many2one('website.menu', 'Parent Menu', index=True, ondelete="cascade")
     child_id = fields.One2many('website.menu', 'parent_id', string='Child Menus')
-    parent_left = fields.Integer('Parent Left', index=True)
-    parent_right = fields.Integer('Parent Right', index=True)
+    parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
     @api.one
