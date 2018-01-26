@@ -127,7 +127,7 @@ class Registry(Mapping):
         # Indicates that the registry is 
         self.ready = False
 
-        # Inter-process signaling (used only when odoo.multi_process is True):
+        # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
         # The `base_cache_signaling sequence` indicates all caches must be
@@ -357,7 +357,7 @@ class Registry(Mapping):
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
-        if not odoo.multi_process:
+        if self.in_test_mode():
             return
 
         with self.cursor() as cr:
@@ -383,7 +383,7 @@ class Registry(Mapping):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if not odoo.multi_process:
+        if self.in_test_mode():
             return self
 
         with closing(self.cursor()) as cr:
@@ -409,7 +409,7 @@ class Registry(Mapping):
 
     def signal_registry_change(self):
         """ Notifies other processes that the registry has changed. """
-        if odoo.multi_process:
+        if not self.in_test_mode():
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
@@ -417,7 +417,7 @@ class Registry(Mapping):
 
     def signal_caches_change(self):
         """ Notifies other processes if caches have been invalidated. """
-        if odoo.multi_process and self.cache_cleared:
+        if self.cache_cleared and not self.in_test_mode():
             # signal it through the database to other processes
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:
