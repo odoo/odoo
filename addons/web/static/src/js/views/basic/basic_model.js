@@ -1854,7 +1854,7 @@ var BasicModel = AbstractModel.extend({
                 model: record.model,
                 method: 'read',
                 args: [[record.res_id], fieldNames],
-                context: record.getContext(),
+                context: _.extend({}, record.getContext(), {bin_size: true}),
             })
             .then(function (result) {
                 if (result.length === 0) {
@@ -2374,7 +2374,7 @@ var BasicModel = AbstractModel.extend({
                 });
                 record.data[fieldName] = list.id;
                 if (!fieldInfo.__no_fetch) {
-                    var def = self._readUngroupedList(list).then(function (list) {
+                    var def = self._readUngroupedList(list).then(function () {
                         return $.when(
                             self._fetchX2ManysBatched(list),
                             self._fetchReferencesBatched(list)
@@ -2403,6 +2403,7 @@ var BasicModel = AbstractModel.extend({
         var fields = view ? view.fields : fieldInfo.relatedFields;
         var viewType = view ? view.type : fieldInfo.viewType;
         list = this._applyX2ManyOperations(list);
+        this._sortList(list);
         var x2mRecords = [];
 
         // step 1: collect ids
@@ -2640,7 +2641,7 @@ var BasicModel = AbstractModel.extend({
                 var relRecordAdded = [];
                 var relRecordUpdated = [];
                 _.each(list._changes, function (change) {
-                    if (change.operation === 'ADD') {
+                    if (change.operation === 'ADD' && change.id) {
                         relRecordAdded.push(self.localData[change.id]);
                     } else if (change.operation === 'UPDATE' && !self.isNew(change.id)) {
                         // ignore new records that would have been updated
@@ -2699,6 +2700,10 @@ var BasicModel = AbstractModel.extend({
                         } else if (_.contains(addedIds, list.res_ids[i])) {
                             // this is a new id (maybe existing in DB, but new in JS)
                             relRecord = _.findWhere(relRecordAdded, {res_id: list.res_ids[i]});
+                            if (!relRecord) {
+                                commands[fieldName].push(x2ManyCommands.link_to(list.res_ids[i]));
+                                continue;
+                            }
                             changes = this._generateChanges(relRecord, options);
                             if (changes.id) {
                                 // the subrecord already exists in db
@@ -3092,23 +3097,13 @@ var BasicModel = AbstractModel.extend({
             id: {type: 'integer'},
         }, params.fields);
 
-        // datapoint context is extended by fields widgets
-        var context = _.extend({}, params.context);
-        if (params.fieldsInfo && params.viewType) {
-            _.each(params.fieldsInfo[params.viewType], function (field) {
-                if (field.context) {
-                    _.extend(context, field.context);
-                }
-            });
-        }
-
         var dataPoint = {
             _cache: type === 'list' ? {} : undefined,
             _changes: null,
             _domains: {},
             _rawChanges: {},
             aggregateValues: params.aggregateValues || {},
-            context: context,
+            context: params.context,
             count: params.count || res_ids.length,
             data: data,
             domain: params.domain || [],
@@ -3657,6 +3652,10 @@ var BasicModel = AbstractModel.extend({
                             // Also keep data if we only reload groups' own data
                             delete updatedProps.data;
                         }
+                        // set the limit such that all previously loaded records
+                        // (e.g. if we are coming back to the kanban view from a
+                        // form view) are reloaded
+                        oldGroup.limit = oldGroup.limit + oldGroup.loadMoreOffset;
                         _.extend(oldGroup, updatedProps);
                         newGroup = oldGroup;
                     } else if (!newGroup.openGroupByDefault) {

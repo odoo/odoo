@@ -6922,6 +6922,7 @@ QUnit.module('relational_fields', {
                 if (args.method === 'read' && args.model === 'partner') {
                     assert.deepEqual(args.kwargs.context, {
                         active_field: 2,
+                        bin_size: true,
                         someKey: 'some value',
                     }, "sent context should be correct");
                 }
@@ -7642,6 +7643,74 @@ QUnit.module('relational_fields', {
         form.$('.o_list_record_remove:first i').click();
         assert.strictEqual(form.$('.o_data_row').text(), 'from onchange',
             'onchange has been properly applied');
+        form.destroy();
+    });
+
+    QUnit.test('one2many with multiple pages and sequence field, part2', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records[0].turtles = [3, 2, 1];
+        this.data.partner.onchanges.turtles = function () {};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree limit="2">' +
+                            '<field name="turtle_int" widget="handle"/>' +
+                            '<field name="turtle_foo"/>' +
+                            '<field name="partner_ids" invisible="1"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return $.when({value: { turtles: [
+                        [5],
+                        [1, 1, {turtle_foo: "from onchange id2", partner_ids: [[5]]}],
+                        [1, 3, {turtle_foo: "from onchange id3", partner_ids: [[5]]}],
+                    ]}});
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+        form.$('.o_list_record_remove:first i').click();
+        assert.strictEqual(form.$('.o_data_row').text(), 'from onchange id2from onchange id3',
+            'onchange has been properly applied');
+        form.destroy();
+    });
+
+    QUnit.test('new record, with one2many with more default values than limit', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="turtles">' +
+                        '<tree limit="2">' +
+                            '<field name="turtle_foo"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            context: { default_turtles: [1,2,3]},
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+        assert.strictEqual(form.$('.o_data_row').text(), 'yopblip',
+            'data has been properly loaded');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.strictEqual(form.$('.o_data_row').text(), 'yopblip',
+            'data has been properly saved');
         form.destroy();
     });
 

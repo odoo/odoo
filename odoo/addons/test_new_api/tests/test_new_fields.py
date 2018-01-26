@@ -130,6 +130,46 @@ class TestFields(common.TransactionCase):
         })
         check_stored(discussion3)
 
+    def test_11_stored_protected(self):
+        """ test protection against recomputation """
+        model = self.env['test_new_api.compute.protected']
+        field = model._fields['bar']
+
+        record = model.create({'foo': 'unprotected #1'})
+        self.assertEqual(record.bar, 'unprotected #1')
+
+        record.write({'foo': 'unprotected #2'})
+        self.assertEqual(record.bar, 'unprotected #2')
+
+        # by protecting 'bar', we prevent it from being recomputed
+        with self.env.protecting([field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+            # also works when nested
+            with self.env.protecting([field], record):
+                record.write({'foo': 'protected'})
+                self.assertEqual(record.bar, 'unprotected #2')
+
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+        record.write({'foo': 'unprotected #3'})
+        self.assertEqual(record.bar, 'unprotected #3')
+
+        # also works with duplicated fields
+        with self.env.protecting([field, field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #3')
+
+        record.write({'foo': 'unprotected #4'})
+        self.assertEqual(record.bar, 'unprotected #4')
+
+        # we protect 'bar' on a different record
+        with self.env.protecting([field], record):
+            record2 = model.create({'foo': 'unprotected'})
+            self.assertEqual(record2.bar, 'unprotected')
+
     def test_11_computed_access(self):
         """ test computed fields with access right errors """
         User = self.env['res.users']
@@ -238,33 +278,70 @@ class TestFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
-        record = self.env['test_new_api.compute.inverse']
-
         # create/write on 'foo' should only invoke the compute method
-        record.counts.update(compute=0, inverse=0)
-        record = record.create({'foo': 'Hi'})
+        log = []
+        model = self.env['test_new_api.compute.inverse'].with_context(log=log)
+        record = model.create({'foo': 'Hi'})
         self.assertEqual(record.foo, 'Hi')
         self.assertEqual(record.bar, 'Hi')
-        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+        self.assertCountEqual(log, ['compute'])
 
-        record.counts.update(compute=0, inverse=0)
+        log.clear()
         record.write({'foo': 'Ho'})
         self.assertEqual(record.foo, 'Ho')
         self.assertEqual(record.bar, 'Ho')
-        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+        self.assertCountEqual(log, ['compute'])
 
         # create/write on 'bar' should only invoke the inverse method
-        record.counts.update(compute=0, inverse=0)
-        record = record.create({'bar': 'Hi'})
+        log.clear()
+        record = model.create({'bar': 'Hi'})
         self.assertEqual(record.foo, 'Hi')
         self.assertEqual(record.bar, 'Hi')
-        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+        self.assertCountEqual(log, ['inverse'])
 
-        record.counts.update(compute=0, inverse=0)
+        log.clear()
         record.write({'bar': 'Ho'})
         self.assertEqual(record.foo, 'Ho')
         self.assertEqual(record.bar, 'Ho')
-        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+        self.assertCountEqual(log, ['inverse'])
+
+        # Test compatibility multiple compute/inverse fields
+        log = []
+        model = self.env['test_new_api.multi_compute_inverse'].with_context(log=log)
+        record = model.create({
+            'bar1': '1',
+            'bar2': '2',
+            'bar3': '3',
+        })
+        self.assertEqual(record.foo, '1/2/3')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '2')
+        self.assertEqual(record.bar3, '3')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
+        log.clear()
+        record.write({'bar2': '4', 'bar3': '5'})
+        self.assertEqual(record.foo, '1/4/5')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '4')
+        self.assertEqual(record.bar3, '5')
+        self.assertCountEqual(log, ['inverse23'])
+
+        log.clear()
+        record.write({'bar1': '6', 'bar2': '7'})
+        self.assertEqual(record.foo, '6/7/5')
+        self.assertEqual(record.bar1, '6')
+        self.assertEqual(record.bar2, '7')
+        self.assertEqual(record.bar3, '5')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
+        log.clear()
+        record.write({'foo': 'A/B/C'})
+        self.assertEqual(record.foo, 'A/B/C')
+        self.assertEqual(record.bar1, 'A')
+        self.assertEqual(record.bar2, 'B')
+        self.assertEqual(record.bar3, 'C')
+        self.assertCountEqual(log, ['compute'])
 
     def test_14_search(self):
         """ test search on computed fields """

@@ -35,7 +35,7 @@ invoice
 % if object.origin:
 (with reference: ${object.origin})
 % endif
-amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
+amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
 from ${object.company_id.name}.
 </p>
 
