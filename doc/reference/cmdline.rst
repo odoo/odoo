@@ -15,7 +15,8 @@ Running the server
 
 .. option:: -d <database>, --database <database>
 
-    database used when installing or updating modules.
+    database(s) used when installing or updating modules.
+    Providing a coma-separated list restrict access to databases provided in list.
 
 .. option:: -i <modules>, --init <modules>
 
@@ -164,7 +165,39 @@ database
       These operations are case sensitive. Add option ``(?i)`` to match all
       databases (so domain ``odoo.com`` using ``(?i)%d`` matches the database
       ``Odoo``).
+      
+    Since version 11, it's also possible to restrict access to a given database listen
+    by using the --database parameter and specifying a coma-separated list of databases
+    
+    When combining the two parameters, db-filter superseed the coma-separated database list for restricting database list,
+    while the coma-separated list is used for performing requested operations like upgrade of modules.
+    
+    .. code-block:: bash
+        odoo-bin --db-filter ^11.*$ 
+        
+    Restrict access to databases whose name starts with 11
 
+    .. code-block:: bash
+        odoo-bin --database 11firstdatabase,11seconddatabase
+        
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase
+    
+    .. code-block:: bash
+        odoo-bin --database 11firstdatabase,11seconddatabase -u base
+        
+    Restrict access to only two databases, 11firstdatabase and 11seconddatabase,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
+    .. code-block:: bash
+        odoo-bin --db-filter ^11.*$ --database 11firstdatabase,11seconddatabase -u base
+        
+    Restrict access to databases whose name starts with 11,
+    and update base module on one database: 11firstdatabase
+    If database 11seconddatabase doesn't exist, the database is created and base modules
+    is installed
+    
 .. option:: --db-template <template>
 
     when creating new databases from the database-management screens, use the
@@ -173,6 +206,12 @@ database
 .. option:: --no-database-list
 
     Suppresses the ability to list databases available on the system
+    
+.. option:: --db_sslmode
+
+    Control the SSL security of the connection between Odoo and PostgreSQL.
+    Value should bve one of 'disable', 'allow', 'prefer', 'require', 'verify-ca' or 'verify-full'
+    Default value is 'prefer'
 
 built-in HTTP
 -------------
