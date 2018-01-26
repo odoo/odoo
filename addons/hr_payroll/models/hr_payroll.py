@@ -501,9 +501,10 @@ class HrPayslip(models.Model):
                 if rule.amount_select in ['account_move']:
                     #si es del nuevo tipo, basado en movimientos contables, buscamos
                     #los movimiento
-                    partner = self.employee_id.address_home_id.commercial_partner_id
+                    payslip = self.search([('id','=',localdict['payslip'].id)])
+                    partner = payslip.employee_id.address_home_id.commercial_partner_id
                     if not partner:
-                        raise UserError(u'El empleado %s no tiene una empresa configurada' % self.employee_id.name)
+                        raise UserError(u'El empleado %s no tiene una empresa configurada' % payslip.employee_id.name)
                     account = rule.account_credit
                     if not account:
                         raise UserError(u'La regla salarial %s es de tipo Neteo Saldo Contable, solo debe tener una cuenta acreedora configurada' % rule.name)
@@ -511,8 +512,8 @@ class HrPayslip(models.Model):
                         raise UserError(u'La regla salarial %s es de tipo Neteo Saldo Contable, solo debe tener una cuenta acreedora configurada' % rule.name)
                     move_ids = aml_obj.search([
                         ('partner_id','=',partner.id), 
-                        ('date_maturity','>=',self.date_from),
-                        ('date_maturity','<=',self.date_to),
+                        ('date_maturity','>=',payslip.date_from),
+                        ('date_maturity','<=',payslip.date_to),
                         ('debit','>',0.0), #escuchamos en el debe
                         ('amount_residual','>',0.0),
                         #('full_reconcile_id','=',False),
@@ -569,6 +570,7 @@ class HrPayslip(models.Model):
                 key = rule.code + '-' + str(contract.id) + '-'+str(move.id)
                 localdict['force_amount'] = move.amount_residual #todo en validar regla en satisfy_condition 
                 #fin seccion modificada por TRESCLOUD
+                
                 
                 localdict['result'] = None
                 localdict['result_qty'] = 1.0
