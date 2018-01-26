@@ -113,7 +113,7 @@ sAnimation.registry.autohideMenu = sAnimation.Class.extend({
      */
     _adapt: function () {
         this._restore();
-        if (config.device.size_class < config.device.SIZES.SM) {
+        if (config.device.isMobile) {
             return;
         }
 

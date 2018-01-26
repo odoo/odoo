@@ -7,6 +7,7 @@ var config = require('web.config');
 var KanbanModel = require('web.KanbanModel');
 var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanController = require('web.KanbanController');
+var kanbanExamplesRegistry = require('web.kanban_examples_registry');
 var utils = require('web.utils');
 
 var _lt = core._lt;
@@ -62,6 +63,7 @@ var KanbanView = BasicView.extend({
             deletable: activeActions.group_delete,
             group_creatable: activeActions.group_create && !config.device.isMobile,
             quick_create: params.isQuickCreateEnabled || this._isQuickCreateEnabled(),
+            quickCreateView: this.arch.attrs.quick_create_view || null,
             hasProgressBar: !!progressBar,
         };
         this.rendererParams.record_options = {
@@ -69,9 +71,12 @@ var KanbanView = BasicView.extend({
             deletable: activeActions.delete,
             read_only_mode: params.readOnlyMode,
         };
+        var examples = this.arch.attrs.examples;
+        if (examples) {
+            this.rendererParams.examples = kanbanExamplesRegistry.get(examples);
+        }
 
         this.controllerParams.on_create = this.arch.attrs.on_create;
-
         this.controllerParams.readOnlyMode = false;
         this.controllerParams.hasButtons = true;
 

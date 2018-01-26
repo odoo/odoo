@@ -20,7 +20,7 @@ var qweb = core.qweb;
 var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
-var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
+var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_svg_container",

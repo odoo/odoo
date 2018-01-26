@@ -5,12 +5,10 @@ var BasicRenderer = require('web.BasicRenderer');
 var core = require('web.core');
 var KanbanColumn = require('web.KanbanColumn');
 var KanbanRecord = require('web.KanbanRecord');
-var quick_create = require('web.kanban_quick_create');
+var ColumnQuickCreate = require('web.kanban_column_quick_create');
 var QWeb = require('web.QWeb');
 var session = require('web.session');
 var utils = require('web.utils');
-
-var ColumnQuickCreate = quick_create.ColumnQuickCreate;
 
 var qweb = core.qweb;
 
@@ -84,7 +82,8 @@ function transformQwebTemplate(node, fields) {
 var KanbanRenderer = BasicRenderer.extend({
     className: 'o_kanban_view',
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events || {}, {
-        'set_progress_bar_state': '_onSetProgressBarState',
+        close_quick_create: '_onCloseQuickCreate',
+        set_progress_bar_state: '_onSetProgressBarState',
     }),
 
     /**
@@ -98,17 +97,24 @@ var KanbanRenderer = BasicRenderer.extend({
         var templates = findInNode(this.arch, function (n) { return n.tag === 'templates';});
         transformQwebTemplate(templates, state.fields);
         this.qweb.add_template(utils.json_node_to_xml(templates));
-
+        this.examples = params.examples;
         this.recordOptions = _.extend({}, params.record_options, {
             qweb: this.qweb,
             viewType: 'kanban',
         });
-        this.columnOptions = _.extend({}, params.column_options, { qweb: this.qweb });
+        this.columnOptions = _.extend({}, params.column_options);
         if (this.columnOptions.hasProgressBar) {
             this.columnOptions.progressBarStates = {};
         }
-
         this._setState(state);
+    },
+    /**
+     * Called each time the renderer is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        if (this.quickCreate) {
+            this.quickCreate.on_attach_callback();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -117,9 +123,11 @@ var KanbanRenderer = BasicRenderer.extend({
 
     /**
      * Displays the quick create record in the first column.
+     *
+     * @returns {Deferred}
      */
     addQuickCreate: function () {
-        this.widgets[0].addQuickCreate();
+        return this.widgets[0].addQuickCreate();
     },
     /**
      * Toggle fold/unfold the Column quick create widget
@@ -152,11 +160,21 @@ var KanbanRenderer = BasicRenderer.extend({
         var index = _.findIndex(this.widgets, {db_id: localID});
         var column = this.widgets[index];
         this.widgets[index] = newColumn;
-        return newColumn.insertAfter(column.$el).then(function () {
+        return newColumn.appendTo(document.createDocumentFragment()).then(function () {
+            var def;
             if (options && options.openQuickCreate) {
-                newColumn.addQuickCreate();
+                def = newColumn.addQuickCreate();
             }
-            column.destroy();
+            return $.when(def).then(function () {
+                newColumn.$el.insertAfter(column.$el);
+                // When a record has been quick created, the new column directly
+                // renders the quick create widget (to allow quick creating several
+                // records in a row). However, as we render this column in a
+                // fragment, the quick create widget can't be correctly focused. So
+                // we manually call on_attach_callback to focus it once in the DOM.
+                newColumn.on_attach_callback();
+                column.destroy();
+            });
         });
     },
     /**
@@ -272,11 +290,18 @@ var KanbanRenderer = BasicRenderer.extend({
 
             // Enable column quickcreate
             if (this.createColumnEnabled) {
-                this.quickCreate = new ColumnQuickCreate(this);
-                this.quickCreate.appendTo(fragment);
+                this.quickCreate = new ColumnQuickCreate(this, {
+                    examples: this.examples,
+                });
+                this.quickCreate.appendTo(fragment).then(function () {
+                    // Open it directly if there is no column yet
+                    if (!self.state.data.length) {
+                        self.quickCreate.toggleFold();
+                    }
+                });
+
             }
         }
-
     },
     /**
      * Renders an ungrouped kanban view in a fragment.
@@ -334,8 +359,9 @@ var KanbanRenderer = BasicRenderer.extend({
     _setState: function (state) {
         this.state = state;
 
-        var groupByFieldAttrs = state.fields[state.groupedBy[0]];
-        var groupByFieldInfo = state.fieldsInfo.kanban[state.groupedBy[0]];
+        var groupByField = state.groupedBy[0];
+        var groupByFieldAttrs = state.fields[groupByField];
+        var groupByFieldInfo = state.fieldsInfo.kanban[groupByField];
         // Deactivate the drag'n'drop if the groupedBy field:
         // - is a date or datetime since we group by month or
         // - is readonly (on the field attrs or in the view)
@@ -353,13 +379,14 @@ var KanbanRenderer = BasicRenderer.extend({
             }
         }
         this.groupedByM2O = groupByFieldAttrs && (groupByFieldAttrs.type === 'many2one');
-        var grouped_by_field = this.groupedByM2O && groupByFieldAttrs.relation;
+        var relation = this.groupedByM2O && groupByFieldAttrs.relation;
         var groupByTooltip = groupByFieldInfo && groupByFieldInfo.options.group_by_tooltip;
         this.columnOptions = _.extend(this.columnOptions, {
             draggable: draggable,
             group_by_tooltip: groupByTooltip,
+            groupedBy: groupByField,
             grouped_by_m2o: this.groupedByM2O,
-            relation: grouped_by_field,
+            relation: relation,
         });
         this.createColumnEnabled = this.groupedByM2O && this.columnOptions.group_creatable;
     },
@@ -368,6 +395,16 @@ var KanbanRenderer = BasicRenderer.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Closes the opened quick create widgets in columns
+     *
+     * @private
+     */
+    _onCloseQuickCreate: function () {
+        if (this.state.groupedBy.length) {
+            _.invoke(this.widgets, 'cancelQuickCreate');
+        }
+    },
     /**
      * Updates progressbar internal states (necessary for animations) with
      * received data.
