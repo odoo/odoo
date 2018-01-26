@@ -126,7 +126,7 @@ class Registry(Mapping):
         self.loaded = False             # whether all modules are loaded
         self.ready = False              # whether everything is set up
 
-        # Inter-process signaling (used only when odoo.multi_process is True):
+        # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
         # must be reloaded.
         # The `base_cache_signaling sequence` indicates all caches must be
@@ -347,7 +347,7 @@ class Registry(Mapping):
 
     def setup_signaling(self):
         """ Setup the inter-process signaling on this registry. """
-        if not odoo.multi_process:
+        if self.in_test_mode():
             return
 
         with self.cursor() as cr:
@@ -373,7 +373,7 @@ class Registry(Mapping):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
-        if not odoo.multi_process:
+        if self.in_test_mode():
             return self
 
         with closing(self.cursor()) as cr:
@@ -399,7 +399,7 @@ class Registry(Mapping):
 
     def signal_changes(self):
         """ Notifies other processes if registry or cache has been invalidated. """
-        if odoo.multi_process and self.registry_invalidated:
+        if self.registry_invalidated and not self.in_test_mode():
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
@@ -407,7 +407,7 @@ class Registry(Mapping):
 
         # no need to notify cache invalidation in case of registry invalidation,
         # because reloading the registry implies starting with an empty cache
-        elif odoo.multi_process and self.cache_invalidated:
+        elif self.cache_invalidated and not self.in_test_mode():
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_cache_signaling')")
