@@ -514,9 +514,9 @@ class HrPayslip(models.Model):
                         ('partner_id','=',partner.id), 
                         ('date_maturity','>=',payslip.date_from),
                         ('date_maturity','<=',payslip.date_to),
+                        ('account_id','=',account.id),
                         ('debit','>',0.0), #escuchamos en el debe
-                        ('amount_residual','>',0.0),
-                        #('full_reconcile_id','=',False),
+                        ('full_reconcile_id','=',False),
                     ])
                 if move_ids:
                     for move in move_ids:
@@ -568,7 +568,14 @@ class HrPayslip(models.Model):
             for rule, move in sorted_rules_and_moves:
                 sequence += 1
                 key = rule.code + '-' + str(contract.id) + '-'+str(move.id)
-                localdict['force_amount'] = move.amount_residual #todo en validar regla en satisfy_condition 
+                localdict['force_amount'] = 0.0
+                if move.amount_residual:
+                    localdict['force_amount'] = move.amount_residual #todo en validar regla en satisfy_condition
+                elif not move.full_reconcile_id:
+                    #cuando la cuenta no es de tipo por pagar no tiene amount_Residual
+                    #en este caso tomamos el valor de debito
+                    localdict['force_amount'] = abs(move.debit)
+                 
                 #fin seccion modificada por TRESCLOUD
                 
                 
