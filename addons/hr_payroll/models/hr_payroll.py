@@ -514,7 +514,8 @@ class HrPayslip(models.Model):
                         ('date_maturity','>=',self.date_from),
                         ('date_maturity','<=',self.date_to),
                         ('debit','>',0.0), #escuchamos en el debe
-                        ('full_reconcile_id','=',False),
+                        ('amount_residual','>',0.0),
+                        #('full_reconcile_id','=',False),
                     ])
                 if move_ids:
                     for move in move_ids:
