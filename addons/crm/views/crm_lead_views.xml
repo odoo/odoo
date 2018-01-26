@@ -336,8 +336,8 @@
                                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                         <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
                                         <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li t-if="! record.active.value"><a name="action_set_active" type="object">Restore</a></li>
-                                        <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
+                                        <li t-if="! record.active.raw_value"><a name="action_set_active" type="object">Restore</a></li>
+                                        <li t-if="record.active.raw_value"><a name="action_set_unactive" type="object">Archive</a></li>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>

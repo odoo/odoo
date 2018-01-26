@@ -208,18 +208,37 @@ var KanbanController = BasicController.extend({
                 resIDs: record.res_ids,
             },
             on_closed: function () {
-                self.model.reload(record.id).then(function (db_id) {
+                var recordModel = self.model.localData[record.id];
+                var group = self.model.localData[recordModel.parentID];
+                var parent = self.model.localData[group.parentID];
+                var fieldNames = _.keys(record.fieldsInfo.kanban);
+                fieldNames = _.uniq(fieldNames.concat(_.pluck(_.filter(group.domain, _.isArray), 0)));
+
+                self.model.reload(record.id, {fieldNames: fieldNames}).then(function (db_id) {
                     var data = self.model.get(db_id);
                     var kanban_record = event.target;
                     var domain = parent ? parent.domain : group.domain;
                     if ('active' in data.data && _.pluck(domain, 0).indexOf('active') === -1) {
                         domain = [['active', '=', true]].concat(domain);
                     }
-                    var visible = new Domain(domain).compute(data.evalContext);
-                    if (visible) {
-                        kanban_record.update(data);
+
+                    if (parent) {
+                        var groupedFieldName = parent.groupedBy[0];
+                        var groupedField = parent.fields[groupedFieldName];
+                        var moveToGroup = _.find(parent.data, function (groupID) {
+                            return new Domain(self.model.localData[groupID].domain).compute(data.evalContext);
+                        });
+                        if (!moveToGroup) {
+                            self.model.removeRecordFromGroup(db_id, group.id);
+                        } else if (moveToGroup !== group.id) {
+                            self.model._moveRecord(db_id, moveToGroup, parent.id);
+                            self.renderer.updateColumn(moveToGroup, self.model.get(moveToGroup));
+                        }
+                        self.renderer.updateColumn(group.id, self.model.get(group.id));
+                    } else if (new Domain(domain).compute(data.evalContext)) {
+                        self.renderer.updateRecord(data);
                     } else {
-                        kanban_record.destroy();
+                        self.renderer.removeWidget(event.target);
                     }
                 });
             },

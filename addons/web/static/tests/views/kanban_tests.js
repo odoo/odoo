@@ -1533,6 +1533,112 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('use action button in kanban (with group_by string field)', function (assert) {
+        assert.expect(5);
+
+        var data = this.data;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: data,
+            domain: [['bar', '=', true]],
+            arch: '<kanban class="o_kanban_test" default_group_by="foo">' +
+                        '<field name="bar"/>' +
+                        '<field name="foo"/>' +
+                        '<templates>'+
+                            '<t t-name="kanban-box">' +
+                                '<div class="o_dropdown_kanban dropdown">' +
+                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >dropdown</a>' +
+                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
+                                        '<li><a name="action_bar" type="object">bar=false</a></li>' +
+                                        '<li t-if="record.foo.raw_value !== \'gnap\'"><a name="action_gnap" type="object">go to gnap</a></li>' +
+                                    '</ul>' +
+                                '</div>' +
+                                '<div class="oe_kanban_content">' +
+                                    '<div><field name="foo"/></div>' +
+                                '</div>' +
+                            '</t>' +
+                        '</templates></kanban>',
+            intercepts: {
+                execute_action: function (event) {
+                    var record = _.find(data.partner.records, {id: event.data.env.currentID});
+                    if (event.data.action_data.name === "action_bar") {
+                        record.bar = false;
+                    }
+                    if (event.data.action_data.name === "action_gnap") {
+                        record.foo = 'gnap';
+                    }
+                    event.data.on_closed();
+                },
+            },
+        });
+
+        kanban.$('.o_kanban_group:eq(1) .dropdown-menu a[data-name="action_bar"]').click();
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) > *:not(.o_kanban_header)').html(),
+            undefined,
+            "should remove the record from this group");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_kanban_header_title').data('original-title'),
+            '<p>0 records</p>',
+            "should change the column record number");
+
+        kanban.$('.o_kanban_group:eq(0) .dropdown-menu a[data-name="action_gnap"]').click();
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) > *:not(.o_kanban_header)').html(),
+            undefined,
+            "should remove the record from this group");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(2) .o_dropdown_kanban').length,
+            2,
+            "should add the record in the other group");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(2) .o_kanban_header_title').data('original-title'),
+            '<p>2 records</p>',
+            "should change the column record number");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('use action button in kanban (with group_by many2one field)', function (assert) {
+        assert.expect(2);
+
+        var data = this.data;
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: data,
+            arch: '<kanban class="o_kanban_test" default_group_by="product_id">' +
+                        '<field name="product_id"/>' +
+                        '<field name="foo"/>' +
+                        '<templates>'+
+                            '<t t-name="kanban-box">' +
+                                '<div class="o_dropdown_kanban dropdown">' +
+                                    '<a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >dropdown</a>' +
+                                    '<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">' +
+                                        '<li t-if="record.product_id.raw_value !== \'gnap\'"><a name="action_xmo" type="object">go to xmo</a></li>' +
+                                    '</ul>' +
+                                '</div>' +
+                                '<div class="oe_kanban_content">' +
+                                    '<div><field name="foo"/></div>' +
+                                '</div>' +
+                            '</t>' +
+                        '</templates></kanban>',
+            intercepts: {
+                execute_action: function (event) {
+                    var record = _.find(data.partner.records, {id: event.data.env.currentID});
+                    if (event.data.action_data.name === "action_xmo") {
+                        record.product_id = 5;
+                    }
+                    event.data.on_closed();
+                },
+            },
+        });
+
+        kanban.$('.o_kanban_group:eq(0) .dropdown-menu a[data-name="action_xmo"]:first').click();
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(0) .o_dropdown_kanban').length, 1,
+            "should remove the record from this group");
+        assert.strictEqual(kanban.$('.o_kanban_group:eq(1) .o_dropdown_kanban').length, 3,
+            "should add the record in the other group");
+
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with create=False', function (assert) {
         assert.expect(1);
 

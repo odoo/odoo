@@ -205,6 +205,85 @@ var KanbanModel = BasicModel.extend({
     moveRecord: function (recordID, groupID, parentID) {
         var self = this;
         var parent = this.localData[parentID];
+        var record = this.localData[recordID];
+        var new_group = this.localData[groupID];
+        var old_group;
+        for (var i = 0; i < parent.data.length; i++) {
+            old_group = this.localData[parent.data[i]];
+            if (_.indexOf(old_group.data, recordID) !== -1) {
+                break;
+            }
+        }
+        var changes = this._moveRecord(recordID, groupID, parentID);
+        return this.notifyChanges(recordID, changes).then(function () {
+            return self.save(recordID);
+        }).then(function () {
+            record.parentID = new_group.id;
+            return [old_group.id, new_group.id];
+        });
+    },
+    /**
+     * @override
+     */
+    reload: function (id, options) {
+        // if the groupBy is given in the options and if it is an empty array,
+        // fallback on the default groupBy
+        if (options && options.groupBy && !options.groupBy.length) {
+            options.groupBy = this.defaultGroupedBy;
+        }
+        var def = this._super(id, options);
+        return this._reloadProgressBarGroupFromRecord(id, def);
+    },
+    /**
+     * Remove a record from a group in the localData
+     *
+     * @param {string} groupID localID of the group
+     * @param {string} recordID localID of the record
+     */
+    removeRecordFromGroup: function (recordID, groupID) {
+        var group = this.localData[groupID];
+        var record = this.localData[recordID];
+        group.data.splice(group.data.indexOf(recordID), 1);
+        group.res_ids.splice(group.res_ids.indexOf(record.res_id), 1);
+        group.count--;
+
+        // update the res_ids and count of the parent
+        this.localData[group.parentID].count--;
+        this._updateParentResIDs(group);
+    },
+    /**
+     * @override
+     */
+    save: function (recordID) {
+        var def = this._super.apply(this, arguments);
+        return this._reloadProgressBarGroupFromRecord(recordID, def);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _makeDataPoint: function (params) {
+        var dataPoint = this._super.apply(this, arguments);
+        if (params.progressBar) {
+            dataPoint.progressBar = params.progressBar;
+        }
+        return dataPoint;
+    },
+    /**
+     * Moves a record from a group to another in the dataset.
+     *
+     * @param {string} recordID localID of the record
+     * @param {string} groupID localID of the new group of the record
+     * @param {string} parentID localID of the parent
+     * @returns {object} record changes
+     */
+    _moveRecord: function (recordID, groupID, parentID) {
+        var self = this;
+        var parent = this.localData[parentID];
         var new_group = this.localData[groupID];
         var changes = {};
         var groupedFieldName = parent.groupedBy[0];
@@ -244,46 +323,7 @@ var KanbanModel = BasicModel.extend({
         new_group.res_ids.push(resID);
         new_group.count++;
 
-        return this.notifyChanges(recordID, changes).then(function () {
-            return self.save(recordID);
-        }).then(function () {
-            record.parentID = new_group.id;
-            return [old_group.id, new_group.id];
-        });
-    },
-    /**
-     * @override
-     */
-    reload: function (id, options) {
-        // if the groupBy is given in the options and if it is an empty array,
-        // fallback on the default groupBy
-        if (options && options.groupBy && !options.groupBy.length) {
-            options.groupBy = this.defaultGroupedBy;
-        }
-        var def = this._super(id, options);
-        return this._reloadProgressBarGroupFromRecord(id, def);
-    },
-    /**
-     * @override
-     */
-    save: function (recordID) {
-        var def = this._super.apply(this, arguments);
-        return this._reloadProgressBarGroupFromRecord(recordID, def);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _makeDataPoint: function (params) {
-        var dataPoint = this._super.apply(this, arguments);
-        if (params.progressBar) {
-            dataPoint.progressBar = params.progressBar;
-        }
-        return dataPoint;
+        return changes;
     },
     /**
      * @override
