@@ -831,7 +831,7 @@ class Picking(models.Model):
 
     def _put_in_pack(self):
         package = False
-        for pick in self:
+        for pick in self.filtered(lambda p: p.state not in ('done', 'cancel')):
             operations = pick.move_line_ids.filtered(lambda o: o.qty_done > 0 and not o.result_package_id)
             operation_ids = self.env['stock.move.line']
             if operations:
