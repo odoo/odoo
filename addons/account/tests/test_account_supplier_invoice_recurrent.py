@@ -3,8 +3,10 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestAccountRecurrent(AccountingTestCase):
 
     def apply_vendor_cron(self):
