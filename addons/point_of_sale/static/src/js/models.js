@@ -721,13 +721,13 @@ exports.PosModel = Backbone.Model.extend({
             canvas.height = this.height;
             canvas.width = this.width;
             ctx.drawImage(this,0,0);
-
             var dataURL = canvas.toDataURL('image/jpeg');
             product.image_base64 = dataURL;
             canvas = null;
 
             deferred.resolve();
         };
+        img.crossOrigin = 'anonymous';
         img.src = url;
 
         return deferred;
