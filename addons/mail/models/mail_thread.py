@@ -230,7 +230,7 @@ class MailThread(models.AbstractModel):
         # automatic logging unless asked not to (mainly for various testing purpose)
         if not self._context.get('mail_create_nolog'):
             doc_name = self.env['ir.model']._get(self._name).name
-            thread.message_post(body=_('%s created') % doc_name)
+            thread._message_log(body=_('%s created') % doc_name)
 
         # auto_subscribe: take values and defaults into account
         create_values = dict(values)
