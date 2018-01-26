@@ -150,7 +150,7 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        if (config.device.size_class !== config.device.SIZES.XS) {
+        if (!config.device.isMobile) {
             this.toggle_fold();
             this.trigger("fold_channel", this.channel_id, this.folded);
         }

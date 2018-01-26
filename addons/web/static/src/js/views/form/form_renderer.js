@@ -18,9 +18,18 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * @override
      */
-    init: function (parent, state, params) {
+    init: function () {
         this._super.apply(this, arguments);
         this.idsForLabels = {};
+    },
+    /**
+     * @override
+     */
+    start: function () {
+        if (config.device.size_class <= config.device.SIZES.XXS) {
+            this.$el.addClass('o_xxs_form_view');
+        }
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -279,7 +288,7 @@ var FormRenderer = BasicRenderer.extend({
         var visible_buttons = buttons_partition[1];
 
         // Get the unfolded buttons according to window size
-        var nb_buttons = [2, 4, 6, 7][config.device.size_class];
+        var nb_buttons = [2, 2, 4, 6, 7][config.device.size_class];
         var unfolded_buttons = visible_buttons.slice(0, nb_buttons).concat(invisible_buttons);
 
         // Get the folded buttons

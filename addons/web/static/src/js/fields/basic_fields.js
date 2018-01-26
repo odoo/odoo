@@ -1037,7 +1037,7 @@ var FieldPhone = FieldEmail.extend({
      * @private
      */
     _canCall: function () {
-        return config.device.size_class <= config.device.SIZES.XS;
+        return config.device.isMobile;
     }
 });
 

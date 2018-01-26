@@ -502,12 +502,26 @@
             </field>
         </record>
 
+        <record id="quick_create_task_form" model="ir.ui.view">
+            <field name="name">project.task.form.quick_create</field>
+            <field name="model">project.task</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="user_id" options="{'no_open': True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <!-- Project Task Kanban View -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>

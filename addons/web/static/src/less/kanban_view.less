@@ -161,12 +161,11 @@
         box-shadow: 0 0 20px -10px;
         margin: 0 @o-kanban-record-margin -1px @o-kanban-record-margin;
 
-        input {
-            width: 100%;
-            margin: 2px 0 8px;
-            padding: 3px 6px;
-            color: @headings-color;
-            font-weight: 500;
+        .o_form_view {
+            padding: 0;
+            .o_group.o_inner_group {
+                margin: 0;
+            }
         }
     }
 
@@ -548,45 +547,58 @@
 
     // Kanban Grouped Layout - "Create new column" column
     .o_column_quick_create {
-        .o-kanban-slim-col();
-
-        .o_column_header {
-            .o-kanban-header-title();
-            position: relative;
-            opacity: 0.5;
-
-            .o_kanban_title {
-                .o-kanban-v-title();
+        .o_quick_create_folded {
+            cursor: pointer;
+            padding: 12px 16px;
+            white-space: nowrap;
+            color: @text-muted;
+            opacity: 0.6;
+            &:hover {
+                opacity: 1;
             }
 
             .o_kanban_add_column {
-                .o-kanban-icon(1);
+                display: inline-block;
+                padding: 10px 14px;
+                background-color: @odoo-color-silver-dark;
+            }
+            .o_kanban_title {
+                margin-left: 10px;
             }
         }
 
-        .o_kanban_quick_create {
-            display: none;
-            width: @o-kanban-default-record-width;
+        .o_quick_create_unfolded {
+            padding: @o-kanban-inside-vgutter @o-kanban-inside-hgutter;
+            width: @o-kanban-small-record-width;
             height: 100%;
-            margin: 0 (-@o-kanban-group-padding/2);
             border: none;
             box-shadow: 0 0 20px -10px;
             background-color: @gray-lighter;
 
-            input, input:focus, input:hover {
-                font-size: 16px;
-                background: @gray-lighter;
-                outline: none;
-                box-shadow: none;
-                font-weight: 400;
-                margin: 0;
-            }
-        }
+            .o_kanban_header {
+                height: 50px;
 
-        &:hover {
-            .o_column_header, .o_kanban_add_column {
-                opacity: 1;
+                .o_kanban_examples {
+                    cursor: pointer;
+                }
+
+                input, input:focus, input:hover {
+                    margin-top: 3px;
+                    font-size: 16px;
+                    background: transparent;
+                }
+
+                .o_kanban_add {
+                    margin-left: 10px;
+                }
             }
+
+            .o_kanban_muted_record {
+                background: @gray-lighter-dark;
+                height: 70px;
+                margin: 10px 0px;
+            }
+
         }
     }
 

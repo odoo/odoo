@@ -39,8 +39,12 @@ var KanbanController = BasicController.extend({
 
         this.on_create = params.on_create;
         this.hasButtons = params.hasButtons;
-
-        this.createColumnEnabled = this._isCreateColumnEnabled();
+    },
+    /**
+     * Called each time the kanban view is attached into the DOM.
+     */
+    on_attach_callback: function () {
+        this.renderer.on_attach_callback();
     },
 
     //--------------------------------------------------------------------------
@@ -57,15 +61,6 @@ var KanbanController = BasicController.extend({
             this._updateButtons();
             this.$buttons.appendTo($node);
         }
-    },
-    /**
-     * Override update method to recompute createColumnEnabled.
-     *
-     * @returns {Deferred}
-     */
-    update: function () {
-        this.createColumnEnabled = this._isCreateColumnEnabled();
-        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -92,18 +87,18 @@ var KanbanController = BasicController.extend({
      * m2o field and group_create action enabled.
      *
      * @private
+     * @param {Object} state the current state
      * @returns {boolean}
      */
-    _isCreateColumnEnabled: function () {
+    _isCreateColumnEnabled: function (state) {
         var groupCreate = this.is_action_enabled('group_create');
         if (!groupCreate) {
             // pre-return to avoid a lot of the following processing
             return false;
         }
-        var state = this.model.get(this.handle, {raw: true});
         var groupByField = state.fields[state.groupedBy[0]];
         var groupedByM2o = groupByField && (groupByField.type === 'many2one');
-        return groupedByM2o;
+        return !!groupedByM2o;
     },
     /**
      * This method calls the server to ask for a resequence.  Note that this
@@ -122,6 +117,16 @@ var KanbanController = BasicController.extend({
         });
     },
     /**
+     * Overrides to update the control panel buttons when the state is updated.
+     *
+     * @override
+     * @private
+     */
+    _update: function () {
+        this._updateButtons();
+        return this._super.apply(this, arguments);
+    },
+    /**
      * In grouped mode, set 'Create' button as btn-default if there is no column
      * (except if we can't create new columns)
      *
@@ -130,12 +135,9 @@ var KanbanController = BasicController.extend({
      */
     _updateButtons: function () {
         if (this.$buttons) {
-            var data = this.model.get(this.handle, {raw: true});
-            var grouped = data.groupedBy.length;
-            var createMuted = grouped && data.data.length === 0 && this.createColumnEnabled;
-            this.$buttons.find('.o-kanban-button-new')
-                .toggleClass('btn-primary', !createMuted)
-                .toggleClass('btn-default', createMuted);
+            var state = this.model.get(this.handle, {raw: true});
+            var createHidden = state.data.length === 0 && this._isCreateColumnEnabled(state);
+            this.$buttons.find('.o-kanban-button-new').toggleClass('o_hidden', createHidden);
         }
     },
 
@@ -297,52 +299,51 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} event
+     * @param {KanbanColumn} event.target the column in which the record should
+     *   be added
+     * @param {Object} event.data.values the field values of the record to
+     *   create; if values only contains the value of the 'display_name', a
+     *   'name_create' is performed instead of 'create'
      */
     _onQuickCreateRecord: function (event) {
         var self = this;
+        var values = event.data.values;
         var column = event.target;
-        var name = event.data.value;
-        var state = this.model.get(this.handle, {raw: true});
-        var columnState = this.model.get(column.db_id, {raw: true});
-        var context = columnState.getContext();
-        context['default_' + state.groupedBy[0]] = columnState.res_id;
 
-        this._rpc({
-                model: state.model,
-                method: 'name_create',
-                args: [name],
-                context: context,
-            })
-            .then(add_record)
+        // function that updates the kanban view once the record has been added
+        // it receives the local id of the created record in arguments
+        var update = function (db_id) {
+            self._updateEnv();
+
+            var columnState = self.model.getColumn(db_id);
+            return self.renderer
+                .updateColumn(columnState.id, columnState, {openQuickCreate: true})
+                .then(function () {
+                    if (event.data.openRecord) {
+                        self.trigger_up('open_record', {id: db_id, mode: 'edit'});
+                    }
+                });
+        };
+
+        this.model.createRecordInGroup(column.db_id, values)
+            .then(update)
             .fail(function (error, event) {
                 event.preventDefault();
+                var columnState = self.model.get(column.db_id, {raw: true});
+                var context = columnState.getContext();
+                var state = self.model.get(self.handle, {raw: true});
+                context['default_' + state.groupedBy[0]] = columnState.res_id;
                 new view_dialogs.FormViewDialog(self, {
                     res_model: state.model,
                     context: _.extend({default_name: name}, context),
                     title: _t("Create"),
                     disable_multiple_selection: true,
                     on_saved: function (record) {
-                        add_record([record.res_id]);
+                        self.model.addRecordToGroup(column.db_id, record.res_id)
+                            .then(update);
                     },
                 }).open();
             });
-
-        function add_record(records) {
-            return self.model
-                .addRecordToGroup(columnState.id, records[0])
-                .then(function (db_id) {
-                    self._updateEnv();
-
-                    var columnState = self.model.getColumn(db_id);
-                    return self.renderer
-                        .updateColumn(columnState.id, columnState, {openQuickCreate: true})
-                        .then(function () {
-                            if (event.data.openRecord) {
-                                self.trigger_up('open_record', {id: db_id, mode: 'edit'});
-                            }
-                        });
-                });
-        }
     },
     /**
      * @private

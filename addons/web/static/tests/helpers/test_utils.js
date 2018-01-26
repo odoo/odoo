@@ -346,6 +346,7 @@ function addMockEnvironment(widget, params) {
         initialConfig.device = _.clone(config.device);
         if ('device' in params.config) {
             _.extend(config.device, params.config.device);
+            config.device.isMobile = config.device.size_class <= config.device.SIZES.XS;
         }
         if ('debug' in params.config) {
             config.debug = params.config.debug;
