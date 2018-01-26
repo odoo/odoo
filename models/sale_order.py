@@ -36,10 +36,9 @@ class SaleOrder(models.Model):
         return order
 
     def action_confirm(self):
-        res = super(SaleOrder, self).action_confirm()
         self.recompute_coupon_lines()
         self.generated_coupon_ids.write({'state': 'new'})
-        return res
+        return super(SaleOrder, self).action_confirm()
 
     def action_cancel(self):
         res = super(SaleOrder, self).action_cancel()
