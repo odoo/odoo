@@ -24,7 +24,6 @@ class TestAccountRecurrent(AccountingTestCase):
                     'quantity': 1.0,
                     'price_unit': 100.0,
                     'account_id': invoice_line_account_id,
-                    'name': 'product test 4',
                 }
              ),
             (0, 0,
@@ -34,7 +33,6 @@ class TestAccountRecurrent(AccountingTestCase):
                     'quantity': 2.0,
                     'price_unit': 200.0,
                     'account_id': invoice_line_account_id,
-                    'name': 'product test 5',
                 }
              )
         ]
@@ -53,26 +51,21 @@ class TestAccountRecurrent(AccountingTestCase):
             'recurrency_type': 'months',
             'invoice_line_ids': invoice_line_data
         })
-
-        self.apply_vendor_cron()
         recurring_domain = [('type', '=', 'in_invoice'), ('state', '=', 'draft'), ('is_recurring_document', '=', True)]
-        recurring_invoice_count = AccountInvoice.search_count(recurring_domain)
-        # after executing crons for recurrent invoices verify that no invoices is auto generated if the recurrent invoice is in `draft` state
-        self.assertEquals(recurring_invoice_count, 0, 'Recurring invoices should not be generated when invoice is in `draft` state.')
 
+        # After executing cron, verify that no bill is auto generated if the recurrent bill is in `draft` state
+        self.apply_vendor_cron()
+        recurring_invoice_count = AccountInvoice.search_count(recurring_domain)
+        self.assertEquals(recurring_invoice_count, 0, 'Recurring bills should not be generated when reference bill is still `draft`.')
+
+        # After validating bill, run cron and check that 2 recurring bill have been generated
         invoice.action_invoice_open()  # Validate invoice
         self.apply_vendor_cron()
-        # After validating invoice ran cron and then checked, 2 recurring invoices should be generated
         recurring_invoice_count = previous_recurring_invoice_count = AccountInvoice.search_count(recurring_domain)
-        self.assertEquals(recurring_invoice_count, 2, '2 recurring invoices should be generated.')
+        self.assertEquals(recurring_invoice_count, 2, '2 recurring bills should be generated.')
 
+        # verify that bills aren't generated if reference bill is in `cancel` state
         purchase_journal.write({'update_posted': True})  # Allow to cancel the invoice
-        invoice.action_invoice_cancel()  # Cancel the invoice
-        self.apply_vendor_cron()
-        # verify that invoices isn't generated if invoice is in `cancel` state
-        recurring_invoice_count = AccountInvoice.search_count(recurring_domain)
-        self.assertEquals(previous_recurring_invoice_count, recurring_invoice_count, 'Recurring invoices should not be generated when invoice is in `cancel` state.')
-
         inv2_data = {
             'name': 'invoice test recurrent 2',
             'date_invoice': datetime.today() + relativedelta(months=-2),
@@ -80,19 +73,30 @@ class TestAccountRecurrent(AccountingTestCase):
             'recurrency_interval': 1,
             'recurrency_type': 'months',
         }
-
         invoice2 = invoice.copy(default=inv2_data)
+        invoice2.action_invoice_cancel()  # Cancel the invoice
+        self.apply_vendor_cron()
+        recurring_invoice_count = AccountInvoice.search_count(recurring_domain)
+        self.assertEquals(previous_recurring_invoice_count, recurring_invoice_count, 'Recurring bills should not be generated when reference bill is in `cancel` state.')
 
-        invoice2.action_invoice_open()  # Validate invoice
+        # verify that vendor bills are generated even when invoice is in `paid` state
+        inv3_data = {
+            'name': 'invoice test recurrent 3',
+            'date_invoice': datetime.today() + relativedelta(months=-2),
+            'is_recurrency_enabled': True,
+            'recurrency_interval': 1,
+            'recurrency_type': 'months',
+        }
+
+        invoice3 = invoice.copy(default=inv3_data)
+        invoice3.action_invoice_open()  # Validate invoice
         Payment = self.env['account.payment']
         payment_vals = Payment.with_context(default_invoice_ids=[(4, invoice2.id, None)]).default_get(Payment._fields.keys())
         payment_vals.update({
             'payment_method_id': self.ref("account.account_payment_method_manual_out"),
             'journal_id': self.env['account.journal'].search([('type', '=', 'bank')], limit=1).id
         })
-        # Register payment
-        Payment.create(payment_vals).action_validate_invoice_payment()
-        # verify that vendor bills are generated even when invoice is in `paid` state
+        Payment.create(payment_vals).action_validate_invoice_payment()  # Register the payment
         self.apply_vendor_cron()
         recurring_invoice_count = AccountInvoice.search_count(recurring_domain)
-        self.assertEquals(recurring_invoice_count, previous_recurring_invoice_count + 2, '4 recurring invoices should be generated.')
+        self.assertEquals(recurring_invoice_count, 4, '4 recurring bills should be generated.')
