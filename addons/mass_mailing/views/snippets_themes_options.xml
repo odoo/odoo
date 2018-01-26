@@ -6,10 +6,12 @@
     <t t-raw="0"/>
 
     <div data-js="width-x"
-        data-selector="img, .mv, .col_mv, td:not(.o_mail_no_resize), th">
-    </div>
+        data-selector="img, .mv, .col_mv, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_wrapper_td"/>
 
-    <div data-js="table_item" data-selector="td, th"/>
+    <div data-js="table_item"
+        data-selector="td, th"
+        data-exclude=".o_mail_wrapper_td"/>
 
     <div data-js="table_row"
         data-selector="tr:has(> .row), tr:has(> .col_mv)"
@@ -18,11 +20,13 @@
 
     <div data-js="table_column"
         data-selector=".col>td, .col>th"
+        data-exclude=".o_mail_wrapper_td"
         data-drop-near=".col>td, .col>th">
     </div>
 
     <div data-js="table_column_mv"
         data-selector=".col_mv, td, th"
+        data-exclude=".o_mail_wrapper_td"
         data-drop-near=".col_mv, td, th">
     </div>
 
@@ -33,19 +37,22 @@
     </div>
 
     <div data-js="resize"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div">
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div"
+        data-exclude=".o_mail_no_resize, .o_mail_wrapper_td">
     </div>
 
     <div data-js="margin-y"
-        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td:not(.o_mail_no_resize), th">
+        data-selector="[data-oe-field='body_html'] > div:not(.o_layout), [data-oe-field='body_html'] .oe_structure > div, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_wrapper_td">
     </div>
 
     <div data-js="colorpicker"
         data-selector="
-            [data-oe-field='body_html'] > div:not(.o_layout):not(.o_mail_no_colorpicker),
-            [data-oe-field='body_html'] .oe_structure > div:not(.o_mail_no_colorpicker),
+            [data-oe-field='body_html'] > div:not(.o_layout),
+            [data-oe-field='body_html'] .oe_structure > div,
             td, th
-        ">
+        "
+        data-exclude=".o_mail_no_colorpicker">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Color</a>
             <ul class="dropdown-menu">
