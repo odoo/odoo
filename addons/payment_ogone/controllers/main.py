@@ -30,11 +30,15 @@ class OgoneController(http.Controller):
 
     @http.route(['/payment/ogone/s2s/create_json'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json(self, **kwargs):
+        if not kwargs.get('partner_id'):
+            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         new_id = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
         return new_id.id
 
     @http.route(['/payment/ogone/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def ogone_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
+        if not kwargs.get('partner_id'):
+            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
         token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
 
         if not token:
