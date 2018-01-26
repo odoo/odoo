@@ -93,7 +93,7 @@ class TestAccountRecurrent(AccountingTestCase):
         invoice3 = invoice.copy(default=inv3_data)
         invoice3.action_invoice_open()  # Validate invoice
         Payment = self.env['account.payment']
-        payment_vals = Payment.with_context(default_invoice_ids=[(4, invoice2.id, None)]).default_get(Payment._fields.keys())
+        payment_vals = Payment.with_context(default_invoice_ids=[(4, invoice3.id, None)]).default_get(Payment._fields.keys())
         payment_vals.update({
             'payment_method_id': self.ref("account.account_payment_method_manual_out"),
             'journal_id': self.env['account.journal'].search([('type', '=', 'bank')], limit=1).id
