@@ -68,7 +68,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *          rejected otherwise
      */
     canBeDiscarded: function (recordID) {
-        if (!this.model.isDirty(recordID || this.handle)) {
+        if (!this.isDirty(recordID)) {
             return $.when(false);
         }
 
@@ -119,6 +119,15 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     getSelectedIds: function () {
         return [];
+    },
+    /**
+     * Returns true iff the given recordID (or the main recordID) is dirty.
+     *
+     * @param {string} [recordID] - default to main recordID
+     * @returns {boolean}
+     */
+    isDirty: function (recordID) {
+        return this.model.isDirty(recordID || this.handle);
     },
     /**
      * @override

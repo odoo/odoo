@@ -248,32 +248,30 @@ tour.register('main_flow_tour', {
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
     position: "bottom"
 }, {
-    trigger: ".modal-body input:first",
-    content: _t("Enter the opportunity title."),
+    trigger: ".o_kanban_quick_create input:first",
+    content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
     run: "text the_flow.opportunity",
 }, {
-    trigger: ".o_field_widget[name=partner_id] input",
+    trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] input",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     position: "left",
     run: "text the_flow.customer",
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.customer')",
-    in_modal: false,
     auto: true,
 }, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
-    content: _t("Create"),
-    position: "bottom",
+    trigger: ".o_kanban_quick_create .o_kanban_add",
+    extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
+    content: _t("Click here to <b>add your opportunity</b>."),
+    position: "right",
 }, {
-    trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
+    trigger: ".o_kanban_group:first .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:has(span:contains('the_flow.opportunity'))",
-    extra_trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))", // FIXME: this is required due to an issue in tour_manager (see [*])
+    trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("Click on an opportunity to zoom to it."),
     position: "bottom",
 }, {

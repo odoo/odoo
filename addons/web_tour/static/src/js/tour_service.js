@@ -12,7 +12,7 @@ var TourManager = require('web_tour.TourManager');
 
 var QWeb = core.qweb;
 
-if (config.device.size_class <= config.device.SIZES.XS) {
+if (config.device.isMobile) {
     return $.Deferred().reject();
 }
 

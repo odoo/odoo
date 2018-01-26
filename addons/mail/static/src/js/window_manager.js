@@ -193,7 +193,7 @@ function toggle_fold_chat (channel) {
 }
 
 function compute_available_slots (nb_windows) {
-    if (config.device.size_class === config.device.SIZES.XS) {
+    if (config.device.isMobile) {
         display_state.nb_slots = 1; // one chat window full screen in mobile
         return;
     }

@@ -485,6 +485,12 @@ var MockServer = Class.extend({
         _.each(kwargs.views, function (view_descr) {
             var viewID = view_descr[0] || false;
             var viewType = view_descr[1];
+            if (!viewID) {
+                var contextKey = viewType + '_view_ref';
+                if (contextKey in kwargs.context) {
+                    viewID = kwargs.context[contextKey];
+                }
+            }
             var key = [model, viewID, viewType].join(',');
             var arch = self.archs[key];
             if (!arch) {
