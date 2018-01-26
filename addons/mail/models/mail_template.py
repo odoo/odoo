@@ -247,22 +247,18 @@ class MailTemplate(models.Model):
             # perform this check if the new body_html is non-empty
             if vals.get('model_id'):
                 _model = self.env['ir.model'].sudo().browse(
-                    vals['model_id']
-                ).model
+                    vals['model_id']).model
             else:
                 _model = self.model
 
             Model = self.env[_model]
-
             if not Model._abstract:
                 # Get the latest record so as to not use older, potentially
                 # deprecated/obsolete records
                 res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
-
                 if res_ids:
                     render = self.render_template(
-                        vals['body_html'], _model, res_ids
-                    )
+                        vals['body_html'], _model, res_ids)
 
                     if not any(render.values()):
                         raise UserError(_(
