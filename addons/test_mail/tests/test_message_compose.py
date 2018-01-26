@@ -3,6 +3,7 @@
 
 import base64
 
+from email.utils import formataddr
 from unittest.mock import patch
 
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest, MockEmails, TestRecipients
@@ -199,6 +200,17 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(reply.subtype_id, self.env.ref('mail.mt_note'))
         self.assertEqual(reply.needaction_partner_ids, self.user_employee.partner_id)
         self.assertEqual(reply.parent_id, msg)
+
+    def test_post_log(self):
+        new_note = self.test_record.sudo(self.user_employee)._message_log(
+            body='<p>Labrador</p>',
+        )
+
+        self.assertEqual(new_note.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(new_note.body, '<p>Labrador</p>')
+        self.assertEqual(new_note.author_id, self.user_employee.partner_id)
+        self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
+        self.assertEqual(new_note.needaction_partner_ids, self.env['res.partner'])
 
 
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
