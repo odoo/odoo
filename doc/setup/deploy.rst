@@ -172,10 +172,11 @@ SSL Between Odoo and PostgreSQL
 
 Since Odoo 11.0, you can enforce ssl connection between Odoo and PostgreSQL.
 in Odoo the db_sslmode control the ssl security of the connection 
-with value choosed out of 'disable', 'allow', 'prefer', 'require', 'verify-ca' or 'verify-full'
+with value choosed out of 'disable', 'allow', 'prefer', 'require', 'verify-ca'
+or 'verify-full'
 
 `PostgreSQL Doc <https://www.postgresql.org/docs/current/static/libpq-ssl.html>`_
-  
+
 .. _builtin_server:
 
 Builtin server
