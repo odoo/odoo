@@ -575,8 +575,8 @@ class HrPayslip(models.Model):
                     #cuando la cuenta no es de tipo por pagar no tiene amount_Residual
                     #en este caso tomamos el valor de debito
                     localdict['force_amount'] = abs(move.debit)
-                 
                 #fin seccion modificada por TRESCLOUD
+                
                 
                 
                 localdict['result'] = None
@@ -590,10 +590,20 @@ class HrPayslip(models.Model):
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
                     tot_rule = amount * qty * rate / 100.0
-                    localdict[rule.code] = tot_rule
+                    
+                    
+                    #MODIFICADO POR TRESCLOUD PARA PERMITIR SUMAR VARIOS REGISTROS
+                    #DE LA MISMA REGLA SALARIAL
+                    if localdict.get(rule.code):
+                        localdict[rule.code] += tot_rule
+                    else:
+                        localdict[rule.code] = tot_rule
                     rules_dict[rule.code] = rule
                     #sum the amount for its salary category
-                    localdict = _sum_salary_rule_category(localdict, rule.category_id, tot_rule - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, localdict[rule.code] - previous_amount)
+                    #FIN MODIFICACION TRESCLOUD
+                    
+                    
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
