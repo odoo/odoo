@@ -912,11 +912,12 @@ class WizardMultiChartsAccounts(models.TransientModel):
         acc_template_ref, taxes_ref = self.chart_template_id._install_template(company, code_digits=self.code_digits, transfer_account_id=self.transfer_account_id)
 
         # write values of default taxes for product as super user and write in the config
-        IrDefault = self.env['ir.default']
-        if self.sale_tax_id and taxes_ref:
-            IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
-        if self.purchase_tax_id and taxes_ref:
-            IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
+        if taxes_ref:
+            IrDefault = self.env['ir.default']
+            if self.sale_tax_id in taxes_ref:
+                IrDefault.sudo().set('product.template', "taxes_id", [taxes_ref[self.sale_tax_id.id]], company_id=company.id)
+            if self.purchase_tax_id in taxes_ref:
+                IrDefault.sudo().set('product.template', "supplier_taxes_id", [taxes_ref[self.purchase_tax_id.id]], company_id=company.id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(company, acc_template_ref)
