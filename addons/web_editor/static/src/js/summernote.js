@@ -703,10 +703,16 @@ dom.isRemovableEmptyNode = function (node) {
 dom.isForbiddenNode = function (node) {
     return node.tagName === "BR" || $(node).is(".fa, img");
 };
-dom.listBetween = function (sc, ec) {
+/**
+ * @todo 'so' and 'eo' were added as a bugfix and are not given everytime. They
+ * however should be as the function may be wrong without them (for example,
+ * when asking the list between an element and its parent, as there is no path
+ * from the beginning of the former to the beginning of the later).
+ */
+dom.listBetween = function (sc, ec, so, eo) {
     var nodes = [];
     var ancestor = dom.commonAncestor(sc, ec);
-    dom.walkPoint({'node': sc, 'offset': 0}, {'node': ec, 'offset': 0}, function (point) {
+    dom.walkPoint({'node': sc, 'offset': so || 0}, {'node': ec, 'offset': eo || 0}, function (point) {
         if (ancestor !== point.node || ancestor === sc || ancestor === ec) {
             nodes.push(point.node);
         }
@@ -1926,7 +1932,7 @@ $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTa
     }
 
     // fix by odoo because if you select a style in a li with no p tag all the ul is wrapped by the style tag
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     for (var i=0; i<nodes.length; i++) {
         if (dom.isBR(nodes[i]) || (dom.isText(nodes[i]) && dom.isVisibleText(nodes[i])) || dom.isB(nodes[i]) || dom.isU(nodes[i]) || dom.isS(nodes[i]) || dom.isI(nodes[i]) || dom.isFont(nodes[i])) {
             var ancestor = dom.ancestor(nodes[i], isFormatNode);
