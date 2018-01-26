@@ -643,13 +643,15 @@ QUnit.module('account', {
                                                                   "counterpart_aml_id": 109,
                                                                   "credit": 650,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0002"
+                                                                  "name": "INV/2017/0002",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 },
                                                                 {
                                                                   "counterpart_aml_id": 112,
                                                                   "credit": 525,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0003"
+                                                                  "name": "INV/2017/0003",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_reconciliations with ids");
@@ -691,7 +693,8 @@ QUnit.module('account', {
                                         account_id: 287,
                                         credit: 1175,
                                         debit: 0,
-                                        name: 'SAJ/2014/002 and SAJ/2014/003'
+                                        name: 'SAJ/2014/002 and SAJ/2014/003',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }]}]],
                 "Should call process_reconciliations with ids");
         });
@@ -736,7 +739,8 @@ QUnit.module('account', {
                                         counterpart_aml_id: 109,
                                         credit: 650,
                                         debit: 0,
-                                        name: 'INV/2017/0002'
+                                        name: 'INV/2017/0002',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }],
                                     payment_aml_ids: [], 
                                     new_aml_dicts: [{
