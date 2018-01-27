@@ -4,7 +4,7 @@
 # 
 # Translators:
 # oihane <oihanecruce@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # ibinka lete <ilete@fpbidasoa.net>, 2017
 # Esther Martín Menéndez <esthermartin001@gmail.com>, 2017
 # Gorka Toledo <gorka.toledo@gmail.com>, 2017
@@ -130,6 +130,107 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"\n"
+"            <div style=\"margin: 10px auto;\">\n"
+"            % set last_created_project = user.env['project.project'].search([('alias_id','!=',False)], order=\"create_date desc\")[0]\n"
+"            <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:100%;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:2px;width:30%;\">\n"
+"                            <img src=\"web/static/src/img/logo.png\"/>\n"
+"                        </td>\n"
+"                        <td style=\"vertical-align: top; padding: 8px 10px;text-align: left;font-size: 14px;\">\n"
+"                            <a href=\"web/login\" style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: 5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-decoration: none;\">Auto Login</a>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:100%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px solid lightgray\"\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding:15px 10px;font-size:20px\">\n"
+"                            <p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                <span>Zure Odoo Proiektua aplikazioa martxan dago</span></p><br>\n"
+"                            <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-size:13px;font-weight:bold;\">Eta orain, zer?</span></p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                % if last_created_project:\n"
+"                                    <li dir=\"ltr\">\n"
+"                                        <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                            <span>Probatu zeregin bat sortu eta e-postaz bidaltzen honi: </span>\n"
+"                                            <a href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}\">\n"
+"                                                <span style=\"font-weight:bold; text-decoration:underline;\">${last_created_project.alias_id.name_get()[0][1] if last_created_project.alias_id.alias_domain else user.company_id.email}</span>\n"
+"                                            </a>\n"
+"                                        </p>\n"
+"                                    </li>\n"
+"                                % endif\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span><a href=\"/web#view_type=list&model=res.users&action=base.action_res_users\">\n"
+"                                            <span style=\"font-weight:bold; text-decoration:underline;\">Erabiltzaile berria gonbidatu</span></a></span>\n"
+"                                        <span>kolaboratzera</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul> <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Deskubritu ezazu </span>\n"
+"                                <span><a href=\"/web#view_type=kanban&model=project.project&action=project.open_view_project_all\">\n"
+"                                    <span style=\"font-weight:bold; text-decoration:underline;\">proiektu planifikatzailea</span></a></span>\n"
+"                                <span> ezaugarri berriak aktibatzeko</span>\n"
+"                                <span style=\"color:#875A7B;margin:0;font-weight:bold\">(${user.env['web.planner'].get_planner_progress('planner_project')}% done)</span>\n"
+"                            </p>\n"
+"                            <ul style=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-type:disc;\">\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Orduen jarraipena egin denbora-orriekin,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Planifikatu zereginak eta baliabideak iragarpenekin,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Eskuratu txosten adimentsuak eta arbel zehatzak,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:0pt;\">\n"
+"                                        <span>Fakturatu zeregin edo arazoetan sartutako denbora,</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                                <li dir=\"ltr\">\n"
+"                                    <p dir=\"ltr\" style=\"margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                        <span>Eta askoz gehiago...</span>\n"
+"                                    </p>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span style=\"font-weight:bold;\">Laguntza behar?</span>\n"
+"                                <span style=\"font-style:italic;\">Ez zaude bakarrik</span>\n"
+"                            </p>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\">\n"
+"                                <span>Zure ibilbidean zehar laguntzeko prest gaude. Jarri gurekin harremanetan gure\n"
+"                                <a href=\"https://www.odoo.com/help\">laguntza formulario bidez</a> edozein galdera duzula ere.\n"
+"                                Odoo Proiektuei etekin gehiago nola atera ikas dezakezu gure </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation/user/10.0/project.html\">\n"
+"                                <span style=\"text-decoration:underline;\">Erabiltzaileen dokumentazioarekin</span></a>\n"
+"                                </span><span> edota gure </span>\n"
+"                                <a href=\"https://www.odoo.com/documentation\">\n"
+"                                <span style=\"text-decoration:underline;\">API dokumentazioarekin</span></a>\n"
+"                            </p>\n"
+"                            <br>\n"
+"                            <p dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span>Odoo esperientzia atsegina izan dezazula,</span></p>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <div dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;color:grey\">\n"
+"                <span><br/>-- <br/>Odoo Taldea<br/>OH.: Jendeak maite du Odoo, begira </span><a href=\"https://twitter.com/odoo/favorites\"><span style=\"text-decoration:underline;\">zer dioten.</span></a></span>\n"
+"            </div>\n"
+"        </div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -531,11 +632,13 @@ msgid ""
 "<strong> New business issues (5 min)</strong>\n"
 "                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  issue as you walk through the project status session. Not every  issue warrants spending time here, so keep discussions to a minimum."
 msgstr ""
+"<strong> Negozioko arazo berriak (5 min)</strong>\n"
+"                                Astean zehar proiektuari eragiten dion zerbait ikasiko zenuen agian. Bileraren hasieran aipatu ezazu taldekideek arazoaren inguruan pentsatu ahal dezaten proiektuaren egoeraren inguruko batzarra egiten duzuen bitartean. Arazo guztiek ez dute merezi denbora hemen, ahalik eta eztabaida gutxien mantendu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong> Prepare an agenda (and keep to it)</strong>"
-msgstr ""
+msgstr "<strong> Prestatu agenda bat (eta mantendu ezazu)</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -543,6 +646,8 @@ msgid ""
 "<strong> Project plan status review (20 min) </strong>\n"
 "                                Walk through your project plan and allow each team member to provide a brief status of assignments due this week and tasks planned for the next two  weeks. You want to know whether tasks are on track and if any will miss  their projected deadline. You also want to allow the team member to share  any special considerations that might affect other tasks or members of  the project. Carefully manage this part because some team members will  want to pontificate and spend more time than is really needed. Remember, you’re the project manager."
 msgstr ""
+"<strong> Proiektuaren plangintzaren egoera ikuskatu (20 min) </strong>\n"
+"                                Proiektuaren plangintza errepasatu eta utzi taldekide bakoitzari informazio laburra ematen aste honetarako esleitutako lanen eta hurrengo bi asteetarako zereginen inguruan. Zereginak egunean dauden jakin nahi duzu eta ea epemugarik bete behar ez den. Halaber, taldekideei utzi nahi diezu proiektuko beste zeregin edota kideri eragin diezaieken edozein gairi buruz hitz egiten. Kontuz landu atal hau, zenbait taldekidek sermoia bota eta beharrezkoa den baino denbora gehiago erabili nahiko dute eta. Gogoratu, zu zara proiektu arduraduna."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -550,6 +655,8 @@ msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
 "                                Always give your team time to ask questions on issues that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
 msgstr ""
+"<strong> Galdera eta eztabaida denbora (10 min)</strong>\n"
+"                                Beti utzi zure taldekideei denbora galderak egiteko hitz egin ez diren gaien inguruan. Honek beste aukera bat emango dizu astean zehar jaso edota bileran aurkitu dituzun funtsezko puntuetan arreta jartzeko."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -557,6 +664,8 @@ msgid ""
 "<strong> Roll call (5 min)</strong>\n"
 "                                Let everyone know who is in attendance before starting. This is important  for remote team members who have dialled in and will save you time later."
 msgstr ""
+"<strong> Zerrenda pasatu (5 min)</strong>\n"
+"                                Utzi guztiek jakin dezaten nor dagoen bileran hau hasi aurretik. Hau garrantzitsua da urrunetik parte hartzen ari diren taldekideentzat eta denbora aurreztuko dizu aurrerago."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -564,6 +673,8 @@ msgid ""
 "<strong> Summary and follow-up items (5 min)</strong>\n"
 "                                Always wrap up with a project status summary and a list of action items  dentified in the meeting to help move the project along."
 msgstr ""
+"<strong> Laburpena eta jarraipeneko gaiak (5 min)</strong>\n"
+"                                Amaitu ezazu beti proiektuaren egoeraren laburpenarekin eta bileran zehar identifikatu diren hurrengo ekintza-gaiekin, proiektuari aurrera egiten laguntzeko."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -571,6 +682,8 @@ msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and Issues and is extremely useful for several cases."
 msgstr ""
+"<strong>Odooren ezaugarri on bat da bere integrazioa Etherpad izena duen Koaderno Kolaboratiboarekin.</strong><br/>\n"
+"                            Zeregin eta Arazoetako deskribapenaren eremu estandarra ordezten du eta oso erabilgarria da hainbat kasutan."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -578,11 +691,13 @@ msgid ""
 "<strong>A problem or request from a customer</strong> that needs to be "
 "identified, solved and followed up asap."
 msgstr ""
+"<strong>Bezero bat arazoa edota eskaera</strong> ahal bezain laister "
+"identifikatua, konpondua eta jarraipena emana izan behar dena."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>About Employees:</strong>"
-msgstr ""
+msgstr "<strong>Langileen inguruan:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -590,6 +705,8 @@ msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task or issue is progressing as expected  and to anticipate its next update."
 msgstr ""
+"<strong>Epemuga gehitu</strong><br/>\n"
+"                                    Epemugak lagunduko dizu jakiten zeregin edo arazo bat espero moduan ari den aurrera egiten eta bere hurrengo eguneraketa aurreratzen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -597,16 +714,18 @@ msgid ""
 "<strong>An internal activity</strong> that should be done within a defined "
 "period of time."
 msgstr ""
+"<strong>Barne-jarduera</strong> , denbora jakin batean egin behar "
+"litzatekeena."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Analyze reports</strong> (every a year)"
-msgstr ""
+msgstr "<strong>Txostenak aztertu</strong> (urtero)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Approve your Timesheets</strong> (every week)"
-msgstr ""
+msgstr "<strong>Onetsi zure Denbora-orriak</strong> (astero)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -614,6 +733,8 @@ msgid ""
 "<strong>Ask participants to prepare</strong><br/>\n"
 "                                To run an effective meeting, prepare participants beforehand. Inform them of how they are expected to contribute."
 msgstr ""
+"<strong>Eskatu partaideei prestatzeko</strong><br/>\n"
+"                                Bilera eraginkorra izateko, prestatu partaideak aurretiaz. Jakinarazi iezaiezu haiek zer ekarpen egitea espero den."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -621,11 +742,13 @@ msgid ""
 "<strong>Be careful about the messages you send</strong><br/>\n"
 "                                    Sending a message through Odoo will automatically send an email containing your message to all the followers including internal employees, external users or customers."
 msgstr ""
+"<strong>Kontuz bidaltzen dituzun mezuekin</strong><br/>\n"
+"                                    Odoo bidez mezuak bidaltzean e-postaz automatikoki bidaliko da zure mezua jarraitzaile guztiei, besteak beste langile, kanpoko erabiltzaile edo bezeroei."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Billing</strong>"
-msgstr ""
+msgstr "<strong>Fakturazioa</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -633,6 +756,8 @@ msgid ""
 "<strong>Choose the right day</strong><br/>\n"
 "                                    Avoid Monday mornings as your regular meeting day; choosing to meet later in the week gives participants time to get ready for the meeting and to work toward specific objectives in the days that follow."
 msgstr ""
+"<strong>Egun egokia aukera</strong><br/>\n"
+"                                    Saihestu astelehen goiza ohiko bilerak egiteko; astean zehar beranduago egiten baditu, denbora emango diezu partaideei bilera prestatzeko eta hurrengo egunetan helburu zehatzetan lana egiteko."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -640,11 +765,13 @@ msgid ""
 "<strong>Click on 'Reporting' on the main menu</strong> and generate "
 "statistics relevent to each profiles:"
 msgstr ""
+"<strong>Egin klik menu nagusiko 'Txostenak' aukeran</strong> eta sortu "
+"profil bakoitzarentzat adierazgarriak diren estatistikak:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Contact us now:</strong><br/>"
-msgstr ""
+msgstr "<strong>Jarri gurekin harremanetan orain:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -652,6 +779,8 @@ msgid ""
 "<strong>Create tasks and issues by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task or issue in the first stage of the project, with all the email recipients as its default followers."
 msgstr ""
+"<strong>E-postaz sortu zereginak eta arazoak</strong><br/>\n"
+"                                Odoon, proiektu bakoitza e-posta helbidea dauka. E-postaz mezua bidaltzen baduzu helbide horretara, automatikoki sortuko du zeregina edo arazoa proiektuaren lehen etapan, jarraitzaile moduan jarriz e-posta mezuaren hartzaile guztiak."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -659,16 +788,18 @@ msgid ""
 "<strong>Define a Naming Convention</strong><br/>\n"
 "                                    Add keywords in the 'Task title' field, for example [Customer name] or [Website]. This will help you navigate and search through the dozens of tasks in your project."
 msgstr ""
+"<strong>Izendatze-logika zehaztu</strong><br/>\n"
+"                                    Gehitu etiketak 'Zereginaren izenburua' eremuan, adibidez [Bezeroaren izena] edo [Webgunea]. Honek lagunduko dizu zure proiektuko dozenaka zereginen artean nabigatu eta bilaketak egiten."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Enter your activities</strong> (every day)"
-msgstr ""
+msgstr "<strong>Zure jarduerak sartu</strong> (egunero)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Example: </strong>"
-msgstr ""
+msgstr "<strong>Adibidea: </strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -676,6 +807,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Issues."
 msgstr ""
+"<strong>Ariketa:</strong> Saiatu zaitez grafikoa sortzen Arazoen 'Ixteko "
+"batezbesteko atzerapena' eremuaren hileko eboluzioarekin."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -683,6 +816,8 @@ msgid ""
 "<strong>Exercise:</strong> Try to get a view of the workload for this week "
 "for all your employees (planned hours)."
 msgstr ""
+"<strong>Ariketa:</strong> Saiatu zaitez zure langileek aste honetarako "
+"daukaten (planifikatutako orduak) lan-kargaren ikuspegia sortzen."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -690,6 +825,8 @@ msgid ""
 "<strong>Follow every meeting with a recap email</strong>\n"
 "                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, issues/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
 msgstr ""
+"<strong>Bilera bakoitzari jarraipena eman laburpen mezua bidaliz e-postaz</strong>\n"
+"                                    Bilera amaitu bezain laster, bileraren laburpena publikatu eta banatu ezazu eguneratutako proiektuaren programazioa, arazo/akzio elementuen matrizea, eta egokia ikusten duzun beste dokumentazioarekin batera."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -697,21 +834,23 @@ msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks or issues of a project."
 msgstr ""
+"<strong>Soilik behar duzunaren jarraipena egin</strong><br/>\n"
+"                                    Jakinarazpenak erabiltzeko modurik sinpleena da proiektu osoa jarraitzea: jakinarazpenak jasoko dituzu proiektuaren zeregin edo arazo berri eta zaharren inguruan."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For issues:</strong>"
-msgstr ""
+msgstr "<strong>Arazoentzat:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>For tasks:</strong>"
-msgstr ""
+msgstr "<strong>Zereginentzat:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Getting reports</strong> on what your employees are working on"
-msgstr ""
+msgstr "<strong>Txostenak eskuratu</strong> zure langileen jardunari buruz"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -719,6 +858,8 @@ msgid ""
 "<strong>Getting statistics</strong> on how much time a task takes to be "
 "completed"
 msgstr ""
+"<strong>Estatistikak eskuratu</strong> zeregin bat egiteko behar den "
+"denborari buruz"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -726,6 +867,8 @@ msgid ""
 "<strong>Have Clear Responsibilities</strong><br/>\n"
 "                                    The person assigned to a task is responsible for its progress and their avatar is displayed in Kanban view for quick reference. Of course, the responsibility for a task can change depending on its stage."
 msgstr ""
+"<strong>Ardurak garbi eduki</strong><br/>\n"
+"                                    Zeregin bat esleitu zaion pertsona da bere arduraduna eta bere avatarra erakusten da Kanban ikuspegian, erreferentzia azkar gisa. Zeregin baten ardura aldatu egin daiteke bere egoeraren arabera, noski."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -737,6 +880,11 @@ msgid ""
 "best way to work if you have diluted responsibilities for your Kanban "
 "stages."
 msgstr ""
+"<strong>'Tira egin' moduan</strong>, hurrengo etapara pasatzeko prest dauden"
+" zereginak 'Hurrengo etaparako prest' moduan (egoeraren ikonoa erabiliz) "
+"markatzen ditu etapa honen arduradunak. Ondoren, hurrengo etaparen "
+"arduradunak zeregina hartu eta hurrengo etapara mugitzen du. Hau da lana "
+"egiteko modurik egokiena zure Kanban etapetako ardura banatu badituzu."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -746,39 +894,49 @@ msgid ""
 "stage. This is a simple way to work but only functions well if you work "
 "alone."
 msgstr ""
+"<strong>'Bultza egin' moduan</strong>, zereginei bultza egiten die hurrengo "
+"etapara (behin zehaztapenak betetzen dituztenean) egungo etaparen "
+"arduradunak. Lana egiteko modu sinpleagoa da hau, baina bakarrik lana egiten"
+" baduzu soilik funtzionatzen du ondo."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Invoice your customers</strong> (every month)"
-msgstr ""
+msgstr "<strong>Fakturatu zure bezeroei</strong> (hilero)"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Invoicing your customers</strong> on Time &amp; Material projects"
 msgstr ""
+"<strong>Fakturatu zure bezeroei</strong> Denbora eta Materiala proiektuetan"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Need help to structure your projects?</strong><br/>"
 msgstr ""
+"<strong>Laguntza behar duzu zure proiektuak egituratzen?</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with Timesheets management? Contact us now:</strong><br/>"
 msgstr ""
+"<strong>Laguntza behar duzu Denbora-orrien kudeaketan? Jarri gurekin "
+"harremanetan:</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Need help with defining your Projects? Contact us now.</strong><br/>"
 msgstr ""
+"<strong>Laguntza behar duzu zure Proiektuak definitzen? Jarri gurekin "
+"harremanetan orain.</strong><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Notes</strong>"
-msgstr ""
+msgstr "<strong>Oharrak</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -786,11 +944,13 @@ msgid ""
 "<strong>Prepare yourself as well</strong><br/>\n"
 "                                As project manager, you also need to be fully prepared. There should be no surprises during the meeting. Surprises can undermine your ability to manage the project and cause team members to lose confidence in you."
 msgstr ""
+"<strong>Prestatu zeure burua baita ere</strong><br/>\n"
+"                                Proiektu arduradun moduan, guztiz prest egon beharra daukazu. Bileran ez duzu sorpresarik eduki behar. Ustekabeek proiektua kudeatzeko zure gaitasuna gutxitu dezakete eta taldekideek zugan duten konfiantza galdu dezakete."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>Gomedatutako akzioak:</strong>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -798,6 +958,8 @@ msgid ""
 "<strong>Rely on the chatter</strong><br/>\n"
 "                                    Below every Task and Issue (or more generally, below every Document in Odoo) is an area called Chatter."
 msgstr ""
+"<strong>Fidatu zaitez txatean</strong><br/>\n"
+"                                    Zeregin eta Arazo bakoitzaren azpian (eta, oro har, Odooko edozein Dokumenturen azpian) Txata izeneko eremu bat dago."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -805,11 +967,13 @@ msgid ""
 "<strong>Set Priorities</strong><br/>\n"
 "                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks or Issues will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
 msgstr ""
+"<strong>Lehentasunak zehaztu</strong><br/>\n"
+"                                    <i class=\"fa fa-star\"/> erabiltzen da lehentasuna adierazteko: Kanban ikuspegietan, lehentasuna duten Zeregin edo Arazoak goian erakutsiko dira. Bereziki erabilgarria izan daiteke Scrum metodologia erabiltzen baduzu asteko zereginak zehazteko. Egoerarekin bezala, Izarraren esanahia aldatu dezakezu Proiektuen Etapen fitxan."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid "<strong>Stages and Requirements</strong> for next stage:"
-msgstr ""
+msgstr "<strong>Etapak eta Eskakizunak</strong> hurrengo etaparako:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -817,6 +981,8 @@ msgid ""
 "<strong>Start with an answer.</strong><br/>\n"
 "                                The worst question to ask is, \"What did you do this week?\" It invariably  generates unnecessary, time-consuming dialogue from team members. Plus, you should already know what everyone on the team did during the week."
 msgstr ""
+"<strong>Hasi erantzun batekin.</strong><br/>\n"
+"                                Egin dezakezun galderarik txarrena da, \"Zer egin zenuen iragan astean?\" Taldeko partaideen alferrikako hitz-aspertuak sortuko ditu. Gainera, jada jakin beharko zenuke taldekide guztiek zer egin zuten astean zehar."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
