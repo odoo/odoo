@@ -40,3 +40,16 @@ class ResPartner(models.Model):
                     partner.l10n_co_verification_code = 11 - number
             except ValueError:
                 partner.l10n_co_verification_code = False
+
+    @api.constrains('vat', 'commercial_partner_country_id', 'l10n_co_document_type')
+    def check_vat(self):
+        # check_vat is implemented by base_vat which this localization
+        # doesn't directly depend on. It is however automatically
+        # installed for Colombia.
+        if self.sudo().env.ref('base.module_base_vat').state == 'installed':
+            # don't check Colombian partners unless they have RUT (= Colombian VAT) set as document type
+            self = self.filtered(lambda partner: partner.country_id != self.env.ref('base.co') or\
+                                                 partner.l10n_co_document_type == 'rut')
+            return super(ResPartner, self).check_vat()
+        else:
+            return True
