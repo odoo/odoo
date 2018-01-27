@@ -62,7 +62,7 @@ class Http(models.AbstractModel):
         if not request.session.uid:
             env = api.Environment(request.cr, SUPERUSER_ID, request.context)
             website = env['website'].get_current_website()
-            if website:
+            if website and website.user_id:
                 request.uid = website.user_id.id
         if not request.uid:
             super(Http, cls)._auth_method_public()

@@ -88,7 +88,7 @@
                                 </td>
                             </tr>
                             <tr t-foreach="range(max(5-len(o.invoice_line_ids),0))" t-as="l">
-                                <td>&amp;nbsp;</td>
+                                <td t-translation="off">&amp;nbsp;</td>
                                 <td class="hidden"></td>
                                 <td></td>
                                 <td></td>
@@ -112,18 +112,18 @@
                                     <t t-foreach="o._get_tax_amount_by_group()" t-as="amount_by_group">
                                         <tr style="border-bottom:1px solid #dddddd;">
                                             <t t-if="len(o.tax_line_ids) == 1 and o.amount_untaxed == amount_by_group[2]">
-                                                <td><span t-esc="amount_by_group[0]"/></td>
-                                                <td class="text-right">
-                                                    <span t-esc="amount_by_group[3]"/>
-                                                </td>
-                                            </t>
-                                            <t t-else="">
                                                 <td>
                                                     <span t-esc="amount_by_group[0]"/>
                                                     <span>&amp;nbsp;<span>on</span>
                                                         <t t-esc="amount_by_group[4]"/>
                                                     </span>
                                                 </td>
+                                                <td class="text-right">
+                                                    <span t-esc="amount_by_group[3]"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+                                                <td><span t-esc="amount_by_group[0]"/></td>
                                                 <td class="text-right">
                                                     <span t-esc="amount_by_group[3]" />
                                                 </td>

@@ -179,7 +179,7 @@
                     </td>
                 </tr>
                 <tr t-foreach="range(max(5-len(invoice.invoice_line_ids),0))" t-as="l">
-                    <td>&amp;nbsp;</td>
+                    <td t-translation="off">&amp;nbsp;</td>
                     <td class="hidden"></td>
                     <td></td>
                     <td></td>
@@ -253,8 +253,8 @@
     </template>
 
     <template id="portal_invoice_error" name="Invoice error/warning display">
-        <div class="row">
-            <div t-att-class="'col-md-6 col-md-offset-3 text-center alert alert-dismissable %s' % ('alert-danger' if error else 'alert-warning')">
+        <div class="row mr16">
+            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
                 <t t-if="error == 'generic'" name="generic">
                     There was an error processing this page.
@@ -264,8 +264,8 @@
     </template>
 
     <template id="portal_invoice_success" name="Invoice success display">
-        <div class="row">
-            <div class="col-md-6 col-md-offset-3 text-center alert alert-dismissable alert-success">
+        <div class="row mr16">
+            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
             </div>
         </div>

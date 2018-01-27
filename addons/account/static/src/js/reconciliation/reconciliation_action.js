@@ -359,7 +359,11 @@ var ManualAction = StatementAction.extend({
                 title: self.title,
                 time: Date.now()-self.time,
             });
-            self._openFirstLine();
+            if(!_.any(result.updated, function (handle) {
+                return self.model.getLine(handle).mode !== 'inactive';
+            })) {
+                self._openFirstLine();
+            }
         });
     },
 });

@@ -46,6 +46,13 @@ class HrContract(models.Model):
         self.car_id = self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1)
         return {'domain': {'car_id': self._get_available_cars_domain()}}
 
+    @api.onchange('transport_mode')
+    def _onchange_transport_mode(self):
+        super(HrContract, self)._onchange_transport_mode()
+        if self.transport_mode != 'company_car':
+            self.car_id = False
+            self.new_car_model_id = False
+
     def _get_available_cars_domain(self):
         return ['|', ('driver_id', '=', False), ('driver_id', '=', self.employee_id.address_home_id.id)]
 

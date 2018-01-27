@@ -200,6 +200,7 @@
             <field name="arch" type="xml">
                 <form string="Transfer">
                 <header>
+                    <field name="id" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="show_mark_as_todo" invisible="1"/>
                     <field name="show_check_availability" invisible="1"/>
@@ -245,8 +246,8 @@
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                         </group>
                         <group>
-                            <field name="scheduled_date"/>
-                            <field name="origin" placeholder="e.g. PO0032" readonly="1"/>
+                            <field name="scheduled_date" attrs="{'readonly': [('id', '=', False)]}"/>
+                            <field name="origin" placeholder="e.g. PO0032"/>
                             <field name="owner_id" groups="stock.group_tracking_owner"/>
                             <div groups="stock.group_tracking_owner" colspan="2" col="2">
                                 <button name="action_assign_owner" string="Assign Owner" type="object" attrs="{'invisible': ['|',('move_line_exist', '=', False),('state', 'not in', ('draft','assigned','confirmed'))]}"

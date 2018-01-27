@@ -92,7 +92,7 @@ odoo.define('payment_stripe.stripe', function(require) {
             return false;
         }
 
-        var access_token = $("input[name='access_token']").val() || $("input[name='token']").val();
+        var access_token = $("input[name='access_token']").val() || $("input[name='token']").val() || '';
         var so_id = $("input[name='return_url']").val().match(/quote\/([0-9]+)/) || undefined;
         if (so_id) {
             so_id = parseInt(so_id[1]);
@@ -119,6 +119,14 @@ odoo.define('payment_stripe.stripe', function(require) {
                 acquirer_id: acquirer_id
             }).then(function (data) {
                 try { provider_form[0].innerHTML = data; } catch (e) {};
+            });
+        } else if (window.location.href.includes("/my/orders/")) {
+            var create_tx = ajax.jsonRpc('/pay/sale/' + acquirer_id + '/form_tx/', 'call', {
+                so_id: so_id,
+                access_token: access_token,
+                acquirer_id: acquirer_id
+            }).then(function (data) {
+                try { provider_form.innerHTML = data; } catch (e) {};
             });
         }
         else {

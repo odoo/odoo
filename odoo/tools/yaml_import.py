@@ -726,7 +726,7 @@ class YamlInterpreter(object):
         if node.target:
             values['target'] = node.target
 
-        if node.src_model and isinstance(node.src_model, basestring):
+        if node.src_model and isinstance(node.src_model, pycompat.string_types):
             values['binding_model_id'] = self.env['ir.model']._get(node.src_model).id
 
         id = self.sudo_env['ir.model.data']._update('ir.actions.act_window', self.module, values, node.id, mode=self.mode)
