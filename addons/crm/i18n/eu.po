@@ -3,7 +3,7 @@
 # * crm
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eneko <eastigarraga@codesyntax.com>, 2018
 # Mikel Lizarralde <mikellizarralde@gmail.com>, 2018
 msgid ""
@@ -135,6 +135,13 @@ msgid ""
 "%endif\n"
 "</p><p>Thank you!</p>\n"
 msgstr ""
+"\n"
+"<p>Kaixo ${object.user_id and object.user_id.name or ''},</p>\n"
+"<p><strong>${object.name}</strong> Aukerak ez du jarduerarik eduki azken bost egunetan.</p>\n"
+"%if object.description:\n"
+"<p>Hemen dago aukeraren deskribapena: </p><p><i>${object.description}</i>\n"
+"%endif\n"
+"</p><p>Eskerrik asko!</p>\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_meeting_count
@@ -146,7 +153,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_opportunity_report_nbr_activities
 msgid "# of Activities"
-msgstr ""
+msgstr "Jarduera #"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
@@ -577,7 +584,7 @@ msgstr ""
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner
 msgid "<strong>Recommended actions:</strong>"
-msgstr ""
+msgstr "<strong>Gomedatutako akzioak:</strong>"
 
 #. module: crm
 #: model:ir.ui.view,arch_db:crm.crm_planner

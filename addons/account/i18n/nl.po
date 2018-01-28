@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
@@ -8203,6 +8203,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr "Definieer een reeks voor het dagboek gerelateerd aan deze factuur."
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr "Plus bank"
@@ -11934,7 +11942,7 @@ msgid ""
 "You cannot validate an invoice with a negative total amount. You should "
 "create a credit note instead."
 msgstr ""
-"U kunt gen factuur bevestigen met een negatief totaalbedrag. U dient "
+"U kunt geen factuur bevestigen met een negatief totaalbedrag. U dient "
 "hiervoor een credit factuur aan te maken."
 
 #. module: account

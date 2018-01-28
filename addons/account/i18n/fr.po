@@ -5,7 +5,7 @@
 # Translators:
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
 # lap.odoo <lap@odoo.com>, 2017
 # Clo <clo@odoo.com>, 2017
@@ -21,7 +21,7 @@
 # Lamia Ishak <lamiaishak@hotmail.co.uk>, 2017
 # Sébastien Le Ray <sebastien-github@orniz.org>, 2017
 # Benjamin Delagoutte <ben@ampletus.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
+# Florian Hatat, 2017
 # Olivier Dony <odo@odoo.com>, 2017
 # Xavier Brochard <xavier@alternatif.org>, 2017
 # matthieu gaillet <matthieu.gaillet@lebrass.be>, 2017
@@ -29,12 +29,12 @@
 # Alexis de Lattre <alexis@via.ecp.fr>, 2017
 # Bertrand LATOUR <divoir@gmail.com>, 2017
 # nthnnl <nathan070@me.com>, 2017
-# Stéphane Bidoul (ACSONE) <stephane.bidoul@acsone.eu>, 2017
+# Stéphane Bidoul (ACSONE), 2017
 # Omar Mezga <omar.mezgrane@aldaway.com>, 2017
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2017
-# Fabrice Henrion <fhe@odoo.com>, 2017
+# Fabrice Henrion, 2017
 # lucasdeliege <deliegelucas@gmail.com>, 2017
 # Ilone Math <ilonemail2@gmail.com>, 2017
 # Frédéric Clementi <frederic.clementi@camptocamp.com>, 2017
@@ -45,8 +45,8 @@
 # Benedicte HANET <hanetb@gmail.com>, 2017
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2017
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2017
-# Cédric Le Brouster <cedric.lebrouster@openfire.fr>, 2017
-# Hamid Darabi <hamid.darabi@gmail.com>, 2017
+# Cédric Le Brouster, 2017
+# Hamid Darabi, 2017
 # Quentin THEURET <odoo@kerpeo.com>, 2017
 # Jérémy Donas <LeDistordu@users.noreply.github.com>, 2017
 # Frédéric LIETART <stuff@tifred.fr>, 2017
@@ -379,6 +379,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Cher ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Voici, en pièce jointe, votre \n"
+"% if object.number:\n"
+"facture <strong>${object.number}</strong>\n"
+"% else:\n"
+"facture\n"
+"% endif\n"
+"% if object.origin:\n"
+"(avec la référence ${object.origin})\n"
+"% endif\n"
+", son montant s'élève à <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"émis par ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Voir la facture</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Cette facture est déjà payée.</p>\n"
+"% else:\n"
+"    <p>Merci de procéder au payement dès que possible.</p>\n"
+"% endif\n"
+"\n"
+"<p>Merci,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -5940,8 +5984,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
-"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
-"and 'draft' or ''}"
+"Facture_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'brouillon' or ''}"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8176,6 +8220,14 @@ msgstr "Veuillez définir une séquence sur le journal."
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
 "Veuillez définir une séquence dans le journal relatif à cette facture."
+
+#. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form

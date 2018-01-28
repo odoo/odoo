@@ -6,7 +6,7 @@
 # Rivo Zängov <eraser@eraser.ee>, 2017
 # Wanradt Koell <wanradt@gmail.com>, 2017
 # Arma Gedonsky <armagedonsky@hot.ee>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eneli Õigus <enelioigus@gmail.com>, 2017
 msgid ""
 msgstr ""
@@ -30,8 +30,8 @@ msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
 msgstr ""
-"Märgi see ruut, et tagada, et iga selles riigis loodud aadressil on 'Linn' "
-"valitud riigi linnade loendist."
+"Tee sellesse ruutu märge, kui soovid, et selle riigi aadressidel oleks alati"
+" \"linn\" valitud."
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
@@ -41,6 +41,7 @@ msgstr "Linnad"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
 #: model:ir.ui.view,arch_db:base_address_city.view_city_filter
 #: model:ir.ui.view,arch_db:base_address_city.view_city_tree
 msgid "City"
@@ -59,7 +60,6 @@ msgstr "Kontakt"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
 msgid "Country"
 msgstr "Riik"
 
