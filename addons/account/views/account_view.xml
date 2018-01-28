@@ -679,10 +679,9 @@
                                     <field name="ref" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }" groups="base.group_no_one"/>
                                     <field name="amount" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
                                     <field name="journal_currency_id" invisible="1"/>
-                                    <field name="amount_currency" invisible="1" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="currency_id" options="{'no_create': True}" invisible="1" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"/>
-                                    <field name="bank_account_id" invisible="1" attrs="{'readonly' : [('journal_entry_ids', '!=', [])] }"
-                                        domain="['|', ('partner_id', '=', partner_id), ('partner_id', '=', False)]"/>
+                                    <field name="amount_currency" invisible="1"/>
+                                    <field name="currency_id" invisible="1" />
+                                    <field name="bank_account_id" invisible="1" />
                                 </tree>
                             </field>
                         </page>
