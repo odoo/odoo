@@ -69,10 +69,15 @@ class configmanager(object):
                       from Python code without resorting to environment
                       variable
         """
+        # Check for a bind-mounted secrets file
+        try:
+            admin_pwd_file = open("/run/secrets/adminpw","r")
+        except:
+            admin_pwd_file = None
         # Options not exposed on the command line. Command line options will be added
         # from optparse's parser.
         self.options = {
-            'admin_passwd': 'admin',
+            'admin_passwd': admin_pwd_file and admin_pwd_file.read() or 'admin',
             'csv_internal_sep': ',',
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
             'reportgz': False,
