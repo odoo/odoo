@@ -5,7 +5,7 @@
 # Translators:
 # 老窦 北京 <2662059195@qq.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# nle_odoo <nle@odoo.com>, 2017
+# nle_odoo, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # jack adam <jackadam@sina.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2018
@@ -6861,7 +6861,7 @@ msgstr "无详情"
 msgid ""
 "No miscellaneous journal could be found. Please create one before "
 "proceeding."
-msgstr ""
+msgstr "未找到杂项日记账，请在处理之前先创建一个"
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -7783,6 +7783,14 @@ msgstr "请在日记账中定义序列号"
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "请给这张发票相关的日记账定义序列号"
+
+#. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr "请在处理之前先安装会计科目表或创建一个杂项日记账"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
