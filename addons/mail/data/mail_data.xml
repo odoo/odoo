@@ -132,9 +132,20 @@
     ${object.body | safe}
 </div>
 % if ctx.get('tracking'):
+    <div> Notification about: <b>${object.record_name}</b> </div>
     <ul>
-    % for tracking in ctx['tracking']
-        <li>${tracking[0]} : ${tracking[1]} -&gt; ${tracking[2]}</li>
+    % for tracking in ctx['tracking']:
+        <li>
+            ${tracking[0]}:
+            % if tracking[1]:
+                ${tracking[1]}
+                % if tracking[1] != tracking[2]:
+                    ➜ <b style="color:#875a7b;"> ${tracking[2]} </b>
+                % endif
+            % else:
+                ${tracking[2]}
+            % endif
+        </li>
     % endfor
     </ul>
 % endif
