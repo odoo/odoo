@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
@@ -14,7 +14,7 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Olivier Dony <odo@odoo.com>, 2016
 # Stanislas Sodonon <stanislas.sodonon@gmail.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Florian Hatat, 2016
 # Nissar Chababy <funilrys@outlook.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Nicolas JEUDY <njeudy@panda-chi.io>, 2016
@@ -25,9 +25,9 @@
 # Lucas Deliege <lud@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Mickaël Audigane <maudigane@teclib.com>, 2016
-# ShevAbam <shevabam@gmail.com>, 2016
+# ShevAbam, 2016
 # Sébastien LANGE (SYLEAM) <sebastien.lange@syleam.fr>, 2016
-# Fabrice Henrion <fhe@odoo.com>, 2016
+# Fabrice Henrion, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
@@ -37,9 +37,9 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2016
 # Benjamin Delagoutte <ben@ampletus.fr>, 2016
 # Mensanh Dodji Anani LAWSON <omolowo73@gmail.com>, 2016
-# Stéphane Bidoul (ACSONE) <stephane.bidoul@acsone.eu>, 2016
+# Stéphane Bidoul (ACSONE), 2016
 # Lionel Sausin <ls@numerigraphe.com>, 2016
-# Hamid Darabi <hamid.darabi@gmail.com>, 2016
+# Hamid Darabi, 2016
 # Nacim ABOURA <nacim.aboura@gmail.com>, 2016
 # salwa belhadj <salwa.belhadj@gmail.com>, 2016
 # Lamia Ishak <lamiaishak@hotmail.co.uk>, 2016
@@ -369,6 +369,50 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"<p>Cher ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set access_url = object.get_mail_url()\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>Voici, en pièce jointe, votre \n"
+"% if object.number:\n"
+"facture <strong>${object.number}</strong>\n"
+"% else:\n"
+"facture\n"
+"% endif\n"
+"% if object.origin:\n"
+"(avec la référence ${object.origin})\n"
+"% endif\n"
+", son montant s'élève à <strong>${object.amount_total} ${object.currency_id.name}</strong>\n"
+"émis par ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online:\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"      <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">Voir la facture</a>\n"
+"    </center>\n"
+"% endif\n"
+"    <br/><br/>\n"
+"\n"
+"% if object.state=='paid':\n"
+"    <p>Cette facture est déjà payée.</p>\n"
+"% else:\n"
+"    <p>Merci de procéder au payement dès que possible.</p>\n"
+"% endif\n"
+"\n"
+"<p>Merci,</p>\n"
+"<p style=\"color:#888888\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
+"</div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_my_invoices
