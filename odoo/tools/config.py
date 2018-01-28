@@ -71,7 +71,7 @@ class configmanager(object):
         """
         # Check for a bind-mounted secrets file
         try:
-            admin_pwd_file = open("/run/secrets/adminpw","r")
+            admin_pwd_file = open("/run/secrets/adminpwd","r")
         except:
             admin_pwd_file = None
         # Options not exposed on the command line. Command line options will be added
