@@ -105,6 +105,10 @@ var db = {
             {id: 9, display_name: "Delta PC - Delta PC"},
         ]
     },
+    'account.analytic.tag': {
+        fields: {},
+        records: []
+    },
     'account.bank.statement': {
         fields: {},
         reconciliation_widget_preprocess: function () {
