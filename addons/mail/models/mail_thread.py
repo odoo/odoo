@@ -661,7 +661,7 @@ class MailThread(models.AbstractModel):
         return groups
 
     @api.multi
-    def _message_notification_recipients(self, message, recipients):
+    def _notify_classify_recipients(self, message, recipients):
         # At this point, all access rights should be ok. We sudo everything to
         # access rights checks and speedup the computation.
         result = {}
@@ -709,7 +709,7 @@ class MailThread(models.AbstractModel):
         return result
 
     @api.model
-    def message_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, res_ids, default=None):
         """ Returns the preferred reply-to email address that is basically the
         alias of the document, if it exists. Override this method to implement
         a custom behavior about reply-to for generated emails. """
@@ -752,9 +752,12 @@ class MailThread(models.AbstractModel):
         return res
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
+    def _notify_specific_email_values(self, message):
         """ Get specific notification email values to store on the notification
-        mail_mail. Void method, inherit it to add custom values. """
+        mail.mail. Override to add values related to a specific model.
+
+        :param MailMessage message: mail.message record being notified by email
+        """
         self.ensure_one()
         database_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
         return {'headers': repr({
@@ -763,12 +766,15 @@ class MailThread(models.AbstractModel):
         })}
 
     @api.multi
-    def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
-        """ Get specific notification recipient values to store on the notification
-        mail_mail. Basic method just set the recipient partners as mail_mail
-        recipients. Inherit this method to add custom behavior like using
-        recipient email_to to bypass the recipint_ids heuristics in the
-        mail sending mechanism. """
+    def _notify_email_recipients(self, message, recipient_ids):
+        """ Format email notification recipient values to store on the notification
+        mail.mail. Basic method just set the recipient partners as mail_mail
+        recipients. Override to generate other mail values like email_to or
+        email_cc.
+
+        :param MailMessage message: mail.message record being notified by email
+        :param list recipient_ids: list of res.partner ids to notify
+        """
         return {
             'recipient_ids': [(4, pid) for pid in recipient_ids]
         }
@@ -1759,9 +1765,10 @@ class MailThread(models.AbstractModel):
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, body='', subject=None, message_type='notification',
-                     subtype=None, parent_id=False, attachments=None,
-                     content_subtype='html', **kwargs):
+    def message_post(self, body='', subject=None,
+                     message_type='notification', subtype=None,
+                     parent_id=False, attachments=None, content_subtype='html',
+                     notif_layout=False, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
             :param int thread_id: thread ID to post into, or list with one ID;
@@ -1886,15 +1893,16 @@ class MailThread(models.AbstractModel):
 
         # Post the message
         new_message = MailMessage.create(values)
-        self._message_post_after_hook(new_message, values)
+        self._message_post_after_hook(new_message, values, notif_layout)
         return new_message
 
-    def _message_post_after_hook(self, message, values):
+    def _message_post_after_hook(self, message, values, notif_layout):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
         # Notify recipients of the newly-created message (Inbox / Email + channels)
         message._notify(
+            layout=notif_layout,
             force_send=self.env.context.get('mail_notify_force_send', True),
             user_signature=self.env.context.get('mail_notify_user_signature', True)
         )

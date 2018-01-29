@@ -888,11 +888,11 @@ class Task(models.Model):
         return groups
 
     @api.model
-    def message_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, res_ids, default=None):
         """ Override to get the reply_to of the parent project. """
         tasks = self.sudo().browse(res_ids)
         project_ids = tasks.mapped('project_id').ids
-        aliases = self.env['project.project'].message_get_reply_to(project_ids, default=default)
+        aliases = self.env['project.project']._notify_get_reply_to(project_ids, default=default)
         return {task.id: aliases.get(task.project_id.id, False) for task in tasks}
 
     @api.multi
@@ -968,14 +968,12 @@ class Task(models.Model):
         return recipients
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
-        res = super(Task, self).message_get_email_values(notif_mail=notif_mail)
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers.update(safe_eval(res['headers']))
-            except Exception:
-                pass
+    def _notify_specific_email_values(self, message):
+        res = super(Task, self)._notify_specific_email_values(message)
+        try:
+            headers = safe_eval(res.get('headers', dict()))
+        except Exception:
+            headers = {}
         if self.project_id:
             current_objects = [h for h in headers.get('X-Odoo-Objects', '').split(',') if h]
             current_objects.insert(0, 'project.project-%s, ' % self.project_id.id)
@@ -985,7 +983,7 @@ class Task(models.Model):
         res['headers'] = repr(headers)
         return res
 
-    def _message_post_after_hook(self, message, values):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -996,7 +994,7 @@ class Task(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Task, self)._message_post_after_hook(message, values)
+        return super(Task, self)._message_post_after_hook(message, values, notif_layout)
 
     def action_assign_to_me(self):
         self.write({'user_id': self.env.user.id})

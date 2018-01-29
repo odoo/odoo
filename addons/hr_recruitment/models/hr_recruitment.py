@@ -336,10 +336,10 @@ class Applicant(models.Model):
         return super(Applicant, self)._track_subtype(init_values)
 
     @api.model
-    def message_get_reply_to(self, ids, default=None):
+    def _notify_get_reply_to(self, ids, default=None):
         """ Override to get the reply_to of the parent project. """
         applicants = self.sudo().browse(ids)
-        aliases = self.env['hr.job'].message_get_reply_to(applicants.mapped('job_id').ids, default=default)
+        aliases = self.env['hr.job']._notify_get_reply_to(applicants.mapped('job_id').ids, default=default)
         return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
 
     @api.multi
@@ -377,7 +377,7 @@ class Applicant(models.Model):
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message, values):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -388,7 +388,7 @@ class Applicant(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message, values)
+        return super(Applicant, self)._message_post_after_hook(message, values, notif_layout)
 
     @api.multi
     def create_employee_from_applicant(self):

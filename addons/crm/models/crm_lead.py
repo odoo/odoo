@@ -1113,9 +1113,9 @@ class Lead(models.Model):
         return [new_group] + groups
 
     @api.model
-    def message_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, res_ids, default=None):
         leads = self.sudo().browse(res_ids)
-        aliases = self.env['crm.team'].message_get_reply_to(leads.mapped('team_id').ids, default=default)
+        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped('team_id').ids, default=default)
         return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
 
     @api.multi
@@ -1197,7 +1197,7 @@ class Lead(models.Model):
                 update_vals[key] = res.group(2).lower()
         return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
-    def _message_post_after_hook(self, message, values):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -1208,7 +1208,7 @@ class Lead(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Lead, self)._message_post_after_hook(message, values)
+        return super(Lead, self)._message_post_after_hook(message, values, notif_layout)
 
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
