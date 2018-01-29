@@ -21,6 +21,8 @@ var ColumnQuickCreate = Widget.extend({
         'click .o_kanban_examples': '_onShowExamples',
         'keydown': '_onKeydown',
         'keypress input': '_onKeypress',
+        'blur input': '_onInputBlur',
+        'focus input': '_onInputFocus',
     },
 
     /**
@@ -123,6 +125,27 @@ var ColumnQuickCreate = Widget.extend({
     _onAddClicked: function (event) {
         event.stopPropagation();
         this._add();
+    },
+    /**
+     * When the input is not focused, no key event may occur in the column, so
+     * the discard feature will not work by pressing ESC. We simply hide the
+     * help message in that case, so we do not mislead our users.
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onInputBlur: function () {
+        this.$('.o_discard_msg').hide();
+    },
+    /**
+     * When the input is focused, we need to show the discard help message (it
+     * might have been hidden, @see _onInputBlur)
+     *
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    _onInputFocus: function () {
+        this.$('.o_discard_msg').show();
     },
     /**
      * Cancels quick creation on escape keydown event
