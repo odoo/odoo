@@ -92,7 +92,7 @@ class TestChannelAccessRights(common.BaseFunctionalTest, common.MockEmails):
         with self.assertRaises(AccessError):
             self.group_private.sudo(self.user_employee).write({'name': 're-modified'})
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_access_rights_followers_ko(self):
         with self.assertRaises(AccessError):
             self.group_private.sudo(self.user_portal).name
