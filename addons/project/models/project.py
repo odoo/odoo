@@ -187,7 +187,7 @@ class Project(models.Model):
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
     resource_calendar_id = fields.Many2one('resource.calendar', string='Working Time',
         help="Timetable working hours to adjust the gantt diagram report")
-    type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
+    type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages', copy=False)
     task_count = fields.Integer(compute='_compute_task_count', string="Tasks")
     task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="Tasks")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
