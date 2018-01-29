@@ -115,6 +115,13 @@ in ``/etc/postgresql/9.5/main/postgresql.conf`` set:
   listen_addresses = 'localhost,192.168.1.2'
   port = 5432
   max_connections = 80
+  
+Don't forget to uncomment the # before the ``listen_addresses`` variable or otherwise it will not be checked and used.
+Now reload your PostgreSQL service in order to apply all changes to your PostgreSQL instance.
+  
+.. code-block:: text
+
+  sudo service postgresql reload
 
 .. _setup/deploy/odoo:
 
