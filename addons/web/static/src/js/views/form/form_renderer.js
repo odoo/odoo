@@ -298,7 +298,7 @@ var FormRenderer = BasicRenderer.extend({
             folded_buttons = [];
         }
 
-        // Toggle class to tell if the button box is full (LESS requirement)
+        // Toggle class to tell if the button box is full (CSS requirement)
         var full = (visible_buttons.length > nb_buttons);
         $result.toggleClass('o_full', full).toggleClass('o_not_full', !full);
 
