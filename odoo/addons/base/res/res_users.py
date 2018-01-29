@@ -14,7 +14,6 @@ from odoo.exceptions import AccessDenied, AccessError, UserError, ValidationErro
 from odoo.osv import expression
 from odoo.service.db import check_super
 from odoo.tools import partition
-from odoo.http import root
 
 _logger = logging.getLogger(__name__)
 
@@ -373,8 +372,6 @@ class Users(models.Model):
         if any(key.startswith('context_') or key in ('lang', 'tz') for key in values):
             self.context_get.clear_cache(self)
         if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
-            # force deletion of all sessions for these users
-            root.session_store.delete_sessions_for_uids(self.ids)
             db = self._cr.dbname
             for id in self.ids:
                 self.__uid_cache[db].pop(id, None)
@@ -388,10 +385,7 @@ class Users(models.Model):
         db = self._cr.dbname
         for id in self.ids:
             self.__uid_cache[db].pop(id, None)
-        res = super(Users, self).unlink()
-        # force deletion of all sessions for these users
-        root.session_store.delete_sessions_for_uids(self.ids)
-        return res
+        return super(Users, self).unlink()
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
