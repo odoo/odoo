@@ -371,8 +371,11 @@ class Product(models.Model):
     @api.multi
     def write(self, values):
         res = super(Product, self).write(values)
-        if 'active' in values and not values['active'] and self.mapped('orderpoint_ids').filtered(lambda r: r.active):
-            raise UserError(_('You still have some active reordering rules on this product. Please archive or delete them first.'))
+        if 'active' in values and not values['active']:
+            orderpoints = self.mapped('orderpoint_ids').filtered(lambda r: r.active)
+            if orderpoints:
+                product = orderpoints[0].product_id
+                raise UserError(_('You still have some active reordering rules on this product : %s. Please archive or delete them first.') % product.display_name)
         return res
 
 class ProductTemplate(models.Model):
