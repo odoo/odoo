@@ -14,4 +14,11 @@ action = env['pos.order']._check_hash_integrity(env.user.company_id.id)
     </record>
 
     <menuitem action="action_check_hash_integrity_pos_orders" id="menu_check_pos_order_integrity" parent="pos_fr_statements_menu" sequence="90"/>
+
+    <record id="archive_posted" model="mail.message.subtype">
+        <field name="name">Archived</field>
+        <field name="res_model">res.partner</field>
+        <field name="default" eval="False"/>
+        <field name="description">Archive Posted</field>
+    </record>
 </odoo>
