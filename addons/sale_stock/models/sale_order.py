@@ -130,6 +130,7 @@ class SaleOrder(models.Model):
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
 
 
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -389,10 +390,4 @@ class SaleOrderLine(models.Model):
         if self.mapped('qty_delivered') and values['product_uom_qty'] < max(self.mapped('qty_delivered')):
             raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
                               'Create a return first.'))
-        for line in self:
-            pickings = self.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
-            for picking in pickings:
-                picking.message_post(body="The quantity of %s has been updated from %d to %d in %s" %
-                                          (line.product_id.name, line.product_uom_qty, values['product_uom_qty'], self.order_id.name)
-                )
         super(SaleOrderLine, self)._update_line_quantity(values)
