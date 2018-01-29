@@ -1681,6 +1681,35 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('hide and display help message (ESC) in kanban quick create', function (assert) {
+        assert.expect(2);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<field name="product_id"/>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+        });
+
+        kanban.$('.o_quick_create_folded').click();
+
+        assert.ok(kanban.$('.o_discard_msg').is(':visible'),
+            'the ESC to discard message is visible');
+
+        // click in the column, but outside the input (to lose focus)
+        kanban.$('.o_kanban_header').click();
+        assert.notOk(kanban.$('.o_discard_msg').is(':visible'),
+            'the ESC to discard message is no longer visible');
+
+        kanban.destroy();
+    });
+
     QUnit.test('delete a column in grouped on m2o', function (assert) {
         assert.expect(28);
 
