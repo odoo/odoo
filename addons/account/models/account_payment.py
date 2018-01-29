@@ -327,7 +327,7 @@ class account_payment(models.Model):
         else:
             if self.payment_type == 'inbound':
                 domain.append(('at_least_one_inbound', '=', True))
-            else:
+            elif self.payment_type == 'outbound':
                 domain.append(('at_least_one_outbound', '=', True))
         return {'domain': domain, 'journal_types': set(journal_type)}
 
@@ -369,6 +369,8 @@ class account_payment(models.Model):
                 self.partner_type = 'customer'
             elif self.payment_type == 'outbound':
                 self.partner_type = 'supplier'
+            else:
+                self.partner_type = False
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):

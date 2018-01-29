@@ -132,7 +132,7 @@ class PadCommon(models.AbstractModel):
 
         # Update the `pad_content_field` if the pad is modified
         for k, v in list(vals.items()):
-            field = self._fields[k]
+            field = self._fields.get(k)
             if hasattr(field, 'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(v)
 
