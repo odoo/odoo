@@ -682,6 +682,8 @@ var FieldX2Many = AbstractField.extend({
         resequence: '_onResequence',
         save_line: '_onSaveLine',
         toggle_column_order: '_onToggleColumnOrder',
+        activate_next_widget: '_onActiveNextWidget',
+        navigation_move: '_onNavigationMove',
     }),
 
     // We need to trigger the reset on every changes to be aware of the parent changes
@@ -797,6 +799,30 @@ var FieldX2Many = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
 
+    /**
+     * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+       return (this.mode === 'edit' && this.$input) || this.$el;
+    },
+
+    /**
+     * @override
+     * @param {Object} [options]
+     */
+    activate: function (options) {
+        if (!this.activeActions.create || this.isReadonly || !this.$el.is(":visible")) {
+            return false;
+        }
+        if (this.view.type === 'kanban') {
+            this.$buttons.find(".o-kanban-button-new").focus();
+        }
+        if (this.view.arch.tag === 'tree') {
+            this.renderer.$('.o_field_x2many_list_row_add a').focus();
+        }
+        return true;
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1159,6 +1185,16 @@ var FieldX2Many = AbstractField.extend({
     _onToggleColumnOrder: function (ev) {
         ev.data.field = this.name;
     },
+    /*
+    * Move to next widget.
+    *
+    * @private
+    */
+    _onActiveNextWidget: function (e) {
+        e.stopPropagation();
+        this.renderer.unselectRow();
+        this.trigger_up('navigation_move',{direction:'next'});
+    },
 });
 
 var FieldOne2Many = FieldX2Many.extend({
@@ -1257,7 +1293,6 @@ var FieldOne2Many = FieldX2Many.extend({
         var self = this;
         // we don't want interference with the components upstream.
         ev.stopPropagation();
-
         if (this.editable) {
             if (!this.activeActions.create) {
                 if (ev.data.onFail) {
@@ -1329,7 +1364,6 @@ var FieldMany2Many = FieldX2Many.extend({
     _onAddRecord: function (ev) {
         var self = this;
         ev.stopPropagation();
-
         var domain = this.record.getDomain({fieldName: this.name});
 
         new dialogs.SelectCreateDialog(this, {

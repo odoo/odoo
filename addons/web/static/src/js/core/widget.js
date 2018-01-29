@@ -284,6 +284,16 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
 
         return this;
     },
+    
+    /**
+     * Update the modifiers with the newest value. 
+     * Now this.attrs.modifiersValue can be used consistantly even with 
+     * conditional modifiers
+     * 
+     * @param {Object} modifiers  the updated modifiers
+     */
+    updateModifiersValue: function(modifiers) {
+    },
 
     //--------------------------------------------------------------------------
     // Private

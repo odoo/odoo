@@ -108,7 +108,7 @@ var CrashManager = core.Class.extend({
             title: _.str.capitalize(error.type || error.message) || _t("Odoo Warning"),
             subtitle: error.data.title,
             $content: $(QWeb.render('CrashManager.warning', {error: error}))
-        }).open();
+        }).open({shouldFocusButtons:true});
     },
     show_error: function(error) {
         if (!this.active) {

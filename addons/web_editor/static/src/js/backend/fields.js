@@ -63,6 +63,12 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         return this.value && this.value !== "<p><br/></p>" && this.value.match(/\S/);
     },
     /**
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$content || this._super.apply(this, arguments);
+    },
+    /**
      * Do not re-render this field if it was the origin of the onchange call.
      *
      * @override
