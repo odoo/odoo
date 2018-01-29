@@ -19,6 +19,8 @@ var FormController = BasicController.extend({
         open_one2many_record: '_onOpenOne2ManyRecord',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
+        focus_control_button: '_onFocusControlButton',
+        form_dialog_discarded: '_onFormDialogDiscarded',
     }),
     /**
      * @override
@@ -41,12 +43,19 @@ var FormController = BasicController.extend({
     // Public
     //--------------------------------------------------------------------------
 
+
     /**
      * Calls autofocus on the renderer
      */
     autofocus: function () {
         if (!this.disableAutofocus) {
-            this.renderer.autofocus();
+            var isControlActivted = this.renderer.autofocus();
+            if (!isControlActivted) { 
+                // this can happen in read mode if there are no button with class oe_highlight
+                if (this.$buttons && this.mode === 'readonly') {
+                    return this.$buttons.find('.o_form_button_edit').focus();
+                }
+            }
         }
     },
     /**
@@ -119,13 +128,21 @@ var FormController = BasicController.extend({
         this.$buttons = $('<div/>');
         if (mustRenderFooterButtons) {
             this.$buttons.append($footer);
+
         } else {
             this.$buttons.append(qweb.render("FormView.buttons", {widget: this}));
             this.$buttons.on('click', '.o_form_button_edit', this._onEdit.bind(this));
             this.$buttons.on('click', '.o_form_button_create', this._onCreate.bind(this));
             this.$buttons.on('click', '.o_form_button_save', this._onSave.bind(this));
             this.$buttons.on('click', '.o_form_button_cancel', this._onDiscard.bind(this));
-
+            this._assignSaveCancelKeyboardBehavior(this.$buttons.find('.o_form_buttons_edit'));
+            this.$buttons.find('.o_form_buttons_edit').tooltip({
+                delay: {show: 200, hide:0},
+                title: function(){
+                    return qweb.render('SaveCancelButton.tooltip');
+                },
+                trigger: 'manual',
+            });
             this._updateButtons();
         }
         this.$buttons.appendTo($node);
@@ -218,7 +235,37 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
+    /**
+     * Assign on the buttons save and discard additionnal behavior to facilitate
+     * the work of the users doing input only using the keyboard
+     * 
+     * @param {jQueryElement} $saveCancelButtonContainer  The div containing the
+     * save and cancel buttons
+     * @private
+     */
+    _assignSaveCancelKeyboardBehavior: function ($saveCancelButtonContainer) {
+        var self = this;
+        $saveCancelButtonContainer.children().on('keydown', function(e) {
+            switch(e.which) {
+                case $.ui.keyCode.ENTER:
+                    e.preventDefault();
+                    self.saveRecord.apply(self);
+                    break;
+                case $.ui.keyCode.ESCAPE:
+                    e.preventDefault();
+                    self._discardChanges.apply(self);
+                    break;
+                case $.ui.keyCode.TAB:
+                    if (!e.shiftKey && 
+                        (e.target.classList.contains("btn-primary") || 
+                         e.target.classList.contains("oe_highlight"))) {
+                        $saveCancelButtonContainer.tooltip('show');
+                        e.preventDefault();
+                    }
+                    break;
+            }
+        });
+    },
     /**
      * When a save operation has been confirmed from the model, this method is
      * called.
@@ -487,6 +534,28 @@ var FormController = BasicController.extend({
     _onFreezeOrder: function (event) {
         event.stopPropagation();
         this.model.freezeOrder(event.data.id);
+    },
+    /**
+     * Set the focus on the first primary button of the controller (likely Edit)
+     * 
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onFocusControlButton:function(e) {
+        if (this.$buttons) {
+            e.stopPropagation();
+            this.$buttons.find('.btn-primary:visible:first()').focus();
+        }
+    },
+    /**
+     * Reset the focus on the control that openned a Dialog after it was closed
+     * 
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onFormDialogDiscarded: function(e) {
+        e.stopPropagation();
+        this.renderer.focusLastActivatedWidget();
     },
     /**
      * Opens a one2many record (potentially new) in a dialog. This handler is

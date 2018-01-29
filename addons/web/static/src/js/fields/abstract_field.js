@@ -299,6 +299,34 @@ var AbstractField = Widget.extend({
         return this._render() || $.when();
     },
 
+    /**
+     * Remove the invalid class on a field
+     */
+    removeInvalidClass: function () {
+        this.$el.removeClass('o_field_invalid');
+    },
+
+    /**
+     * add the invalid class on a field
+     */
+    setInvalidClass: function () {
+        this.$el.addClass('o_field_invalid');
+    },
+
+    /**
+     * Update the modifiers with the newest value. 
+     * Now this.attrs.modifiersValue can be used consistantly even with 
+     * conditional modifiers inside field widgets, and without needing new 
+     * events or synchronization between the widgets, renderer and controller
+     * 
+     * @param {Object || null} modifiers  the updated modifiers
+     * @override
+     */
+    updateModifiersValue: function(modifiers) {
+        this.attrs.modifiersValue = modifiers || {};
+    },
+
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------

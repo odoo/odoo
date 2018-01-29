@@ -143,19 +143,22 @@ tour.register('main_flow_tour', {
     trigger: ".modal-footer .btn-primary",
     content: _t('Save'),
     position: 'bottom',
-}, {
+},
+ {
 // Add second component
     trigger: ".o_field_x2many_list_row_add > a",
-    extra_trigger: "body:not(.modal-open)",
+    extra_trigger: "body:not(:has(table.o_list_view div.o_field_widget[name='product_id'] input))",
     content: _t("Click here to add some lines."),
     position: "bottom",
-}, {
+}, 
+{ 
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
     extra_trigger: '.o_field_widget[name=bom_line_ids] .o_data_row:nth(1).o_selected_row',
     content: _t("Select a product, or create a new one on the fly."),
     position: "right",
     run: "text the_flow.component2",
-}, {
+}, 
+{
     trigger: ".ui-menu-item > a:contains('the_flow.component2')",
     auto: true,
 }, {
@@ -364,11 +367,11 @@ tour.register('main_flow_tour', {
     content: _t("Enter an email address"),
     position: "right",
     run: "text test@the_flow.com",
-}, {
+},{
     trigger: ".modal-footer .btn-primary",
     content: _t("Save your changes"),
     position: "bottom",
-}, {
+},  {
     trigger: ".modal-footer .btn-primary span:contains('Send')",
     content: _t("Try to send it to email"),
     position: "bottom",
