@@ -331,6 +331,7 @@ var EventDispatcherMixin = _.extend({}, ParentedMixin, {
     },
     trigger_up: function (name, info) {
         var event = new OdooEvent(this, name, info);
+        //console.info('event: ', name, info);
         this._trigger_up(event);
     },
     _trigger_up: function (event) {

@@ -11251,6 +11251,219 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+
+    QUnit.module('TabNavigation');
+    QUnit.test('when Navigating to a many to one with tabs, it receives the focus on the add new line link', function (assert) {
+         assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            viewOptions: {
+                mode: 'edit',
+            },
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                        '<notebook>' +
+                            '<page string="Partner page">' +
+                                '<field name="turtles">' +
+                                    '<tree editable="bottom">' +
+                                        '<field name="turtle_foo"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$el.find('input[name="qux"]')[0],
+                            document.activeElement,
+                            "initially, the focus should be on the 'qux' field because it is the first input");
+        form.$el.find('input[name="qux"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+        assert.strictEqual(assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add>a')[0],
+                            document.activeElement,
+                            "after tab, the focus should be on the many2one on the add new line"));
+           
+        form.destroy();
+    });
+
+    QUnit.test('when Navigating to a many to one with tabs, it places the focus on the first visible field', function (assert) {
+        assert.expect(3);
+
+       var form = createView({
+           View: FormView,
+           model: 'partner',
+           viewOptions: {
+               mode: 'edit',
+           },
+           data: this.data,
+           arch:'<form string="Partners">' +
+                   '<sheet>' +
+                       '<group>' +
+                           '<field name="qux"/>' +
+                       '</group>' +
+                       '<notebook>' +
+                           '<page string="Partner page">' +
+                               '<field name="turtles">' +
+                                   '<tree editable="bottom">' +
+                                       '<field name="turtle_bar" invisible="1"/>'+
+                                       '<field name="turtle_foo"/>' +
+                                   '</tree>' +
+                               '</field>' +
+                           '</page>' +
+                       '</notebook>' +
+                   '</sheet>' +
+               '</form>',
+           res_id: 1,
+       });
+
+       assert.strictEqual(form.$el.find('input[name="qux"]')[0],
+                           document.activeElement,
+                           "initially, the focus should be on the 'qux' field because it is the first input");
+       form.$el.find('input[name="qux"]').trigger($.Event('keydown', {
+           which: $.ui.keyCode.TAB,
+           keyCode: $.ui.keyCode.TAB,
+       }));
+       document.activeElement.click();
+       assert.strictEqual(assert.strictEqual(form.$el.find('input[name="turtle_foo"]')[0],
+                           document.activeElement,
+                           "after tab, the focus should be on the many2one"));
+          
+       form.destroy();
+   });
+
+    QUnit.test('when Navigating to a many to one with tabs, not filling in the first field and hitting tab, we should not add a first line but navigate to the next control', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records[0].turtles = [];
+       
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            viewOptions: {
+                mode: 'edit',
+            },
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                        '<notebook>' +
+                            '<page string="Partner page">' +
+                                '<field name="turtles">' +
+                                    '<tree editable="bottom">' +
+                                        '<field name="turtle_foo"/>' +
+                                        '<field name="turtle_description"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$el.find('input[name="qux"]')[0],
+                            document.activeElement,
+                            "initially, the focus should be on the 'qux' field because it is the first input");
+        form.$el.find('input[name="qux"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+
+        $(document.activeElement).trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
+
+        assert.strictEqual(assert.strictEqual(form.$el.find('input[name="foo"]')[0],
+                            document.activeElement,
+                            "after tab, the focus should be on the many2one"));
+            
+        form.destroy();
+    });
+
+    QUnit.test('when Navigating to a many to one with tabs, editing in a popup, the popup should receive the focus then give it back', function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records[0].turtles = [];
+       
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            viewOptions: {
+                mode: 'edit',
+            },
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="qux"/>' +
+                        '</group>' +
+                        '<notebook>' +
+                            '<page string="Partner page">' +
+                                '<field name="turtles">' +
+                                    '<tree>' +
+                                        '<field name="turtle_foo"/>' +
+                                        '<field name="turtle_description"/>' +
+                                    '</tree>' +
+                                '</field>' +
+                            '</page>' +
+                        '</notebook>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            archs: {
+                'turtle,false,form': '<form><group><field name="turtle_foo"/><field name="turtle_int"/></group></form>',
+            },
+        });
+
+        assert.strictEqual(form.$el.find('input[name="qux"]')[0],
+                            document.activeElement,
+                            "initially, the focus should be on the 'qux' field because it is the first input");
+        form.$el.find('input[name="qux"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.TAB,
+            keyCode: $.ui.keyCode.TAB,
+        }));
+
+        assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add a')[0],
+            document.activeElement,
+            "after tab, the focus should be on the add new line link");
+
+        form.$el.find('.o_field_x2many_list_row_add a').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ENTER,
+            keyCode: $.ui.keyCode.ENTER,
+        }));
+
+        assert.strictEqual($.find('input[name="turtle_foo"]')[0],
+            document.activeElement,
+            "after enter, the focus should be in the popup, in the first input field");
+        
+        $('input[name="turtle_foo"]').trigger($.Event('keydown', {
+            which: $.ui.keyCode.ESCAPE,
+            keyCode: $.ui.keyCode.ESCAPE,
+        }));
+
+        assert.strictEqual(form.$el.find('.o_field_x2many_list_row_add a')[0],
+            document.activeElement,
+            "after escape, the focus should be back on the add new line link");
+        
+        form.destroy();
+    });
+
 });
 });
 });

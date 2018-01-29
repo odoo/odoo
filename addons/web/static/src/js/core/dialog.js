@@ -18,7 +18,12 @@ var _t = core._t;
  **/
 var Dialog = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
-
+    custom_events: _.extend({}, Widget.prototype.custom_events, {
+        focus_control_button: '_onFocusControlButton',
+    }),
+    events: _.extend({} , Widget.prototype.events, {
+        'keydown .modal-footer button':'_onFooterButtonKeyDown',
+    }),
     /**
      * @param {Widget} parent
      * @param {Object} [options]
@@ -102,6 +107,9 @@ var Dialog = Widget.extend({
         }
         this.$el.addClass('modal-body ' + this.dialogClass);
     },
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
     /**
      * @param {Object[]} buttons - @see init
      */
@@ -148,7 +156,14 @@ var Dialog = Widget.extend({
         return (handler)? this._opened.then(handler) : this._opened;
     },
 
-    open: function () {
+    /**
+     * Show a dialog
+     * 
+     * @param {Object} options
+     * @param {boolean} options.shouldFocusButtons  if true, put the focus on 
+     * the first button primary when the dialog opens
+     */
+    open: function (options) {
         $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
         var self = this;
@@ -157,6 +172,9 @@ var Dialog = Widget.extend({
             self.$modal.modal('show');
             self._opened.resolve();
         });
+        if (options && options.shouldFocusButtons) {
+            self._onFocusControlButton();
+        }
 
         return self;
     },
@@ -176,6 +194,8 @@ var Dialog = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
+        var isFocusSet = this._focusOnClose(); 
+
         this._super();
 
         $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
@@ -184,11 +204,75 @@ var Dialog = Widget.extend({
             this.$modal.remove();
         }
 
-        var modals = $('body > .modal').filter(':visible');
-        if (modals.length) {
-            modals.last().focus();
-            // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-            $('body').addClass('modal-open');
+        if (!isFocusSet) {
+            var modals = $('body > .modal').filter(':visible');
+            if (modals.length) {
+                modals.last().focus();
+                // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
+                $('body').addClass('modal-open');
+            }
+        }
+    },
+    /**
+     * adds the keydown behavior to the dialogs after external files modifies 
+     * its DOM.
+     */
+    rebindButtonBehavior: function () {
+        this.$footer.on('keydown', this._onFooterButtonKeyDown);
+    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+    /**
+     * Manages the focus when the dialog closes. The default behavior is to set the focus on the top-most opened popup.
+     * The goal of this function is to be overridden by all children of the dialog class.
+     * 
+     * @returns: boolean  should return true if the focus has already been set else false.
+     */
+    _focusOnClose: function() {
+        return false;
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+    /**
+     * Moves the focus to the first button primary in the footer of the dialog
+     * 
+     * @private
+     * @param {odooEvent} e
+     */
+    _onFocusControlButton: function (e) {
+        if (this.$footer) {
+            if (e) {
+                e.stopPropagation();
+            }
+            this.$footer.find('.btn-primary:visible:first()').focus();
+        }
+    },
+    /**
+     * Manages the TAB key on the buttons. If you the focus is on a primary 
+     * button and the users tries to tab to go to the next button, display
+     * a tooltip
+     * 
+     * @param {jQueryEvent} e
+     * @private
+     */
+    _onFooterButtonKeyDown: function (e) {
+        switch(e.which) {
+            case $.ui.keyCode.TAB:
+                if (!e.shiftKey && (e.target.classList.contains("btn-primary") || e.target.classList.contains("oe_highlight"))) {
+                    e.preventDefault();
+                    var $primaryButton = $(e.target);
+                    $primaryButton.tooltip({
+                        delay: {show: 200, hide:0},
+                        title: function(){
+                            return QWeb.render('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
+                        },
+                        trigger: 'manual',
+                    });
+                    $primaryButton.tooltip('show');
+                }
+                break;
         }
     }
 });
@@ -207,7 +291,7 @@ Dialog.alert = function (owner, message, options) {
             text: message,
         }),
         title: _t("Alert"),
-    }, options)).open();
+    }, options)).open({shouldFocusButtons:true});
 };
 
 // static method to open simple confirm dialog
@@ -232,7 +316,7 @@ Dialog.confirm = function (owner, message, options) {
             text: message,
         }),
         title: _t("Confirmation"),
-    }, options)).open();
+    }, options)).open({shouldFocusButtons:true});
 };
 
 /**

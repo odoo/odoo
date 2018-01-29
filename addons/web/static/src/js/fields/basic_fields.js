@@ -312,12 +312,20 @@ var InputField = DebouncedField.extend({
         this._super.apply(this, arguments);
 
         // the following code only makes sense in edit mode, with an input
-        if (this.mode === 'edit') {
+        if (this.mode === 'edit' && ev.data.direction !== 'cancel') {
             var input = this.$input[0];
             var selecting = (input.selectionEnd !== input.selectionStart);
             if ((ev.data.direction === "left" && (selecting || input.selectionStart !== 0))
-             || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
+                || (ev.data.direction === "right" && (selecting || input.selectionStart !== input.value.length))) {
                 ev.stopPropagation();
+            }
+            if (ev.data.direction ==='next' && this.attrs.modifiersValue.required) { 
+                if (!this.$input.val()){
+                    this.setInvalidClass();
+                    ev.stopPropagation();
+                } else {
+                    this.removeInvalidClass();
+                }
             }
         }
     },

@@ -15,6 +15,10 @@ var FormRenderer = BasicRenderer.extend({
         'click .o_notification_box .oe_field_translate': '_onTranslate',
         'click .oe_title, .o_inner_group': '_onClick',
     }),
+    custom_events: _.extend({}, BasicRenderer.prototype.custom_events, {
+        'navigation_move':'_onNavigationMove',
+        'activate_next_widget' : '_onActivateNextWidget',
+    }),
     // default col attributes for the rendering of groups
     INNER_GROUP_COL: 2,
     OUTER_GROUP_COL: 2,
@@ -25,6 +29,7 @@ var FormRenderer = BasicRenderer.extend({
     init: function () {
         this._super.apply(this, arguments);
         this.idsForLabels = {};
+        this.lastActivatedFieldIndex = -1;
     },
     /**
      * @override
@@ -43,10 +48,19 @@ var FormRenderer = BasicRenderer.extend({
     /**
      * Focuses the field having attribute 'default_focus' set, if any, or the
      * first focusable field otherwise.
+     * In read mode, delegate which button to give the focus to, to the form_renderer
+     * 
+     * @returns {int || undefined} the index of the widget activated else 
+     * undefined
      */
     autofocus: function () {
         if (this.mode === 'readonly') {
-            return;
+            var firstPrimaryFormButton =  this.$el.find('button.oe_highlight:enabled:visible:first()');
+            if (firstPrimaryFormButton.length > 0) {
+                return firstPrimaryFormButton.focus();
+            } else {
+                return;
+            }
         }
         var focusWidget = this.defaultFocusField;
         if (!focusWidget || !focusWidget.isFocusable()) {
@@ -60,7 +74,7 @@ var FormRenderer = BasicRenderer.extend({
             }
         }
         if (focusWidget) {
-            focusWidget.activate({noselect: true});
+            return focusWidget.activate({noselect: true});
         }
     },
     /**
@@ -145,6 +159,15 @@ var FormRenderer = BasicRenderer.extend({
             .removeAttr('disabled');
     },
     /**
+     * Put the focus on the last activated widget. 
+     * This function is used when closing a dialog to give the focus back to the
+     * form that has opened it and ensures that the focus is in the correct 
+     * field.
+     */
+    focusLastActivatedWidget: function () {
+        this._activateNextFieldWidget(this.state, this.lastActivatedFieldIndex - 1);
+    },
+    /**
      * returns the active tab pages for each notebook
      *
      * @todo currently, this method is unused...
@@ -211,7 +234,27 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
+    /**
+     * @override
+     */
+    _activateNextFieldWidget: function (record, currentIndex) {
+        //if we are the last widget, we should give the focus to the first Primary Button in the form
+        //else do the default behavior
+        if ( (currentIndex + 1) >= (this.allFieldWidgets[record.id] || []).length) {
+            this.trigger_up('focus_control_button');
+            this.lastActivatedFieldIndex = -1;
+        } else {
+            var activatedIndex =  this._super.apply(this, arguments);
+            if (activatedIndex === -1 ) { // no widget have been activated, we should go to the edit/save buttons
+                this.trigger_up('focus_control_button');
+                this.lastActivatedFieldIndex = -1;
+            }
+            else {
+                this.lastActivatedFieldIndex = activatedIndex;
+            }
+        }
+        return this.lastActivatedFieldIndex;
+    },
     /**
      * Add a tooltip on a button
      *
@@ -819,11 +862,15 @@ var FormRenderer = BasicRenderer.extend({
         this.defs = defs;
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
-
+        
         return $.when.apply($, defs).then(function () {
             self._updateView($form.contents());
         }, function () {
             $form.remove();
+        }).then(function(){
+            if (self.lastActivatedFieldIndex >= 0) {
+                self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
+            } 
         });
     },
     /**
@@ -882,7 +929,11 @@ var FormRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-
+    _onActivateNextWidget: function (e) {
+        e.stopPropagation();
+        var index = this.allFieldWidgets[this.state.id].indexOf(e.data.target);
+        this._activateNextFieldWidget(this.state, index);
+    },
     /**
      * Makes the Edit button bounce in readonly
      *
@@ -899,11 +950,13 @@ var FormRenderer = BasicRenderer.extend({
      * @param {OdooEvent} ev
      */
     _onNavigationMove: function (ev) {
-        ev.stopPropagation();
+        if (ev.data.direction !== "cancel") {
+            ev.stopPropagation();
+        }
 
         var index;
         if (ev.data.direction === "next") {
-            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);
+            index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target || ev.target);
             this._activateNextFieldWidget(this.state, index);
         } else if (ev.data.direction === "previous") {
             index = this.allFieldWidgets[this.state.id].indexOf(ev.data.target);

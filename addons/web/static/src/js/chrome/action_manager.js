@@ -417,6 +417,7 @@ var ActionManager = Widget.extend({
                     callbacks: [{widget: dialog}, {widget: controller.widget}],
                 });
                 widget.renderButtons(dialog.$footer);
+                dialog.rebindButtonBehavior();
 
                 return action;
             });

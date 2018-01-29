@@ -2400,11 +2400,14 @@ QUnit.module('Views', {
             "third row should be in edition");
 
         // Press 'Tab' -> should go to next line
+        // add a value in the cell because the Tab on an empty first cell would activate the next widget in the view
+        list.$('.o_selected_row input').val(11).trigger('input'); 
         list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
         assert.ok(list.$('.o_data_row:nth(3)').hasClass('o_selected_row'),
             "fourth row should be in edition");
 
         // Press 'Tab' -> should go back to first line as the create action isn't available
+        list.$('.o_selected_row input').val(11).trigger('input');
         list.$('.o_selected_row input').trigger({type: 'keydown', which: 9});
         assert.ok(list.$('.o_data_row:first').hasClass('o_selected_row'),
             "first row should be in edition");
@@ -2471,7 +2474,7 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            fieldDebounce: 1,
+            fieldDebounce: 1
         });
 
         // click on first td and press TAB

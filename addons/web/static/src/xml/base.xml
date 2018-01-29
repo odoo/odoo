@@ -209,7 +209,7 @@
 
 <t t-name="WebClient.DebugManager">
     <li class="o_debug_manager">
-        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" tabindex="-1">
             <span class="fa fa-bug"/>
         </a>
         <ul class="dropdown-menu o_debug_dropdown" role="menu"/>
@@ -409,6 +409,22 @@
                 class="btn btn-default btn-sm o_form_button_cancel" accesskey="j">
             Discard
         </button>
+    </div>
+</t>
+<t t-name="SaveCancelButton.tooltip">
+    <div class="oe_tooltip_string">
+        <div class="tooltip-inner">
+            Hit ENTER to SAVE<br/>
+            Hit ESCAPE to DISCARD
+        </div>
+    </div>
+</t>
+<t t-name="CreateButton.tooltip">
+    <div class="oe_tooltip_string">
+        <div class="tooltip-inner">
+            Hit ENTER to CREATE<br/>
+            Hit DOWN to navigate to the list bellow
+        </div>
     </div>
 </t>
 <form t-name="FormView.set_default">
