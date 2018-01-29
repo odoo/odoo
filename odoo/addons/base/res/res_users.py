@@ -374,8 +374,8 @@ class Users(models.Model):
             self.context_get.clear_cache(self)
         if any(key in values for key in ['active'] + USER_PRIVATE_FIELDS):
             # force deletion of all sessions for these users
-            root.session_store.delete_sessions_for_uids(self.ids)
             db = self._cr.dbname
+            root.session_store.delete_sessions_for_uids(db, self.ids)
             for id in self.ids:
                 self.__uid_cache[db].pop(id, None)
 
@@ -390,7 +390,7 @@ class Users(models.Model):
             self.__uid_cache[db].pop(id, None)
         res = super(Users, self).unlink()
         # force deletion of all sessions for these users
-        root.session_store.delete_sessions_for_uids(self.ids)
+        root.session_store.delete_sessions_for_uids(db, self.ids)
         return res
 
     @api.model

@@ -1279,13 +1279,13 @@ class DisableCacheMiddleware(object):
         return self.app(environ, start_wrapped)
 
 class OdooSessionStore(werkzeug.contrib.sessions.FilesystemSessionStore):
-    def delete_sessions_for_uids(self, uids):
+    def delete_sessions_for_uids(self, dbname, uids):
         # pretty expensive on large session stores, especially non-local!
         uids = set(uids)
         _logger.info('Deleting all HTTP sessions for UIDs %s', uids)
         for sid in self.list():
             s = self.get(sid)
-            if s.uid and s.uid in uids:
+            if s.db and s.db == dbname and s.uid and s.uid in uids:
                 _logger.debug('Deleting session %s', sid)
                 self.delete(s)
 
