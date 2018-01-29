@@ -281,8 +281,10 @@ var RTEWidget = Widget.extend({
         .each(function () {
             var $node = $(this);
 
+            // fallback for firefox iframe display:none see https://github.com/odoo/odoo/pull/22610
+            var computedStyles = window.getComputedStyle(this) || window.parent.getComputedStyle(this);
             // add class to display inline-block for empty t-field
-            if (window.getComputedStyle(this).display === 'inline' && $node.data('oe-type') !== 'image') {
+            if (computedStyles.display === 'inline' && $node.data('oe-type') !== 'image') {
                 $node.addClass('o_is_inline_editable');
             }
         });
