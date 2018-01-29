@@ -85,6 +85,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                     description: $("input[name='invoice_num']").val(),
                     currency: currency,
                     amount: amount,
+                    zipCode: true,
                 });
         } else {
             var currency = $("input[name='currency']").val();
@@ -103,6 +104,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                     description: $("input[name='invoice_num']").val(),
                     currency: currency,
                     amount: amount,
+                    zipCode: true,
                 });
             });
         }
