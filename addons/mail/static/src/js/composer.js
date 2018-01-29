@@ -504,7 +504,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
         // behavior for the chatter composer
 
         //Removing unwanted extra spaces from message
-        var value = _.escape(this.$input.text()).trim();
+        var value = _.escape(this.$input.text());
         value = value.replace(/(\r|\n){2,}/g, '<br/><br/>');
         value = value.replace(/(\r|\n)/g, '<br/>');
 
