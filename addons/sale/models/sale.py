@@ -853,8 +853,9 @@ class SaleOrderLine(models.Model):
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
         if 'done' in self.mapped('order_id.state') and any(f in values.keys() for f in protected_fields):
+            protected_fields_modified = list(set(protected_fields) & set(values.keys()))
             fields = self.env['ir.model.fields'].search([
-                ('name', 'in', protected_fields), ('model', '=', self._name)
+                ('name', 'in', protected_fields_modified), ('model', '=', self._name)
             ])
             raise UserError(
                 _('It is forbidden to modify the following fields in a locked order:\n%s')

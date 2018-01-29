@@ -417,6 +417,9 @@ dom.isImg = function (node) {
 };
 var fn_is_forbidden_node = dom.isForbiddenNode || function () {};
 dom.isForbiddenNode = function (node) {
+    if (node.tagName === "BR") {
+        return false;
+    }
     return fn_is_forbidden_node(node) || $(node).is(".media_iframe_video");
 };
 var fn_is_img_font = dom.isImgFont || function () {};
