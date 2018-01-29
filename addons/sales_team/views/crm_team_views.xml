@@ -58,7 +58,7 @@
                             </h1>
                             <div name="options_active" attrs="{'invisible': ['&amp;', ('team_type', '!=', 'sales'), ('team_type', '!=', 'website')]}"/>
                         </div>
-                        <group>
+                        <group name="main">
                             <group name="left">
                                 <field name="team_type" groups="base.group_no_one"/>
                                 <field name="user_id" domain="[('share', '=', False)]"/>
