@@ -3,7 +3,7 @@
     <!-- Assets for reports -->
 
     <template id="report_assets_common">
-        <t t-call="web.less_helpers"/>
+        <t t-call="web._assets_helpers"/>
 
         <link href="/web/static/src/less/import_bootstrap.less" rel="stylesheet" type="text/less"/>
         <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
@@ -30,7 +30,7 @@
     </template>
 
     <template id="report_assets_editor">
-        <t t-call="web.less_helpers"/>
+        <t t-call="web._assets_helpers"/>
 
         <link href="/web/static/src/less/report.editor.less" rel="stylesheet" type="text/less"/>
 

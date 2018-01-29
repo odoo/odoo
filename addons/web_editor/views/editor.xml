@@ -52,7 +52,7 @@
     <link rel="stylesheet" type="text/less" href="/web_editor/static/lib/summernote/src/less/summernote.less"/>
 </template>
 
-<template id="less_helpers" inherit_id="web.less_helpers">
+<template id="_assets_helpers" inherit_id="web._assets_helpers">
     <xpath expr="link[last()]" position="after">
         <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.variables.less"/>
     </xpath>
@@ -87,7 +87,7 @@
 </template>
 
 <template id="assets_editor" name="Web Editor Assets (used in private and public editor)">
-    <t t-call="web.less_helpers"/>
+    <t t-call="web._assets_helpers"/>
 
     <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
 
