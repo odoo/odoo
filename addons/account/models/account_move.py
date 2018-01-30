@@ -1560,7 +1560,7 @@ class AccountMoveLine(models.Model):
             domain += [('account_id', 'in', context['account_ids'].ids)]
 
         if context.get('analytic_tag_ids'):
-            domain += ['|', ('analytic_account_id.tag_ids', 'in', context['analytic_tag_ids'].ids), ('analytic_tag_ids', 'in', context['analytic_tag_ids'].ids)]
+            domain += [('analytic_tag_ids', 'in', context['analytic_tag_ids'].ids)]
 
         if context.get('analytic_account_ids'):
             domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]

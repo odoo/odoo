@@ -165,7 +165,6 @@
                                 <field name="partner_id"/>
                             </group>
                             <group>
-                                <field name="tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                 <field name="group_id"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                                 <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
@@ -204,7 +203,6 @@
             <field name="arch" type="xml">
                <kanban class="o_kanban_mobile">
                    <field name="display_name"/>
-                   <field name="tag_ids"/>
                    <field name="balance"/>
                    <field name="currency_id"/>
                    <templates>
@@ -234,7 +232,6 @@
             <field name="arch" type="xml">
                 <search string="Analytic Account">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
-                    <field name="tag_ids"/>
                     <field name="partner_id"/>
                     <filter string="Archived" domain="[('active', '=', False)]" name="inactive"/>
                     <group expand="0" string="Group By...">

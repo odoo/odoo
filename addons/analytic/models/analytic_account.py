@@ -89,7 +89,6 @@ class AccountAnalyticAccount(models.Model):
     code = fields.Char(string='Reference', index=True, track_visibility='onchange')
     active = fields.Boolean('Active', help="If the active field is set to False, it will allow you to hide the account without removing it.", default=True)
 
-    tag_ids = fields.Many2many('account.analytic.tag', 'account_analytic_account_tag_rel', 'account_id', 'tag_id', string='Tags', copy=True)
     group_id = fields.Many2one('account.analytic.group', string='Group')
 
     line_ids = fields.One2many('account.analytic.line', 'account_id', string="Analytic Lines")
