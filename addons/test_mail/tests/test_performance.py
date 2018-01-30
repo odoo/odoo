@@ -220,7 +220,7 @@ class TestHeavyMailPerformance(TransactionCase):
         })
         mail_ids = mail.ids
 
-        with self.assertQueryCount(admin=17, emp=25):  # com runbot 17 - 25 // test_mail only: 15 - 23
+        with self.assertQueryCount(admin=16, emp=24):  # com runbot 16 - 24 // test_mail only: 14 - 22
             self.env['mail.mail'].browse(mail_ids).send()
 
         self.assertEqual(mail.body_html, '<p>Test</p>')
@@ -233,7 +233,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.sudo(self.env.user)
 
-        with self.assertQueryCount(admin=131, emp=163):  # com runbot 129 - 161 // test_mail only: 125 - 156
+        with self.assertQueryCount(admin=123, emp=156):  # com runbot 121 - 154 // test_mail only: 117 - 149
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',
@@ -250,7 +250,7 @@ class TestHeavyMailPerformance(TransactionCase):
         record = self.umbrella.sudo(self.env.user)
         template_id = self.env.ref('test_mail.mail_test_tpl').id
 
-        with self.assertQueryCount(admin=192, emp=239):  # com runbot 190 - 237 // test_mail only: 182 - 227
+        with self.assertQueryCount(admin=148, emp=196):  # com runbot 146 - 194 // test_mail only: 140 - 186
             record.message_post_with_template(template_id, message_type='comment', composition_mode='comment')
 
         self.assertEqual(record.message_ids[0].body, '<p>Adding stuff on %s</p>' % record.name)
@@ -266,7 +266,7 @@ class TestHeavyMailPerformance(TransactionCase):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=355, emp=428):  # test_mail only: 337 - 407
+        with self.assertQueryCount(admin=347, emp=420):  # test_mail only: 330 - 399
             rec = self.env['mail.test.full'].create({
                 'name': 'Test',
                 'umbrella_id': umbrella_id,
