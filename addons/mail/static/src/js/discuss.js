@@ -117,6 +117,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         'click .o_mail_chat_channel_item': '_onChannelClicked',
         'click .o_mail_open_channels': '_onPublicChannelsClick',
         'click .o_mail_partner_unpin': '_onUnpinChannel',
+        'click .o_mail_channel_settings': '_onChannelSettingsClicked',
         'click .o_mail_request_permission': '_onRequestNotificationPermission',
         'click .o_mail_sidebar_title .o_add': '_onAddChannel',
         'keydown': '_onKeydown',
@@ -373,8 +374,6 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         this.$buttons = $(QWeb.render("mail.chat.ControlButtons", {debug: session.debug}));
         this.$buttons.find('button').css({display:"inline-block"});
         this.$buttons.on('click', '.o_mail_chat_button_invite', this._onInviteButtonClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_unsubscribe', this._onUnsubscribeButtonClicked.bind(this));
-        this.$buttons.on('click', '.o_mail_chat_button_settings', this._onSettingsButtonClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_mark_read', this._onMarkAllReadClicked.bind(this));
         this.$buttons.on('click', '.o_mail_chat_button_unstar_all', this._onUnstarAllClicked.bind(this));
     },
@@ -692,10 +691,6 @@ var Discuss = Widget.extend(ControlPanelMixin, {
     _updateControlPanelButtons: function (channel) {
         // Hide 'unsubscribe' button in state channels and DM and channels with group-based subscription
         this.$buttons
-            .find('.o_mail_chat_button_unsubscribe')
-            .toggle(channel.type !== "dm" && channel.type !== 'static' && ! channel.group_based_subscription);
-        // Hide 'invite', 'unsubscribe' and 'settings' buttons in static channels and DM
-        this.$buttons
             .find('.o_mail_chat_button_invite, .o_mail_chat_button_settings')
             .toggle(channel.type !== "dm" && channel.type !== 'static');
         this.$buttons
@@ -933,12 +928,14 @@ var Discuss = Widget.extend(ControlPanelMixin, {
     },
     /**
      * @private
+     * @param {MouseEvent} event
      */
-    _onSettingsButtonClicked: function () {
+    _onChannelSettingsClicked: function (event) {
+        var channelID = $(event.target).data("channel-id");
         this.do_action({
             type: 'ir.actions.act_window',
             res_model: "mail.channel",
-            res_id: this.channel.id,
+            res_id: channelID,
             views: [[false, 'form']],
             target: 'current'
         });
@@ -958,12 +955,6 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      */
     _onUnstarAllClicked: function () {
         this.call('chat_manager', 'unstarAll');
-    },
-    /**
-     * @private
-     */
-    _onUnsubscribeButtonClicked: function () {
-        this._unsubscribe(this.channel);
     },
 });
 
