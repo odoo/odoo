@@ -74,14 +74,14 @@ class IrTranslationImport(object):
             params['type'] = 'model'
             params['name'] = 'ir.model.fields,field_description'
             params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
 
         elif params['type'] == 'help':
             model, field = params['name'].split(',')
             params['type'] = 'model'
             params['name'] = 'ir.model.fields,help'
             params['imd_model'] = 'ir.model.fields'
-            params['imd_name'] = 'field_%s_%s' % (model.replace('.', '_'), field)
+            params['imd_name'] = 'field_%s__%s' % (model.replace('.', '_'), field)
 
         elif params['type'] == 'view':
             params['type'] = 'model'
