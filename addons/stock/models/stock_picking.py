@@ -861,6 +861,7 @@ class Picking(models.Model):
         # example:
         # {'(delivery_picking_1, admin)': stock.move(1, 2)
         #  '(delivery_picking_2, admin)': stock.move(3)}
+        visited_documents = {}
         if stream == 'DOWN':
             if sorted_method and groupby_method:
                 grouped_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)
@@ -868,15 +869,17 @@ class Picking(models.Model):
                 raise UserError(_('You have to define a groupby and sorted method and pass them as arguments.'))
         elif stream == 'UP':
             # When using upstream document it is required to define
-            # _get_uppermost_ongoing_document_and_responsible on
+            # _get_upstream_documents_and_responsibles on
             # destination objects in order to ascend documents.
             grouped_moves = {}
             for visited_move in origin_objects.mapped(stream_field):
-                for document, responsible in visited_move._get_upstream_documents_and_responsibles():
+                for document, responsible, visited in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name]):
                     if grouped_moves.get((document, responsible)):
                         grouped_moves[(document, responsible)] |= visited_move
+                        visited_documents[(document, responsible)] |= visited
                     else:
                         grouped_moves[(document, responsible)] = visited_move
+                        visited_documents[(document, responsible)] = visited
             grouped_moves = grouped_moves.items()
         else:
             raise UserError(_('Unknow stream.'))
@@ -887,7 +890,10 @@ class Picking(models.Model):
             moves = self.env[moves[0]._name].concat(*moves)
             # Get the note
             rendering_context = {move: (orig_object, orig_obj_changes[orig_object]) for move in moves for orig_object in move_to_orig_object_rel[move]}
-            documents[(parent, responsible)] = rendering_context
+            if visited_documents:
+                documents[(parent, responsible)] = rendering_context, visited_documents.values()
+            else:
+                documents[(parent, responsible)] = rendering_context
         return documents
 
     def _log_activity(self, render_method, documents):

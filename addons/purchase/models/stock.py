@@ -83,11 +83,11 @@ class StockMove(models.Model):
                 'purchase_line_id').sudo()._update_received_qty()
         return res
 
-    def _get_upstream_documents_and_responsibles(self):
+    def _get_upstream_documents_and_responsibles(self, visited):
         if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
-            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id)]
+            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
         else:
-            return super(StockMove, self)._get_upstream_documents_and_responsibles()
+            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
 
 class StockWarehouse(models.Model):
