@@ -120,9 +120,11 @@ class SaleOrder(models.Model):
             visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
             order_line_ids = self.env['sale.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
             sale_order_ids = order_line_ids.mapped('order_id')
+            impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
             values = {
                 'sale_order_ids': sale_order_ids,
                 'order_exceptions': order_exceptions.values(),
+                'impacted_pickings': impacted_pickings,
                 'cancel': cancel
             }
             return self.env.ref('sale_stock.exception_on_so').render(values=values)

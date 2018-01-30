@@ -1147,13 +1147,14 @@ class StockMove(models.Model):
                 else:
                     move.state = 'confirmed'
 
-    def _get_upstream_documents_and_responsibles(self):
+    def _get_upstream_documents_and_responsibles(self, visited):
         if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
             result = set()
+            visited |= self
             for move in self.move_orig_ids:
                 if move.state not in ('done', 'cancel'):
-                    for document, responsible in move._get_upstream_documents_and_responsibles():
-                        result.add((document, responsible))
+                    for document, responsible, visited in move._get_upstream_documents_and_responsibles(visited):
+                        result.add((document, responsible, visited))
             return result
         else:
-            return [(self.picking_id, self.product_id.responsible_id)]
+            return [(self.picking_id, self.product_id.responsible_id, visited)]
