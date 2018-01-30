@@ -756,11 +756,8 @@ class IrModelFields(models.Model):
             # create a corresponding xml id
             module = field._module or self._context.get('module')
             if module:
-                model = self.env[field.model_name]
-                xmlid = 'field_%s_%s' % (model._table, field.name)
-                cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
-                if cr.fetchone():
-                    xmlid = xmlid + "_" + str(record.id)
+                model_name = field.model_name.replace('.', '_')
+                xmlid = 'field_%s__%s' % (model_name, field.name)
                 cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
                                VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
                            (module, xmlid, record._name, record.id))
