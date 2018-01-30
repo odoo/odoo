@@ -567,7 +567,7 @@ var FieldMonetary = InputField.extend({
         }
 
         this.formatOptions.currency = this.currency;
-        this.formatOptions.digits = [16, 2];
+        this.formatOptions.digits = this.currency.digits || [16, 2];
     },
 
     //--------------------------------------------------------------------------
