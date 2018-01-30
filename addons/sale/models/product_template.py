@@ -17,7 +17,7 @@ class ProductTemplate(models.Model):
     sale_line_warn_msg = fields.Text('Message for Sales Order Line')
     expense_policy = fields.Selection(
         [('no', 'No'), ('cost', 'At cost'), ('sales_price', 'Sales price')],
-        string='Re-Invoice Expenses',
+        string='Re-Invoice Policy',
         default='no')
 
     @api.multi
@@ -52,3 +52,10 @@ class ProductTemplate(models.Model):
         help='Ordered Quantity: Invoice based on the quantity the customer ordered.\n'
              'Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries).',
         default='order')
+
+    @api.onchange('type')
+    def _onchange_type(self):
+        """ Force values to stay consistent with integrity constraints """
+        if self.type == 'consu':
+            self.invoice_policy = 'order'
+            self.service_type = 'manual'
