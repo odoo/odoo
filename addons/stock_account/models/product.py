@@ -125,7 +125,13 @@ class ProductProduct(models.Model):
         for location in locations:
             for product in self.with_context(location=location.id, compute_child=False).filtered(lambda r: r.valuation == 'real_time'):
                 diff = product.standard_price - new_price
-                if float_is_zero(diff, precision_rounding=product.currency_id.rounding):
+                #TRESCLOUD MA-735
+                #La precision debe ser del producto, no de la moneda, pues la presicion del campo es del producto
+                #esto causara que de haber una diferencia menor a la presicion de la moneda y poco stock se haga un asiento
+                #contable en cero, lo cual es adecuado pues demuestra que se hizo una alteracion.
+                #if float_is_zero(diff, precision_rounding=product.currency_id.rounding):
+                prec = self.env['decimal.precision'].precision_get('Product Price')
+                if float_is_zero(diff, precision_digits=prec):
                     raise UserError(_("No difference between standard price and new price!"))
                 if not product_accounts[product.id].get('stock_valuation', False):
                     raise UserError(_('You don\'t have any stock valuation account defined on your product category. You must define one before processing this operation.'))
