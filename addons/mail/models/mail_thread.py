@@ -566,7 +566,7 @@ class MailThread(models.AbstractModel):
                     continue
                 record.message_post(subtype=subtype_xmlid, tracking_value_ids=tracking_value_ids)
             elif tracking_value_ids:
-                record.message_post(tracking_value_ids=tracking_value_ids)
+                record._message_log(tracking_value_ids=tracking_value_ids)
 
         self._message_track_post_template(tracking)
 
