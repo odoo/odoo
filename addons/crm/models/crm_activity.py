@@ -48,8 +48,5 @@ class CrmActivity(models.Model):
 
     @api.multi
     def unlink(self):
-        activities = self.search([('subtype_id', '=', self.subtype_id.id)])
-        # to ensure that the subtype is only linked the current activity
-        if len(activities) == 1:
-            self.subtype_id.unlink()
+        self.env['mail.message.subtype'].search([('id', 'in', self.mapped(lambda r: r.subtype_id.id))]).unlink()
         return super(CrmActivity, self).unlink()
