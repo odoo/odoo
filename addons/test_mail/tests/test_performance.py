@@ -102,6 +102,16 @@ class TestMailPerformance(TransactionCase):
         with self.assertQueryCount(admin=32, emp=42):  # test_mail only: 30 - 39
             self.env['mail.test.simple'].create({'name': 'Test'})
 
+    @users('admin', 'emp')
+    @warmup
+    def test_write_mail_simple(self):
+        rec = self.env['mail.test.simple'].create({'name': 'Test'})
+        with self.assertQueryCount(admin=1, emp=1):  # test_mail only: 1 - 1
+            rec.write({
+                'name': 'Test2',
+                'email_from': 'test@test.com',
+            })
+
 
 class TestAdvMailPerformance(TransactionCase):
 
@@ -281,3 +291,44 @@ class TestHeavyMailPerformance(TransactionCase):
         # creation message
         self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('mail.mt_note'))
         self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.env['res.partner'])
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('admin', 'emp')
+    @warmup
+    def test_complex_write_tracking_subscription(self):
+        """ Create record using most features: auto subscription, tracking
+        and templates. """
+        umbrella_id = self.umbrella.id
+        customer_id = self.customer.id
+        user_id = self.user_portal.id
+        umbrella2 = self.env['mail.test'].with_context(mail_create_nosubscribe=True).create({
+            'name': 'Test Umbrella 2',
+            'customer_id': False,
+            'alias_name': False,
+        })
+
+        rec = self.env['mail.test.full'].create({
+            'name': 'Test',
+            'umbrella_id': umbrella2.id,
+            'customer_id': False,
+            'user_id': user_id,
+        })
+        self.assertEqual(rec.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
+
+        with self.assertQueryCount(admin=238, emp=278):  # test_mail only: 232 - 271
+            rec.write({
+                'name': 'Test2',
+                'umbrella_id': umbrella_id,
+                'customer_id': customer_id,
+                })
+
+        self.assertEqual(rec.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
+        # write tracking message
+        self.assertEqual(rec.message_ids[0].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec.message_ids[0].needaction_partner_ids, self.partners | self.user_portal.partner_id)
+        # create tracking message
+        self.assertEqual(rec.message_ids[1].subtype_id, self.env.ref('test_mail.st_mail_test_full_umbrella_upd'))
+        self.assertEqual(rec.message_ids[1].needaction_partner_ids, self.user_portal.partner_id)
+        # creation message
+        self.assertEqual(rec.message_ids[2].subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(rec.message_ids[2].needaction_partner_ids, self.env['res.partner'])
