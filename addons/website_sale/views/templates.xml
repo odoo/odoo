@@ -4,14 +4,14 @@
     <template id="assets_backend" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_backend.js"></script>
-            <link rel="stylesheet" href="/website_sale/static/src/less/website_sale_dashboard.less"/>
+            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale_dashboard.scss"/>
         </xpath>
     </template>
 
     <template id="assets_frontend" inherit_id="website.assets_frontend">
         <xpath expr="link[last()]" position="after">
-            <link rel="stylesheet" type="text/less" href="/website_sale/static/src/less/website_sale.less" />
-            <link rel="stylesheet" type="text/less" href="/website_sale/static/src/less/website_mail.less" />
+            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_mail.scss"/>
         </xpath>
         <xpath expr="script[last()]" position="after">
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale.js"></script>
