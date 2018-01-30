@@ -43,3 +43,5 @@ class Stage(models.Model):
         help='Explanation text to help users using the star and priority mechanism on stages or issues that are in this stage.')
     fold = fields.Boolean('Folded in Pipeline',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
+    active = fields.Boolean(default=True, 
+                            help="If the active field is set to False, it will allow you to hide the stage case without removing it.")
