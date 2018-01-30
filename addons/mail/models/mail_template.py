@@ -257,15 +257,24 @@ class MailTemplate(models.Model):
                 # deprecated/obsolete records
                 res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
                 if res_ids:
-                    render = self.render_template(
-                        vals['body_html'], _model, res_ids)
-
-                    if not any(render.values()):
-                        raise UserError(_(
-                            "Template rendering failed, this could mean that "
-                            "your template contains python syntax errors"
-                        ))
-
+                    try:
+                        render = self.render_template(
+                            vals['body_html'], _model, res_ids)
+                    except UserError:
+                        # Rendering failed, disregard since the full ctx
+                        # is not available on save and if the rendering
+                        # crashes, the error will be raised when the mail is
+                        # sent anyway.
+                        pass
+                    else:
+                        if not any(render.values()):
+                            # Rendering empty emails is what we're looking
+                            # for, if it is the case, then raise our own
+                            # UserError
+                            raise UserError(_(
+                                "Template rendering failed, this could mean "
+                                "your template contains python syntax errors"
+                            ))
         return super(MailTemplate, self).write(vals)
 
     @api.multi
