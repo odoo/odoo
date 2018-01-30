@@ -118,6 +118,7 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
      */
     _getValue: function () {
         if (this.nodeOptions['style-inline']) {
+            transcoder.linkImgToAttachmentThumbnail(this.$content);
             transcoder.classToStyle(this.$content);
             transcoder.fontToImg(this.$content);
         }
