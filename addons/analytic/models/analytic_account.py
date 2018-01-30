@@ -70,6 +70,8 @@ class AccountAnalyticAccount(models.Model):
         if self._context.get('tag_ids'):
             tag_domain = expression.OR([[('tag_ids', 'in', [tag])] for tag in self._context['tag_ids']])
             domain = expression.AND([domain, tag_domain])
+        if self._context.get('company_ids'):
+            domain.append(('company_id', 'in', self._context['company_ids']))
 
         user_currency = self.env.user.company_id.currency_id
         account_amounts = analytic_line_obj.search_read(domain, ['account_id', 'amount', 'currency_id'])
