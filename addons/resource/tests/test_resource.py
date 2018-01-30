@@ -55,6 +55,12 @@ class TestIntervals(TestResourceCommon):
         # Third interval: 04, 17-21, 18-19 being inside 17-21
         self.assertEqual(cleaned_intervals[2][:2], (Datetime.from_string('2013-02-04 17:00:00'), Datetime.from_string('2013-02-04 21:00:00')))
 
+    def test_interval_and(self):
+        self.assertEqual(self.env['resource.calendar']._interval_and(self.intervals[0], self.intervals[1]),
+                         self.calendar._interval_new(Datetime.from_string('2013-02-04 09:00:00'), Datetime.from_string('2013-02-04 11:00:00')))
+        self.assertEqual(self.env['resource.calendar']._interval_and(self.intervals[2], self.intervals[3]),
+                         None)
+
     def test_interval_remove(self):
         working_interval = self.calendar._interval_new(Datetime.from_string('2013-02-04 08:00:00'), Datetime.from_string('2013-02-04 18:00:00'))
         result = self.env['resource.calendar']._interval_remove_leaves(working_interval, self.intervals)
