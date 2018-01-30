@@ -716,11 +716,6 @@ class SaleOrderLine(models.Model):
             else:
                 line.product_updatable = True
 
-    @api.depends('product_id.invoice_policy', 'order_id.state')
-    def _compute_qty_delivered_updateable(self):
-        for line in self:
-            line.qty_delivered_updateable = (line.order_id.state == 'sale') and (line.product_id.service_type == 'manual') and (line.product_id.expense_policy == 'no')
-
     @api.depends('qty_invoiced', 'qty_delivered', 'product_uom_qty', 'order_id.state')
     def _get_to_invoice_qty(self):
         """
@@ -873,8 +868,17 @@ class SaleOrderLine(models.Model):
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
-    qty_delivered_updateable = fields.Boolean(compute='_compute_qty_delivered_updateable', string='Can Edit Delivered', readonly=True, default=True)
-    qty_delivered = fields.Float(string='Delivered', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
+    qty_delivered_method = fields.Selection([
+        ('manual', 'Manual'),
+        ('analytic', 'Analytic From Expenses')
+    ], string="Method to update delivered qty", compute='_compute_qty_delivered_method', compute_sudo=True, store=True, readonly=True,
+        help="According to product configuration, the delivered quantity can be automatically computed by mechanism :\n"
+             "  - Manual: the quantity is set manually on the line\n"
+             "  - Analytic From expenses: the quantity is the quantity sum from posted expenses\n"
+             "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
+             "  - Stock Moves: the quantity comes from confirmed pickings\n")
+    qty_delivered = fields.Float('Delivered', copy=False, compute='_compute_qty_delivered', inverse='_inverse_qty_delivered', compute_sudo=True, store=True, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
+    qty_delivered_manual = fields.Float('Delivered Manually', copy=False, digits=dp.get_precision('Product Unit of Measure'), default=0.0)
     qty_to_invoice = fields.Float(
         compute='_get_to_invoice_qty', string='To Invoice', store=True, readonly=True,
         digits=dp.get_precision('Product Unit of Measure'))
@@ -887,6 +891,8 @@ class SaleOrderLine(models.Model):
     company_id = fields.Many2one(related='order_id.company_id', string='Company', store=True, readonly=True)
     order_partner_id = fields.Many2one(related='order_id.partner_id', store=True, string='Customer')
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
+    analytic_line_ids = fields.One2many('account.analytic.line', 'so_line', string="Analytic lines")
+    is_expense = fields.Boolean('Is expense', help="Is true if the sales order line comes from an expense or a vendor bills")
     is_downpayment = fields.Boolean(
         string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
         " They are not copied when duplicating a sales order.")
@@ -905,6 +911,93 @@ class SaleOrderLine(models.Model):
     layout_category_id = fields.Many2one('sale.layout_category', string='Section')
     layout_category_sequence = fields.Integer(string='Layout Sequence')
     # TODO: remove layout_category_sequence in master or make it work properly
+
+    @api.multi
+    @api.depends('state', 'is_expense')
+    def _compute_qty_delivered_method(self):
+        """ Sale module compute delivered qty for product [('type', 'in', ['consu']), ('service_type', '=', 'manual')]
+                - consu + expense_policy : analytic (sum of analytic unit_amount)
+                - consu + no expense_policy : manual (set manually on SOL)
+                - service (+ service_type='manual', the only available option) : manual
+
+            This is true when only sale is installed: sale_stock redifine the behavior for 'consu' type,
+            and sale_timesheet implements the behavior of 'service' + service_type=timesheet.
+        """
+        for line in self:
+            if line.is_expense:
+                line.qty_delivered_method = 'analytic'
+            else:  # service and consu
+                line.qty_delivered_method = 'manual'
+
+    @api.multi
+    @api.depends('qty_delivered_method', 'qty_delivered_manual', 'analytic_line_ids.so_line', 'analytic_line_ids.unit_amount', 'analytic_line_ids.product_uom_id')
+    def _compute_qty_delivered(self):
+        """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
+            expense/vendor bills (sum of unit_amount of AAL), and manual case.
+            This method should be overriden to provide other way to automatically compute delivered qty. Overrides should
+            take their concerned so lines, compute and set the `qty_delivered` field, and call super with the remaining
+            records.
+        """
+        # compute for analytic lines
+        lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
+        mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
+        for so_line in lines_by_analytic:
+            so_line.qty_delivered = mapping.get(so_line.id, 0.0)
+        # compute for manual lines
+        for line in self:
+            if line.qty_delivered_method == 'manual':
+                line.qty_delivered = line.qty_delivered_manual or 0.0
+
+    @api.multi
+    def _get_delivered_quantity_by_analytic(self, additional_domain):
+        """ Compute and write the delivered quantity of current SO lines, based on their related
+            analytic lines.
+            :param additional_domain: domain to restrict AAL to include in computation (required since timesheet is an AAL with a project ...)
+        """
+        result = {}
+        # avoid recomputation if no SO lines concerned
+        if not self:
+            return result
+
+        # group anaytic lines by product uom and so line
+        domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
+        data = self.env['account.analytic.line'].read_group(
+            domain,
+            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
+        )
+
+        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
+        # browse so lines and product uoms here to make them share the same prefetch
+        lines_map = {line.id: line for line in self}
+        product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
+        product_uom_map = {uom.id: uom for uom in self.env['product.uom'].browse(product_uom_ids)}
+        for item in data:
+            if not item['product_uom_id']:
+                continue
+            so_line_id = item['so_line'][0]
+            so_line = lines_map[so_line_id]
+            result.setdefault(so_line_id, 0.0)
+            uom = product_uom_map.get(item['product_uom_id'][0])
+            if so_line.product_uom.category_id == uom.category_id:
+                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom)
+            else:
+                qty = item['unit_amount']
+            result[so_line_id] += qty
+
+        return result
+
+    @api.multi
+    @api.onchange('qty_delivered')
+    def _inverse_qty_delivered(self):
+        """ When writing on qty_delivered, if the value should be modify manually (`qty_delivered_method` = 'manual' only),
+            then we put the value in `qty_delivered_manual`. Otherwise, `qty_delivered_manual` should be False since the
+            delivered qty is automatically compute by other mecanisms.
+        """
+        for line in self:
+            if line.qty_delivered_method == 'manual':
+                line.qty_delivered_manual = line.qty_delivered
+            else:
+                line.qty_delivered_manual = 0.0
 
     @api.multi
     def _prepare_invoice_line(self, qty):
@@ -1071,15 +1164,6 @@ class SaleOrderLine(models.Model):
             raise UserError(_('You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0.'))
         return super(SaleOrderLine, self).unlink()
 
-    @api.multi
-    def _get_delivered_qty(self):
-        '''
-        Intended to be overridden in sale_stock and sale_mrp
-        :return: the quantity delivered
-        :rtype: float
-        '''
-        return 0.0
-
     def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
         """Retrieve the price before applying the pricelist
             :param obj product: object of current product record
@@ -1153,54 +1237,3 @@ class SaleOrderLine(models.Model):
             discount = (new_list_price - price) / new_list_price * 100
             if discount > 0:
                 self.discount = discount
-
-    ###########################
-    # Analytic Methods
-    ###########################
-
-    @api.multi
-    def _analytic_compute_delivered_quantity_domain(self):
-        """ Return the domain of the analytic lines to use to recompute the delivered quantity
-            on SO lines. This method is a hook: since analytic line are used for timesheet,
-            expense, ...  each use case should provide its part of the domain.
-        """
-        return [('so_line', 'in', self.ids), ('amount', '<=', 0.0)]
-
-    @api.multi
-    def _analytic_compute_delivered_quantity(self):
-        """ Compute and write the delivered quantity of current SO lines, based on their related
-            analytic lines.
-        """
-        # avoid recomputation if no SO lines concerned
-        if not self:
-            return False
-
-        # group anaytic lines by product uom and so line
-        domain = self._analytic_compute_delivered_quantity_domain()
-        data = self.env['account.analytic.line'].read_group(
-            domain,
-            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
-        )
-        # Force recompute for the "unlink last line" case: if remove the last AAL link to the SO, the read_group
-        # will give no value for the qty of the SOL, so we need to reset it to 0.0
-        value_to_write = {}
-        if self._context.get('sale_analytic_force_recompute'):
-            value_to_write = dict.fromkeys([sol for sol in self], 0.0)
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
-        for item in data:
-            if not item['product_uom_id']:
-                continue
-            so_line = self.browse(item['so_line'][0])
-            value_to_write.setdefault(so_line, 0.0)
-            uom = self.env['product.uom'].browse(item['product_uom_id'][0])
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom)
-            else:
-                qty = item['unit_amount']
-            value_to_write[so_line] += qty
-
-        # write the delivered quantity
-        for so_line, qty in value_to_write.items():
-            so_line.write({'qty_delivered': qty})
-
-        return True

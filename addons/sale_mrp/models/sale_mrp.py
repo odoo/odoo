@@ -9,19 +9,20 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     @api.multi
-    def _get_delivered_qty(self):
-        self.ensure_one()
+    def _compute_qty_delivered(self):
+        super(SaleOrderLine, self)._compute_qty_delivered()
 
-        # In the case of a kit, we need to check if all components are shipped. Since the BOM might
-        # have changed, we don't compute the quantities but verify the move state.
-        bom = self.env['mrp.bom']._bom_find(product=self.product_id)
-        if bom and bom.type == 'phantom':
-            bom_delivered = all([move.state == 'done' for move in self.move_ids])
-            if bom_delivered:
-                return self.product_uom_qty
-            else:
-                return 0.0
-        return super(SaleOrderLine, self)._get_delivered_qty()
+        for line in self:
+            if line.qty_delivered_method == 'stock_move':
+                # In the case of a kit, we need to check if all components are shipped. Since the BOM might
+                # have changed, we don't compute the quantities but verify the move state.
+                bom = self.env['mrp.bom']._bom_find(product=line.product_id)
+                if bom and bom.type == 'phantom':
+                    bom_delivered = all([move.state == 'done' for move in line.move_ids])
+                    if bom_delivered:
+                        line.qty_delivered = line.product_uom_qty
+                    else:
+                        line.qty_delivered = 0.0
 
     @api.multi
     def _get_bom_component_qty(self, bom):

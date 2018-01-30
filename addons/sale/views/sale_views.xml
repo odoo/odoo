@@ -247,7 +247,8 @@
                                             <field name="layout_category_id" groups="sale.group_sale_layout"/>
                                             <field name="invoice_status" invisible="1"/>
                                             <field name="qty_to_invoice" invisible="1"/>
-                                            <field name="qty_delivered_updateable" invisible="1"/>
+                                            <field name="qty_delivered_manual" invisible="1"/>
+                                            <field name="qty_delivered_method" invisible="1"/>
                                             <field name="price_subtotal" invisible="1"/>
                                             <label for="product_uom_qty" string="Ordered Quantity"/>
                                             <div>
@@ -259,7 +260,7 @@
                                             </div>
                                             <label for="qty_delivered" string="Delivered Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
-                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                                <field name="qty_delivered" attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                                             </div>
                                             <label for="qty_invoiced" string="Invoiced Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                             <div attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}">
@@ -308,7 +309,9 @@
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
                                     />
                                     <field name="qty_delivered"
-                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_updateable', '=', False)]}"/>
+                                        attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])], 'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
+                                    <field name="qty_delivered_manual" invisible="1"/>
+                                    <field name="qty_delivered_method" invisible="1"/>
                                     <field name="qty_invoiced"
                                         attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                                     <field name="qty_to_invoice" invisible="1"/>
@@ -324,7 +327,6 @@
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal" widget="monetary" groups="sale.group_show_price_subtotal"/>
                                     <field name="price_total" widget="monetary" groups="sale.group_show_price_total"/>
-                                    <field name="qty_delivered_updateable" invisible="1"/>
                                     <field name="state" invisible="1"/>
                                     <field name="invoice_status" invisible="1"/>
                                     <field name="customer_lead" invisible="1"/>
@@ -392,7 +394,7 @@
                                 <group string="Reporting" name="technical" groups="base.group_no_one">
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
-                                <group name="utm_link" groups="base.group_no_one"/>    
+                                <group name="utm_link" groups="base.group_no_one"/>
                             </group>
                         </page>
                     </notebook>
@@ -686,6 +688,7 @@
                     <group string="Invoicing" name="invoicing">
                         <field name="invoice_policy" widget="radio"/>
                         <field name="service_type" widget="radio" invisible="True"/>
+                        <field name="expense_policy" widget="radio"/>
                     </group>
                 </group>
             </field>
