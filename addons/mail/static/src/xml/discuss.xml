@@ -107,6 +107,8 @@
                     <t t-esc="channel.name"/>
                     <i t-if="channel.mass_mailing" class="fa fa-envelope-o" title="Sends messages by email"/>
                 </span>
+                <span t-attf-class="fa fa-cog o_mail_channel_settings"
+                      title="Channel settings" t-att-data-channel-id="channel.id"/>
                 <t t-call="mail.chat.SidebarNeedaction"/>
                 <span t-if="! channel.group_based_subscription" t-attf-class="fa fa-times o_mail_partner_unpin #{counter ? 'hide' : ''}"
                       title="Leave this channel" t-att-data-channel-id="channel.id"/>
@@ -133,10 +135,8 @@
             <button type="button" class="btn btn-primary btn-sm o_mail_chat_button_invite hidden-xs" title="Invite people">Invite</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_mark_read" title="Mark all as read">Mark all read</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unstar_all" title="Unstar all messages">Unstar all</button>
-            <button type="button" class="btn btn-default btn-sm o_mail_chat_button_unsubscribe hidden-xs" title="Unsubscribe from channel">Unsubscribe</button>
             <button type="button" class="btn btn-default btn-sm o_mail_chat_button_dm visible-xs" title="New Message">New Message</button>
             <button t-if="!disable_add_channel" type="button" class="btn btn-default btn-sm o_mail_chat_button_public o_mail_chat_button_private visible-xs" title="New Channel">New Channel</button>
-            <button t-if="debug" type="button" class="btn btn-default btn-sm o_mail_chat_button_settings" title="Open channel settings">Settings</button>
         </div>
     </t>
 

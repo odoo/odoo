@@ -73,13 +73,13 @@
                 .o-flex(1, 1, auto);
                 .o-text-overflow();
             }
-            .o_mail_sidebar_needaction, .o_mail_partner_unpin {
+            .o_mail_sidebar_needaction, .o_mail_partner_unpin, .o_mail_channel_settings {
                 .o-flex(0, 0, auto);
             }
             .o_mail_sidebar_needaction {
                 margin: 0 0 0 5px;
             }
-            .o_mail_partner_unpin {
+            .o_mail_partner_unpin, .o_mail_channel_settings {
                 padding: 2px 6px;
             }
             i.fa-envelope-o {
@@ -164,7 +164,7 @@
             &:hover {
                 background-color: darken(@gray-dark,2%);
 
-                .o_mail_partner_unpin {
+                .o_mail_partner_unpin, .o_mail_channel_settings {
                     opacity: @sidebar-icon-opacity;
                 }
             }
@@ -178,7 +178,7 @@
                 opacity: 0.6
             }
 
-            .o_mail_partner_unpin {
+            .o_mail_partner_unpin, .o_mail_channel_settings {
                 .o-hover-opacity(@default-opacity: 0, @hover-opacity: 1);
             }
             &.o_unread_message {
