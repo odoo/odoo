@@ -300,7 +300,7 @@ class MailTemplate(models.Model):
 
         def _process_link(url):
             new_url = urls.url_parse(url)
-            if new_url.scheme and new_url.netloc:
+            if new_url.scheme and (new_url.netloc or new_url.scheme == 'mailto'):
                 return url
             return new_url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
 
