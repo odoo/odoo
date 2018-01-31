@@ -86,6 +86,7 @@
                             <field name="account_id"/>
                             <field name="tax_ids" widget="many2many_tags"/>
                             <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                         </group>
                     </group>
@@ -104,6 +105,7 @@
                     <field name="name"/>
                     <field name="account_id"/>
                     <field name="account_analytic_id" domain="[('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="quantity"/>
                     <field name="price_unit"/>
                     <field name="tax_ids" widget="many2many_tags"/>
@@ -252,6 +254,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','sale')]"/>
@@ -368,6 +371,7 @@
                                     <field name="name"/>
                                     <field name="account_id" groups="account.group_account_user"/>
                                     <field name="account_analytic_id" domain="[('company_id', '=', parent.company_id)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                     <field name="quantity"/>
                                     <field name="price_unit"/>
                                     <field name="tax_ids" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]"/>

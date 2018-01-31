@@ -59,4 +59,4 @@ class AccountingTestTemplConsistency(HttpCase):
         '''Test fields consistency for ('account.reconcile.model', 'account.reconcile.model.template')
         '''
         self.check_fields_consistency('account.reconcile.model.template', 'account.reconcile.model', exceptions=['chart_template_id'])
-        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'second_journal_id', 'second_analytic_account_id'])
+        self.check_fields_consistency('account.reconcile.model', 'account.reconcile.model.template', exceptions=['company_id', 'journal_id', 'analytic_account_id', 'second_journal_id', 'second_analytic_account_id', 'analytic_tag_ids', 'second_analytic_tag_ids'])
