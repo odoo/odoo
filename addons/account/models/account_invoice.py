@@ -940,6 +940,7 @@ class AccountInvoice(models.Model):
             'sequence': tax['sequence'],
             'account_analytic_id': tax['analytic'] and line.account_analytic_id.id or False,
             'account_id': self.type in ('out_invoice', 'in_invoice') and (tax['account_id'] or line.account_id.id) or (tax['refund_account_id'] or line.account_id.id),
+            'analytic_tag_ids': tax['analytic'] and line.analytic_tag_ids.ids or False,
         }
 
         # If the taxes generate moves on the same financial account as the invoice line,
@@ -948,7 +949,6 @@ class AccountInvoice(models.Model):
         # to ensure the tax move is allocated to the proper analytic account.
         if not vals.get('account_analytic_id') and line.account_analytic_id and vals['account_id'] == line.account_id.id:
             vals['account_analytic_id'] = line.account_analytic_id.id
-
         return vals
 
     @api.multi
@@ -1056,9 +1056,9 @@ class AccountInvoice(models.Model):
                 'product_id': line.product_id.id,
                 'uom_id': line.uom_id.id,
                 'account_analytic_id': line.account_analytic_id.id,
+                'analytic_tag_ids': analytic_tag_ids,
                 'tax_ids': tax_ids,
                 'invoice_id': self.id,
-                'analytic_tag_ids': analytic_tag_ids
             }
             res.append(move_line_dict)
         return res
@@ -1075,6 +1075,8 @@ class AccountInvoice(models.Model):
                 if tax.amount_type == "group":
                     for child_tax in tax.children_tax_ids:
                         done_taxes.append(child_tax.id)
+
+                analytic_tag_ids = [(4, analytic_tag.id, None) for analytic_tag in tax_line.analytic_tag_ids]
                 res.append({
                     'invoice_tax_line_id': tax_line.id,
                     'tax_line_id': tax_line.tax_id.id,
@@ -1085,6 +1087,7 @@ class AccountInvoice(models.Model):
                     'price': tax_line.amount_total,
                     'account_id': tax_line.account_id.id,
                     'account_analytic_id': tax_line.account_analytic_id.id,
+                    'analytic_tag_ids': analytic_tag_ids,
                     'invoice_id': self.id,
                     'tax_ids': [(6, 0, list(done_taxes))] if tax_line.tax_id.include_base_amount else []
                 })
@@ -1261,7 +1264,6 @@ class AccountInvoice(models.Model):
             'debit': line['price'] > 0 and line['price'],
             'credit': line['price'] < 0 and -line['price'],
             'account_id': line['account_id'],
-            'analytic_line_ids': line.get('analytic_line_ids', []),
             'amount_currency': line['price'] > 0 and abs(line.get('amount_currency', False)) or -abs(line.get('amount_currency', False)),
             'currency_id': line.get('currency_id', False),
             'quantity': line.get('quantity', 1.00),
@@ -1733,6 +1735,7 @@ class AccountInvoiceTax(models.Model):
                     'tax_id': tax.tax_id.id,
                     'account_id': tax.account_id.id,
                     'account_analytic_id': tax.account_analytic_id.id,
+                    'analytic_tag_ids': tax.analytic_tag_ids.ids or False,
                 })
                 if tax.invoice_id and key in tax_grouped[tax.invoice_id.id]:
                     tax.base = tax_grouped[tax.invoice_id.id][key]['base']
@@ -1744,6 +1747,7 @@ class AccountInvoiceTax(models.Model):
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict')
     account_id = fields.Many2one('account.account', string='Tax Account', required=True, domain=[('deprecated', '=', False)])
     account_analytic_id = fields.Many2one('account.analytic.account', string='Analytic account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     amount = fields.Monetary('Tax Amount')
     amount_rounding = fields.Monetary('Amount Delta')
     amount_total = fields.Monetary(string="Amount Total", compute='_compute_amount_total')
