@@ -1522,6 +1522,7 @@ var BasicModel = AbstractModel.extend({
                         fields: view ? view.fields : fieldInfo.relatedFields,
                         fieldsInfo: view ? view.fieldsInfo : fieldInfo.fieldsInfo,
                         res_id: d.id,
+                        data: d,
                         viewType: view ? view.type : fieldInfo.viewType,
                         parentID: list.id,
                     });
