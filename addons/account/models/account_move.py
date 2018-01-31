@@ -1161,6 +1161,9 @@ class AccountMoveLine(models.Model):
                         temp['amount_currency'] = bank.company_id.currency_id.with_context(ctx).compute(tax_vals['amount'], bank.currency_id, round=True)
                     tax_lines_vals.append(temp)
 
+        if vals.get('debit', 0) < 0 or vals.get('credit', 0) < 0:
+            vals['debit'], vals['credit'] = -vals.get('credit', 0), -vals.get('debit', 0)
+
         new_line = super(AccountMoveLine, self).create(vals)
         for tax_line_vals in tax_lines_vals:
             # TODO: remove .with_context(context) once this context nonsense is solved
