@@ -61,6 +61,28 @@ class StockMove(models.Model):
             return price_unit
         return super(StockMove, self)._get_price_unit()
 
+    def _generate_valuation_lines_data(self, qty, debit_value, credit_value, debit_account_id, credit_account_id):
+        """ Overridden from stock_account to support amount_currency on valuation lines generated from po
+        """
+        rslt = super(StockMove, self)._generate_valuation_lines_data(qty, debit_value, credit_value, debit_account_id, credit_account_id)
+
+        if self.purchase_line_id:
+            purchase_currency = self.purchase_line_id.currency_id
+            purchase_price_unit = self.purchase_line_id.price_unit
+
+            currency_move_valuation = purchase_currency.round(purchase_price_unit * qty)
+
+            credit_line_vals = rslt['credit_line_vals']
+            debit_line_vals = rslt['debit_line_vals']
+
+            credit_line_vals['amount_currency'] = credit_line_vals['credit'] and -currency_move_valuation or currency_move_valuation
+            credit_line_vals['currency_id'] = purchase_currency.id
+
+            debit_line_vals['amount_currency'] = debit_line_vals['credit'] and -currency_move_valuation or currency_move_valuation
+            debit_line_vals['currency_id'] = purchase_currency.id
+
+        return rslt
+
     def _prepare_extra_move_vals(self, qty):
         vals = super(StockMove, self)._prepare_extra_move_vals(qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
