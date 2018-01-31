@@ -66,6 +66,23 @@ class PurchaseRequisition(models.Model):
                               copy=False, default='draft')
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', required=True, default=_get_picking_in)
+    is_quantity_copy = fields.Selection(related='type_id.quantity_copy', readonly=True)
+
+    @api.onchange('vendor_id')
+    def _onchange_vendor(self):
+        requisitions = self.env['purchase.requisition'].search([
+            ('vendor_id', '=', self.vendor_id.id),
+            ('state', '=', 'ongoing'),
+            ('type_id.quantity_copy', '=', 'none'),
+        ])
+        if any(requisitions):
+            title = _("Warning for %s") % self.vendor_id.name
+            message = _("%s has already an ongoing blanket order") % self.vendor_id.name
+            warning = {
+                'title': title,
+                'message': message
+            }
+            return {'warning': warning}
 
     @api.multi
     @api.depends('purchase_ids')
