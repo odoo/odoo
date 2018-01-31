@@ -82,7 +82,7 @@ class AccountAnalyticAccount(models.Model):
             currency_id = account_amount['currency_id'][0]
             amount = res_currency_obj.browse(currency_id).compute(account_amount['amount'], user_currency)
             if amount < 0.0:
-                data_fdebit[account_amount['account_id'][0]] += amount
+                data_debit[account_amount['account_id'][0]] += amount
             else:
                 data_credit[account_amount['account_id'][0]] += amount
 
