@@ -191,7 +191,7 @@ class Project(models.Model):
     task_count = fields.Integer(compute='_compute_task_count', string="Tasks")
     task_needaction_count = fields.Integer(compute='_compute_task_needaction_count', string="Tasks")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
-                               domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)])
+                               domain=['|', ('stage_id.fold', '=', False), ('stage_id', '=', False)], copy=False)
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user)
     alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True,
