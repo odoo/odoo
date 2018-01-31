@@ -56,6 +56,7 @@
                     <field name="post_visible" invisible="1"/>
                     <field name="unreserve_visible" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
+                        <button name="%(stock.action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability Report" type="action" states="done" groups="stock.group_production_lot"/>
                         <button name="%(action_mrp_workorder_production_specific)d" type="action" attrs="{'invisible': [('workorder_count', '=', 0)]}" class="oe_stat_button" icon="fa-play-circle-o">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="workorder_done_count" widget="statinfo" nolabel="1"/> / <field name="workorder_count" widget="statinfo" nolabel="1"/></span>
