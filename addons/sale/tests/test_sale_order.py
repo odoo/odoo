@@ -3,6 +3,8 @@
 
 import odoo
 from odoo.exceptions import UserError, AccessError
+from odoo.tests import Form
+from odoo.tools import float_compare
 
 from .test_sale_common import TestCommonSaleNoChart
 
@@ -12,6 +14,8 @@ class TestSaleOrder(TestCommonSaleNoChart):
     @classmethod
     def setUpClass(cls):
         super(TestSaleOrder, cls).setUpClass()
+
+        SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
 
         # set up users
         cls.setUpUsers()
@@ -25,8 +29,8 @@ class TestSaleOrder(TestCommonSaleNoChart):
         cls.setUpClassicProducts()
         cls.setUpAccountJournal()
 
-        # create a generic Sale Order with all classical products
-        cls.sale_order = cls.env['sale.order'].create({
+        # create a generic Sale Order with all classical products and empty pricelist
+        cls.sale_order = SaleOrder.create({
             'partner_id': cls.partner_customer_usd.id,
             'partner_invoice_id': cls.partner_customer_usd.id,
             'partner_shipping_id': cls.partner_customer_usd.id,
@@ -59,7 +63,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
-        cls.sol_prod_deliver = cls.env['sale.order.line'].create({
+        cls.sol_product_deliver = cls.env['sale.order.line'].create({
             'name': cls.product_deliver.name,
             'product_id': cls.product_deliver.id,
             'product_uom_qty': 2,
@@ -196,3 +200,36 @@ class TestSaleOrder(TestCommonSaleNoChart):
         sol = so.order_line.filtered(lambda l: l.product_id == serv_cost)
         self.assertTrue(sol, 'Sale: cost invoicing does not add lines when confirming vendor invoice')
         self.assertEquals((sol.price_unit, sol.qty_delivered, sol.product_uom_qty, sol.qty_invoiced), (160, 2, 0, 0), 'Sale: line is wrong after confirming vendor invoice')
+
+    def test_sale_with_taxes(self):
+        """ Test SO with taxes applied on its lines and check subtotal applied on its lines and total applied on the SO """
+        # Create a tax with price included
+        tax_include = self.env['account.tax'].create({
+            'name': 'Tax with price include',
+            'amount': 10,
+            'price_include': True
+        })
+        # Create a tax with price not included
+        tax_exclude = self.env['account.tax'].create({
+            'name': 'Tax with no price include',
+            'amount': 10,
+        })
+
+        # Apply taxes on the sale order lines
+        self.sol_product_order.write({'tax_id': [(4, tax_include.id)]})
+        self.sol_serv_deliver.write({'tax_id': [(4, tax_include.id)]})
+        self.sol_serv_order.write({'tax_id': [(4, tax_exclude.id)]})
+        self.sol_product_deliver.write({'tax_id': [(4, tax_exclude.id)]})
+
+        # Trigger onchange to reset discount, unit price, subtotal, ...
+        for line in self.sale_order.order_line:
+            line.product_id_change()
+            line._onchange_discount()
+
+        for line in self.sale_order.order_line:
+            if line.tax_id.price_include:
+                price = line.price_unit * line.product_uom_qty - line.price_tax
+                self.assertEquals(float_compare(line.price_subtotal, price, precision_digits=2), 0, 'Tax should be included on an order line')
+            else:
+                self.assertEquals(line.price_subtotal, line.price_unit * line.product_uom_qty, 'Tax should not be included on an order line')
+        self.assertEquals(self.sale_order.amount_total, self.sale_order.amount_untaxed + self.sale_order.amount_tax, 'Taxes should be applied')
