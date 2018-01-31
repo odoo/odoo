@@ -6,6 +6,12 @@
             <field name="arch" type="xml">
                 <form string="Views">
                   <sheet>
+                      <div class="oe_button_box" name="button_box">
+                        <button type="object" name="restore_views" groups="base.group_no_one"
+                            string="Restore view" class="oe_stat_button"
+                            icon="fa-undo" confirm="Are you sure you want to restore this view?"
+                            attrs="{'invisible': [('arch_fs', '=', False)]}"/>
+                      </div>
                     <group>
                         <group>
                             <field name="name"/>
@@ -13,6 +19,7 @@
                             <field name="model"/>
                             <field name="priority"/>
                             <field name="active"/>
+                            <field name="arch_fs" invisible="1"/>
                         </group>
                         <group groups="base.group_no_one">
                             <field name="field_parent"/>

@@ -229,8 +229,8 @@ actual arch.
 * if False, the view currently does not extend its parent but can be enabled
          """)
 
-    @api.depends('arch_db', 'arch_fs')
-    def _compute_arch(self):
+
+    def _get_arch_fs(self, view):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
                 xmlid = m.group('xmlid')
@@ -239,19 +239,28 @@ actual arch.
                 return m.group('prefix') + str(self.env['ir.model.data'].xmlid_to_res_id(xmlid))
             return re.sub(r'(?P<prefix>[^%])%\((?P<xmlid>.*?)\)[ds]', replacer, arch_fs)
 
+        arch_fs = None
+        if view.arch_fs and view.xml_id:
+            # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
+            fullpath = get_resource_path(*view.arch_fs.split('/'))
+            if fullpath:
+                arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
+                # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
+                arch_fs = arch_fs and resolve_external_ids(
+                    arch_fs, view.xml_id).replace('%%', '%')
+            else:
+                _logger.warning("View %s: Full path [%s] cannot be found.",
+                                view.xml_id, view.arch_fs)
+                arch_fs = False
+        return arch_fs
+
+    @api.depends('arch_db', 'arch_fs')
+    def _compute_arch(self):
         for view in self:
-            arch_fs = None
-            if 'xml' in config['dev_mode'] and view.arch_fs and view.xml_id:
-                # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
-                fullpath = get_resource_path(*view.arch_fs.split('/'))
-                if fullpath:
-                    arch_fs = get_view_arch_from_file(fullpath, view.xml_id)
-                    # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
-                    arch_fs = arch_fs and resolve_external_ids(arch_fs, view.xml_id).replace('%%', '%')
-                else:
-                    _logger.warning("View %s: Full path [%s] cannot be found.", view.xml_id, view.arch_fs)
-                    arch_fs = False
-            view.arch = pycompat.to_text(arch_fs or view.arch_db)
+            if 'xml' in config['dev_mode']:
+                view.arch = pycompat.to_text(self._get_arch_fs(view) or view.arch_db)
+            else:
+                view.arch = pycompat.to_text(view.arch_db)
 
     def _inverse_arch(self):
         for view in self:
@@ -263,6 +272,16 @@ actual arch.
                 if path_info:
                     data['arch_fs'] = '/'.join(path_info[0:2])
             view.write(data)
+
+    def restore_views(self):
+        """
+        Restore views to default by reloading the .xml file contents.
+        """
+        for view in self:
+            arch_fs = self._get_arch_fs(view)
+            if arch_fs:
+                view.arch = pycompat.to_text(arch_fs)
+        return self
 
     @api.depends('arch')
     def _compute_arch_base(self):
