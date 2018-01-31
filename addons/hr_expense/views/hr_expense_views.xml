@@ -26,6 +26,7 @@
                     <field name="employee_id"/>
                     <field name="sheet_id" invisible="not context.get('show_report', False)"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                     <field name="total_amount" sum="Total Amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
@@ -65,6 +66,7 @@
                             <field name="sheet_id" invisible="1"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group><group>
                             <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -443,6 +445,7 @@
                                 <field name="name"/>
                                 <field name="state" invisible="1"/>
                                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
                                 <field name="message_unread" invisible="1"/>
                                 <field name="attachment_number" string=" "/>
                                 <button name="action_get_attachment_view" string="View Attachments" type="object" icon="fa-paperclip"/>

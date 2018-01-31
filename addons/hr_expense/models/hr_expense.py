@@ -44,6 +44,7 @@ class HrExpense(models.Model):
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.user.company_id.currency_id)
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, oldname='analytic_account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     account_id = fields.Many2one('account.account', string='Account', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, default=_default_account_id, help="An expense account is expected")
     description = fields.Text('Notes...', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
@@ -273,6 +274,7 @@ class HrExpense(models.Model):
                 'product_id': expense.product_id.id,
                 'product_uom_id': expense.product_uom_id.id,
                 'analytic_account_id': expense.analytic_account_id.id,
+                'analytic_tag_ids': [(6, 0, expense.analytic_tag_ids.ids)],
                 'expense_id': expense.id,
                 'partner_id': partner_id,
                 'tax_ids': [(6, 0, expense.tax_ids.ids)],
