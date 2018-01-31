@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, exceptions, _
+from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.exceptions import ValidationError
 
 
 class AccountAnalyticDistribution(models.Model):
@@ -116,9 +117,9 @@ class AccountAnalyticAccount(models.Model):
         for analytic in self:
             name = analytic.name
             if analytic.code:
-                name = '['+analytic.code+'] '+name
+                name = '[' + analytic.code + '] ' + name
             if analytic.partner_id:
-                name = name +' - '+analytic.partner_id.commercial_partner_id.name
+                name = name + ' - ' + analytic.partner_id.commercial_partner_id.name
             res.append((analytic.id, name))
         return res
 
@@ -155,3 +156,10 @@ class AccountAnalyticLine(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, default=lambda self: self.env.user.company_id)
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True, store=True)
     group_id = fields.Many2one('account.analytic.group', related='account_id.group_id', store=True, readonly=True)
+
+    @api.multi
+    @api.constrains('company_id', 'account_id')
+    def _check_company_id(self):
+        for line in self:
+            if line.account_id.company_id and line.company_id.id != line.account_id.company_id.id:
+                raise ValidationError(_('The selected account belongs to another company that the one you\'re trying to create an analytic item for'))
