@@ -61,14 +61,23 @@ class AccountConfigSettings(models.TransientModel):
 
     @api.model
     def get_default_tax_fields(self, fields):
-        default_purchase_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_purchase_tax_id', default=False)
-        default_sale_tax_id = self.env['ir.config_parameter'].sudo().get_param('account.default_sale_tax_id', default=False)
-        return dict(default_purchase_tax_id=int(default_purchase_tax_id), default_sale_tax_id=int(default_sale_tax_id))
+        # DO NOT FORWARDPORT, ONLY FOR SAAS-15
+        default_purchase_tax_id = (
+            self.env['ir.values'].sudo().get_default('product.template', 'supplier_taxes_id', company_id=self.env.user.company_id.id) or
+            self.env['ir.config_parameter'].sudo().get_param('account.default_purchase_tax_id', default=False)
+        )
+        default_sale_tax_id = (
+            self.env['ir.values'].sudo().get_default('product.template', 'taxes_id', company_id=self.env.user.company_id.id) or
+            self.env['ir.config_parameter'].sudo().get_param('account.default_sale_tax_id', default=False)
+        )
+        return {
+            'default_purchase_tax_id': int(default_purchase_tax_id[0]) if isinstance(default_purchase_tax_id, list) and default_purchase_tax_id else default_purchase_tax_id,
+            'default_sale_tax_id': int(default_sale_tax_id[0]) if isinstance(default_sale_tax_id, list) and default_sale_tax_id else default_sale_tax_id,
+        }
 
     @api.multi
     def set_default_tax_fields(self):
-        self.env['ir.config_parameter'].sudo().set_param("account.default_purchase_tax_id", self.default_purchase_tax_id.id)
-        self.env['ir.config_parameter'].sudo().set_param("account.default_sale_tax_id", self.default_sale_tax_id.id)
+        pass
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
