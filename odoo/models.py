@@ -3347,7 +3347,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             for _inv, fields in groupby(inverse_fields, attrgetter('inverse')):
                 fields[0].determine_inverse(record)
 
-            record.modified(set(inverse_vals) - set(store_vals))
+            # trick: no need to mark non-stored fields as modified, thanks to
+            # the transitive closure made over non-stored dependencies
 
             # check Python constraints for inversed fields
             record._validate_fields(set(inverse_vals) - set(store_vals))
