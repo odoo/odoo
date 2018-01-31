@@ -330,7 +330,7 @@ exports.PosModel = Backbone.Model.extend({
         ids:    function(self){ return [self.config.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];
-            if (self.currency.rounding > 0) {
+            if (self.currency.rounding > 0 && self.currency.rounding < 1) {
                 self.currency.decimals = Math.ceil(Math.log(1.0 / self.currency.rounding) / Math.log(10));
             } else {
                 self.currency.decimals = 0;
