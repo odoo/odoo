@@ -87,12 +87,6 @@
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="is_address_home_a_company" invisible="1" />
-                                        <div class="text-warning" attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
-                                            Use here the home address of the employee.
-                                            This private address is used in the expense report reimbursement document.
-                                            It should be different from the work address.
-                                        </div>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
@@ -124,6 +118,27 @@
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
+            </field>
+        </record>
+
+        <!-- TO DO in MASTER
+            Make this view include all the <page> that contains the group_hr_user infos
+            And change all inherited views to point to this one-->
+        <!-- Elevated user Employee -->
+        <record id="view_employee_group_hr_user_form" model="ir.ui.view">
+            <field name="name">hr.employee.group.hr.user.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="groups_id" eval="[(4, ref('hr.group_hr_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='address_home_id']" position="after">
+                    <field name="is_address_home_a_company" invisible="1" />
+                    <div class="text-warning" attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
+                        Use here the home address of the employee.
+                        This private address is used in the expense report reimbursement document.
+                        It should be different from the work address.
+                    </div>
+                </xpath>
             </field>
         </record>
 
