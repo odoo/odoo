@@ -110,7 +110,16 @@ var DomainTree = DomainNode.extend({
     /// @see DomainTree._addFlattenedChildren
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
-        this._initialize(domainUtils.stringToDomain(domain));
+        try {
+            domain = domainUtils.stringToDomain(domain);
+        } catch (err) {
+            // TODO: domain could contain `parent` for example, which is
+            // currently not handled by the DomainSelector
+            this.invalidDomain = true;
+            this.children = [];
+            return;
+        }
+        this._initialize(domain);
     },
     /// @see DomainTree.init
     _initialize: function (domain) {
@@ -279,6 +288,18 @@ var DomainSelector = DomainTree.extend({
             }
         },
     }),
+
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            if (self.invalidDomain) {
+                var msg = _t("This domain is not supported.");
+                self.$el.html(msg);
+            }
+        });
+    },
+
+
     _initialize: function (domain) {
         // Check if the domain starts with implicit "&" operators and make them
         // explicit. As the DomainSelector is a specialization of a DomainTree,
