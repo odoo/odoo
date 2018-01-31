@@ -2159,15 +2159,24 @@ class MailThread(models.AbstractModel):
             ctx.pop('active_domain')
             self = self.with_context(ctx)
 
+        assignation_tpl = self.env.ref('mail.message_user_assigned')
+
         for record in self:
-            record.message_post_with_view(
-                'mail.message_user_assigned',
-                composition_mode='mass_mail',
+            values = {
+                'object': record,
+            }
+            assignation_msg = assignation_tpl.render(values, engine='ir.qweb')
+            assignation_msg = self.env['mail.thread']._replace_local_links(assignation_msg)
+            record.message_notify(
+                subject='You have been assigned to %s' % record.display_name,
+                body=assignation_msg,
                 partner_ids=[(4, pid) for pid in partner_ids],
-                auto_delete=True,
-                auto_delete_message=True,
-                parent_id=False, # override accidental context defaults
-                subtype_id=self.env.ref('mail.mt_note').id)
+                record_name=record.display_name,
+                notif_layout='mail.mail_notification_light',
+                notif_values={
+                    'model_description': record._description.lower(),
+                }
+            )
 
     @api.multi
     def message_auto_subscribe(self, updated_fields, values=None):
@@ -2238,7 +2247,7 @@ class MailThread(models.AbstractModel):
             self.message_subscribe(channel_ids=[cid], subtype_ids=subtypes, force=(subtypes != None))
 
         # remove the current user from the needaction partner to avoid to notify the author of the message
-        user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user and user.notification_type == 'email']
+        user_pids = [user.partner_id.id for user in to_add_users if user != self.env.user]
         self._message_auto_subscribe_notify(user_pids)
 
         return True
