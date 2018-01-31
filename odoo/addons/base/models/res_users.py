@@ -954,7 +954,7 @@ class ChangePasswordUser(models.TransientModel):
     _name = 'change.password.user'
     _description = 'Change Password Wizard User'
 
-    wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True)
+    wizard_id = fields.Many2one('change.password.wizard', string='Wizard', required=True, ondelete='cascade')
     user_id = fields.Many2one('res.users', string='User', required=True, ondelete='cascade')
     user_login = fields.Char(string='User Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')
