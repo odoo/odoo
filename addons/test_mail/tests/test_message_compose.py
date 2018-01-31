@@ -213,6 +213,20 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         self.assertEqual(new_note.email_from, formataddr((self.user_employee.name, self.user_employee.email)))
         self.assertEqual(new_note.needaction_partner_ids, self.env['res.partner'])
 
+    def test_post_notify(self):
+        self.user_employee.write({'notification_type': 'inbox'})
+        new_notification = self.env['mail.thread'].message_notify(
+            subject='This should be a subject',
+            body='<p>You have received a notification</p>',
+            partner_ids=[(4, self.partner_1.id), (4, self.user_employee.partner_id.id)],
+        )
+
+        self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
+        self.assertEqual(new_notification.body, '<p>You have received a notification</p>')
+        self.assertEqual(new_notification.author_id, self.env.user.partner_id)
+        self.assertEqual(new_notification.email_from, formataddr((self.env.user.name, self.env.user.email)))
+        self.assertEqual(new_notification.needaction_partner_ids, self.partner_1 | self.user_employee.partner_id)
+
 
 class TestComposer(BaseFunctionalTest, MockEmails, TestRecipients):
 
