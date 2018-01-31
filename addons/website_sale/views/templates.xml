@@ -94,7 +94,8 @@
                 </div>
                 <div class="oe_product_image">
                     <a itemprop="url" t-att-href="product_href">
-                        <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="product.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
+                        <t t-set="display_img" t-value="product.display_image_id or product"/>
+                        <span itemprop="image" t-attf-content="{{request.httprequest.url_root}}web/image/product.template/{{product.id}}/image" t-field="display_img.image" t-options="{'widget': 'image', 'resize': None if product_image_big else '300x300', 'zoom': 'image'}" t-att-alt="product.name" />
                     </a>
                 </div>
                 <t t-if="show_publish">
@@ -428,42 +429,8 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <t t-set="variant_img" t-value="any(product.mapped('product_variant_ids.image_variant'))"/>
-                            <t t-set="image_ids"  t-value="product.product_image_ids"/>
-                            <div id="o-carousel-product" class="carousel slide" data-ride="carousel" data-interval="0">
-                              <div class="carousel-outer">
-                                <div class="carousel-inner">
-                                    <div t-if="variant_img" class="carousel-item active" itemprop="image" t-field="product[:1].product_variant_id.image" t-options="{'widget': 'image', 'class': 'product_detail_img js_variant_img', 'alt-field': 'name', 'zoom': 'image', 'unique': str(product['__last_update']) + (str(product.product_variant_id['__last_update']) or '')}"/>
-                                    <div t-attf-class="carousel-item#{'' if variant_img else ' active'}" itemprop="image" t-field="product.image" t-options="{'widget': 'image', 'class': 'product_detail_img', 'alt-field': 'name', 'zoom': 'image', 'unique': product['__last_update']}"/>
-                                    <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
-                                        <div class="carousel-item" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
-                                    </t>
-                                </div>
-
-                                <t t-if="len(image_ids) or variant_img">
-                                    <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-slide="prev" >
-                                        <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
-                                    </a>
-                                    <a class="carousel-control-next" href="#o-carousel-product" role="button" data-slide="next">
-                                        <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
-                                    </a>
-                                </t>
-                              </div>
-
-                              <ol class="carousel-indicators" t-if="len(image_ids) or variant_img">
-                                <li t-if="variant_img" data-target="#o-carousel-product" data-slide-to="0" class="active">
-                                    <img class="img img-fluid js_variant_img_small" t-attf-src="/website/image/product.product/{{product.product_variant_id.id}}/image/90x90" t-att-alt="product.name"/>
-                                </li>
-                                <li data-target="#o-carousel-product" t-att-data-slide-to="1 if variant_img else '0'" t-att-class="'' if variant_img else 'active'">
-                                    <img class="img img-fluid" t-attf-src="/website/image/product.template/{{product.id}}/image/90x90" t-att-alt="product.name"/>
-                                </li>
-                                <t t-if="len(image_ids)" t-foreach="image_ids" t-as="pimg">
-                                    <li data-target="#o-carousel-product" t-att-data-slide-to="pimg_index + (variant_img and 2 or 1)">
-                                        <img class="img img-fluid" t-attf-src="/website/image/product.image/{{pimg.id}}/image/90x90" t-att-alt="pimg.name"/>
-                                    </li>
-                                </t>
-                              </ol>
-                            </div>
+                            <t t-set="product_variant" t-value="product.product_variant_id"/>
+                            <t t-call="website_sale.product_carousel"/>
                         </div>
                         <div class="col-md-6 col-xl-4 offset-xl-2" id="product_details">
                             <h1 itemprop="name" t-field="product.name">Product Name</h1>
@@ -504,6 +471,54 @@
         <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
             <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
         </xpath>
+    </template>
+
+    <template id="product_carousel" name="Product Images Carousel">
+        <t t-set="variant_image_ids" t-value="product_variant.variant_image_ids"/>
+        <t t-set="image_ids" t-value="product_variant.product_tmpl_id.product_image_ids"/>
+        <div id="o-carousel-product" class="carousel slide" t-att-data-product_id="product_variant.id" data-ride="carousel" data-interval="0">
+            <div class="carousel-outer">
+                <div class="carousel-inner">
+                    <t t-foreach="variant_image_ids" t-as="pimg">
+                        <div t-attf-class="carousel-item#{pimg_index == 0 and ' active' or ''}" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
+                    </t>
+                    <t t-foreach="image_ids" t-as="pimg">
+                        <div t-attf-class="carousel-item#{not len(variant_image_ids) and pimg_index == 0 and ' active' or ''}" t-field="pimg.image" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
+                    </t>
+                    <t t-if="not(len(variant_image_ids) or len(image_ids))">
+                        <div class="carousel-item active" t-field="product_variant.product_tmpl_id.image_medium" t-options='{"widget": "image", "class": "product_detail_img", "alt-field": "name", "zoom": "image" }'/>
+                    </t>
+                </div>
+                <t t-if="len(image_ids) + len(variant_image_ids) > 1">
+                    <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-slide="prev" >
+                        <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
+                    </a>
+                    <a class="carousel-control-next" href="#o-carousel-product" role="button" data-slide="next" >
+                        <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
+                    </a>
+                </t>
+            </div>
+            <span class="btn btn-light o_indicators left">
+                <i class="fa fa-chevron-left" role="img" aria-label="Slide Back" title="Slide Back"/>
+            </span>
+            <span class="btn btn-light o_indicators right">
+                <i class="fa fa-chevron-right" role="img" aria-label="Slide Forward" title="Slide Forward"/>
+            </span>
+            <div class="o_indicators_container" t-if="len(image_ids) + len(variant_image_ids) > 1">
+                <ol class="carousel-indicators">
+                    <t t-foreach="variant_image_ids" t-as="pimg">
+                        <li data-target="#o-carousel-product" t-attf-data-slide-to="#{pimg_index}" t-attf-class="#{pimg_index == 0 and ' active' or ''}" t-att-data-img-id="pimg.id">
+                            <img class="img img-fluid" t-attf-src="/website/image/product.image/{{pimg.id}}/image/90x90" t-att-alt="pimg.name"/>
+                        </li>
+                    </t>
+                    <t t-foreach="image_ids" t-as="pimg">
+                        <li data-target="#o-carousel-product" t-attf-data-slide-to="#{not len(variant_image_ids) and pimg_index == 0 and pimg_index or (pimg_index + len(variant_image_ids))}" t-attf-class="#{not len(variant_image_ids) and pimg_index == 0 and ' active' or ''}" t-att-data-img-id="pimg.id">
+                            <img class="img img-fluid" t-attf-src="/website/image/product.image/{{pimg.id}}/image/90x90" t-att-alt="pimg.name"/>
+                        </li>
+                    </t>
+                </ol>
+            </div>
+        </div>
     </template>
 
     <template inherit_id='website_sale.product' id="product_picture_magnify_auto" active="False" customize_show="True" name="Automatic Image Zoom">

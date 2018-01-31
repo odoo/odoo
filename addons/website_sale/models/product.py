@@ -128,10 +128,20 @@ class ProductTemplate(models.Model):
                                         "customers find all the items within a category. To publish them, go to the Shop page, "
                                         "hit Customize and turn *Product Categories* on. A product can belong to several categories.")
     product_image_ids = fields.One2many('product.image', 'product_tmpl_id', string='Images')
+    display_image_id = fields.Many2one('product.image', compute="_compute_display_image", store=True, string='Image to display on list')
 
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+
+    @api.depends('product_image_ids', 'product_variant_ids.variant_image_ids')
+    def _compute_display_image(self):
+        for template in self:
+            images = template.product_variant_id.variant_image_ids or template.product_image_ids
+            if images:
+                template.display_image_id = images[0]
+            else:
+                template.display_image_id = False
 
     def _website_price(self):
         # First filter out the ones that have no variant:
@@ -183,6 +193,31 @@ class ProductTemplate(models.Model):
         for product in self:
             product.website_url = "/shop/product/%s" % (product.id,)
 
+    @api.model
+    def create(self, vals):
+        image = vals.get('image') or vals.get('image_medium') or vals.get('image_small')
+        if image:
+            vals.setdefault('product_image_ids', []).append((0, 0, {'image': image, 'name': vals.get('name'), 'sequence': 0}))
+        return super(ProductTemplate, self).create(vals)
+
+    @api.multi
+    def write(self, vals):
+        img_fields = set(vals.keys()) & {'image', 'image_medium', 'image_small'}  # value of image fields can be False when user removes it
+        if img_fields and not self.env.context.get('no_update'):
+            image_data = vals[img_fields.pop()]
+            self._update_template_images(image_data)
+        return super(ProductTemplate, self).write(vals)
+
+    def _update_template_images(self, image_data):
+        if image_data:
+            productImg = self.env['product.image']
+            images = self.mapped('product_image_ids').filtered(lambda img: img.sequence == 0)
+            images.with_context(no_update=True).write({'image': image_data})
+            for product_template in self - images.mapped('product_tmpl_id'):
+                productImg.create({'product_tmpl_id': product_template.id, 'image': image_data, 'name': product_template.name, 'sequence': 0})
+        else:
+            self.mapped('product_image_ids').filtered(lambda img: img.sequence == 0).unlink()
+
 
 class Product(models.Model):
     _inherit = "product.product"
@@ -192,6 +227,7 @@ class Product(models.Model):
     website_price = fields.Float('Website price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_public_price = fields.Float('Website public price', compute='_website_price', digits=dp.get_precision('Product Price'))
     website_price_difference = fields.Boolean('Website price difference', compute='_website_price')
+    variant_image_ids = fields.One2many('product.image', 'product_product_id', string='Product Images')
 
     def _website_price(self):
         qty = self._context.get('quantity', 1.0)
@@ -217,6 +253,22 @@ class Product(models.Model):
         self.ensure_one()
         return self.product_tmpl_id.website_publish_button()
 
+    @api.multi
+    def write(self, vals):
+        if 'image_variant' in vals.keys() and not self.env.context.get('no_update'):
+            self._update_product_images(vals['image_variant'])
+        return super(Product, self).write(vals)
+
+    def _update_product_images(self, image_data):
+        if image_data:
+            productImg = self.env['product.image']
+            images = self.mapped('variant_image_ids').filtered(lambda img: img.sequence == 0)
+            images.with_context(no_update=True).write({'image': image_data})
+            for product_product in self - images.mapped('product_product_id'):
+                productImg.create({'product_product_id': product_product.id, 'product_tmpl_id': False, 'image': image_data, 'name': product_product.name, 'sequence': 0})
+        else:
+            self.mapped('variant_image_ids').filtered(lambda img: img.sequence == 0).unlink()
+
 
 class ProductAttribute(models.Model):
     _inherit = "product.attribute"
@@ -234,7 +286,35 @@ class ProductAttributeValue(models.Model):
 
 class ProductImage(models.Model):
     _name = 'product.image'
+    _order = "sequence, id"
 
     name = fields.Char('Name')
     image = fields.Binary('Image', attachment=True)
     product_tmpl_id = fields.Many2one('product.template', 'Related Product', copy=True)
+    product_product_id = fields.Many2one('product.product', 'Related Product Product', copy=True)
+    sequence = fields.Integer(default=1)
+
+    @api.onchange('sequence')
+    def _onchange_sequence(self):
+        '''
+        Image with 0 sequence is considered as 'main' image for
+        product template / variant and is managed automatically.
+        '''
+        for image in self:
+            if image.sequence <= 0:
+                image.sequence = 1
+                return {
+                    'warning': {
+                        'title': _('Warning!'),
+                        'message': _('Only sequence > 0 is allowed.'),
+                    }
+                }
+
+    @api.multi
+    def write(self, vals):
+        res = super(ProductImage, self).write(vals)
+        if 'image' in vals and not self.env.context.get('no_update'):
+            main_images = self.filtered(lambda img: img.sequence == 0).with_context(no_update=True)
+            main_images.mapped('product_tmpl_id').write({'image_medium': vals.get('image')})
+            main_images.mapped('product_product_id').write({'image_medium': vals.get('image')})
+        return res

@@ -347,6 +347,10 @@ class WebsiteSale(http.Controller):
         }
         return request.render("website_sale.product", values)
 
+    @http.route('/shop/carousel/<model("product.product"):product>', type='json', auth="public", website=True)
+    def product_carousel(self, product):
+        return request.env['ir.ui.view'].render_template("website_sale.product_carousel", {'product_variant': product})
+
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True)
     def pricelist_change(self, pl_id, **post):
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \

@@ -151,6 +151,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
         'click .toggle_summary': '_onToggleSummary',
+        'click #o-carousel-product .o_indicators': '_onCarouselScroll',
     },
 
     /**
@@ -161,6 +162,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
 
         this._changeCartQuantity = _.debounce(this._changeCartQuantity.bind(this), 500);
         this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
+        this.carouselCache = {};
     },
     /**
      * @override
@@ -179,6 +181,8 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
             $('input.js_variant_change, select.js_variant_change', add_variant).first().trigger('change');
         });
 
+        this._updateCarouselIndicators();
+
         this.$('select[name="country_id"]').change();
 
         this.$('#checkbox_cgv').trigger('change');
@@ -189,6 +193,19 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
             }
         });
 
+        this._activateZoom();
+
+        return def;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _activateZoom: function () {
         // Do not activate image zoom for mobile devices, since it might prevent users from scrolling the page
         if (!config.device.isMobile) {
             var autoZoom = $('.ecom-zoomable').data('ecom-zoom-auto') || false,
@@ -214,14 +231,7 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
                 callback();
             }
         }
-
-        return def;
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @private
      */
@@ -346,29 +356,43 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
      * @private
      */
     _updateProductImage: function ($productContainer, product_id) {
-        var $img;
-        if ($('#o-carousel-product').length) {
-            $img = $productContainer.find('img.js_variant_img');
-            $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-            $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                .data('oe-model', 'product.product').data('oe-id', product_id);
-
-            var $thumbnail = $productContainer.find('img.js_variant_img_small');
-            if ($thumbnail.length !== 0) { // if only one, thumbnails are not displayed
-                $thumbnail.attr("src", "/web/image/product.product/" + product_id + "/image/90x90");
-                $('.carousel').carousel(0);
+        var self = this;
+        var $carousel = $productContainer.find("#o-carousel-product");
+        if (!$carousel.length) {
+            return;
+        }
+        var $carouselContainer = $carousel.parent();
+        if ($carousel.length && $carousel.data('product_id') !== product_id) {
+            this.carouselCache[$carousel.data('product_id')] = $carousel.detach();
+            if (this.carouselCache[product_id]) {
+                $carouselContainer.append(this.carouselCache[product_id]);
+            }
+            else {
+                this._rpc({
+                    route: _.str.sprintf('/shop/carousel/%d', product_id),
+                }).then(function (data) {
+                    $carouselContainer.append(data);
+                    self._activateZoom();
+                    self._updateCarouselIndicators();
+                });
             }
         }
-        else {
-            $img = $productContainer.find('span[data-oe-model^="product."][data-oe-type="image"] img:first, img.product_detail_img');
-            $img.attr("src", "/web/image/product.product/" + product_id + "/image");
-            $img.parent().attr('data-oe-model', 'product.product').attr('data-oe-id', product_id)
-                .data('oe-model', 'product.product').data('oe-id', product_id);
-        }
-        // reset zooming constructs
-        $img.filter('[data-zoom-image]').attr('data-zoom-image', $img.attr('src'));
-        if ($img.data('zoomOdoo') !== undefined) {
-            $img.data('zoomOdoo').isReady = false;
+    },
+    /**
+     * @private
+     */
+    _updateCarouselIndicators: function () {
+        // Hide / Show bottom scroll indicators based on no of images
+        var $carousel = $('#o-carousel-product');
+        var indicators = $carousel.find('.carousel-indicators li').length;
+        if (indicators) {
+            var indicatorWidth = $carousel.find('.carousel-indicators li.active').outerWidth() + 2;
+            var parentWidth = $carousel.width();
+            if (parentWidth < indicatorWidth * indicators) {
+                $carousel.addClass('o_show_indicators');
+            } else {
+                $carousel.removeClass('o_show_indicators');
+            }
         }
     },
 
@@ -635,6 +659,26 @@ sAnimations.registry.WebsiteSale = sAnimations.Class.extend({
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-none d-xl-block');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onCarouselScroll: function (ev) {
+        ev.preventDefault();
+        var $target = $(ev.currentTarget);
+        var $carousel = $target.parent();
+        var $indicators = $carousel.find('.carousel-indicators li');
+        var indicatorWidth = $indicators.first().outerWidth() + 4;
+        var parentWidth = $carousel.find('.o_indicators_container').width();
+        var maxLeft = parentWidth - (indicatorWidth * $indicators.length);
+        var currentPosition = $carousel.find('.carousel-indicators').position().left;
+        if ($target.hasClass('right')) {
+            var left = currentPosition - (indicatorWidth * 3) < maxLeft ? maxLeft : currentPosition - (indicatorWidth * 3);
+        } else {
+            left = currentPosition + (indicatorWidth * 3) > -(indicatorWidth / 2) ? 0 : currentPosition + (indicatorWidth * 3);
+        }
+        $carousel.find('.carousel-indicators').css('left', left);
     },
 });
 

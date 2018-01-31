@@ -30,4 +30,5 @@
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'application': True,
+    'post_init_hook': '_set_product_image_ids',
 }
