@@ -876,7 +876,7 @@ var BasicComposer = Widget.extend(chat_mixin, {
     _onEmojiButtonClick: function () {
         if (!this.$emojisContainer) { // lazy rendering
             this.$emojisContainer = $(QWeb.render('mail.ChatComposer.emojis', {
-                emojis: this._getEmojis(),
+                options: this._getEmojis(),
             }));
         }
         if (this.$emojisContainer.parent().length) {

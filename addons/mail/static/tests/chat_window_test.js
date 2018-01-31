@@ -92,7 +92,7 @@ QUnit.module('mail', {}, function () {
             var widget = new Widget();
 
             widget.on('get_emojis', widget, function (ev) {
-                ev.data.callback([]);
+                ev.data.callback({emojis: []});
             });
 
             testUtils.addMockEnvironment(widget, params);

@@ -67,6 +67,7 @@
     }
 
    .o_mail_emoji_container {
+        .o-position-absolute(auto, 0, 100%, 0);
         padding: 0 @o-mail-chatter-gap @o-mail-chatter-gap 0;
         border: 1px solid @gray-lighter-dark;
         background-color: @gray-lighter;
@@ -131,6 +132,9 @@
             .o_composer, .o_composer_subject {
                 padding: @o-mail-chatter-gap @o-mail-chatter-gap 0;
             }
+            .o_mail_emoji_container {
+                bottom: auto;
+            }
             .o_composer_send {
                 margin-top: @o-mail-chatter-gap;
             }
@@ -146,10 +150,6 @@
                 padding: @o-mail-chatter-gap @o-mail-chatter-gap 0 @o-mail-chatter-gap;
                 border-radius: 2px 0 0 2px;
                 border-right-width: 0;
-            }
-            .o_mail_emoji_container {
-                text-align: right;
-                border-width: 1px;
             }
             .o_composer_input {
                 .o-flex-flow(row, wrap);
@@ -190,8 +190,9 @@
             width: 100%;
         }
         .o_mail_emoji_container {
-            .o-position-absolute(auto, 0, 100%, 0);
+            max-height: 20vh;
             border-bottom-width: 1px;
+            overflow-y: auto;
         }
         .o_composer_input {
             .o-flex-flow(row, nowrap);

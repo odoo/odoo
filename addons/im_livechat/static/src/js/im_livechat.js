@@ -313,7 +313,7 @@ var Feedback = Widget.extend({
 
         // only display textearea if bad smiley selected
         var close_chat = false;
-        if (this.rating === 0) {
+        if (this.rating === 1) {
             this.$('.o_livechat_rating_reason').show();
         } else {
             this.$('.o_livechat_rating_reason').hide();
@@ -341,11 +341,9 @@ var Feedback = Widget.extend({
         };
         return session.rpc('/im_livechat/feedback', args).then(function () {
             if (options.close) {
-                var content = _.str.sprintf(_t("Rating: :rating_%d"), self.rating);
                 if (options.reason) {
-                    content += " \n" + options.reason;
+                    self.trigger("send_message", {content: options.reason});
                 }
-                self.trigger("send_message", {content: content});
                 self.trigger("feedback_sent"); // will close the chat
             }
         });
