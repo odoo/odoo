@@ -849,7 +849,7 @@
     
     <record id="tva_ned_1950c" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Colectat 19%, 50% deductibil</field>
+        <field name="name">TVA colectat 19% Nedeductibil 50%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">-9.5</field>
         <field name="amount_type">percent</field>
@@ -861,7 +861,7 @@
     </record>
     <record id="tva_ned_1950d" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Deductibil 19%, 50% deductibil</field>
+        <field name="name">TVA deductibil 19% Nedeductibil 50%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
@@ -873,7 +873,7 @@
     </record>
     <record id="tva_ned_1950dexp" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Cheltuiala TVA Deductibil 19%, 50% deductibil</field>
+        <field name="name">Cheltuiala TVA 19% Nedeductibil 50%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">9.5</field>
         <field name="amount_type">percent</field>
@@ -886,7 +886,7 @@
     <record id="tva_ned_1950" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="sequence">110</field>
-        <field name="name">TVA Deductibil 19%, 50% deductibil</field>
+        <field name="name">TVA 19% Nedeductibil 50%</field>
         <field name="amount">1</field>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
@@ -895,9 +895,9 @@
     
     <record id="tva_ned_19c" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Nedeductibil 19% colectat</field>
+        <field name="name">TVA colectat 19% Nedeductibil 100%</field>
         <field name="price_include" eval="0"/>
-        <field name="amount">-9.5</field>
+        <field name="amount">-19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">none</field>
         <field name="refund_account_id" ref="pcg_4427"/>
@@ -907,7 +907,7 @@
     </record>
     <record id="tva_ned_19d" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">TVA Nedeductibil 19% deductibil</field>
+        <field name="name">TVA deductibil 19% Nedeductibil 100%</field>
         <field name="price_include" eval="0"/>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
@@ -919,9 +919,9 @@
     </record>
     <record id="tva_ned_19dexp" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
-        <field name="name">Cheltuiala TVA Nedeductibil 19%</field>
+        <field name="name">Cheltuiala TVA 19% Nedeductibil 100%</field>
         <field name="price_include" eval="0"/>
-        <field name="amount">9.5</field>
+        <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">none</field>
         <field name="refund_account_id" ref="pcg_6352"/>
@@ -932,7 +932,7 @@
     <record id="tva_ned_19" model="account.tax.template">
         <field name="chart_template_id" ref="ro_chart_template"/>
         <field name="sequence">111</field>
-        <field name="name">TVA Nedeductibil 19%</field>
+        <field name="name">TVA 19% Nedeductibil 100%</field>
         <field name="amount">1</field>
         <field name="amount_type">group</field>
         <field name="type_tax_use">purchase</field>
