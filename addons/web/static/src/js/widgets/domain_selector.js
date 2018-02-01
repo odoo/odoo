@@ -185,11 +185,10 @@ var DomainTree = DomainNode.extend({
         } catch (err) {
             // TODO: domain could contain `parent` for example, which is
             // currently not handled by the DomainSelector
-            this._isValid = false;
+            this.invalidDomain = false;
             this.children = [];
             return;
         }
-        
         this._initialize(domain);
     },
     /**
@@ -579,7 +578,7 @@ var DomainSelector = DomainTree.extend({
     start: function () {
         var self = this;
         return this._super.apply(this, arguments).then(function () {
-            if (!self._isValid) {
+            if (self.invalidDomain) {
                 var msg = _t("This domain is not supported.");
                 self.$el.html(msg);
             }
