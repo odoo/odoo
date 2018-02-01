@@ -91,4 +91,17 @@
             </form>
         </field>
     </record>
+
+    <record id="non_normalized_attrs" model="ir.ui.view">
+        <field name="name">Non Normalised Domains</field>
+        <field name="model">test_testing_utilities.a</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="f1"/>
+                <field name="f2" attrs="{'readonly': [['f1', '=', 63], ['f3', '=', 5]]}"/>
+                <field name="f3"/>
+                <field name="f4"/>
+            </form>
+        </field>
+    </record>
 </odoo>
