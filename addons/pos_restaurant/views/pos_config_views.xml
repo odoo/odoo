@@ -8,7 +8,9 @@
         <field name="arch" type="xml">
             <button id="btn_use_pos_restaurant" position="replace"/>
             <div id="iface_invoicing" position="before">
-                <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="iface_printbill"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="iface_printbill"/>
                     </div>
@@ -20,7 +22,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="iface_splitbill"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="iface_splitbill"/>
                     </div>
@@ -32,7 +36,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6 o_setting_box" title="This product is used as reference on customer receipts." attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="iface_tipproduct"
+                     title="This product is used as reference on customer receipts."
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="iface_tipproduct"/>
                     </div>
@@ -52,7 +59,9 @@
                 </div>
             </div>
             <div id="barcode_scanner" position="after">
-                <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="is_order_printer"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="is_order_printer"/>
                     </div>
@@ -75,7 +84,9 @@
                 </div>
             </div>
             <div id="category_reference" position="before">
-                <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="is_table_management"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="is_table_management"/>
                     </div>
@@ -96,7 +107,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6 o_setting_box" attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                <div class="col-xs-12 col-md-6 o_setting_box"
+                     id="iface_orderline_notes"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
                     <div class="o_setting_left_pane">
                         <field name="iface_orderline_notes"/>
                     </div>
