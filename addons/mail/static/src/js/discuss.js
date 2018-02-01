@@ -905,7 +905,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         var def = window.Notification && window.Notification.requestPermission();
         if (def) {
             def.then(function (value) {
-                if (value === 'denied') {
+                if (value !== 'granted') {
                     self._sendNotification(self, _t('Permission denied'),
                         _t('Odoo will not have the permission to send native notifications on this device.'));
                 } else {

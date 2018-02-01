@@ -96,6 +96,7 @@ class EventMailScheduler(models.Model):
 
     @api.one
     def execute(self):
+        now = fields.Datetime.now()
         if self.interval_type == 'after_sub':
             # update registration lines
             lines = [
@@ -105,9 +106,10 @@ class EventMailScheduler(models.Model):
             if lines:
                 self.write({'mail_registration_ids': lines})
             # execute scheduler on registrations
-            self.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT)).execute()
+            self.mail_registration_ids.filtered(lambda reg: reg.scheduled_date and reg.scheduled_date <= now).execute()
         else:
-            if not self.mail_sent:
+            # Do not send emails if the mailing was scheduled before the event but the event is over
+            if not self.mail_sent and (self.interval_type != 'before_event' or self.event_id.date_end > now):
                 self.event_id.mail_attendees(self.template_id.id)
                 self.write({'mail_sent': True})
         return True

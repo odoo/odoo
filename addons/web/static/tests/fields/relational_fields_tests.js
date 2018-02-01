@@ -1321,6 +1321,93 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('X2Many sequence list in modal', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.fields.sequence = {string: 'Sequence', type: 'integer'};
+        this.data.partner.records[0].sequence = 1;
+        this.data.partner.records[1].sequence = 2;
+        this.data.partner.onchanges = {
+            sequence: function (obj) {
+                if (obj.id === 2) {
+                    obj.sequence = 1;
+                    assert.step('onchange sequence');
+                }
+            },
+        };
+
+        this.data.product.fields.turtle_ids = {string: 'Turtles', type: 'one2many', relation: 'turtle'};
+        this.data.product.records[0].turtle_ids = [1];
+
+        this.data.turtle.fields.partner_types_ids = {string: "Partner", type: "one2many", relation: 'partner'};
+        this.data.turtle.fields.type_id = {string: "Partner Type", type: "many2one", relation: 'partner_type'};
+
+        this.data.partner_type.fields.partner_ids = {string: "Partner", type: "one2many", relation: 'partner'};
+        this.data.partner_type.records[0].partner_ids = [1,2];
+
+        testUtils.createAsyncView({
+            View: FormView,
+            model: 'product',
+            data: this.data,
+            arch: '<form>' +
+                        '<field name="name"/>' +
+                        '<field name="turtle_ids" widget="one2many_list">' +
+                            '<tree string="Turtles" editable="bottom">' +
+                                '<field name="type_id"/>' +
+                            '</tree>' +
+                        '</field>' +
+                '</form>',
+            archs: {
+                'partner_type,false,form': '<form><field name="partner_ids"/></form>',
+                'partner,false,list': '<tree string="Vendors">' +
+                                            '<field name="display_name"/>' +
+                                            '<field name="sequence" widget="handle"/>' +
+                                      '</tree>',
+            },
+            res_id: 37,
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/product/read') {
+                    return $.when([{id: 37, name: 'xphone', display_name: 'leonardo', turtle_ids: [1]}]);
+                }
+                if (route === '/web/dataset/call_kw/turtle/read') {
+                    return $.when([{id: 1, type_id: [12, 'gold']}]);
+                }
+                if (route === '/web/dataset/call_kw/partner_type/get_formview_id') {
+                    return $.when(false)
+                }
+                if (route === '/web/dataset/call_kw/partner_type/read') {
+                    return $.when([{id: 12, partner_ids: [1,2], display_name: 'gold'}])
+                }
+                if (route === '/web/dataset/call_kw/partner_type/write') {
+                    assert.step('partner_type write');
+                }
+                return this._super.apply(this, arguments);
+            },
+        }).then(function(form) {
+            form.$buttons.find('.o_form_button_edit').click();
+            form.$('.o_data_cell').click();
+            form.$('.o_external_button').click();
+
+            var $modal = $('.modal-dialog');
+            assert.equal($modal.length, 1,
+                'There should be 1 modal opened');
+
+            var $handles = $modal.find('.ui-sortable-handle');
+            assert.equal($handles.length, 2,
+                'There should be 2 sequence handlers');
+
+            testUtils.dragAndDrop($handles.eq(1), $modal.find('tbody tr').first());
+
+            // Saving the modal and then the original model
+            $modal.find('.modal-footer .btn-primary').click();
+            form.$buttons.find('.o_form_button_save').click();
+
+            assert.verifySteps(['onchange sequence', 'partner_type write']);
+
+            form.destroy();
+        });
+    });
+
     QUnit.test('autocompletion in a many2one, in form view with a domain', function (assert) {
         assert.expect(1);
 

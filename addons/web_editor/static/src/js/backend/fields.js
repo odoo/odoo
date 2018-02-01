@@ -409,7 +409,19 @@ var FieldTextHtml = AbstractField.extend({
                 var layoutInfo = self.editor.rte.editable().data('layoutInfo');
                 $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
             }
+            var $ancestors = self.$iframe.filter(':not(:visible)').parentsUntil(':visible').addBack();
+            var ancestorsStyle = [];
+            // temporarily force displaying iframe (needed for firefox)
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                ancestorsStyle.unshift($el.attr('style') || null);
+                $el.css({display: 'initial', visibility: 'hidden', height: 1});
+            });
             self.editor.snippetsMenu && self.editor.snippetsMenu.cleanForSave();
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                $el.attr('style', ancestorsStyle.pop());
+            });
             self._setValue(self.$content.html());
         });
     },
