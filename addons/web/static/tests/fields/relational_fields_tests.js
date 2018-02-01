@@ -1373,10 +1373,10 @@ QUnit.module('relational_fields', {
                     return $.when([{id: 1, type_id: [12, 'gold']}]);
                 }
                 if (route === '/web/dataset/call_kw/partner_type/get_formview_id') {
-                    return $.when(false)
+                    return $.when(false);
                 }
                 if (route === '/web/dataset/call_kw/partner_type/read') {
-                    return $.when([{id: 12, partner_ids: [1,2], display_name: 'gold'}])
+                    return $.when([{id: 12, partner_ids: [1,2], display_name: 'gold'}]);
                 }
                 if (route === '/web/dataset/call_kw/partner_type/write') {
                     assert.step('partner_type write');
@@ -1396,7 +1396,8 @@ QUnit.module('relational_fields', {
             assert.equal($handles.length, 2,
                 'There should be 2 sequence handlers');
 
-            testUtils.dragAndDrop($handles.eq(1), $modal.find('tbody tr').first());
+            testUtils.dragAndDrop($handles.eq(1), $modal.find('tbody tr').first(),
+                                  {position: 'top'});
 
             // Saving the modal and then the original model
             $modal.find('.modal-footer .btn-primary').click();
