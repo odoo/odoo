@@ -267,12 +267,7 @@ FormRenderer.include({
             });
         });
         this.$el.toggleClass('o_dashboard_nocontent', !hasAction);
-        if (!hasAction) {
-            var innerDiv = $('<div class="o_view_nocontent">')
-                            .append(this.noContentHelp || "<div/>");
-            return $('<div class="o_view_nocontent_container">')
-                .append(innerDiv);
-        }
+
         // We should start with three columns available
         node = $.extend(true, {}, node);
 
