@@ -391,17 +391,8 @@ class Project(models.Model):
     def open_tasks(self):
         ctx = dict(self._context)
         ctx.update({'search_default_project_id': self.id})
-        kanban_view_id = self.env.ref('project.view_task_kanban')
-        return {
-            'name': _('Tasks'),
-            'res_model': 'project.task',
-            'type': 'ir.actions.act_window',
-            'view_id': kanban_view_id.id,
-            'views': [(kanban_view_id.id, 'kanban'), (False, 'form')],
-            'view_mode': 'kanban,tree,form',
-            'view_type': 'form',
-            'context': ctx
-        }
+        action = self.env['ir.actions.act_window'].for_xml_id('project', 'act_project_project_2_project_task_all')
+        return dict(action, context=ctx)
 
     @api.multi
     def action_view_all_rating(self):
