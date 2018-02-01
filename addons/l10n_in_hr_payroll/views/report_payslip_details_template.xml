@@ -62,7 +62,8 @@
                                             <strong><span t-esc="h['rule_category']"/></strong>
                                         </td>
                                         <td>
-                                            <strong><span t-esc="format(h['total'], 'monetary', o.company_id.currency_id)"/></strong>
+                                            <strong><span t-esc="h['total']"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/></strong>
                                         </td>
                                     </tr>
                                 </t>
@@ -75,7 +76,8 @@
                                             <span t-esc="'..'*h['level']"/><span t-esc="h['rule_category']"/>
                                         </td>
                                         <td>
-                                            <span t-esc="format(h['total'], 'monetary', o.company_id.currency_id)"/>
+                                            <span t-esc="h['total']"
+                                          t-esc-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
                                         </td>
                                     </tr>
                                 </t>
