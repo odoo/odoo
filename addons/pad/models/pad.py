@@ -9,7 +9,6 @@ import urllib2
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
-from odoo.tools import html2plaintext
 
 from ..py_etherpad import EtherpadLiteClient
 
@@ -64,9 +63,7 @@ class PadCommon(models.AbstractModel):
             # get content of the real field
             for record in model.browse([self.env.context["object_id"]]):
                 if record[real_field]:
-                    myPad.setText(path, (html2plaintext(record[real_field]).encode('utf-8')))
-                    # Etherpad for html not functional
-                    # myPad.setHTML(path, record[real_field])
+                    myPad.setHtmlFallbackText(path, record[real_field])
 
         return {
             "server": pad["server"],
@@ -76,15 +73,22 @@ class PadCommon(models.AbstractModel):
 
     @api.model
     def pad_get_content(self, url):
+        company = self.env.user.sudo().company_id
+        myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
         content = ''
         if url:
+            split_url = url.split('/p/')
+            path = len(split_url) == 2 and split_url[1]
             try:
+                content = myPad.getHtml(path).get('html', '')
+            except urllib2.HTTPError:
+                _logger.warning('Http Error: the credentials might be absent for url: "%s". Falling back.' % url)
                 page = urllib2.urlopen('%s/export/html' % url).read()
                 mo = re.search('<body>(.*)</body>', page, re.DOTALL)
                 if mo:
                     content = mo.group(1)
-            except:
-                _logger.warning("No url found '%s'.", url)
+            except Exception:
+                _logger.warning("No pad found with url '%s'.", url)
         return content
 
     # TODO
@@ -121,7 +125,7 @@ class PadCommon(models.AbstractModel):
                 company = self.env.user.sudo().company_id
                 myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
                 path = self[k].split('/p/')[1]
-                myPad.setText(path, (html2plaintext(vals[field.pad_content_field]).encode('utf-8')))
+                myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
         # Update the `pad_content_field` if the pad is modified
         for k, v in vals.items():
             field = self._fields.get(k)
