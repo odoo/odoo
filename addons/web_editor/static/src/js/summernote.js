@@ -2018,6 +2018,14 @@ eventHandler.modules.editor.currentStyle = function (target) {
         if(r)
             styleInfo.image = r.isOnImg();
     }
+    // Fix when the target is a link: the text-align buttons state should
+    // indicate the alignment of the link in the parent, not the text inside
+    // the link (which is not possible to customize with summernote). Summernote fixed
+    // this in their newest version... by just not showing the active button
+    // for alignments.
+    if (styleInfo.anchor) {
+        styleInfo['text-align'] = $(styleInfo.anchor).parent().css('text-align');
+    }
     return styleInfo;
 }
 
