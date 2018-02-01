@@ -35,7 +35,7 @@ class SendSMS(models.TransientModel):
 
     def _sms_sanitization(self, partner, field_name):
         number = partner[field_name]
-        if _sms_phonenumbers_lib_imported:
+        if number and _sms_phonenumbers_lib_imported:
             country = self._phone_get_country(partner)
             country_code = country.code if country else None
             try:

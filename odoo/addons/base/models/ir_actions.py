@@ -8,6 +8,7 @@ from odoo.tools.safe_eval import safe_eval, test_python_expr
 from odoo.tools import pycompat
 from odoo.http import request
 
+import base64
 from collections import defaultdict
 import datetime
 import dateutil
@@ -76,6 +77,8 @@ class IrActions(models.Model):
             'datetime': datetime,
             'dateutil': dateutil,
             'timezone': timezone,
+            'b64encode': base64.b64encode,
+            'b64decode': base64.b64decode,
         }
 
     @api.model
@@ -253,7 +256,7 @@ class IrActionsActWindowView(models.Model):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
-    _order = 'sequence'
+    _order = 'sequence,id'
 
     sequence = fields.Integer()
     view_id = fields.Many2one('ir.ui.view', string='View')

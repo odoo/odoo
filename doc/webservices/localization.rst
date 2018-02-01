@@ -1,12 +1,13 @@
 :banner: banners/localization.jpg
 
-==========================
-Making my Own Localization
-==========================
+=======================
+Creating a Localization
+=======================
 
 .. warning::
 
-    This tutorial requires knowledges about how to build a module in Odoo.
+    This tutorial requires knowledges about how to build a module in Odoo (see
+    :doc:`../../howtos/backend`).
 
 Building a localization module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
