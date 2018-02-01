@@ -15,7 +15,4 @@ Allow the auto-generation of archives containing the point of sale data to ensur
     'installable': True,
     'auto_install': True,
     'application': False,
-    'data': [
-        'data/mail_message_subtype.xml',
-    ],
 }
