@@ -713,6 +713,7 @@ var ListView = View.extend({
      * @param {Array} [records]
      */
     compute_aggregates: function (records) {
+        var self = this;
         var columns = _(this.aggregate_columns).filter(function (column) {
             return column['function']; });
         if (_.isEmpty(columns)) { return; }
@@ -763,8 +764,12 @@ var ListView = View.extend({
 
         var aggregates = {};
         _.each(_.filter(columns, function (column) {
-            if (column.currency_field && records.length > 0 && records[0].values['currency_id']) {
-                var currency_ids = _.map(records, function(record) {return record.values['currency_id'][0]});
+            if (!self.grouped && column.currency_field) {
+                var currency_ids = _.map(records, function(record) {
+                    if (record.values[column.currency_field]) {
+                        return record.values[column.currency_field][0];
+                    }
+                });
                 if (_.every(currency_ids, function (currency_id){return currency_id === currency_ids[0]})) {
                     return column;
                 }
