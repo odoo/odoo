@@ -100,9 +100,11 @@ var ColumnQuickCreate = Widget.extend({
      * @private
      */
     _cancel: function () {
-        this.folded = true;
-        this.$input.val('');
-        this._update();
+        if (!this.folded) {
+            this.folded = true;
+            this.$input.val('');
+            this._update();
+        }
     },
     /**
      * Updates the rendering according to the current state (folded/unfolded)
@@ -112,6 +114,7 @@ var ColumnQuickCreate = Widget.extend({
     _update: function () {
         this.$quickCreateFolded.toggle(this.folded);
         this.$quickCreateUnfolded.toggle(!this.folded);
+        this.trigger_up('quick_create_column_updated');
     },
 
     //--------------------------------------------------------------------------

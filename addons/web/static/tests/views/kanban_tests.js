@@ -2106,7 +2106,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper when no data', function (assert) {
-        assert.expect(5);
+        assert.expect(4);
 
         var records = this.data.partner.records;
 
@@ -2128,9 +2128,6 @@ QUnit.module('Views', {
                 }
             },
         });
-
-        assert.ok(kanban.$('.o_kanban_view').hasClass('o_view_nocontent_container'),
-            "$el should have correct no content class");
 
         assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
             "should display the no content helper");
@@ -2219,11 +2216,229 @@ QUnit.module('Views', {
         assert.strictEqual(kanban.$('.o_kanban_record').length, 0,
             "there should be no records");
         assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
-            "there should be no nocontent helper");
+            "there should be no nocontent helper (we are in 'column creation mode')");
         assert.strictEqual(kanban.$('.o_column_quick_create').length, 1,
             "there should be a column quick create");
         kanban.destroy();
     });
+
+    QUnit.test('no nocontent helper is shown when no longer creating column', function (assert) {
+        assert.expect(3);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper (we are in 'column creation mode')");
+
+        // creating a new column
+        kanban.$('.o_column_quick_create .o_input').val('applejack');
+        kanban.$('.o_column_quick_create .o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper (still in 'column creation mode')");
+
+        // leaving column creation mode
+        kanban.$('.o_column_quick_create .o_input').trigger($.Event('keydown', {
+            keyCode: $.ui.keyCode.ESCAPE,
+            which: $.ui.keyCode.ESCAPE,
+        }));
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
+            "there should be a nocontent helper");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('no nocontent helper is hidden when quick creating a column', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="foo"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    var result = [
+                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                    ];
+                    return $.when(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
+            "there should be a nocontent helper");
+
+        kanban.$('.o_kanban_add_column').click();
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper (we are in 'column creation mode')");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('remove nocontent helper after adding a record', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    var result = [
+                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                    ];
+                    return $.when(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
+            "there should be a nocontent helper");
+
+        // add a record
+        kanban.$('.o_kanban_quick_add').click();
+        kanban.$('.o_kanban_quick_create .o_input').val('twilight sparkle').trigger('input');
+        kanban.$('button.o_kanban_add').click();
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper (there is now one record)");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('remove nocontent helper when adding a record', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    var result = [
+                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                    ];
+                    return $.when(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
+            "there should be a nocontent helper");
+
+        // add a record
+        kanban.$('.o_kanban_quick_add').click();
+        kanban.$('.o_kanban_quick_create .o_input').val('twilight sparkle').trigger('input');
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
+            "there should be no nocontent helper (there is now one record)");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('nocontent helper is displayed again after canceling quick create', function (assert) {
+        assert.expect(1);
+
+        this.data.partner.records = [];
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                        '<templates><t t-name="kanban-box">' +
+                            '<div><field name="name"/></div>' +
+                        '</t></templates>' +
+                    '</kanban>',
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    var result = [
+                        {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                    ];
+                    return $.when(result);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        // add a record
+        kanban.$('.o_kanban_quick_add').click();
+
+        kanban.$('.o_kanban_view').click();
+
+        assert.strictEqual(kanban.$('.o_view_nocontent').length, 1,
+            "there should be again a nocontent helper");
+
+        kanban.destroy();
+    });
+
 
     QUnit.test('nocontent helper for grouped kanban with no records with no group_create', function (assert) {
         assert.expect(4);
