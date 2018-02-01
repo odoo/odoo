@@ -35,7 +35,9 @@ def _auto_install_l10n(cr, registry):
                 module_list.append('l10n_generic_coa')
         if country_code == 'US':
             module_list.append('account_plaid')
-            module_list.append('account_check_printing')
+            module_list.append('l10n_us_check_printing')
+        if country_code == 'CA':
+            module_list.append('l10n_ca_check_printing')
         if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
             module_list.append('account_yodlee')
         if country_code in SYSCOHADA_LIST + [
