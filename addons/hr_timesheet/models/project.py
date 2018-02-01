@@ -50,7 +50,7 @@ class Task(models.Model):
         if 'project_id' in values:
             project_id = values.get('project_id')
             # a timesheet must have an analytic account (and a project)
-            if not project_id:
+            if self and not project_id:
                 raise UserError(_('This task must have a project since they are linked to timesheets.'))
             self.sudo().mapped('timesheet_ids').write({
                 'project_id': project_id,
