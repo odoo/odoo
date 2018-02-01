@@ -3,6 +3,11 @@
 import json
 import urllib
 import urllib2
+import logging
+
+from odoo.tools import html2plaintext
+
+_logger = logging.getLogger(__name__)
 
 
 class EtherpadLiteClient:
@@ -185,6 +190,15 @@ class EtherpadLiteClient:
             "padID": padID,
             "text": text
         })
+
+    def setHtmlFallbackText(self, padID, html):
+        try:
+            # Prevents malformed HTML errors
+            html_wellformed = '<html><body>' + html + '</body></html>'
+            return self.setHtml(padID, html_wellformed)
+        except Exception:
+            _logger.exception('Falling back to setText. SetHtml failed with message:')
+            return self.setText(padID, html2plaintext(html).encode('UTF-8'))
 
     def setHtml(self, padID, html):
         """sets the text of a pad from html"""
