@@ -83,7 +83,10 @@ var KanbanRenderer = BasicRenderer.extend({
     className: 'o_kanban_view',
     custom_events: _.extend({}, BasicRenderer.prototype.custom_events || {}, {
         close_quick_create: '_onCloseQuickCreate',
+        cancel_quick_create: '_onCloseQuickCreate',
         set_progress_bar_state: '_onSetProgressBarState',
+        start_quick_create: '_onStartQuickCreate',
+        quick_create_column_updated: '_onQuickCreateColumnUpdated',
     }),
 
     /**
@@ -134,6 +137,7 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     quickCreateToggleFold: function () {
         this.quickCreate.toggleFold();
+        this._toggleNoContentHelper();
     },
     /**
      * Removes a widget (record if ungrouped, column if grouped) from the view.
@@ -150,16 +154,21 @@ var KanbanRenderer = BasicRenderer.extend({
      * @param {string} localID the column id
      * @param {Object} columnState
      * @param {Object} [options]
+     * @param {Object} [options.state] if set, this represents the new state
      * @param {boolean} [options.openQuickCreate] if true, directly opens the
      *   QuickCreate widget in the updated column
      *
      * @returns {Deferred}
      */
     updateColumn: function (localID, columnState, options) {
+        var self = this;
         var newColumn = new KanbanColumn(this, columnState, this.columnOptions, this.recordOptions);
         var index = _.findIndex(this.widgets, {db_id: localID});
         var column = this.widgets[index];
         this.widgets[index] = newColumn;
+        if (options && options.state) {
+            this.state = options.state;
+        }
         return newColumn.appendTo(document.createDocumentFragment()).then(function () {
             var def;
             if (options && options.openQuickCreate) {
@@ -167,6 +176,7 @@ var KanbanRenderer = BasicRenderer.extend({
             }
             return $.when(def).then(function () {
                 newColumn.$el.insertAfter(column.$el);
+                self._toggleNoContentHelper();
                 // When a record has been quick created, the new column directly
                 // renders the quick create widget (to allow quick creating several
                 // records in a row). However, as we render this column in a
@@ -207,6 +217,7 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     updateState: function (state) {
         this._setState(state);
+        this._toggleNoContentHelper();
         return this._super.apply(this, arguments);
     },
 
@@ -214,19 +225,6 @@ var KanbanRenderer = BasicRenderer.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * The nocontent helper should be displayed in kanban:
-     *   - ungrouped: if there is no records
-     *   - grouped: if there is no groups and no column quick create
-     *
-     * @override
-     * @private
-     */
-    _hasContent: function () {
-        return this._super.apply(this, arguments) ||
-               this.createColumnEnabled ||
-               (this.state.groupedBy.length && this.state.data.length);
-    },
     /**
      * Renders empty invisible divs in a document fragment.
      *
@@ -329,26 +327,39 @@ var KanbanRenderer = BasicRenderer.extend({
         this.widgets = [];
         this.$el.empty();
 
-        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
-        this.$el.toggleClass('o_view_nocontent_container', displayNoContentHelper);
-        if (displayNoContentHelper) {
-            // display the no content helper if there is no data to display
-            this._renderNoContentHelper();
+        var isGrouped = !!this.state.groupedBy.length;
+        this.$el.toggleClass('o_kanban_grouped', isGrouped);
+        this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
+        var fragment = document.createDocumentFragment();
+        // render the kanban view
+        if (isGrouped) {
+            this._renderGrouped(fragment);
         } else {
-            var isGrouped = !!this.state.groupedBy.length;
-            this.$el.toggleClass('o_kanban_grouped', isGrouped);
-            this.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
-            var fragment = document.createDocumentFragment();
-            // render the kanban view
-            if (isGrouped) {
-                this._renderGrouped(fragment);
-            } else {
-                this._renderUngrouped(fragment);
-            }
-            this.$el.append(fragment);
+            this._renderUngrouped(fragment);
         }
-
+        this.$el.append(fragment);
+        this._toggleNoContentHelper();
         return this._super.apply(this, arguments).then(_.invoke.bind(_, oldWidgets, 'destroy'));
+    },
+    /**
+     * @param {boolean} [remove] if true, the nocontent helper is always removed
+     * @private
+     */
+    _toggleNoContentHelper: function (remove) {
+        var displayNoContentHelper =
+            !remove &&
+            !this._hasContent() &&
+            !!this.noContentHelp &&
+            !(this.quickCreate && !this.quickCreate.folded);
+
+        var $noContentHelper = this.$('.o_view_nocontent');
+
+        if (displayNoContentHelper && !$noContentHelper.length) {
+            this.$el.append(this._renderNoContentHelper());
+        }
+        if (!displayNoContentHelper && $noContentHelper.length) {
+            $noContentHelper.remove();
+        }
     },
     /**
      * Sets the current state and updates some internal attributes accordingly.
@@ -404,6 +415,15 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.state.groupedBy.length) {
             _.invoke(this.widgets, 'cancelQuickCreate');
         }
+        this._toggleNoContentHelper();
+    },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onQuickCreateColumnUpdated: function (event) {
+        event.stopPropagation();
+        this._toggleNoContentHelper();
     },
     /**
      * Updates progressbar internal states (necessary for animations) with
@@ -417,6 +437,14 @@ var KanbanRenderer = BasicRenderer.extend({
             this.columnOptions.progressBarStates[ev.data.columnID] = {};
         }
         _.extend(this.columnOptions.progressBarStates[ev.data.columnID], ev.data.values);
+    },
+    /**
+     * Closes the opened quick create widgets in columns
+     *
+     * @private
+     */
+    _onStartQuickCreate: function () {
+        this._toggleNoContentHelper(true);
     },
 });
 

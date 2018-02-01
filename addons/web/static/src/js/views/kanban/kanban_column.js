@@ -187,10 +187,12 @@ var KanbanColumn = Widget.extend({
             });
             return;
         }
+
         if (this.quickCreateWidget) {
             return $.Deferred().reject();
         }
         this.trigger_up('close_quick_create'); // close other quick create widgets
+        this.trigger_up('start_quick_create');
         var context = this.data.getContext();
         context['default_' + this.groupedBy] = this.id;
         this.quickCreateWidget = new RecordQuickCreate(this, {

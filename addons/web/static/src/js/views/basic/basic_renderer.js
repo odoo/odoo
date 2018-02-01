@@ -559,12 +559,14 @@ var BasicRenderer = AbstractRenderer.extend({
      * message when no content is available.
      *
      * @private
+     * @returns {jQueryElement}
      */
     _renderNoContentHelper: function () {
-        var $msg = $('<div>')
+        var $noContent =
+            $('<div>').html(this.noContentHelp).addClass('o_nocontent_help');
+        return $('<div>')
             .addClass('o_view_nocontent')
-            .html(this.noContentHelp);
-        this.$el.html($msg);
+            .append($noContent);
     },
     /**
      * Actual rendering. Supposed to be overridden by concrete renderers.

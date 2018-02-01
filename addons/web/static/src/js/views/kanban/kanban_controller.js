@@ -316,8 +316,9 @@ var KanbanController = BasicController.extend({
             self._updateEnv();
 
             var columnState = self.model.getColumn(db_id);
+            var state = self.model.get(self.handle);
             return self.renderer
-                .updateColumn(columnState.id, columnState, {openQuickCreate: true})
+                .updateColumn(columnState.id, columnState, {openQuickCreate: true, state: state})
                 .then(function () {
                     if (event.data.openRecord) {
                         self.trigger_up('open_record', {id: db_id, mode: 'edit'});
