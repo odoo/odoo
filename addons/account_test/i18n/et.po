@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-09-07 14:40+0000\n"
-"PO-Revision-Date: 2016-03-12 17:10+0000\n"
+"PO-Revision-Date: 2018-01-30 09:13+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -22,24 +22,24 @@ msgstr ""
 msgid ""
 "<br/>\n"
 "                        <strong>Description:</strong>"
-msgstr ""
+msgstr "<br/>\n                        <strong>Kirjeldus:</strong>"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "<strong>Name:</strong>"
-msgstr ""
+msgstr "<strong>Nimi:</strong>"
 
 #. module: account_test
 #: model:ir.actions.act_window,name:account_test.action_accounting_assert
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "Raamatupidamiskatsed"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.report_accounttest
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Raamatupidamise katsed"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_active
@@ -49,48 +49,48 @@ msgstr "Aktiivne"
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
+msgstr "Kontrollige, kas liikumise read on tasakaalus ja neil on sama kuupäev ja periood"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
 msgid ""
 "Check on bank statement that the Closing Balance = Starting Balance + sum of"
 " statement lines"
-msgstr ""
+msgstr "Kontrollige pangaväljavõttel, et lõppsaldo = algsaldo + väljavõtte ridade summa"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
+msgstr "Kontrollige, et makstud/ühendatud arved ei oleks 'avatud' olekus"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
 msgid ""
 "Check that reconciled account moves, that define Payable and Receivable "
 "accounts, are belonging to reconciled invoices"
-msgstr ""
+msgstr "Kontrollige, kas sobitatud konto liigutused, mis määravad tasumata ja maksmata kontod, kuuluvad sobitavate arvete hulka"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
 msgid ""
 "Check that reconciled invoice for Sales/Purchases has reconciled entries for"
 " Payable and Receivable Accounts"
-msgstr ""
+msgstr "Kontrollige, kas sobitatud müügiarve/ostuarve on sobitatud tasumata ja maksmata kannete kontodega"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Kontrollige saldosid: Deebeti summa = Kreediti summa"
 
 #. module: account_test
 #: model:ir.actions.act_window,help:account_test.action_accounting_assert
 msgid "Click to create Accounting Test."
-msgstr ""
+msgstr "Vajuta, et luua raamatupidamise test."
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Code Help"
-msgstr ""
+msgstr "Koodi abi"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -115,7 +115,7 @@ msgid ""
 "          '''\n"
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
-msgstr ""
+msgstr "Kood peaks alati määrama muutuja nimega 'tulemus' koos testi tulemustega, see võib olla nimekiri või ka seletus."
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_create_uid
@@ -183,43 +183,43 @@ msgstr "Jada"
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Test 1: Üldine bilanss"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_03
 msgid "Test 3: Movement lines"
-msgstr ""
+msgstr "Test 3: Ridade liikumised"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
 msgid ""
 "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
+msgstr "Test 5.1 : Sobitatud arvete tasumata ja maksmata raamatupidamisread "
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
+msgstr "Test 5.2 : Sobitatud arved ja tasumata/makstama kontod"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
 msgid "Test 6 : Invoices status"
-msgstr ""
+msgstr "Test 6 : Arve olek"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_07
 msgid "Test 7 : Closing balance on bank statements"
-msgstr ""
+msgstr "Test 7 : Pangaväljavõtte lõppsaldo"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_desc
 msgid "Test Description"
-msgstr ""
+msgstr "Testi kirjeldus"
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test_name
 msgid "Test Name"
-msgstr ""
+msgstr "Testi nimi"
 
 #. module: account_test
 #: model:ir.ui.view,arch_db:account_test.account_assert_form
@@ -231,14 +231,14 @@ msgstr "Testid"
 #: code:addons/account_test/report/account_test_report.py:49
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "Test läbiti edukalt"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_accounting_assert_test
 msgid "accounting.assert.test"
-msgstr ""
+msgstr "accounting.assert.test"
 
 #. module: account_test
 #: model:ir.model,name:account_test.model_report_account_test_report_accounttest
 msgid "report.account_test.report_accounttest"
-msgstr ""
+msgstr "report.account_test.report_accounttest"
