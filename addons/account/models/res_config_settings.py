@@ -24,6 +24,10 @@ class ResConfigSettings(models.TransientModel):
         ('round_per_line', 'Round calculation of taxes per line'),
         ('round_globally', 'Round globally calculation of taxes '),
         ], related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method')
+    fiscalyear_last_day = fields.Integer(related='company_id.fiscalyear_last_day')
+    fiscalyear_last_month = fields.Selection([(1, 'January'), (2, 'February'), (3, 'March'), (4, 'April'), (5, 'May'), (6, 'June'), (7, 'July'), (8, 'August'), (9, 'September'), (10, 'October'), (11, 'November'), (12, 'December')], related='company_id.fiscalyear_last_month')
+    period_lock_date = fields.Date(related='company_id.period_lock_date')
+    fiscalyear_lock_date = fields.Date(related='company_id.fiscalyear_lock_date')
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
@@ -95,6 +99,10 @@ class ResConfigSettings(models.TransientModel):
                 'currency_id': self.currency_id.id,
                 'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,
                 'cash_account_code_prefix': self.chart_template_id.cash_account_code_prefix,
+                'fiscalyear_last_day': self.fiscalyear_last_day,
+                'fiscalyear_last_month': self.fiscalyear_last_month,
+                'period_lock_date': self.period_lock_date,
+                'fiscalyear_lock_date': self.fiscalyear_lock_date
             })
             wizard.onchange_chart_template_id()
             wizard.execute()

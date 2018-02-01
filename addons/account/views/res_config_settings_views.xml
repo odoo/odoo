@@ -267,8 +267,42 @@
 
                         <t groups="account.group_account_user">
                             <h2>Fiscal Periods</h2>
+                            <div class="row mt16 o_settings_container" id="accounting_fiscalyaer">
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear">
+                                    <div class="o_setting_left_pane"/>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Fiscal Year"/>
+                                        <div class="text-muted">
+                                            Last day of your fiscal year, for automatic opening entries
+                                        </div>
+                                         <div class="content-group">
+                                            <div class="row mt16">
+                                                <label string="Last Day" class="col-md-3 o_light_label"/>
+                                                <field name="fiscalyear_last_month" style="width: 100px; margin-right: 8px;"/>
+                                                <field name="fiscalyear_last_day" class="oe_inline"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear">
+                                    <div class="o_setting_left_pane"/>
+                                    <div class="o_setting_right_pane">
+                                        <label string="Fiscal Period Closing"/>
+                                        <div class="text-muted">
+                                            Lock your fiscal period
+                                        </div>
+                                         <div class="content-group">
+                                            <div class="row mt16">
+                                                <label for="fiscalyear_lock_date" class="col-md-5 o_light_label"/>
+                                                <field name="fiscalyear_lock_date"/>
+                                                <label for="period_lock_date" class="col-md-5 o_light_label"/>
+                                                <field name="period_lock_date"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row mt16 o_settings_container" id="accounting_reports">
-                                <div class="col-xs-12 col-md-6 o_setting_box" id="fiscalyear" invisible="1"/>
                                 <div class="col-xs-12 col-md-6 o_setting_box" id="dynamic_report" invisible="1" groups="account.group_account_user">
                                     <div class="o_setting_left_pane">
                                         <field name="module_account_reports" widget="upgrade_boolean"/>
