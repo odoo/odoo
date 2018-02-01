@@ -130,7 +130,7 @@ class TestBadReconciliation(common.TransactionCase):
         # Market value of CC (day 2): 1 CC = $0.5
 
         # Payment transaction:
-        # * Dr. 50 CC / $25 - CC To Inventory (valued at market price
+        # * Dr. 50 CC / $25 - CC Bank (valued at market price
         # at the time of receiving the coins)
         # * Cr. 50 CC / $25 - Accounts Receivable
         #####
@@ -165,7 +165,7 @@ class TestBadReconciliation(common.TransactionCase):
         # Market value of CC (day 2): 1 CC = $1
 
         # Payment transaction:
-        # * Dr. 50 CC / $25 - CC To Inventory (valued at market price
+        # * Dr. 50 CC / $25 - CC Bank (valued at market price
         # at the time of receiving the coins)
         # * Cr. 50 CC / $25 - Accounts Receivable
         #####
@@ -235,9 +235,9 @@ class TestBadReconciliation(common.TransactionCase):
         # Market value of CC (day 2): 1 CC = $1
 
         # Payment transaction:
-        # * Dr. 50 CC / $25 - CC To Inventory (valued at market price
+        # * Dr. 50 CC / $50 - CC Bank (valued at market price
         # at the time of receiving the coins)
-        # * Cr. 50 CC / $25 - Accounts Receivable
+        # * Cr. 50 CC / $50 - Accounts Receivable
         #####
         self.env['res.currency.rate'].create({
             'currency_id': self.currency_cc.id,
