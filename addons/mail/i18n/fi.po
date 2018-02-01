@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-05-26 16:29+0000\n"
+"PO-Revision-Date: 2018-01-17 12:31+0000\n"
 "Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>\n"
 "Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -166,7 +166,7 @@ msgstr "%s on liittynyt %s verkkoon."
 #: code:addons/mail/static/src/xml/thread.xml:96
 #, python-format
 msgid "(from"
-msgstr ""
+msgstr "(lähettäjä"
 
 #. module: mail
 #. openerp-web
@@ -255,7 +255,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_general_configuration_mail_alias_domain
 msgid "<span>failed emails</span>"
-msgstr ""
+msgstr "<span>epäonnistunutta lähetystä</span>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -464,13 +464,13 @@ msgstr "Anonyymi"
 msgid ""
 "Answers do not go in the original document discussion thread. This has an "
 "impact on the generated message-id."
-msgstr ""
+msgstr "Vastaukset eivät päädy alkuperäiseen keskustelusäikeeseen. Tämä vaikuttaa muodostuvaan message-id kenttään"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_model_id
 msgid "Applies to"
-msgstr ""
+msgstr "Koskee"
 
 #. module: mail
 #. openerp-web
@@ -519,7 +519,7 @@ msgstr "Tekijä"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr ""
+msgstr "Tekijän allekirjoitus (vain massapostituksissa)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_id
@@ -535,7 +535,7 @@ msgstr "Viestin luoja. Jos tätä ei ole asetettu, viestin lähettäjä (email_f
 #: model:ir.model.fields,field_description:mail.field_mail_mail_author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "Tekijän avatar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_public_id
@@ -581,7 +581,7 @@ msgstr "Käytettävissä joukkopostitukseen"
 #: code:addons/mail/static/src/xml/chatter.xml:162
 #, python-format
 msgid "Be careful with channels following internal notifications"
-msgstr ""
+msgstr "Ole varovainen sellaisten kanavien kanssa jotka seuraavat sisäisiä tiedotuksia"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_body_html
@@ -648,7 +648,7 @@ msgstr "Muuta"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field
 msgid "Changed Field"
-msgstr ""
+msgstr "Muuttunut kenttä"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_channel_id
@@ -660,12 +660,12 @@ msgstr "Kanava"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
 msgid "Channel Type"
-msgstr ""
+msgstr "Kanavatyyppi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
 msgid "Channel message ids"
-msgstr ""
+msgstr "Kanavan message id :t"
 
 #. module: mail
 #. openerp-web
@@ -687,7 +687,7 @@ msgstr "Kanavat"
 #: model:ir.actions.act_window,name:mail.mail_channel_partner_action
 #: model:ir.ui.menu,name:mail.mail_channel_partner_menu
 msgid "Channels/Partner"
-msgstr ""
+msgstr "Kanavat/Kumppanit"
 
 #. module: mail
 #. openerp-web
@@ -695,12 +695,12 @@ msgstr ""
 #: model:ir.actions.client,name:mail.mail_channel_action_client_chat
 #, python-format
 msgid "Chat"
-msgstr ""
+msgstr "Chat"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "Chat-keskustelu"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -717,7 +717,7 @@ msgstr "Aliviestit"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_server_action_form_template
 msgid "Choose a template to display its values."
-msgstr ""
+msgstr "Valitse malli näyttääksesi sen valinnat"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form
@@ -759,7 +759,7 @@ msgstr "Pilkulla eroteltu lista piilokopioiden vastaanottajien sähköpostiosoit
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr ""
+msgstr "Pilkulla erotettu lista vastaanottajien id :eistä"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_partner_to
@@ -767,7 +767,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_template_partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
+msgstr "Pilkulla erotettu lista vastaanottaja-kumppanien id -kentistä (voit käyttää paikkamerkkejä)"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1130,7 +1130,7 @@ msgstr "Tähän käyttäjään sisäisesti liitetty sähköpostiosoite. Saapuvat
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
-msgstr ""
+msgstr "Lähettäjän sähköpostiosoite. Tälle kentälle annetaan arvo kun lähettäjälle ei automaattisesti löydy kumppania. Korvaa author_id kentän keskustelussa."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form

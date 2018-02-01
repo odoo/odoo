@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-11-27 14:24+0000\n"
+"PO-Revision-Date: 2018-01-20 13:48+0000\n"
 "Last-Translator: Martin Trigaux\n"
 "Language-Team: Basque (http://www.transifex.com/odoo/odoo-9/language/eu/)\n"
 "MIME-Version: 1.0\n"
@@ -359,7 +359,7 @@ msgstr "Bezero erref."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_from
 msgid "Date from which membership becomes active."
-msgstr ""
+msgstr "Kidetza aktiboa bilakatzen den data."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_message_last_post
@@ -369,7 +369,7 @@ msgstr "Date of the last message posted on the record."
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_membership_date_to
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Kidetza noiz arte egongo den aktibo."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_uom_id
@@ -592,7 +592,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "Pisu gordina"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -672,7 +672,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_property_account_income_id
 msgid "Income Account"
-msgstr ""
+msgstr "Diru-sarreren kontua"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_incoming_qty
@@ -718,7 +718,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "Fakturazio-politika"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_is_follower
@@ -750,7 +750,7 @@ msgstr "Last Message Date"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier___last_update
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Azken aldaketa"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_write_uid
@@ -767,7 +767,7 @@ msgstr "Last Updated on"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_location_id
 msgid "Location"
-msgstr ""
+msgstr "Kokapena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_packaging_ids
@@ -802,17 +802,17 @@ msgstr "Irudi ertaina"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership
 msgid "Membership"
-msgstr ""
+msgstr "Kidetza"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_to
 msgid "Membership End Date"
-msgstr ""
+msgstr "Kidetza amaiera-data"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_membership_date_from
 msgid "Membership Start Date"
-msgstr ""
+msgstr "Kidetza hasiera-data"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_message_ids
@@ -942,7 +942,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr ""
+msgstr "Prezioak"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_price_rule_ids
@@ -957,7 +957,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_alert_time
 msgid "Product Alert Time"
-msgstr ""
+msgstr "Produktuaren alerta-denbora"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_attribute_line_ids
@@ -982,7 +982,7 @@ msgstr "Produktu Kudeatzailea"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_removal_time
 msgid "Product Removal Time"
-msgstr ""
+msgstr "Produktuaren kentze-denbora"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_template
@@ -1381,7 +1381,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_track_service
 msgid "Track Service"
-msgstr ""
+msgstr "Zerbitzuaren jarraipena"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_tracking
@@ -1528,28 +1528,28 @@ msgstr ""
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before an "
 "alert should be notified."
-msgstr ""
+msgstr "Serie-zenbaki berri bat jaulkitzean, hau da abisua jakinarazteko pasa behar diren egunak."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_life_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods may become dangerous and must not be consumed."
-msgstr ""
+msgstr "Serie-zenbaki berri bat jaulkitzean, hau da ondasunak arriskutsu bilakatu eta kontsumitu ezin diren egun kopurua."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_removal_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods should be removed from the stock."
-msgstr ""
+msgstr "Serie-zenbaki berri bat jaulkitzean, hau da ondasun bat zure stocketik kentzeko egun-kopurua"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_use_time
 msgid ""
 "When a new a Serial Number is issued, this is the number of days before the "
 "goods starts deteriorating, without being dangerous yet."
-msgstr ""
+msgstr "Serie-zenbaki berri bat jaulkitzean, hau da ondasun bat hondatzen hasten den egun-kopurua, oraindik arriskutsua izan gabe."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_property_stock_account_input
