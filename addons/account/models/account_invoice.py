@@ -1785,6 +1785,7 @@ class AccountPaymentTermLine(models.Model):
         if self.value == 'percent' and (self.value_amount < 0.0 or self.value_amount > 100.0):
             raise ValidationError(_('Percentages for Payment Terms Line must be between 0 and 100.'))
 
+    @api.one
     @api.constrains('days')
     def _check_days(self):
         if self.option in ('day_following_month', 'day_current_month') and self.days <= 0:
