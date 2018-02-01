@@ -5,7 +5,7 @@
             <field name="name">res.lang.tree</field>
             <field name="model">res.lang</field>
             <field name="arch" type="xml">
-                <tree string="Languages" colors="gray:not active" >
+                <tree string="Languages" decoration-muted="active == False" >
                     <field name="name"/>
                     <field name="code"/>
                     <field name="iso_code"/>
