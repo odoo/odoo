@@ -473,6 +473,8 @@ class Import(models.TransientModel):
             :returns: {fields, matches, headers, preview} | {error, preview}
             :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str))} | {str, str}
         """
+        from odoo.http import request
+        self.env = request.env
         self.ensure_one()
         fields = self.get_fields(self.res_model)
         try:
