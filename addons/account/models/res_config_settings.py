@@ -8,7 +8,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     has_accounting_entries = fields.Boolean(compute='_compute_has_chart_of_accounts')
-    country_code = fields.Char(string="Company Country code", related='company_id.country_id.code', readonly=True)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
@@ -37,8 +36,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
-    module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
-    module_l10n_ca_check_printing = fields.Boolean("Allow Canadian check printing and deposits", default=False)
+    module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
              '-This installs the module account_batch_deposit.')

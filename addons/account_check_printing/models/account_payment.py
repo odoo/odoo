@@ -120,8 +120,7 @@ class AccountPayment(models.Model):
     @api.multi
     def do_print_checks(self):
         """ This method is a hook for l10n_xx_check_printing modules to implement actual check printing capabilities """
-        raise UserError(_("There is no check layout configured.\nMake sure the proper check printing module is installed"
-                          " and its configuration (in company settings > 'Configuration' tab) is correct."))
+        raise UserError(_("You have to choose a check layout. For this, go in Apps, search for 'Checks layout' and install one."))
 
     #######################
     #CHECK PRINTING METHODS
