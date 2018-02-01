@@ -405,7 +405,19 @@ var FieldTextHtml = widget.extend({
                 var layoutInfo = this.editor.rte.editable().data('layoutInfo');
                 $.summernote.pluginEvents.codeview(undefined, undefined, layoutInfo, false);
             }
+            var $ancestors = this.$iframe.filter(':not(:visible)').parentsUntil(':visible').addBack();
+            var ancestorsStyle = [];
+            // temporarily force displaying iframe (needed for firefox)
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                ancestorsStyle.unshift($el.attr('style') || null);
+                $el.css({display: 'initial', visibility: 'hidden', height: 1});
+            });
             this.editor.buildingBlock.clean_for_save();
+            _.each($ancestors, function (el) {
+                var $el = $(el);
+                $el.attr('style', ancestorsStyle.pop());
+            });
             this.internal_set_value( this.$content.html() );
         }
     },
