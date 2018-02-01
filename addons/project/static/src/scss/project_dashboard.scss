@@ -1,22 +1,22 @@
 .o_kanban_view.o_kanban_dashboard.o_project_kanban {
     .o_project_kanban_boxes {
-        .o-flex-display();
-        .o-flex-flow(row, nowrap);
+        @include o-flex-display;
+        @include o-flex-flow(row, nowrap);
 
         .o_project_kanban_box {
             position: relative;
             text-align: center;
             padding: 0 0 0 0;
-            .o-flex(1, 1, auto);
-            .o-flex-display();
-            .o-flex-flow(row, nowrap);
-            .o-justify-content(center);
+            @include o-flex(1, 1, auto);
+            @include o-flex-display;
+            @include o-flex-flow(row, nowrap);
+            @include o-justify-content(center);
 
             &:first-child {
-                .o-justify-content(flex-start);
+                @include o-justify-content(flex-start);
             }
             &:last-child {
-                .o-justify-content(flex-end);
+                @include o-justify-content(flex-end);
             }
 
             .o_value {
@@ -30,7 +30,7 @@
                     font-size: small;
                     font-weight: 400;
                     margin-left: 4px;
-                    .o-hover-opacity(0.5, 1);
+                    @include o-hover-opacity(0.5, 1);
 
                     &:before {
                         content: "/ ";
@@ -57,10 +57,10 @@
         outline: 2px solid transparent;
         box-shadow: 0px 0px 1px 1px #ccc;
         &.o_selected {
-            outline-color: @odoo-brand-optional;
+            outline-color: $odoo-brand-optional;
         }
         > img {
-            .o-position-absolute(@top: 0; @left: 0; @right: 0; @bottom: 0);
+            @include o-position-absolute($top: 0, $left: 0, $right: 0, $bottom: 0);
             margin: auto;
             max-height: 100%;
             max-width: 100%;

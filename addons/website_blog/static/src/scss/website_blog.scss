@@ -40,10 +40,10 @@
         position: relative;
 
         > .o_blog_cover_component {
-            .o-position-absolute(0, 0, 0, 0);
+            @include o-position-absolute(0, 0, 0, 0);
             display: none;
 
-            .o-background-size(cover);
+            @include o-background-size(cover);
             background-position: center;
             background-repeat: no-repeat;
         }
@@ -61,7 +61,7 @@
         &.cover, &.cover_footer {
             > .blog_title {
                 color: white;
-                .o-position-absolute(20%, @grid-gutter-width, auto, @grid-gutter-width);
+                @include o-position-absolute(20%, $grid-gutter-width, auto, $grid-gutter-width);
             }
         }
 
@@ -92,7 +92,7 @@
     }
 
     /* mobile preview: for blog h1,h2 font-size and cover-footer height of image overlapas */
-    @media (max-width: @screen-xs-max) {
+    @media (max-width: $screen-xs-max) {
         .o_blog_cover_container {
             > .blog_title {
                 > h1 {

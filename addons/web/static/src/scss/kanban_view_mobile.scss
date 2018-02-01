@@ -1,27 +1,27 @@
-@o-kanban-mobile-tabs-height: 40px;
+$o-kanban-mobile-tabs-height: 40px;
 
-@media (max-width: @screen-xs-max) {
+@media (max-width: $screen-xs-max) {
     .o_kanban_view.o_kanban_grouped {
         display: block;
         position: relative;
         overflow: hidden;
 
         .o_kanban_mobile_tabs {
-            height: @o-kanban-mobile-tabs-height;
+            height: $o-kanban-mobile-tabs-height;
             position: relative;
             background-color: #5E5E5E;
 
             .o_kanban_mobile_tab {
-                .o-position-absolute(@left: 100%);
-                .o-transform(translateX(-50%));
-                height: @o-kanban-mobile-tabs-height;
+                @include o-position-absolute($left: 100%);
+                @include o-transform(translateX(-50%));
+                height: $o-kanban-mobile-tabs-height;
                 padding: 10px;
                 font-size: 14px;
                 color: white;
 
                 &.o_current {
                     font-weight: bold;
-                    border-bottom: 3px solid @odoo-brand-optional;
+                    border-bottom: 3px solid $odoo-brand-optional;
                 }
                 .o_column_title {
                     white-space: nowrap;
@@ -30,7 +30,7 @@
         }
 
         &.o_kanban_small_column .o_kanban_group:not(.o_column_folded) {
-            .o-position-absolute(@top: @o-kanban-mobile-tabs-height, @left: 0, @bottom: 0);
+            @include o-position-absolute($top: $o-kanban-mobile-tabs-height, $left: 0, $bottom: 0);
             overflow-x: scroll;
             width: 100%;
             padding: 0;

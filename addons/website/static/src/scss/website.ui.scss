@@ -5,17 +5,17 @@
 
 // LAYOUTING
 body.o_connected_user {
-    padding-top: @odoo-navbar-height!important;
+    padding-top: $odoo-navbar-height!important;
 }
 
 // MAIN MENU STYLE (added above navbar.less)
 #oe_main_menu_navbar {
-    .o-position-absolute(0, 0, auto, 0);
+    @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: @zindex-modal - 10;
+    z-index: $zindex-modal - 10;
 
-    font-family: @o-we-font-family;
-    font-size: @odoo-font-size-base;
+    font-family: $o-we-font-family;
+    font-size: $odoo-font-size-base;
     a:hover, a:focus {
         text-decoration: none;
     }
@@ -27,7 +27,7 @@ body.o_connected_user {
     .o_menu_sections {
         a {
             > .fa-plus, > .fa-pencil {
-                margin-right: @grid-gutter-width/4;
+                margin-right: $grid-gutter-width/4;
             }
         }
 
@@ -38,18 +38,18 @@ body.o_connected_user {
     }
     .o_menu_systray {
         a {
-            padding: 0 @grid-gutter-width/2;
+            padding: 0 $grid-gutter-width/2;
 
             &.css_edit_dynamic{
-                padding: 0 @grid-gutter-width/4;
+                padding: 0 $grid-gutter-width/4;
             }
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
-                .button-variant(white, @odoo-brand-optional, @odoo-brand-optional);
+                @include button-variant(white, $odoo-brand-optional, $odoo-brand-optional);
             }
 
             > .fa-plus, > .fa-pencil {
-                margin-right: @grid-gutter-width/4;
+                margin-right: $grid-gutter-width/4;
             }
         }
 
@@ -58,7 +58,7 @@ body.o_connected_user {
             font-size: 20px;
         }
     }
-    @media only screen and (max-width: @screen-xs-max) {
+    @media only screen and (max-width: $screen-xs-max) {
         #oe_applications {
             position: inherit;
             z-index: 1002;
@@ -66,50 +66,50 @@ body.o_connected_user {
     }
 }
 
-.o-w-close-icon(@size:12px, @color:#000, @color-hover:#000, @thickness: 1px, @opacity: 0.7, @opacity-hover: 1) {
+@mixin o-w-close-icon($size:12px, $color:#000, $color-hover:#000, $thickness: 1px, $opacity: 0.7, $opacity-hover: 1) {
     color: transparent;
     position: relative;
     display: inline-block;
-    opacity: @opacity;
-    .square(@size);
+    opacity: $opacity;
+    @include square($size);
 
     &:hover, &:focus {
         outline: none;
-        opacity: @opacity-hover;
+        opacity: $opacity-hover;
 
         &::after, &::before {
-            background: @color-hover;
+            background: $color-hover;
         }
     }
 
     &:after, &:before {
         content: '';
         margin-top: -1px;
-        background: @color;
-        .size(100%, @thickness);
-        .o-position-absolute(50%, @left:0);
-        .o-transform(rotate(45deg));
+        background: $color;
+        @include size(100%, $thickness);
+        @include o-position-absolute(50%, $left:0);
+        @include o-transform(rotate(45deg));
     }
 
     &:after {
-        .o-transform(rotate(-45deg));
+        @include o-transform(rotate(-45deg));
     }
 }
 
 // MODALS
 body .modal {
     &.o_technical_modal {
-        .o-w-preserve-base();
-        .o-w-preserve-headings();
-        .o-w-preserve-forms();
-        .o-w-preserve-links();
-        .o-w-preserve-btn();
-        .o-w-preserve-wells();
-        .o-w-preserve-modals();
-        .o-w-preserve-tabs();
+        @include o-w-preserve-base;
+        @include o-w-preserve-headings;
+        @include o-w-preserve-forms;
+        @include o-w-preserve-links;
+        @include o-w-preserve-btn;
+        @include o-w-preserve-wells;
+        @include o-w-preserve-modals;
+        @include o-w-preserve-tabs;
 
         button.close {
-            .o-w-close-icon(12px);
+            @include o-w-close-icon(12px);
             margin-right: -2px;
         }
     }
@@ -137,7 +137,7 @@ body .modal {
                 .modal-header {
                     border: none;
                     cursor: pointer;
-                    font-family: @o-we-font-family;
+                    font-family: $o-we-font-family;
 
                     h4 {
                         color: lightgray;
@@ -145,7 +145,7 @@ body .modal {
                         font-weight: normal;
 
                         .fa {
-                            margin-left: @grid-gutter-width/2;
+                            margin-left: $grid-gutter-width/2;
                         }
                     }
                 }
@@ -155,17 +155,17 @@ body .modal {
                     border-radius: 20px;
                     padding: 15px;
 
-                    @mobile-preview-width: 320px;
-                    @mobile-preview-height: 530px;
+                    $mobile-preview-width: 320px;
+                    $mobile-preview-height: 530px;
 
-                    .o-flex-display();
-                    width: @mobile-preview-width + 15;
-                    height: @mobile-preview-height;
-                    .o-transition(all, 400ms);
+                    @include o-flex-display;
+                    width: $mobile-preview-width + 15;
+                    height: $mobile-preview-height;
+                    @include o-transition(all, 400ms);
 
                     &.o_invert_orientation {
-                        width: @mobile-preview-height + 15;
-                        height: @mobile-preview-width;
+                        width: $mobile-preview-height + 15;
+                        height: $mobile-preview-width;
                     }
 
                     > iframe {
@@ -229,11 +229,11 @@ body .modal {
                     &:first-child {
                         width: 55%;
                         padding-right: 15px;
-                        border: 1px solid @o-we-color-text-light;
+                        border: 1px solid $o-we-color-text-light;
                         text-align: right;
-                        background-color: @o-we-color-paper;
+                        background-color: $o-we-color-paper;
 
-                        @media screen and (min-width: @screen-md-min) {
+                        @media screen and (min-width: $screen-md-min) {
                             width: 38%;
                         }
                     }
@@ -243,7 +243,7 @@ body .modal {
                         visibility: visible;
                         padding-left: 15px;
 
-                        @media screen and (min-width: @screen-md-min) {
+                        @media screen and (min-width: $screen-md-min) {
                             padding-left: 50px;
                         }
                     }
@@ -252,7 +252,7 @@ body .modal {
                 tbody {
                     td {
                         padding: 5px;
-                        .o-transition(padding, .3s);
+                        @include o-transition(padding, .3s);
 
                         &:first-child {
                             border-width: 0 1px;
@@ -265,8 +265,8 @@ body .modal {
                                 font-weight: normal;
 
                                 .oe_remove {
-                                    .o-w-close-icon(10px, white, @o-we-color-danger, 2px);
-                                    .o-position-absolute(5px, 5px);
+                                    @include o-w-close-icon(10px, white, $o-we-color-danger, 2px);
+                                    @include o-position-absolute(5px, 5px);
                                 }
                             }
                         }
@@ -287,7 +287,7 @@ body .modal {
                     }
 
                     tr {
-                        .o-animation(fadeInDownSmall, .3s);
+                        @include o-animation(fadeInDownSmall, .3s);
 
                         &:first-child {
                             td:first-child {
@@ -352,16 +352,16 @@ body .modal {
 
 // ADD NEW PAGE MODAL
 #o_new_content_menu_choices {
-    .o-position-absolute(@odoo-navbar-height, 0, 0, 0);
+    @include o-position-absolute($odoo-navbar-height, 0, 0, 0);
     position: fixed;
-    .o-flex-display();
-    .o-justify-content(center);
-    .o-align-items(center);
-    font-family: @o-we-font-family;
+    @include o-flex-display;
+    @include o-justify-content(center);
+    @include o-align-items(center);
+    font-family: $o-we-font-family;
 
     &::before {
         content: " ";
-        .o-position-absolute(0, 0, 0, 0);
+        @include o-position-absolute(0, 0, 0, 0);
         z-index: -1;
         pointer-events: none;
         background-color: black;
@@ -369,9 +369,9 @@ body .modal {
     }
 
     > ul {
-        .o-flex-display();
-        .o-flex-flow(row, wrap);
-        .o-justify-content(space-around);
+        @include o-flex-display;
+        @include o-flex-flow(row, wrap);
+        @include o-justify-content(space-around);
         width: auto;
         max-width: 60%;
         max-height: 100%;
@@ -382,7 +382,7 @@ body .modal {
         li {
             display: block;
             opacity: 0;
-            .animation(fadeInDownSmall 1s forwards);
+            @include animation(fadeInDownSmall 1s forwards);
             margin: 2em 32px;
             padding: 0 15px;
 
@@ -401,7 +401,7 @@ body .modal {
                     background-color: #2C2C36;
                     color: white;
 
-                    .o-transition(all, 0.5s, cubic-bezier(0.19, 1, 0.22, 1));
+                    @include o-transition(all, 0.5s, cubic-bezier(0.19, 1, 0.22, 1));
                 }
                 p {
                     color: white;
@@ -436,7 +436,7 @@ body .modal {
     overflow: visible;
     display: block;
     .modal-dialog {
-        .o-position-absolute(@odoo-navbar-height + 10, 10px);
+        @include o-position-absolute($odoo-navbar-height + 10, 10px);
         width: auto;
         margin: 0;
         font-family: Roboto;
@@ -445,7 +445,7 @@ body .modal {
         display: none;
     }
     &.loading .loading_backdrop {
-        .o-position-absolute(0, 0, 0, 0);
+        @include o-position-absolute(0, 0, 0, 0);
         display: block;
         background: black;
         opacity: 0.3;
@@ -478,11 +478,11 @@ body .modal {
 
 // ACE EDITOR
 .o_ace_view_editor {
-    .o-w-preserve-base();
-    .o-w-preserve-btn();
-    .o-w-preserve-forms();
+    @include o-w-preserve-base;
+    @include o-w-preserve-btn;
+    @include o-w-preserve-forms;
 
-    .o-position-absolute(@odoo-navbar-height, 0, 0);
+    @include o-position-absolute($odoo-navbar-height, 0, 0);
     position: fixed;
     z-index: 1001;
 }
@@ -523,14 +523,14 @@ body .modal {
 }
 #edit_website_pages {
     th {
-        background-color: @odoo-brand-primary;
+        background-color: $odoo-brand-primary;
         color: white;
     }
     td > a.fa {
         margin-left: 5px;
-        color: @odoo-brand-primary;
+        color: $odoo-brand-primary;
     }
     .fa-check, .fa-eye-slash {
-        color: @odoo-brand-optional;
+        color: $odoo-brand-optional;
     }
 }

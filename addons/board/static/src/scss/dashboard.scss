@@ -2,9 +2,9 @@
 
     // no content help
     &.o_dashboard_nocontent {
-        .o-flex-display();
-        .o-align-content(center);
-        .o-justify-content(center);
+        @include o-flex-display;
+        @include o-align-content(center);
+        @include o-justify-content(center);
     }
 
     // Dashboard layout
@@ -155,5 +155,5 @@
 // Favorites menu in control panel
 .o_add_to_dashboard {
     display: none; // hidden by default
-    .o-search-options-dropdown-custom-li;
+    @include o-search-options-dropdown-custom-li;
 }

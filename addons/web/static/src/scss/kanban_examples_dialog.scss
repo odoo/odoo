@@ -1,29 +1,29 @@
 .o_kanban_examples_dialog {
-    .o-flex-display();
+    @include o-flex-display;
     padding: 0px;
-    background: @odoo-color-silver;
+    background: $odoo-color-silver;
 
     // sidebar
     .o_kanban_examples_dialog_nav {
-        .o-flex(0, 0, auto);
-        border-right: 1px solid @gray-lighter-dark;
+        @include o-flex(0, 0, auto);
+        border-right: 1px solid $gray-lighter-dark;
         background: white;
 
         > ul > li {
             margin: 0;
-            border-bottom: 1px solid @gray-lighter-dark;
+            border-bottom: 1px solid $gray-lighter-dark;
 
             > a {
                 padding: 12px 15px;
-                color: @odoo-main-text-color;
+                color: $odoo-main-text-color;
                 border-left: 3px solid transparent;
                 &:focus {
                     outline: none;
                 }
             }
             &.active > a {
-                color: @headings-color;
-                border-left-color: @odoo-brand-optional;
+                color: $headings-color;
+                border-left-color: $odoo-brand-optional;
                 font-weight: bold;
             }
         }
@@ -31,28 +31,28 @@
 
     // content
     .o_kanban_examples_dialog_content {
-        .o-flex(1, 1, 100%);
+        @include o-flex(1, 1, 100%);
 
         .o_kanban_examples_description {
             padding: 16px 16px 0;
             text-align: justify;
         }
         .o_kanban_examples {
-            .o-flex-display();
+            @include o-flex-display;
             padding: 0 6px;
 
             .o_kanban_examples_group {
-                .o-flex(1, 1, 100%);
+                @include o-flex(1, 1, 100%);
                 margin: 10px;
 
                 .o_kanban_examples_ghost {
                     padding: 5px;
                     margin-top: -1px;
-                    border: thin solid @gray-lighter-dark;
+                    border: thin solid $gray-lighter-dark;
                     background-color: white;
                     .o_ghost_content {
                         height: 12px;
-                        background: @gray-lighter-dark;
+                        background: $gray-lighter-dark;
                         &.o_ghost_tag {
                             display: inline-block;
                             width: 40%;

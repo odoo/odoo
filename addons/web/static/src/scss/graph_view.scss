@@ -3,7 +3,7 @@
         height: 100%;
         overflow: auto;
         svg {
-            background-color: @odoo-view-background-color;
+            background-color: $odoo-view-background-color;
         }
     }
 }
@@ -16,5 +16,5 @@
 // Control panel buttons
 // ------------------------------------------------------------------
 .o_graph_measures_list {
-    .o-selected-li;
+    @include o-selected-li;
 }

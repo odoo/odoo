@@ -7,7 +7,7 @@
 // Navbar =====================================================================
 
 .navbar {
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
 
   &-nav,
   &-form {
@@ -16,10 +16,10 @@
   }
 
   &-nav > li > a {
-    padding: @padding-base-vertical @padding-base-horizontal;
+    padding: $padding-base-vertical $padding-base-horizontal;
     margin: 12px 6px;
     border: 1px solid transparent;
-    border-radius: @border-radius-base;
+    border-radius: $border-radius-base;
 
     &:hover {
       border: 1px solid #ddd;
@@ -32,11 +32,11 @@
   }
 
   &-default .navbar-nav > .active > a:hover {
-    color: @navbar-default-link-hover-color;
+    color: $navbar-default-link-hover-color;
   }
 
   &-inverse .navbar-nav > .active > a:hover {
-    color: @navbar-inverse-link-hover-color;
+    color: $navbar-inverse-link-hover-color;
   }
 
   &-brand {
@@ -44,7 +44,7 @@
   }
 }
 
-@media (max-width: @grid-float-breakpoint) {
+@media (max-width: $grid-float-breakpoint) {
   .navbar {
     .navbar-nav > li > a {
       margin: 0;
@@ -55,7 +55,7 @@
 // Buttons ====================================================================
 
 .btn {
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
 }
 
 // Typography =================================================================
@@ -65,11 +65,11 @@
 // Forms ======================================================================
 
 legend {
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
 }
 
 .input-group-addon {
-  font-family: @font-family-sans-serif;
+  font-family: $font-family-sans-serif;
 }
 
 // Navs =======================================================================
@@ -84,7 +84,7 @@ legend {
 
 .pagination {
 
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
 
   &-lg > li > a,
   &-lg > li > span {
@@ -94,10 +94,10 @@ legend {
 
 .pager {
 
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
 
   a {
-    color: @text-color;
+    color: $text-color;
   }
 
   a:hover {
@@ -106,7 +106,7 @@ legend {
   }
 
   .disabled a {
-    border-color: @pager-border;
+    border-color: $pager-border;
   }
 }
 
@@ -127,18 +127,18 @@ legend {
 
 .alert {
   .alert-link {
-    color: @alert-success-text;
+    color: $alert-success-text;
     text-decoration: underline;
   }
 }
 
 .label {
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
   font-weight: normal;
 
   &-default {
     border: 1px solid #ddd;
-    color: @text-color;
+    color: $text-color;
   }
 
 }
@@ -146,7 +146,7 @@ legend {
 .badge {
   padding: 1px 7px 5px;
   vertical-align: 2px;
-  font-family: @headings-font-family;
+  font-family: $headings-font-family;
   font-weight: normal;
 }
 
@@ -155,11 +155,11 @@ legend {
 // Containers =================================================================
 
 .panel {
-  .box-shadow(none);
+  @include box-shadow(none);
 
   &-default {
     .close {
-      color: @text-color;
+      color: $text-color;
     }
   }
 
@@ -175,13 +175,13 @@ legend {
     .panel-body {
       border: 1px solid #ddd;
       border-top-width: 0;
-      border-radius: 0 0 @border-radius-base @border-radius-base;
+      border-radius: 0 0 $border-radius-base $border-radius-base;
     }
   }
 }
 
 .modal {
   .close {
-    color: @text-color;
+    color: $text-color;
   }
 }

@@ -1,41 +1,41 @@
-@o-kanban-counter-header-height: @o-kanban-header-title-height*0.6;
+$o-kanban-counter-header-height: $o-kanban-header-title-height*0.6;
 
-.o-kanban-css-filter(@class, @accent-color) {
+@mixin o-kanban-css-filter($class, $accent-color) {
     // Provide CSS reordering and highlight
-    &.o_kanban_group_show_@{class} {
-        @mix-soft: mix(@accent-color, @odoo-webclient-background-color, 5%);
-        @mix-full: mix(@accent-color, @odoo-webclient-background-color);
+    &.o_kanban_group_show_#{$class} {
+        $mix-soft: mix($accent-color, $odoo-webclient-background-color, 5%);
+        $mix-full: mix($accent-color, $odoo-webclient-background-color);
 
         &, .o_kanban_header {
-            background-color: @mix-soft;
-            border-color: @mix-full;
+            background-color: $mix-soft;
+            border-color: $mix-full;
         }
 
-        .progress-bar.bg-@{class}-full {
+        .progress-bar.bg-#{$class}-full {
             border: 1px solid white;
         }
 
-        .oe_kanban_card_@{class} {
+        .oe_kanban_card_#{$class} {
             order: 1;
-            margin-bottom: @o-kanban-inside-vgutter*0.5;
+            margin-bottom: $o-kanban-inside-vgutter*0.5;
 
-            ~ .oe_kanban_card_@{class} {
-                margin-top: -@o-kanban-inside-vgutter*0.5 - 1px;
+            ~ .oe_kanban_card_#{$class} {
+                margin-top: -$o-kanban-inside-vgutter*0.5 - 1px;
             }
 
             ~ .o_kanban_load_more {
-                margin-top: -@o-kanban-inside-vgutter*0.5;
+                margin-top: -$o-kanban-inside-vgutter*0.5;
             }
         }
 
         .o_kanban_load_more {
             order: 2;
-            padding: @o-kanban-inside-vgutter*0.5 0 @o-kanban-inside-vgutter;
+            padding: $o-kanban-inside-vgutter*0.5 0 $o-kanban-inside-vgutter;
         }
 
-        .o_kanban_record:not(.oe_kanban_card_@{class}) {
+        .o_kanban_record:not(.oe_kanban_card_#{$class}) {
             order: 3;
-            .o-hover-opacity(0.5);
+            @include o-hover-opacity(0.5);
             box-shadow: none;
         }
     }
@@ -44,7 +44,7 @@
 // If columns has the progressbar, adapt the layout
 .o_kanban_view .o_kanban_group.o_kanban_has_progressbar {
     > .o_kanban_header .o_kanban_header_title {
-        height: @o-kanban-counter-header-height;
+        height: $o-kanban-counter-header-height;
         margin-top: 5px;
     }
 
@@ -57,16 +57,16 @@
 
 .o_kanban_counter {
     position: relative;
-    .o-flex-display();
-    .o-align-items(center);
-    .o-transition(opacity, 0.3s);
-    margin-bottom: @o-kanban-record-margin*2;
+    @include o-flex-display;
+    @include o-align-items(center);
+    @include o-transition(opacity, 0.3s);
+    margin-bottom: $o-kanban-record-margin*2;
 
     > .o_kanban_counter_progress {
         width: 76%;
-        height: @font-size-small;
+        height: $font-size-small;
         margin-bottom: 0;
-        background-color: @gray-lighter-dark;
+        background-color: $gray-lighter-dark;
         box-shadow: none;
 
         .progress-bar {
@@ -82,23 +82,23 @@
 
         .o_kanban_counter_label {
             font-size: 10px;
-            .user-select(none);
+            @include user-select(none);
         }
     }
 
     > .o_kanban_counter_side {
         width: 21%;
         margin-left: 3%;
-        color: @headings-color;
+        color: $headings-color;
         text-align: right;
-        .o-transform-origin(right, center);
+        @include o-transform-origin(right, center);
 
         &.o_kanban_grow {
-            .o-animation(grow, 1s, ease);
+            @include o-animation(grow, 1s, ease);
         }
 
         &.o_kanban_grow_huge {
-            .o-animation(grow_huge, 1s, ease);
+            @include o-animation(grow_huge, 1s, ease);
         }
 
         // Target currency icon
@@ -112,16 +112,16 @@
 }
 
 .o_kanban_view .o_kanban_group {
-    .o-kanban-css-filter(success, @brand-success);
-    .o-kanban-css-filter(warning, @brand-warning);
-    .o-kanban-css-filter(danger, @brand-danger);
+    @include o-kanban-css-filter(success, $brand-success);
+    @include o-kanban-css-filter(warning, $brand-warning);
+    @include o-kanban-css-filter(danger, $brand-danger);
 
     &.o_kanban_group_show {
-        .o-flex-display();
-        .o-flex-flow(column, nowrap);
+        @include o-flex-display;
+        @include o-flex-flow(column, nowrap);
 
         > * {
-            .o-flex(0, 0, auto);
+            @include o-flex(0, 0, auto);
         }
     }
 }

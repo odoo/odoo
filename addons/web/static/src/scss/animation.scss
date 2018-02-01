@@ -146,16 +146,16 @@
 }
 
 /************** MIXINS for ANIMATIONS **************/
-.o-display-marked(@content, @top, @left, @color) {
-    .o-position-absolute(@top: @top, @left: @left);
+@mixin o-display-marked($content, $top, $left, $color) {
+    @include o-position-absolute($top: $top, $left: $left);
     font-size: 300px;
     font-family: "FontAwesome";
-    content: @content;
-    color: @color;
-    .o-transform-origin();
-    .o-animation(markAnim, 1s, ease-in-out, 0s, 1, normal, forwards);
+    content: $content;
+    color: $color;
+    @include o-transform-origin;
+    @include o-animation(markAnim, 1s, ease-in-out, 0s, 1, normal, forwards);
 
-    @media (max-width: @screen-sm-max) {
+    @media (max-width: $screen-sm-max) {
         left: 40%;
         font-size: 30vw;
     }

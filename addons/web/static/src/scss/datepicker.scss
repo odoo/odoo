@@ -1,5 +1,5 @@
-@odoo-datepicker-week-color: #8f8f8f;
-@odoo-datepicker-week-bg-color: lighten(@odoo-datepicker-week-color, 30%);
+$odoo-datepicker-week-color: #8f8f8f;
+$odoo-datepicker-week-bg-color: lighten($odoo-datepicker-week-color, 30%);
 
 .sr-only {
   position: absolute;
@@ -20,10 +20,10 @@
     }
 
     .o_datepicker_button {
-        .o-position-absolute(2px, 4px);
+        @include o-position-absolute(2px, 4px);
         cursor: pointer;
         &:after {
-            .o-caret-down;
+            @include o-caret-down;
         }
     }
 }
@@ -32,26 +32,26 @@
 // The '.dropdown-menu' part is needed to override default bootstrap rule as
 // this file is unfortunately placed in common assets.
 .bootstrap-datetimepicker-widget.dropdown-menu {
-    z-index: @zindex-modal + 1;
+    z-index: $zindex-modal + 1;
 }
 
 .datepicker {
     .table-condensed {
         > thead {
             color: white;
-            background-color: @odoo-brand-primary;
+            background-color: $odoo-brand-primary;
 
             > tr {
                 &:first-child {
                     th:hover {
                         color: white;
-                        background-color: darken(@odoo-brand-primary, 10%);
+                        background-color: darken($odoo-brand-primary, 10%);
                     }
                 }
 
                 &:last-child {
-                    color: @odoo-datepicker-week-color;
-                    background-color: @odoo-datepicker-week-bg-color;
+                    color: $odoo-datepicker-week-color;
+                    background-color: $odoo-datepicker-week-bg-color;
                 }
                 > th {
                     border-radius: 0;
@@ -63,12 +63,12 @@
             > tr {
                 > td {
                     &.active, .active {
-                        background-color: @odoo-brand-optional;
+                        background-color: $odoo-brand-optional;
                         border-radius: 100px;
                     }
 
                     &.today:before {
-                        border-bottom-color: @odoo-brand-optional;
+                        border-bottom-color: $odoo-brand-optional;
                     }
                 }
             }

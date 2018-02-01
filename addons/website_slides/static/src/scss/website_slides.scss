@@ -1,16 +1,16 @@
-.define-color-if-not-defined() {
-    @nav-tabs-border-color: #dddddd;
-    @brand-info: #dddddd;
-    @body-bg: #FFFFFF;
-    @brand-primary: #428bca;
-    @link-color: @brand-primary;
-    @panel-footer-bg: #f5f5f5;
-    @nav-link-hover-bg: #FFFFFF;
-    @navbar-default-link-color: #777;
-    @navbar-default-link-hover-color: #333;
-    @navbar-default-bg: #f8f8f8;
-    @MAX-Z-INDEX : 2147483647;
-} .define-color-if-not-defined();
+@mixin define-color-if-not-defined {
+    $nav-tabs-border-color: #dddddd;
+    $brand-info: #dddddd;
+    $body-bg: #FFFFFF;
+    $brand-primary: #428bca;
+    $link-color: $brand-primary;
+    $panel-footer-bg: #f5f5f5;
+    $nav-link-hover-bg: #FFFFFF;
+    $navbar-default-link-color: #777;
+    $navbar-default-link-hover-color: #333;
+    $navbar-default-bg: #f8f8f8;
+    $MAX-Z-INDEX : 2147483647;
+} @include define-color-if-not-defined;
 
 .top_covered_image {
     object-fit: cover;
@@ -18,11 +18,11 @@
 }
 
 .oe_slides_panel_footer {
-    background-color: @navbar-default-bg;
+    background-color: $navbar-default-bg;
 }
 
 .oe_slides_panel_footer .fa, .oe_slide_js_embed_option_link{
-    color : @brand-primary;
+    color : $brand-primary;
     cursor: pointer;
 }
 
@@ -33,7 +33,7 @@
     left: 0px;
     right: 0px;
     bottom: 0px;
-    background-color: @body-bg;
+    background-color: $body-bg;
     opacity: 1;
     display:none;
     overflow-y: auto !important;
@@ -44,13 +44,13 @@
 }
 
 section.oe_slides_promote_box {
-    background-color: @panel-footer-bg;
-    border-bottom: 1px solid @nav-tabs-border-color;
-    border-top: 1px solid @nav-tabs-border-color;
+    background-color: $panel-footer-bg;
+    border-bottom: 1px solid $nav-tabs-border-color;
+    border-top: 1px solid $nav-tabs-border-color;
 }
 
 img.oe_slides_channel_thumbnail {
-    .top_covered_image();
+    @include top-covered-image;
     height: 250px;
     width: 100%
 }
@@ -60,7 +60,7 @@ img.oe_slides_opacity {
 }
 
 img.oe_slides_promote_image {
-    .top_covered_image();
+    @include top-covered-image;
     max-height: 300px;
     width: 100%;
     overflow: hidden;
@@ -72,13 +72,13 @@ img.oe_slides_promote_image {
 }
 
 .oe_slides_apart_small {
-    .top_covered_image();
+    @include top-covered-image;
     height: 60px;
     width: 90px;
 }
 
 .oe_slides_statistics_title {
-    border-bottom: 1px solid @nav-tabs-border-color;
+    border-bottom: 1px solid $nav-tabs-border-color;
     padding-bottom: 5px;
 }
 .oe_slides_transcript {
@@ -87,12 +87,12 @@ img.oe_slides_promote_image {
 }
 
 .oe_slides_bottom_border {
-   border-bottom: 1px solid @nav-tabs-border-color;
+   border-bottom: 1px solid $nav-tabs-border-color;
 }
 
 .oe_slide_js_like, .oe_slide_js_unlike{
     cursor: pointer;
-    color: @link-color;
+    color: $link-color;
 }
 
 textarea.o_slides_comment {
@@ -105,7 +105,7 @@ textarea.o_slides_comment {
 }
 
 .oe_slides_grid_thumbnail {
-    .top_covered_image();
+    @include top-covered-image;
     height: 200px;
     width: 100%;
     overflow: hidden;
@@ -179,7 +179,7 @@ textarea.o_slides_comment {
 }
 
 .oe_show_footer {
-    z-index: @MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
+    z-index: $MAX-Z-INDEX; // Looks terrible but seems necessary due to fullscreen & canvas in PDFSlidesViewer
 }
 // Display Slide Navigation Footer bit clear on mobile preview
 @media screen and (max-width: 300px) {

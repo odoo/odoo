@@ -1,9 +1,9 @@
-@odoo-list-group-header-color: lighten(@odoo-brand-lightsecondary, 10%);
+$odoo-list-group-header-color: lighten($odoo-brand-lightsecondary, 10%);
 
 .o_list_view {
     position: relative;
     cursor: pointer;
-    background-color: @odoo-view-background-color;
+    background-color: $odoo-view-background-color;
     margin-bottom: 0px;
 
     &.table {
@@ -13,7 +13,7 @@
     }
 
     thead {
-        color: @odoo-main-text-color;
+        color: $odoo-main-text-color;
         border-bottom: 1px solid #cacaca;
         > tr > th {
             border-left: 1px solid #dfdfdf;
@@ -25,16 +25,16 @@
 
     tfoot {
         cursor: default;
-        color: @odoo-list-footer-color;
-        background-color: @odoo-list-footer-bg-color;
-        font-weight: @odoo-list-footer-font-weight;
+        color: $odoo-list-footer-color;
+        background-color: $odoo-list-footer-bg-color;
+        font-weight: $odoo-list-footer-font-weight;
         border-top: 2px solid #cacaca;
         border-bottom: 1px solid #cacaca;
     }
 
     .o_column_sortable {
         position: relative;
-        .user-select(none);  // Prevent unwanted selection while sorting
+        @include user-select(none);  // Prevent unwanted selection while sorting
 
         &::after {
             margin-left: 6px;
@@ -59,7 +59,7 @@
             opacity: 0.3;
         }
         &.o-sort-up, &.o-sort-down {
-            color: @headings-color;
+            color: $headings-color;
             &::after {
                 opacity: 1;
             }
@@ -78,7 +78,7 @@
         font-style: italic;
     }
     .text-muted {
-        color: lighten(@text-muted, 10%);
+        color: lighten($text-muted, 10%);
     }
 
     // Grouped list views
@@ -90,14 +90,14 @@
         }
         .o_group_pager {
             cursor: text;
-            .user-select(none);
+            @include user-select(none);
             text-align: right;
             padding-top: 0;
             padding-bottom: 0;
             .o_pager_previous, .o_pager_next {
-                background-color: @odoo-list-group-header-color;
+                background-color: $odoo-list-group-header-color;
                 &:hover {
-                    background-color: darken(@odoo-list-group-header-color, 10%);
+                    background-color: darken($odoo-list-group-header-color, 10%);
                 }
             }
         }
@@ -148,7 +148,7 @@
 
         // Field widgets override
         > .o_field_widget {
-            .o-position-absolute(0, 0, auto, 0);
+            @include o-position-absolute(0, 0, auto, 0);
             min-height: 100%;
 
             &:not(.o_field_text) {
@@ -163,11 +163,11 @@
             }
         }
         > .o_field_translate {
-            .o-position-absolute(0, 5px);
+            @include o-position-absolute(0, 5px);
             width: 16px; // to have some space on the right
         }
         .o_input {
-            padding: @table-condensed-cell-padding;
+            padding: $table-condensed-cell-padding;
             background-color: white;
 
             .o_input {
@@ -191,7 +191,7 @@
                 padding-right: 15px; // To prevent caret overlapping
             }
             > .o_dropdown_button, .o_datepicker_button {
-                .o-position-absolute(20%, 5px);
+                @include o-position-absolute(20%, 5px);
             }
         }
         .o_field_widget > .o_external_button {

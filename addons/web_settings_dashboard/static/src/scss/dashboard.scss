@@ -1,10 +1,10 @@
 .o_web_settings_dashboard {
 
-    @bg-dashboard-col: #FFF;
+    $bg-dashboard-col: #FFF;
 
-    .o_web_settings_dashboard_card() {
+    @mixin o-web-settings-dashboard-card {
         box-shadow: 0 1px 2px 0 rgba(0,0,0,.14);
-        background: @bg-dashboard-col;
+        background: $bg-dashboard-col;
         border-radius: 2px;
     }
 
@@ -18,7 +18,7 @@
     .o_web_settings_dashboard_col {
         padding: 10px 8px;
 
-        @media (max-width: @screen-sm-max) {
+        @media (max-width: $screen-sm-max) {
             padding: 5px 8px;
         }
 
@@ -28,7 +28,7 @@
         }
 
         > div {
-            .o_web_settings_dashboard_card();
+            @include o-web-settings-dashboard-card;
             padding: 25px 18px 18px 18px;
                 .o_web_settings_dashboard_header {
                     font-size: 22px;
@@ -75,7 +75,7 @@
         .o_web_settings_dashboard_planner {
             .progress {
                 height: 10px;
-                background-color: darken(@bg-dashboard-col, 15%);
+                background-color: darken($bg-dashboard-col, 15%);
                 cursor: pointer;
                 margin-bottom: 30px;
             }
@@ -90,7 +90,7 @@
             .o_web_settings_dashboard_progress_title {
                 font-weight: bold;
                 cursor: pointer;
-                color: @odoo-brand-optional;
+                color: $odoo-brand-optional;
             }
         }
     }

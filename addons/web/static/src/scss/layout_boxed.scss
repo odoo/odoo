@@ -1,22 +1,22 @@
 .o_boxed_footer, .o_boxed_header, .o_report_layout_boxed {
     font-family: 'Lato';
-    color: @gray;
+    color: $gray;
     font-size: 12px;
 }
 .o_boxed_header {
-    border-bottom: 1px solid @gray-lighter;
+    border-bottom: 1px solid $gray-lighter;
     img {
         max-height: 100px;
     }
     h4 {
-        color: @o-we-color-text-normal;
+        color: $o-we-color-text-normal;
         font-weight: 700;
         text-transform: uppercase;
     }
 }
 .o_boxed_footer {
     white-space: nowrap;
-    border-top: 3px solid @gray;
+    border-top: 3px solid $gray;
     ul {
         margin: 4px 0;
     }
@@ -25,7 +25,7 @@
     // This is not a general rule since the id is not used in all the reports,
     // we should make a general structure for report body to use it everywhere
     #informations {
-        border: 1px solid @gray;
+        border: 1px solid $gray;
         padding-top: 10px;
         margin: 0;
     }
@@ -33,22 +33,22 @@
         text-transform: uppercase;
     }
     table {
-        border: 1px solid @gray;
+        border: 1px solid $gray;
         thead {
             tr th {
-                border-bottom: 3px solid @gray !important;
+                border-bottom: 3px solid $gray !important;
                 text-transform: uppercase;
             }
         }
         tbody {
-            color: @gray;
+            color: $gray;
             tr {
                 td {
                     border-top: none;
-                    border-right: 1px solid @gray;
+                    border-right: 1px solid $gray;
                 }
                 td:last-child {
-                    background-color: @gray-lighter;
+                    background-color: $gray-lighter;
                 }
             }
         }
@@ -66,7 +66,7 @@
             background-color: transparent;
         }
         tr:last-child td {
-            background-color: @gray;
+            background-color: $gray;
             color: #fff;
         }
     }

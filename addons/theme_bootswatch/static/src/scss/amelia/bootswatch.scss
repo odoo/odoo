@@ -15,7 +15,7 @@
   &-default {
     .badge {
       background-color: #fff;
-      color: @navbar-default-bg;
+      color: $navbar-default-bg;
     }
   }
 }
@@ -32,11 +32,11 @@
 .btn-default {
 
   &:hover {
-    color: @btn-default-color;
+    color: $btn-default-color;
   }
 
   .caret {
-    border-top-color: @btn-default-color;
+    border-top-color: $btn-default-color;
   }
 }
 
@@ -44,33 +44,33 @@
 
 .text-primary,
 .text-primary:hover {
-  color: lighten(@brand-primary, 40%);
+  color: lighten($brand-primary, 40%);
 }
 
 .text-success,
 .text-success:hover {
-  color: lighten(@brand-success, 20%);
+  color: lighten($brand-success, 20%);
 }
 
 .text-danger,
 .text-danger:hover {
-  color: lighten(@brand-danger, 20%);
+  color: lighten($brand-danger, 20%);
 }
 
 .text-warning,
 .text-warning:hover {
-  color: lighten(@brand-warning, 20%);
+  color: lighten($brand-warning, 20%);
 }
 
 .text-info,
 .text-info:hover {
-  color: lighten(@brand-info, 40%);
+  color: lighten($brand-info, 40%);
 }
 
 // Tables =====================================================================
 
 .table-responsive > .table {
-  background-color: @table-bg;
+  background-color: $table-bg;
 }
 
 table,
@@ -82,7 +82,7 @@ table,
   }
 
   .text-muted {
-    color: @text-muted;
+    color: $text-muted;
   }
 }
 
@@ -90,7 +90,7 @@ table,
 
 input,
 textarea {
-  color: @input-color;
+  color: $input-color;
 }
 
 legend {
@@ -99,19 +99,19 @@ legend {
 }
 
 .input-group-addon {
-  color: @btn-default-color;
+  color: $btn-default-color;
 }
 
 .has-warning {
   .help-block,
   .control-label,
   .form-control-feedback {
-    color: lighten(@brand-warning, 20%);
+    color: lighten($brand-warning, 20%);
   }
 
   .form-control,
   .form-control:focus {
-    border-color: lighten(@brand-warning, 20%);
+    border-color: lighten($brand-warning, 20%);
   }
 
   .input-group-addon {
@@ -123,12 +123,12 @@ legend {
   .help-block,
   .control-label,
   .form-control-feedback {
-    color: lighten(@brand-primary, 40%);
+    color: lighten($brand-primary, 40%);
   }
 
   .form-control,
   .form-control:focus {
-    border-color: lighten(@brand-primary, 40%);
+    border-color: lighten($brand-primary, 40%);
   }
 
   .input-group-addon {
@@ -140,12 +140,12 @@ legend {
   .help-block,
   .control-label,
   .form-control-feedback {
-    color: lighten(@brand-success, 20%);
+    color: lighten($brand-success, 20%);
   }
 
   .form-control,
   .form-control:focus {
-    border-color: lighten(@brand-success, 20%);
+    border-color: lighten($brand-success, 20%);
   }
 
   .input-group-addon {
@@ -187,9 +187,9 @@ legend {
 a.thumbnail:hover,
 a.thumbnail:focus,
 a.thumbnail.active {
-  border-color: @thumbnail-border;
+  border-color: $thumbnail-border;
 }
 
 .popover {
-  color: @gray-dark;
+  color: $gray-dark;
 }

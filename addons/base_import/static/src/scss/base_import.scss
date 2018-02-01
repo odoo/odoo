@@ -1,5 +1,5 @@
 .oe_import {
-    .o-webclient-padding(@top: 8px);
+    @include o-webclient-padding($top: 8px);
     background-color: white;
     overflow: auto;
     position: absolute; // Needed for chrome
@@ -7,7 +7,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    @media (max-width: @screen-xs-max) {
+    @media (max-width: $screen-xs-max) {
         position: static;
     }
 
@@ -29,7 +29,7 @@
     .oe_import_box {
         padding: 16px;
         background: #F0EEEE;
-        border-radius: @border-radius-base;
+        border-radius: $border-radius-base;
         border: solid 1px #dddddd;
         label {
             font-weight: normal;
@@ -85,7 +85,7 @@
     }
 
     .oe_import_noheaders {
-        .text-muted();
+        @extend .text-muted; // FIXME was a mixin before scss convertion
     }
 
     /* ------------- ERRORS AND WARNINGS REPORT ------------ */
@@ -97,19 +97,19 @@
             padding: 4px;
             margin: 2px 0;
             list-style: none;
-            border-radius: @border-radius-base;
+            border-radius: $border-radius-base;
         }
         .oe_import_report_error {
-            .bg-danger();
-            .text-danger();
+            @extend .bg-danger; // FIXME was a mixin before scss convertion
+            @extend .text-danger; // FIXME was a mixin before scss convertion
         }
         .oe_import_report_warning {
-            .bg-warning();
-            .text-warning();
+            @extend .bg-warning; // FIXME was a mixin before scss convertion
+            @extend .text-warning; // FIXME was a mixin before scss convertion
         }
         .oe_import_report_info {
-            .bg-info();
-            .text-info();
+            @extend .bg-info; // FIXME was a mixin before scss convertion
+            @extend .text-info; // FIXME was a mixin before scss convertion
         }
     }
 
@@ -136,7 +136,7 @@
 
 /* Field dropdown */
 .oe_import_selector {
-    font-size: @font-size-small;
+    font-size: $font-size-small;
     ul, li {
         margin: 0; padding: 0;
     }

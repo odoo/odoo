@@ -5,15 +5,15 @@
     border-radius: 5px;
 
     &.accepted {
-        background-color: @brand-success;
+        background-color: $brand-success;
     }
 
     &.needsAction {
-        background-color: @odoo-brand-secondary;
+        background-color: $odoo-brand-secondary;
     }
 
     &.declined {
-        background-color: @brand-danger;
+        background-color: $brand-danger;
     }
 }
 
@@ -42,11 +42,11 @@
 }
 
 .o_calendar_invitation_page {
-    .o-flex(0, 0, auto);
+    @include o-flex(0, 0, auto);
     width: 50%;
     margin: 30px auto 0;
-    .o-webclient-padding(@top: 10px, @bottom: 10px);
-    background-color: @odoo-view-background-color;
+    @include o-webclient-padding($top: 10px, $bottom: 10px);
+    background-color: $odoo-view-background-color;
 
     .o_logo {
         width: 15%;
@@ -71,9 +71,9 @@
     }
 
     .o_accepted {
-        color: @brand-success;
+        color: $brand-success;
     }
     .o_declined {
-        color: @brand-danger;
+        color: $brand-danger;
     }
 }

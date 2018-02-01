@@ -12,7 +12,7 @@
 
     .badge {
       background-color: #fff;
-      color: @brand-primary;
+      color: $brand-primary;
     }
   }
 }
@@ -31,27 +31,27 @@ body {
 
 .text-primary,
 .text-primary:hover {
-  color: @brand-primary;
+  color: $brand-primary;
 }
 
 .text-success,
 .text-success:hover {
-  color: @brand-success;
+  color: $brand-success;
 }
 
 .text-danger,
 .text-danger:hover {
-  color: @brand-danger;
+  color: $brand-danger;
 }
 
 .text-warning,
 .text-warning:hover {
-  color: @brand-warning;
+  color: $brand-warning;
 }
 
 .text-info,
 .text-info:hover {
-  color: @brand-info;
+  color: $brand-info;
 }
 
 // Tables =====================================================================
@@ -82,13 +82,13 @@ table,
   .help-block,
   .control-label,
   .form-control-feedback {
-    color: @brand-warning;
+    color: $brand-warning;
   }
 
   .form-control,
   .form-control:focus,
   .input-group-addon {
-    border: 1px solid @brand-warning;
+    border: 1px solid $brand-warning;
   }
 }
 
@@ -96,13 +96,13 @@ table,
   .help-block,
   .control-label,
   .form-control-feedback {
-    color: @brand-danger;
+    color: $brand-danger;
   }
 
   .form-control,
   .form-control:focus,
   .input-group-addon {
-    border: 1px solid @brand-danger;
+    border: 1px solid $brand-danger;
   }
 }
 
@@ -110,13 +110,13 @@ table,
   .help-block,
   .control-label,
   .form-control-feedback {
-    color: @brand-success;
+    color: $brand-success;
   }
 
   .form-control,
   .form-control:focus,
   .input-group-addon {
-    border: 1px solid @brand-success;
+    border: 1px solid $brand-success;
   }
 }
 
@@ -167,7 +167,7 @@ table,
 
 .progress {
   height: 8px;
-  .box-shadow(none);
+  @include box-shadow(none);
   .progress-bar {
     font-size: 8px;
     line-height: 8px;
@@ -185,17 +185,17 @@ table,
 
   &-default {
     .close {
-      color: @text-color;
+      color: $text-color;
     }
   }
 }
 
 .modal {
   .close {
-    color: @text-color;
+    color: $text-color;
   }
 }
 
 .popover {
-  color: @text-color;
+  color: $text-color;
 }
