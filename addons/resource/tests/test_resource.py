@@ -698,6 +698,48 @@ class TestResourceMixin(TestResourceCommon):
         self.assertEqual(res['days'], 0.75)
         self.assertEqual(res['hours'], 6.0)
 
+    def test_days_count_with_domain(self):
+        self.test.resource_id.write({
+            'user_id': self.lost_user.id,
+        })
+
+        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'first',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-02-05 08:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-02-09 18:00:00'), self.lost_user)
+        })
+
+        self.env['resource.calendar.leaves'].sudo(self.lost_user).create({
+            'name': 'second',
+            'calendar_id': self.test.resource_calendar_id.id,
+            'resource_id': self.test.resource_id.id,
+            'date_from': to_naive_utc(Datetime.from_string('2018-01-12 08:00:00'), self.lost_user),
+            'date_to': to_naive_utc(Datetime.from_string('2018-01-13 18:00:00'), self.lost_user)
+        })
+
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', '')]
+        )
+        self.assertEqual(res, 3.0)
+
+        res = self.test.get_work_days_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', 'first')]
+        )
+        self.assertEqual(res, 1.0)
+
+        res = self.test.get_leaves_day_count(
+            to_naive_utc(Datetime.from_string('2018-02-04 06:00:00'), self.env.user),
+            to_naive_utc(Datetime.from_string('2018-02-14 20:00:00'), self.env.user),
+            domain=[('name', '=', 'first')]
+        )
+        self.assertEqual(res, 2.0)
+
 class TestGlobalLeaves(TestResourceCommon):
 
     def setUp(self):
