@@ -28,6 +28,7 @@ from decorator import decorator
 from lxml import etree, html
 
 from odoo.models import BaseModel
+from odoo.osv.expression import normalize_domain
 from odoo.tools import pycompat
 from odoo.tools.safe_eval import safe_eval
 
@@ -758,7 +759,10 @@ class Form(object):
         contexts = fvg['contexts'] = {}
         for f in etree.fromstring(fvg['arch']).iter('field'):
             fname = f.get('name')
-            modifiers[fname] = json.loads(f.get('modifiers', '{}'))
+            modifiers[fname] = {
+                modifier: domain if isinstance(domain, bool) else normalize_domain(domain)
+                for modifier, domain in json.loads(f.get('modifiers', '{}')).items()
+            }
             ctx = f.get('context')
             if ctx:
                 contexts[fname] = ctx
