@@ -21,6 +21,7 @@
         'wizard/stock_warn_insufficient_qty_views.xml',
         'views/mrp_views_menus.xml',
         'views/stock_move_views.xml',
+        'views/mrp_bom_report.xml',
         'views/mrp_message_views.xml',
         'views/mrp_workorder_views.xml',
         'views/mrp_workcenter_views.xml',
@@ -38,8 +39,6 @@
         'views/stock_scrap_views.xml',
         'report/mrp_report_views_main.xml',
         'report/mrp_production_templates.xml',
-        'report/mrp_bom_structure_report_templates.xml',
-        'report/mrp_bom_cost_report_templates.xml',
     ],
     'demo': [
         'data/mrp_demo.xml',
