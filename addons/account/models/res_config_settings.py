@@ -37,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
-    module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
+    module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
              '-This installs the module account_batch_deposit.')
