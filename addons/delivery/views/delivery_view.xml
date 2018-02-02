@@ -45,7 +45,7 @@
             <field name="name">delivery.carrier.form</field>
             <field name="model">delivery.carrier</field>
             <field name="arch" type="xml">
-                <form string="Carrier">
+                <form string="Carrier" duplicate="false">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_prod_environment" type="object" class="oe_stat_button" icon="fa-check-square" attrs="{'invisible': ['|', ('delivery_type', '=', 'fixed'), ('delivery_type', '=', 'base_on_rule')]}">
