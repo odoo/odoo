@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
 from odoo.tools.translate import _
 
@@ -38,6 +40,7 @@ class Notification(models.Model):
             ("UNKNOWN", "Unknown error"),
             ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
+    read_date = fields.Datetime('Read Date', copy=False)
 
     _sql_constraints = [
         # email notification;: partner is required
@@ -57,3 +60,25 @@ class Notification(models.Model):
             return dict(type(self).failure_type.selection).get(self.failure_type, _('No Error'))
         else:
             return _("Unknown error") + ": %s" % (self.failure_reason or '')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('is_read'):
+                vals['read_date'] = fields.Datetime.now()
+        return super(Notification, self).create(vals_list)
+
+    def write(self, vals):
+        if vals.get('is_read'):
+            vals['read_date'] = fields.Datetime.now()
+        return super(Notification, self).write(vals)
+
+    @api.model
+    def _gc_notifications(self, max_age_days=180):
+        domain = [
+            ('is_read', '=', True),
+            ('read_date', '<', fields.Datetime.now() - relativedelta(days=max_age_days)),
+            ('res_partner_id.partner_share', '=', False),
+            ('notification_type', '=', 'email')
+        ]
+        return self.search(domain).unlink()

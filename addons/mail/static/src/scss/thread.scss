@@ -229,6 +229,12 @@
         margin-bottom: 20px;
         font-weight: bold;
         font-size: 125%;
+
+        &.o_neutral_face_icon:before {
+            @extend %o-nocontent-init-image;
+            @include size(120px, 140px);
+            background: transparent url(/web/static/src/img/neutral_face.svg) no-repeat center;
+        }
     }
 
     .o_mail_no_content {
