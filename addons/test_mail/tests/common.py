@@ -73,7 +73,7 @@ class BaseFunctionalTest(common.SavepointCase):
             for partner_attribute in counters.keys():
                 counter, notif_type, notif_read = counters[partner_attribute]
                 partner = getattr(self, partner_attribute)
-                partner_notif = new_notifications.filtered(lambda n: n.res_partner_id == partner)
+                partner_notif = new_notifications.filtered(lambda n: n.res_partner_id == partner and (n.is_read == (notif_read not in ['unread', ''])))
 
                 self.assertEqual(len(partner_notif), counter)
 

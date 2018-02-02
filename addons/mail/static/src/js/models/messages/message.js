@@ -32,6 +32,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
      * @param {Array} [data.needaction_partner_ids = []]
+     * @param {Array} [data.history_partner_ids = []]
      * @param {string} [data.record_name]
      * @param {integer} [data.res_id]
      * @param {Array} [data.starred_partner_ids = []]
@@ -648,6 +649,9 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         if (_.contains(this._starredPartnerIDs, session.partner_id)) {
             this.setStarred(true);
         }
+        if (_.contains(this._historyPartnerIDs, session.partner_id)) {
+            this._setHistory(true);
+        }
         if (
             this.originatesFromChannel() &&
             _.contains(
@@ -739,6 +743,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
      * @param {Array} [data.needaction_partner_ids = []]
+     * @param {Array} [data.history_partner_ids = []]
      * @param {string} [data.record_name]
      * @param {integer} [data.res_id]
      * @param {Array} [data.starred_partner_ids = []]
@@ -757,12 +762,28 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._moduleIcon = data.module_icon;
         this._needactionPartnerIDs = data.needaction_partner_ids || [];
         this._starredPartnerIDs = data.starred_partner_ids || [];
+        this._historyPartnerIDs = data.history_partner_ids || [];
         this._subject = data.subject;
         this._subtypeDescription = data.subtype_description;
         this._threadIDs = data.channel_ids || [];
         this._trackingValueIDs = data.tracking_value_ids;
 
         this._moderationStatus = data.moderation_status || 'accepted';
+    },
+    /*
+     * Set whether the message is history or not.
+     * If it is history, the message is moved to the "History" mailbox.
+     * Note that this function only applies it locally, the server is not aware
+     *
+     * @private
+     * @param {boolean} history if set, the message is history
+     */
+    _setHistory: function (history) {
+        if (history) {
+            this._addThread('mailbox_history');
+        } else {
+            this.removeThread('mailbox_history');
+        }
     },
     /**
      * Set whether the message is moderated by current user or not.

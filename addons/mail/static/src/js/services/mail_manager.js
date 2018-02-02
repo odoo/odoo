@@ -1257,7 +1257,7 @@ var MailManager =  AbstractService.extend({
     },
     /**
      * Update the mailboxes with mail data fetched from server, namely 'Inbox',
-     * 'Starred', and 'Moderation Queue' if the user is a moderator of a channel
+     * 'Starred', 'History', and 'Moderation Queue' if the user is a moderator of a channel
      *
      * @private
      * @param {Object} data
@@ -1280,6 +1280,10 @@ var MailManager =  AbstractService.extend({
             id: 'starred',
             name: _t("Starred"),
             mailboxCounter: data.starred_counter || 0,
+        });
+        this._addMailbox({
+            id: 'history',
+            name: _t("History"),
         });
 
         if (data.is_moderator) {

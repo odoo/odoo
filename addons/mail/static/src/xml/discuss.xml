@@ -60,6 +60,10 @@
             <t t-set="counter" t-value="starred.getMailboxCounter()"/>
             <t t-call="mail.discuss.SidebarCounter"/>
         </div>
+        <div t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID === 'mailbox_history') ? 'o_active': ''}"
+            data-thread-id="mailbox_history">
+            <span class="o_thread_name"><i class="fa fa-history mr8"/>History</span>
+        </div>
         <div t-if="isMyselfModerator" t-attf-class="o_mail_discuss_title_main o_mail_discuss_item #{(activeThreadID == 'mailbox_moderation') ? 'o_active': ''}"
                 data-thread-id="mailbox_moderation">
             <span class="o_thread_name"> <i class="fa fa-envelope mr8"/>Moderation Queue</span>
@@ -241,6 +245,9 @@
                 </button>
                 <button type="button" class="btn btn-secondary d-inline d-md-none o_mailbox_inbox_item" title="Starred" data-type="mailbox_starred">
                     Starred
+                </button>
+                <button type="button" class="btn btn-secondary d-inline d-md-none o_mailbox_inbox_item" title="History" data-type="mailbox_history">
+                    History
                 </button>
             </div>
             <div class="o_mail_discuss_content"/>

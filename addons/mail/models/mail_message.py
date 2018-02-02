@@ -190,53 +190,28 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.model
-    def mark_all_as_read(self, channel_ids=None, domain=None):
-        """ Remove all needactions of the current partner. If channel_ids is
-            given, restrict to messages written in one of those channels. """
+    def mark_all_as_read(self, domain=None):
+        # not really efficient method: it does one db request for the
+        # search, and one for each message in the result set is_read to True in the
+        # current notifications from the relation.
         partner_id = self.env.user.partner_id.id
-        delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
-        if not domain and delete_mode:
-            query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
-            args = [(partner_id,)]
-            if channel_ids:
-                query += """
-                    AND mail_message_id in
-                        (SELECT mail_message_id
-                        FROM mail_message_mail_channel_rel
-                        WHERE mail_channel_id in %s)"""
-                args += [tuple(channel_ids)]
-            query += " RETURNING mail_message_id as id"
-            self._cr.execute(query, args)
-            self.invalidate_cache()
+        msg_domain = [('needaction_partner_ids', 'in', partner_id)]
+        unread_messages = self.search(expression.AND([msg_domain, domain]))
+        ids = unread_messages.ids
+        notifications = self.env['mail.notification'].sudo().search([
+            ('mail_message_id', 'in', ids),
+            ('res_partner_id', '=', partner_id),
+            ('is_read', '=', False)])
+        notifications.write({'is_read': True})
 
-            ids = [m['id'] for m in self._cr.dictfetchall()]
-        else:
-            # not really efficient method: it does one db request for the
-            # search, and one for each message in the result set to remove the
-            # current user from the relation.
-            msg_domain = [('needaction_partner_ids', 'in', partner_id)]
-            if channel_ids:
-                msg_domain += [('channel_ids', 'in', channel_ids)]
-            unread_messages = self.search(expression.AND([msg_domain, domain]))
-            notifications = self.env['mail.notification'].sudo().search([
-                ('mail_message_id', 'in', unread_messages.ids),
-                ('res_partner_id', '=', self.env.user.partner_id.id),
-                ('is_read', '=', False)])
-            if delete_mode:
-                notifications.unlink()
-            else:
-                notifications.write({'is_read': True})
-            ids = unread_messages.mapped('id')
-
-        notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
+        notification = {'type': 'mark_as_read', 'message_ids': ids}
+        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids
 
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id
-        delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
 
         notifications = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
@@ -264,10 +239,7 @@ class Message(models.Model):
         current_group = [record.id]
         current_channel_ids = record.channel_ids
 
-        if delete_mode:
-            notifications.unlink()
-        else:
-            notifications.write({'is_read': True})
+        notifications.write({'is_read': True})
 
         for (msg_ids, channel_ids) in groups:
             notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
@@ -501,20 +473,27 @@ class Message(models.Model):
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
 
         # fetch notification status
-        notif_dict = {}
-        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('res_partner_id', '!=', False), ('is_read', '=', False)])
+
+        notif_dict = defaultdict(lambda: defaultdict(list))
+        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('res_partner_id', '!=', False)])
+
         for notif in notifs:
             mid = notif.mail_message_id.id
-            if not notif_dict.get(mid):
-                notif_dict[mid] = {'partner_id': list()}
-            notif_dict[mid]['partner_id'].append(notif.res_partner_id.id)
+            if notif.is_read:
+                notif_dict[mid]['history_partner_ids'].append(notif.res_partner_id.id)
+            else:
+                notif_dict[mid]['needaction_partner_ids'].append(notif.res_partner_id.id)
 
         for message in message_values:
-            message['needaction_partner_ids'] = notif_dict.get(message['id'], dict()).get('partner_id', [])
-            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id
-            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id
+            message.update({
+                'needaction_partner_ids': notif_dict[message['id']]['needaction_partner_ids'],
+                'history_partner_ids': notif_dict[message['id']]['history_partner_ids'],
+                'is_note': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == note_id,
+                'is_discussion': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == com_id,
+                'subtype_description': message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
+            })
             message['is_notification'] = message['message_type'] == 'user_notification'
-            message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
+
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
         return message_values

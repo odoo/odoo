@@ -319,12 +319,14 @@ MailManager.include({
      */
     _handlePartnerMarkAsReadNotification: function (data) {
         var self = this;
+        var history = this.getMailbox('history');
         _.each(data.message_ids, function (messageID) {
             var message = _.find(self._messages, function (msg) {
                 return msg.getID() === messageID;
             });
             if (message) {
                 self._removeMessageFromThread('mailbox_inbox', message);
+                history.addMessage(message);
                 self._mailBus.trigger('update_message', message, data.type);
             }
         });
