@@ -417,7 +417,7 @@ var KanbanController = BasicController.extend({
         var data = this.model.get(this.handle, {raw: true});
         if (config.device.isMobile && data.groupedBy.length && this.renderer.getScrollPosition) {
             ev.stopPropagation();
-            return this.renderer.getScrollPosition();
+            ev.data.callback(this.renderer.getScrollPosition());
         }
     },
 });
