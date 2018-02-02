@@ -15,8 +15,8 @@ class Notification(models.Model):
         'mail.message', 'Message', index=True, ondelete='cascade', required=True)
     res_partner_id = fields.Many2one(
         'res.partner', 'Needaction Recipient', index=True, ondelete='cascade', required=True)
-    is_read = fields.Boolean('Is Read', index=True)
     is_email = fields.Boolean('Sent by Email', index=True)
+    active = fields.Boolean('Active', help="Set active false for those who are not share group users.", index=True, default=True)
     email_status = fields.Selection([
         ('ready', 'Ready to Send'),
         ('sent', 'Sent'),
@@ -37,11 +37,12 @@ class Notification(models.Model):
             ], string='Failure type')
     failure_reason = fields.Text('Failure reason', copy=False)
 
-    @api.model_cr
     def init(self):
-        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_res_partner_id_is_read_email_status_mail_message_id',))
+        self._cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_res_partner_id_active_email_status_mail_message_id',))
         if not self._cr.fetchone():
-            self._cr.execute('CREATE INDEX mail_notification_res_partner_id_is_read_email_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, is_read, email_status, mail_message_id)')
+            self._cr.execute('CREATE INDEX mail_notification_res_partner_id_active_email_status_mail_message_id ON mail_message_res_partner_needaction_rel (res_partner_id, active, email_status, mail_message_id)')
+        # default=True not working on relation table so set default True
+        self._cr.execute('ALTER TABLE ONLY mail_message_res_partner_needaction_rel  ALTER COLUMN active set default true')
 
     @api.multi
     def format_failure_reason(self):

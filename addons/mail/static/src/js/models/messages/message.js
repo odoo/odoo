@@ -28,6 +28,8 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * @param {string} [data.customer_email_status]
      * @param {string} [data.email_from]
      * @param {string} [data.info]
+     * @param {boolean} [data.history] if set, the message should be put in
+     *   the 'History' mailbox.
      * @param {string} [data.model]
      * @param {string} [data.moderation_status='accepted']
      * @param {string} [data.module_icon]
@@ -64,7 +66,7 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
         this._moderationStatus = data.moderation_status || 'accepted';
 
         this._processBody(emojis);
-        this._processMailboxes();
+        this._processMailboxes(data);
         this._processModeration();
         this._processDocumentThread();
         this._processTrackingValues();
@@ -643,13 +645,20 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
      * Set the appropriate mailboxes to this message based on server data
      *
      * @private
+     * @param {Object} data data on message that has been fetched from the
+     *   server.
+     * @param {boolean} data.is_needaction if set, the message should be put in
+     *   the 'History' mailbox.
      */
-    _processMailboxes: function () {
-        if (_.contains(this._needactionPartnerIDs, session.partner_id)) {
+    _processMailboxes: function (data) {
+        if (_.contains(this._needactionPartnerIDs, session.partner_id) && !data.is_needaction) {
             this._setNeedaction(true);
         }
         if (_.contains(this._starredPartnerIDs, session.partner_id)) {
             this.setStarred(true);
+        }
+        if (data.is_needaction) {
+            this._setHistory(true);
         }
         if (
             this.originatesFromChannel() &&
@@ -727,6 +736,21 @@ var Message =  AbstractMessage.extend(Mixins.EventDispatcherMixin, ServicesMixin
                     }
                 }
             });
+        }
+    },
+    /**
+     * Set whether the message is history or not.
+     * If it is history, the message is moved to the "History" mailbox.
+     * Note that this function only applies it locally, the server is not aware
+     *
+     * @private
+     * @param {boolean} history if set, the message is history
+     */
+    _setHistory: function (history) {
+        if (history) {
+            this._addThread('mailbox_history');
+        } else {
+            this.removeThread('mailbox_history');
         }
     },
     /**

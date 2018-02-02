@@ -32,7 +32,6 @@ class TestMailRace(common.TransactionCase, mail_common.MockEmails):
         notif.write({
             'mail_id': mail.id,
             'is_email': True,
-            'is_read': True,
             'email_status': 'ready',
         })
         # we need to commit transaction or cr will keep the lock on notif

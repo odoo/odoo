@@ -148,7 +148,6 @@ class Partner(models.Model):
                     notifications.write({
                         'is_email': True,
                         'mail_id': email.id,
-                        'is_read': True,  # handle by email discards Inbox notification
                         'email_status': 'ready',
                     })
 
@@ -200,7 +199,7 @@ class Partner(models.Model):
             self.env.cr.execute("""
                 SELECT count(*) as needaction_count
                 FROM mail_message_res_partner_needaction_rel R
-                WHERE R.res_partner_id = %s AND (R.is_read = false OR R.is_read IS NULL)""", (self.env.user.partner_id.id,))
+                WHERE R.res_partner_id = %s AND (R.active = true)""", (self.env.user.partner_id.id,))
             return self.env.cr.dictfetchall()[0].get('needaction_count')
         _logger.error('Call to needaction_count without partner_id')
         return 0

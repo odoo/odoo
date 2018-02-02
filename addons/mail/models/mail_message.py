@@ -126,6 +126,7 @@ class Message(models.Model):
     #keep notification layout informations to be able to generate mail again
     layout = fields.Char('Layout', copy=False)  # xml id of layout
     add_sign = fields.Boolean(default=True)
+    is_needaction = fields.Boolean(string='Is Needaction', search='_search_is_needaction', compute="_compute_is_needaction")
 
     @api.multi
     def _get_needaction(self):
@@ -133,15 +134,15 @@ class Message(models.Model):
         my_messages = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', self.env.user.partner_id.id),
-            ('is_read', '=', False)]).mapped('mail_message_id')
+            ('active', '=', True)]).mapped('mail_message_id')
         for message in self:
             message.needaction = message in my_messages
 
     @api.model
     def _search_needaction(self, operator, operand):
         if operator == '=' and operand:
-            return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', False)]
-        return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', True)]
+            return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.active', '=', True)]
+        return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.active', '=', False)]
 
     @api.multi
     def _compute_has_error(self):
@@ -171,6 +172,19 @@ class Message(models.Model):
             return [('starred_partner_ids', 'in', [self.env.user.partner_id.id])]
         return [('starred_partner_ids', 'not in', [self.env.user.partner_id.id])]
 
+    @api.model
+    def _search_is_needaction(self, operator, operand):
+        if operator == '=' and operand:
+            return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.active', '=', False)]
+        return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.active', '=', True)]
+
+    @api.multi
+    def _compute_is_needaction(self):
+        for msg in self:
+            notif = msg.with_context(active_test=False).notification_ids.filtered(lambda x: msg.env.user.partner_id == x.res_partner_id)
+            if notif:
+                msg.is_needaction = not notif.active
+
     @api.multi
     def _compute_need_moderation(self):
         for message in self:
@@ -192,45 +206,21 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.model
-    def mark_all_as_read(self, channel_ids=None, domain=None):
-        """ Remove all needactions of the current partner. If channel_ids is
-            given, restrict to messages written in one of those channels. """
+    def mark_all_as_read(self, domain=None):
         partner_id = self.env.user.partner_id.id
-        delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
-        if not domain and delete_mode:
-            query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
-            args = [(partner_id,)]
-            if channel_ids:
-                query += """
-                    AND mail_message_id in
-                        (SELECT mail_message_id
-                        FROM mail_message_mail_channel_rel
-                        WHERE mail_channel_id in %s)"""
-                args += [tuple(channel_ids)]
-            query += " RETURNING mail_message_id as id"
-            self._cr.execute(query, args)
-            self.invalidate_cache()
+        # not really efficient method: it does one db request for the
+        # search, and one for each message in the result set to archive the
+        # current notifications from the relation.
+        msg_domain = [('needaction_partner_ids', 'in', partner_id)]
+        unread_messages = self.search(expression.AND([msg_domain, domain]))
+        notifications = self.env['mail.notification'].sudo().search([
+            ('mail_message_id', 'in', unread_messages.ids),
+            ('res_partner_id', '=', self.env.user.partner_id.id),
+            ('active', '=', True)])
+        notifications.write({'active': False})
+        ids = unread_messages.mapped('id')
 
-            ids = [m['id'] for m in self._cr.dictfetchall()]
-        else:
-            # not really efficient method: it does one db request for the
-            # search, and one for each message in the result set to remove the
-            # current user from the relation.
-            msg_domain = [('needaction_partner_ids', 'in', partner_id)]
-            if channel_ids:
-                msg_domain += [('channel_ids', 'in', channel_ids)]
-            unread_messages = self.search(expression.AND([msg_domain, domain]))
-            notifications = self.env['mail.notification'].sudo().search([
-                ('mail_message_id', 'in', unread_messages.ids),
-                ('res_partner_id', '=', self.env.user.partner_id.id),
-                ('is_read', '=', False)])
-            if delete_mode:
-                notifications.unlink()
-            else:
-                notifications.write({'is_read': True})
-            ids = unread_messages.mapped('id')
-
-        notification = {'type': 'mark_as_read', 'message_ids': ids, 'channel_ids': channel_ids}
+        notification = {'type': 'mark_as_read', 'message_ids': ids}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
         return ids
@@ -239,12 +229,11 @@ class Message(models.Model):
     def set_message_done(self):
         """ Remove the needaction from messages for the current partner. """
         partner_id = self.env.user.partner_id
-        delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
 
         notifications = self.env['mail.notification'].sudo().search([
             ('mail_message_id', 'in', self.ids),
             ('res_partner_id', '=', partner_id.id),
-            ('is_read', '=', False)])
+            ('active', '=', True)])
 
         if not notifications:
             return
@@ -267,10 +256,7 @@ class Message(models.Model):
         current_group = [record.id]
         current_channel_ids = record.channel_ids
 
-        if delete_mode:
-            notifications.unlink()
-        else:
-            notifications.write({'is_read': True})
+        notifications.write({'active': False})
 
         for (msg_ids, channel_ids) in groups:
             notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
@@ -419,7 +405,7 @@ class Message(models.Model):
         return messages._format_mail_failures()
 
     @api.model
-    def message_fetch(self, domain, limit=20, moderated_channel_ids=None):
+    def message_fetch(self, domain, limit=20, moderated_channel_ids=None, **kwargs):
         """ Get a limited amount of formatted messages with provided domain.
             :param domain: the domain to filter messages;
             :param limit: the maximum amount of messages to get;
@@ -442,10 +428,10 @@ class Message(models.Model):
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
             messages = messages.sorted(key='id', reverse=True)[:limit]
-        return messages.message_format()
+        return messages.message_format(**kwargs)
 
     @api.multi
-    def message_format(self):
+    def message_format(self, **kwargs):
         """ Get the message values in the format for web client. Since message values can be broadcasted,
             computed fields MUST NOT BE READ and broadcasted.
             :returns list(dict).
@@ -493,7 +479,7 @@ class Message(models.Model):
             'model', 'res_id', 'record_name',  # document related
             'channel_ids', 'partner_ids',  # recipients
             'starred_partner_ids',  # list of partner ids for whom the message is starred
-            'moderation_status',
+            'moderation_status', 'is_needaction'
         ])
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
@@ -509,7 +495,7 @@ class Message(models.Model):
 
         # fetch notification status
         notif_dict = {}
-        notifs = self.env['mail.notification'].sudo().search([('mail_message_id', 'in', list(mid for mid in message_tree)), ('is_read', '=', False)])
+        notifs = self.env['mail.notification'].sudo().with_context(active_test=kwargs.get('active_test')).search([('mail_message_id', 'in', list(mid for mid in message_tree))])
         for notif in notifs:
             mid = notif.mail_message_id.id
             if not notif_dict.get(mid):
