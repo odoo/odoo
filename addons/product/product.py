@@ -364,12 +364,12 @@ class product_attribute_line(osv.osv):
         # search on a m2o and one on a m2m, probably this will quickly become
         # difficult to compute - check if performance optimization is required
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            new_args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-        else:
-            new_args = args
+            args = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+            return self.name_get(cr, uid, ids, context=context)
         return super(product_attribute_line, self).name_search(
             cr, uid, name=name,
-            args=new_args,
+            args=args,
             operator=operator, context=context, limit=limit)
 
 
