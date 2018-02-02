@@ -64,9 +64,9 @@ class ir_property(osv.osv):
     }
 
     def _update_values(self, cr, uid, ids, values):
-        value = values.pop('value', None)
-        if not value:
+        if 'value' not in values:
             return values
+        value = values.pop('value')
 
         prop = None
         type_ = values.get('type')
@@ -82,7 +82,9 @@ class ir_property(osv.osv):
             raise UserError(_('Invalid type'))
 
         if field == 'value_reference':
-            if isinstance(value, orm.BaseModel):
+            if not value:
+                value = False
+            elif isinstance(value, orm.BaseModel):
                 value = '%s,%d' % (value._name, value.id)
             elif isinstance(value, (int, long)):
                 field_id = values.get('fields_id')
