@@ -357,11 +357,11 @@ class PurchaseOrder(models.Model):
                 picking = self.env['stock.picking'].create(res)
                 moves = order.order_line.filtered(lambda r: r.product_id.type in ['product', 'consu'])._create_stock_moves(picking)
                 move_ids = moves.action_confirm()
+                moves = self.env['stock.move'].browse(move_ids)
                 seq = 0
                 for move in sorted(moves, key=lambda move: move.date_expected):
                     seq += 5
                     move.sequence = seq
-                moves = self.env['stock.move'].browse(move_ids)
                 moves.force_assign()
         return True
 
