@@ -2360,7 +2360,7 @@ exports.Order = Backbone.Model.extend({
         this.assert_editable();
         var newPaymentline = new exports.Paymentline({},{order: this, cashregister:cashregister, pos: this.pos});
         if(cashregister.journal.type !== 'cash' || this.pos.config.iface_precompute_cash){
-            newPaymentline.set_amount( Math.max(this.get_due(),0) );
+            newPaymentline.set_amount( this.get_due() );
         }
         this.paymentlines.add(newPaymentline);
         this.select_paymentline(newPaymentline);
@@ -2524,10 +2524,10 @@ exports.Order = Backbone.Model.extend({
                 }
             }
         }
-        return round_pr(Math.max(0,due), this.pos.currency.rounding);
+        return round_pr(due, this.pos.currency.rounding);
     },
     is_paid: function(){
-        return this.get_due() === 0;
+        return this.get_due() <= 0;
     },
     is_paid_with_cash: function(){
         return !!this.paymentlines.find( function(pl){
