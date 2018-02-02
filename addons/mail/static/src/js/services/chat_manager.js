@@ -1642,7 +1642,7 @@ var ChatManager =  AbstractService.extend({
             web_client.set_title_part("_chat", tabTitle);
         }
 
-        this.sendNotification(web_client, title, content);
+        this.call('bus_service', 'sendNotification', web_client, title, content);
     },
     /**
      * Removes channel
