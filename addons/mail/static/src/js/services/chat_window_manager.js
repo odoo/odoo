@@ -387,8 +387,8 @@ var ChatWindowManager =  AbstractService.extend({
         this.displayState.hiddenSessions = hiddenSessions;
         this.displayState.hiddenUnreadCounter = hiddenUnreadCounter;
 
-        if (this.displayState.$hidden_windows_dropdown) {
-            this.displayState.$hidden_windows_dropdown.remove();
+        if (this.displayState.$hiddenWindowsDropdown) {
+            this.displayState.$hiddenWindowsDropdown.remove();
         }
         if (hiddenSessions.length) {
             this.displayState.$hiddenWindowsDropdown = this._renderHiddenSessionsDropdown();
@@ -487,8 +487,8 @@ var ChatWindowManager =  AbstractService.extend({
                 self.displayState.hiddenUnreadCounter += session.window.unread_msgs;
             }
         });
-        if (self.displayState.$hidden_windows_dropdown) {
-            self.displayState.$hidden_windows_dropdown.html(self.renderHiddenSessionsDropdown().html());
+        if (self.displayState.$hiddenWindowsDropdown) {
+            self.displayState.$hiddenWindowsDropdown.html(self._renderHiddenSessionsDropdown().html());
             self._repositionHiddenSessionsDropdown();
         }
     },
