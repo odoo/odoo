@@ -103,11 +103,14 @@ class ProductAttributeLine(models.Model):
 
     @api.model
     def name_search(self, name='', args=None, operator='ilike', limit=100):
-        # TDE FIXME: currently overriding the domain; however as it includes a
-        # search on a m2o and one on a m2m, probably this will quickly become
-        # difficult to compute - check if performance optimization is required
+        """ Don't call super to avoid having AND and OR on the same field """
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            new_args = ['|', ('value_ids', operator, name)]
-        else:
-            new_args = args
-        return super(ProductAttributeLine, self).name_search(name=name, args=new_args, operator=operator, limit=limit)
+            lines = self.search([
+                '|',
+                ('attribute_id', operator, name),
+                ('value_ids', operator, name),
+            ], limit=limit)
+            return lines.name_get()
+
+        return super(ProductAttributeLine, self).name_search(
+            name=name, args=args, operator=operator, limit=limit)
