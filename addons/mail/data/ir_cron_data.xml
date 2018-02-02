@@ -43,5 +43,17 @@
             <field eval="False" name="doall" />
             <field name="priority">1000</field>
         </record>
+
+        <record id="ir_cron_delete_notification" model="ir.cron">
+            <field name="name">Notification: Delete Notifications older than 6 Month</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="code">model._gc_notifications(max_age_days=180)</field>
+            <field name="state">code</field>
+        </record>
+
     </data>
 </odoo>
