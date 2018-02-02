@@ -7834,6 +7834,43 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('onchange in a one2Many, but not in main record, with non inline view', function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.sequence = {string: 'Sequence', type: 'integer'};
+        this.data.partner.records[0].sequence = 1;
+        this.data.partner.records[1].sequence = 2;
+        this.data.partner.onchanges = {sequence: function () {}};
+
+        this.data.partner_type.fields.partner_ids = {string: "Partner", type: "one2many", relation: 'partner'};
+        this.data.partner_type.records[0].partner_ids = [1,2];
+
+        var form = testUtils.createView({
+            View: FormView,
+            model: 'partner_type',
+            data: this.data,
+            arch: '<form><field name="partner_ids"/></form>',
+            archs: {
+                'partner,false,list': '<tree string="Vendors">' +
+                                            '<field name="sequence" widget="handle"/>' +
+                                            '<field name="display_name"/>' +
+                                      '</tree>',
+            },
+            res_id: 12,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {mode: 'edit'},
+        });
+
+        // swap 2 lines in the one2many
+        testUtils.dragAndDrop(form.$('.ui-sortable-handle:eq(1)'), form.$('tbody tr').first(),
+                                {position: 'top'});
+        assert.verifySteps(['load_views', 'read', 'read', 'onchange', 'onchange']);
+        form.destroy();
+    });
+
     QUnit.module('FieldMany2Many');
 
     QUnit.test('many2many kanban: edition', function (assert) {
