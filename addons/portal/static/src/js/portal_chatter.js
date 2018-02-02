@@ -52,7 +52,8 @@ var PortalChatter = Widget.extend({
                 params: this._messageFetchPrepareParams()
             }), this._loadTemplates()
         ).then(function(result){
-            self.result = result
+            self.result = result;
+            self.options = _.extend(self.options, self.result['options'] || {});
             return result;
         });
     },
@@ -69,7 +70,6 @@ var PortalChatter = Widget.extend({
         this.on("change:pager", this, this._renderPager);
         this.on("change:domain", this, this._onChangeDomain);
         // set options and parameters
-        this.options = _.extend(this.options, this.result['options'] || {});
         this.set('message_count', this.options['message_count']);
         this.set('messages', this.preprocessMessages(this.result['messages']));
         return this._super.apply(this, arguments);
