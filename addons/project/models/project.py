@@ -682,10 +682,16 @@ class Task(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
+        tname = _("task")
+        project_id = self.env.context.get('default_project_id', False)
+        if project_id:
+            name = self.env['project.project'].browse(project_id).label_tasks
+            if name: tname = name.lower()
+
         self = self.with_context(
             empty_list_help_id=self.env.context.get('default_project_id'),
             empty_list_help_model='project.project',
-            empty_list_help_document_name=_("task"),
+            empty_list_help_document_name=tname,
         )
         return super(Task, self).get_empty_list_help(help)
 

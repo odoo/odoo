@@ -332,14 +332,14 @@ class MailThread(models.AbstractModel):
             if nothing_here:
                 return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>%(static_help)s" % {
                     'static_help': help or '',
-                    'dyn_help': _("Add new %(document)s or send an email to: %(email_link)s") % {
+                    'dyn_help': _("Add new %(document)s or send an email to %(email_link)s") % {
                         'document': document_name,
                         'email_link': email_link
                     }
                 }
             return "%(static_help)s<p>%(dyn_help)s</p>" % {
                     'static_help': help or '',
-                    'dyn_help': _("You could also add a new %(document)s by sending an email to: %(email_link)s") %  {
+                    'dyn_help': _("Create a new %(document)s by sending an email to %(email_link)s") %  {
                         'document': document_name,
                         'email_link': email_link,
                     }
