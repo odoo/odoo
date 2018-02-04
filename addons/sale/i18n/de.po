@@ -5,23 +5,23 @@
 # Translators:
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Malte Jansen <work@maltejansen.de>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Wolfgang Taferner, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
-# Andi <flimflam@salasar.de>, 2017
+# Andi, 2017
 # Kontor Consulting <p.becker@kontor.consulting>, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
+# Niki Waibel, 2017
+# Renzo Meister, 2017
 # Gab_Odoo <gab@odoo.com>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
-# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# Dejan Dinic, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
 # Pascal <paesce@gentlemansclub.de>, 2017
 # Mathias Neef <mn@copado.de>, 2017
@@ -35,8 +35,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
 "Last-Translator: DE T1 <e2f8846@yahoo.com>, 2017\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -1294,6 +1294,14 @@ msgid "Is expired"
 msgstr "Ist abgelaufen"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1471,17 +1479,11 @@ msgid "No longer edit orders once confirmed"
 msgstr "Nach Bestätigung Bestellungen nicht mehr bearbeiten"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -2049,6 +2051,7 @@ msgstr "Berichtswesen"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2241,6 +2244,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "Produkte in verschiedenen Mengeneinheiten verkaufen und kaufen"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Verkaufe digitale Produkte - stelle herunterladbare Inhalte im Kundenportal "
+"bereit"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2837,17 +2848,11 @@ msgid "Your Order has been confirmed."
 msgstr "Ihre Bestellung wurde bestätigt."
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale
