@@ -33,13 +33,14 @@
 # Wei "oldrev" Li <liwei@sandwych.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # ShiGang Chen <jjfxb@live.cn>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: ShiGang Chen <jjfxb@live.cn>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -137,6 +138,8 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div><div itemscope itemtype=\"http://schema.org/EmailMessage\"><div itemprop=\"potentialAction\" itemscope itemtype=\"http://schema.org/ViewAction\"><link itemprop=\"target\" href=\"${ctx['button_access']['url']}\"/><link itemprop=\"url\" href=\"${ctx['button_access']['url']}\"/><meta itemprop=\"name\" content=\"View ${ctx['model_name']}\"/></div></div><div summary=\"o_mail_notification\" style=\"padding: 0px; width:600px;\"><table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width: 600px; margin-top: 5px;\"><tbody><tr><td valign=\"center\"><a href=\"${ctx['button_access']['url']}\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\"></a><a href=\"${ctx['button_follow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\"></a><a href=\"${ctx['button_unfollow']['url']}\" style=\"color: #875A7B; text-decoration: none !important;\"></a><a href=\"${action['url']}\" style=\"color: #875A7B; text-decoration:none !important;\"></a></td><td valign=\"center\" align=\"right\"><img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; max-width: 80px; max-height: 40px;\" alt=\"${company.name}\"></td></tr><tr><td colspan=\"2\" style=\"text-align:center;\"><hr width=\"100%\"\n"
+" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:10px 0;\"><p style=\"background-color: #f2dede; padding: 5px; margin-bottom: 16px;\"><strong></strong></p></td></tr></tbody></table></div><div></div><ul><li></li></ul><br/><p style=\"color: #555555;\"><a href=\"${ctx['website_url']}\" style=\"text-decoration:none; color: #875A7B;\"></a><a target=\"_blank\" href=\"https://www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\"></a></p></div>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:674
@@ -259,7 +262,7 @@ msgid ""
 "            You can mention a channel by typing <b>#channel</b>.<br>\n"
 "            You can execute a command by typing <b>/command</b>.<br>\n"
 "            You can insert canned responses in your message by typing <b>:shortcut</b>.<br>"
-msgstr ""
+msgstr "<br><br><b></b><br><b></b><br><b></b><br><b></b><br>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:584
@@ -314,7 +317,7 @@ msgid ""
 "<p><b>Chat with coworkers</b> in real-time using direct "
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
-msgstr ""
+msgstr "<p><b/></p><p><i/></p>"
 
 #. module: mail
 #. openerp-web
@@ -324,7 +327,7 @@ msgid ""
 "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can"
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
-msgstr ""
+msgstr "<p><b/></p><p><i/><i/><i/></p>"
 
 #. module: mail
 #. openerp-web
@@ -334,7 +337,7 @@ msgid ""
 "<p>Channels make it easy to organize information across different topics and"
 " groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, "
 "marketing, product XYZ, after work party, etc).</p>"
-msgstr ""
+msgstr "<p/><p><b/></p>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -363,6 +366,8 @@ msgid ""
 "                                    If you want to use only selected records please uncheck this selection box :\n"
 "                                </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\"/><span "
+"attrs=\"{'invisible': [('use_active_domain', '=', False)]}\"/>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -391,7 +396,7 @@ msgid ""
 "                                </strong><br/>\n"
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
-msgstr ""
+msgstr "<strong/><br/><br/>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_activity_done
@@ -403,7 +408,7 @@ msgstr "<strong> 反馈</strong>"
 msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
