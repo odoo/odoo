@@ -461,7 +461,7 @@ class Task(models.Model):
         return stages.browse(stage_ids)
 
     active = fields.Boolean(default=True)
-    name = fields.Char(string='Task Title', track_visibility='always', required=True, index=True)
+    name = fields.Char(string='Title', track_visibility='always', required=True, index=True)
     description = fields.Html(string='Description')
     priority = fields.Selection([
         ('0', 'Low'),
