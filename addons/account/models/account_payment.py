@@ -276,7 +276,8 @@ class account_payment(models.Model):
             rec['currency_id'] = invoice['currency_id'][0]
             rec['payment_type'] = invoice['type'] in ('out_invoice', 'in_refund') and 'inbound' or 'outbound'
             rec['partner_type'] = MAP_INVOICE_TYPE_PARTNER_TYPE[invoice['type']]
-            rec['partner_id'] = invoice['partner_id'][0]
+            commercial_partner = self.env['res.partner'].browse(invoice['partner_id'][0]).commercial_partner_id
+            rec['partner_id'] = commercial_partner.id
             rec['amount'] = invoice['residual']
         return rec
 
