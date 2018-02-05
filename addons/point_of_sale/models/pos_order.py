@@ -351,6 +351,37 @@ class PosOrder(models.Model):
 
             order.write({'state': 'done', 'account_move': move.id})
 
+        if order.company_id.anglo_saxon_accounting:
+            for product_key in list(grouped_data.keys()):
+                if product_key[0] == "product":
+                    line = grouped_data[product_key][0]
+                    product = self.env['product.product'].browse(line['product_id'])
+                    price_unit = product._get_anglo_saxon_price_unit()
+                    account_analytic = self.env['account.analytic.account'].browse(line.get('analytic_account_id'))
+                    res = self.env['product.product']._anglo_saxon_sale_move_lines(
+                        line['name'], product, product.uom_id, line['quantity'], price_unit,
+                            fiscal_position=order.fiscal_position_id,
+                            account_analytic=account_analytic)
+                    if res:
+                        line1, line2 = res
+                        line1 = self.env['product.product'].line_get_convert(line1, partner_id)
+                        insert_data('counter_part', {
+                            'name': line1['name'],
+                            'account_id': line1['account_id'],
+                            'credit': line1['credit'] or 0.0,
+                            'debit': line1['debit'] or 0.0,
+                            'partner_id': line1['partner_id']
+
+                        })
+
+                        line2 = self.env['product.product'].line_get_convert(line2, partner_id)
+                        insert_data('counter_part', {
+                            'name': line2['name'],
+                            'account_id': line2['account_id'],
+                            'credit': line2['credit'] or 0.0,
+                            'debit': line2['debit'] or 0.0,
+                            'partner_id': line2['partner_id']
+                        })
         all_lines = []
         for group_key, group_data in grouped_data.items():
             for value in group_data:
