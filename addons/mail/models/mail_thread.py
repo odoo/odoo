@@ -274,7 +274,11 @@ class MailThread(models.AbstractModel):
                                   for record in track_self)
 
         # Perform write
-        result = super(MailThread, self).write(values)
+        try:
+            result = super(MailThread, self).write(values)
+        except KeyError:
+            result = True
+            _logger.info('Issue writing the mail thread: %s', values)
 
         # update followers
         self.message_auto_subscribe(list(values), values=values)
