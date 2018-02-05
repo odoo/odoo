@@ -66,7 +66,12 @@ QUnit.module('Chatter', {
                     create_uid: { string: "Assigned to", type: "many2one", relation: 'partner' },
                     display_name: { string: "Display name", type: "char" },
                     date_deadline: { string: "Due Date", type: "date" },
-                    user_id: { string: "Assigned to", type: "many2one", relation: 'partner' },
+                    user_id: { string: "Assigned to", type: "many2one", relation: 'res.users' },
+                    summary: { string: "summary", type: "char"},
+                    note: { string: "note", type: "text"},
+                    res_model_id: { relation: 'ir.model', type:  'many2one'},
+                    res_id: { type: 'integer'},
+                    res_model: { type:'char'},
                     state: {
                         string: 'State',
                         type: 'selection',
@@ -81,6 +86,22 @@ QUnit.module('Chatter', {
                 records: [
                     { id: 1, name: "Type 1" },
                     { id: 2, name: "Type 2" },
+                ],
+            },
+            'ir.model': {
+                fields: {
+                    name: { string: "Name", type: "char" },
+                },
+                records: [
+                    { id: 1, name: "Partner", model:'partner' },
+                ],
+            },
+            'res.users': {
+                fields: {
+                    name: { string: "Name", type: "char" },
+                },
+                records: [
+                    { id: 1, name: "Administrator"},
                 ],
             }
         };
@@ -777,6 +798,69 @@ QUnit.test('form activity widget: schedule next activity', function (assert) {
     form.destroy();
 });
 
+QUnit.test('form activity composer: schedule new activity', function (assert) {
+    assert.expect(6);
+    var self = this;
+    var form = createView({
+        View: FormView,
+        model: 'partner',
+        data: this.data,
+        arch: '<form string="Partners">' +
+                '<sheet>' +
+                    '<field name="foo"/>' +
+                '</sheet>' +
+                '<div class="oe_chatter">' +
+                    '<field name="activity_ids" widget="mail_activity"/>' +
+                '</div>' +
+            '</form>',
+        res_id: 2,
+        mockRPC: function (route, args) {
+            if (args.method === 'create') {
+                assert.step('create');
+                assert.deepEqual(args.args[0], {
+                    activity_type_id: 1,
+                    date_deadline: "2018-02-08",
+                    note: "Schedule new activity",
+                    res_id: 2,
+                    res_model: "partner",
+                    res_model_id: false,
+                    summary: false,
+                    user_id: 1,
+                },"should correctly create activity");
+                return this._super.apply(this, arguments).then(function (activity_id) {
+                    self.data.partner.records[0].activity_ids.push(activity_id);
+                    return activity_id;
+                });
+            } else {
+                return this._super.apply(this, arguments);
+            }
+        },
+        intercepts: {
+            warning: function (event) {
+                assert.step('warning');
+                assert.strictEqual(event.data.title, "Please fill out all required fields",
+                    "should display required field warning.");
+            }
+        }
+    });
+
+    // Schedule an activity
+    form.$('.o_chatter_button_schedule_activity').click();
+    // shoud reaise required field warning
+    form.$('.o_schedule_activity').click();
+
+    form.$('.activity_type_id .o_input').click().autocomplete('widget').find('li:first').click();
+    form.$('.user_id .o_input').click().autocomplete('widget').find('li:first').click();
+    form.$('.date_deadline .o_input').val('02/08/2018').trigger('input').trigger('change');
+    form.$('.o_activity_textarea_container .o_input').val('Schedule new activity').trigger('input');
+    form.$('.o_schedule_activity').click();
+    assert.verifySteps(['warning', 'create']);
+
+    assert.strictEqual(form.$('.o_mail_activity .o_thread_message_note').text().trim(), 'Schedule new activity',
+        'form should have newly created activity.');
+    form.destroy();
+});
+
 QUnit.test('form activity widget: schedule activity does not discard changes', function (assert) {
     assert.expect(1);
 
@@ -814,7 +898,7 @@ QUnit.test('form activity widget: schedule activity does not discard changes', f
     // update value of foo field
     form.$('.o_field_widget[name=foo]').val('new value').trigger('input');
 
-    // schedule an activity (this triggers a do_action)
+    // schedule an activity
     form.$('.o_chatter_button_schedule_activity').click();
 
     // save the record
