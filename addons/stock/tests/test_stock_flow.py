@@ -418,7 +418,7 @@ class TestStockFlow(TestStockCommon):
         # Back order of Outgoing shipment
         # ----------------------------------------------------------------------
 
-        back_order_out.do_transfer()
+        back_order_out.action_done()
 
         # Check stock location quants and available quantity for product A.
         quants = self.StockQuantObj.search([('product_id', '=', self.productA.id), ('location_id', '=', self.stock_location)])

@@ -77,7 +77,7 @@ class TestPackingNeg(TransactionCase):
         })
 
         # Transfer the receipt
-        pick_neg.do_transfer()
+        pick_neg.action_done()
 
         # Make a delivery order of 300 pieces to the customer
         default_get_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
@@ -119,7 +119,7 @@ class TestPackingNeg(TransactionCase):
                 rec.result_package_id = False
 
         # Process this picking
-        delivery_order_neg.do_transfer()
+        delivery_order_neg.action_done()
 
         # Check the quants that you have -20 pieces pallet 2 in stock, and a total quantity
         # of 50 in stock from pallet 3 (should be 20+30, as it has been split by reservation)
@@ -161,7 +161,7 @@ class TestPackingNeg(TransactionCase):
             ('name', '=', 'Lot neg')], limit=1)
         pack = self.env["stock.quant.package"].search([('name', '=', 'Palneg 2')], limit=1)
         delivery_reconcile.move_line_ids[0].write({'lot_id': lot.id, 'qty_done': 20.0, 'result_package_id': pack.id})
-        delivery_reconcile.do_transfer()
+        delivery_reconcile.action_done()
 
         # Check the negative quant was reconciled
         neg_quants = self.env['stock.quant'].search([

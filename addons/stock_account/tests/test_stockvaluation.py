@@ -1126,7 +1126,7 @@ class TestStockValuation(TransactionCase):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 1.0
-        return_pick.do_transfer()
+        return_pick.action_done()
 
         self.assertEqual(self.product1.standard_price, 16)
 
@@ -1840,7 +1840,7 @@ class TestStockValuation(TransactionCase):
         # Add a new move line to receive 10 more
         # ---------------------------------------------------------------------
         self.assertEqual(len(move1.move_line_ids), 1)
-        self.env['stock.move.line'].with_context(debug=True).create({
+        self.env['stock.move.line'].create({
             'move_id': move1.id,
             'product_id': move1.product_id.id,
             'qty_done': 10,
@@ -2109,7 +2109,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Actually, send 10 in the last move
         # ---------------------------------------------------------------------
-        move2.with_context(debug=True).quantity_done = 10
+        move2.quantity_done = 10
 
         self.assertEqual(move2.value, -100.0)
         self.assertEqual(move2.remaining_qty, 0.0)
@@ -2760,7 +2760,7 @@ class TestStockValuation(TransactionCase):
         # ---------------------------------------------------------------------
         # Change the production valuation to AVCO
         # ---------------------------------------------------------------------
-        self.product1.with_context(debug=True).product_tmpl_id.cost_method = 'standard'
+        self.product1.product_tmpl_id.cost_method = 'standard'
 
         # valuation should stay to ~240
         self.assertAlmostEqual(self.product1.stock_value, 240, delta=0.03)
