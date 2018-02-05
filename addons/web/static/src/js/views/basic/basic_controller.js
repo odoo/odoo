@@ -511,7 +511,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 // TODO this will tell the renderer to rerender the widget that
                 // asked for the discard but will unfortunately lose the click
                 // made on another row if any
-                self._confirmChange(self.handle, [ev.data.fieldName], ev)
+                self._confirmChange(recordID, [ev.data.fieldName], ev)
                     .always(ev.data.onSuccess);
             })
             .fail(ev.data.onFailure);
