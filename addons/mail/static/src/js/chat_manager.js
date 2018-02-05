@@ -750,7 +750,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
                         processed_msgs.push(add_message(msg, {silent: true}));
                     });
                     return _.sortBy(loaded_msgs.concat(processed_msgs), function (msg) {
-                        return msg.id;
+                        return msg.date;
                     });
                 });
         } else {
