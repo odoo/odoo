@@ -64,7 +64,7 @@ class OpeningAccountMoveWizard(models.TransientModel):
             "effect": {
                 'fadeout': 'slow',
                 'img_url': '/web/static/src/img/smile.svg',
-                'message': "Well done! The configuration steps have been done successfully.",
+                'message': _("Well done! The configuration steps have been done successfully."),
                 'type': "rainbow_man"
             }
         }
