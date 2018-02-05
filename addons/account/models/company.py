@@ -40,14 +40,14 @@ class ResCompany(models.Model):
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     overdue_msg = fields.Text(string='Overdue Payments Message', translate=True,
-        default='''Dear Sir/Madam,
+        default=lambda s: _('''Dear Sir/Madam,
 
 Our records indicate that some payments on your account are still due. Please find details below.
 If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.
 If you have any queries regarding your account, Please contact us.
 
 Thank you in advance for your cooperation.
-Best Regards,''')
+Best Regards,'''))
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
 
     #Fields of the setup step for opening move
@@ -180,7 +180,6 @@ Best Regards,''')
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.user.company_id
-        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -271,7 +270,7 @@ Best Regards,''')
             default_journal = self.env['account.journal'].search([('type', '=', 'general'), ('company_id', '=', self.id)], limit=1)
 
             if not default_journal:
-                raise UserError(_("No miscellaneous journal could be found. Please create one before proceeding."))
+                raise UserError(_("Please install a chart of accounts or create a miscellaneous journal before proceeding."))
 
             self.account_opening_move_id = self.env['account.move'].create({
                 'name': _('Opening Journal Entry'),
@@ -298,14 +297,14 @@ Best Regards,''')
         unaffected_earnings_type = self.env.ref("account.data_unaffected_earnings")
         account = self.env['account.account'].search([('company_id', '=', self.id),
                                                       ('user_type_id', '=', unaffected_earnings_type.id)])
-        if not account:
-            account = self.env['account.account'].create({
+        if account:
+            return account[0]
+        return self.env['account.account'].create({
                 'code': '999999',
                 'name': _('Undistributed Profits/Losses'),
                 'user_type_id': unaffected_earnings_type.id,
                 'company_id': self.id,
             })
-        return account
 
     def get_opening_move_differences(self, opening_move_lines):
         currency = self.currency_id

@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo import tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 
 _logger = logging.getLogger(__name__)
@@ -111,13 +111,14 @@ class Employee(models.Model):
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
+        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
+        groups="hr.group_hr_user")
     is_address_home_a_company = fields.Boolean(
         'The employee adress has a company linked',
         compute='_compute_is_address_home_a_company',
     )
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)')
+        'res.country', 'Nationality (Country)', groups="hr.group_hr_user")
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -139,9 +140,9 @@ class Employee(models.Model):
         domain="[('partner_id', '=', address_home_id)]",
         groups="hr.group_hr_user",
         help='Employee bank salary account')
-    permit_no = fields.Char('Work Permit No')
-    visa_no = fields.Char('Visa No')
-    visa_expire = fields.Date('Visa Expire Date')
+    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user")
+    visa_no = fields.Char('Visa No', groups="hr.group_hr_user")
+    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -269,7 +270,11 @@ class Employee(models.Model):
         """Checks that choosen address (res.partner) is not linked to a company.
         """
         for employee in self:
-            employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            try:
+                employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            except AccessError:
+                employee.is_address_home_a_company = False
+
 
 class Department(models.Model):
     _name = "hr.department"

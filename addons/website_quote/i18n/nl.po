@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Cas Vissers <casvissers@brahoo.nl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 msgid ""
 msgstr ""
@@ -98,10 +98,10 @@ msgstr ""
 "        <tbody><tr>\n"
 "            <td style=\"padding:0px 10px 5px 5px;font-size: 14px;\">\n"
 "                <p>Beste ${object.partner_id.name},</p><br/>\n"
-"                <p>Uw order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> is gevalideerd!</p><br/>\n"
+"                <p>Uw order <a href=\"/quote/${object.id}/${object.access_token}\">${object.name}</a> is bevestigd!</p><br/>\n"
 "                \n"
 "                % if object.partner_id.user_ids\n"
-"                <p>You can view your quotes, sales orders and invoices online by going to our <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online Portal</a>.</p><br/>\n"
+"                <p>U kunt uw offertes, verkooporders en facturen online bekijken door te gaan naar onze <a style=\"text-decoration:none; color: #875A7B;\" href=\"/my/home\">Online portal</a>.</p><br/>\n"
 "                % endif\n"
 "\n"
 "                <p>Als u nog vragen heeft, aarzel dan niet om contact met ons op.</p><br/>\n"
@@ -366,7 +366,7 @@ msgstr ""
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
 msgid "<strong>This offer expires in</strong>"
-msgstr "<strong>Dit aanbod vervalt in</strong>"
+msgstr "<strong>Deze offerte vervalt in</strong>"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.so_quotation
@@ -857,7 +857,7 @@ msgid ""
 "                        use this modified template."
 msgstr ""
 "Wanneer een offerte wordt bewerkt in de 'Preview' van een offerte, kunt u\n"
-"de offerte bijwerken voor alleen deze klant. Wanneer u een offerte sjabloon\n"
+"de offerte bijwerken voor alleen deze klant. Wanneer u een offertesjabloon\n"
 "bewerkt (vanuit het Configuratie menu), zullen alle toekomstige offerte \n"
 "het aangepaste sjabloon gebruiken."
 
@@ -1091,7 +1091,7 @@ msgstr "Online betaling"
 #: selection:sale.order,require_payment:0
 #: selection:sale.quote.template,require_payment:0
 msgid "Online Signature"
-msgstr "On,ine handtekening"
+msgstr "Onine handtekening"
 
 #. module: website_quote
 #: model:product.product,quote_description:website_quote.product_product_quote_1
@@ -1296,19 +1296,19 @@ msgstr "Offerte optie"
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_name
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Quotation Template"
-msgstr "Offerte sjabloon"
+msgstr "Offertesjabloon"
 
 #. module: website_quote
 #: model:ir.model,name:website_quote.model_sale_quote_line
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_template_quote_line
 msgid "Quotation Template Lines"
-msgstr "Offerte sjabloon regels"
+msgstr "Offertesjabloon regels"
 
 #. module: website_quote
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_line_quote_id
 #: model:ir.model.fields,field_description:website_quote.field_sale_quote_option_template_id
 msgid "Quotation Template Reference"
-msgstr "Offerte sjabloon referentie"
+msgstr "Offertesjabloon referentie"
 
 #. module: website_quote
 #: model:ir.actions.act_window,name:website_quote.action_sale_quotation_template
@@ -1390,7 +1390,7 @@ msgstr "Verkooporder referentie"
 #: model:ir.ui.view,arch_db:website_quote.sale_order_form_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_form
 msgid "Sales Quotation Template Lines"
-msgstr "Verkoopofferte sjabloonregels"
+msgstr "Verkoop offertesjabloonregels"
 
 #. module: website_quote
 #: model:ir.ui.view,arch_db:website_quote.view_sale_quote_template_search

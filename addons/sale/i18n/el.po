@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Kostas Goutoudis <goutoudis@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # George Tarasidis <george_tarasidis@yahoo.com>, 2017
 # Timos Zacharatos <kokkinopioupiou@hotmail.com>, 2017
 # Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
 "Last-Translator: Costas Pittalis <cpittalis@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -677,7 +677,7 @@ msgstr "Στο κόστος"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
 msgid "Attribute Values"
-msgstr "Αξίες Χαρακτηριστικών"
+msgstr "Τιμές Χαρακτηριστικών"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_attribute_action
@@ -1420,6 +1420,14 @@ msgid "Is expired"
 msgstr "Έχει λήξει"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1604,19 +1612,11 @@ msgid "No longer edit orders once confirmed"
 msgstr "Να μην επεξεργάζονται πλέον παραγγελίες αφού επιβεβαιωθούν"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-"Λάβετε υπόψη ότι μόλις μια προσφορά γίνει παραγγελία, θα μεταφερθεί από τη "
-"λίστα προσφορών στην λίστα των παραγγελιών."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 "Λάβετε υπόψη ότι μόλις μια προσφορά γίνει παραγγελία, θα μεταφερθεί από τη "
 "λίστα προσφορών στην λίστα των παραγγελιών."
@@ -2204,6 +2204,7 @@ msgstr "Αναφορές"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2394,6 +2395,14 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "Πώληση και αγορά προϊόντων σε διαφορετικές μονάδες μέτρησης"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Πούλησε ψηφιακά προϊόντα- πρόσφερε  περιεχόμενο με δυνατότητα λήψης στην "
+"Πύλη των πελάτων"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3018,19 +3027,11 @@ msgid "Your Order has been confirmed."
 msgstr "Η παραγγελία σας έχει επιβεβαιωθεί."
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-"Οι επόμενες ενέργειες σας θα πρέπει να γίνουν αποτελεσματικά: \n"
-"επιβεβαιώστε την Προσφορά σε μια Παραγγελία, μετά δημιουργήστε το Τιμολόγιο και εισπράξτε την Πληρωμή."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "Οι επόμενες ενέργειες σας θα πρέπει να γίνουν αποτελεσματικά: \n"
 "επιβεβαιώστε την Προσφορά σε μια Παραγγελία, μετά δημιουργήστε το Τιμολόγιο και εισπράξτε την Πληρωμή."

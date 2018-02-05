@@ -281,8 +281,10 @@ var RTEWidget = Widget.extend({
         .each(function () {
             var $node = $(this);
 
+            // fallback for firefox iframe display:none see https://github.com/odoo/odoo/pull/22610
+            var computedStyles = window.getComputedStyle(this) || window.parent.getComputedStyle(this);
             // add class to display inline-block for empty t-field
-            if (window.getComputedStyle(this).display === 'inline' && $node.data('oe-type') !== 'image') {
+            if (computedStyles.display === 'inline' && $node.data('oe-type') !== 'image') {
                 $node.addClass('o_is_inline_editable');
             }
         });
@@ -374,10 +376,11 @@ var RTEWidget = Widget.extend({
      * @param {boolean} internal_history
      */
     historyRecordUndo: function ($target, event, internal_history) {
+        $target = $($target);
         var rng = range.create();
         var $editable = $(rng && rng.sc).closest('.o_editable');
         if (!rng || !$editable.length) {
-            $editable = $($target).closest('.o_editable');
+            $editable = $target.closest('.o_editable');
             rng = range.create($target.closest('*')[0],0);
         } else {
             rng = $editable.data('range') || rng;
@@ -650,26 +653,16 @@ var RTEWidget = Widget.extend({
             self.historyRecordUndo($target, 'activate',  true);
         });
 
-        // To Fix Google Chrome Tripleclick Issue, which selects the ending
-        // whitespace characters (so Tripleclicking then typing text will remove
-        // the whole paragraph instead of its content).
-        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
-        if ($.browser.chrome === true && ev.originalEvent.detail === 3) {
-            var currentSelection = range.create();
-            if (currentSelection.sc.parentNode === currentSelection.ec) {
-                _selectSC(currentSelection);
-            } else if (currentSelection.eo === 0) {
-                var $hasNext = $(currentSelection.sc).parent();
-                while (!$hasNext.next().length && !$hasNext.is('body')) {
-                    $hasNext = $hasNext.parent();
-                }
-                if ($hasNext.next()[0] === currentSelection.ec) {
-                    _selectSC(currentSelection);
-                }
-            }
-        }
-        function _selectSC(selection) {
-            range.create(selection.sc, selection.so, selection.sc, selection.sc.length).select();
+        // Browsers select different content from one to another after a
+        // triple click (especially: if triple-clicking on a paragraph on
+        // Chrome, blank characters of the element following the paragraph are
+        // selected too)
+        //
+        // The triple click behavior is reimplemented for all browsers here
+        if (ev.originalEvent.detail === 3) {
+            // Select the whole content inside the deepest DOM element that was
+            // triple-clicked
+            range.create(ev.target, 0, ev.target, ev.target.childNodes.length).select();
         }
     },
 });

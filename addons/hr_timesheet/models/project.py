@@ -59,3 +59,18 @@ class Task(models.Model):
             vals['parent_id'] = context.pop('default_parent_id', None)
         task = super(Task, self.with_context(context)).create(vals)
         return task
+
+    @api.multi
+    def write(self, values):
+        result = super(Task, self).write(values)
+        # reassign project_id on related timesheet lines
+        if 'project_id' in values:
+            project_id = values.get('project_id')
+            # a timesheet must have an analytic account (and a project)
+            if self and not project_id:
+                raise UserError(_('This task must have a project since they are linked to timesheets.'))
+            self.sudo().mapped('timesheet_ids').write({
+                'project_id': project_id,
+                'account_id': self.env['project.project'].browse(project_id).sudo().analytic_account_id.id
+            })
+        return result

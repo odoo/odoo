@@ -264,8 +264,19 @@
         </t>
         <li><a href="#" data-action="fvg">Fields View Get</a></li>
         <t t-if="can_edit">
-            <li><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.type)"/>View</a></li>
-            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.fields_view.view_id">Edit SearchView</a></li>
+            <li>
+              <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">
+                <t t-if="view.type == 'form'">Edit Form view</t>
+                <t t-elif="view.type == 'list'">Edit List view</t>
+                <t t-elif="view.type == 'kanban'">Edit Kanban view</t>
+                <t t-elif="view.type == 'graph'">Edit Graph view</t>
+                <t t-elif="view.type == 'gantt'">Edit Gantt view</t>
+                <t t-elif="view.type == 'pivot'">Edit Pivot view</t>
+                <t t-elif="view.type == 'calendar'">Edit Calendar view</t>
+                <t t-else="1">Edit view, type: <t t-esc="_.str.capitalize(view.type)"/></t>
+              </a>
+            </li>
+            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.fields_view.view_id">Edit Search view</a></li>
         </t>
     </t>
 </t>
@@ -824,7 +835,7 @@
     <t t-foreach="elements" t-as="el">
         <t t-set="color" t-value="el[colorField] || 0"/>
         <span t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
-            <span class="o_badge_text"><t t-raw="el.display_name"/></span>
+            <span class="o_badge_text"><t t-esc="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
     </t>

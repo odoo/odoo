@@ -24,6 +24,22 @@ var utils = {
         }
     },
     /**
+     * Check if the value is a bin_size or not.
+     * If not, compute an approximate size out of the base64 encoded string.
+     *
+     * @param  {string} value original format
+     * @return {string} bin_size (human-readable)
+     */
+    binaryToBinsize: function (value) {
+        if (!this.is_bin_size(value)) {
+            // Computing approximate size out of base64 encoded string
+            // http://en.wikipedia.org/wiki/Base64#MIME
+            return this.human_size(value.length / 1.37);
+        }
+        // already bin_size
+        return value;
+    },
+    /**
      * Confines a value inside an interval
      *
      * @param {number} [val] the value to confine
@@ -132,7 +148,7 @@ var utils = {
             size /= 1024;
             ++i;
         }
-        return size.toFixed(2) + ' ' + units[i];
+        return size.toFixed(2) + ' ' + units[i].trim();
     },
     /**
      * Insert "thousands" separators in the provided number (which is actually

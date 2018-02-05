@@ -4,9 +4,10 @@
 # 
 # Translators:
 # liAnGjiA <liangjia@qq.com>, 2017
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
 # Xu Lei <xulei8@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 msgid ""
@@ -78,13 +79,13 @@ msgstr "创建时间"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_dayofweek
 msgid "Day of Week"
-msgstr "星期"
+msgstr "周"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
 msgid "Default Working Hours"
-msgstr ""
+msgstr "默认工作时间"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
@@ -139,19 +140,19 @@ msgstr "周五"
 #: code:addons/resource/models/resource.py:74
 #, python-format
 msgid "Friday Evening"
-msgstr ""
+msgstr "周五晚上"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:73
 #, python-format
 msgid "Friday Morning"
-msgstr ""
+msgstr "周五上午"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Global Leaves"
-msgstr ""
+msgstr "全局离开"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
@@ -258,13 +259,13 @@ msgstr "周一"
 #: code:addons/resource/models/resource.py:66
 #, python-format
 msgid "Monday Evening"
-msgstr ""
+msgstr "周一晚上"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:65
 #, python-format
 msgid "Monday Morning"
-msgstr ""
+msgstr "周一上午"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
@@ -320,7 +321,7 @@ msgstr "资源休假"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
 msgid "Resource Mixin"
-msgstr ""
+msgstr "资源装饰"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -380,7 +381,7 @@ msgstr "搜索工作时间"
 #: code:addons/resource/models/res_company.py:23
 #, python-format
 msgid "Standard 40 hours/week"
-msgstr ""
+msgstr "标准40小时/周"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -410,13 +411,13 @@ msgstr "周日"
 #. module: resource
 #: model:ir.model,name:resource.model_resource_test
 msgid "Test Resource Model"
-msgstr ""
+msgstr "测试资源模型"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:689
 #, python-format
 msgid "The efficiency factor cannot be equal to 0."
-msgstr ""
+msgstr "效率因子不能等于0。"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
@@ -427,6 +428,8 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"此字段用于计算此工作中心的工作订单的预计工期。 例如，如果一个工作单需要一个小时，效率因子是100％，那么预期的时间将是一个小时。 "
+"如果效率因素是200％，但预计的持续时间将是30分钟。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -437,18 +440,18 @@ msgstr "周四"
 #: code:addons/resource/models/resource.py:72
 #, python-format
 msgid "Thursday Evening"
-msgstr ""
+msgstr "周四晚上"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:71
 #, python-format
 msgid "Thursday Morning"
-msgstr ""
+msgstr "周四上午"
 
 #. module: resource
 #: sql_constraint:resource.resource:0
 msgid "Time efficiency must be strictly positive"
-msgstr ""
+msgstr "时间效率必须严格肯定"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
@@ -460,7 +463,7 @@ msgstr "时区"
 msgid ""
 "Timezone used when encoding the leave. It is used to correctlylocalize leave"
 " hours when computing time intervals."
-msgstr ""
+msgstr "编码离开时使用的时区。 计算时间间隔时用于正确定位休假小时数。"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -471,13 +474,13 @@ msgstr "周二"
 #: code:addons/resource/models/resource.py:68
 #, python-format
 msgid "Tuesday Evening"
-msgstr ""
+msgstr "周二晚上"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:67
 #, python-format
 msgid "Tuesday Morning"
-msgstr ""
+msgstr "周二上午"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -504,13 +507,13 @@ msgstr "周三"
 #: code:addons/resource/models/resource.py:70
 #, python-format
 msgid "Wednesday Evening"
-msgstr ""
+msgstr "周三晚上"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:69
 #, python-format
 msgid "Wednesday Morning"
-msgstr ""
+msgstr "周三上午"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
@@ -520,7 +523,7 @@ msgstr "工作详情"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Work Resources"
-msgstr ""
+msgstr "工作资源"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -547,7 +550,7 @@ msgstr "工作时间"
 #: code:addons/resource/models/resource.py:60
 #, python-format
 msgid "Working Hours of %s"
-msgstr ""
+msgstr "%s的工作时间"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search

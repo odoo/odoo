@@ -3,15 +3,16 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
-# Michael Yeung <michael@deluxe.hk>, 2017
+# Martin Trigaux, 2017
+# Michael Yeung, 2017
+# Cécile Collart <cco@odoo.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Michael Yeung <michael@deluxe.hk>, 2017\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,17 +29,22 @@ msgid ""
 " * The 'Paid' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled.\n"
 " * The 'Cancelled' status is used when user cancel invoice."
 msgstr ""
+"*“草稿”狀態用於編輯新的和未審核發票，\n"
+"*“形式發票”狀態用於發票號碼的發票，\n"
+"*“開啟中”狀態用於創建發票，並生成了發票號，它將保持開啟狀態，直到用戶付款，\n"
+"*“已付款”狀態用於發票已付款之後自動變為已付款。相關的日記賬分錄可以或不可被調節，\n"
+"*“取消”狀態用於取消的發票。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_code_digits
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_code_digits
 msgid "# of Digits"
-msgstr ""
+msgstr "#數字"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings_code_digits
 msgid "# of Digits *"
-msgstr ""
+msgstr "#數字*"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report_nbr
@@ -48,12 +54,12 @@ msgstr "項目數量"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_reconcile_trans_nbr
 msgid "# of Transaction"
-msgstr ""
+msgstr "#交易"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -64,7 +70,7 @@ msgstr "${object.company_id.name|safe} 發票 (參考 ${object.number or 'n/a'})
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} 付款收據 (編號 ${object.name or 'n/a' })"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_notification_email_account_invoice
@@ -75,13 +81,13 @@ msgstr "${object.subject}"
 #: code:addons/account/models/account_bank_statement.py:462
 #, python-format
 msgid "%d transactions were automatically reconciled."
-msgstr ""
+msgstr "%d交易已自動調節。"
 
 #. module: account
 #: code:addons/account/models/account.py:794
 #, python-format
 msgid "%s (Copy)"
-msgstr ""
+msgstr "%s (副本)"
 
 #. module: account
 #: code:addons/account/models/account.py:211
@@ -100,27 +106,27 @@ msgstr "&amp;nbsp;"
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;<span>on</span>"
-msgstr ""
+msgstr "&amp;nbsp;<span>在</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ", if accounting or purchase is installed"
-msgstr ""
+msgstr ", 會計或採購模塊是否已安裝"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.invoice_supplier_form
 msgid "- First Number:"
-msgstr ""
+msgstr "-第一個號碼："
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "-> Reconcile"
-msgstr ""
+msgstr "-> 調節"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr ""
+msgstr "-> 查看部分調節的分錄"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:463
@@ -131,17 +137,17 @@ msgstr "1筆交易已自動對賬"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
 msgid "15 Days"
-msgstr ""
+msgstr "15天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "30天"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
 msgid "30% Advance End of Following Month"
-msgstr ""
+msgstr "次月月底預付30%"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -332,6 +338,8 @@ msgid ""
 "<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
 "class=\"hidden-xs\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> 等待支付</span></span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.partner_view_buttons
@@ -377,6 +385,11 @@ msgid ""
 "                                        <span class=\"small\">&lt; 200 contacts</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> 手動創建</strong><br/>\n"
+"                                        <span class=\"small\">&lt; 小於200個聯繫人</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -387,6 +400,11 @@ msgid ""
 "                                        <span class=\"small\">Recommended if &lt;100 products</span>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <span class=\"fa\" data-icon=\"\"/>\n"
+"                                        <strong> 手動創建</strong><br/>\n"
+"                                        <span class=\"small\">推薦，如果&lt;100 個產品</span>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -395,6 +413,9 @@ msgid ""
 "                                        <strong>Accountant</strong> (Advanced access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>主管</strong> (高級訪問)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -403,6 +424,9 @@ msgid ""
 "                                        <strong>Advisor</strong> (Full access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>經理</strong> (完全訪問)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -411,6 +435,9 @@ msgid ""
 "                                        <strong>Billing</strong> (Limited access)\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>專員</strong> (限制訪問)\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -419,6 +446,9 @@ msgid ""
 "                                        <strong>Customer follow-up</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>客戶催款</strong>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -438,6 +468,9 @@ msgid ""
 "                                        <strong>Invoice payment by Wire Transfer</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>通過電匯付款</strong>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -468,11 +501,14 @@ msgid ""
 "                                        <strong>Record your Bills</strong>\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"panel-title\">\n"
+"                                        <strong>記錄帳單</strong>\n"
+"                                    </span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in Odoo\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in Odoo\">總賬中的餘額</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -517,7 +553,7 @@ msgstr "<span>未到期</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Operations</span>"
-msgstr ""
+msgstr "<span>操作</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -527,7 +563,7 @@ msgstr "<span>沖帳</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>報表</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -537,7 +573,7 @@ msgstr "<span>檢視</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>-The Odoo Team</strong>"
-msgstr ""
+msgstr "<strong>-Odoo團隊</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -596,29 +632,31 @@ msgid ""
 "<strong>Check unpaid invoices</strong><br/>\n"
 "                                         Run an <i>Aged Receivable report</i> and check which customers still owe you money."
 msgstr ""
+"<strong>查看未付款發票</strong><br/>\n"
+"                                         運行 <i>到期的應收賬款報表</i> 查看哪些客戶欠錢."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Clean customer invoices:</strong> easy to create, beautiful and full"
 " featured invoices."
-msgstr ""
+msgstr "<strong>客戶發票:</strong> 方便創建，美觀功能齊全的發票。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 msgid "<strong>Company:</strong>"
-msgstr ""
+msgstr "<strong>公司:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr ""
+msgstr "<strong>合同和訂閱</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Create a Customer Invoice</strong>"
-msgstr ""
+msgstr "<strong>創建一張客戶發票</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -626,29 +664,31 @@ msgid ""
 "<strong>Create a Deposit Ticket</strong><br/>\n"
 "                                        This allows you to record the different payments that constitute your bank deposit. (You may need to"
 msgstr ""
+"<strong>創建存款單</strong><br/>\n"
+"                                        允許你記錄多筆不同的付款構成的存款。 (你可能需要"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>Create the bill in Odoo</strong><br/> with a proper due date, and "
 "create the vendor if it doesnt' exist yet."
-msgstr ""
+msgstr "<strong>創建賬單</strong><br/> 有正確的付款日期，如果供應商不存在，則創建。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 msgid "<strong>Customer Address</strong>"
-msgstr ""
+msgstr "<strong>客戶地址</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
-msgstr ""
+msgstr "<strong>客戶代碼:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Customer: </strong>"
-msgstr ""
+msgstr "<strong>客戶: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -656,7 +696,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date from :</strong>"
-msgstr ""
+msgstr "<strong>起始日期 :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_financial
@@ -664,70 +704,70 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.report_partnerledger
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Date to :</strong>"
-msgstr ""
+msgstr "<strong>結束日期 :</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Deposit Tickets</strong>"
-msgstr ""
+msgstr "<strong>存款單</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Description:</strong>"
-msgstr ""
+msgstr "<strong>說明:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_trialbalance
 msgid "<strong>Display Account:</strong>"
-msgstr ""
+msgstr "<strong>顯示科目:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Display Account</strong>"
-msgstr ""
+msgstr "<strong>顯示科目</strong> "
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
-msgstr ""
+msgstr "<strong>付款日期:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Entries Sorted By:</strong>"
-msgstr ""
+msgstr "<strong>分錄排序:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Expenses</strong>"
-msgstr ""
+msgstr "<strong>費用</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.setup_financial_year_opening_form
 msgid "<strong>Fiscal Year End</strong>"
-msgstr ""
+msgstr "<strong>會計年度期末</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_tax
 msgid "<strong>From</strong>"
-msgstr ""
+msgstr "<strong>從</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Invoice Date:</strong>"
-msgstr ""
+msgstr "<strong>發票日期:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
-msgstr ""
+msgstr "<strong>日記賬:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_generalledger
 msgid "<strong>Journals:</strong>"
-msgstr ""
+msgstr "<strong>日記賬:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -735,23 +775,25 @@ msgid ""
 "<strong>Mark the bills to pay</strong><br/>\n"
 "                                        Group or filter your bills to see those due in the next week, then open each bill individually, click on <strong>'Pay'</strong> and select the payment method you prefer."
 msgstr ""
+"<strong>標記賬單為待付款</strong><br/>\n"
+"                                       分組或篩選出下週要到期的賬單，然後打開每張賬單，點擊 <strong>'付款'</strong> 並選擇付款方式。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
 msgid "<strong>Memo: </strong>"
-msgstr ""
+msgstr "<strong>評論: </strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Next action:</strong><br/>"
-msgstr ""
+msgstr "<strong>下一動作:</strong><br/>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid ""
 "<strong>On-the-fly payment reconciliation:</strong> automatic suggestions of"
 " outstanding payments when creating invoices."
-msgstr ""
+msgstr "<strong>飛速付款調節:</strong> 創建發票時自動生成欠款付款。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -759,11 +801,13 @@ msgid ""
 "<strong>Or generate payment orders</strong><br/>\n"
 "                                        Create a Payment Order and select the bills you'd like to pay as Entry lines (only the validated bills will appear)."
 msgstr ""
+"<strong>或生成付款單</strong><br/>\n"
+"                                        創建一張付款單，選擇需要付款的賬單作為明細(只會顯示已審核的賬單)。"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_agedpartnerbalance
 msgid "<strong>Partner's:</strong>"
-msgstr ""
+msgstr "<strong>合作夥伴:</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_payment_receipt
@@ -1096,11 +1140,6 @@ msgid "Account"
 msgstr ""
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr ""
@@ -1425,6 +1464,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr ""
@@ -1781,7 +1821,6 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -3800,6 +3839,20 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr "親愛的先生/小姐"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -5854,6 +5907,13 @@ msgid "Journals"
 msgstr ""
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
+
+#. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "July"
 msgstr ""
@@ -7654,6 +7714,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr ""
@@ -8392,13 +8460,6 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
 msgstr ""
 
 #. module: account
@@ -9296,8 +9357,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
 
@@ -10128,6 +10189,7 @@ msgid "Total"
 msgstr "總計"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr ""
@@ -10318,20 +10380,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr ""

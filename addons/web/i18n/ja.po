@@ -3,7 +3,7 @@
 # * web
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
@@ -11,13 +11,14 @@
 # 髙木雄介 <yuusuke.takagi@pro-spire.co.jp>, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 # Manami Hashi <manami@roomsfor.hk>, 2017
+# Tim Siu Lai <tl@roomsfor.hk>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
-"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
+"POT-Creation-Date: 2018-01-09 10:16+0000\n"
+"PO-Revision-Date: 2018-01-09 10:16+0000\n"
+"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,7 +307,7 @@ msgstr "有効化"
 #: code:addons/web/static/src/xml/base.xml:231
 #, python-format
 msgid "Activate Assets Debugging"
-msgstr "資産のデバッグを有効にします"
+msgstr "アセットのデバッグを有効化"
 
 #. module: web
 #. openerp-web
@@ -519,24 +520,31 @@ msgstr "このレコードを削除しますか？"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:332
+#: code:addons/web/static/src/xml/base.xml:343
 #, python-format
 msgid "Attachment :"
 msgstr "添付:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1181
+#: code:addons/web/static/src/xml/base.xml:1195
 #, python-format
 msgid "Available fields"
 msgstr "利用可能な項目"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:510
+#: code:addons/web/static/src/xml/base.xml:521
 #, python-format
 msgid "Bar Chart"
 msgstr "バーチャート"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:1311
+#, python-format
+msgid "Binary File"
+msgstr ""
 
 #. module: web
 #: code:addons/web/controllers/main.py:1474
@@ -572,7 +580,7 @@ msgstr "ボタンタイプ:"
 #: code:addons/web/static/src/js/core/utils.js:129
 #, python-format
 msgid "Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
-msgstr "バイト、キロバイト、メガバイト、ギガバイト、テラバイト、ペタバイト、エクサバイト、ゼッタバイト、ヨッタバイト"
+msgstr "バイト,キロバイト,メガバイト,ギガバイト,テラバイト,ペタバイト,エクサバイト,ゼッタバイト,ヨッタバイト"
 
 #. module: web
 #. openerp-web
@@ -823,7 +831,7 @@ msgstr "作成者:"
 #: code:addons/web/static/src/xml/base.xml:291
 #, python-format
 msgid "Creation Date:"
-msgstr "日付の作成："
+msgstr "作成日:"
 
 #. module: web
 #. openerp-web
@@ -954,14 +962,21 @@ msgstr "しばしご辛抱を。<br />引き続き読込中です..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:539
+#: code:addons/web/static/src/js/fields/basic_fields.js:1316
+#, python-format
+msgid "Download"
+msgstr "ダウンロード"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:550
 #, python-format
 msgid "Download xls"
 msgstr "xlsダウンロード"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form/form_controller.js:161
+#: code:addons/web/static/src/js/views/form/form_controller.js:162
 #, python-format
 msgid "Duplicate"
 msgstr "複製"
@@ -988,6 +1003,13 @@ msgstr "アクションの編集"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:275
+#, python-format
+msgid "Edit Calendar view"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:287
 #, python-format
 msgid "Edit Column"
@@ -995,17 +1017,59 @@ msgstr "カラム編集"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:603
+#: code:addons/web/static/src/xml/base.xml:614
 #, python-format
 msgid "Edit Domain"
+msgstr "ドメインを編集"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:269
+#, python-format
+msgid "Edit Form view"
 msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:268
+#: code:addons/web/static/src/xml/base.xml:273
 #, python-format
-msgid "Edit SearchView"
-msgstr "検索ビューの編集"
+msgid "Edit Gantt view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:272
+#, python-format
+msgid "Edit Graph view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:271
+#, python-format
+msgid "Edit Kanban view"
+msgstr "かんばんビューを編集"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:270
+#, python-format
+msgid "Edit List view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:274
+#, python-format
+msgid "Edit Pivot view"
+msgstr "ピボットビューを編集"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:279
+#, python-format
+msgid "Edit Search view"
+msgstr "検索ビューを編集"
 
 #. module: web
 #. openerp-web
@@ -1013,6 +1077,13 @@ msgstr "検索ビューの編集"
 #, python-format
 msgid "Edit Stage"
 msgstr "ステージ編集"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:276
+#, python-format
+msgid "Edit view, type:"
+msgstr ""
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
@@ -1241,7 +1312,7 @@ msgstr "フォーム"
 #: code:addons/web/static/src/xml/base.xml:1339
 #, python-format
 msgid "Get this feature and much more with Odoo Enterprise!"
-msgstr "OdooEnterprise Edition でさらに多くの機能を利用できます！"
+msgstr "Odooエンタープライズ版では、この機能やその他多数の機能がご利用いただけます。"
 
 #. module: web
 #. openerp-web
@@ -1289,7 +1360,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:275
 #, python-format
 msgid "ID:"
-msgstr "ID："
+msgstr "ID:"
 
 #. module: web
 #. openerp-web
@@ -1476,7 +1547,7 @@ msgstr "データベース管理"
 #: code:addons/web/static/src/xml/base.xml:240
 #, python-format
 msgid "Manage Filters"
-msgstr "フィルタの管理"
+msgstr "フィルタを管理"
 
 #. module: web
 #. openerp-web
@@ -1497,7 +1568,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:639
 #, python-format
 msgid "Match records with the following rule:"
-msgstr ""
+msgstr "次のルールでレコードを特定:"
 
 #. module: web
 #. openerp-web
@@ -1748,7 +1819,7 @@ msgstr "Odooアプリがそのうち利用できるようになるかもしれ�
 #: code:addons/web/static/src/js/services/crash_manager.js:156
 #, python-format
 msgid "Odoo Client Error"
-msgstr ""
+msgstr "Odooクライアントエラー"
 
 #. module: web
 #. openerp-web
@@ -1869,7 +1940,7 @@ msgstr "ビューを開く"
 #: code:addons/web/static/src/js/views/form/form_controller.js:498
 #, python-format
 msgid "Open: "
-msgstr "開く:"
+msgstr "オープン:"
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.external_layout_background
@@ -2581,11 +2652,12 @@ msgstr "アーカイブ取消"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_model.js:179
+#: code:addons/web/static/src/js/views/graph/graph_model.js:178
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:73
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:76
-#: code:addons/web/static/src/js/views/list/list_renderer.js:419
+#: code:addons/web/static/src/js/views/kanban/kanban_renderer_mobile.js:145
 #: code:addons/web/static/src/js/views/list/list_renderer.js:422
+#: code:addons/web/static/src/js/views/list/list_renderer.js:425
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:689
 #, python-format
 msgid "Undefined"
@@ -2686,13 +2758,6 @@ msgstr "検証エラー"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:267
-#, python-format
-msgid "View"
-msgstr "ビュー"
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:239
 #, python-format
 msgid "View Fields"
@@ -2757,7 +2822,7 @@ msgstr "週"
 #: code:addons/web/static/src/js/widgets/rainbow_man.js:32
 #, python-format
 msgid "Well Done!"
-msgstr ""
+msgstr "よくできました！"
 
 #. module: web
 #. openerp-web
@@ -3188,7 +3253,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:599
 #, python-format
 msgid "record(s)"
-msgstr ""
+msgstr "レコード"
 
 #. module: web
 #. openerp-web

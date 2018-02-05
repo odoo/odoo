@@ -4,14 +4,14 @@
 # 
 # Translators:
 # Boško Stojaković <bluesoft83@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Bole <bole@dajmi5.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2017\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
@@ -306,7 +306,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Kontakt</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -454,18 +454,18 @@ msgstr "Avans: %s"
 #: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
 #: model:ir.ui.menu,name:sale.report_all_channels_sales
 msgid "All Channels Sales Orders"
-msgstr ""
+msgstr "Prodajne narudžbe sa svih kanala"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
 #: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 msgid "All Channels Sales Orders Analysis"
-msgstr ""
+msgstr "Analiza prodajnih narudžbi sa svih kanala"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
 msgid "All sales orders grouped by sales channels"
-msgstr ""
+msgstr "Sve prodajne narudžbe grupisane po prodajnim kanalima"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -618,7 +618,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Click to define a target"
-msgstr ""
+msgstr "Kliknite da definišete cilj"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -985,7 +985,7 @@ msgstr "Prošireni filteri"
 #: code:addons/sale/models/sale.py:807
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Dodatna stavka sa %s "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -1009,7 +1009,7 @@ msgstr "U potpunosti fakturisano"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Future Activities"
-msgstr ""
+msgstr "Buduće aktivnosti"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1253,6 +1253,14 @@ msgid "Is expired"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1282,7 +1290,7 @@ msgstr "Zadnje ažurirano"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Late Activities"
-msgstr ""
+msgstr "Aktivnosti u kašnjenju"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
@@ -1383,7 +1391,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1430,17 +1438,11 @@ msgid "No longer edit orders once confirmed"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -1623,7 +1625,7 @@ msgstr "Narudžbe"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Narudžbe za fakturisati"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -1806,7 +1808,7 @@ msgstr "Kategorija proizvoda"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_image
 msgid "Product Image"
-msgstr ""
+msgstr "Slika proizvoda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_qty
@@ -1865,7 +1867,7 @@ msgstr "Kol. za fakturisanje"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr ""
+msgstr "Količine za fakturisanje sa prodajne narudžbe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
@@ -2010,6 +2012,7 @@ msgstr "Izvještavanje"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2044,13 +2047,13 @@ msgstr "Analiza prodaje"
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Channel"
-msgstr ""
+msgstr "Prodajni kanal"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.report_sales_team
 #: model:ir.ui.menu,name:sale.sales_team_config
 msgid "Sales Channels"
-msgstr ""
+msgstr "Prodajni kanali"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -2143,7 +2146,7 @@ msgstr ""
 #: code:addons/sale/models/sales_team.py:94
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr ""
+msgstr "Prodaja: ukupno bez PDVa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_user_id
@@ -2200,6 +2203,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
 msgstr ""
 
 #. module: sale
@@ -2297,7 +2306,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Prikaži sve zapise koji imaju datum sljedeće akcije prije danas"
 
 #. module: sale
 #: model:res.groups,comment:sale.group_show_price_total
@@ -2405,12 +2414,12 @@ msgstr "Prikaz PDV-a B2C"
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Excluded Prices"
-msgstr ""
+msgstr "Cijene bez PDV-a"
 
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Included Prices"
-msgstr ""
+msgstr "Cijene s PDV-om"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2519,8 +2528,8 @@ msgstr ""
 #. module: sale
 #: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr "Nema stavki koje se mogu fakturisati."
+msgid "There is no invoiceable line."
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_error
@@ -2769,20 +2778,14 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:229
 #, python-format
 msgid "Your Order has been confirmed."
-msgstr ""
+msgstr "Vaša narudžba je potvrđena."
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale

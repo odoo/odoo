@@ -2,12 +2,16 @@
 # This file contains the translation of the following modules:
 # * event
 # 
+# Translators:
+# Martin Trigaux, 2018
+# matjaz k <matjaz@mentis.si>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: matjaz k <matjaz@mentis.si>, 2018\n"
 "Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -364,6 +368,12 @@ msgid "${object.event_id.name}: ${object.get_date_range_str()}"
 msgstr ""
 
 #. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopija)"
+
+#. module: event
 #: model:event.event,description:event.event_0
 msgid ""
 "1 business room: to discuss implementation methodologies, best sales "
@@ -514,7 +524,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
 msgid "Active"
-msgstr ""
+msgstr "Aktivno"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -691,7 +701,7 @@ msgstr ""
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Preklicano"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
@@ -733,7 +743,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_company_id
 #: model:ir.model.fields,field_description:event.field_event_registration_company_id
 msgid "Company"
-msgstr ""
+msgstr "Družba"
 
 #. module: event
 #: code:addons/event/models/event.py:475
@@ -759,12 +769,12 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Nastavitve"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr ""
+msgstr "Potrdi"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
@@ -785,7 +795,7 @@ msgstr ""
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed"
-msgstr ""
+msgstr "Potrjeno"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -801,12 +811,12 @@ msgstr ""
 #: model:ir.model,name:event.model_res_partner
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
 msgid "Contact"
-msgstr ""
+msgstr "Stik"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
-msgstr ""
+msgstr "Država"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
@@ -817,7 +827,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_create_uid
 #: model:ir.model.fields,field_description:event.field_event_type_mail_create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Ustvaril"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_date
@@ -828,7 +838,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_create_date
 #: model:ir.model.fields,field_description:event.field_event_type_mail_create_date
 msgid "Created on"
-msgstr ""
+msgstr "Ustvarjeno"
 
 #. module: event
 #: code:addons/event/models/event.py:438
@@ -856,7 +866,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: event
 #: model:event.event,description:event.event_3
@@ -1065,7 +1075,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
 
@@ -1146,7 +1156,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_search
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
-msgstr ""
+msgstr "Združi po"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -1168,7 +1178,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail_id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_state
@@ -1232,7 +1242,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type___last_update
 #: model:ir.model.fields,field_description:event.field_event_type_mail___last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Zadnjič spremenjeno"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_write_uid
@@ -1243,7 +1253,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail_write_uid
 #: model:ir.model.fields,field_description:event.field_event_type_write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zadnjič posodobil"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_write_date
@@ -1254,7 +1264,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_type_mail_write_date
 #: model:ir.model.fields,field_description:event.field_event_type_write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zadnjič posodobljeno"
 
 #. module: event
 #: selection:event.event,seats_availability:0
@@ -1628,7 +1638,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Send by Email"
-msgstr ""
+msgstr "Pošlji po e-pošti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_done
@@ -1649,7 +1659,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "Nastavitve"
 
 #. module: event
 #: model:event.type,name:event.event_type_3
@@ -1832,7 +1842,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_interval_unit
 #: model:ir.model.fields,field_description:event.field_event_type_mail_interval_unit
 msgid "Unit"
-msgstr ""
+msgstr "Enota"
 
 #. module: event
 #: selection:event.event,seats_availability:0

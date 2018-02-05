@@ -5,7 +5,7 @@
 # Translators:
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # SHIMIZU Taku <shimizu.taku@gmail.com>, 2017
 # 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
 # Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2017
@@ -165,7 +165,8 @@ msgid ""
 "<span class=\"label label-default text-center odoo_purple\">Process the "
 "products</span>"
 msgstr ""
-"<span class=\"label label-default text-center odoo_purple\">製品を処理する</span>"
+"<span class=\"label label-default text-center "
+"odoo_purple\">プロダクトを処理する</span>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -2752,7 +2753,7 @@ msgstr "今すぐ移動しますか？"
 #. module: stock
 #: selection:res.config.settings,module_procurement_jit:0
 msgid "Immediately after sales order confirmation"
-msgstr "受注確認後即時"
+msgstr "販売オーダ確認後即時"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
@@ -3116,7 +3117,7 @@ msgstr "棚卸対象"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_is_locked
 #: model:ir.model.fields,field_description:stock.field_stock_picking_is_locked
 msgid "Is Locked"
-msgstr ""
+msgstr "ロック済"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_return_location
@@ -4157,7 +4158,7 @@ msgstr "オーダ処理"
 #: model:ir.model.fields,field_description:stock.field_stock_move_line_ordered_qty
 #: model:ir.model.fields,field_description:stock.field_stock_move_ordered_qty
 msgid "Ordered Quantity"
-msgstr "受注数量"
+msgstr "オーダ数量"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_move_search
@@ -4682,7 +4683,7 @@ msgstr ""
 #: code:addons/stock/models/product.py:347
 #, python-format
 msgid "Produced Qty"
-msgstr "製品数量"
+msgstr "プロダクト数量"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -5221,12 +5222,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules"
-msgstr "再発注規則"
+msgstr "再オーダ規則"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rules Search"
-msgstr "再発注規則検索"
+msgstr "再オーダ規則検索"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_warehouse_report
@@ -5476,7 +5477,7 @@ msgstr "廃棄済"
 msgid ""
 "Scrapping a product will remove it from your stock. The product will\n"
 "                end up in a scrap location that can be used for reporting purpose."
-msgstr ""
+msgstr "プロダクト廃棄により在庫が引き落とされます。プロダクトは廃棄ロケーションに移動され、この実績はレポーティングに使用されます。"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_picking_form
@@ -6096,7 +6097,7 @@ msgstr "マニュアル操作 の値は、現在のものの後に在庫移動�
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.inventory_planner
 msgid "The RFQ becomes a Purchase Order and a Transfer Order is created"
-msgstr "RFQが購買発注となり、転送オーダが登録されます。"
+msgstr "RFQが購買オーダとなり、転送オーダが登録されます。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product_sale_delay
@@ -7372,7 +7373,7 @@ msgstr ""
 msgid ""
 "You haven't entered <i>done</i> quantities, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the <i>reserved</i> quantities."
-msgstr ""
+msgstr "<i>完了</i> 数量の指定がありません。<i>適用</i>ボタンを押すと、全<i>引当済</i>数量が処理されます。"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:44

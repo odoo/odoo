@@ -3,14 +3,16 @@
 # * event
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
+# Up Link <linkup.way@gmail.com>, 2018
+# Linda Stockelova <stockeloval@btlnet.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-16 08:08+0000\n"
 "PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Last-Translator: Linda Stockelova <stockeloval@btlnet.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -364,7 +366,13 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
+
+#. module: event
+#: code:addons/event/models/event.py:297
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (사본)"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -517,7 +525,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_active
 msgid "Active"
-msgstr ""
+msgstr "활성화"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -548,7 +556,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Archived"
-msgstr ""
+msgstr "보관완료"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -570,36 +578,36 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Attendance"
-msgstr ""
+msgstr "참석"
 
 #. module: event
 #: selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attended"
-msgstr ""
+msgstr "참석함"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_date_closed
 msgid "Attended Date"
-msgstr ""
+msgstr "참석 날짜"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Attended the Event"
-msgstr ""
+msgstr "일정에 참석함"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_registration_id
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Attendee"
-msgstr ""
+msgstr "참석자"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_name
 #: model:ir.ui.view,arch_db:event.event_event_report_template_badge
 msgid "Attendee Name"
-msgstr ""
+msgstr "참석자 이름"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_registration_from_event
@@ -609,22 +617,22 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.view_event_form
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Attendees"
-msgstr ""
+msgstr "참석자"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "접수 자동승인"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "접수 자동승인"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "자동으로 이메일 전송"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_available
@@ -654,13 +662,13 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings_module_event_barcode
 msgid "Barcode"
-msgstr ""
+msgstr "바코드"
 
 #. module: event
 #: selection:event.mail,interval_type:0
 #: selection:event.type.mail,interval_type:0
 msgid "Before the event"
-msgstr ""
+msgstr "일정 전"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -683,13 +691,13 @@ msgstr "취소"
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Cancel Event"
-msgstr ""
+msgstr "이벤트 취소"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Cancel Registration"
-msgstr ""
+msgstr "등록 취소"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
@@ -699,7 +707,7 @@ msgstr "취소됨"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_type_id
 msgid "Category"
-msgstr ""
+msgstr "분류"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -714,12 +722,12 @@ msgstr ""
 #. module: event
 #: model:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Click to add a new attendee."
-msgstr ""
+msgstr "클릭해서 새로운 멤버를 추가합니다."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
 msgid "Click to add a new event."
-msgstr ""
+msgstr "클릭해서 새로운 이벤트를 추가합니다."
 
 #. module: event
 #: code:addons/event/models/event.py:264
@@ -730,7 +738,7 @@ msgstr ""
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Communication"
-msgstr ""
+msgstr "대화"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_company_id
@@ -742,12 +750,12 @@ msgstr "회사"
 #: code:addons/event/models/event.py:475
 #, python-format
 msgid "Compose Email"
-msgstr ""
+msgstr "메일 작성"
 
 #. module: event
 #: model:event.type,name:event.event_type_2
 msgid "Conference"
-msgstr ""
+msgstr "회의"
 
 #. module: event
 #: model:event.event,name:event.event_2
@@ -762,54 +770,54 @@ msgstr ""
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "환경 설정"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
 msgid "Confirm"
-msgstr ""
+msgstr "확인"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_confirm
 msgid "Confirm Anyway"
-msgstr ""
+msgstr "무조건 확정"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
 msgid "Confirm Event"
-msgstr ""
+msgstr "이벤트 확정"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_tree
 msgid "Confirm Registration"
-msgstr ""
+msgstr "등록 확정"
 
 #. module: event
 #: selection:event.event,state:0 selection:event.registration,state:0
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed"
-msgstr ""
+msgstr "확인됨"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr ""
+msgstr "확인된 참석자"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Confirmed events"
-msgstr ""
+msgstr "확인된 일정"
 
 #. module: event
 #: model:ir.model,name:event.model_res_partner
 #: model:ir.model.fields,field_description:event.field_event_registration_partner_id
 msgid "Contact"
-msgstr ""
+msgstr "연락처"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_country_id
 msgid "Country"
-msgstr ""
+msgstr "국가"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm_create_uid
@@ -843,18 +851,18 @@ msgstr "고객"
 #: code:addons/event/models/event.py:440
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "고객 이메일"
 
 #. module: event
 #: selection:event.mail,interval_unit:0
 #: selection:event.type.mail,interval_unit:0
 msgid "Day(s)"
-msgstr ""
+msgstr "일"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Delete"
-msgstr ""
+msgstr "삭제"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_description
@@ -864,7 +872,7 @@ msgstr "설명"
 #. module: event
 #: model:event.event,description:event.event_3
 msgid "Develop a new module for a particular application."
-msgstr ""
+msgstr "특정 애플리케이션을 위한 신규 모듈 개발."
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -890,7 +898,7 @@ msgstr ""
 #. module: event
 #: selection:event.event,state:0
 msgid "Done"
-msgstr ""
+msgstr "완료"
 
 #. module: event
 #: model:event.event,description:event.event_2
@@ -909,7 +917,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_email
 msgid "Email"
-msgstr ""
+msgstr "이메일"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -921,12 +929,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_mail_template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "이메일 서식"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end
 msgid "End Date"
-msgstr ""
+msgstr "종료일"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_end_located
@@ -940,7 +948,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:event.event_event_view_pivot
 #: model:ir.ui.view,arch_db:event.view_registration_search
 msgid "Event"
-msgstr ""
+msgstr "일정"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail
@@ -1068,7 +1076,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
 msgid ""
-"Events and registrations will automatically be confirmedupon creation, "
+"Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
 
@@ -1273,7 +1281,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_address_id
 #: model:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr ""
+msgstr "위치"
 
 #. module: event
 #: model:event.event,description:event.event_0
@@ -1327,7 +1335,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Manager"
-msgstr ""
+msgstr "관리자"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_availability
@@ -1489,7 +1497,7 @@ msgstr "파트너"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_phone
 msgid "Phone"
-msgstr ""
+msgstr "전화"
 
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
@@ -1591,7 +1599,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_user_id
 #: model:ir.ui.view,arch_db:event.view_event_search
 msgid "Responsible"
-msgstr ""
+msgstr "담당자"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1652,12 +1660,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr ""
+msgstr "설정"
 
 #. module: event
 #: model:event.type,name:event.event_type_3
 msgid "Show"
-msgstr ""
+msgstr "보기"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_origin
@@ -1667,7 +1675,7 @@ msgstr "자재 문서"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin
 msgid "Start Date"
-msgstr ""
+msgstr "시작일"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_date_begin_located
@@ -1871,7 +1879,7 @@ msgstr ""
 #. module: event
 #: model:res.groups,name:event.group_event_user
 msgid "User"
-msgstr ""
+msgstr "사용자"
 
 #. module: event
 #: model:event.event,description:event.event_1
@@ -2010,7 +2018,7 @@ msgstr ""
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: event
 #: code:addons/event/models/event.py:493

@@ -73,8 +73,8 @@ class HrHolidaySummaryReport(models.AbstractModel):
             for index in range(0, ((date_to - date_from).days + 1)):
                 if date_from >= start_date and date_from <= end_date:
                     res[(date_from-start_date).days]['color'] = holiday.holiday_status_id.color_name
-                    count+=1
                 date_from += timedelta(1)
+            count += abs(holiday.number_of_days)
         self.sum = count
         return res
 

@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-30 13:12+0000\n"
-"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"POT-Creation-Date: 2018-01-09 10:16+0000\n"
+"PO-Revision-Date: 2018-01-09 10:16+0000\n"
 "Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2017\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
@@ -518,24 +518,31 @@ msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετ�
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:332
+#: code:addons/web/static/src/xml/base.xml:343
 #, python-format
 msgid "Attachment :"
 msgstr "Συνημένο:"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:1181
+#: code:addons/web/static/src/xml/base.xml:1195
 #, python-format
 msgid "Available fields"
 msgstr "Διαθέσιμα πεδία"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:510
+#: code:addons/web/static/src/xml/base.xml:521
 #, python-format
 msgid "Bar Chart"
 msgstr "Ραβδόγραμμα"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:1311
+#, python-format
+msgid "Binary File"
+msgstr ""
 
 #. module: web
 #: code:addons/web/controllers/main.py:1474
@@ -954,14 +961,21 @@ msgstr "Μην φύγετε ακόμη,<br />φορτώνει..."
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:539
+#: code:addons/web/static/src/js/fields/basic_fields.js:1316
+#, python-format
+msgid "Download"
+msgstr "Λήψη"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:550
 #, python-format
 msgid "Download xls"
 msgstr "Λήψη xls"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/form/form_controller.js:161
+#: code:addons/web/static/src/js/views/form/form_controller.js:162
 #, python-format
 msgid "Duplicate"
 msgstr "Δημιουργία Αντίγραφου"
@@ -988,6 +1002,13 @@ msgstr "Επεξεργασία ενέργειας"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/xml/base.xml:275
+#, python-format
+msgid "Edit Calendar view"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:287
 #, python-format
 msgid "Edit Column"
@@ -995,17 +1016,59 @@ msgstr "Επεξεργασία Στήλης"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:603
+#: code:addons/web/static/src/xml/base.xml:614
 #, python-format
 msgid "Edit Domain"
 msgstr "Επεξεργασία Τομέα"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/xml/base.xml:268
+#: code:addons/web/static/src/xml/base.xml:269
 #, python-format
-msgid "Edit SearchView"
-msgstr "Επεξεργασία Προβολής Αναζήτησης"
+msgid "Edit Form view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:273
+#, python-format
+msgid "Edit Gantt view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:272
+#, python-format
+msgid "Edit Graph view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:271
+#, python-format
+msgid "Edit Kanban view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:270
+#, python-format
+msgid "Edit List view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:274
+#, python-format
+msgid "Edit Pivot view"
+msgstr ""
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:279
+#, python-format
+msgid "Edit Search view"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1013,6 +1076,13 @@ msgstr "Επεξεργασία Προβολής Αναζήτησης"
 #, python-format
 msgid "Edit Stage"
 msgstr "Επεξεργασία Σταδίου"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/xml/base.xml:276
+#, python-format
+msgid "Edit view, type:"
+msgstr ""
 
 #. module: web
 #: model:ir.ui.view,arch_db:web.login
@@ -2381,7 +2451,7 @@ msgstr "Τεχνική Μετάφραση"
 #: model:ir.ui.view,arch_db:web.external_layout_boxed
 #: model:ir.ui.view,arch_db:web.external_layout_clean
 msgid "Tel:"
-msgstr ""
+msgstr "Τηλ:"
 
 #. module: web
 #. openerp-web
@@ -2560,7 +2630,7 @@ msgstr "Ανίχνευση προς τα πίσω:"
 #: code:addons/web/static/src/js/fields/field_utils.js:45
 #, python-format
 msgid "True"
-msgstr ""
+msgstr "Αληθές"
 
 #. module: web
 #. openerp-web
@@ -2598,11 +2668,12 @@ msgstr "Μη αρχειοθετημένο"
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_model.js:179
+#: code:addons/web/static/src/js/views/graph/graph_model.js:178
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:73
 #: code:addons/web/static/src/js/views/kanban/kanban_column.js:76
-#: code:addons/web/static/src/js/views/list/list_renderer.js:419
+#: code:addons/web/static/src/js/views/kanban/kanban_renderer_mobile.js:145
 #: code:addons/web/static/src/js/views/list/list_renderer.js:422
+#: code:addons/web/static/src/js/views/list/list_renderer.js:425
 #: code:addons/web/static/src/js/views/pivot/pivot_model.js:689
 #, python-format
 msgid "Undefined"
@@ -2700,13 +2771,6 @@ msgstr "Χρησιμοποίησε ως προεπιλογή"
 #, python-format
 msgid "Validation Error"
 msgstr "Σφάλμα Επικύρωσης"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:267
-#, python-format
-msgid "View"
-msgstr "Προβολή"
 
 #. module: web
 #. openerp-web

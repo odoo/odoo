@@ -501,7 +501,7 @@ var StatementModel = BasicModel.extend({
         var amount = line.balance.amount;
         var amount_str = _.str.sprintf('%.2f', Math.abs(amount));
         amount_str = (amount > '0' ? '-' : '+') + amount_str;
-        if (line.balance.amount_currency) {
+        if (line.balance.currency_id && line.balance.amount_currency) {
             var amount_currency = line.balance.amount_currency;
             var amount_currency_str = _.str.sprintf('%.2f', Math.abs(amount_currency));
             amount_str += '|' + (amount_currency > '0' ? '-' : '+') + amount_currency_str;
@@ -821,14 +821,13 @@ var StatementModel = BasicModel.extend({
                 amount: total,
                 amount_str: field_utils.format.monetary(Math.abs(total), {}, formatOptions),
                 currency_id: isOtherCurrencyId,
-                amount_currency: isOtherCurrencyId ? amount_currency : false,
+                amount_currency: isOtherCurrencyId ? amount_currency : total,
                 amount_currency_str: isOtherCurrencyId ? field_utils.format.monetary(Math.abs(amount_currency), {}, {
                     currency_id: isOtherCurrencyId
                 }) : false,
                 account_code: self.accounts[line.st_line.open_balance_account_id],
             };
-            line.balance.type = (isOtherCurrencyId && amount_currency || line.balance.amount) ?
-                (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
+            line.balance.type = line.balance.amount_currency ? (line.balance.amount_currency > 0 && line.st_line.partner_id ? 0 : -1) : 1;
         });
     },
     /**
@@ -1295,7 +1294,7 @@ var ManualModel = StatementModel.extend({
         return this._super(line).then(function () {
             var props = _.reject(line.reconciliation_proposition, 'invalid');
             line.balance.type = -1;
-            if (!line.balance.amount && props.length) {
+            if (!line.balance.amount_currency && props.length) {
                 line.balance.type = 1;
             } else if(_.any(props, function (prop) {return prop.amount > 0;}) &&
                      _.any(props, function (prop) {return prop.amount < 0;})) {

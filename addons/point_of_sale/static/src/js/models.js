@@ -330,7 +330,7 @@ exports.PosModel = Backbone.Model.extend({
         ids:    function(self){ return [self.config.currency_id[0]]; },
         loaded: function(self, currencies){
             self.currency = currencies[0];
-            if (self.currency.rounding > 0) {
+            if (self.currency.rounding > 0 && self.currency.rounding < 1) {
                 self.currency.decimals = Math.ceil(Math.log(1.0 / self.currency.rounding) / Math.log(10));
             } else {
                 self.currency.decimals = 0;
@@ -527,7 +527,7 @@ exports.PosModel = Backbone.Model.extend({
 
                 var fields =  typeof model.fields === 'function'  ? model.fields(self,tmp)  : model.fields;
                 var domain =  typeof model.domain === 'function'  ? model.domain(self,tmp)  : model.domain;
-                var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context;
+                var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                 var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                 var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
                 progress += progress_step;
@@ -535,7 +535,7 @@ exports.PosModel = Backbone.Model.extend({
                 if( model.model ){
                     var params = {
                         model: model.model,
-                        context: context,
+                        context: _.extend(context, session.user_context || {}),
                     };
 
                     if (model.ids) {

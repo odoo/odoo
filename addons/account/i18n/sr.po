@@ -3,15 +3,15 @@
 # * account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Slobodan Simić <slsimic@gmail.com>, 2017
 # Đorđe Cvijanović <cdorde@gmail.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: Đorđe Cvijanović <cdorde@gmail.com>, 2017\n"
 "Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
 "MIME-Version: 1.0\n"
@@ -1074,11 +1074,6 @@ msgid "Account"
 msgstr "Рачун"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr ""
@@ -1403,6 +1398,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "Рачуноводство"
@@ -1759,7 +1755,6 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -3781,6 +3776,20 @@ msgstr ""
 #. module: account
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 msgstr ""
 
 #. module: account
@@ -5838,6 +5847,13 @@ msgid "Journals"
 msgstr "Dnevnici"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
+
+#. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "July"
 msgstr "Jul"
@@ -7638,6 +7654,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr ""
@@ -8376,13 +8400,6 @@ msgstr "Prodaja"
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
 msgstr ""
 
 #. module: account
@@ -9283,8 +9300,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
 
@@ -10120,6 +10137,7 @@ msgid "Total"
 msgstr "Ukupno"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "Ukupni iznos"
@@ -10310,20 +10328,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr ""

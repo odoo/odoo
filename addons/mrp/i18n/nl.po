@@ -6,7 +6,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # wilcobergacker <wilcobergacker@gmail.com>, 2017
@@ -139,7 +139,7 @@ msgstr "<span class=\"o_stat_text\">Tijd<br/> analyse</span>"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "<span class=\"o_stat_text\">Work Center Load</span>"
-msgstr "<span class=\"o_stat_text\">Werkplek belasting</span>"
+msgstr "<span class=\"o_stat_text\">Werkplekbelasting</span>"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -521,7 +521,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:mrp.mrp_production_workcenter_form_view_inherit
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_block_wizard_form
 msgid "Block"
-msgstr "Blok"
+msgstr "Blokkeer"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_mrp_block_workcenter
@@ -672,7 +672,7 @@ msgstr "Klik om een productieorder aan te maken."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Click here to create a Unbuild Order."
-msgstr "Klik om een nieuw demontage order aan te maken."
+msgstr "Klik om een nieuw demontageorder aan te maken."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -682,7 +682,7 @@ msgstr "Klik hier om een nieuwe route aan te maken."
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
 msgid "Click here to create a new Work Center"
-msgstr "Klik hier om een nieuw werkcentrum aan te maken"
+msgstr "Klik hier om een nieuwe werkplek aan te maken"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_message_action_main
@@ -774,7 +774,7 @@ msgstr "Verbruikte demontageregels"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move_consume_unbuild_id
 msgid "Consumed Disassembly Order"
-msgstr "Verbruikte demontage order"
+msgstr "Verbruikte demontageorder"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_consumed_less_than_planned
@@ -1700,6 +1700,9 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Productiebewerkingen worden verwerkt bij werklekken. Een werkplek kan worden samengesteld\n"
+" uit werknemers en/of machines, ze worden gebruikt voor calculatie, planning, capaciteitsplanning, etc.\n"
+" De werkplekken worden gedefinieerd op de bewerkingen van de routing."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1708,6 +1711,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Productiebewerkingen worden verwerkt in werkplekken. Een werkplek kan worden samengesteld\n"
+" uit werknemers en/of machines, ze worden gebruikt voor calculatie, planning, capaciteitsplanning, etc.\n"
+" De werkplekken worden gedefinieerd op de bewerkingen van de routing."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -1793,7 +1799,7 @@ msgstr "Werkplek"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
-msgstr "MRP: plan productie orders"
+msgstr "MRP: plan productieorders"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -2426,7 +2432,7 @@ msgstr "Locatie grondstoffen"
 #: model:ir.ui.view,arch_db:mrp.view_mrp_production_workcenter_form_view_filter
 #: selection:mrp.workorder,state:0
 msgid "Ready"
-msgstr "Gereed"
+msgstr "Gereed voor productie"
 
 #. module: mrp
 #. openerp-web
@@ -2501,7 +2507,7 @@ msgstr "Repareer"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Repair products and invoice the repair orders"
-msgstr "Repareer producten en factureer de reparatie orders"
+msgstr "Repareer producten en factureer de reparatieorders"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_reporting
@@ -2829,7 +2835,7 @@ msgstr "Start met werken"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_state
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_state
 msgid "State"
-msgstr "Staat / Provincie"
+msgstr "Status"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild_state
@@ -2893,7 +2899,7 @@ msgstr "Tafelpoot"
 #: model:ir.model.fields,help:mrp.field_stock_move_is_done
 #: model:ir.model.fields,help:mrp.field_stock_move_line_done_move
 msgid "Technical Field to order moves"
-msgstr "Technisch veld voor order mutaties"
+msgstr "Technisch veld voor ordermutaties"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production_check_to_done
@@ -3037,8 +3043,8 @@ msgid ""
 "everything is processed in the production order itself. "
 msgstr ""
 "De werkzaamheden voor de productie van deze stuklijst. Wanneer een route is "
-"opgegeven, zullen de productie orders worden uitgevoerd door middel van werk"
-" orders, anders alles wordt verwerkt in de productieorder zelf."
+"opgegeven, zullen de productieorders worden uitgevoerd door middel van werk "
+"orders, anders alles wordt verwerkt in de productieorder zelf."
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:94
@@ -3099,8 +3105,8 @@ msgid ""
 "minutes."
 msgstr ""
 "Dit veld wordt gebruikt om de verwachte duur van een werkorder in dit "
-"werkcentrum te berekenen. Bijvoorbeeld, als een werkorder een uur duurt en "
-"de efficiëntie factor 100% is, zal de verwachte duur 1 uur zijn. Indien de "
+"werkplek te berekenen. Bijvoorbeeld, als een werkorder een uur duurt en de "
+"efficiëntie factor 100% is, zal de verwachte duur 1 uur zijn. Indien de "
 "efficiëntie factor 200% is zal de verwachte duur echter 30 minuten zijn."
 
 #. module: mrp
@@ -3401,6 +3407,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"Het gebruik van een MPS rapport om uw bevoorrading- en productieactiviteiten"
+" te plannen, is handig als u een lange doorlooptijd hebt en als u produceert"
+" op basis van verkoopprognoses."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
@@ -3501,13 +3510,13 @@ msgstr "Werkplek"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_workcenter_load
 msgid "Work Center Load"
-msgstr "Werkplek belasting"
+msgstr "Werkplekbelasting"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_report_graph
 #: model:ir.ui.view,arch_db:mrp.view_workcenter_load_pivot
 msgid "Work Center Loads"
-msgstr "Werkplek belasting"
+msgstr "Werkplekbelasting"
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3527,7 +3536,7 @@ msgstr "Gebruik van werkplek"
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.view_work_center_load_graph
 msgid "Work Center load"
-msgstr "Belasting werkplek"
+msgstr "Werkplekbelasting"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
@@ -3579,6 +3588,8 @@ msgid ""
 "Work Order Messages are used to warn users about any change in the product,\n"
 "                process, etc. These messages will appear on the involved Work Orders."
 msgstr ""
+"Werkorderberichten worden gebruikt om gebruikers te waarschuwen voor alle veranderingen in het product,\n"
+" proces, etc. Deze berichten verschijnen op de betreffende werkorders."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3639,6 +3650,8 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden verwerkt bij een werkplek om een productieorder te realiseren. Werkorders worden aangemaakt door productieorders,\n"
+" ze zijn gebaseerd op de routing die op de stuklijst is gedefinieerd."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
@@ -3647,6 +3660,8 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones."
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden verwerkt bij een werkplek om een productieorder te realiseren. Werkorders worden aangemaakt door productieorders,\n"
+" ze zijn gebaseerd op de routing die op de stuklijst is gedefinieerd."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
@@ -3655,6 +3670,8 @@ msgid ""
 "           Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "           they are based on the Routing defined on these ones."
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden verwerkt bij een werkplek om een productie order te realiseren. Werkorders worden aangemaakt door productieorders,\n"
+" ze zijn gebaseerd op de routing die op de stuklijst is gedefinieerd."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -3710,7 +3727,7 @@ msgstr "Werktijd"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_production_messages
 msgid "Workorder Message"
-msgstr "Werkorder bericht"
+msgstr "Werkorderbericht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder_worksheet
@@ -3933,7 +3950,7 @@ msgstr "stock.warn.insufficient.qty.unbuild"
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
 msgid "to create a new Work Center."
-msgstr "om een nieuw werkcentrum aan te maken."
+msgstr "om een nieuwe werkplek aan te maken."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

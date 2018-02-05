@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Morten Schou <ms@msteknik.dk>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
 "Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
@@ -189,7 +189,7 @@ msgstr "&amp;nbsp;"
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;<span>på</span>&amp;nbsp;"
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
@@ -343,12 +343,12 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Accept &amp; Sign"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Godkend &amp; underskriv"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "<i class=\"fa fa-check-circle\"/> Signed"
-msgstr ""
+msgstr "<i class=\"fa fa-check-circle\"/> Underskrevet"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
@@ -567,7 +567,7 @@ msgstr ""
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.portal_order_page
 msgid "Accept &amp; Sign"
-msgstr ""
+msgstr "Godkend &amp; underskriv"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1149,7 +1149,7 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Med denne rapport kan du få et overblik over det beløb, der faktureres til "
+"Med denne rapport kan du få en oversigt over det beløb, der faktureres til "
 "din kunde. Søgeværktøjet kan også bruges til at tilpasse dine "
 "fakturarapporter og matche det til dine behov."
 
@@ -1411,6 +1411,14 @@ msgid "Is expired"
 msgstr "Er udløbet"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1590,17 +1598,11 @@ msgid "No longer edit orders once confirmed"
 msgstr "Ikke længere redigere ordrer, når de er bekræftede"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 
 #. module: sale
@@ -2113,7 +2115,7 @@ msgstr "Tilbud"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr ""
+msgstr "Tilbud &amp; ordre"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -2177,6 +2179,7 @@ msgstr "Rapportering"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2371,6 +2374,13 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Sælg og køb produkter i forskellige måleenheder"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+"Sælg digitale produkter - leverer downloadvenligt indhold på din kundeportal"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr ""
@@ -2528,7 +2538,7 @@ msgstr "Kildedokument"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_module_product_email_template
 msgid "Specific Email"
-msgstr "Specifik Email"
+msgstr "Specifik e-mail"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:88
@@ -2575,12 +2585,12 @@ msgstr "Momsvisning B2C"
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Excluded Prices"
-msgstr "Priser Uden Moms"
+msgstr "Priser uden moms"
 
 #. module: sale
 #: selection:res.config.settings,sale_show_tax:0
 msgid "Tax-Included Prices"
-msgstr "Priser Med Moms"
+msgstr "Priser med moms"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2967,17 +2977,11 @@ msgid "Your Order has been confirmed."
 msgstr "Din Ordre er blevet bekræftet."
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 
 #. module: sale

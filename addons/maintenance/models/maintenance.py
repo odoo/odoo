@@ -214,6 +214,15 @@ class MaintenanceEquipment(models.Model):
         return super(MaintenanceEquipment, self).write(vals)
 
     @api.model
+    def _message_get_auto_subscribe_fields(self, updated_fields, auto_follow_fields=None):
+        """ mail.thread override so user_id which has no special access allowance is not
+            automatically subscribed.
+        """
+        if auto_follow_fields is None:
+            auto_follow_fields = []
+        return super(MaintenanceEquipment, self)._message_get_auto_subscribe_fields(updated_fields, auto_follow_fields)
+
+    @api.model
     def _read_group_category_ids(self, categories, domain, order):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
@@ -359,7 +368,7 @@ class MaintenanceTeam(models.Model):
     _name = 'maintenance.team'
     _description = 'Maintenance Teams'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     member_ids = fields.Many2many('res.users', 'maintenance_team_users_rel', string="Team Members")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)

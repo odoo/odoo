@@ -388,9 +388,12 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
     if (r.sc.tagName && r.sc.childNodes.length) {
         r.sc = r.sc.childNodes[r.so];
     }
+    var media = $(r.sc).parents().addBack().filter(function (i, el) {
+        return dom.isImg(el);
+    })[0];
     core.bus.trigger('media_dialog_demand', {
         $editable: $editable,
-        media: dom.isImg(r.sc) ? r.sc : null,
+        media: media,
     });
     return new $.Deferred().reject();
 };
@@ -414,6 +417,9 @@ dom.isImg = function (node) {
 };
 var fn_is_forbidden_node = dom.isForbiddenNode || function () {};
 dom.isForbiddenNode = function (node) {
+    if (node.tagName === "BR") {
+        return false;
+    }
     return fn_is_forbidden_node(node) || $(node).is(".media_iframe_video");
 };
 var fn_is_img_font = dom.isImgFont || function () {};

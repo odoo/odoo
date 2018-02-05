@@ -48,9 +48,9 @@ class Forum(models.Model):
     description = fields.Text(
         'Description',
         translate=True,
-        default='This community is for professionals and enthusiasts of our products and services. '
-                'Share and discuss the best content and new marketing ideas, '
-                'build your professional profile and become a better marketer together.')
+        default=lambda s: _('This community is for professionals and enthusiasts of our products and services. '
+                            'Share and discuss the best content and new marketing ideas, '
+                            'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
@@ -437,7 +437,7 @@ class Post(models.Model):
         elif post.parent_id and not post.can_answer:
             raise KarmaError('Not enough karma to answer to a question')
         if not post.parent_id and not post.can_post:
-            post.state = 'pending'
+            post.sudo().state = 'pending'
 
         # add karma for posting new questions
         if not post.parent_id and post.state == 'active':
@@ -466,11 +466,18 @@ class Post(models.Model):
 
     @api.multi
     def write(self, vals):
+        trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
         if 'content' in vals:
             vals['content'] = self._update_content(vals['content'], self.forum_id.id)
         if 'state' in vals:
-            if vals['state'] in ['active', 'close'] and any(not post.can_close for post in self):
-                raise KarmaError('Not enough karma to close or reopen a post.')
+            if vals['state'] in ['active', 'close']:
+                if any(not post.can_close for post in self):
+                    raise KarmaError('Not enough karma to close or reopen a post.')
+                trusted_keys += ['state', 'closed_uid', 'closed_date', 'closed_reason_id']
+            elif vals['state'] == 'flagged':
+                if any(not post.can_flag for post in self):
+                    raise KarmaError('Not enough karma to flag a post.')
+                trusted_keys += ['state', 'flag_user_id']
         if 'active' in vals:
             if any(not post.can_unlink for post in self):
                 raise KarmaError('Not enough karma to delete or reactivate a post')
@@ -487,7 +494,7 @@ class Post(models.Model):
             tag_ids = set(tag.get('id') for tag in self.resolve_2many_commands('tag_ids', vals['tag_ids']))
             if any(set(post.tag_ids) != tag_ids for post in self) and any(self.env.user.karma < post.forum_id.karma_edit_retag for post in self):
                 raise KarmaError(_('Not enough karma to retag.'))
-        if any(key not in ['state', 'active', 'is_correct', 'closed_uid', 'closed_date', 'closed_reason_id', 'tag_ids'] for key in vals) and any(not post.can_edit for post in self):
+        if any(key not in trusted_keys for key in vals) and any(not post.can_edit for post in self):
             raise KarmaError('Not enough karma to edit a post.')
 
         res = super(Post, self).write(vals)

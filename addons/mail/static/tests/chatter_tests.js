@@ -1250,8 +1250,9 @@ QUnit.module('FieldMany2ManyTagsEmail', {
 });
 
 QUnit.test('fieldmany2many tags email', function (assert) {
-    assert.expect(11);
+    assert.expect(13);
     var done = assert.async();
+    var nameGottenIds = [[12], [12, 14]];
 
     this.data.partner.records[0].timmy = [12, 14];
 
@@ -1271,7 +1272,11 @@ QUnit.test('fieldmany2many tags email', function (assert) {
             mode: 'edit',
         },
         mockRPC: function (route, args) {
-            if (args.method ==='read' && args.model === 'partner_type') {
+            if (route === "/web/dataset/call_kw/partner_type/name_get") {
+                assert.deepEqual(args.args[0], nameGottenIds.shift(),
+                    "partner with email should be name_get'ed");
+            }
+            else if (args.method ==='read' && args.model === 'partner_type') {
                 assert.step(args.args[0]);
                 assert.deepEqual(args.args[1] , ['display_name', 'email'], "should read the email");
             }

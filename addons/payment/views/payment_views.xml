@@ -83,7 +83,7 @@
                                 <group name="acquirer_config">
                                     <field name="journal_id" context="{'default_type': 'bank'}"/>
                                     <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
-                                    <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                    <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
                                     <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
                                     <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
@@ -416,7 +416,7 @@
             <field name="arch" type="xml">
                 <form string="Payment Icon">
                     <sheet>
-                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Name"/></h1>
                         </div>

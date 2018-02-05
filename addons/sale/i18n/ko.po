@@ -1,65 +1,120 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * sale
-#
+# 
 # Translators:
+# Martin Trigaux, 2017
+# Up Link <linkup.way@gmail.com>, 2017
+# nle_odoo, 2018
+# link up <link-up@naver.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-03-10 09:16+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
+"Last-Translator: link up <link-up@naver.com>, 2018\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale
 #: model:mail.template,body_html:sale.email_template_edi_sale
 msgid ""
 "\n"
-"% set access_action = object.get_access_action()\n"
-"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else "
-"'order confirmation'\n"
-"% set is_online = access_action and access_action['type'] == 'ir.actions."
-"act_url'\n"
-"% set access_name = is_online and object.template_id and 'Accept and pay %s "
-"online' % doc_name or 'View %s' % doc_name\n"
-"% set access_url = is_online and access_action['url'] or object."
-"get_signup_url()\n"
+"<p>Dear ${object.partner_id.name}\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set pay_sign_name =  object.get_portal_confirmation_action()\n"
+"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and object.get_mail_url() or ''\n"
 "\n"
-"<p>Dear\n"
-"% if object.partner_id.is_company and object.child_ids:\n"
-"    ${object.partner_id.child_ids[0].name}\n"
-"% else :\n"
-"    ${object.partner_id.name}\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
 "% endif\n"
 ",</p>\n"
-"<p>Thank you for your inquiry.<br />\n"
-"Here is your ${doc_name} <strong>${object.name}</strong>\n"
+"<p>\n"
+"Here is\n"
+"% if ctx.get('proforma')\n"
+"in attachment, your pro-forma invoice\n"
+"% else\n"
+"the ${doc_name} <strong>${object.name}</strong>\n"
+"% endif\n"
 "% if object.origin:\n"
 "(with reference: ${object.origin} )\n"
 "% endif\n"
-"amounting <strong>${object.amount_total} ${object.pricelist_id.currency_id."
-"name}</strong>\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
 "from ${object.company_id.name}.\n"
 "</p>\n"
 "\n"
-"<p style=\"margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;\">\n"
-"    <a href=\"${access_url}\" style=\"padding: 5px 10px; font-size: 12px; "
-"line-height: 18px; color: #FFFFFF; border-color:#a24689; text-decoration: "
-"none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-"
-"align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; "
-"background-image: none; background-color: #a24689; border: 1px solid "
-"#a24689; border-radius:3px\" class=\"o_default_snippet_text\">${access_name}"
-"</a>\n"
+"% if is_online and not ctx.get('proforma'):\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/><br/>\n"
+"        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>You can reply to this email if you have any questions.</p>\n"
+"<p>Thank you,</p>\n"
+"\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
 "</p>\n"
-"<p>If you have any question, do not hesitate to contact us.</p>\n"
-"<p>Best regards,</p>\n"
 msgstr ""
+"\n"
+"<p>${object.partner_id.name} 귀하\n"
+"% set access_action = object.with_context(force_website=True).get_access_action()\n"
+"% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
+"% set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order confirmation'\n"
+"% set pay_sign_name =  object.get_portal_confirmation_action()\n"
+"% set access_name = is_online and object.state in ('draft', 'sent') and pay_sign_name in ('pay', 'sign') and 'Accept and %s online' % pay_sign_name or 'View %s' % doc_name\n"
+"% set access_url = is_online and object.get_mail_url() or ''\n"
+"\n"
+"% if object.partner_id.parent_id:\n"
+"    (<i>${object.partner_id.parent_id.name}</i>)\n"
+"% endif\n"
+",</p>\n"
+"<p>\n"
+"아래내용을 확인하시기 바랍니다.\n"
+"% if ctx.get('proforma')\n"
+"견적송장이 첨부됩니다.\n"
+"% else\n"
+"the ${doc_name} <strong>${object.name}</strong>\n"
+"% endif\n"
+"% if object.origin:\n"
+"(with reference: ${object.origin} )\n"
+"% endif\n"
+"amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}</strong>\n"
+"from ${object.company_id.name}.\n"
+"</p>\n"
+"\n"
+"% if is_online and not ctx.get('proforma'):\n"
+"    <br/><br/>\n"
+"    <center>\n"
+"        <a href=\"${access_url}\" style=\"background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;\" class=\"o_default_snippet_text\">${access_name}</a>\n"
+"        <br/><br/><br/>\n"
+"        <span style=\"color:#888888\">(or view attached PDF)</span>\n"
+"    </center>\n"
+"    <br/>\n"
+"% endif\n"
+"\n"
+"<p>궁금하신 사항이 있으시면 메일을 주시기 바랍니다.</p>\n"
+"<p>감사합니다.</p>\n"
+"\n"
+"<p style=\"color:#888888;\">\n"
+"% if object.user_id and object.user_id.signature:\n"
+"    ${object.user_id.signature | safe}\n"
+"% endif\n"
+"</p>\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_sales_count
@@ -80,100 +135,441 @@ msgstr "# 명세"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_count
 msgid "# of Orders"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
-msgid "# of Qty"
-msgstr "수량"
+msgstr "#의 주문"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_count
+#: model:ir.model.fields,field_description:sale.field_res_users_sale_order_count
 msgid "# of Sales Order"
 msgstr "판매 주문"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+"${(object.name or '').replace('/','_')}${object.state == 'draft' and "
+"'_draft' or ''}"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
-#, fuzzy
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name|safe} ${object.state in ('draft', 'sent') and "
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
-msgid "(update)"
-msgstr "(갱신)"
+#: model:mail.template,subject:sale.mail_template_data_notification_email_sale_order
+msgid "${object.subject}"
+msgstr "${object.subject}"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid "&amp;nbsp;"
+msgstr "&amp;nbsp;"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
+msgstr "&amp;nbsp;<span>on</span>&amp;nbsp;"
+
+#. module: sale
+#: model:mail.template,body_html:sale.mail_template_data_notification_email_sale_order
+msgid ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
+msgstr ""
+"<html>\n"
+"                <head></head>\n"
+"                % set record = ctx.get('record')\n"
+"                % set company = record and record.company_id or user.company_id\n"
+"                <body style=\"margin: 0; padding: 0;\">\n"
+"                <table border=\"0\" width=\"100%\" cellpadding=\"0\" bgcolor=\"#ededed\" style=\"padding: 20px; background-color: #ededed; border-collapse:separate;\" summary=\"o_mail_notification\">\n"
+"                    <tbody>\n"
+"\n"
+"                      <!-- HEADER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\">\n"
+"                                  <span style=\"font-size:20px; color:white; font-weight: bold;\">\n"
+"                                      ${object.record_name}\n"
+"                                  </span>\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\">\n"
+"                                  <img src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${company.name}\">\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- CONTENT -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#ffffff\" style=\"min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;\">\n"
+"                            <tbody>\n"
+"                              <td valign=\"top\" style=\"font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;\">\n"
+"                                ${object.body | safe}\n"
+"                              </td>\n"
+"                            </tbody>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"\n"
+"                      <!-- FOOTER -->\n"
+"                      <tr>\n"
+"                        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                          <table width=\"590\" border=\"0\" cellpadding=\"0\" bgcolor=\"#875A7B\" style=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                              <td valign=\"middle\" align=\"left\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                ${company.name}<br/>\n"
+"                                ${company.phone or ''}\n"
+"                              </td>\n"
+"                              <td valign=\"middle\" align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;\">\n"
+"                                % if company.email:\n"
+"                                <a href=\"mailto:${company.email}\" style=\"text-decoration:none; color: white;\">${company.email}</a><br/>\n"
+"                                % endif\n"
+"                                % if company.website:\n"
+"                                    <a href=\"${company.website}\" style=\"text-decoration:none; color: white;\">\n"
+"                                        ${company.website}\n"
+"                                    </a>\n"
+"                                % endif\n"
+"                              </td>\n"
+"                            </tr>\n"
+"                          </table>\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                      <tr>\n"
+"                        <td align=\"center\">\n"
+"                            Powered by <a target=\"_blank\" href=\"https://www.odoo.com\">Odoo</a>.\n"
+"                        </td>\n"
+"                      </tr>\n"
+"                    </tbody>\n"
+"                </table>\n"
+"                </body>\n"
+"                </html>\n"
+"            "
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<i class=\"fa fa-arrow-circle-right\"/> Accept &amp; Sign"
+msgstr "승인 &amp; 사인"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<i class=\"fa fa-check-circle\"/> Signed"
+msgstr "사인 완료"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "<i>Example: pre-paid service offers for which the customer have\n"
-"                to buy an extra pack of hours, because he used all his "
-"support\n"
+"                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
+msgstr "<i>예시 : 선불 서비스는 고객에게 제공된 서비스 시간을 소진한 뒤 추가적인 시간을 구매해야 될 경우 제공합니다.</i>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"hidden-xs\">Sales Order #</span>\n"
+"                      <span class=\"visible-xs\">Ref.</span>"
 msgstr ""
+"<span class=\"hidden-xs\">주문 #</span>\n"
+"                      <span class=\"visible-xs\">참고</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/><span "
+"class=\"hidden-xs\"> Problem</span></span>"
+msgstr ""
+"<span class=\"label label-danger\"><i class=\"fa fa-fw fa-warning\"/><span "
+"class=\"hidden-xs\"> 문제</span></span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> Done</span></span>"
+msgstr ""
+"<span class=\"label label-default hidden-xs\"><i class=\"fa fa-fw fa-"
+"check\"/><span class=\"hidden-xs\"> 완료</span></span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+msgid ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
+"Expired</span>"
+msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-clock-o\"/> "
+"만료됨</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
+"Cancelled</span>"
+msgstr "취소됨"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
+"Done</span>"
+msgstr ""
+"<span class=\"label label-default\"><i class=\"fa fa-fw fa-remove\"/> "
+"완료</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Waiting</span>"
+msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/>대기중</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> Invoiced</span></span>"
+msgstr ""
+"<span class=\"label label-info\"><i class=\"fa fa-fw fa-clock-o\"/><span "
+"class=\"hidden-xs\"> 송장발행완료</span></span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Paid</span>"
+msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> 지불완료</span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<span>Pro-Forma Invoice # </span>"
+msgstr "<span> 견적 송장 # </span>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Contact</strong>"
+msgstr "<strong>연락하기</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong>Date Ordered:</strong>"
+msgstr "<strong>주문일자:</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Date:</strong>"
+msgstr "<strong>일자:</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Expiration Date:</strong>"
+msgstr "<strong>만료일</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Fiscal Position Remark:</strong>"
-msgstr ""
+msgstr "<strong>회계 위치 참고:</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Invoices</strong>"
+msgstr "<strong>송장</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Invoicing Address</strong>"
+msgstr "<strong>송장 주소</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong>Payment Term:</strong>"
-msgstr ""
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>결제 조건:</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Product</strong>"
+msgstr "<strong>제품</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Quantity</strong>"
+msgstr "<strong>수량</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong>Quotation Date:</strong>"
+msgstr "<strong>견적일자</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson:</strong>"
-msgstr ""
+msgstr "<strong>영업사원:</strong>"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Shipping Address</strong>"
+msgstr "<strong>배송주소:</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping address:</strong>"
-msgstr ""
+msgstr "<strong>배송주소:</strong>"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgid "<strong>Subtotal: </strong>"
+msgstr "<strong>소계</strong>"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>소계</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>합계</strong>"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "<strong>Unit Price</strong>"
+msgstr "<strong>단가</strong>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Your Reference:</strong>"
+msgstr "<strong>참조:</strong>"
+
+#. module: sale
+#: selection:res.config.settings,sale_pricelist_setting:0
+msgid "A single sales price per product"
+msgstr "제품당 단일단가"
+
+#. module: sale
+#: model:res.groups,name:sale.group_warning_sale
+msgid "A warning can be set on a product or a customer (Sale)"
+msgstr "제품 또는 고객에 대한 주의사항이 설정됩니다.(판매)"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Ability to select a package type in sales orders and to force a quantity "
+"that is a multiple of the number of units per package."
 msgstr ""
 
 #. module: sale
-#: selection:sale.config.settings,sale_pricelist_setting:0
-msgid "A single sale price per product"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "Accept &amp; Sign"
+msgstr "승인 &amp; 사인"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
 msgid "Account used for deposits"
-msgstr ""
+msgstr "보증금 또는 착수금에 사용된 계정"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_delivery_address
-msgid "Addresses"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_pagebreak
+msgid "Add pagebreak"
+msgstr "페이지 나누기 추가"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_subtotal
+msgid "Add subtotal"
+msgstr "소계 추가"
 
 #. module: sale
 #: model:res.groups,name:sale.group_delivery_invoice_address
@@ -181,49 +577,68 @@ msgid "Addresses in Sales Orders"
 msgstr "판매 주문 상의 주소"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:139
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:156
 #, python-format
 msgid "Advance: %s"
-msgstr ""
+msgstr "선불: %s"
 
 #. module: sale
-#: selection:sale.config.settings,sale_pricelist_setting:0
-msgid "Advanced pricing based on formula"
-msgstr ""
+#: model:ir.actions.act_window,name:sale.report_all_channels_sales_action
+#: model:ir.ui.menu,name:sale.report_all_channels_sales
+msgid "All Channels Sales Orders"
+msgstr "모든 판매채널의 판매 주문"
 
 #. module: sale
-#: selection:sale.config.settings,group_discount_per_so_line:0
-msgid "Allow discounts on sales order lines"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
+#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+msgid "All Channels Sales Orders Analysis"
+msgstr "모든 판매채널의 판매 주문 분석"
 
 #. module: sale
-#: selection:sale.config.settings,auto_done_setting:0
-msgid ""
-"Allow to edit sales order from the 'Sales Order' menu (not from the "
-"Quotation menu)"
-msgstr ""
+#: model:ir.model,name:sale.model_report_all_channels_sales
+msgid "All sales orders grouped by sales channels"
+msgstr "모든 주문은 판매채널로 구분됩니다."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_group_sale_pricelist
-msgid ""
-"Allows to manage different prices based on rules per category of customers.\n"
-"                    Example: 10% for retailers, promotion of 5 EUR on this "
-"product, etc."
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Allow manual discounts on order lines"
+msgstr "할인을 별도로 입력하는 것을 허용합니다."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_group_uom
-msgid ""
-"Allows you to select and maintain different units of measure for products."
-msgstr "상품에 대해 다른 단위를 선택 및 관리할 수 있습니다."
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Allows you to send Pro-Forma Invoice to your customers"
+msgstr "고객에게 견적송장 전송을 허용합니다"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_amount
-msgid "Amount of sales to invoice"
-msgstr ""
+#: model:ir.model.fields,help:sale.field_res_config_settings_group_proforma_sales
+msgid "Allows you to send pro-forma invoice."
+msgstr "견적 송장 전송을 허용합니다."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_project_id
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "Amount"
+msgstr "금액"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_invoiced
+#: model:ir.model.fields,field_description:sale.field_sale_report_amt_invoiced
+msgid "Amount Invoiced"
+msgstr "송장 발행 완료 금액"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
+#: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
+msgid "Amount To Invoice"
+msgstr "송장 발행 대상 금액"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
+msgid "Amount of quotations to invoice"
+msgstr "송장발행할 견적서 금액"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_analytic_account_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_analytic_account_id
 msgid "Analytic Account"
 msgstr "분석적 계정"
@@ -232,6 +647,53 @@ msgstr "분석적 계정"
 #: model:res.groups,name:sale.group_analytic_accounting
 msgid "Analytic Accounting for Sales"
 msgstr "판매에 대한 분석 회계"
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "명세 분석"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_analytic_tag_ids
+msgid "Analytic Tags"
+msgstr "태그 분석"
+
+#. module: sale
+#: selection:product.template,expense_policy:0
+msgid "At cost"
+msgstr "실경비 기준"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_variants_action
+msgid "Attribute Values"
+msgstr "속성 값"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_attribute_action
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Attributes"
+msgstr "속성"
+
+#. module: sale
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Blocking Message"
+msgstr "메시지 차단"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Boost your sales with two kinds of discount programs: promotions and coupon "
+"codes. Specific conditions can be set (products, customers, minimum purchase"
+" amount, period). Rewards can be discounts (% or amount) or free products."
+msgstr ""
+"프로모션과 쿠폰코드, 이 두가지의 할인 프로그램으로 여러분의 판매를 촉진하세요. 특별한 조건이 세팅됩니다(제품, 고객, 최소 구매금액, "
+"기간). 할인(% 또는 금액) 또는 무료 제품증정으로 보상할수 있습니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+msgid "Breaks Page"
+msgstr "페이지 나누기"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -251,7 +713,12 @@ msgstr "영업팀별"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered_updateable
 msgid "Can Edit Delivered"
-msgstr ""
+msgstr "납품된 건 편집가능"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_product_updatable
+msgid "Can Edit Product"
+msgstr "제품 편집 가능"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -265,19 +732,27 @@ msgid "Cancelled"
 msgstr "취소됨"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_crm_team_use_invoices
-msgid "Check this box to manage invoices in this sales team."
-msgstr ""
+#: model:ir.ui.menu,name:sale.product_menu_catalog
+msgid "Catalog"
+msgstr "카달로그"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_use_quotations
-msgid "Check this box to manage quotations in this sales team."
-msgstr "이 영업팀의 견적을 관리하려면 확인란을 선택하십시오."
+msgid ""
+"Check this box if you send quotations to your customers rather than "
+"confirming orders straight away. This will add specific action buttons to "
+"your dashboard."
+msgstr "만약 견적서를 승인없이 바로 고객에게 전송할 경우 이 체크박스에 체크하세요. 여러분의 알림판에 특별한 버튼이 추가됩니다."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_crm_team_use_invoices
+msgid "Check this box to set an invoicing target for this sales channel."
+msgstr "송장을 이 판매채널에 반영하려면 이 체크박스에 체크하세요."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-msgid "Click to define a team target"
-msgstr ""
+msgid "Click to define a target"
+msgstr "클릭해서 타겟을 정의합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_commercial_partner_id
@@ -290,6 +765,7 @@ msgid "Companies"
 msgstr "회사"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_company_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_company_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_company_id
@@ -298,14 +774,60 @@ msgid "Company"
 msgstr "회사"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with DHL"
+msgstr "DHL과 연동하여 운송비용과 운송건을 계산합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with FedEx"
+msgstr "FedEx와 연동하여 운송비용과 운송건을 계산합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with UPS"
+msgstr "UPS와 연동하여 운송비용과 운송건을 계산합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with USPS"
+msgstr "USPS와 연동하여 운송비용과 운송건을 계산합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with bpost"
+msgstr "bpost와 연동하여 운송비용과 운송건을 계산합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs on orders"
+msgstr "주문에 운송비용을 계산합니다."
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_sale_config
+msgid "Configuration"
+msgstr "환경 설정"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirm Sale"
 msgstr "판매 확정"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
-msgid "Create Invoice"
-msgstr "송장 작성"
+#: model:ir.model.fields,field_description:sale.field_sale_order_confirmation_date
+#: model:ir.model.fields,field_description:sale.field_sale_report_confirmation_date
+msgid "Confirmation Date"
+msgstr "확정일"
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_partner
+msgid "Contact"
+msgstr "연락처"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_coupon
+msgid "Coupons & Promotions"
+msgstr "쿠폰&프로모션"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -319,20 +841,16 @@ msgstr "송장 작성"
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a Quotation, the first step of a new sale."
-msgstr ""
-
-#. module: sale
-#: selection:product.template,track_service:0
-msgid "Create a task and track hours"
-msgstr ""
+msgstr "새로운 판매를 위한 첫 번째 단계인 견적작성을 시작합니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoices"
-msgstr ""
+msgstr "송장 작성 및 보기"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_uid
 msgid "Created by"
@@ -340,6 +858,7 @@ msgstr "작성자"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_create_date
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_create_date
 msgid "Created on"
 msgstr "작성일"
@@ -350,11 +869,15 @@ msgid "Creation Date"
 msgstr "작성 날짜"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team_currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_currency_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_currency_id
 msgid "Currency"
 msgstr "유통"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+msgid "Current Year Sales"
+msgstr "현재연도 판매"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_partner_id
@@ -363,6 +886,11 @@ msgstr "유통"
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
 msgstr "고객"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_delivery_address
+msgid "Customer Addresses"
+msgstr "고객 주소"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_client_order_ref
@@ -375,19 +903,15 @@ msgid "Customer Taxes"
 msgstr "고객 세금"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_config
-msgid "Customer portal"
-msgstr ""
+#: model:ir.ui.menu,name:sale.res_partner_menu
+msgid "Customers"
+msgstr "고객"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_date_order
 #: model:ir.model.fields,field_description:sale.field_sale_report_date
 msgid "Date Order"
 msgstr "주문 날짜"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Date Ordered:"
-msgstr "주문한 날짜 :"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_create_date
@@ -395,9 +919,14 @@ msgid "Date on which sales order is created."
 msgstr "판매 주문이 작성된 날짜."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
-msgid "Default Invoicing"
-msgstr ""
+#: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
+msgid "Date on which the sales order is confirmed."
+msgstr "판매 주문이 승인된 날짜"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_use_sale_note
+msgid "Default Terms & Conditions"
+msgstr "기본 조건"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company_sale_note
@@ -405,14 +934,9 @@ msgid "Default Terms and Conditions"
 msgstr "기본 조건"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_deposit_product_id_setting
+#: model:ir.model.fields,help:sale.field_res_config_settings_default_deposit_product_id
 msgid "Default product used for payment advances"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_company_inherit_form2
-msgid "Default terms & conditions..."
-msgstr "기본 조건..."
+msgstr "지불 진행에 사용되는 기본 제품"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_delivered
@@ -420,16 +944,19 @@ msgid "Delivered"
 msgstr "납품됨"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:824
 #: model:ir.ui.view,arch_db:sale.view_order_form
+#, python-format
 msgid "Delivered Quantity"
-msgstr ""
+msgstr "납품된 수량"
 
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Delivered quantities"
-msgstr ""
+msgstr "납품된 수량"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_invoice_partner_shipping_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_shipping_id
 msgid "Delivery Address"
 msgstr "배송 주소"
@@ -440,6 +967,11 @@ msgid "Delivery Lead Time"
 msgstr "배송 소요 시간"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_account_invoice_partner_shipping_id
+msgid "Delivery address for current invoice."
+msgstr "현재 송장의 배송 주소"
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_shipping_id
 msgid "Delivery address for current sales order."
 msgstr "현재 판매 주문의 배송 주소"
@@ -448,34 +980,35 @@ msgstr "현재 판매 주문의 배송 주소"
 #: model:product.product,name:sale.advance_product_0
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Deposit"
-msgstr ""
+msgstr "보증금"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_deposit_product_id_setting
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_default_deposit_product_id
 msgid "Deposit Product"
 msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_name
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Description"
 msgstr "설명"
 
 #. module: sale
-#: selection:sale.config.settings,sale_pricelist_setting:0
-msgid "Different prices per customer segment"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Design standardized offers"
+msgstr "표준화된 제안 설계"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid "Digital Content"
+msgstr "디지털 컨텐츠"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
-#, fuzzy
 msgid "Disc.(%)"
-msgstr "할인율 (%)"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_discount_per_so_line
-msgid "Discount"
-msgstr "할인"
+msgstr "할인율(%)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_discount
@@ -483,18 +1016,30 @@ msgid "Discount (%)"
 msgstr "할인율 (%)"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_pricelist_discount_policy
+msgid "Discount Policy"
+msgstr "할인 방침"
+
+#. module: sale
+#: selection:product.pricelist,discount_policy:0
+msgid "Discount included in the price"
+msgstr "가격내 할인포함"
+
+#. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
 msgid "Discount on lines"
 msgstr "명세 할인율"
 
 #. module: sale
-#: selection:sale.config.settings,group_sale_delivery_address:0
-msgid ""
-"Display 3 fields on sales orders: customer, invoice address, delivery address"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_discount_per_so_line
+msgid "Discounts"
+msgstr "할인"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_display_name
+#: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_display_name
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report_display_name
@@ -502,56 +1047,53 @@ msgid "Display Name"
 msgstr "표시 이름"
 
 #. module: sale
-#: model:res.groups,name:sale.group_display_incoterm
-msgid "Display incoterms on Sales Order and related invoices"
-msgstr ""
-
-#. module: sale
-#: selection:sale.config.settings,module_sale_margin:0
-msgid "Display margins on quotations and sales orders"
-msgstr ""
-
-#. module: sale
-#: selection:sale.config.settings,module_sale_layout:0
-msgid "Do not personalize sale orders and invoice reports"
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,state:0
-msgid "Done"
-msgstr "완료"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:83
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:84
 #, python-format
 msgid "Down Payment"
-msgstr ""
+msgstr "계약금"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_amount
 msgid "Down Payment Amount"
-msgstr ""
+msgstr "계약금액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_product_id
 msgid "Down Payment Product"
-msgstr ""
+msgstr "선급금 제품"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Down Payments"
+msgstr "계약금"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (fixed amount)"
-msgstr ""
+msgstr "계약금(고정금액)"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Down payment (percentage)"
-msgstr ""
+msgstr "계약금(%)"
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:80
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:81
 #, python-format
 msgid "Down payment of %s%%"
-msgstr ""
+msgstr "%s%%의 계약금"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_line_is_downpayment
+msgid ""
+"Down payments are made when creating invoices from a sales order. They are "
+"not copied when duplicating a sales order."
+msgstr "계약금은 판매주문에서 송장을 생성할때 만들어집니다. 판매주문을 복사하여도 계약금은 복사되지 않습니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
+msgid "Download"
+msgstr "다운로드"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -564,17 +1106,6 @@ msgid "Email composition wizard"
 msgstr "이메일 작성 마법사"
 
 #. module: sale
-#: model:ir.model,name:sale.model_survey_mail_compose_message
-#, fuzzy
-msgid "Email composition wizard for Survey"
-msgstr "이메일 작성 마법사"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_portal
-msgid "Enable customer portal to track orders, delivery and invoices"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_validity_date
 msgid "Expiration Date"
 msgstr "만료일"
@@ -585,18 +1116,15 @@ msgid "Extended Filters"
 msgstr "확장 필터"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:807
+#, python-format
+msgid "Extra line with %s "
+msgstr "%s을 포함한 라인 추가"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
 msgid "Fiscal Position"
 msgstr "재정 위치"
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_sale_pricelist_setting
-msgid ""
-"Fix Price: all price manage from products sale price.\n"
-"Different prices per Customer: you can assign price on buying of minimum "
-"quantity in products sale tab.\n"
-"Advanced pricing based on formula: You can have all the rights on pricelist"
-msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -605,19 +1133,32 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"이 보고서에서 고객에게 청구 된 금액에 대한 전반적인 내용를 확인할 수 있습니다. 검색 도구는 또한 송장발행 보고서를 개인 설정하는 데 "
+"사용할 수 있으므로 이 분석을 필요에 맞게 사용 할 수 있습니다."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr ""
+msgstr "송장 발행 완료"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Future Activities"
+msgstr "향후 활동"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Get warnings in orders for products or customers"
+msgstr "제품 또는 고객에 대한 주의사항을 확인합니다."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_weight
 msgid "Gross Weight"
-msgstr ""
+msgstr "총중량"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -625,7 +1166,15 @@ msgid "Group By"
 msgstr "그룹화"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+msgid "Group By Name"
+msgstr "이름으로 그룹화"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_id
+#: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma_id
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_id
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_id
@@ -635,9 +1184,16 @@ msgstr "ID"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid ""
-"If a sale order is done, you cannot modify it manually anymore. However, you "
-"will still be able to invoice or deliver. This is used to freeze the sale "
-"order."
+"If the sale is locked, you can not modify it anymore. However, you will "
+"still be able to invoice or deliver."
+msgstr "판매를 잠글경우 더이상 수정불가합니다. 그러나 송장발행이나 납품은 가능합니다."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_line_product_image
+msgid ""
+"Image of the product variant (Big-sized image of product template if false)."
+" It is automatically resized as a 1024x1024px image, with aspect ratio "
+"preserved."
 msgstr ""
 
 #. module: sale
@@ -646,9 +1202,15 @@ msgid "Income Account"
 msgstr "수익 계정"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_display_incoterm
-msgid "Incoterms"
-msgstr "인코텀즈"
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Insert your terms & conditions here..."
+msgstr "지불 조건을 입력하세요."
+
+#. module: sale
+#: code:addons/sale/controllers/portal.py:216
+#, python-format
+msgid "Invalid order"
+msgstr "잘못된 주문"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice
@@ -656,10 +1218,10 @@ msgid "Invoice"
 msgstr "송장"
 
 #. module: sale
-#: code:addons/sale/sale.py:840
+#: code:addons/sale/models/account_invoice.py:52
 #, python-format
 msgid "Invoice %s paid"
-msgstr ""
+msgstr "%s지급된 송장"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_partner_invoice_id
@@ -669,12 +1231,12 @@ msgstr "송장 발행 주소"
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr ""
+msgstr "승인된 송장"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr ""
+msgstr "작성된 송장"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_line
@@ -703,47 +1265,37 @@ msgid "Invoice Status"
 msgstr "송장 상태"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
-msgid "Invoice Target"
-msgstr "송장 대상"
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_partner_invoice_id
 msgid "Invoice address for current sales order."
 msgstr "현재 판매 주문의 송장 발행 주소"
 
 #. module: sale
-#: selection:sale.config.settings,default_invoice_policy:0
-msgid "Invoice based on costs (time and material, expenses)"
-msgstr ""
-
-#. module: sale
-#: selection:sale.config.settings,default_invoice_policy:0
-msgid "Invoice delivered quantities"
-msgstr ""
-
-#. module: sale
-#: selection:sale.config.settings,default_invoice_policy:0
-msgid "Invoice ordered quantities"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced
 msgid ""
-"Invoice revenue for the current month. This is the amount the sales team has "
-"invoiced this month. It is used to compute the progression ratio of the "
+"Invoice revenue for the current month. This is the amount the sales channel "
+"has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
 
 #. module: sale
+#: selection:res.config.settings,default_invoice_policy:0
+msgid "Invoice what is delivered"
+msgstr "납품된 건에 대해 송장발행"
+
+#. module: sale
+#: selection:res.config.settings,default_invoice_policy:0
+msgid "Invoice what is ordered"
+msgstr "주문받은 건에 대해 송장 발행"
+
+#. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines"
-msgstr ""
+msgstr "송장발행가능 명세"
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
 msgid "Invoiceable lines (deduct down payments)"
-msgstr ""
+msgstr "송장발행 가능한 행(계약금 공제)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_invoiced
@@ -751,18 +1303,19 @@ msgid "Invoiced"
 msgstr "송장 발행됨"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:825
 #: model:ir.ui.view,arch_db:sale.view_order_form
+#, python-format
 msgid "Invoiced Quantity"
-msgstr ""
+msgstr "송장발행된 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_invoiced
 msgid "Invoiced This Month"
-msgstr ""
+msgstr "이번달 발행된 송장"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
-#: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
 #: model:ir.model.fields,field_description:sale.field_sale_order_invoice_ids
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -782,13 +1335,23 @@ msgstr "송장 통계"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
-"Invoices will be created in draft so that you can update\n"
+"Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
+"송장은 승인전 검사가 가능하도록 \n"
+"초안으로 작성됩니다."
+
+#. module: sale
+#: code:addons/sale/models/sales_team.py:96
+#, python-format
+msgid "Invoices: Untaxed Total"
+msgstr "송장:공급가액 합계"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_invoicing
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing"
 msgstr "송장 발행"
@@ -796,34 +1359,48 @@ msgstr "송장 발행"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template_invoice_policy
-#: model:ir.ui.view,arch_db:sale.product_template_form_view_invoice_policy
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_default_invoice_policy
 msgid "Invoicing Policy"
-msgstr ""
+msgstr "송장 정책"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_crm_team_invoiced_target
+msgid "Invoicing Target"
+msgstr "송장발행 대상"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing address:"
-msgstr ""
+msgstr "송장 발행 주소"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Invoicing and shipping address:"
-msgstr ""
+msgstr "송장 발행 및 배송 주소 :"
 
 #. module: sale
-#: selection:sale.config.settings,group_sale_delivery_address:0
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_is_downpayment
+msgid "Is a down payment"
+msgstr "계약금"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_is_expired
+msgid "Is expired"
+msgstr "만료됨"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
 msgid ""
-"Invoicing and shipping addresses are always the same (Example: services "
-"companies)"
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-msgid "Invoicing/Progression Ratio"
-msgstr ""
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
+#: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_order___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_order_line___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report___last_update
@@ -832,6 +1409,7 @@ msgstr "최근 수정"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_uid
 msgid "Last Updated by"
@@ -839,32 +1417,74 @@ msgstr "최근 갱신한 사람"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_write_date
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_write_date
 msgid "Last Updated on"
 msgstr "최근 갱신 날짜"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_contract
-msgid "Manage subscriptions and recurring invoicing"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Late Activities"
+msgstr "지연된 활동"
 
 #. module: sale
-#: selection:product.template,track_service:0
+#: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
+msgid "Layout Sequence"
+msgstr "배치 순서"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Let your customers log in to see their documents"
+msgstr "고객이 로그인하여 문서를 확인할 수 있습니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Let your customers sign &amp; pay online"
+msgstr "고객이 사인 및 온라인 결제가 가능합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Line subtotals in sales orders"
+msgstr "판매주문에서 소계 행을 생성합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_order_form
+msgid "Lock"
+msgstr "잠금"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_auto_done_setting
+msgid "Lock Confirmed Orders"
+msgstr "확정된 주문 잠그기"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Locked"
+msgstr "잠김"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Manage promotion &amp; coupon programs"
+msgstr "프로모션 &amp; 쿠폰프로그램 관리"
+
+#. module: sale
+#: selection:product.template,service_type:0
 msgid "Manually set quantities on order"
-msgstr ""
+msgstr "주문에서 수량을 수동으로 설정"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_product_product_track_service
-#: model:ir.model.fields,help:sale.field_product_template_track_service
+#: model:ir.model.fields,help:sale.field_product_product_service_type
+#: model:ir.model.fields,help:sale.field_product_template_service_type
 msgid ""
-"Manually set quantities on order: Invoice based on the manually entered "
-"quantity, without creating an analytic account.\n"
-"Timesheets on contract: Invoice based on the tracked hours on the related "
-"timesheet.\n"
-"Create a task and track hours: Create a task on the sale order validation "
-"and track the work hours."
+"Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
+"Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
+"Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"주문에서 수량을 수동으로 설정합니다. : 송장에 자동으로 생성되지 않고, 수동으로 수량을 입력하여 반영합니다. \n"
+"타임시트의 연락처 : 송장에 관련 타임시트에 추적된 시간을 반영합니다. \n"
+"업무생성 및 시간 추적 : 확인된 확인주문기준으로 업무가 생성되며 작업시간이 반영됩니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_validity_date
@@ -872,12 +1492,45 @@ msgid ""
 "Manually set the expiration date of your quotation (offer), or it will set "
 "the date automatically based on the template if online quotation is "
 "installed."
-msgstr ""
+msgstr "견적 (만기일)의 만료 날짜를 수동으로 설정하거나 온라인 견적이 설치되어있는 경우 양식 기준으로 자동으로 날짜를 설정합니다."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_margin
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_margin
 msgid "Margins"
 msgstr "이익"
+
+#. module: sale
+#: model:sale.layout_category,name:sale.sale_layout_cat_2
+msgid "Material"
+msgstr "재료"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn_msg
+#: model:ir.model.fields,field_description:sale.field_res_users_sale_warn_msg
+msgid "Message for Sales Order"
+msgstr "판매 주문에 대한 메시지"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn_msg
+#: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn_msg
+msgid "Message for Sales Order Line"
+msgstr "판매 주문 명세에 대한 메시지"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_multi_sales_price
+msgid "Multiple Sales Prices per Product"
+msgstr "제품당 복합 판매단가"
+
+#. module: sale
+#: selection:res.config.settings,multi_sales_price_method:0
+#: selection:res.config.settings,sale_pricelist_setting:0
+msgid "Multiple prices per product (e.g. customer segments, currencies)"
+msgstr "제품당 복합단가(예. 고객구분, 환율)"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "My Activities"
+msgstr "나의 활동"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -890,41 +1543,44 @@ msgid "My Sales Order Lines"
 msgstr "내 판매 주문 명세"
 
 #. module: sale
-#: selection:sale.config.settings,auto_done_setting:0
-msgid "Never allow to modify a confirmed sale order"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_name
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+msgid "Name"
+msgstr "이름"
 
 #. module: sale
-#: code:addons/sale/sale.py:101
+#: code:addons/sale/models/sale.py:115 code:addons/sale/models/sale.py:275
+#: code:addons/sale/models/sale.py:277 code:addons/sale/models/sale.py:279
 #, python-format
 msgid "New"
-msgstr ""
+msgstr "신규"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotation_form
 msgid "New Quotation"
-msgstr ""
+msgstr "새로운 견적서"
 
 #. module: sale
-#: selection:sale.config.settings,group_discount_per_so_line:0
-msgid "No discount on sales order lines, global discount only"
-msgstr ""
+#: selection:product.template,expense_policy:0
+msgid "No"
+msgstr "아니오"
 
 #. module: sale
-#: selection:sale.config.settings,group_display_incoterm:0
-msgid "No incoterm on reports"
-msgstr ""
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "No Message"
+msgstr "메시지 없음"
 
 #. module: sale
-#: selection:sale.config.settings,group_product_variant:0
-msgid "No variants on products"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "No longer edit orders once confirmed"
+msgstr "한번 승인된 주문은 수정할 수 없습니다"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
-"Note that once a Quotation becomes a Sale Order, it will be moved \n"
+"Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
 
@@ -932,7 +1588,7 @@ msgstr ""
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
-"Note that once a Quotation becomes a Sale Order, it will be moved from the "
+"Note that once a Quotation becomes a Sales Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
 
@@ -940,7 +1596,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr ""
+msgstr "송장 할 내용 없음"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -950,28 +1606,54 @@ msgid ""
 msgstr "주문 확정과 고객에게 제품을 배송한 사이의 일자"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_crm_team_quotations_count
+msgid "Number of quotations to invoice"
+msgstr "송장발행할 견적서 수"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_crm_team_sales_to_invoice_count
+msgid "Number of sales to invoice"
+msgstr "송장발행할 주문 수"
+
+#. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders
 msgid ""
 "Once the quotation is confirmed, it becomes a sales order.\n"
 "                    You'll be able to invoice it and collect payments.\n"
-"                    From the <i>Sales Orders</i> menu, you can track "
-"delivery\n"
+"                    From the <i>Sales Orders</i> menu, you can track delivery\n"
 "                    orders or services."
 msgstr ""
+"견적서가 승인되면, 판매주문으로 변경됩니다. \n"
+"<i>판매주문</i>메뉴에서 납품요청 또는 서비스를 통해 \n"
+"송장을 발행하거나 수금이 가능합니다."
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_quote
-msgid "Online Quotations"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_sale_payment
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_portal_confirmation
+msgid "Online Signature & Payment"
+msgstr "온라인 사인 & 결제"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_portal_confirmation_options
+msgid "Online Signature & Payment options"
+msgstr "온라인 사인 & 결제 옵션"
 
 #. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/sale.js:26
+#: code:addons/sale/static/src/js/sale.js:32
 #, python-format
 msgid "Only Integer Value should be valid."
 msgstr "오직 정수 값만이 유효합니다."
 
 #. module: sale
+#: code:addons/sale/controllers/portal.py:209
+#, python-format
+msgid "Operation not allowed"
+msgstr "작업이 허용되지 않습니다"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
 msgstr "주문"
@@ -979,12 +1661,23 @@ msgstr "주문"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order #"
-msgstr ""
+msgstr "주문 #"
 
 #. module: sale
+#: code:addons/sale/controllers/portal.py:86
+#: code:addons/sale/controllers/portal.py:138
 #: model:ir.model.fields,field_description:sale.field_sale_order_date_order
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model:ir.ui.view,arch_db:sale.view_order_tree
+#, python-format
 msgid "Order Date"
 msgstr "주문 날짜"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Order Line Sections"
+msgstr "주문 명세 부분"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_order_line
@@ -1004,8 +1697,10 @@ msgid "Order Number"
 msgstr "주문 번호"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_name
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_order_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_name
+#: model:ir.model.fields,field_description:sale.field_sale_report_name
 msgid "Order Reference"
 msgstr "주문 참조"
 
@@ -1015,24 +1710,43 @@ msgid "Order Status"
 msgstr "주문 상태"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
-msgid "Ordered Qty"
-msgstr ""
+#: code:addons/sale/controllers/portal.py:218
+#, python-format
+msgid "Order is not in a state requiring customer validation."
+msgstr "주문은 고객확인이 필요한 상태가 아닙니다."
+
+#. module: sale
+#: code:addons/sale/controllers/portal.py:225
+#, python-format
+msgid "Order signed by %s"
+msgstr "%s 를 통해 승인된 주문"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+msgid "Order to Invoice"
+msgstr "송장 발행 대상 주문"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
+msgid "Ordered Qty"
+msgstr "주문된 수량"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:821
+#: model:ir.ui.view,arch_db:sale.view_order_form
+#, python-format
 msgid "Ordered Quantity"
-msgstr ""
+msgstr "주문된 수량"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product_invoice_policy
 #: model:ir.model.fields,help:sale.field_product_template_invoice_policy
 msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
-"Delivered Quantity: Invoiced based on the quantity the vendor delivered.\n"
-"Reinvoice Costs: Invoice with some additional charges (product transfer, "
-"labour charges,...)"
+"Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
+"주문된 수량 : 송장에 고객이 주문한 수량을 반영합니다.\n"
+"납품된 수량 : 송장에 공급업체가 납품한 수량을 반영합니다.(시간 또는 납품)"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1042,22 +1756,34 @@ msgstr "판매 주문의 주문일"
 #. module: sale
 #: selection:product.template,invoice_policy:0
 msgid "Ordered quantities"
-msgstr ""
+msgstr "주문한 수량"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_sale_order
+#: model:ir.ui.menu,name:sale.sale_order_menu
+msgid "Orders"
+msgstr "주문"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_orders_to_invoice
+#: model:ir.ui.menu,name:sale.menu_sale_order_invoice
+#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+msgid "Orders to Invoice"
+msgstr "송장 발행 대상 주문"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr ""
+msgstr "상향 판매 주문"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_upselling
 msgid ""
 "Orders to upsell are orders having products with an invoicing\n"
-"                policy based on <i>ordered quantities</i> for which you "
-"have\n"
+"                policy based on <i>ordered quantities</i> for which you have\n"
 "                delivered more than what have been ordered."
-msgstr ""
+msgstr "상향 판매 주문은 <i>주문된 수량</i>보다 납품된 수량이 많을 때 반영되는 송장에 대한 규칙입니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1065,58 +1791,94 @@ msgid "Other Information"
 msgstr "기타 정보"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_partner
+#: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
+msgid "PRO-FORMA Invoice"
+msgstr "견적 송장"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_partner_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_partner_id
 msgid "Partner"
 msgstr "파트너"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_country_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_country_id
 msgid "Partner Country"
-msgstr ""
+msgstr "파트너 국가"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Partner's Country"
-msgstr ""
+msgstr "파트너의 국가"
+
+#. module: sale
+#: selection:res.config.settings,portal_confirmation_options:0
+msgid "Payment"
+msgstr "결제"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Payment Acquirers"
+msgstr "결제 매입사"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_payment_term_id
-msgid "Payment Term"
-msgstr "지불 기간"
+msgid "Payment Terms"
+msgstr "지불 조건"
 
 #. module: sale
-#: selection:sale.config.settings,module_sale_layout:0
-msgid ""
-"Personnalize the sale orders and invoice report with separators, page-breaks "
-"or subtotals"
-msgstr ""
+#: model:res.groups,name:sale.group_sale_layout
+msgid "Personalize sales order and invoice report"
+msgstr "개인에 맞게 판매주문과 송장발행 보고서를 만듭니다"
 
 #. module: sale
-#: code:addons/sale/sale.py:246
+#: code:addons/sale/models/sale.py:353
 #, python-format
-msgid "Please define an accounting sale journal for this company."
-msgstr ""
+msgid "Please define an accounting sales journal for this company."
+msgstr "해당 회사의 매출장부를 정의하십시오."
 
 #. module: sale
-#: code:addons/sale/sale.py:703
+#: code:addons/sale/models/sale.py:916
 #, python-format
 msgid ""
 "Please define income account for this product: \"%s\" (id:%d) - or for its "
 "category: \"%s\"."
-msgstr ""
+msgstr "해당 상품(\"%s\" (id: %d) 또는 상품의 카테고리(\"%s\")에 대한 소득 계정을 정의하세요."
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 msgid "Price"
 msgstr "가격"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce
 msgid "Price Reduce"
-msgstr "가격 감소"
+msgstr "금액 감소"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxexcl
+msgid "Price Reduce Tax excl"
+msgstr "세금을 제외한 금액감소"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_price_reduce_taxinc
+msgid "Price Reduce Tax inc"
+msgstr "세금을 포함한 금액감소"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_subtotal
+msgid "Price Subtotal"
+msgstr "금액 소계"
+
+#. module: sale
+#: selection:res.config.settings,sale_pricelist_setting:0
+msgid "Price computed from formulas (discounts, margins, roundings)"
+msgstr "금액은 수식에 의해 계산됩니다.(할인, 마진, 반올림)"
+
+#. module: sale
+#: model:ir.model,name:sale.model_product_pricelist
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_pricelist_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_pricelist_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_pricelist_id
 msgid "Pricelist"
@@ -1128,32 +1890,41 @@ msgid "Pricelist for current sales order."
 msgstr "현재 판매 주문의 가격표."
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_multi_sales_price_method
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_pricelist_setting
+#: model:ir.ui.menu,name:sale.menu_product_pricelist_main
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Pricelists"
+msgstr "가격표"
+
+#. module: sale
+#: selection:res.config.settings,multi_sales_price_method:0
+msgid "Prices computed from formulas (discounts, margins, roundings)"
+msgstr "금액은 수식에 의해 계산됩니다.(할인, 마진, 반올림)"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Pricing"
+msgstr "가격책정"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Print"
 msgstr "인쇄"
 
 #. module: sale
-#: selection:sale.config.settings,module_website_quote:0
-msgid "Print quotes or send by email"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_proforma_sales
+msgid "Pro-Forma Invoice"
+msgstr "견적 송장"
 
 #. module: sale
-#: model:ir.model,name:sale.model_procurement_order
-msgid "Procurement"
-msgstr "조달"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_procurement_group_id
-msgid "Procurement Group"
-msgstr "조달 그룹"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order_line_procurement_ids
-msgid "Procurements"
-msgstr "조달"
+#: model:res.groups,name:sale.group_proforma_sales
+msgid "Pro-forma Invoices"
+msgstr "견적 송장"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_product_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_id
@@ -1162,43 +1933,50 @@ msgid "Product"
 msgstr "제품"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Product Catalog"
+msgstr "제품 카달로그"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_categ_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_categ_id
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Product Category"
 msgstr "제품 범주"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_product_image
+msgid "Product Image"
+msgstr "제품 이미지"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_qty
+msgid "Product Quantity"
+msgstr "상품 수량"
+
+#. module: sale
 #: model:ir.model,name:sale.model_product_template
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_product_tmpl_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_product_tmpl_id
 msgid "Product Template"
 msgstr "제품 양식"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_variant
+#: model:ir.ui.menu,name:sale.menu_product
+#: model:ir.ui.menu,name:sale.menu_products
 msgid "Product Variants"
 msgstr "파생 제품"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_config
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Product used for down payments"
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_template_action
+#: model:ir.ui.menu,name:sale.prod_config_main
 msgid "Products"
 msgstr "제품"
-
-#. module: sale
-#: selection:sale.config.settings,group_product_variant:0
-msgid ""
-"Products can have several attributes, defining variants (Example: size, "
-"color,...)"
-msgstr ""
-
-#. module: sale
-#: selection:sale.config.settings,group_uom:0
-msgid "Products have only one unit of measure (easier)"
-msgstr ""
-
-#. module: sale
-#: model:res.groups,name:sale.group_mrp_properties
-msgid "Properties on lines"
-msgstr "내역 속성"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -1208,55 +1986,70 @@ msgstr "수량"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_delivered
 msgid "Qty Delivered"
-msgstr ""
+msgstr "납품된 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_invoiced
 msgid "Qty Invoiced"
-msgstr ""
+msgstr "송장 발행된 수량"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report_product_uom_qty
+msgid "Qty Ordered"
+msgstr "주문된 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_qty_to_invoice
 msgid "Qty To Invoice"
-msgstr ""
+msgstr "송장 발행 대상 수량"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Quantities to invoice from sales orders"
+msgstr "판매주문에서 송장 발행 대상 수량"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_product_uom_qty
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quantity"
 msgstr "수량"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.view_order_form
+msgid "Quantity:"
+msgstr "수량:"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model:ir.ui.view,arch_db:sale.portal_order_page
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 #: selection:sale.order,state:0
 msgid "Quotation"
 msgstr "견적"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr ""
+msgstr "견적서 #"
 
 #. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
+#: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
 msgstr "견적 / 주문"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "Quotation Date:"
+#: model:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Quotation Date"
 msgstr "견적 작성일"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Quotation Number"
 msgstr "견적 번호"
-
-#. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
-msgid "Quotation Send"
-msgstr "견적 보내기"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -1271,24 +2064,30 @@ msgstr "견적서 확정함"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
+#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
 msgstr "견적 발송"
 
 #. module: sale
+#: code:addons/sale/models/sales_team.py:101
 #: model:ir.actions.act_window,name:sale.action_quotations
 #: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.model.fields,field_description:sale.field_crm_team_use_quotations
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
+#, python-format
 msgid "Quotations"
 msgstr "견적"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_config
-msgid "Quotations & Sales"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Quotations &amp; Orders"
+msgstr "견적서 &amp; 주문서"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -1297,9 +2096,13 @@ msgstr "견적 분석"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-#, fuzzy
 msgid "Quotations Sent"
-msgstr "견적 발송"
+msgstr "견적 발송일"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_quote
+msgid "Quotations Templates"
+msgstr "견적서 양식"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
@@ -1307,61 +2110,51 @@ msgid "Quotations and Sales"
 msgstr "견적 및 판매"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product_expense_policy
+#: model:ir.model.fields,field_description:sale.field_product_template_expense_policy
+msgid "Re-Invoice Expenses"
+msgstr "송장 재발행 비용"
+
+#. module: sale
+#: code:addons/sale/controllers/portal.py:87
+#: code:addons/sale/controllers/portal.py:139
+#, python-format
+msgid "Reference"
+msgstr "참조"
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_origin
 msgid "Reference of the document that generated this sales order request."
 msgstr "해당 판매 주문 요청을 생성한 문서의 참조"
 
 #. module: sale
-#: selection:product.template,invoice_policy:0
-#, fuzzy
-msgid "Reinvoice Costs"
-msgstr "송장 상태"
+#: model:ir.actions.act_window,name:sale.report_configuration_action
+#: model:ir.ui.view,arch_db:sale.report_configuration_form_view
+#: model:ir.ui.view,arch_db:sale.report_configuration_tree_view
+msgid "Report Configuration"
+msgstr "보고서 환경 설정"
 
 #. module: sale
+#: model:ir.ui.menu,name:sale.Report_configuration
+msgid "Report Layout Categories"
+msgstr "보고서 양식 카테고리"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_sale_report
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Reporting"
 msgstr "보고"
 
 #. module: sale
-#: selection:sale.order,state:0
-msgid "Sale Order"
-msgstr "판매 주문"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_account_analytic_line_so_line
-#: model:ir.model.fields,field_description:sale.field_procurement_order_sale_line_id
-msgid "Sale Order Line"
-msgstr "판매 주문 내역"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_product_sale_list
-#: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
-msgid "Sale Order Lines"
-msgstr "판매 주문 명세"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_auto_done_setting
-msgid "Sale Order Modification"
-msgstr ""
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_config
-msgid "Sale Price"
-msgstr "판매 가격"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_sale_layout
-msgid "Sale Reports Layout"
-msgstr ""
-
-#. module: sale
 #: model:ir.ui.menu,name:sale.menu_report_product_all
+#: model:ir.ui.menu,name:sale.sale_menu_root
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
-#: model:ir.ui.view,arch_db:sale.view_company_inherit_form2
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Sales"
 msgstr "매출"
@@ -1381,9 +2174,30 @@ msgid "Sales Analysis"
 msgstr "판매 분석"
 
 #. module: sale
+#: model:ir.model,name:sale.model_crm_team
+#: model:ir.model.fields,field_description:sale.field_account_invoice_report_team_id
+#: model:ir.model.fields,field_description:sale.field_account_invoice_team_id
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_team_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_team_id
+#: model:ir.model.fields,field_description:sale.field_sale_report_team_id
+#: model:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
+#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_search
+#: model:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
+#: model:ir.ui.view,arch_db:sale.view_order_product_search
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Sales Channel"
+msgstr "판매 채널"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.report_sales_team
+#: model:ir.ui.menu,name:sale.sales_team_config
+msgid "Sales Channels"
+msgstr "판매 채널"
+
+#. module: sale
 #: selection:sale.report,state:0
 msgid "Sales Done"
-msgstr ""
+msgstr "판매 완료"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_sale_report_sales_funnel
@@ -1396,12 +2210,14 @@ msgid "Sales Information"
 msgstr "매출 정보"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_order
 #: model:ir.model.fields,field_description:sale.field_res_partner_sale_order_ids
+#: model:ir.model.fields,field_description:sale.field_res_partner_sale_warn
+#: model:ir.model.fields,field_description:sale.field_res_users_sale_order_ids
+#: model:ir.model.fields,field_description:sale.field_res_users_sale_warn
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:res.request.link,name:sale.req_link_sale_order
-#: selection:sale.report,state:0
+#: selection:sale.order,state:0 selection:sale.report,state:0
 msgid "Sales Order"
 msgstr "판매 주문"
 
@@ -1413,10 +2229,15 @@ msgstr "판매 주문이 확정됨"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
+#: model:ir.model.fields,field_description:sale.field_account_analytic_line_so_line
+#: model:ir.model.fields,field_description:sale.field_product_product_sale_line_warn
+#: model:ir.model.fields,field_description:sale.field_product_template_sale_line_warn
 msgid "Sales Order Line"
 msgstr "판매 주문 명세"
 
 #. module: sale
+#: model:ir.actions.act_window,name:sale.action_product_sale_list
+#: model:ir.model.fields,field_description:sale.field_account_invoice_line_sale_line_ids
 #: model:ir.ui.view,arch_db:sale.view_order_form
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Sales Order Lines"
@@ -1433,20 +2254,20 @@ msgid "Sales Order Lines related to a Sales Order of mine"
 msgstr "내 판매 주문에 관련된 판매 주문 내역"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
-msgid "Sales Order that haven't yet been confirmed"
-msgstr "아직 확정되지 않은 판매 주문"
-
-#. module: sale
+#: code:addons/sale/models/sales_team.py:102
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
-#: model:ir.ui.menu,name:sale.menu_sale_order
+#: model:ir.ui.menu,name:sale.menu_sales_config
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
+#: model:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
+#: model:ir.ui.view,arch_db:sale.portal_my_home_sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
 #: model:ir.ui.view,arch_db:sale.view_order_tree
 #: model:ir.ui.view,arch_db:sale.view_sale_order_calendar
 #: model:ir.ui.view,arch_db:sale.view_sale_order_graph
 #: model:ir.ui.view,arch_db:sale.view_sale_order_pivot
+#, python-format
 msgid "Sales Orders"
 msgstr "판매 주문"
 
@@ -1456,31 +2277,18 @@ msgid "Sales Orders Statistics"
 msgstr "판매 주문 통계"
 
 #. module: sale
-#: model:ir.model,name:sale.model_crm_team
-#: model:ir.model.fields,field_description:sale.field_account_invoice_report_team_id
-#: model:ir.model.fields,field_description:sale.field_account_invoice_team_id
-#: model:ir.model.fields,field_description:sale.field_sale_order_team_id
-#: model:ir.model.fields,field_description:sale.field_sale_report_team_id
-#: model:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
-#: model:ir.ui.view,arch_db:sale.view_order_product_search
-#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
-msgid "Sales Team"
-msgstr "영업팀"
+#: selection:product.template,expense_policy:0
+msgid "Sales price"
+msgstr "판매 가격"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_orders_to_invoice
-#: model:ir.ui.menu,name:sale.menu_sale_order_invoice
-#: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
-msgid "Sales to Invoice"
-msgstr ""
+#: code:addons/sale/models/sales_team.py:94
+#, python-format
+msgid "Sales: Untaxed Total"
+msgstr "공급가액 합계"
 
 #. module: sale
-#: selection:sale.config.settings,module_sale_margin:0
-msgid "Salespeople do not need to view margins when quoting"
-msgstr ""
-
-#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_user_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_salesman_id
 #: model:ir.model.fields,field_description:sale.field_sale_order_user_id
 #: model:ir.model.fields,field_description:sale.field_sale_report_user_id
@@ -1491,15 +2299,69 @@ msgid "Salesperson"
 msgstr "영업사원"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
+msgid "Search Name"
+msgstr "이름 검색"
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
 msgstr "판매 주문 검색"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_module_website_sale_digital
+#: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_id
+msgid "Section"
+msgstr "구분"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_sale_layout
+msgid "Sections on Sales Orders"
+msgstr "판매 주문 구분"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_access_token
+msgid "Security Token"
+msgstr "보안토큰"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product_sale_line_warn
+#: model:ir.model.fields,help:sale.field_product_template_sale_line_warn
+#: model:ir.model.fields,help:sale.field_res_partner_sale_warn
+#: model:ir.model.fields,help:sale.field_res_users_sale_warn
+msgid ""
+"Selecting the \"Warning\" option will notify user with the message, "
+"Selecting \"Blocking Message\" will throw an exception with the message and "
+"block the flow. The Message has to be written in the next field."
+msgstr ""
+"\"경고\" 옵션을 선택하면 사용자들이 메시지를 받을 수 있습니다. \"메시지 차단\"을 선택하면, 메시지 흐름이 차단됩니다. 메시지는 "
+"다음 필드에 작성되어야 합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Sell and purchase products in different units of measure"
+msgstr "판매와 구매의 단위가 다르게 설정"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
 msgid ""
 "Sell digital products - provide downloadable content on your customer portal"
+msgstr "디지털 제품 판매 - 고객 포털에 다운로드 가능한 컨텐츠 제공"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Sell products by multiple of unit # per package"
+msgstr "다양한 포장당 단위를 판매"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_order_form
+msgid "Send PRO-FORMA Invoice"
+msgstr "견적 송장 전송"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Send a product-specific email once the invoice is paid"
 msgstr ""
 
 #. module: sale
@@ -1508,62 +2370,149 @@ msgid "Send by Email"
 msgstr "이메일로 전송"
 
 #. module: sale
-#: selection:sale.config.settings,module_website_quote:0
-msgid "Send online quotations based on templates (advanced)"
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Sending an email is useful if you need to share specific information or "
+"content about a product (instructions, rules, links, media, etc.). Create "
+"and set the email template from the product detail form (in Sales tab)."
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_sequence
 msgid "Sequence"
 msgstr "순서"
 
 #. module: sale
-#. openerp-web
-#: code:addons/sale/static/src/js/sale.js:19
-#, python-format
-msgid "Set an invoicing target: "
-msgstr ""
+#: model:sale.layout_category,name:sale.sale_layout_cat_1
+msgid "Services"
+msgstr "서비스"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_order_form
-msgid "Set to Done"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_crm_team_use_invoices
+msgid "Set Invoicing Target"
+msgstr "송장발행 달성목표 설정"
+
+#. module: sale
+#. openerp-web
+#: code:addons/sale/static/src/js/sale.js:25
+#, python-format
+msgid "Set an invoicing target: "
+msgstr "송장발행 달성목표 설정"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Set multiple prices per product, automated discounts, etc."
+msgstr "제품당 복합단가 설정, 자동 할인 등"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Set product attributes (e.g. color, size) to sell variants"
+msgstr "판매제품 사양에 반영하기 위해 제품 사양(예. 색상, 크기) 설정"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Set specific billing and shipping addresses"
+msgstr "특정 지불 및 배송 주소 설정"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
 msgid "Set to Quotation"
-msgstr ""
+msgstr "견적서로 변경"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_config_settings
+#: model:ir.ui.menu,name:sale.menu_sale_general_settings
+msgid "Settings"
+msgstr "설정"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
-msgid "Setup default terms and conditions in your company settings."
-msgstr ""
+msgid "Setup default terms and conditions in your sales settings ..."
+msgstr "판매 조정을 위한 기본 지불조건 설정"
 
 #. module: sale
-#: selection:sale.config.settings,group_display_incoterm:0
-msgid "Show incoterms on sale orders and invoices"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Shipping"
+msgstr "배송"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_product_pricelist
-msgid "Show pricelists On Products"
-msgstr ""
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_delivery
+msgid "Shipping Costs"
+msgstr "배송 비용"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_pricelist_item
-msgid "Show pricelists to customers"
-msgstr ""
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Show all records which has next action date is before today"
+msgstr "다음 활동 일자가 오늘 이전인 모든 자료 조회"
 
 #. module: sale
-#: selection:sale.config.settings,group_uom:0
-msgid ""
-"Some products may be sold/purchased in different units of measure (advanced)"
-msgstr ""
+#: model:res.groups,comment:sale.group_show_price_total
+msgid "Show line subtotals with taxes included (B2C)"
+msgstr "세금이 포함된 부분합을 표시(B2C)"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_show_price_subtotal
+msgid "Show line subtotals without taxes (B2B)"
+msgstr "세금이 제외된 부분합을 표시(B2B)"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Show margins on orders"
+msgstr "주문에서 마진 표시"
+
+#. module: sale
+#: selection:product.pricelist,discount_policy:0
+msgid "Show public price & discount to the customer"
+msgstr "고객에 일단단가와 할인을 표시"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Show standard terms &amp; conditions on orders"
+msgstr "주문에 표준 결제조건을 표시"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
+msgid "Show subtotal"
+msgstr "소계 표시"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_total
+msgid "Show total"
+msgstr "합계 표시"
+
+#. module: sale
+#: selection:res.config.settings,portal_confirmation_options:0
+msgid "Signature"
+msgstr "사인"
+
+#. module: sale
+#: code:addons/sale/controllers/portal.py:211
+#, python-format
+msgid "Signature is missing."
+msgstr "사인이 없습니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Sort products in sections with subtotals and page-breaks"
+msgstr "부분합과 페이지 구분으로 구역내 제품을 분류"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_origin
 msgid "Source Document"
-msgstr "자재 문서"
+msgstr "원본 문서"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_product_email_template
+msgid "Specific Email"
+msgstr "특정 이메일"
+
+#. module: sale
+#: code:addons/sale/controllers/portal.py:88
+#: code:addons/sale/controllers/portal.py:140
+#, python-format
+msgid "Stage"
+msgstr "단계"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -1573,12 +2522,8 @@ msgid "Status"
 msgstr "상태"
 
 #. module: sale
-#: model:ir.ui.view,arch_db:sale.view_sales_config
-msgid "Subscriptions"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_subtotal
+#: model:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
 msgid "Subtotal"
 msgstr "소계"
 
@@ -1586,13 +2531,39 @@ msgstr "소계"
 #: model:ir.model.fields,help:sale.field_crm_team_invoiced_target
 msgid ""
 "Target of invoice revenue for the current month. This is the amount the "
-"sales team estimates to be able to invoice this month."
+"sales channel estimates to be able to invoice this month."
 msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_show_tax
+msgid "Tax Display"
+msgstr "세금 표시"
+
+#. module: sale
+#: model:res.groups,name:sale.group_show_price_subtotal
+msgid "Tax display B2B"
+msgstr "B2B에서 세금 표시"
+
+#. module: sale
+#: model:res.groups,name:sale.group_show_price_total
+msgid "Tax display B2C"
+msgstr "B2C에서 세금표시"
+
+#. module: sale
+#: selection:res.config.settings,sale_show_tax:0
+msgid "Tax-Excluded Prices"
+msgstr "세금 별도 금액"
+
+#. module: sale
+#: selection:res.config.settings,sale_show_tax:0
+msgid "Tax-Included Prices"
+msgstr "세금 포함 금액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_tax
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_tax_id
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
 msgstr "세금"
@@ -1600,7 +2571,17 @@ msgstr "세금"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_taxes_id
 msgid "Taxes used for deposits"
+msgstr "예금에 사용되는 세금"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_res_config_settings_module_sale_payment
+msgid "Technical field implied by user choice of online_confirmation"
 msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_sale_note
+msgid "Terms & Conditions"
+msgstr "내용 및 조건"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_note
@@ -1608,66 +2589,94 @@ msgid "Terms and conditions"
 msgstr "내용 및 조건"
 
 #. module: sale
-#: code:addons/sale/sale_analytic.py:56
+#: code:addons/sale/models/analytic.py:128
+#: code:addons/sale/models/analytic.py:140
 #, python-format
 msgid ""
-"The Sale Order %s linked to the Analytic Account must be validated before "
+"The Sales Order %s linked to the Analytic Account must be validated before "
 "registering expenses."
-msgstr ""
+msgstr "회계분석에 연동된 판매주문%s은 비용 등록 전에 승인되어야 합니다."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_amount
 msgid "The amount to be invoiced in advance, taxes excluded."
-msgstr ""
+msgstr "사전 송장이 발행된 금액, 세금 제외"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order_project_id
+#: model:ir.model.fields,help:sale.field_sale_order_analytic_account_id
 msgid "The analytic account related to a sales order."
 msgstr "판매 주문과 관련된 분석 계정."
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"The printed reports will display the incoterms for the sale orders and the "
-"related invoices"
+"The margin is computed as the sum of product sales prices minus the cost set"
+" in their detail form."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:137
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
 #, python-format
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr ""
+msgstr "선금 송장으로 발행 된 제품은 '서비스' 유형 이어야만 합니다. 다른 제품을 사용하거나이 제품을 업데이트하십시오."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:135
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:147
 #, python-format
 msgid ""
-"The product used to invoice a down payment should have an invoice policy set "
-"to \"Ordered quantities\". Please update your deposit product to be able to "
-"create a deposit invoice."
+"The product used to invoice a down payment should have an invoice policy set"
+" to \"Ordered quantities\". Please update your deposit product to be able to"
+" create a deposit invoice."
 msgstr ""
+"선금 송장으로 발행 된 제품의 송장 정책이 \"주문 수량\"으로 설정되어 있어야 합니다. 예금 송장을 만들려면 예금 상품을 "
+"업데이트하십시오."
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:77
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:78
 #, python-format
 msgid "The value of the down payment amount must be positive."
+msgstr "선급금 금액은 양수 여야합니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+msgid "There are currently no orders for your account."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:73
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+msgid "There are currently no quotations for your account."
+msgstr ""
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"There are two ways to manage pricelists: 1) Multiple prices per product: "
+"must be set in the Sales tab of the product detail form. 2) Price computed "
+"from formulas: must be set in the pricelist form."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:74
 #, python-format
 msgid ""
-"There is no income account defined for this product: \"%s\". You may have to "
-"install a chart of account from Accounting app, settings menu."
+"There is no income account defined for this product: \"%s\". You may have to"
+" install a chart of account from Accounting app, settings menu."
 msgstr ""
+"이 제품에 대해 정의 된 소득 계정이 없습니다 : \"%s\". 회계 응용 프로그램, 설정 메뉴에서 계정 차트를 설치해야 할 수도 "
+"있습니다."
 
 #. module: sale
-#: code:addons/sale/sale.py:330 code:addons/sale/sale.py:334
+#: code:addons/sale/models/sale.py:430 code:addons/sale/models/sale.py:434
 #, python-format
-msgid "There is no invoicable line."
-msgstr ""
+msgid "There is no invoiceable line."
+msgstr "송장발행가능 명세가 없습니다."
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.portal_order_error
+msgid "There was an error processing this page."
+msgstr "현재페이지에서 작업하는데 오류가 있습니다."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1675,25 +2684,24 @@ msgid "This Year"
 msgstr "올해"
 
 #. module: sale
-#: model:web.tip,description:sale.sale_tip_1
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
-"This progress bar shows the stages your quotation will go through.\n"
-"                Use buttons on the left to move forward to the next stages."
+"This default value is applied to any new product created. This can be "
+"changed in the product detail form."
 msgstr ""
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
 msgid ""
 "This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
+"check your sales revenues and sort it by different group criteria (salesman,"
+" partner, product, etc.) Use this report to perform analysis on sales not "
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"이 보고서는 귀하의 견적과 판매 주문에 대한 분석을 수행합니다. 판매 수익을 분"
-"석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 등). 송장 발행이 "
-"아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석"
-"하고자 하는 경우 회계 프로그램에 있는 송장 분석 보고서를 사용할 수 있습니다."
+"이 보고서는 귀하의 견적과 판매 주문에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, "
+"상품 등). 송장 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에"
+" 있는 송장 분석 보고서를 사용할 수 있습니다."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -1704,10 +2712,9 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"이 보고서는 귀하의 견적에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 "
-"다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 등). 송장 발행이 아직 없는 판"
-"매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 "
-"경우 회계 프로그램에 있는 송장 분석 보고서를 사용할 수 있습니다."
+"이 보고서는 귀하의 견적에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 등). "
+"송장 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에 있는 송장 "
+"분석 보고서를 사용할 수 있습니다."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -1718,15 +2725,14 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"이 보고서는 귀하의 판매 주문에 대한 분석을 수행합니다. 판매 수익을 분석 확인"
-"하고 다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 등). 송장 발행이 아직 없"
-"는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 "
-"하는 경우 회계 프로그램에 있는 송장 분석 보고서를 사용할 수 있습니다."
+"이 보고서는 귀하의 판매 주문에 대한 분석을 수행합니다. 판매 수익을 분석 확인하고 다른 그룹별로 정렬합니다(영업사원, 파트너, 상품 "
+"등). 송장 발행이 아직 없는 판매 분석을 수행하는데 이 보고서를 사용합니다. 귀하의 회전율을 분석하고자 하는 경우 회계 프로그램에 있는"
+" 송장 분석 보고서를 사용할 수 있습니다."
 
 #. module: sale
-#: selection:product.template,track_service:0
-msgid "Timesheets on project"
-msgstr ""
+#: selection:product.template,service_type:0
+msgid "Timesheets on project (one fare per SO/Project)"
+msgstr "프로젝트상의 타임시트(판매주문/프로젝트 당 1운임)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -1738,16 +2744,28 @@ msgid "To Invoice"
 msgstr "송장 발행 대상"
 
 #. module: sale
+#: model:ir.ui.view,arch_db:sale.view_sales_order_filter
+msgid "Today Activities"
+msgstr "금일 활동"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_price_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_total
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_total
+#: model:ir.model.fields,field_description:sale.field_sale_report_price_total
+#: model:ir.ui.view,arch_db:sale.invoice_form_inherit_sale
+#: model:ir.ui.view,arch_db:sale.portal_my_orders
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+#: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 #: model:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
 msgstr "총계"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_report_price_total
+#: model:ir.ui.view,arch_db:sale.report_all_channels_sales_view_pivot
+#: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Total Price"
-msgstr "총계"
+msgstr "총금액"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_tree
@@ -1756,15 +2774,21 @@ msgid "Total Tax Included"
 msgstr "세금 포함 총계"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product_track_service
-#: model:ir.model.fields,field_description:sale.field_product_template_track_service
+#: model:ir.model.fields,field_description:sale.field_product_product_service_type
+#: model:ir.model.fields,field_description:sale.field_product_template_service_type
 msgid "Track Service"
-msgstr ""
+msgstr "서비스 추적"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_price_unit
+#: model:ir.ui.view,arch_db:sale.report_invoice_layouted
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Unit Price"
+msgstr "단가"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_order_form
+msgid "Unit Price:"
 msgstr "단가"
 
 #. module: sale
@@ -1775,10 +2799,21 @@ msgid "Unit of Measure"
 msgstr "측정 단위"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_uom
-#, fuzzy
+#: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "단위 카테고리"
+
+#. module: sale
+#: model:ir.ui.menu,name:sale.menu_product_uom_form_action
+#: model:ir.ui.menu,name:sale.next_id_16
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Units of Measure"
-msgstr "측정 단위"
+msgstr "단위"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.view_order_form
+msgid "Unlock"
+msgstr "잠금해제"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1792,42 +2827,57 @@ msgstr "공급가액"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_price_subtotal
-msgid "Untaxed Total Price"
-msgstr ""
+msgid "Untaxed Total"
+msgstr "공급가액 합계"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "Upselling"
-msgstr ""
+msgstr "상향판매"
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Upselling Opportunity"
-msgstr ""
+msgstr "상향판매 기회"
 
 #. module: sale
-#: model:web.tip,description:sale.sale_tip_2
-msgid ""
-"Use pivot and graph views to analyze your sales pipeline.\n"
-"                Select measures, filter and group dimensions to get the "
-"perfect report according to your needs."
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_sale_pricelist
-msgid "Use pricelists to adapt your price per customers"
-msgstr "고객 별로 가격을 적용하기 위한 가격표 사용"
-
-#. module: sale
-#: model:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "VAT:"
-msgstr "부가세 :"
+#: model:ir.ui.view,arch_db:sale.portal_my_quotations
+msgid "Valid Until"
+msgstr "유효 마감일"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report_volume
 msgid "Volume"
-msgstr ""
+msgstr "부피"
+
+#. module: sale
+#: selection:product.template,sale_line_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "경고"
+
+#. module: sale
+#: code:addons/sale/models/sale.py:1006
+#, python-format
+msgid "Warning for %s"
+msgstr "%s에 대한 경고"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
+msgid "Warning on the Sales Order"
+msgstr "판매 주문 경고"
+
+#. module: sale
+#: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+msgid "Warning when Selling this Product"
+msgstr "이 상품을 판매할 때 경고"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_group_warning_sale
+msgid "Warnings"
+msgstr "경고"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_advance_payment_method
@@ -1835,70 +2885,73 @@ msgid "What do you want to invoice?"
 msgstr "송장 발행 대상은 어떤 것입니니까?"
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_sale_config_settings_group_product_variant
-msgid ""
-"Work with product variant allows you to define some variant of the same "
-"products, an ease the product management in the ecommerce for example"
-msgstr ""
-
-#. module: sale
 #. openerp-web
-#: code:addons/sale/static/src/js/sale.js:26
+#: code:addons/sale/static/src/js/sale.js:32
 #, python-format
 msgid "Wrong value entered!"
 msgstr "잘못된 값을 입력!"
 
 #. module: sale
-#: code:addons/sale/sale.py:163
+#: code:addons/sale/models/sale.py:188
 #, python-format
 msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
-msgstr ""
+msgstr "전송된 견적서나 판매주문을 삭제할 수 없습니다! 먼저 취소하세요."
 
 #. module: sale
-#: code:addons/sale/sale.py:797
+#: code:addons/sale/models/sale.py:1069
 #, python-format
 msgid ""
-"You can not remove a sale order line.\n"
+"You can not remove a sales order line.\n"
 "Discard changes and try setting the quantity to 0."
 msgstr ""
+"판매 주문 명세를 삭제할 수 없습니다. \n"
+"변경내용을 취소하시고 수량을 0으로 설정하세요."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
-msgstr ""
+msgstr "모든 주문과 송장을 일괄적 또는 각각 선택할 수 있습니다. "
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
-#, fuzzy
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr "송장 발행 준비가 완료된 판매 주문 내역"
+msgstr "송장발행이 준비된 모든 주문을 확인할 수 있습니다."
+
+#. module: sale
+#: code:addons/sale/controllers/portal.py:229
+#, python-format
+msgid "Your Order has been confirmed."
+msgstr "주문이 승인되었습니다."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
-"Your next actions should flow efficiently: confirm the Quotation \n"
-"                to a Sale Order, then create the Invoice and collect the "
-"Payment."
+"Your next actions should flow efficiently: confirm the Quotation\n"
+"                to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
+"견적서 승인에서 판매주문으로, 이후 송장발행과 대금지급까지\n"
+"동작은 효율적으로 흘러가야합니다."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model:ir.actions.act_window,help:sale.action_orders_salesteams
 msgid ""
-"Your next actions should flow efficiently: confirm the Quotation to a Sale "
+"Your next actions should flow efficiently: confirm the Quotation to a Sales "
 "Order, then create the Invoice and collect the Payment."
 msgstr ""
+"견적서 승인에서 판매주문으로, 이후 송장발행과 대금지급까지\n"
+"동작은 효율적으로 흘러가야합니다."
 
 #. module: sale
-#: model:ir.model,name:sale.model_account_analytic_line
-#, fuzzy
-msgid "account analytic line"
-msgstr "분석 명세"
+#: model:ir.ui.view,arch_db:sale.portal_order_error
+#: model:ir.ui.view,arch_db:sale.portal_order_success
+msgid "close"
+msgstr ""
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1906,41 +2959,16 @@ msgid "days"
 msgstr "일"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#: model:ir.model,name:sale.model_report_sale_report_saleproforma
+msgid "report.sale.report_saleproforma"
+msgstr "report.sale.report_saleproforma"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_pricelist_setting
-msgid "unknown"
-msgstr "알 수 없음"
+#: model:ir.model,name:sale.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
-#~ msgid "Allows you to specify an analytic account on sales orders."
-#~ msgstr "판매 주문서에 분석 계정을 지정할 수 있도록 허용."
-
-#~ msgid "Analytic accounting for sales"
-#~ msgstr "판매에 대한 분석 회계"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "레코드에 게시된 최근 메시지의 날짜."
-
-#~ msgid "Followers"
-#~ msgstr "팔로워"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "선택하면 새로운 메시지를 주목할 필요가 있습니다."
-
-#~ msgid "Last Message Date"
-#~ msgstr "최근 메시지 날짜"
-
-#~ msgid "Messages"
-#~ msgstr "메시지"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "메시지 및 대화 기록"
-
-#~ msgid "Open Sale Menu"
-#~ msgstr "판매 메뉴 열기"
-
-#~ msgid "account.config.settings"
-#~ msgstr "account.config.settings"
+#. module: sale
+#: model:ir.model,name:sale.model_sale_layout_category
+msgid "sale.layout_category"
+msgstr "sale.layout_category"

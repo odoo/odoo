@@ -5,16 +5,18 @@
 # Translators:
 # 老窦 北京 <2662059195@qq.com>, 2017
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
-# Ted Wang <feiyuwang2012@gmail.com>, 2017
+# nle_odoo, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # jack adam <jackadam@sina.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
-"Last-Translator: jack adam <jackadam@sina.com>, 2017\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,7 +105,7 @@ msgstr "%s(副本)"
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;"
-msgstr "&"
+msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -186,6 +188,8 @@ msgid ""
 "</p>\n"
 "</data>"
 msgstr ""
+"<?xml "
+"version=\"1.0\"?><data><p></p><p><br/><strong></strong><strong></strong></p><p></p><p></p></data>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_notification_email_account_invoice
@@ -256,6 +260,35 @@ msgid ""
 "</table>\n"
 "</div>"
 msgstr ""
+"<div><table bgcolor=\"#ededed\" border=\"0\" cellpadding=\"0\" "
+"style=\"padding: 20px; background-color: #ededed; border-"
+"collapse:separate;\" summary=\"o_mail_notification\" "
+"width=\"100%\"><tbody><tr><td align=\"center\" style=\"min-width: "
+"590px;\"><table bgcolor=\"#875A7B\" border=\"0\" cellpadding=\"0\" style"
+"=\"min-width: 590px; background-color: rgb(135,90,123); padding: 20px; "
+"border-collapse:separate;\" width=\"590\"><tr><td valign=\"middle\"><span "
+"style=\"font-size:20px; color:white; font-weight: bold;\"/></td><td "
+"align=\"right\" valign=\"middle\"><img alt=\"${company.name}\" "
+"src=\"/logo.png?company=${company.id}\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\"/></td></tr></table></td></tr><tr><td "
+"align=\"center\" style=\"min-width: 590px;\"><table bgcolor=\"#ffffff\" "
+"border=\"0\" cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"rgb(255, 255, 255); padding: 20px; border-collapse:separate;\" "
+"width=\"590\"><tbody><td style=\"font-family:Arial,Helvetica,sans-serif; "
+"color: #555; font-size: 14px;\" "
+"valign=\"top\"/></tbody></table></td></tr><tr><td align=\"center\" style"
+"=\"min-width: 590px;\"><table bgcolor=\"#875A7B\" border=\"0\" "
+"cellpadding=\"0\" style=\"min-width: 590px; background-color: "
+"rgb(135,90,123); padding: 20px; border-collapse:separate;\" "
+"width=\"590\"><tr><td align=\"left\" style=\"color: #fff; padding-top: 10px;"
+" padding-bottom: 10px; font-size: 12px;\" valign=\"middle\"><br/></td><td "
+"align=\"right\" style=\"color: #fff; padding-top: 10px; padding-bottom: "
+"10px; font-size: 12px;\" valign=\"middle\"><a "
+"href=\"mailto:${company.email}\" style=\"text-decoration:none; color: "
+"white;\"/><br/><a href=\"${company.website}\" style=\"text-decoration:none; "
+"color: white;\"/></td></tr></table></td></tr><tr><td align=\"center\"><a "
+"href=\"https://www.odoo.com\" "
+"target=\"_blank\"/></td></tr></tbody></table></div>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -305,6 +338,12 @@ msgid ""
 "</p>\n"
 "</div>"
 msgstr ""
+"<div><p><i/></p><p lilt=\"split=0\"><strong/></p><p "
+"lilt=\"split=1\"><strong/></p><br/><br/><center><a "
+"class=\"o_default_snippet_text\" href=\"${access_url}\" style=\"background-"
+"color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-"
+"radius: 5px; font-size: 16px;\"/></center><br/><br/><p/><p/><p/><p "
+"style=\"color:#888888\"/></div>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1159,11 +1198,6 @@ msgid "Account"
 msgstr "科目"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr "会计"
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "试算平衡账龄报表"
@@ -1488,6 +1522,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "会计"
@@ -1847,7 +1882,6 @@ msgstr "允许使用辅助核算项"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -3881,6 +3915,28 @@ msgstr "发票日期后的天数"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
 msgstr "在仪表板停用设置进度条"
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"尊敬的先生/女士,\n"
+"    我们的记录表明，你的账户仍有到期的付款。请查找下面的明细。\n"
+"    如果款项已经支付，请忽略此通知。否则，请按如下所述的总金额转交给我们。\n"
+"    如果有任何关于账户的疑问，请联系我们。\n"
+"\n"
+"    谢谢你的合作。\n"
+"    此致 ,\n"
+"           敬礼"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -5949,6 +6005,13 @@ msgid "Journals"
 msgstr "日记账"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
+
+#. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "July"
 msgstr "七月"
@@ -6836,7 +6899,7 @@ msgstr "无详情"
 msgid ""
 "No miscellaneous journal could be found. Please create one before "
 "proceeding."
-msgstr ""
+msgstr "未找到杂项日记账，请在处理之前先创建一个"
 
 #. module: account
 #: code:addons/account/models/account.py:116
@@ -7760,6 +7823,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr "请给这张发票相关的日记账定义序列号"
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr "请在处理之前先安装会计科目表或创建一个杂项日记账"
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr "加 银行"
@@ -8499,13 +8570,6 @@ msgstr "销售"
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
 msgstr "销售税"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "销售/采购日记账"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -9409,10 +9473,10 @@ msgstr "技术领域用于隐藏的付款方法，如果选择的日记账只有
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
-msgstr "用于跟踪税收现金基础对账的技术领域。取消来源时需要这样：它将通过反向日记帐分录以取消该部分。"
+msgstr "技术字段用于追踪税金现金收付制调节。当取消源单据时需要它：它会登录逆转会计分录来取消那部分。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -10262,6 +10326,7 @@ msgid "Total"
 msgstr "合计"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "总金额"
@@ -10452,20 +10517,12 @@ msgid "UP"
 msgstr "向上"
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr "尚未定义"
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "未分配利润"

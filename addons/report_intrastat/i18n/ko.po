@@ -1,31 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * report_intrastat
-#
+# 
 # Translators:
+# Martin Trigaux, 2017
+# Up Link <linkup.way@gmail.com>, 2018
+# Linda Stockelova <stockeloval@btlnet.com>, 2018
+# Seongseok Shin <shinss61@hotmail.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-25 08:56+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Korean (http://www.transifex.com/odoo/odoo-9/language/ko/)\n"
-"Language: ko\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Seongseok Shin <shinss61@hotmail.com>, 2018\n"
+"Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Comment:</strong>"
-msgstr ""
+msgstr "<strong>댓글</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Document:</strong>"
 msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "<strong>Fiscal Position Remark:</strong>"
+msgstr "<strong>회계 위치 참고:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -44,18 +53,18 @@ msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Payment Term:</strong>"
-msgstr ""
+msgid "<strong>Payment Terms:</strong>"
+msgstr "<strong>결제 조건:</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "<strong>Total Without Taxes</strong>"
-msgstr ""
+msgid "<strong>Subtotal</strong>"
+msgstr "<strong>소계</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>합계</strong>"
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -65,17 +74,17 @@ msgstr "금액"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "April"
-msgstr "4월"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "August"
-msgstr "8월"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Cancelled Invoice"
-msgstr "취소한 송장"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_company_id
@@ -90,7 +99,12 @@ msgstr "국가"
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_code
 msgid "Country code"
-msgstr "국가 코드"
+msgstr ""
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Credit Note"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_currency_id
@@ -100,7 +114,7 @@ msgstr "유통"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "December"
-msgstr "12월"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -120,17 +134,17 @@ msgstr "표시 이름"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Draft Invoice"
-msgstr "송장 기안"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
 msgid "Export"
-msgstr "내보내기"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "February"
-msgstr "2월"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_id
@@ -140,50 +154,51 @@ msgstr "ID"
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
 msgid "Import"
-msgstr "가져오기"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_tree_all
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_all
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Intrastat"
-msgstr "인트라스탯(EU 통계자료 공유)"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
+#: model:ir.model.fields,field_description:report_intrastat.field_product_product_intrastat_id
+#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_form
 msgid "Intrastat Code"
-msgstr "인트라스탯 코드"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_search
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_tree
 msgid "Intrastat Data"
-msgstr "인트라스탯 데이타"
+msgstr ""
 
 #. module: report_intrastat
-#: model:ir.actions.report.xml,name:report_intrastat.account_intrastatinvoices
+#: model:ir.actions.report,name:report_intrastat.account_intrastatinvoices
 msgid "Intrastat Invoices"
-msgstr "인트라스탯 송장"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat_code
-#: model:ir.model.fields,field_description:report_intrastat.field_product_template_intrastat_id
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_intrastat_id
 #: model:ir.ui.view,arch_db:report_intrastat.view_report_intrastat_code_tree
 msgid "Intrastat code"
-msgstr "인트라스탯 코드"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_res_country_intrastat
 msgid "Intrastat member"
-msgstr "인트라스탯 회원"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_report_intrastat
 msgid "Intrastat report"
-msgstr "인트라스탯 보고서"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -193,17 +208,17 @@ msgstr "송장"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "January"
-msgstr "1월"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "July"
-msgstr "7월"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "June"
-msgstr "6월"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat___last_update
@@ -213,12 +228,12 @@ msgstr "최근 수정"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "March"
-msgstr "3월"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "May"
-msgstr "5월"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_month
@@ -228,17 +243,12 @@ msgstr "월"
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "November"
-msgstr "11월"
+msgstr ""
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "October"
-msgstr "10월"
-
-#. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "PRO-FORMA"
-msgstr "견적"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model,name:report_intrastat.model_product_template
@@ -251,24 +261,19 @@ msgid "Quantity"
 msgstr "수량"
 
 #. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Refund"
-msgstr "환불"
-
-#. module: report_intrastat
 #: selection:report.intrastat,month:0
 msgid "September"
-msgstr "9월"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_ref
 msgid "Source document"
-msgstr "원본 문서"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_supply_units
 msgid "Supply Units"
-msgstr "공급 단위"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -283,7 +288,7 @@ msgstr "세금"
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_type
 msgid "Type"
-msgstr "유형"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
@@ -293,28 +298,28 @@ msgstr "단가"
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Unit of measure"
-msgstr "측정 단위"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_value
 msgid "Value"
-msgstr "값"
-
-#. module: report_intrastat
-#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Vendor Bill"
 msgstr ""
 
 #. module: report_intrastat
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
-msgid "Vendor Refund"
+msgid "Vendor Bill"
+msgstr "공급 업체 청구서"
+
+#. module: report_intrastat
+#: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
+msgid "Vendor Credit Note"
 msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_weight
 #: model:ir.ui.view,arch_db:report_intrastat.report_intrastatinvoice_document
 msgid "Weight"
-msgstr "무게"
+msgstr ""
 
 #. module: report_intrastat
 #: model:ir.model.fields,field_description:report_intrastat.field_report_intrastat_name

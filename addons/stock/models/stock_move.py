@@ -316,10 +316,12 @@ class StockMove(models.Model):
 
     @api.constrains('product_uom')
     def _check_uom(self):
-        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id.id != move.product_uom.category_id.id)
+        moves_error = self.filtered(lambda move: move.product_id.uom_id.category_id != move.product_uom.category_id)
         if moves_error:
             user_warning = _('You try to move a product using a UoM that is not compatible with the UoM of the product moved. Please use an UoM in the same UoM category.')
-            user_warning += '\n\nBlocking: %s' % ' ,'.join(moves_error.mapped('name'))
+            for move in moves_error:
+                user_warning += _('\n\n%s --> Product UoM is %s (%s) - Move UoM is %s (%s)') % (move.product_id.display_name, move.product_id.uom_id.name, move.product_id.uom_id.category_id.name, move.product_uom.name, move.product_uom.category_id.name)
+            user_warning += _('\n\nBlocking: %s') % ' ,'.join(moves_error.mapped('name'))
             raise UserError(user_warning)
 
     @api.model_cr
@@ -998,22 +1000,21 @@ class StockMove(models.Model):
 
         moves = self.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_todo = self.env['stock.move']
-        # Create extra moves where necessary
+
+        # Cancel moves where necessary ; we should do it before creating the extra moves because
+        # this operation could trigger a merge of moves.
         for move in moves:
-            # Here, the `quantity_done` was already rounded to the product UOM by the `do_produce` wizard. However,
-            # it is possible that the user changed the value before posting the inventory by a value that should be
-            # rounded according to the move's UOM. In this specific case, we chose to round up the value, because it
-            # is what is expected by the user (if i consumed/produced a little more, the whole UOM unit should be
-            # consumed/produced and the moves are split correctly).
-            # FIXME: move rounding to move line
-            # rounding = move.product_uom.rounding
-            # move.quantity_done = float_round(move.quantity_done, precision_rounding=rounding, rounding_method ='UP')
             if move.quantity_done <= 0:
                 if float_compare(move.product_uom_qty, 0.0, precision_rounding=move.product_uom.rounding) == 0:
                     move._action_cancel()
+
+        # Create extra moves where necessary
+        for move in moves:
+            if move.state == 'cancel' or move.quantity_done <= 0:
                 continue
             moves_todo |= move
             moves_todo |= move._create_extra_move()
+
         # Split moves where necessary and move quants
         for move in moves_todo:
             rounding = move.product_uom.rounding

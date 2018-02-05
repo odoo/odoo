@@ -5,9 +5,9 @@
 # Translators:
 # Gab_Odoo <gab@odoo.com>, 2017
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Wolfgang Taferner, 2017
 # Mathias Neef <mn@copado.de>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Jasper Torlitz <inactive+jtorlitz@transifex.com>, 2017
@@ -15,13 +15,13 @@
 # darenkster <inactive+darenkster@transifex.com>, 2017
 # Philipp Hug <philipp@hug.cx>, 2017
 # Malte Jansen <work@maltejansen.de>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
+# Renzo Meister, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Niki Waibel, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
 # Torsten Wichmann <t.wichmann@intero-technologies.de>, 2017
-# BT_astauder <andreas.stauder@brain-tec.ch>, 2017
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2017
 # Martin K <martinkuenz@gmail.com>, 2017
 # key six <mobile.umts@gmail.com>, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
@@ -31,15 +31,16 @@
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
 # Constantin Ehrenstein <transifex@skiller.eu>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
-# Andi <flimflam@salasar.de>, 2017
+# Andi, 2017
 # DE T1 <e2f8846@yahoo.com>, 2017
+# Juan José Trujillo <juanjosetrujillo@gmx.de>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
-"Last-Translator: DE T1 <e2f8846@yahoo.com>, 2017\n"
+"POT-Creation-Date: 2018-01-08 10:30+0000\n"
+"PO-Revision-Date: 2018-01-08 10:30+0000\n"
+"Last-Translator: Juan José Trujillo <juanjosetrujillo@gmx.de>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1304,6 +1305,13 @@ msgid "Do you want to open cash registers?"
 msgstr "Wollen Sie eine Registrierkasse öffnen"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Don't turn this option on if you take orders on smartphones or tablets. Such"
+" devices already benefit from a native keyboard."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
 msgstr "Erledigt"
@@ -1313,13 +1321,6 @@ msgstr "Erledigt"
 msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid ""
-"Don’t turn this option on if you take orders on smartphones or tablets. Such"
-" devices already benefit from a native keyboard."
 msgstr ""
 
 #. module: point_of_sale
@@ -2530,7 +2531,7 @@ msgstr "Zahlungen"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:939
 #, python-format
 msgid "Payments:"
-msgstr ""
+msgstr "Zahlungen"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.peche
@@ -2605,7 +2606,7 @@ msgstr "Bitte Partner für diesen Verkauf definieren"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:533
 #, python-format
 msgid "Please select a payment method."
-msgstr ""
+msgstr "Bitte wählen Sie eine Zahlungsmethode"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2776,7 +2777,7 @@ msgstr "Kartoffeln"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_iface_precompute_cash
 msgid "Prefill Cash Payment"
-msgstr ""
+msgstr "Barzahlung vorausfüllen"
 
 #. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3999,7 +4000,7 @@ msgstr "Gesamtpreis"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:868
 #, python-format
 msgid "Total Taxes"
-msgstr ""
+msgstr "Gesamte Steuern"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session_cash_register_total_entry_encoding
@@ -4059,17 +4060,22 @@ msgstr "Unbekannter Barcode"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2023
+#: code:addons/point_of_sale/static/src/js/screens.js:2061
 #, python-format
 msgid "Unknown Error"
 msgstr "Unbekannter Fehler"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1324
+#: code:addons/point_of_sale/static/src/js/screens.js:1337
 #, python-format
 msgid "Unsupported File Format"
 msgstr "Nicht unterstütztes Dateiformat"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "Unused"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_existing_lots

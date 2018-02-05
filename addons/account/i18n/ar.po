@@ -5,7 +5,7 @@
 # Translators:
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2017
 # Mustafa Rawi <mustafa@cubexco.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2017
 # Shaima Safar <shaima.safar@open-inside.com>, 2017
 # Majeed Alsamarraie <majeed.hatim@gmail.com>, 2017
@@ -23,12 +23,13 @@
 # Abd El-Rahman Ali <abdelrahman.ali.242@gmail.com>, 2017
 # Zuhair Hammadi <zuhair12@gmail.com>, 2017
 # morheb bek <morhebbek@gmail.com>, 2017
-# zahi chemaly <zahi@sercotex.net>, 2017
+# nle_odoo, 2017
 # Yihya Hugirat <hugirat@gmail.com>, 2017
 # Mohamed Hamdy <medo_boy1104@yahoo.com>, 2017
 # Hear Here <hearherebox@gmail.com>, 2017
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2017
 # hamza tayseer atieh <hamza.atieh@minervadata.com>, 2017
+# zahi chemaly <zahi@sercotex.net>, 2017
 # khalil qandil <khalilqandil@gmail.com>, 2017
 # mohammed rabea <moh.rabea@gmail.com>, 2017
 # fares alokeeli <okffok@gmail.com>, 2017
@@ -41,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-11-16 08:08+0000\n"
-"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"POT-Creation-Date: 2018-01-10 07:40+0000\n"
+"PO-Revision-Date: 2018-01-10 07:40+0000\n"
 "Last-Translator: jahzar <jahzar@gmail.com>, 2017\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -132,7 +133,7 @@ msgstr "%s (نسخة)"
 #: model:ir.ui.view,arch_db:account.portal_invoice_report
 #: model:ir.ui.view,arch_db:account.report_invoice_document
 msgid "&amp;nbsp;"
-msgstr ";amp;nbsp&"
+msgstr "&amp;nbsp;"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.report_invoice_document
@@ -585,7 +586,7 @@ msgstr "<span>التسوية</span>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>التقارير</span>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -680,7 +681,7 @@ msgstr "<strong>الشركة:</strong>"
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "<strong>Contracts &amp; Subscriptions</strong>"
-msgstr "<strong>العقود & الإشتراكات</strong>"
+msgstr "<strong>العقود &amp; الإشتراكات</strong>"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1199,11 +1200,6 @@ msgid "Account"
 msgstr "حساب"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
-msgid "Account Accountant"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
 msgstr "تقرير ميزان المراجعة لعمر الحساب"
@@ -1534,6 +1530,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings_module_account_accountant
 #: model:ir.ui.menu,name:account.account_account_menu
 msgid "Accounting"
 msgstr "الحسابات"
@@ -1900,7 +1897,6 @@ msgstr "يسمح لك باستخدام المحاسبة التحليلية"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:252
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal
-#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount
 #: model:ir.model.fields,field_description:account.field_account_invoice_tax_amount_total
 #: model:ir.model.fields,field_description:account.field_account_move_amount
@@ -3957,6 +3953,28 @@ msgstr "يوم(أيام) بعد تاريخ الفاتورة"
 #: model:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Deactivate setup bar on the dashboard"
 msgstr ""
+
+#. module: account
+#: code:addons/account/models/company.py:43
+#, python-format
+msgid ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
+msgstr ""
+"Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_debit
@@ -6068,6 +6086,13 @@ msgid "Journals"
 msgstr "اليوميات"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
+#: model:ir.actions.report,name:account.action_report_journal
+#: model:ir.ui.menu,name:account.menu_print_journal
+msgid "Journals Audit"
+msgstr ""
+
+#. module: account
 #: selection:res.company,fiscalyear_last_month:0
 msgid "July"
 msgstr "يوليو"
@@ -7914,6 +7939,14 @@ msgid "Please define sequence on the journal related to this invoice."
 msgstr "من فضلك حدد تسلسل  في دفتر اليومية المتصل بهذه الفاتورة."
 
 #. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form
 msgid "Plus Bank"
 msgstr "بالإضافة إلى البنك"
@@ -8663,13 +8696,6 @@ msgstr "المبيعات"
 #: model:ir.ui.view,arch_db:account.view_wizard_multi_chart
 msgid "Sale Tax"
 msgstr "ضريبة مبيعات"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_account_print_journal_menu
-#: model:ir.actions.report,name:account.action_report_journal
-#: model:ir.ui.menu,name:account.menu_print_journal
-msgid "Sale/Purchase Journal"
-msgstr "دفتر يومية المبيعات والمشتريات"
 
 #. module: account
 #: selection:account.tax,type_tax_use:0
@@ -9591,13 +9617,10 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_tax_cash_basis_rec_id
 msgid ""
-"Technical field used to keep track of the tax cash basis reconciliation.This"
-" is needed when cancelling the source: it will post the inverse journal "
+"Technical field used to keep track of the tax cash basis reconciliation. "
+"This is needed when cancelling the source: it will post the inverse journal "
 "entry to cancel that part too."
 msgstr ""
-"الحقل التقني يُستخدم للحفاظ على مسار تسوية الضرائب على الاساس النقدى . هذا "
-"مطلوب عند الغاء المصدر: سوف يُأجل قيد اليومية العكسي لإلغاء هذا الجزء أيضاً."
-"  "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line_tax_exigible
@@ -10507,6 +10530,7 @@ msgid "Total"
 msgstr "الإجمالي "
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_line_price_total
 #: model:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total Amount"
 msgstr "إجمالي المبلغ"
@@ -10697,20 +10721,12 @@ msgid "UP"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/account.py:944
-#, python-format
-msgid ""
-"Unable to mix any taxes being price included with taxes affecting the base "
-"amount but not included in price."
-msgstr ""
-
-#. module: account
 #: selection:account.journal,bank_statements_source:0
 msgid "Undefined Yet"
 msgstr ""
 
 #. module: account
-#: code:addons/account/models/company.py:304
+#: code:addons/account/models/company.py:305
 #, python-format
 msgid "Undistributed Profits/Losses"
 msgstr "الأرباح/الخسائر غير الموزعة"

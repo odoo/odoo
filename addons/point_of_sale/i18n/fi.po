@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
-# salmemik <salmemik@gmail.com>, 2017
+# Mikko Salmela <salmemik@gmail.com>, 2017
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 # Marko Happonen <marko.happonen@sprintit.fi>, 2017
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2017
@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-10 11:34+0000\n"
-"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"POT-Creation-Date: 2018-01-08 10:30+0000\n"
+"PO-Revision-Date: 2018-01-08 10:30+0000\n"
 "Last-Translator: Jukka Paulin <jukka.paulin@gmail.com>, 2017\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
@@ -1242,7 +1242,7 @@ msgstr "Alennus:"
 #: code:addons/point_of_sale/models/barcode_rule.py:14
 #, python-format
 msgid "Discounted Product"
-msgstr ""
+msgstr "Alennettu tuote"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1293,6 +1293,13 @@ msgid "Do you want to open cash registers?"
 msgstr "Haluatko avata kassakoneet?"
 
 #. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Don't turn this option on if you take orders on smartphones or tablets. Such"
+" devices already benefit from a native keyboard."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
 msgid "Done"
 msgstr "Valmis"
@@ -1302,13 +1309,6 @@ msgstr "Valmis"
 msgid ""
 "Don’t turn this option on if you take orders on smartphones or tablets. \n"
 " Such devices already benefit from a native keyboard."
-msgstr ""
-
-#. module: point_of_sale
-#: model:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid ""
-"Don’t turn this option on if you take orders on smartphones or tablets. Such"
-" devices already benefit from a native keyboard."
 msgstr ""
 
 #. module: point_of_sale
@@ -4014,17 +4014,22 @@ msgstr "Tuntematon viivakoodi"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:2023
+#: code:addons/point_of_sale/static/src/js/screens.js:2061
 #, python-format
 msgid "Unknown Error"
 msgstr "Tuntematon virhe"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/screens.js:1324
+#: code:addons/point_of_sale/static/src/js/screens.js:1337
 #, python-format
 msgid "Unsupported File Format"
 msgstr "Tuntematon tiedostomuoto"
+
+#. module: point_of_sale
+#: model:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "Unused"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config_use_existing_lots

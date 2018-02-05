@@ -27,12 +27,12 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "(e.g. expenses@mycompany.odoo.com)"
-msgstr "(Ör. giderler@sirketim.odoo.com)"
+msgstr "(Ör. masraflar@sirketim.odoo.com)"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "(if the expense has been paid by the employee directly);"
-msgstr "(eğer gider personel tarafından ödenmişse);"
+msgstr "(eğer masraf personel tarafından ödenmişse);"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -140,7 +140,7 @@ msgid ""
 msgstr ""
 "<span class=\"panel-title\">\n"
 "                                        <strong>Merkezi</strong><br/>\n"
-"                                        <span class=\"small\">İK memuru, yöneticisi</span>\n"
+"                                        <span class=\"small\">İK yetkilisi, yöneticisi</span>\n"
 "                                    </span>"
 
 #. module: hr_expense
@@ -924,7 +924,7 @@ msgstr "İlgili muhasebecilere aşağıdaki erişim haklarını veriniz:"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Grant such users with “Officer” rights for Expense app"
-msgstr "Bu kullanıcılara Masraflar uygulamasında \"Memur\" yetkisini veriniz"
+msgstr "Bu kullanıcılara Masraflar uygulamasında \"Yetkili\" yetkisini veriniz"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1150,7 +1150,7 @@ msgstr "Eklentilerin Sayısı"
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_user
 msgid "Officer"
-msgstr "Memur"
+msgstr "Yetkili"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1204,13 +1204,13 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:543
 #, python-format
 msgid "Only HR Officers can approve expenses"
-msgstr "Sadece İK Memurları giderleri onaylayabilir"
+msgstr "Sadece İK yetkilileri masrafları onaylayabilir"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:534
 #, python-format
 msgid "Only HR Officers can refuse expenses"
-msgstr "Sadece İK Memurları giderleri reddedebilir"
+msgstr "Sadece İK yetkileri masrafları reddedebilir"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1458,7 +1458,7 @@ msgstr "Yeniden Gönder"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
 msgid "Review expenses to approve"
-msgstr "Onaylanacak giderleri gözden geçirir"
+msgstr "Onaylanacak masrafları gözden geçirir"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_planner
@@ -1534,7 +1534,7 @@ msgstr "Ürünün İK masrafı olarak kullanılıp kullanılamayacağını belir
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_filter
 msgid "State"
-msgstr "İl/Eyalet"
+msgstr "Durum"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_state
@@ -1713,7 +1713,7 @@ msgid ""
 msgstr ""
 "Bu uygulamayı personeller tarafından yapılan ve şirket tarafından karşılanan"
 " veya şirket kredi kartıyla ödenen masrafları takip etmek için kullanın. "
-"Eğer şirkete satınalma faturası gönderildiyse, gider yerine Muhasebe "
+"Eğer şirkete satınalma faturası gönderildiyse, masraf yerine Muhasebe "
 "uygulamasındaki Satınalma Faturaları'nı kullanmanız daha iyi olacaktır."
 
 #. module: hr_expense

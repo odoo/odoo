@@ -8,7 +8,7 @@
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2017
 # William Surya Permana <zarambie_game@yahoo.com>, 2017
 # Andhitia Rama <andhitia.r@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Rizki Mudhar <mudharrizki@gmail.com>, 2017
 # Budi Iskandar <budiiskandar11@gmail.com>, 2017
 # firman firman <firman.olxbpn@gmail.com>, 2017
@@ -17,13 +17,14 @@
 # Deddy Ddr <deddy.ddr@gmail.com>, 2017
 # Febrasari Almania <febrasari.almania@gmail.com>, 2017
 # Hendra So <mask783@gmail.com>, 2017
+# nle_odoo, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Hendra So <mask783@gmail.com>, 2017\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
+"Last-Translator: nle_odoo, 2017\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1119,7 +1120,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Fully Invoiced"
-msgstr "Selesai Difakturkan"
+msgstr "Selesai"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1376,6 +1377,14 @@ msgid "Is expired"
 msgstr "Telah kadaluarsa"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1559,19 +1568,11 @@ msgid "No longer edit orders once confirmed"
 msgstr "Tidak ijinkan ubah order penjualan yang telah dikonfirmasi"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
-msgstr ""
-"Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
-" dari daftar Penawaran ke daftar Order Penjualan"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
 msgstr ""
 "Setelah Penawaran menjadi Order Penjualan, dokumen tersebut akan dipindahkan"
 " dari daftar Penawaran ke daftar Order Penjualan"
@@ -1590,7 +1591,7 @@ msgstr ""
 #: selection:sale.order,invoice_status:0
 #: selection:sale.order.line,invoice_status:0
 msgid "Nothing to Invoice"
-msgstr "Tidak ada bisa difakturkan"
+msgstr "Belum Selesai"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line_customer_lead
@@ -2152,6 +2153,7 @@ msgstr "Laporan"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2345,6 +2347,12 @@ msgid "Sell and purchase products in different units of measure"
 msgstr "Jual dan beli produk dalam satuan yang berbeda"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr ""
+
+#. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
 msgstr "Jual produk menurut jumlah unit # tiap paket"
@@ -2467,7 +2475,7 @@ msgstr "Tampilkan harga jual dan diskon pada pelanggan"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show standard terms &amp; conditions on orders"
-msgstr "Tampilkan syarat & ketentuan standar di order penjualan"
+msgstr "Tampilkan syarat &amp; ketentuan standar di order penjualan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings_group_show_price_subtotal
@@ -2953,19 +2961,11 @@ msgid "Your Order has been confirmed."
 msgstr "Order Anda telah dikonfirmasi"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-"Aksi Anda berikutnya harus mengalir dengan efektif: konfirmasi Penawaran\n"
-"menjadi Order Penjualan, lalu buat Faktur dan terima Pembayaran."
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "Aksi Anda berikutnya harus mengalir dengan efektif: konfirmasi Penawaran\n"
 "menjadi Order Penjualan, lalu buat Faktur dan terima Pembayaran."

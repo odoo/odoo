@@ -3,15 +3,17 @@
 # * sale_stock
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
 # xiaobin wu <bd5dml@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Talway <9010446@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
 # Connie Xiao <connie.xiao@elico-corp.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
 msgid ""
@@ -35,11 +37,13 @@ msgid ""
 "\n"
 "There are %s %s available accross all warehouses."
 msgstr ""
+"\n"
+"所有仓库都有 %s %s 可用。"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
-msgstr "<strong>客户参照:</strong>"
+msgstr "<strong>客户参考:</strong>"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
@@ -55,7 +59,7 @@ msgstr "售后"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr "适用于从订单的专用线路（例如dropshipping，MTO）"
+msgstr "从订单申请特殊的路线（例如直销，MTO）"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -94,7 +98,7 @@ msgstr "交货日期"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_delivery_count
 msgid "Delivery Orders"
-msgstr "交货单"
+msgstr "发货单"
 
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
@@ -181,18 +185,18 @@ msgstr "将预期交货日期提前"
 #: code:addons/sale_stock/models/sale_order.py:174
 #, python-format
 msgid "Not enough inventory!"
-msgstr "库存不够！"
+msgstr "没有足够的库存！"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr "以具体的路线"
+msgstr "订单特定路线"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:188
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "订货数量减少！"
+msgstr "订购数量减少！"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_product_packaging
@@ -311,12 +315,12 @@ msgstr "按订单设定交货日期"
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr "立即装运所有产品"
+msgstr "一次运送所有产品"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
-msgstr "船舶产品，尽快，与回订单"
+msgstr "尽快运送产品，并退回订单"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -391,14 +395,14 @@ msgstr "何时开始装运"
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the delivery order if needed."
-msgstr "你在减少订单数量，不要忘记需要手工更新发货单的数量。"
+msgstr "您正在减少订购的数量！ 如果需要，不要忘记手动更新交货订单。"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:166
 #, python-format
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
-msgstr "你打算出售%s%s，但你只能%s%s在%s仓库里买到。"
+msgstr "您计划出售%s%s，但只有%s%s在%s仓库中可用。"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

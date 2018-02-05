@@ -4,20 +4,22 @@
 # 
 # Translators:
 # liAnGjiA <liangjia@qq.com>, 2017
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# Martin Trigaux, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Talway <9010446@qq.com>, 2017
 # Yaorong Li <55yaorong.li@gmail.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
 # 苏州远鼎 <tiexinliu@126.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2017\n"
+"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,7 +122,7 @@ msgstr "成本明细"
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
-msgstr ""
+msgstr "成本和调整行不匹配。 你也许应该重新计算成本。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -170,7 +172,7 @@ msgstr "草稿"
 #: selection:product.template,split_method:0
 #: selection:stock.landed.cost.lines,split_method:0
 msgid "Equal"
-msgstr "均等"
+msgstr "平均"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product_split_method
@@ -182,6 +184,11 @@ msgid ""
 "By Weight : Cost will be divided depending on its weight.\n"
 "By Volume : Cost will be divided depending on its volume."
 msgstr ""
+"平等：成本将平分。\n"
+"按数量：成本将根据产品的数量进行划分。\n"
+"按当前成本计算：成本将根据产品当前成本进行划分。\n"
+"按重量：成本将根据其重量进行划分。\n"
+"按体积：成本将根据其体积分配。"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_final_cost
@@ -191,12 +198,12 @@ msgstr "最终成本"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost
 msgid "Former Cost"
-msgstr "前成本"
+msgstr "原成本"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_former_cost_per_unit
 msgid "Former Cost(Per Unit)"
-msgstr "前成本（单位）"
+msgstr "原成本（单位）"
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -267,7 +274,7 @@ msgstr "到岸成本"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "到岸成本是根据购买单位计算的。"
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -311,7 +318,7 @@ msgstr "名称"
 #, python-format
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
-msgstr ""
+msgstr "没有估值调整明细。 你也许应该重新计算成本。"
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:86

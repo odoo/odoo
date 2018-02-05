@@ -28,6 +28,23 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
+ * Convert binary to bin_size
+ * 
+ * @param {string} [value] base64 representation of the binary (might be already a bin_size!)
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored) 
+ * @param {Object} [options] additional options (note: this parameter is ignored)
+ * 
+ * @returns {string} bin_size (which is human-readable)
+ */
+function formatBinary(value, field, options) {
+    if (!value) {
+        return '';
+    }
+    return utils.binaryToBinsize(value);
+}
+
+/**
  * @todo Really? it returns a jQuery element...  We should try to avoid this and
  * let DOM utility functions handle this directly. And replace this with a
  * function that returns a string so we can get rid of the forceString.
@@ -561,7 +578,7 @@ function parseMany2one(value) {
 
 return {
     format: {
-        binary: _.identity, // todo
+        binary: formatBinary,
         boolean: formatBoolean,
         char: formatChar,
         date: formatDate,

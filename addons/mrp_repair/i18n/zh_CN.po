@@ -3,14 +3,16 @@
 # * mrp_repair
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2017
+# Martin Trigaux, 2017
 # Talway <9010446@qq.com>, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
 # 卓忆科技 <zhanghao@jointd.com>, 2017
-# Gary Wei <Gary.wei@elico-corp.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
+# fausthuang, 2017
 # 菜小蛇 <lttlsnk@gmail.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # mrshelly <mrshelly@hotmail.com>, 2017
 # waveyeung <waveyeung@qq.com>, 2017
@@ -34,12 +36,12 @@ msgstr ""
 #. module: mrp_repair
 #: model:mail.template,report_name:mrp_repair.mail_template_mrp_repair_quotation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or ‘’).replace(‘/‘,’_’)}"
 
 #. module: mrp_repair
 #: model:mail.template,subject:mrp_repair.mail_template_mrp_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.partner_id.name} 维修单 (Ref ${object.name or ’n/a’ })"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -61,6 +63,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"*“草稿”状态用于用户正在编码新的和未经确认的维修订单。\n"
+"*用户确认维修订单时使用“确认”状态。\n"
+"*“准备维修”状态用于开始维修，用户只有在维修订单确认后才能开始维修。\n"
+"*“待开票”状态用于在维修完成之前或之后生成发票。\n"
+"*维修完成后，“完成”状态将被设置。\n"
+"*用户取消维修订单时使用“取消”状态。"
 
 #. module: mrp_repair
 #: model:mail.template,body_html:mrp_repair.mail_template_mrp_repair_quotation
@@ -80,6 +88,20 @@ msgid ""
 "                <p>Thank you,</p>\n"
 "            </data>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<data><p>Dear ${object.partner_id.name}</p>\n"
+"                <p>\n"
+"                Here is your repair order ${doc_name} <strong>${object.name}</strong>\n"
+"                % if object.origin:\n"
+"                (with reference: ${object.origin} )\n"
+"                % endif\n"
+"                % if object.invoice_method != ‘none’:\n"
+"                amounting in <strong>${object.amount_total} ${object.pricelist_id.currency_id.name}.</strong>\n"
+"                % endif\n"
+"                </p>\n"
+"                <p>You can reply to this email if you have any questions.</p>\n"
+"                <p>Thank you,</p>\n"
+"            </data>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -89,17 +111,17 @@ msgstr "<i>(添加)</i>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr ""
+msgstr "<strong>批次/序列号</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Operations</strong>"
-msgstr ""
+msgstr "<strong>操作</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Parts</strong>"
-msgstr ""
+msgstr "<strong>零件</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -109,7 +131,7 @@ msgstr "<strong>打印日期:</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Product to Repair:</strong>"
-msgstr "<strong>待修理产品:</strong>"
+msgstr "<strong>待维修产品:</strong>"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -129,7 +151,7 @@ msgstr "<strong>总计</strong>"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "<strong>Warranty:</strong>"
-msgstr ""
+msgstr "<strong>保证:</strong>"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -149,18 +171,18 @@ msgstr "添加报价单备注..."
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "After Repair"
-msgstr "修理后"
+msgstr "维修后"
 
 #. module: mrp_repair
 #: selection:mrp.repair,invoice_method:0
 msgid "Before Repair"
-msgstr "修理前"
+msgstr "维修前"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:237
 #, python-format
 msgid "Can only confirm draft repairs."
-msgstr ""
+msgstr "只能确认草稿维修单。"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
@@ -172,13 +194,13 @@ msgstr "取消"
 #: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Cancel Repair"
-msgstr "取消修理"
+msgstr "取消维修"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid "Cancel Repair Order"
-msgstr "取消修理单"
+msgstr "取消维修单"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0 selection:mrp.repair.line,state:0
@@ -189,7 +211,7 @@ msgstr "已取消"
 #: code:addons/mrp_repair/models/mrp_repair.py:249
 #, python-format
 msgid "Cannot cancel completed repairs."
-msgstr "不能取消已完成的修理."
+msgstr "不能取消已完成的维修."
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_partner_id
@@ -199,7 +221,7 @@ msgstr "为将要开票或者发运的订单选择业务伙伴"
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
 msgid "Click to create a reparation order."
-msgstr "点击创建一个修理单"
+msgstr "点击创建一个维修单"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_company_id
@@ -210,7 +232,7 @@ msgstr "公司"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Confirm Repair"
-msgstr "确认修理"
+msgstr "确认维修"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -279,12 +301,12 @@ msgstr "默认地址"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_address_id
 msgid "Delivery Address"
-msgstr "交货地址"
+msgstr "收货地址"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_location_dest_id
 msgid "Delivery Location"
-msgstr "交货位置"
+msgstr "收货位置"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_name
@@ -326,7 +348,7 @@ msgstr "草稿"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "End Repair"
-msgstr "结束修理"
+msgstr "结束维修"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -385,7 +407,7 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
-"在修理订单中，你可以非常详细定义你要移除和添加或者替代的组件\n"
+"在维修订单中，你可以非常详细定义你要移除和添加或者替代的组件\n"
 "并且可以记录你在不同操作上花费的时间"
 
 #. module: mrp_repair
@@ -509,7 +531,7 @@ msgstr "凭证"
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_move_id
 msgid "Move created by the repair order"
-msgstr "根据修理订单创建的库存移动"
+msgstr "根据维修订单创建的库存移动"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
@@ -574,7 +596,7 @@ msgstr "业务伙伴"
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_operations
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Parts"
-msgstr ""
+msgstr "零件"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
@@ -618,12 +640,12 @@ msgstr "单位"
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_product_id
 msgid "Product to Repair"
-msgstr "待修理产品"
+msgstr "待维修产品"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr "修理的产品全属于此批次"
+msgstr "维修的产品全属于此批次"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_product_uom_qty
@@ -656,12 +678,12 @@ msgstr "报价单"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr "准备修理"
+msgstr "准备维修"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
-msgstr "准备修理"
+msgstr "准备维修"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
@@ -677,104 +699,104 @@ msgstr "维修"
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
 msgid "Repair Fees Line"
-msgstr "修理费明细行"
+msgstr "维修费明细行"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Repair Line"
-msgstr "修理明细"
+msgstr "维修明细"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Repair Order"
-msgstr "修理单"
+msgstr "维修单"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Order #:"
-msgstr "修理订单行"
+msgstr "维修订单行"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_repair_id
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_repair_id
 msgid "Repair Order Reference"
-msgstr "修理单编＃"
+msgstr "维修单编＃"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Repair Orders"
-msgstr "修理单"
+msgstr "维修单"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.report_mrprepairorder
 msgid "Repair Quotation #:"
-msgstr "修理报价单＃"
+msgstr "维修报价单＃"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_name
 msgid "Repair Reference"
-msgstr "修理参照"
+msgstr "维修参照"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:203
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
-msgstr ""
+msgstr "必须取消维修单，以便将其重置为草稿。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:408
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr ""
+msgstr "维修单必须确认后才能进行维修。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:436
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
-msgstr ""
+msgstr "维修单必须维修后，才能移动"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:419
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
-msgstr ""
+msgstr "维修单必须维修，以便结束赔偿。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:251
 #, python-format
 msgid "Repair order is already invoiced."
-msgstr "修理单早已开票。"
+msgstr "维修单早已开票。"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/mrp_repair_cancel.py:20
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr "未开发票的修理单"
+msgstr "未开发票的维修单"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_repaired
 #: selection:mrp.repair,state:0
 msgid "Repaired"
-msgstr "已修理"
+msgstr "已维修"
 
 #. module: mrp_repair
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repairs"
-msgstr "修理"
+msgstr "维修"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_tree
 msgid "Repairs order"
-msgstr "修理单"
+msgstr "维修单"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr "搜索修理单"
+msgstr "搜索维修单"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_invoice_method
@@ -782,7 +804,7 @@ msgid ""
 "Selecting 'Before Repair' or 'After Repair' will allow you to generate "
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
-msgstr "选择“修理前”或“修理后”选项来确定在修理前后生产发票。“无发票”则代表此修理单无需生成发票。"
+msgstr "选择“维修前”或“维修后”选项来确定在维修前后生产发票。“无发票”则代表此维修单无需生成发票。"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
@@ -813,7 +835,7 @@ msgstr "源位置"
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_repair_order_form
 msgid "Start Repair"
-msgstr "开始修理"
+msgstr "开始维修"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_line_state
@@ -857,7 +879,7 @@ msgstr "你选择的计量单位跟产品表单的计量单位在不同的类别
 #. module: mrp_repair
 #: sql_constraint:mrp.repair:0
 msgid "The name of the Repair Order must be unique!"
-msgstr "修理单的名必须唯一！"
+msgstr "维修单的名必须唯一！"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
@@ -865,21 +887,21 @@ msgid ""
 "The repair order uses the warranty date on the Serial Number in\n"
 "                order to know if whether the repair should be invoiced to the\n"
 "                customer or not."
-msgstr "修理单在序列号上用质保期，这样是为了标明是否要给客户开发票"
+msgstr "维修单在序列号上用质保期，这样是为了标明是否要给客户开发票"
 
 #. module: mrp_repair
 #: model:ir.model.fields,help:mrp_repair.field_mrp_repair_line_state
 msgid ""
 "The status of a repair line is set automatically to the one of the linked "
 "repair order."
-msgstr ""
+msgstr "修复线的状态自动设置为链接修复顺序之一。"
 
 #. module: mrp_repair
 #: model:ir.ui.view,arch_db:mrp_repair.view_cancel_repair
 msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
-msgstr "将作废这张修理单，但对应的发票不会作废，继续么？"
+msgstr "将作废这张维修单，但对应的发票不会作废，继续么？"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -914,7 +936,7 @@ msgstr "类型"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr "修理中"
+msgstr "维修中"
 
 #. module: mrp_repair
 #: model:ir.model.fields,field_description:mrp_repair.field_mrp_repair_fee_price_unit
@@ -958,7 +980,7 @@ msgstr "是"
 #: code:addons/mrp_repair/models/mrp_repair.py:300
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form!"
-msgstr "你必须在修理单上选择业务伙伴的发票地址！"
+msgstr "你必须在维修单上选择业务伙伴的发票地址！"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/models/mrp_repair.py:593
@@ -967,14 +989,14 @@ msgstr "你必须在修理单上选择业务伙伴的发票地址！"
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
-msgstr ""
+msgstr "您必须在维修表单中选择一个价目表！ 在选择产品之前请设置一个。"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_traceability_report
 msgid "stock.traceability.report"
-msgstr ""
+msgstr "stock.traceability.report"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_stock_warn_insufficient_qty_repair
 msgid "stock.warn.insufficient.qty.repair"
-msgstr ""
+msgstr "stock.warn.insufficient.qty.repair"
