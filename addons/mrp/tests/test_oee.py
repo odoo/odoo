@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
+from datetime import datetime, timedelta
 
 from odoo.addons.mrp.tests.common import TestMrpCommon
 
@@ -18,7 +18,10 @@ class TestOee(TestMrpCommon):
 
     def test_wrokcenter_oee(self):
         """  Test case workcenter oee. """
-        day = datetime.date.today()
+        day = datetime.date(datetime.today())
+        # Make the test work the weekend. It will fails due to workcenter working hours.
+        if day.weekday() in (5, 6):
+            day -= timedelta(days=2)
 
         # Productive time duration (13 min)
         self.create_productivity_line(self.env.ref('mrp.block_reason7'), str(day) + " " + "10:43:22", str(day) + " " + "10:56:22")
