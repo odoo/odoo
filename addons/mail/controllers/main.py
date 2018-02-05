@@ -59,13 +59,13 @@ class MailController(http.Controller):
         if not model or not res_id or model not in request.env:
             return cls._redirect_to_messaging()
 
-        # find the access action using sudo to have the details about the access link
+        # find the access action to have the details about the access link
         RecordModel = request.env[model]
-        record_sudo = RecordModel.sudo().browse(res_id).exists()
-        if not record_sudo:
+        record_found = RecordModel.sudo(uid).browse(res_id).exists()
+        if not record_found:
             # record does not seem to exist -> redirect to login
             return cls._redirect_to_messaging()
-        record_action = record_sudo.get_access_action()
+        record_action = record_found.get_access_action()
         record_target_type = record_action.pop('target_type', 'dummy')
 
         # the record has a public URL redirection: use it directly
@@ -84,7 +84,7 @@ class MailController(http.Controller):
             if not RecordModel.sudo(uid).check_access_rights('read', raise_exception=False):
                 return cls._redirect_to_messaging()
             try:
-                record_sudo.sudo(uid).check_access_rule('read')
+                record_found.check_access_rule('read')
             except AccessError:
                 return cls._redirect_to_messaging()
             if record_action['type'] == 'ir.actions.act_url':
@@ -102,7 +102,7 @@ class MailController(http.Controller):
             'model': model,
             'id': res_id,
             'active_id': res_id,
-            'view_id': record_sudo.get_formview_id(),
+            'view_id': record_found.get_formview_id(),
             'action': record_action.get('id'),
         }
         url = '/web?#%s' % url_encode(url_params)
