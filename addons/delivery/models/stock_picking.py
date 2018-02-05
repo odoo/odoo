@@ -107,16 +107,12 @@ class StockPicking(models.Model):
 
     @api.multi
     def action_done(self):
-        # TDE FIXME: should work in batch
-        self.ensure_one()
         res = super(StockPicking, self).action_done()
-
-        if self.carrier_id and self.carrier_id.integration_level == 'rate_and_ship':
-            self.send_to_shipper()
-
-        if self.carrier_id:
-            self._add_delivery_cost_to_so()
-
+        for pick in self:
+            if pick.carrier_id:
+                if pick.carrier_id.integration_level == 'rate_and_ship':
+                    pick.send_to_shipper()
+                pick._add_delivery_cost_to_so()
         return res
 
     @api.multi

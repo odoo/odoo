@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo import tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 
 _logger = logging.getLogger(__name__)
@@ -116,7 +116,6 @@ class Employee(models.Model):
     is_address_home_a_company = fields.Boolean(
         'The employee adress has a company linked',
         compute='_compute_is_address_home_a_company',
-        groups="hr.group_hr_user",
     )
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user")
@@ -271,7 +270,11 @@ class Employee(models.Model):
         """Checks that choosen address (res.partner) is not linked to a company.
         """
         for employee in self:
-            employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            try:
+                employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            except AccessError:
+                employee.is_address_home_a_company = False
+
 
 class Department(models.Model):
     _name = "hr.department"
