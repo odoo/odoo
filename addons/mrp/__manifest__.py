@@ -44,7 +44,6 @@
     'demo': [
         'data/mrp_demo.xml',
     ],
-    'qweb': ['static/src/xml/mrp.xml'],
     'test': [],
     'application': True,
 }

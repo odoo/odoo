@@ -16,12 +16,10 @@ QUnit.module('mrp', {
                         type: "selection",
                         selection: [['waiting', 'Waiting'], ['chilling', 'Chilling']],
                     },
-                    document: {string: "Document", type: "binary"},
                     duration: {string: "Duration", type: "float"},
                 },
                 records: [{
                     id: 1,
-                    document: 'coucou==\n',
                     state: 'waiting',
                     duration: 6000,
                 }],
@@ -30,61 +28,6 @@ QUnit.module('mrp', {
         };
     },
 }, function () {
-    QUnit.test("pdf_viewer without data", function (assert) {
-        assert.expect(4);
-
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch:
-                '<form>' +
-                    '<field name="document" widget="pdf_viewer"/>' +
-                '</form>',
-        });
-
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_pdfviewer'));
-        assert.strictEqual(form.$('.o_select_file_button:not(.o_hidden)').length, 1,
-            "there should be a visible 'Upload' button");
-        assert.ok(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
-            "there should be an invisible iframe");
-        assert.strictEqual(form.$('input[type="file"]').length, 1,
-            "there should be one input");
-
-        form.destroy();
-    });
-
-    QUnit.test("pdf_viewer: basic rendering", function (assert) {
-        assert.expect(4);
-
-        var form = createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            res_id: 1,
-            arch:
-                '<form>' +
-                    '<field name="document" widget="pdf_viewer"/>' +
-                '</form>',
-            mockRPC: function (route) {
-                if (route.indexOf('/web/static/lib/pdfjs/web/viewer.html') !== -1) {
-                    return $.when();
-                }
-                return this._super.apply(this, arguments);
-            }
-        });
-
-        assert.ok(form.$('.o_field_widget').hasClass('o_field_pdfviewer'));
-        assert.strictEqual(form.$('.o_select_file_button:not(.o_hidden)').length, 0,
-            "there should not be a any visible 'Upload' button");
-        assert.notOk(form.$('.o_field_widget iframe.o_pdfview_iframe').hasClass('o_hidden'),
-            "there should be an visible iframe");
-        assert.strictEqual(form.$('.o_field_widget iframe.o_pdfview_iframe').attr('data-src'),
-            '/web/static/lib/pdfjs/web/viewer.html?file=%2Fweb%2Fimage%3Fmodel%3Dpartner%26field%3Ddocument%26id%3D1#page=1',
-            "the src attribute should be correctly set on the iframe");
-
-        form.destroy();
-    });
 
     QUnit.test("bullet_state: basic rendering", function (assert) {
         assert.expect(2);
