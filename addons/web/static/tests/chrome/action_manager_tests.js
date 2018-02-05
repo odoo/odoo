@@ -2270,6 +2270,47 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('switch request to unknown view type', function (assert) {
+        assert.expect(7);
+
+        this.actions.push({
+            id: 33,
+            name: 'Partners',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'], [1, 'kanban']], // no form view
+        });
+
+        var actionManager = createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+        actionManager.doAction(33);
+
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "should display the list view");
+
+        // try to open a record in a form view
+        actionManager.$('.o_list_view .o_data_row:first').click();
+        assert.strictEqual(actionManager.$('.o_list_view').length, 1,
+            "should still display the list view");
+        assert.strictEqual(actionManager.$('.o_form_view').length, 0,
+            "should not display the form view");
+
+        assert.verifySteps([
+            '/web/action/load',
+            'load_views',
+            '/web/dataset/search_read',
+        ]);
+
+        actionManager.destroy();
+    });
+
     QUnit.module('Actions in target="new"');
 
     QUnit.test('can execute act_window actions in target="new"', function (assert) {

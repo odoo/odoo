@@ -46,8 +46,10 @@
 }
 
 .o_view_nocontent {
-    .o-position-absolute(20%, 0, 0, 0);
-    pointer-events: none;
+    &.o_kanban_view_nocontent {
+        .o-position-absolute(20%, 0, 0, 0);        
+        pointer-events: none;
+    }
 
     .o_nocontent_help {
         pointer-events: auto;
