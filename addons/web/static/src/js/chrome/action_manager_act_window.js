@@ -159,6 +159,14 @@ ActionManager.include({
      */
     _createViewController: function (action, viewType, viewOptions, options) {
         var self = this;
+        var viewDescr = _.findWhere(action.views, {type: viewType});
+        if (!viewDescr) {
+            // the requested view type isn't specified in the action (e.g.
+            // action with list view only, user clicks on a row in the list, it
+            // tries to switch to form view)
+            return $.Deferred().reject();
+        }
+
         var controllerID = _.uniqueId('controller_');
         var controller = {
             actionID: action.jsID,
@@ -184,7 +192,6 @@ ActionManager.include({
             // communication with trigger_up (e.g. for 'env_updated' event)
             viewOptions = _.extend(viewOptions, { controllerID: controllerID });
 
-            var viewDescr = _.findWhere(action.views, {type: viewType});
             var view = new viewDescr.Widget(viewDescr.fieldsView, viewOptions);
             var def = $.Deferred();
             action.controllers[viewType] = def;

@@ -326,30 +326,31 @@ snippets_editor.Class.include({
 
             $body.removeClass(all_classes).addClass(theme_params.className);
 
-            var $old_layout = $editable_area.find(".o_layout");
-            var $new_wrapper, $new_wrapper_content;
+            var $old_layout = $editable_area.find('.o_layout');
 
+            var $new_wrapper;
+            var $new_wrapper_content;
             if (theme_params.nowrap) {
-                $new_wrapper = $new_wrapper_content = $("<div/>", {"class": "oe_structure"});
-            }
-            else {
-                // This wrapper structure is the only way to have a responsive and
-                // centered fixed-width content column on all mail clients
+                $new_wrapper = $('<div/>', {class: 'oe_structure'});
+                $new_wrapper_content = $new_wrapper;
+            } else {
+                // This wrapper structure is the only way to have a responsive
+                // and centered fixed-width content column on all mail clients
                 $new_wrapper = $('<table/>', {class: 'o_mail_wrapper'});
-                $new_wrapper_content = $("<td/>", {class: 'o_mail_no_resize o_mail_no_colorpicker o_mail_wrapper_td oe_structure'});
+                $new_wrapper_content = $('<td/>', {class: 'o_mail_no_options o_mail_wrapper_td oe_structure'});
                 $new_wrapper.append($('<tr/>').append(
-                    $("<td/>", {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'}),
+                    $('<td/>', {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'}),
                     $new_wrapper_content,
-                    $("<td/>", {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'})
+                    $('<td/>', {class: 'o_mail_no_resize o_not_editable', contenteditable: 'false'})
                 ));
             }
-            var $new_layout = $("<div/>", {"class": "o_layout " + theme_params.className}).append($new_wrapper);
+            var $new_layout = $('<div/>', {class: 'o_layout ' + theme_params.className}).append($new_wrapper);
 
             var $contents;
             if (first_choice) {
                 $contents = theme_params.template;
             } else if ($old_layout.length) {
-                $contents = ($old_layout.hasClass("oe_structure") ? $old_layout : $old_layout.find(".oe_structure").first()).contents();
+                $contents = ($old_layout.hasClass('oe_structure') ? $old_layout : $old_layout.find('.oe_structure').first()).contents();
             } else {
                 $contents = $editable_area.contents();
             }
