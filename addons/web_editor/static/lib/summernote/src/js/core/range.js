@@ -514,6 +514,12 @@ define([
        * @return {Node}
        */
       this.insertNode = function (node) {
+        if (this.isOnImg()) {
+            var info = dom.splitPoint(this.getStartPoint(), !dom.isBodyContainer(dom.ancestor(this.sc, function(node) { return dom.isBodyContainer(node) || dom.isPara(node) })));
+            // info.rightNode will always be the img itself
+            info.rightNode.replaceWith(node);
+            return node;
+        }
         var rng = this.wrapBodyInlineWithPara().deleteContents();
         // ODOO: override to not split world for inserting inline
         // original: var info = dom.splitPoint(rng.getStartPoint(), dom.isInline(node));
