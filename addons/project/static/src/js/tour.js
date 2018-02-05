@@ -68,6 +68,14 @@ tour.register('project_tour', {
     content: _t('Click on this button to modify the task.'),
     position: "bottom"
 }, {
+    trigger: ".o_form_view .o_task_user_field",
+    extra_trigger: '.o_form_project_tasks.o_form_editable',
+    content: _t('<b>Assign the task</b> to someone. <i>You can create and invite a new user on the fly.</i>'),
+    position: "bottom",
+    run: function (actions) {
+        actions.text("Demo User", this.$anchor.find("input"));
+    },
+}, {
     trigger: ".ui-autocomplete > li > a",
     auto: true,
 }, {
