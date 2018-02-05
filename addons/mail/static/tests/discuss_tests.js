@@ -293,5 +293,87 @@ QUnit.test('no crash focusout emoji button', function (assert) {
     });
 });
 
+QUnit.test('older messages are loaded on scroll', function (assert) {
+    assert.expect(4);
+    var done = assert.async();
+
+    // remove throttling
+    testUtils.patch(BasicComposer, {MENTION_THROTTLE: 0});
+    testUtils.patch(ChatManager, {CHANNEL_SEEN_THROTTLE: 0});
+
+    this.data.initMessaging = {
+        channel_slots: {
+            channel_channel: [{
+                id: 1,
+                channel_type: "channel",
+                name: "general",
+                static: true,
+            }],
+        },
+    };
+
+    var limit;
+    var loadDef = $.Deferred();
+    var loadedMessages;
+    var msgData = [];
+    for (var i = 0; i < 35; i++) {
+        msgData.push({
+            author_id: ['1', 'Me'],
+            body: '<p>test ' + i + '</p>',
+            channel_ids: [1],
+            id: i,
+        });
+    }
+    msgData.reverse();
+
+    createDiscuss({
+        context: {},
+        data: this.data,
+        params: {},
+        services: [ChatManager, createBusService()],
+        mockRPC: function (route, args) {
+            if (args.method === 'message_fetch') {
+                limit = args.kwargs.limit;
+                loadedMessages += limit;
+                var message = msgData.slice(0, loadedMessages);
+                if (loadedMessages >= msgData.length) {
+                    loadDef.resolve();
+                }
+                return $.when(message);
+            }
+            return this._super.apply(this, arguments);
+        },
+    }).then(function (discuss) {
+        var $general = discuss.$('.o_mail_chat_channel_item[data-channel-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have a channel item with id 1");
+
+        // switch to 'general'
+        loadedMessages = 0;
+        $general.click();
+
+        assert.ok(limit < 35, "there should be more messages than the limit");
+        assert.strictEqual(discuss.$('.o_thread_message').length, limit,
+            "should display the 'limit' first messages");
+
+        // simulate a scroll to top to load more messages
+        discuss.$('.o_mail_thread').scrollTop(0);
+
+        loadDef
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                assert.strictEqual(discuss.$('.o_thread_message').length, 35,
+                    "all messages should now be loaded");
+
+                // restore throttling
+                testUtils.unpatch(BasicComposer);
+                testUtils.unpatch(ChatManager);
+
+                discuss.destroy();
+                done();
+            });
+    });
+});
+
 });
 });

@@ -83,6 +83,7 @@ var Thread = Widget.extend({
             squash_close_messages: true,
             display_email_icon: true,
             display_reply_icon: false,
+            loadMoreOnScroll: false,
         });
         this.disabledOptions = {
             display_order: this.enabledOptions.display_order,
@@ -93,6 +94,7 @@ var Thread = Widget.extend({
             squash_close_messages: false,
             display_email_icon: false,
             display_reply_icon: false,
+            loadMoreOnScroll: this.enabledOptions.loadMoreOnScroll,
         };
         this.expanded_msg_ids = [];
         this.selected_id = null;

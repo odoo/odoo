@@ -184,6 +184,11 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             .then(function () {
                 self._startListening();
                 self.thread.$el.on("scroll", null, _.debounce(function () {
+                    if (self.thread.get_scrolltop() < 20 &&
+                        !self.thread.$('.o_mail_no_content').length &&
+                        !self.call('chat_manager', 'isAllHistoryLoaded', self.channel, self.domain)) {
+                        self._loadMoreMessages();
+                    }
                     if (self.thread.is_at_bottom()) {
                         self.call('chat_manager', 'markChannelAsSeen', self.channel);
                     }
@@ -218,6 +223,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
         if (this.channel) {
             this.thread.scroll_to({offset: this.channelsScrolltop[this.channel.id]});
         }
+        this._loadEnoughMessages();
     },
     /**
      * @override
@@ -243,6 +249,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             }).then(function (messages) {
                 self.thread.render(messages, self._getThreadRenderingOptions(messages));
                 self._updateButtonStatus(messages.length === 0);
+                return self._loadEnoughMessages();
             });
     },
     /**
@@ -273,6 +280,23 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
             display_email_icon: false,
             display_reply_icon: true,
         };
+    },
+    /**
+     * Ensures that enough messages have been loaded to fill the entire screen
+     * (this is particularily important because remaining messages can only be
+     * loaded when scrolling to the top, so they can't be loaded if there is no
+     * scrollbar)
+     *
+     * @returns {Deferred} resolved when there are enough messages to fill the
+     *   screen, or when there is no more message to fetch
+     */
+    _loadEnoughMessages: function () {
+        var loadMoreMessages = this.thread.el.clientHeight &&
+            this.thread.el.clientHeight === this.thread.el.scrollHeight &&
+            !this.call('chat_manager', 'isAllHistoryLoaded', this.channel, this.domain);
+        if (loadMoreMessages) {
+            return this._loadMoreMessages().then(this._loadEnoughMessages.bind(this));
+        }
     },
     /**
      * Load more messages for the current thread
@@ -429,7 +453,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _renderThread: function () {
         var self = this;
-        this.thread = new ChatThread(this, {display_help: true});
+        this.thread = new ChatThread(this, {display_help: true, loadMoreOnScroll: true});
 
         this.thread.on('redirect', this, function (resModel, resID) {
             self.call('chat_manager', 'redirect', resModel, resID, self._setChannel.bind(self));
@@ -615,7 +639,7 @@ var Discuss = AbstractAction.extend(ControlPanelMixin, {
      */
     _unselectMessage: function () {
         this.basicComposer.do_toggle(this.channel.type !== 'static' && !this.channel.mass_mailing);
-        this.extendedComposer.do_toggle(this.channel.type !== 'static' && this.channel.mass_mailing);
+        this.extendedComposer.do_toggle(this.channel.type !== 'static' && !!this.channel.mass_mailing);
 
         if (!config.device.touch) {
             var composer = this.channel.mass_mailing ? this.extendedComposer : this.basicComposer;
