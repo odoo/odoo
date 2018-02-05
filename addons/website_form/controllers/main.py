@@ -50,8 +50,8 @@ class WebsiteForm(http.Controller):
         return json.dumps({'id': id_record})
 
     # Constants string to make custom info and metadata readable on a text field
-
-    _custom_label = "%s\n___________\n\n" % _("Custom infos")  # Title for custom fields
+    _custom_label = "%s\n___________________________________________\n\n" % _("This message has been posted on your Odoo website!")  # Title for custom fields in mail
+    _custom_info = "%s\n_____________________\n\n" % _("Other Information:")  # Title for custom fields for objects
     _meta_label = "%s\n________\n\n" % _("Metadata")  # Title for meta data
 
     # Dict of dynamically called filters following type of field to be fault tolerent
@@ -175,11 +175,13 @@ class WebsiteForm(http.Controller):
         model_name = model.sudo().model
         record = request.env[model_name].sudo().with_context(mail_create_nosubscribe=True).create(values)
 
+        custom_label = self._custom_info if not model_name == 'mail.mail' else self._custom_label
+
         if custom or meta:
             default_field = model.website_form_default_field_id
             default_field_data = values.get(default_field.name, '')
             custom_content = (default_field_data + "\n\n" if default_field_data else '') \
-                           + (self._custom_label + custom + "\n\n" if custom else '') \
+                           + (custom_label + custom + "\n\n" if custom else '') \
                            + (self._meta_label + meta if meta else '')
 
             # If there is a default field configured for this model, use it.
