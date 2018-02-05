@@ -2,6 +2,7 @@ odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
 var KanbanView = require('web.KanbanView');
+var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -1936,6 +1937,63 @@ QUnit.module('Views', {
                 "quick create should have been added in the first column");
         }
     });
+
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        var initWidget = mixins.ParentedMixin.init;
+        mixins.ParentedMixin.init = function () {
+            instanceNumber++;
+            return initWidget.apply(this, arguments);
+        };
+        var destroyWidget = mixins.ParentedMixin.destroy;
+        mixins.ParentedMixin.destroy = function () {
+            if (!this.isDestroyed()) {
+                instanceNumber--;
+            }
+            return destroyWidget.apply(this, arguments);
+        };
+
+        var params = {
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="product_id"/>' +
+                    '<field name="category_ids"/>' +
+                    '<field name="state"/>' +
+                    '<field name="date"/>' +
+                    '<field name="datetime"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                '</kanban>',
+        };
+
+        var kanban = createView(params);
+        kanban.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        kanban = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        kanban.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber+1, "every widget must be destroyed exept the parent");
+
+        kanban.destroy();
+
+        mixins.ParentedMixin.init = initWidget;
+        mixins.ParentedMixin.destroy = destroyWidget;
+    });
+
 });
 
 });

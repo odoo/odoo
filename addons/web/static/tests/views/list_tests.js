@@ -5,6 +5,7 @@ var config = require('web.config');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
+var mixins = require('web.mixins');
 var testUtils = require('web.test_utils');
 
 var createView = testUtils.createView;
@@ -3179,6 +3180,62 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('.o_data_row').length, 2,
             'should display 2 data rows');
         list.destroy();
+    });
+
+    QUnit.test('check if the view destroys all widgets and instances', function (assert) {
+        assert.expect(1);
+
+        var instanceNumber = 0;
+        var initWidget = mixins.ParentedMixin.init;
+        mixins.ParentedMixin.init = function () {
+            instanceNumber++;
+            return initWidget.apply(this, arguments);
+        };
+        var destroyWidget = mixins.ParentedMixin.destroy;
+        mixins.ParentedMixin.destroy = function () {
+            if (!this.isDestroyed()) {
+                instanceNumber--;
+            }
+            return destroyWidget.apply(this, arguments);
+        };
+
+        var params = {
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="date"/>' +
+                    '<field name="int_field"/>' +
+                    '<field name="qux"/>' +
+                    '<field name="m2o"/>' +
+                    '<field name="o2m"/>' +
+                    '<field name="m2m"/>' +
+                    '<field name="amount"/>' +
+                    '<field name="currency_id"/>' +
+                    '<field name="datetime"/>' +
+                    '<field name="reference"/>' +
+                '</tree>',
+        };
+
+        var list = createView(params);
+        list.destroy();
+
+        var initialInstanceNumber = instanceNumber;
+        instanceNumber = 0;
+
+        list = createView(params);
+
+        // call destroy function of controller to ensure that it correctly destroys everything
+        list.__destroy();
+
+        assert.strictEqual(instanceNumber, initialInstanceNumber+1, "every widget must be destroyed exept the parent");
+
+        list.destroy();
+
+        mixins.ParentedMixin.init = initWidget;
+        mixins.ParentedMixin.destroy = destroyWidget;
     });
 
 });
