@@ -102,7 +102,7 @@ class PurchaseRequisition(models.Model):
         ])
         if any(requisitions):
             title = _("Warning for %s") % self.vendor_id.name
-            message = _("%s has already an ongoing blanket order") % self.vendor_id.name
+            message = _("There is already an open blanket order for this supplier. We suggest you to use to complete this open blanket order instead of creating a new one.")
             warning = {
                 'title': title,
                 'message': message
