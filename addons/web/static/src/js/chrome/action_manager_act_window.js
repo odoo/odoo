@@ -185,6 +185,9 @@ ActionManager.include({
             viewOptions = _.extend(viewOptions, { controllerID: controllerID });
 
             var viewDescr = _.findWhere(action.views, {type: viewType});
+            if (!viewDescr) {
+                return $.Deferred().reject();
+            }
             var view = new viewDescr.Widget(viewDescr.fieldsView, viewOptions);
             var def = $.Deferred();
             action.controllers[viewType] = def;
