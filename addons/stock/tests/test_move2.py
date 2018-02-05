@@ -115,13 +115,13 @@ class TestPickShip(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, location, 10.0)
         picking_pick.action_assign()
         picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
-        picking_pick.do_transfer()
+        picking_pick.action_done()
 
         self.assertEqual(picking_client.state, 'assigned', 'The state of the client should be assigned')
 
         # Now partially transfer the ship
         picking_client.move_lines[0].move_line_ids[0].qty_done = 5
-        picking_client.do_transfer() # no new in order to create backorder
+        picking_client.action_done() # no new in order to create backorder
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_client.id)])
         self.assertEqual(backorder.state, 'assigned', 'Backorder should be started')
@@ -151,7 +151,7 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 5.0)
 
         move_pick.move_line_ids[0].qty_done = 10.0
-        picking_pick.do_transfer()
+        picking_pick.action_done()
 
         self.assertEqual(move_pick.state, 'done')
         self.assertEqual(picking_pick.state, 'done')
@@ -169,7 +169,7 @@ class TestPickShip(TestStockCommon):
 
         picking_pick.action_assign()
         picking_pick.move_lines[0].move_line_ids[0].qty_done = 10.0
-        picking_pick.do_transfer()
+        picking_pick.action_done()
         self.assertEqual(picking_pick.state, 'done')
         self.assertEqual(picking_client.state, 'assigned')
 
@@ -181,7 +181,7 @@ class TestPickShip(TestStockCommon):
         stock_return_picking_action = stock_return_picking.create_returns()
         return_pick = self.env['stock.picking'].browse(stock_return_picking_action['res_id'])
         return_pick.move_lines[0].move_line_ids[0].qty_done = 2.0
-        return_pick.do_transfer()
+        return_pick.action_done()
         # the client picking should not be assigned anymore, as we returned partially what we took
         self.assertEqual(picking_client.state, 'confirmed')
 
@@ -200,7 +200,7 @@ class TestPickShip(TestStockCommon):
         picking_pick.move_lines[0].move_line_ids[0].qty_done = 5.0
 
         # create a backorder
-        picking_pick.do_transfer()
+        picking_pick.action_done()
         picking_pick_backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_pick.id)])
         self.assertEqual(picking_pick_backorder.state, 'assigned')
         self.assertEqual(picking_pick_backorder.move_line_ids.product_qty, 5.0)
@@ -750,7 +750,7 @@ class TestSinglePicking(TestStockCommon):
 
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
-        delivery_order.do_transfer()
+        delivery_order.action_done()
         self.assertNotEqual(delivery_order.date_done, False)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
@@ -788,7 +788,7 @@ class TestSinglePicking(TestStockCommon):
 
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 1
-        delivery_order.do_transfer()
+        delivery_order.action_done()
         self.assertNotEqual(delivery_order.date_done, False)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
 
@@ -835,7 +835,7 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(delivery_order.state, 'assigned')
 
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
-        delivery_order.do_transfer()
+        delivery_order.action_done()
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', delivery_order.id)])
         self.assertEqual(backorder.state, 'confirmed')
@@ -875,7 +875,7 @@ class TestSinglePicking(TestStockCommon):
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 2
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
-        delivery_order.with_context(debug=True).do_transfer()
+        delivery_order.action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location, allow_negative=True), -1.0)
 
@@ -921,7 +921,7 @@ class TestSinglePicking(TestStockCommon):
         # valid with backorder creation
         delivery_order.move_lines[0].move_line_ids[0].qty_done = 3
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
-        delivery_order.do_transfer()
+        delivery_order.action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 0.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location, allow_negative=True), -2.0)
 
@@ -960,7 +960,7 @@ class TestSinglePicking(TestStockCommon):
 
         # valid with backorder creation
         receipt.move_lines[0].move_line_ids[0].qty_done = 2
-        receipt.with_context(debug=True).do_transfer()
+        receipt.action_done()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 2.0)
 
         self.assertEqual(move1.product_qty, 2.0)

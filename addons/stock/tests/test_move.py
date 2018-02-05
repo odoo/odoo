@@ -478,7 +478,7 @@ class StockMove(TransactionCase):
             'product_id': self.product2.id,
         })
 
-        move1.with_context(debug=True).move_line_ids[1].lot_id = lot3
+        move1.move_line_ids[1].lot_id = lot3
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 0.0)
@@ -1678,7 +1678,7 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.product_qty, 5)
         move_line.qty_done = 5.0
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation
-        move_line.with_context(debug=True).lot_id = lot1
+        move_line.lot_id = lot1
         self.assertEqual(move_line.product_qty, 5)  # don't change reservation when assgning a lot now
 
         move1._action_done()
@@ -3083,7 +3083,7 @@ class StockMove(TransactionCase):
         move1._action_confirm()
         move1._action_assign()
         self.assertEqual(move1.state, 'assigned')
-        move1.with_context(debug=True).product_uom_qty = 5
+        move1.product_uom_qty = 5
         self.assertEqual(move1.state, 'assigned')
         self.assertEqual(move1.product_uom_qty, 5)
         self.assertEqual(len(move1.move_line_ids), 1)
