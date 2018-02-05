@@ -908,29 +908,23 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        if help:
-            help_title = ""
-            if self._context.get('default_type') == 'lead':
-                help_title = _('Click here to add new Leads')
-            else:
-                help_title = _('Create a new opportunity to add it to your pipeline')
-            alias_record = self.env['mail.alias'].search([
-                ('alias_name', '!=', False),
-                ('alias_name', '!=', ''),
-                ('alias_model_id.model', '=', 'crm.lead'),
-                ('alias_parent_model_id.model', '=', 'crm.team'),
-                ('alias_force_thread_id', '=', False)
-            ], limit=1)
-            if alias_record and alias_record.alias_domain and alias_record.alias_name:
-                email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-                email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-                help_title = _('%s or send an email to %s') % (help_title, email_link)
-            return '<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>' % (help_title, help)
-        return super(Lead, self.with_context(
-            empty_list_help_model='crm.team',
-            empty_list_help_id=self._context.get('default_team_id', False),
-            empty_list_help_document_name= _('leads') if self._context.get('default_type') == 'lead' else _('opportunity'),
-        )).get_empty_list_help(help)
+        help_title, sub_title = "", ""
+        if self._context.get('default_type') == 'lead':
+            help_title = _('Click here to add new Leads')
+        else:
+            help_title = _('Create a new opportunity to add it to your pipeline')
+        alias_record = self.env['mail.alias'].search([
+            ('alias_name', '!=', False),
+            ('alias_name', '!=', ''),
+            ('alias_model_id.model', '=', 'crm.lead'),
+            ('alias_parent_model_id.model', '=', 'crm.team'),
+            ('alias_force_thread_id', '=', False)
+        ], limit=1)
+        if alias_record and alias_record.alias_domain and alias_record.alias_name:
+            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
+            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
+            sub_title = _('or send an email to %s') % (email_link)
+        return '<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>' % (help_title, sub_title)
 
     @api.multi
     def log_meeting(self, meeting_subject, meeting_date, duration):
