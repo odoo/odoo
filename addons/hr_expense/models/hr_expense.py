@@ -13,7 +13,7 @@ from odoo.addons import decimal_precision as dp
 class HrExpense(models.Model):
 
     _name = "hr.expense"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense"
     _order = "date desc, id desc"
 
