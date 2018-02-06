@@ -134,6 +134,14 @@ var x2ManyCommands = {
 };
 
 var BasicModel = AbstractModel.extend({
+    // list of models for which the DataManager's cache should be cleared on
+    // create, update and delete operations
+    noCacheModels: [
+        'ir.actions.act_window',
+        'ir.filters',
+        'ir.ui.view',
+    ],
+
     /**
      * @override
      */
@@ -248,6 +256,8 @@ var BasicModel = AbstractModel.extend({
                         record.count--;
                     }
                 });
+                // optionally clear the DataManager's cache
+                self._invalidateCache(records[0]);
             });
     },
     /**
@@ -909,11 +919,14 @@ var BasicModel = AbstractModel.extend({
                         // Erase changes as they have been applied
                         record._changes = {};
 
+                        // Optionally clear the DataManager's cache
+                        self._invalidateCache(record);
+
                         self.unfreezeOrder(record.id);
 
                         // Update the data directly or reload them
                         if (shouldReload) {
-                            self._fetchRecord(record).then(function (record) {
+                            self._fetchRecord(record).then(function () {
                                 def.resolve(changedFields);
                             });
                         } else {
@@ -1023,8 +1036,11 @@ var BasicModel = AbstractModel.extend({
                 method: 'write',
                 args: [resIDs, { active: value }],
             })
-            .then(this.reload.bind(this, parentID));
-
+            .then(function () {
+                // optionally clear the DataManager's cache
+                self._invalidateCache(parent);
+                return self.reload(parentID);
+            });
     },
     /**
      * Toggle (open/close) a group in a grouped list, then fetches relevant
@@ -2936,6 +2952,21 @@ var BasicModel = AbstractModel.extend({
 
         }
         return context;
+    },
+    /**
+     * Invalidates the DataManager's cache if the main model (i.e. the model of
+     * its root parent) of the given dataPoint is a model in 'noCacheModels'.
+     *
+     * @private
+     * @param {Object} dataPoint
+     */
+    _invalidateCache: function (dataPoint) {
+        while (dataPoint.parentID) {
+            dataPoint = this.localData[dataPoint.parentID];
+        }
+        if (_.contains(this.noCacheModels, dataPoint.model)) {
+            core.bus.trigger('clear_cache');
+        }
     },
     /**
      * Returns true if the field is protected against changes, looking for a
