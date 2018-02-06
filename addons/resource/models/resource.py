@@ -661,11 +661,16 @@ class ResourceCalendarAttendance(models.Model):
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
 
-    @api.constrains('hour_from', 'hour_to')
-    def _check_hours(self):
-        for attendance in self:
-            if attendance.hour_from > attendance.hour_to:
-                raise ValidationError(_("The start-hour must be lower than end-hour."))
+    @api.onchange('hour_from', 'hour_to')
+    def _onchange_hours(self):
+        # avoid negative or after midnight
+        self.hour_from = min(self.hour_from, 23.99)
+        self.hour_from = max(self.hour_from, 0.0)
+        self.hour_to = min(self.hour_to, 23.99)
+        self.hour_to = max(self.hour_to, 0.0)
+
+        # avoid wrong order
+        self.hour_to = max(self.hour_to, self.hour_from)
 
 
 class ResourceResource(models.Model):
