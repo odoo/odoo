@@ -383,7 +383,7 @@ var PivotModel = AbstractModel.extend({
             comparisonTimeRangeDescription: params.comparisonTimeRangeDescription || "",
             compare: params.compare || false,
             context: _.extend({}, session.user_context, params.context),
-            groupedBy: params.groupedBy,
+            groupedBy: params.context.pivot_row_groupby || params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
             measures: this._processMeasures(params.context.pivot_measures) || params.measures,
             sorted_column: {},
