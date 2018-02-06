@@ -1,4 +1,4 @@
-Belgium 2016-04-11
+Belgium 2018/02/06
 
 Van Roey agrees to the terms of the Odoo Corporate
 Contributor License Agreement v1.0.
@@ -8,7 +8,7 @@ declaration.
 
 Signed,
 
-Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666
+Ward Marissen Ward.Marissen@vanroey.be https://github.com/Wardm95
 
 List of contributors:
 
@@ -16,3 +16,4 @@ Yenthe Van Ginneken  yenthe.vanginneken@vanroey.be https://github.com/Yenthe666 
 Vincent Adriaensen vincent.adriaensen@vanroey.be https://github.com/vincentadriaensen
 Pol Van Dingenen pol.vandingenen@vanroey.be https://github.com/Cyhexy
 Ward Marissen Ward.Marissen@vanroey.be https://github.com/Wardm95
+Abderahman Moujahid Abderahman.Moujahid@vanroey.be https://github.com/Abderahman88
