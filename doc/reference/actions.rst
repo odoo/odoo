@@ -358,8 +358,8 @@ server actions:
 
 .. _reference/actions/report:
 
-Report Actions (``ir.actions.report.xml``)
-==========================================
+Report Actions (``ir.actions.report``)
+======================================
 
 Triggers the printing of a report
 

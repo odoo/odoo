@@ -1,0 +1,145 @@
+<odoo>
+
+    <!-- duplicata of the template payment.payment_confirmation_status. 
+        The duplication avoid to break an existing installation in stable version-->
+    <template id="payment_confirmation_status">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            Your payment has been authorized.
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+    </template>
+
+
+    <template id="portal_my_orders_payment" name="Payment on my orders" inherit_id="sale.portal_order_page">
+        <xpath expr="//t[@name='portal_confirmation_sign']" position="after">
+            <t t-if="not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and order.payment_tx_id.state != 'done'" name="portal_confirmation_pay">
+                <a class="btn btn-primary ml8 pull-right" href="#portal_pay">
+                    <i class="fa fa-arrow-circle-right"/> Pay Now
+                </a>
+            </t>
+            <t t-if="invoices and order.state in ('sale', 'done') and portal_confirmation == 'pay'">
+                <a class="btn btn-primary ml8 pull-right" disabled="disabled">
+                    <i class="fa fa-check-circle"/> Done
+                </a>
+            </t>
+        </xpath>
+        <xpath expr="//t[@t-call='sale.portal_order_success']" position="after">
+            <div t-if="order.payment_tx_ids and not invoices and order.state in ('sent', 'sale') and portal_confirmation == 'pay' and not success and not error" class="o_sale_payment_tx_status" t-att-data-order-id="order.id">
+                <t t-set="payment_tx_id" t-value="order.payment_tx_id"/>
+                <t t-call="sale_payment.payment_confirmation_status"/>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='portal_sign']" position="after">
+            <div class="row" t-if="not invoices and order.state in ('sent') and portal_confirmation == 'pay'" id="portal_pay">
+                <div class="col-md-offset-3 col-md-6">
+                    <div t-if="pms or s2s_acquirers or form_acquirers" id="payment_method" class="text-left col-md-13">
+                        <h4 class="mb24">Pay with</h4>
+                        <t t-call="payment.payment_tokens_list">
+                            <t t-set="mode" t-value="'payment'"/>
+                            <t t-set="partner_id" t-value="order.partner_id.id"/>
+                            <t t-set="access_token" t-value="access_token"/>
+                            <t t-set="success_url" t-value="'/my/orders/%s%s' % (order.id, ('?access_token=%s' % (access_token)) if access_token else '')"/>
+                            <t t-set="error_url" t-value="'/my/orders/%s%s' % (order.id, ('?access_token=%s' % (access_token)) if access_token else '')"/>
+                            <t t-set="callback_method" t-value="''"/>
+                            <t t-set="submit_txt" t-value="'Pay Now'"/>
+                            <t t-set="icon_class" t-value="'fa-lock'"/>
+                            <t t-set="form_action" t-value="'/pay/sale/' + str(order.id) + '/s2s_token_tx/'"/>
+                            <t t-set="prepare_tx_url" t-value="'/pay/sale/' + str(order.id) + '/form_tx/'"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-if='invoices']" position="before">
+            <t t-set="tx_ids" t-value="order.payment_tx_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
+            <t t-if="tx_ids">
+                <div>
+                    <strong>Transactions</strong>
+                </div>
+                <div>
+                    <t t-foreach="tx_ids" t-as="tx">
+                    <div>
+                        <span t-esc="tx.reference"/>
+                        <span class="text-muted" t-field="tx.create_date"/>
+                        <t t-if="tx.state == 'done'">
+                            <span class="label label-success orders_label_text_align"><i class="fa fa-fw fa-check"/> Done</span>
+                        </t>
+                        <t t-if="tx.state != 'done'">
+                            <span class="label label-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> Waiting</span>
+                            <t t-if="tx.state_message"><br /><span t-esc="tx.state_message"/></t>
+                        </t>
+                    </div>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_order_error" name="Order error display: payment errors"
+            inherit_id="sale.portal_order_error">
+        <xpath expr="//t[@name='generic']" position="after">
+            <t t-if="error == 'pay_sale_invalid_doc'">
+                There was an error processing your payment: invalid order.
+            </t>
+            <t t-if="error == 'pay_sale_invalid_doc_state'">
+                There was an error processing your payment: invalid order state.
+            </t>
+            <t t-if="error == 'pay_sale_invalid_token'">
+                There was en error processing your payment: invalid credit card ID.
+            </t>
+            <t t-if="error == 'pay_sale_tx_amount'">
+                There was an error processing your payment: transaction amount issue.<br />
+                <t t-if="order.payment_tx_id">
+                    <t t-esc="order.payment_tx_id.amount"/> / <t t-esc="order.amount_total"/>
+                </t>
+            </t>
+            <t t-if="error == 'pay_sale_tx_fail'">
+                There was an error processing your payment: transaction failed.<br />
+                <t t-if="order.payment_tx_id and order.payment_tx_id.state_message">
+                    <t t-esc="order.payment_tx_id.state_message"/>
+                </t>
+            </t>
+            <t t-if="error == 'pay_sale_tx_state'">
+                There was an error processing your payment: transaction issue.<br />
+                <t t-if="order.payment_tx_id and order.payment_tx_id.state_message">
+                    <t t-esc="order.payment_tx_id.state_message"/>
+                </t>
+            </t>
+            <t t-if="error == 'pay_sale_tx_confirm'">
+                There was an error processing your payment: impossible to validate order.
+            </t>
+            <t t-if="error == 'pay_sale_tx_token'">
+                There was an error processing your payment: issue with credit card ID validation.
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_order_success" name="Order success display: payment success"
+            inherit_id="sale.portal_order_success">
+        <xpath expr="//a[hasclass('close')]" position="after">
+            <t t-if="success == 'pay_sale'">
+                <span t-if='order.payment_acquirer_id.done_msg' t-raw="order.payment_acquirer_id.done_msg"/>
+                <span t-if='order.payment_acquirer_id.post_msg' t-raw="order.payment_acquirer_id.post_msg"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -3,9 +3,11 @@
 
 from odoo.addons.sale.tests.test_sale_common import TestSale
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_repr
+from odoo.tools import float_repr
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestSaleTimesheet(TestSale):
 
     def setUp(self):
@@ -21,7 +23,6 @@ class TestSaleTimesheet(TestSale):
         self.project = self.env['project.project'].create({
             'name': 'Project for my timesheets',
             'allow_timesheets': True,
-            'use_tasks': True,
         })
 
         # create service products
@@ -34,8 +35,9 @@ class TestSaleTimesheet(TestSale):
             'uom_id': self.env.ref('product.product_uom_hour').id,
             'uom_po_id': self.env.ref('product.product_uom_hour').id,
             'default_code': 'SERV-DELI',
-            'track_service': 'task',
-            'project_id': self.project.id
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project.id,
         })
 
         self.product_order = self.env['product.product'].create({
@@ -47,8 +49,9 @@ class TestSaleTimesheet(TestSale):
             'uom_id': self.env.ref('product.product_uom_hour').id,
             'uom_po_id': self.env.ref('product.product_uom_hour').id,
             'default_code': 'SERV-ORDER',
-            'track_service': 'task',
-            'project_id': self.project.id
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project.id,
         })
 
         # pricelists
@@ -64,7 +67,6 @@ class TestSaleTimesheet(TestSale):
             'currency_id': self.env.ref('base.EUR').id,
             'company_id': self.env.user.company_id.id,
         })
-
         # partners
         self.partner_usd = self.env['res.partner'].create({
             'name': 'Cool Partner in USD',
@@ -132,6 +134,8 @@ class TestSaleTimesheet(TestSale):
             'project_id': task_ordered.project_id.id,
         })
 
+        # check we don't compare apples and pears
+        self.assertEquals(timesheet1.currency_id, sale_order.currency_id, 'Currencies should not differ (%s vs %s)' % (timesheet1.currency_id.name, sale_order.currency_id.name))
         # check theorical revenue
         self.assertEquals(timesheet1.timesheet_invoice_type, 'billable_time', "Billable type on task from delivered service should be 'billabe time'")
         self.assertEquals(timesheet2.timesheet_invoice_type, 'billable_time', "Billable type on task from delivered service should be 'billabe time'")

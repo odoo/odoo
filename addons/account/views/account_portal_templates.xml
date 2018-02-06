@@ -1,0 +1,273 @@
+<odoo>
+	<template id="portal_my_home_menu_invoice" name="Portal layout : invoice menu entries" inherit_id="portal.portal_layout" priority="30">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'invoice'" class="active">
+                <a t-if="invoice" t-attf-href="/my/invoices?{{ keep_query() }}">Invoices</a>
+                <t t-else="">Invoices</t>
+            </li>
+            <li t-if="invoice">
+                <t t-esc="invoice.number"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_invoice" name="Portal My Home : invoice entries" inherit_id="portal.portal_my_home" priority="30">
+        <xpath expr="//ul[hasclass('o_portal_docs')]" position="inside">
+            <li t-if="invoice_count" class="list-group-item">
+                <span class="badge" t-esc="invoice_count"/>
+                <a href="/my/invoices">Invoices</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_invoices" name="My Invoices and Payments">
+      <t t-call="portal.portal_layout">
+        <h3>Invoices
+            <t t-call="portal.portal_searchbar"/>
+        </h3>
+        <t t-if="not invoices">
+            <p>There are currently no invoices and payments for your account.</p>
+        </t>
+        <div t-if="invoices" class="panel panel-default">
+            <div class="table-responsive"><table class="table table-hover o_portal_my_doc_table">
+                <thead>
+                  <tr class="active">
+                    <th>Invoice #</th>
+                    <th>Invoice Date</th>
+                    <th class='hidden-xs'>Due Date</th>
+                    <th></th>
+                    <th>Amount Due</th>
+                  </tr>
+                </thead>
+                <t t-foreach="invoices" t-as="invoice">
+                    <tr>
+                        <td>
+                            <a t-attf-href="/my/invoices/#{invoice.id}" t-att-title="invoice.number"><t t-esc="invoice.number"/></a>
+                        </td>
+                        <td><span t-field="invoice.date_invoice"/></td>
+                        <td class='hidden-xs'><span t-field="invoice.date_due"/></td>
+                        <td>
+                            <t t-if="invoice.state == 'open'">
+                                <span class="label label-info"><i class="fa fa-fw fa-clock-o"></i><span class="hidden-xs"> Waiting for Payment</span></span>
+                            </t>
+                            <t t-if="invoice.state == 'paid'">
+                                <span class="label label-default"><i class="fa fa-fw fa-check"></i><span class="hidden-xs"> Paid</span></span>
+                            </t>
+                            <t t-if="invoice.state == 'cancel'">
+                                <span class="label label-default"><i class="fa fa-fw fa-remove"></i><span class="hidden-xs"> Cancelled</span></span>
+                            </t>
+                        </td>
+                        <td><span t-field="invoice.residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
+                    </tr>
+                </t>
+            </table></div>
+            <div t-if="pager" class="o_portal_pager text-center">
+                <t t-call="portal.pager"/>
+            </div>
+        </div>
+      </t>
+    </template>
+
+    <template id="portal_invoice_page" name="Invoice Portal Template">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h4>
+                                    <t t-call='portal.record_pager'/>
+                                    <span t-if="invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">Invoice</span>
+                                    <span t-if="invoice.type == 'out_invoice' and invoice.state == 'draft'">Draft Invoice</span>
+                                    <span t-if="invoice.type == 'out_invoice' and invoice.state == 'cancel'">Cancelled Invoice</span>
+                                    <span t-if="invoice.type == 'out_refund'">Credit Note</span>
+                                    <span t-if="invoice.type == 'in_refund'">Vendor Credit Note</span>
+                                    <span t-if="invoice.type == 'in_invoice'">Vendor Bill</span>
+                                    <span t-field="invoice.number"/>
+                                </h4>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 hidden-print" id="o_portal_account_actions">
+                                <a target="_blank" t-att-href="'/my/invoices/pdf/%s?%s' % (invoice.id, keep_query())" class="pull-right" title="Download">
+                                    <i class="fa fa-download fa-2x" aria-hidden="true"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <t t-if="error or warning" t-call="account.portal_invoice_error"/>
+                        <t t-if="success and (not error and not warning)" t-call="account.portal_invoice_success"/>
+                        <t t-call="account.portal_invoice_report"/>
+                    </div>
+                </div>
+            </div>
+            <div class="oe_structure mb32"/>
+        </t>
+    </template>
+
+    <template id="portal_invoice_report" name="Invoice Portal Report">
+        <div class="row">
+            <div class="col-xs-5" name="customer_address">
+                <strong>Customer Address</strong>
+                <address t-field="invoice.partner_id"
+                    t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                <div t-if="invoice.partner_id.vat" class="mt16">VAT: <span t-field="invoice.partner_id.vat"/></div>
+            </div>
+        </div>
+
+        <div class="row mt32 mb32">
+            <div class="col-xs-2" t-if="invoice.name">
+                <strong>Description:</strong>
+                <p t-field="invoice.name"/>
+            </div>
+            <div class="col-xs-2" t-if="invoice.date_invoice">
+                <strong>Invoice Date:</strong>
+                <p t-field="invoice.date_invoice"/>
+            </div>
+            <div class="col-xs-2" t-if="invoice.date_due and invoice.type == 'out_invoice' and (invoice.state == 'open' or invoice.state == 'paid')">
+                <strong>Due Date:</strong>
+                <p t-field="invoice.date_due"/>
+            </div>
+            <div class="col-xs-2" t-if="invoice.origin">
+                <strong>Source:</strong>
+                <p t-field="invoice.origin"/>
+            </div>
+            <div class="col-xs-2" t-if="invoice.partner_id.ref">
+                <strong>Customer Code:</strong>
+                <p t-field="invoice.partner_id.ref"/>
+            </div>
+            <div name="reference" class="col-xs-2" t-if="invoice.reference">
+                <strong>Reference:</strong>
+                <p t-field="invoice.reference"/>
+            </div>
+        </div>
+
+        <!-- Is there a discount on at least one line? -->
+        <t t-set="display_discount" t-value="any([l.discount for l in invoice.invoice_line_ids])"/>
+
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th class="hidden">Source Document</th>
+                    <th class="text-right">Quantity</th>
+                    <th class="text-right">Unit Price</th>
+                    <th t-if="display_discount" class="text-right">Disc.(%)</th>
+                    <th class="text-right">Taxes</th>
+                    <th class="text-right">Amount</th>
+                </tr>
+            </thead>
+            <tbody class="o_portal_report_tbody">
+                <tr t-foreach="invoice.invoice_line_ids" t-as="l">
+                    <td><span t-field="l.name"/></td>
+                    <td class="hidden"><span t-field="l.origin"/></td>
+                    <td class="text-right">
+                        <span t-field="l.quantity"/>
+                        <span t-field="l.uom_id"  groups="product.group_uom"/>
+                    </td>
+                    <td class="text-right">
+                        <span t-field="l.price_unit"/>
+                    </td>
+                    <td t-if="display_discount" class="text-right">
+                        <span t-field="l.discount"/>
+                    </td>
+                    <td class="text-right">
+                        <span t-esc="', '.join(map(lambda x: (x.description or x.name), l.invoice_line_tax_ids))"/>
+                    </td>
+                    <td class="text-right" id="subtotal">
+                        <span t-field="l.price_subtotal"
+                            t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                    </td>
+                </tr>
+                <tr t-foreach="range(max(5-len(invoice.invoice_line_ids),0))" t-as="l">
+                    <td t-translation="off">&amp;nbsp;</td>
+                    <td class="hidden"></td>
+                    <td></td>
+                    <td></td>
+                    <td t-if="display_discount"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div id="total" class="row">
+            <div class="col-xs-4 pull-right">
+                <table class="table table-condensed">
+                    <tr class="border-black">
+                        <td><strong>Subtotal</strong></td>
+                        <td class="text-right">
+                            <span t-field="invoice.amount_untaxed" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                        </td>
+                    </tr>
+                    <t t-foreach="invoice._get_tax_amount_by_group()" t-as="amount_by_group">
+                        <tr>
+                            <td><span t-esc="amount_by_group[0] if len(invoice.tax_line_ids) &gt; 1 else (invoice.tax_line_ids.tax_id.description or invoice.tax_line_ids.tax_id.name)"/></td>
+                            <td class="text-right">
+                                <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr class="border-black">
+                        <td><strong>Total</strong></td>
+                        <td class="text-right">
+                             <span t-field="invoice.amount_total" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- DO NOT REMOVE THIS TABLE. MANDATORY IN SOME COUNTRIES -->
+        <div class="row" t-if="len(invoice.tax_line_ids) &gt; 0">
+            <div class="col-xs-6">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Tax</th>
+                            <th class="text-right">Base</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="invoice.tax_line_ids" t-as="t">
+                            <td><span t-field="t.tax_id.description"/></td>
+                            <td class="text-right">
+                                <span t-field="t.base" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="t.amount" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p t-if="invoice.comment">
+            <span t-field="invoice.comment"/>
+        </p>
+        <p t-if="invoice.payment_term_id">
+            <span t-field="invoice.payment_term_id.note"/>
+        </p>
+        <p t-if="invoice.fiscal_position_id.note">
+            <span t-field="invoice.fiscal_position_id.note"/>
+        </p>
+    </template>
+
+    <template id="portal_invoice_error" name="Invoice error/warning display">
+        <div class="row mr16">
+            <div t-attf-class="'col-md-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+                <t t-if="error == 'generic'" name="generic">
+                    There was an error processing this page.
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="portal_invoice_success" name="Invoice success display">
+        <div class="row mr16">
+            <div class="col-md-12 mr16 ml16 alert alert-dismissable alert-success">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+            </div>
+        </div>
+    </template>
+</odoo>

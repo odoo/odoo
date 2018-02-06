@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# José Vicente <txusev@gmail.com>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
+# Antonio Trueba <atgayol@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: José Vicente <txusev@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,11 +28,20 @@ msgstr "Compañías"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:126
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+"Si esta casilla de verificación está marcada, no podrá guardar un contacto "
+"si el CIF no puede validarse por el servicio VIES."
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:134
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
@@ -41,7 +51,7 @@ msgstr ""
 "Nota: el formato esperado es %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:125
+#: code:addons/base_vat/models/res_partner.py:133
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
@@ -51,30 +61,23 @@ msgstr ""
 "validación VIES o no respeta el formato esperado %s."
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
-msgid ""
-"Use VIES service to check VAT # of your customers rather than a simple "
-"format validation."
-msgstr ""
-
-#. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "IVA"
 
 #. module: base_vat
-#: model:ir.ui.view,arch_db:base_vat.account_config_settings_view_form_inherit_base_vat
-msgid "VAT # check with European VIES service"
-msgstr ""
-
-#. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_account_config_settings_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
-msgid "VIES VAT Check"
-msgstr "Validación VIES VAT"
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr "Verificar números NIF"
 
 #. module: base_vat
-#: model:ir.model,name:base_vat.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr "Verificar números NIF usando el servicio VIES"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

@@ -29,8 +29,10 @@
         <field name="context">{'search_default_workcenter_id': active_id}</field>
         <field name="domain">[]</field>
         <field name="help" type="html">
-            <p>
-              No data to display. You will get here statistics about the
+            <p class="o_view_nocontent_empty_folder">
+              No data to display
+            </p><p>
+              You will get here statistics about the
               work orders duration related to this routing.
             </p>
         </field>
@@ -46,8 +48,10 @@
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('production_id.routing_id', '=', active_id), ('state', '=', 'done')]</field>
         <field name="help" type="html">
-            <p>
-              No data to display. You will get here statistics about the
+            <p class="o_view_nocontent_empty_folder">
+              No data to display
+            </p><p>
+              You will get here statistics about the
               work orders duration related to this routing.
             </p>
         </field>
@@ -61,16 +65,13 @@
         <field name="view_mode">tree,form,gantt,calendar,pivot,graph</field>
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new work order.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
           </p><p>
-            Work Orders is the list of operations to be performed for each
-            manufacturing order. Once you start the first work order of a
-            manufacturing order, the manufacturing order is automatically
-            marked as started. Once you finish the latest operation of a
-            manufacturing order, the MO is automatically done and the related
-            products are produced.
-          </p>
+            Work Orders are operations to be processed at a Work Center to realize a
+            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+            they are based on the Routing defined on these ones
+            </p>
         </field>
     </record>
 
@@ -96,6 +97,9 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <form string="Production Workcenter" delete="0" create="0">
+            <field name="is_user_working" invisible="1"/>
+            <field name="working_state" invisible="1"/>
+            <field name="production_state" invisible="1"/>
             <header>
                 <button name="button_finish" type="object" string="Finish Order" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('is_produced', '=', False)]}" class="btn-info"/>
                 <button name="button_start" type="object" string="Start Working" attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending')]}"/>
@@ -108,9 +112,6 @@
                 <button name="button_start" type="object" string="Continue Production" attrs="{'invisible': ['|', '|', ('production_state', '=', 'done'), ('working_state', '=', 'blocked'), ('state', '!=', 'done')]}"/>
                 <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}"/>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
-                <field name="is_user_working" invisible="1"/>
-                <field name="working_state" invisible="1"/>
-                <field name="production_state" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
@@ -146,17 +147,20 @@
                     <group>
                         <group>
                             <field name="qty_producing" string="Current Qty" attrs="{'readonly': ['|', ('product_tracking', '=', 'serial'), ('state', 'in', ('done', 'cancel'))]}"/>
-                            <field name="final_lot_id" context="{'default_product_id': product_id}" attrs="{'invisible': [('product_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
+                            <field name="final_lot_id" context="{'default_product_id': product_id}" domain="['|', '&amp;', ('product_id', '=', product_id), ('product_id.tracking', '!=', 'serial'), ('use_next_on_work_order_id', '=', id)]" attrs="{'invisible': [('product_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
                             <field name="product_tracking" invisible="1"/>
                         </group>
                     </group>
                     <field name="move_raw_ids" invisible="1"/>
-                    <field name="active_move_lot_ids" attrs="{'invisible': [('active_move_lot_ids', '=', [])]}">
+                    <field name="active_move_line_ids" attrs="{'invisible': [('active_move_line_ids', '=', [])]}">
                         <tree editable="bottom" create="0" delete="0">
                             <field name="product_id"/>
-                            <field name="quantity" readonly="1"/>
+                            <field name="product_uom_qty" readonly="1" string="To Consume"/>
                             <field name="lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"/>
-                            <field name="quantity_done"/>
+                            <field name="qty_done"/>
+                            <field name="product_uom_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
                             <field name="move_id" invisible="1"/>
                             <field name="done_wo" invisible="1"/>
                         </tree>
@@ -167,9 +171,10 @@
                         <group>
                             <label for="date_planned_start" string="Planned Date"/>
                             <div class="o_row">
-                                from <field name="date_planned_start"/>
-                                <div attrs="{'invisible': [('date_planned_finished', '=', False)]}">
-                                    to
+                                <field name="date_planned_start" class="mr8"/>
+                                <div attrs="{'invisible': [('date_planned_start', '=', False)]}" class="o_row">
+                                    <strong attrs="{'invisible': [('date_planned_finished', '=', False)]}" class="mr8">to</strong>
+                                    <strong class="oe_edit_only mr8" attrs="{'invisible': [('date_planned_finished', '!=', False)]}">to</strong>
                                     <field name="date_planned_finished"/>
                                 </div>
                             </div>
@@ -177,7 +182,7 @@
                             <div class="o_row">
                                 <field name="date_start" readonly="1"/>
                                 <div  attrs="{'invisible': [('date_finished', '=', False)]}">
-                                    to
+                                    <strong class="mr8">to</strong>
                                     <field name="date_finished" readonly="1"/>
                                 </div>
                             </div>
@@ -197,7 +202,7 @@
                         </group>
                     </group>
                     <group>
-                        <field name="time_ids" readonly="1" nolabel="1">
+                        <field name="time_ids" nolabel="1">
                             <tree>
                                 <field name="date_start"/>
                                 <field name="date_end"/>
@@ -252,17 +257,17 @@
                 <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
                 <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
                 <filter string="Finished" name="finish" domain="[('state','=','done')]"/>
-                <filter string="Available" domain="[('production_availability','=', 'assigned')]"/>
+                <filter string="Available" name="available" domain="[('production_availability','=', 'assigned')]"/>
                 <separator/>
-                <filter string="Late" domain="['&amp;', ('date_planned_start','&lt;', current_date), ('state', '=', 'ready')]"
+                <filter string="Late" name="late" domain="['&amp;', ('date_planned_start','&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
                 <field name="workcenter_id"/>
                 <field name="production_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Work Center" domain="[]" context="{'group_by':'workcenter_id'}"/>
-                    <filter string="Production" domain="[]" context="{'group_by':'production_id'}"/>
-                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Scheduled Month" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
+                    <filter string="Work Center" name="work_center" domain="[]" context="{'group_by':'workcenter_id'}"/>
+                    <filter string="Production" name="production" domain="[]" context="{'group_by':'production_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Scheduled Month" name="scheduled_month" domain="[]" context="{'group_by':'date_planned_start'}" help="Scheduled Date by Month"/>
                 </group>
              </search>
         </field>
@@ -285,7 +290,7 @@
         <field name="arch" type="xml">
             <graph string="Operations">
                 <field name="production_id"/>
-                <field name="duration_percent" type="measure"/>
+                <field name="duration" type="measure"/>
             </graph>
         </field>
     </record>
@@ -329,6 +334,10 @@
                 <field name="name"/>
                 <field name="production_id"/>
                 <field name="state"/>
+                <field name="is_user_working"/>
+                <field name="working_user_ids"/>
+                <field name="last_working_user_id"/>
+                <field name="working_state"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
                 <field name="qty_production"/>
@@ -338,14 +347,21 @@
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
                                 <div>
-                                    <span><strong><t t-esc="record.product_id.value"/></strong></span>
+                                    <strong class="o_kanban_record_title">
+                                        <span><t t-esc="record.production_id.value"/></span> - <span><t t-esc="record.name.value"/></span>
+                                    </strong>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-7 o_kanban_primary_left">
-                                        <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <span><t t-esc="record.product_id.value"/></span> <span><t t-esc="record.qty_production.value"/> <t t-esc="record.product_uom_id.value"/></span>
                                     </div>
-                                    <div class="col-xs-5 o_kanban_primary_right">
-                                        <span><t t-esc="record.production_id.value"/></span>
+                                    <div class="oe_kanban_bottom_right" t-if="record.state.raw_value == 'progress'">
+                                        <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length > 0"><i class="fa fa-play"/></span>
+                                        <span t-if="record.working_state.raw_value != 'blocked' and record.working_user_ids.raw_value.length == 0 and record.last_working_user_id.raw_value"><i class="fa fa-pause"/></span>
+                                        <span t-if="record.working_state.raw_value == 'blocked' and (record.working_user_ids.raw_value.length == 0 or record.last_working_user_id.raw_value)"><i class="fa fa-stop"/></span>
+                                        <t t-if="record.last_working_user_id.raw_value">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.last_working_user_id.raw_value)" width="24" height="24" class="oe_kanban_avatar"/>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -364,17 +380,15 @@
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
+        <field name="context">{'search_default_work_center': True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new work order.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
           </p><p>
-            Work Orders is the list of operations to be performed for each
-            manufacturing order. Once you start the first work order of a
-            manufacturing order, the manufacturing order is automatically
-            marked as started. Once you finish the latest operation of a
-            manufacturing order, the MO is automatically done and the related
-            products are produced.
-          </p>
+            Work Orders are operations to be processed at a Work Center to realize a
+            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+            they are based on the Routing defined on these ones
+            </p>
         </field>
     </record>
 
@@ -385,10 +399,12 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
         <field name="view_id" ref="workcenter_line_gantt_production"/>
+        <field name="context">{'search_default_production': True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new work order.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
           </p><p>
             To manufacture or assemble products, and use raw materials and
             finished products you must also handle manufacturing operations.
@@ -408,16 +424,13 @@
         <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_progress': True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start a new work order.
+          <p class="o_view_nocontent_smiling_face">
+            Start a new work order
           </p><p>
-            Work Orders is the list of operations to be performed for each
-            manufacturing order. Once you start the first work order of a
-            manufacturing order, the manufacturing order is automatically
-            marked as started. Once you finish the latest operation of a
-            manufacturing order, the MO is automatically done and the related
-            products are produced.
-          </p>
+            Work Orders are operations to be processed at a Work Center to realize a
+            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
+            they are based on the Routing defined on these ones
+            </p>
         </field>
     </record>
 

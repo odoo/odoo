@@ -733,6 +733,7 @@ var data = {
     DataSet: DataSet,
     DataSetStatic: DataSetStatic,
     DataSetSearch: DataSetSearch,
+    /** @type String */
     noDisplayContent: "<em class=\"text-warning\">" + _t("Unnamed") + "</em>",
 };
 

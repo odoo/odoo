@@ -12,11 +12,11 @@
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" string="Membership Product"/>
-                    <filter string="Inactive" domain="[('active','=',0)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
-                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
-                        <filter string='From Month' domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                        <filter string='Category' name="category" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='From Month' name="from_month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>
@@ -36,6 +36,34 @@
                     <field name="uom_id" invisible="1"/>
                     <field name="type" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="membership_products_kanban" model="ir.ui.view">
+            <field name="name">product.template.kanban</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="name"/>
+                    <field name="membership_date_from"/>
+                    <field name="membership_date_to"/>
+                    <field name="list_price"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span class="mt4"><field name="name"/></span></strong>
+                                    </div>
+                                    <span class="badge"><i class="fa fa-money"/> <field name="list_price"/></span>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i><strong> From: </strong><field name="membership_date_from"/><strong> To:</strong> <field name="membership_date_to"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -98,6 +126,13 @@
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="membership_products_form"/>
+            <field name="act_window_id" ref="action_membership_products"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_membership_product_view_kanban">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="membership_products_kanban"/>
             <field name="act_window_id" ref="action_membership_products"/>
         </record>
 

@@ -5,13 +5,14 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Eric Geens <ericgeens@yahoo.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,28 +21,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:155
+#: code:addons/payment_sips/models/payment.py:153
 #, python-format
 msgid "; multiple order found"
 msgstr "; meerdere orders gevonden"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:153
+#: code:addons/payment_sips/models/payment.py:151
 #, python-format
 msgid "; no order found"
 msgstr "; geen order gevonden"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:76
+#: code:addons/payment_sips/models/payment.py:74
 #, python-format
 msgid "Currency not supported by Wordline"
 msgstr "Valuta wordt niet ondersteund door Worldline"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:57
+#: code:addons/payment_sips/models/payment.py:55
 #, python-format
 msgid "Incorrect payment acquirer provider"
 msgstr "Onjuiste betalingsverwerker "
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_version
+msgid "Interface Version"
+msgstr "Interface versie"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
+msgid "Merchant ID"
+msgstr "Handelaar ID"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
@@ -54,17 +65,27 @@ msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_merchant_id
-msgid "SIPS API User Password"
-msgstr "SIPS API gebruikerswachtwoord"
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_prod_url
+msgid "Prod's url"
+msgstr "Prod's url"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_secret
-msgid "SIPS Secret"
-msgstr "SIPS Secret"
+msgid "Secret Key"
+msgstr "Geheime sleutel"
 
 #. module: payment_sips
-#: code:addons/payment_sips/models/payment.py:151
+#: code:addons/payment_sips/models/payment.py:149
 #, python-format
 msgid "Sips: received data for reference %s"
 msgstr "Sips: gegevens ontvangen voor referentie %s"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer_sips_test_url
+msgid "Test's url"
+msgstr "Test url"
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer_sips_merchant_id
+msgid "Used for production only"
+msgstr "Alleen gebruikt voor productie"

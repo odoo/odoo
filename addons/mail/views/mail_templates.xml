@@ -5,28 +5,31 @@
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/js/many2many_tags_email.js"></script>
 
-                <script type="text/javascript" src="/mail/static/src/js/client_action.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/discuss.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/discuss_mobile.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/extended_chat_window.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/composer.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/chat_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/chat_manager.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/services/chat_window_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chatter_composer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/followers.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/form_controller.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/form_renderer.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/basic_model.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/basic_view.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread_field.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/systray.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/tour.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/window_manager.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/activity.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/chat_mixin.js"></script>
 
                 <link rel="stylesheet" href="/mail/static/src/less/announcement.less"/>
-                <link rel="stylesheet" href="/mail/static/src/less/client_action.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/chat_window.less" type="text/less"/>
+                <link rel="stylesheet" href="/mail/static/src/less/discuss.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/extended_chat_window.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/composer.less" type="text/less"/>
                 <link rel="stylesheet" href="/mail/static/src/less/chatter.less" type="text/less"/>
@@ -39,7 +42,18 @@
 
         <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite">
             <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/mail/static/tests/chat_window_tests.js"></script>
                 <script type="text/javascript" src="/mail/static/tests/chatter_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/discuss_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/systray_tests.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/mock_server.js"></script>
+                <script type="text/javascript" src="/mail/static/tests/helpers/test_utils.js"></script>
+            </xpath>
+        </template>
+
+        <template id="qunit_mobile_suite" name="mail_mobile_tests" inherit_id="web.qunit_mobile_suite">
+            <xpath expr="//t[@t-set='head']" position="inside">
+                <script type="text/javascript" src="/mail/static/tests/discuss_mobile_tests.js"></script>
             </xpath>
         </template>
 
@@ -70,9 +84,24 @@
         by <span t-field="activity.user_id.name"/>:
         <span t-if="activity.summary" t-field="activity.summary"/>
     </p>
-    <div t-field="activity.note"/>
-    <div t-if="activity.feedback"><strong> Feedback : </strong><p t-field="activity.feedback"></p></div>
+    <div t-field="activity.note" style="margin-left: 8px;"/>
+    <div t-if="activity.feedback" style="margin-top: 8px;">
+        <strong> Feedback</strong>
+    <div t-field="activity.feedback" style="margin-left: 8px;"></div>
+    </div>
 </div>
+        </template>
+
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Hello <t t-esc="message['email_from']"/>,</p>
+    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
+    <p>Regards,</p>
+    <p>The <t t-esc="res_company.name"/> team.</p>
+</div>
+<blockquote><t t-esc="message['body']"/></blockquote>
         </template>
 
     </data>

@@ -8,22 +8,24 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Luis Martínez Ontalba <luismaront@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Alejandro Santana <alejandrosantana@anubia.es>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
+# Nicole Kist <nki@odoo.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Luis M. Triana <luis.triana@jarsa.com.mx>, 2016\n"
+"POT-Creation-Date: 2017-10-10 11:34+0000\n"
+"PO-Revision-Date: 2017-10-10 11:34+0000\n"
+"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +42,9 @@ msgid ""
 "                projects, departments, categories of products, etc.)"
 msgstr ""
 "Un presupuesto es una previsión de los ingresos y/o gastos esperados en su "
-"compañía en un periodo en el futuro. Se define en varias cuentas financieras"
-" y/o analíticas (que pueden representar proyectos, departamentos, categorías"
-" de productos, etc)"
+"compañía en un periodo futuro. Se define en varias cuentas financieras y/o "
+"analíticas (que pueden representar proyectos, departamentos, categorías de "
+"productos, etc)."
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_account_ids
@@ -90,6 +92,7 @@ msgstr "Línea de presupuesto"
 #: model:ir.model.fields,field_description:account_budget.field_account_analytic_account_crossovered_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_account_budget_post_crossovered_budget_line
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_crossovered_budget_line
+#: model:ir.model.fields,field_description:account_budget.field_project_project_crossovered_budget_line
 #: model:ir.ui.view,arch_db:account_budget.crossovered_budget_view_form
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_form
 #: model:ir.ui.view,arch_db:account_budget.view_crossovered_budget_line_search
@@ -115,7 +118,7 @@ msgstr "Posición presupuestaria"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
-#: model:ir.ui.view,arch_db:account_budget.account_config_settings_view_form_inherit_account_budget
+#: model:ir.ui.view,arch_db:account_budget.res_config_settings_view_form
 msgid "Budgetary Positions"
 msgstr "Posiciones presupuestarias"
 
@@ -296,10 +299,10 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: account_budget
-#: code:addons/account_budget/models/account_budget.py:89
+#: code:addons/account_budget/models/account_budget.py:31
 #, python-format
-msgid "The Budget '%s' has no accounts!"
-msgstr "¡El presupuesto '%s' no tiene cuentas!"
+msgid "The budget must have at least one account."
+msgstr "El presupuesto debe tener al menos de una cuenta."
 
 #. module: account_budget
 #: model:ir.model.fields,field_description:account_budget.field_crossovered_budget_lines_theoritical_amount

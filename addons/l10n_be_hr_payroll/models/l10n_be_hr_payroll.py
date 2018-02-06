@@ -36,7 +36,7 @@ class HrContract(models.Model):
     company_car_total_depreciated_cost = fields.Monetary()
     public_transport_reimbursed_amount = fields.Monetary(string='Reimbursed amount',
         compute='_compute_public_transport_reimbursed_amount', readonly=False, store=True)
-    others_reimbursed_amount = fields.Monetary(string='Reimbursed amount')
+    others_reimbursed_amount = fields.Monetary(string='Other Reimbursed amount')
     transport_employer_cost = fields.Monetary(compute='_compute_transport_employer_cost', string="Employer cost from employee transports")
     warrants_cost = fields.Monetary(compute='_compute_warrants_cost')
 
@@ -62,10 +62,10 @@ class HrContract(models.Model):
     meal_voucher_amount = fields.Monetary(string="Meal Vouchers",
         default=lambda self: self.get_attribute('meal_voucher_amount', 'default_value'),
         help="Amount the employee receives in the form of meal vouchers per worked day.")
-    holidays = fields.Float(string="Holidays",
+    holidays = fields.Float(string='Legal Leaves',
         default=lambda self: self.get_attribute('holidays', 'default_value'),
         help="Number of days of paid leaves the employee gets per year.")
-    holidays_editable = fields.Boolean(string="Editable Holidays", default=True)
+    holidays_editable = fields.Boolean(string="Editable Leaves", default=True)
     holidays_compensation = fields.Monetary(compute='_compute_holidays_compensation', string="Holidays Compensation")
     wage_with_holidays = fields.Monetary(compute='_compute_wage_with_holidays', inverse='_inverse_wage_with_holidays', string="Wage update with holidays retenues")
     additional_net_amount = fields.Monetary(string="Net Supplements",

@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
-# Bohdan Lisnenko, 2015-2016
-# Bohdan Lisnenko, 2016
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-05-06 12:24+0000\n"
-"Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
-"uk/)\n"
-"Language: uk\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
@@ -35,12 +35,17 @@ msgstr "Архів"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr ""
+msgstr "За липкою заміткою Категорія"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Натисніть, щоб додати нову мітку"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
-msgstr ""
+msgstr "Натисніть, щоб додати особисту нотатку."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_color
@@ -75,7 +80,7 @@ msgstr "Дата проведення"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Delete"
-msgstr "Вилучити"
+msgstr "Видалити"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_display_name
@@ -87,6 +92,11 @@ msgstr "Назва для відображення"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_fold
 msgid "Folded by Default"
+msgstr "Складено за замовчуванням"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
 msgstr ""
 
 #. module: note
@@ -123,21 +133,25 @@ msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr ""
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
+msgstr "Пізніше"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
 msgstr ""
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "Новий"
-
-#. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr "Нова примітка"
+msgstr "Нова"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -149,22 +163,22 @@ msgstr "Примітка"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_memo
 msgid "Note Content"
-msgstr ""
+msgstr "Змісти нотатки"
 
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr ""
+msgstr "Етап нотатки"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_name
 msgid "Note Summary"
-msgstr ""
+msgstr "Резюме нотатки"
 
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr ""
+msgstr "Тег нотатки"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_note
@@ -182,14 +196,19 @@ msgstr "Власник"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr ""
+msgid "Owner of the note stage"
+msgstr "Власник етапу нотатки"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Послідовність"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -205,7 +224,7 @@ msgstr "Назва стадії"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr ""
+msgstr "Етап нотаток"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -217,17 +236,17 @@ msgstr "Стадії"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr ""
+msgstr "Етапи нотаток"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_ids
 msgid "Stages of Users"
-msgstr ""
+msgstr "Етапи користувачів"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag_name
 msgid "Tag Name"
-msgstr ""
+msgstr "Назва тегу"
 
 #. module: note
 #: sql_constraint:note.tag:0
@@ -235,16 +254,19 @@ msgid "Tag name already exists !"
 msgstr "Така мітка вже існує!"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Мітки"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr "Цього тижня"
+msgstr "На тижні"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_01
@@ -253,26 +275,34 @@ msgid "Today"
 msgstr "Сьогодні"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Сьогоднішні дії"
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_02
 msgid "Tomorrow"
-msgstr ""
+msgstr "Завтра"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
+"Використовуйте нотатки для організації особистих завдань або приміток. Всі\n"
+"             примітки приватні; ніхто інший не зможе їх побачити. Однак\n"
+"             ви можете поділитися деякими нотатками з іншими людьми, запросивши підписників\n"
+"             на нотатку. (Корисно для протоколу зустрічі, особливо якщо\n"
+"             ви активуєте функцію підказки для спільних записів)."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "Використовується для замовлення етапів нотатки"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
@@ -285,52 +315,5 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитані повідомлення"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
+"Ви можете налаштувати, як ви обробляєте свої нотатки/завдання, додавши,\n"
+"             видалення або зміну стовпців."

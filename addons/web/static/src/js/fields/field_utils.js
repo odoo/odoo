@@ -16,6 +16,7 @@ odoo.define('web.field_utils', function (require) {
  */
 
 var core = require('web.core');
+var dom = require('web.dom');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -27,9 +28,26 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
- * @todo Really? it returns a jqueryElement...  We should try to move this to a
- * module with dom helpers functions, such as web.dom, maybe. And replace this
- * with a function that returns a string so we can get rid of the forceString.
+ * Convert binary to bin_size
+ * 
+ * @param {string} [value] base64 representation of the binary (might be already a bin_size!)
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored) 
+ * @param {Object} [options] additional options (note: this parameter is ignored)
+ * 
+ * @returns {string} bin_size (which is human-readable)
+ */
+function formatBinary(value, field, options) {
+    if (!value) {
+        return '';
+    }
+    return utils.binaryToBinsize(value);
+}
+
+/**
+ * @todo Really? it returns a jQuery element...  We should try to avoid this and
+ * let DOM utility functions handle this directly. And replace this with a
+ * function that returns a string so we can get rid of the forceString.
  *
  * @param {boolean} value
  * @param {Object} [field]
@@ -37,22 +55,18 @@ var _t = core._t;
  * @param {Object} [options] additional options
  * @param {boolean} [options.forceString=false] if true, returns a string
 *    representation of the boolean rather than a jQueryElement
- * @returns {jQueryElement | string}
+ * @returns {jQuery|string}
  */
 function formatBoolean(value, field, options) {
     if (options && options.forceString) {
         return value ? _t('True') : _t('False');
     }
-    var $input = $('<input/>', {
-        type: 'checkbox',
-    }).prop({
-        checked: value,
-        disabled: true,
+    return dom.renderCheckbox({
+        prop: {
+            checked: value,
+            disabled: true,
+        },
     });
-    var $div = $('<div/>', {
-        class: 'o_checkbox',
-    });
-    return $div.append($input, '<span/>');
 }
 
 /**
@@ -83,7 +97,7 @@ function formatChar(value, field, options) {
  * Returns a string representing a date.  If the value is false, then we return
  * an empty string. Note that this is dependant on the localization settings
  *
- * @param {Moment|false}
+ * @param {Moment|false} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -100,8 +114,7 @@ function formatDate(value, field, options) {
             value = value.clone().add(session.getTZOffset(value), 'minutes');
         }
     }
-    var l10n = core._t.database.parameters;
-    var date_format = time.strftime_to_moment_format(l10n.date_format);
+    var date_format = time.getLangDateFormat();
     return value.format(date_format);
 }
 
@@ -125,11 +138,7 @@ function formatDateTime(value, field, options) {
     if (!options || !('timezone' in options) || options.timezone) {
         value = value.clone().add(session.getTZOffset(value), 'minutes');
     }
-    var l10n = core._t.database.parameters;
-    var date_format = time.strftime_to_moment_format(l10n.date_format);
-    var time_format = time.strftime_to_moment_format(l10n.time_format);
-    var datetime_format = date_format + ' ' + time_format;
-    return value.format(datetime_format);
+    return value.format(time.getLangDatetimeFormat());
 }
 
 /**
@@ -261,7 +270,7 @@ function formatX2Many(value) {
  * @param {Object} [options]
  *        additional options to override the values in the python description of
  *        the field.
- * @param {Object} [options.currency] - the description of the currency to use
+ * @param {Object} [options.currency] the description of the currency to use
  * @param {integer} [options.currency_id]
  *        the id of the 'res.currency' to use (ignored if options.currency)
  * @param {string} [options.currency_field]
@@ -294,11 +303,15 @@ function formatMonetary(value, field, options) {
         currency = session.get_currency(currency_id);
     }
 
+    var digits = (currency && currency.digits) || options.digits;
+    if (options.field_digits === true) {
+        digits = field.digits || digits;
+    }
     var formatted_value = formatFloat(value, field, {
-        digits:  (currency && currency.digits) || options.digits,
+        digits: digits,
     });
 
-    if (!currency) {
+    if (!currency || options.noSymbol) {
         return formatted_value;
     }
     if (currency.position === "after") {
@@ -339,7 +352,7 @@ function formatSelection(value, field, options) {
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @param {string}
+ * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -352,7 +365,7 @@ function parseDate(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
+    var datePattern = time.getLangDateFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
     var date;
     if (options && options.isUTC) {
@@ -378,7 +391,7 @@ function parseDate(value, field, options) {
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
- * @param {string}
+ * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
@@ -391,8 +404,8 @@ function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
-        timePattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
+    var datePattern = time.getLangDateFormat(),
+        timePattern = time.getLangTimeFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
         timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
     var pattern1 = datePattern + ' ' + timePattern;
@@ -459,8 +472,8 @@ function parseFloat(value) {
 
 /**
  * Parse a String containing currency symbol and returns amount
- * 
- * @param {string} value 
+ *
+ * @param {string} value
  *                The string to be parsed
  *                We assume that a monetary is always a pair (symbol, amount) separated
  *                by a non breaking space. A simple float can also be accepted as value
@@ -565,7 +578,7 @@ function parseMany2one(value) {
 
 return {
     format: {
-        binary: _.identity, // todo
+        binary: formatBinary,
         boolean: formatBoolean,
         char: formatChar,
         date: formatDate,

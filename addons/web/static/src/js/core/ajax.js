@@ -211,7 +211,7 @@ var loadJS = (function () {
  * @param {HTMLFormElement} [options.form] the form to submit in order to fetch the file
  * @param {Function} [options.success] callback in case of download success
  * @param {Function} [options.error] callback in case of request error, provided with the error body
- * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
+ * @param {Function} [options.complete] called after both ``success`` and ``error`` callbacks have executed
  * @returns {boolean} a false value means that a popup window was blocked. This
  *   mean that we probably need to inform the user that something needs to be
  *   changed to make it work.
@@ -361,48 +361,133 @@ function post (controller_url, data) {
     return Def;
 }
 
+/**
+ * Loads an XML file according to the given URL and adds its associated qweb
+ * templates to the given qweb engine. The function can also be used to get
+ * the deferred which indicates when all the calls to the function are finished.
+ *
+ * Note: "all the calls" = the calls that happened before the current no-args
+ * one + the calls that will happen after but when the previous ones are not
+ * finished yet.
+ *
+ * @param {string} [url] - an URL where to find qweb templates
+ * @param {QWeb} [qweb] - the engine to which the templates need to be added
+ * @returns {Deferred}
+ *          If no argument is given to the function, the deferred's state
+ *          indicates if "all the calls" are finished (see main description).
+ *          Otherwise, it indicates when the templates associated to the given
+ *          url have been loaded.
+ */
 var loadXML = (function () {
-    var loading = false;
-    var urls = [];
-    var qwebs = [];
-    var templates_def = $.Deferred();
+    // Some "static" variables associated to the loadXML function
+    var isLoading = false;
+    var loadingsData = [];
+    var allLoadingsDef = $.when();
+    var seenURLs = [];
 
-    var load = function loadXML(url, qweb) {
-        if (url) {
-            urls.push(url);
-            qwebs.push(qweb);
+    return function (url, qweb) {
+        // If no argument, simply returns the deferred which indicates when
+        // "all the calls" are finished
+        if (!url || !qweb) {
+            return allLoadingsDef;
         }
 
-        if (!loading && urls.length) {
-            if (templates_def.state() === "resolved") {
-                templates_def = $.Deferred();
+        // If the given URL has already been seen, do nothing but returning the
+        // associated deferred
+        if (_.contains(seenURLs, url)) {
+            var oldLoadingData = _.findWhere(loadingsData, {url: url});
+            return oldLoadingData ? oldLoadingData.def : $.when();
+        }
+        seenURLs.push(url);
+
+        // Add the information about the new data to load: the url, the qweb
+        // engine and the associated deferred
+        var newLoadingData = {
+            url: url,
+            qweb: qweb,
+            def: $.Deferred(),
+        };
+        loadingsData.push(newLoadingData);
+
+        // If not already started, start the loading loop (reinitialize the
+        // "all the calls" deferred to an unresolved state)
+        if (!isLoading) {
+            allLoadingsDef = $.Deferred();
+            _load();
+        }
+
+        // Return the deferred associated to the new given URL
+        return newLoadingData.def;
+
+        function _load() {
+            isLoading = true;
+            if (loadingsData.length) {
+                // There is something to load, load it, resolve the associated
+                // deferred then start loading the next one
+                var loadingData = loadingsData[0];
+                loadingData.qweb.add_template(loadingData.url, function () {
+                    // Remove from array only now so that multiple calls to
+                    // loadXML with the same URL returns the right deferred
+                    loadingsData.shift();
+                    loadingData.def.resolve();
+                    _load();
+                });
+            } else {
+                // There is nothing to load anymore, so resolve the
+                // "all the calls" deferred
+                isLoading = false;
+                allLoadingsDef.resolve();
             }
-
-            loading = true;
-            qwebs.shift().add_template(urls.shift(), function () {
-                loading = false;
-                if (!urls.length) {
-                    templates_def.resolve();
-                }
-                load(null);
-            });
         }
-
-        return templates_def;
     };
-
-    return load;
 })();
 
-return {
+
+/**
+ * Loads the given js and css libraries. Note that the ajax loadJS and loadCSS methods
+ * don't do anything if the given file is already loaded.
+ *
+ * @param {Object} libs
+ * @Param {Array | Array<Array>} [libs.jsLibs=[]] The list of JS files that we want to
+ *   load. The list may contain strings (the files to load), or lists of strings. The
+ *   first level is loaded sequentially, and files listed in inner lists are loaded in
+ *   parallel.
+ * @param {Array<string>} [libs.cssLibs=[]] A list of css files, to be loaded in
+ *   parallel
+ *
+ * @returns {Deferred}
+ */
+function loadLibs (libs) {
+    var defs = [];
+    _.each(libs.jsLibs || [], function (urls) {
+        defs.push($.when.apply($, defs).then(function () {
+            if (typeof(urls) === 'string') {
+                return ajax.loadJS(urls);
+            } else {
+                return $.when.apply($, _.map(urls, function (url) {
+                    return ajax.loadJS(url);
+                }));
+            }
+        }));
+    });
+    _.each(libs.cssLibs || [], function (url) {
+        defs.push(ajax.loadCSS(url));
+    });
+    return $.when.apply($, defs);
+}
+
+var ajax = {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
     rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
     loadXML: loadXML,
+    loadLibs: loadLibs,
     get_file: get_file,
     post: post,
 };
+
+return ajax;
 
 });

@@ -5,26 +5,26 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="stock.view_template_property_form" />
             <field name="arch" type="xml">
-                <group name="stock_property" position="after">
-                    <group name="expiry_and_lots" groups="stock.group_production_lot" attrs="{'invisible': [('tracking','=','none')]}">
-                        <label for="life_time"/>
-                        <div class="o_row">
-                            <field name="life_time" />
+                <group name="traceability" position="after">
+                    <group string="Dates" name="expiry_and_lots" groups="stock.group_production_lot" attrs="{'invisible': [('tracking', '=','none')]}">
+                        <label for="use_time"/>
+                        <div>
+                            <field name="use_time" class="oe_inline"/>
                             <span>days</span>
                         </div>
-                        <label for="use_time"/>
-                        <div class="o_row">
-                            <field name="use_time" />
+                        <label for="life_time"/>
+                        <div>
+                            <field name="life_time" class="oe_inline"/>
                             <span>days</span>
                         </div>
                         <label for="removal_time"/>
-                        <div class="o_row">
-                            <field name="removal_time" />
+                        <div>
+                            <field name="removal_time" class="oe_inline"/>
                             <span>days</span>
                         </div>
                         <label for="alert_time"/>
-                        <div class="o_row">
-                            <field name="alert_time" />
+                        <div>
+                            <field name="alert_time" class="oe_inline"/>
                             <span>days</span>
                         </div>
                     </group>

@@ -2,14 +2,14 @@
 <odoo>
 <data>
 
-<template id="assets_common" name="stock_location_barcodes pdf assets" inherit_id="report.assets_common">
+<template id="assets_common" name="stock_location_barcodes pdf assets" inherit_id="web.report_assets_common">
     <xpath expr="." position="inside">
         <link href="/stock/static/src/less/report_location_barcode.less" rel="stylesheet"/>
     </xpath>
 </template>
 
 <template id="report_location_barcode">
-    <t t-call="report.basic_layout">
+    <t t-call="web.basic_layout">
         <div t-foreach="[docs[x:x+4] for x in xrange(0, len(docs), 4)]" t-as="page_docs" class="page page_stock_location_barcodes">
             <t t-foreach="page_docs" t-as="o">
                 <t t-if="o.barcode"><t t-set="content" t-value="o.barcode"/></t>

@@ -3,7 +3,7 @@
     <data noupdate="1">
 
          <function id="purchase_default_set"
-            model="ir.values" name="set_default"
+            model="ir.default" name="set"
             eval="('purchase.requisition', 'warehouse_id', ref('stock.warehouse0'))"/>
 
         <record id="type_single" model="purchase.requisition.type">
@@ -17,10 +17,17 @@
             <field name="quantity_copy">copy</field>
         </record>
 
-        <record id="seq_purchase_requisition" model="ir.sequence">
-            <field name="name">Purchase Requisition Order</field>
-            <field name="code">purchase.order.requisition</field>
+        <record id="seq_purchase_tender" model="ir.sequence">
+            <field name="name">Purchase Tender</field>
+            <field name="code">purchase.requisition.purchase.tender</field>
             <field name="prefix">TE</field>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="seq_blanket_order" model="ir.sequence">
+            <field name="name">Blanket Order</field>
+            <field name="code">purchase.requisition.blanket.order</field>
+            <field name="prefix">BO</field>
             <field name="padding">5</field>
         </record>
     </data>

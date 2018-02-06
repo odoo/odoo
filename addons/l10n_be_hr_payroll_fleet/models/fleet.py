@@ -11,8 +11,8 @@ from odoo.fields import Datetime
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
-    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
-    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
+    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee", store=True)
+    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost', store=True,
         string="Total Cost (Depreciated)", help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
     fuel_type = fields.Selection(required=True, default='diesel')

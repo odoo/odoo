@@ -2,17 +2,16 @@
 .o_main_navbar {
     position: relative;
     height: @odoo-navbar-height;
-    border: 1px solid @odoo-navbar-inverse-link-hover-bg;
+    border-bottom: 1px solid @odoo-navbar-inverse-link-hover-bg;
     background-color: @odoo-brand-primary;
     color: white;
 
     > a, > button {
         float: left;
-        width: @odoo-navbar-height - 2;
-        height: @odoo-navbar-height - 2;
+        height: @odoo-navbar-height;
         border: none;
-        padding: 0;
-        line-height: @odoo-navbar-height - 2;
+        padding: 0 @odoo-horizontal-padding - 4px 0 @odoo-horizontal-padding;
+        line-height: @odoo-navbar-height;
         background-color: transparent;
         text-align: center;
         color: inherit;
@@ -37,7 +36,7 @@
         color: white;
         font-size: 22px;
         font-weight: 500;
-        line-height: @odoo-navbar-height - 2;
+        line-height: @odoo-navbar-height;
 
         @media (max-width: @screen-xs-max) {
             float: none;
@@ -65,10 +64,10 @@
 
             > a {
                 display: block;
-                height: @odoo-navbar-height - 2;
+                height: @odoo-navbar-height;
                 padding: 0 10px;
                 color: white;
-                line-height: @odoo-navbar-height - 2;
+                line-height: @odoo-navbar-height;
 
                 &:hover {
                     background-color: @odoo-navbar-inverse-link-hover-bg;
@@ -81,7 +80,7 @@
 
             &.o_extra_menu_items {
                 > a {
-                    width: @odoo-navbar-height - 2;
+                    width: @odoo-navbar-height;
                     text-align: center;
                 }
                 &.open > ul {
@@ -122,6 +121,7 @@
 
     .open .dropdown-menu {
         max-height: 90vh; // the dropdown should not overstep the viewport
+        min-width: 100%;
         overflow: auto;
         margin-top: 0;
 
@@ -134,8 +134,20 @@
         .o-menu-indentation(3);
     }
 
-    .oe_topbar_avatar {
-        height: 15px;
+    .open .dropdown-toggle {
+        background-color: @odoo-navbar-inverse-link-hover-bg;
+    }
+    .o_user_menu {
+        margin-left: 6px;
+
+        > a {
+            padding-right: @odoo-horizontal-padding;
+        }
+
+        .oe_topbar_avatar {
+            height: 17px;
+            .o-transform(translateY(-2px));
+        }
     }
 
     @media (max-width: @screen-xs-max) {
@@ -176,8 +188,8 @@
             }
 
             &.o_menu_systray {
-                .o-position-absolute(0px, @odoo-navbar-height - 2, auto, @odoo-navbar-height - 2);
-                height: @odoo-navbar-height - 2;
+                .o-position-absolute(0px, @odoo-navbar-height, auto, @odoo-navbar-height);
+                height: @odoo-navbar-height;
                 text-align: right;
 
                 > li {
@@ -210,3 +222,12 @@
         }
     }
 }
+
+@media (max-width: @screen-xs-max) {
+     .o_switch_company_menu > .dropdown-menu {
+         padding-top: 0px;
+         li.bg-info {
+             padding: 10px;
+         }
+     }
+ }

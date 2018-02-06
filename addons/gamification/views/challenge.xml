@@ -18,8 +18,10 @@
         <field name="view_mode">kanban,tree</field>
         <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
         <field name="help" type="html">
-          <p>
-            There is no goals associated to this challenge matching your search.
+          <p class="o_view_nocontent_empty_folder">
+                No goal found
+          </p><p>
+            There is no goal associated to this challenge matching your search.
             Make sure that your challenge is active and assigned to at least one user.
           </p>
         </field>
@@ -147,8 +149,8 @@
                         <div t-attf-class="oe_kanban_card o_kanban_gamification oe_kanban_global_click">
                             <div class="o_kanban_content">
                                <strong>
-                                   <h4 class="text-center"><field name="name"/></h4>
-                                   <div class="oe_kanban_project_list text-center">
+                                   <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                   <div class="oe_kanban_project_list o_kanban_record_subtitle">
                                        <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px">
                                            <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
                                            <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
@@ -172,10 +174,9 @@
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a challenge.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new challenge
+            </p><p>
                 Assign a list of goals to chosen users to evaluate them.
                 The challenge can use a period (weekly, monthly...) for automatic creation of goals.
                 The goals are created for the specified users or member of the group.
@@ -220,8 +221,8 @@
                     domain="[('category', '=', 'hr')]"/>
                 <field name="name"/>
                 <group expand="0" string="Group By">
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Period" domain="[]" context="{'group_by':'period'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Period" name="period" domain="[]" context="{'group_by':'period'}"/>
                 </group>
             </search>
         </field>

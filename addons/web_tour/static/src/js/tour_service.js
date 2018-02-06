@@ -7,22 +7,33 @@ var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var rpc = require('web.rpc');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 
 var QWeb = core.qweb;
 
-if (config.device.size_class <= config.device.SIZES.XS) {
+if (config.device.isMobile) {
     return $.Deferred().reject();
 }
 
-var CallService = Class.extend(mixins.EventDispatcherMixin, mixins.ServiceProvider, {
+var CallService = Class.extend(mixins.EventDispatcherMixin, ServiceProviderMixin, {
     init: function () {
-        mixins.ServiceProvider.init.call(this);
         mixins.EventDispatcherMixin.init.call(this);
+        ServiceProviderMixin.init.call(this);
     },
 });
 
+/**
+ * @namespace
+ * @property {Object} active_tooltips
+ * @property {Object} tours
+ * @property {Array} consumed_tours
+ * @property {String} running_tour
+ * @property {Number} running_step_delay
+ * @property {'community' | 'enterprise'} edition
+ * @property {Array} _log
+ */
 return session.is_bound.then(function () {
     var defs = [];
     // Load the list of consumed tours and the tip template only if we are admin, in the frontend,

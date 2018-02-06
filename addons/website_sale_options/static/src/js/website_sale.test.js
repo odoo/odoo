@@ -10,7 +10,7 @@ for (var k=0; k<steps.length; k++) {
     if (steps[k].content === "click on add to cart") {
         steps.splice(k+1, 0, {
             content: "click in modal on 'Proceed to checkout' button",
-            trigger: 'a:contains("Proceed to checkout")',
+            trigger: 'a:contains("Proceed to Checkout")',
         });
         break;
     }
@@ -24,7 +24,7 @@ tour.register('shop_customize', {
     [
         {
             content: "open customize menu",
-            trigger: '#customize-menu-button',
+            trigger: '#customize-menu > a',
         },
         {
             content: "click on 'Product Attribute's Filters'",
@@ -56,11 +56,11 @@ tour.register('shop_customize', {
         {
             content: "click in modal on 'Proceed to checkout' button",
             extra_trigger: 'body:has(.js_product:contains(Warranty) a:contains(Add to Cart):hidden)',
-            trigger: '.modal-dialog a:contains("Proceed to checkout")',
+            trigger: '.modal-dialog a:contains("Proceed to Checkout")',
         },
         {
             content: "check quantity",
-            trigger: '.my_cart_quantity:containsExact(2)',
+            trigger: '.my_cart_quantity:containsExact(2),.o_extra_menu_items .fa-plus',
             run: function () {}, // it's a check
         },
         {
@@ -85,7 +85,7 @@ tour.register('shop_customize', {
         {
             content: "open customize menu bis",
             extra_trigger: '#products_grid_before .js_attributes',
-            trigger: '#customize-menu-button',
+            trigger: '#customize-menu > a',
         },
         {
             content: "remove 'Product Attribute's Filters'",

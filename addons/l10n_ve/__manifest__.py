@@ -41,11 +41,11 @@ If you install this module, and select Custom chart a basic chart will be propos
 but you will need set manually account defaults for taxes.
 """,
     'depends': ['account',
-                'base_vat',
     ],
     'data': [
              'data/l10n_ve_chart_data.xml',
+             'data/account_data.xml',
              'data/account_tax_data.xml',
-             'data/account_chart_template_data.yml'
+             'data/account_chart_template_data.xml'
     ],
 }

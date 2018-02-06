@@ -5,12 +5,18 @@ import ast
 import unittest
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, const_eval
 
 
+@tagged('standard', 'at_install')
 class TestSafeEval(unittest.TestCase):
+    def test_const(self):
+        # NB: True and False are names in Python 2 not consts
+        expected = (1, {"a": {2.5}}, [None, u"foo"])
+        actual = const_eval('(1, {"a": {2.5}}, [None, u"foo"])')
+        self.assertEqual(actual, expected)
 
     def test_01_safe_eval(self):
         """ Try a few common expressions to verify they work with safe_eval """
@@ -438,6 +444,7 @@ class TestParentStore(TransactionCase):
         super(TestParentStore, self).setUp()
         # pretend the pool has finished loading to avoid deferring parent_store computation
         self.patch(self.registry, '_init', False)
+        self.registry.do_parent_store(self.cr)
 
         # force res_partner_category.copy() to copy children
         category = self.env['res.partner.category']

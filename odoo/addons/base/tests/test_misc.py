@@ -5,9 +5,10 @@ import datetime
 import unittest
 
 from odoo.tools import misc
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
+@tagged('standard', 'at_install')
 class TestCountingStream(unittest.TestCase):
     def test_empty_stream(self):
         s = misc.CountingStream(iter([]))

@@ -7,32 +7,62 @@
             the base module in order to set new groups.
         -->
         <menuitem
-            id="sales_team.menu_base_partner"
+            id="crm_menu_root"
             name="CRM"
-            groups="sales_team.group_sale_manager,sales_team.group_sale_salesman"
             web_icon="crm,static/description/icon.png"
+            groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"
             sequence="6"/>
 
         <menuitem
+            id="crm_menu_config"
+            name="Configuration"
+            parent="crm_menu_root"
+            sequence="25" groups="sales_team.group_sale_manager"/>
+
+        <menuitem
             id="menu_crm_config_lead"
-            name="Leads &amp; Opportunities"
-            parent="sales_team.menu_sale_config"
-            sequence="2"
+            name="Pipeline"
+            parent="crm_menu_config"
+            sequence="15"
             groups="sales_team.group_sale_manager"/>
 
         <menuitem
             id="menu_crm_config_opportunity"
             name="Opportunities"
-            parent="sales_team.menu_sale_config"
+            parent="crm_menu_config"
             sequence="1"
             groups="sales_team.group_sale_manager"/>
 
-        <!-- Make the xmlid of menus required by the CRM tour available in webclient -->
-        <record id="sales_team.menu_base_partner" model="ir.ui.menu">
-            <field name="load_xmlid" eval="True"/>
-        </record>
-        <record id="base.menu_administration" model="ir.ui.menu">
-            <field name="load_xmlid" eval="True"/>
-        </record>
+        <menuitem id="crm_config_settings_menu"
+            name="Settings"
+            parent="crm_menu_config"
+            action="crm_config_settings_action"
+            groups="base.group_system"
+            sequence="0"/>
+
+        <menuitem id="crm_menu_report"
+            name="Reporting"
+            parent="crm_menu_root"
+            sequence="20"
+            groups="sales_team.group_sale_manager"/>
+
+        <menuitem id="crm_team_config"
+            name="Sales Channels"
+            parent="crm_menu_config"
+            action="sales_team.sales_team_config_action"
+            sequence="5"/>
+
+        <menuitem id="crm_team_menu_config_activity_types"
+            name="Activity Types"
+            parent="crm_menu_config"
+            action="sales_team.mail_activity_type_action_config_sales"
+            sequence="10"/>
+
+
+        <menuitem id="sales_team_menu_report_crm"
+            name="Sales Channel Dashboard"
+            parent="crm_menu_report"
+            action="sales_team.crm_team_salesteams_act"
+            sequence="10"/>
 
 </odoo>

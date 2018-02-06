@@ -7,12 +7,15 @@ from odoo.addons.event.tests.common import TestEventCommon
 from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tools import mute_logger
 from odoo.fields import Datetime
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 
 class TestEventFlow(TestEventCommon):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_basic_event_auto_confirm(self):
         """ Basic event management with auto confirmation """
         # EventUser creates a new event: ok
@@ -62,7 +65,7 @@ class TestEventFlow(TestEventCommon):
         with self.assertRaises(UserError):
             test_event.button_cancel()
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_10_advanced_event_flow(self):
         """ Avanced event flow: no auto confirmation, manage minimum / maximum
         seats, ... """
@@ -106,7 +109,7 @@ class TestEventFlow(TestEventCommon):
             (4, self.env.ref('base.group_erp_manager').id)
         ]})
         with self.assertRaises(AccessError):
-            event_config = self.env['event.config.settings'].sudo(self.user_eventmanager).create({
+            event_config = self.env['res.config.settings'].sudo(self.user_eventmanager).create({
             })
             event_config.execute()
 

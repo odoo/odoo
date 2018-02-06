@@ -1,0 +1,265 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_payment
+# 
+# Translators:
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# DE T2 <e2f48d4s5vd1s2@outlook.com>, 2017
+# e2f_de_t6 <e2f_de_t6@outlook.com>, 2017
+# Malte Jansen <work@maltejansen.de>, 2017
+# DE R1 <e2fes1@hotmail.com>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"Last-Translator: JackTheHunter <Maximilian.N98@gmail.com>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:125
+#, python-format
+msgid "<%s> transaction (%s) failed: <%s>"
+msgstr "<%s> Transaktion (%s) fehlgeschlagen: <%s>"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:132
+#, python-format
+msgid "<%s> transaction (%s) invalid state: %s"
+msgstr "<%s>Transaktion (%s) ungültiger Status: %s"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:140
+#, python-format
+msgid "<%s> transaction (%s) order confirmation failed: <%s>"
+msgstr "<%s> Transaktion (%s) Bestellbestätigung fehlgeschlagen: <%s>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "<i class=\"fa fa-arrow-circle-right\"/> Pay Now"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Jetzt bezahlen"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "<i class=\"fa fa-check-circle\"/> Done"
+msgstr "<i class=\"fa fa-check-circle\"/> Fertig"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Waiting</span>"
+msgstr ""
+"<span class=\"label label-info orders_label_text_align\"><i class=\"fa fa-fw"
+" fa-clock-o\"/> Warten</span>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Done</span>"
+msgstr ""
+"<span class=\"label label-success orders_label_text_align\"><i class=\"fa "
+"fa-fw fa-check\"/> Erledigt</span>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "<strong>Transactions</strong>"
+msgstr "<strong>Transaktionen</strong>"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:53
+#, python-format
+msgid "Amount Mismatch (%s)"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_amount
+msgid "Amount of pending transactions"
+msgstr "Anzahl ausstehender Transaktionen"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_amount
+msgid "Amount of transactions to capture"
+msgstr "Anzahl zu erfassender Transaktionen"
+
+#. module: sale_payment
+#: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_authorized
+msgid "Authorized Payment Transactions"
+msgstr "Autorisierte Zahlungstransaktionen"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Awaiting Payment"
+msgstr "Offene Rechnung"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Awaiting Payments"
+msgstr ""
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:52
+#, python-format
+msgid ""
+"If we store your payment information on our server, subscription payments "
+"will be made automatically."
+msgstr ""
+"Wenn Ihre Zahlungsinformationen auf unserem Server gespeichert sind, "
+"erfolgen Abonnementszahlungen automatisch."
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_id
+msgid "Last Transaction"
+msgstr "Letzte Transaktion"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_transaction_count
+msgid "Number of payment transactions"
+msgstr "Anzahl der Zahlungstransaktionen"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team_pending_payment_transactions_count
+msgid "Number of pending transactions"
+msgstr "Anzahl ausstehender Transaktionen"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_crm_team_authorized_payment_transactions_count
+msgid "Number of transactions to capture"
+msgstr "Anzahl zu erfassender Transaktionen"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_success
+msgid "Order successfully paid."
+msgstr "Bestellung erfolgreich bezahlt."
+
+#. module: sale_payment
+#: code:addons/sale_payment/controllers/payment.py:49
+#, python-format
+msgid "Pay"
+msgstr "Zahlen"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:201
+#, python-format
+msgid "Pay Now"
+msgstr "Jetzt kaufen"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_my_orders_payment
+msgid "Pay with"
+msgstr "Bezahlen mit"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_acquirer_id
+msgid "Payment Acquirer"
+msgstr "Zahlungsanbieter"
+
+#. module: sale_payment
+#: model:ir.model,name:sale_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Zahlungstransaktion"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Payment to Capture"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.crm_team_salesteams_view_kanban_inherit_website_portal_sale
+msgid "Payments to Capture"
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.actions.act_window,name:sale_payment.payment_transaction_action_pending
+msgid "Pending Payment Transactions"
+msgstr "Ausstehende Zahlungstransaktionen"
+
+#. module: sale_payment
+#: model:ir.model,name:sale_payment.model_sale_order
+msgid "Quotation"
+msgstr "Angebot"
+
+#. module: sale_payment
+#: model:ir.model,name:sale_payment.model_crm_team
+msgid "Sales Channel"
+msgstr "Vertriebskanal"
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_payment_transaction_sale_order_id
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
+
+#. module: sale_payment
+#: code:addons/sale_payment/models/payment.py:54
+#, python-format
+msgid ""
+"The sale order was not confirmed despite response from the acquirer (%s): SO"
+" amount is %r but acquirer replied with %r."
+msgstr ""
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid ""
+"There was an error processing your payment: impossible to validate order."
+msgstr ""
+"Fehler beim Verarbeiten Ihrer Zahlung: Bestellung konnte nicht validiert "
+"werden."
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: invalid order state."
+msgstr "Fehler beim Verarbeiten Ihrer Zahlung: ungültiger Bestellstatus."
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: invalid order."
+msgstr "Fehler beim Verarbeiten Ihrer Zahlung: ungültige Bestellung."
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid ""
+"There was an error processing your payment: issue with credit card ID "
+"validation."
+msgstr ""
+"Fehler beim Verarbeiten Ihrer Zahlung: Probleme beim Validieren der "
+"Kreditkarten-ID."
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid ""
+"There was an error processing your payment: transaction amount issue.<br/>"
+msgstr ""
+"Fehler beim Verarbeiten Ihrer Zahlung: Problem mit Transaktionsbetrag.<br/>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: transaction failed.<br/>"
+msgstr ""
+"Fehler beim Verarbeiten Ihrer Zahlung: Transaktion fehlgeschlagen.<br/>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was an error processing your payment: transaction issue.<br/>"
+msgstr "Fehler beim Verarbeiten Ihrer Zahlung: Transaktionsproblem.<br/>"
+
+#. module: sale_payment
+#: model:ir.ui.view,arch_db:sale_payment.portal_order_error
+msgid "There was en error processing your payment: invalid credit card ID."
+msgstr "Fehler beim Verarbeiten Ihrer Zahlung: ungültige Kreditkarten-ID."
+
+#. module: sale_payment
+#: model:ir.model.fields,field_description:sale_payment.field_sale_order_payment_tx_ids
+#: model:ir.ui.view,arch_db:sale_payment.sale_order_view_form
+msgid "Transactions"
+msgstr "Transaktionen"

@@ -8,6 +8,8 @@ from decorator import decorator
 from inspect import formatargspec, getargspec
 import logging
 
+from . import pycompat
+
 unsafe_eval = eval
 
 _logger = logging.getLogger(__name__)
@@ -45,6 +47,10 @@ class ormcache(object):
         @ormcache(skiparg=1)
         def _compute_domain(self, model_name, mode="read"):
             ...
+
+    Methods implementing this decorator should never return a Recordset,
+    because the underlying cursor will eventually be closed and raise a
+    `psycopg2.OperationalError`.
     """
     def __init__(self, *args, **kwargs):
         self.args = args
@@ -112,7 +118,7 @@ class ormcache_context(ormcache):
         spec = getargspec(self.method)
         args = formatargspec(*spec)[1:-1]
         cont_expr = "(context or {})" if 'context' in spec.args else "self._context"
-        keys_expr = "tuple(map(%s.get, %r))" % (cont_expr, self.keys)
+        keys_expr = "tuple(%s.get(k) for k in %r)" % (cont_expr, self.keys)
         if self.args:
             code = "lambda %s: (%s, %s)" % (args, ", ".join(self.args), keys_expr)
         else:
@@ -133,7 +139,7 @@ class ormcache_multi(ormcache):
     def determine_key(self):
         """ Determine the function that computes a cache key from arguments. """
         assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
-        assert isinstance(self.multi, basestring), "ormcache_multi() parameter multi must be an argument name"
+        assert isinstance(self.multi, pycompat.string_types), "ormcache_multi() parameter multi must be an argument name"
 
         super(ormcache_multi, self).determine_key()
 
@@ -200,8 +206,8 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.currentThread()
     me_dbname = getattr(me, 'dbname', 'n/a')
     entries = defaultdict(int)
-    for dbname, reg in Registry.registries.iteritems():
-        for key in reg.cache.iterkeys():
+    for dbname, reg in Registry.registries.items():
+        for key in reg.cache:
             entries[(dbname,) + key[:2]] += 1
     for key, count in sorted(entries.items()):
         dbname, model_name, method = key

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import cgi
+import collections
 import logging
-import lxml.html.clean as clean
+from lxml.html import clean
 import random
 import re
 import socket
@@ -16,6 +16,7 @@ from lxml import etree
 
 import odoo
 from odoo.loglevels import ustr
+from odoo.tools import pycompat, misc
 
 _logger = logging.getLogger(__name__)
 
@@ -84,7 +85,7 @@ class _Cleaner(clean.Cleaner):
             new_node.text = text
             new_node.tail = tail
             if attrs:
-                for key, val in attrs.iteritems():
+                for key, val in attrs.items():
                     new_node.set(key, val)
             return new_node
 
@@ -147,13 +148,13 @@ class _Cleaner(clean.Cleaner):
         attributes = el.attrib
         styling = attributes.get('style')
         if styling:
-            valid_styles = {}
+            valid_styles = collections.OrderedDict()
             styles = self._style_re.findall(styling)
             for style in styles:
                 if style[0].lower() in self._style_whitelist:
                     valid_styles[style[0].lower()] = style[1]
             if valid_styles:
-                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.iteritems())
+                el.attrib['style'] = '; '.join('%s: %s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
 
@@ -169,7 +170,7 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     src = ustr(src, errors='replace')
     # html: remove encoding attribute inside tags
     doctype = re.compile(r'(<[^>]*\s)(encoding=(["\'][^"\']*?["\']|[^\s\n\r>]+)(\s[^>]*|/)?>)', re.IGNORECASE | re.DOTALL)
-    src = doctype.sub(r"", src)
+    src = doctype.sub(u"", src)
 
     logger = logging.getLogger(__name__ + '.html_sanitize')
 
@@ -177,10 +178,10 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
     part = re.compile(r"(<(([^a<>]|a[^<>\s])[^<>]*)@[^<>]+>)", re.IGNORECASE | re.DOTALL)
     # remove results containing cite="mid:email_like@address" (ex: blockquote cite)
     # cite_except = re.compile(r"^((?!cite[\s]*=['\"]).)*$", re.IGNORECASE)
-    src = part.sub(lambda m: ('cite=' not in m.group(1) and 'alt=' not in m.group(1)) and cgi.escape(m.group(1)) or m.group(1), src)
+    src = part.sub(lambda m: (u'cite=' not in m.group(1) and u'alt=' not in m.group(1)) and misc.html_escape(m.group(1)) or m.group(1), src)
     # html encode mako tags <% ... %> to decode them later and keep them alive, otherwise they are stripped by the cleaner
-    src = src.replace('<%', cgi.escape('<%'))
-    src = src.replace('%>', cgi.escape('%>'))
+    src = src.replace(u'<%', misc.html_escape(u'<%'))
+    src = src.replace(u'%>', misc.html_escape(u'%>'))
 
     kwargs = {
         'page_structure': True,
@@ -221,33 +222,34 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
+        assert isinstance(cleaned, pycompat.text_type)
         # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
-        cleaned = cleaned.replace('%24', '$')
-        cleaned = cleaned.replace('%7B', '{')
-        cleaned = cleaned.replace('%7D', '}')
-        cleaned = cleaned.replace('%20', ' ')
-        cleaned = cleaned.replace('%5B', '[')
-        cleaned = cleaned.replace('%5D', ']')
-        cleaned = cleaned.replace('%7C', '|')
-        cleaned = cleaned.replace('&lt;%', '<%')
-        cleaned = cleaned.replace('%&gt;', '%>')
+        cleaned = cleaned.replace(u'%24', u'$')
+        cleaned = cleaned.replace(u'%7B', u'{')
+        cleaned = cleaned.replace(u'%7D', u'}')
+        cleaned = cleaned.replace(u'%20', u' ')
+        cleaned = cleaned.replace(u'%5B', u'[')
+        cleaned = cleaned.replace(u'%5D', u']')
+        cleaned = cleaned.replace(u'%7C', u'|')
+        cleaned = cleaned.replace(u'&lt;%', u'<%')
+        cleaned = cleaned.replace(u'%&gt;', u'%>')
         # html considerations so real html content match database value
-        cleaned.replace(u'\xa0', '&nbsp;')
+        cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
-        if 'empty' in str(e):
-            return ""
+        if u'empty' in pycompat.text_type(e):
+            return u""
         if not silent:
             raise
-        logger.warning('ParserError obtained when sanitizing %r', src, exc_info=True)
-        cleaned = '<p>ParserError when sanitizing</p>'
+        logger.warning(u'ParserError obtained when sanitizing %r', src, exc_info=True)
+        cleaned = u'<p>ParserError when sanitizing</p>'
     except Exception:
         if not silent:
             raise
-        logger.warning('unknown error obtained when sanitizing %r', src, exc_info=True)
-        cleaned = '<p>Unknown error when sanitizing</p>'
+        logger.warning(u'unknown error obtained when sanitizing %r', src, exc_info=True)
+        cleaned = u'<p>Unknown error when sanitizing</p>'
 
     # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-    if cleaned.startswith('<div>') and cleaned.endswith('</div>'):
+    if cleaned.startswith(u'<div>') and cleaned.endswith(u'</div>'):
         cleaned = cleaned[5:-6]
 
     return cleaned
@@ -333,7 +335,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
 def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
-        html entities, using cgi.escape().
+        html entities, using misc.html_escape().
         - all \n,\r are replaced by <br />
         - enclose content into <p>
         - convert url into clickable link
@@ -342,7 +344,7 @@ def plaintext2html(text, container_tag=False):
         :param string container_tag: container of the html; by default the
             content is embedded into a <div>
     """
-    text = cgi.escape(ustr(text))
+    text = misc.html_escape(ustr(text))
 
     # 1. replace \n and \r
     text = text.replace('\n', '<br/>')
@@ -394,7 +396,7 @@ def append_content_to_html(html, content, plaintext=True, preserve=False, contai
         content = re.sub(r'(?i)(</?(?:html|body|head|!\s*DOCTYPE)[^>]*>)', '', content)
         content = u'\n%s\n' % ustr(content)
     # Force all tags to lowercase
-    html = re.sub(r'(</?)\W*(\w+)([ >])',
+    html = re.sub(r'(</?)(\w+)([ >])',
         lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
     insert_location = html.find('</body>')
     if insert_location == -1:
@@ -530,4 +532,4 @@ def decode_smtp_header(smtp_header):
 
 # was mail_thread.decode_header()
 def decode_message_header(message, header, separator=' '):
-    return separator.join(map(decode_smtp_header, filter(None, message.get_all(header, []))))
+    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)

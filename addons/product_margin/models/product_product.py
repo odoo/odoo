@@ -5,6 +5,7 @@ import time
 
 from odoo import api, fields, models
 
+
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
@@ -16,9 +17,9 @@ class ProductProduct(models.Model):
             ('open_paid', 'Open and Paid'),
             ('draft_open_paid', 'Draft, Open and Paid')
         ], string='Invoice State', readonly=True)
-    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Sale Unit Price',
         help="Avg. Price in Customer Invoices.")
-    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Purchase Unit Price',
         help="Avg. Price in Vendor Bills ")
     sale_num_invoiced = fields.Float(compute='_compute_product_margin_fields_values', string='# Invoiced in Sale',
         help="Sum of Quantity in Customer Invoices")
@@ -67,8 +68,8 @@ class ProductProduct(models.Model):
                         prod_re[prod.id] = re_ind
                 re_ind += 1
             res_val = tot_products._compute_product_margin_fields_values(field_names=[x for x in fields if fields in fields_list])
-            for key in res_val.keys():
-                for l in res_val[key].keys():
+            for key in res_val:
+                for l in res_val[key]:
                     re = res[prod_re[key]]
                     if re.get(l):
                         re[l] += res_val[key][l]

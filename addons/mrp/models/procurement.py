@@ -4,98 +4,64 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ProcurementRule(models.Model):
     _inherit = 'procurement.rule'
-
-    @api.model
-    def _get_action(self):
-        return [('manufacture', _('Manufacture'))] + super(ProcurementRule, self)._get_action()
-
-
-class ProcurementOrder(models.Model):
-    _inherit = 'procurement.order'
-
-    bom_id = fields.Many2one('mrp.bom', 'BoM', index=True, ondelete='cascade')
-    production_id = fields.Many2one('mrp.production', 'Manufacturing Order')
+    action = fields.Selection(selection_add=[('manufacture', 'Manufacture')])
 
     @api.multi
-    def propagate_cancels(self):
-        cancel_man_orders = self.filtered(lambda procurement: procurement.rule_id.action == 'manufacture' and procurement.production_id).mapped('production_id')
-        if cancel_man_orders:
-            cancel_man_orders.action_cancel()
-        return super(ProcurementOrder, self).propagate_cancels()
+    def _run_manufacture(self, product_id, product_qty, product_uom, location_id, name, origin, values):
+        Production = self.env['mrp.production']
+        ProductionSudo = Production.sudo().with_context(force_company=values['company_id'].id)
+        bom = self._get_matching_bom(product_id, values)
+        if not bom:
+            msg = _('There is no Bill of Material found for the product %s. Please define a Bill of Material for this product.') % (product_id.display_name,)
+            raise UserError(msg)
+
+        # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+        production = ProductionSudo.create(self._prepare_mo_vals(product_id, product_qty, product_uom, location_id, name, origin, values, bom))
+        origin_production = values.get('move_dest_ids') and values['move_dest_ids'][0].raw_material_production_id or False
+        orderpoint = values.get('orderpoint_id')
+        if orderpoint:
+            production.message_post_with_view('mail.message_origin_link',
+                                              values={'self': production, 'origin': orderpoint},
+                                              subtype_id=self.env.ref('mail.mt_note').id)
+        if origin_production:
+            production.message_post_with_view('mail.message_origin_link',
+                                              values={'self': production, 'origin': origin_production},
+                                              subtype_id=self.env.ref('mail.mt_note').id)
+        return True
 
     @api.multi
-    def _run(self):
-        self.ensure_one()
-        if self.rule_id.action == 'manufacture':
-            # make a manufacturing order for the procurement
-            return self.make_mo()[self.id]
-        return super(ProcurementOrder, self)._run()
-
-    @api.multi
-    def _check(self):
-        return self.production_id.state == 'done' or super(ProcurementOrder, self)._check()
-
-    @api.multi
-    def _get_matching_bom(self):
-        """ Finds the bill of material for the product from procurement order. """
-        if self.bom_id:
-            return self.bom_id
+    def _get_matching_bom(self, product_id, values):
+        if values.get('bom_id', False):
+            return values['bom_id']
         return self.env['mrp.bom'].with_context(
-            company_id=self.company_id.id, force_company=self.company_id.id
-        )._bom_find(product=self.product_id, picking_type=self.rule_id.picking_type_id)  # TDE FIXME: context bullshit
+            company_id=values['company_id'].id, force_company=values['company_id'].id
+        )._bom_find(product=product_id, picking_type=self.picking_type_id)  # TDE FIXME: context bullshit
 
-    def _get_date_planned(self):
-        format_date_planned = fields.Datetime.from_string(self.date_planned)
-        date_planned = format_date_planned - relativedelta(days=self.product_id.produce_delay or 0.0)
-        date_planned = date_planned - relativedelta(days=self.company_id.manufacturing_lead)
-        return date_planned
-
-    def _prepare_mo_vals(self, bom):
+    def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, values, bom):
         return {
-            'origin': self.origin,
-            'product_id': self.product_id.id,
-            'product_qty': self.product_qty,
-            'product_uom_id': self.product_uom.id,
-            'location_src_id': self.rule_id.location_src_id.id or self.location_id.id,
-            'location_dest_id': self.location_id.id,
+            'origin': origin,
+            'product_id': product_id.id,
+            'product_qty': product_qty,
+            'product_uom_id': product_uom.id,
+            'location_src_id': self.location_src_id.id or location_id.id,
+            'location_dest_id': location_id.id,
             'bom_id': bom.id,
-            'date_planned_start': fields.Datetime.to_string(self._get_date_planned()),
-            'date_planned_finished': self.date_planned,
-            'procurement_group_id': self.group_id.id,
-            'propagate': self.rule_id.propagate,
-            'picking_type_id': self.rule_id.picking_type_id.id or self.warehouse_id.manu_type_id.id,
-            'company_id': self.company_id.id,
-            'procurement_ids': [(6, 0, [self.id])],
+            'date_planned_start': fields.Datetime.to_string(self._get_date_planned(product_id, values)),
+            'date_planned_finished': values['date_planned'],
+            'procurement_group_id': values.get('group_id').id if values.get('group_id', False) else False,
+            'propagate': self.propagate,
+            'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
+            'company_id': values['company_id'].id,
+            'move_dest_ids': values.get('move_dest_ids') and [(4, x.id) for x in values['move_dest_ids']] or False,
         }
 
-    @api.multi
-    def make_mo(self):
-        """ Create production orders from procurements """
-        res = {}
-        Production = self.env['mrp.production']
-        for procurement in self:
-            ProductionSudo = Production.sudo().with_context(force_company=procurement.company_id.id)
-            bom = procurement._get_matching_bom()
-            if bom:
-                # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
-                production = ProductionSudo.create(procurement._prepare_mo_vals(bom))
-                origin_production = procurement.move_dest_id.raw_material_production_id
-                orderpoint = procurement.orderpoint_id
-                if orderpoint:
-                    production.message_post_with_view('mail.message_origin_link',
-                        values={'self': production, 'origin': orderpoint},
-                        subtype_id=self.env.ref('mail.mt_note').id)
-                if origin_production:
-                    production.message_post_with_view('mail.message_origin_link',
-                        values={'self': production, 'origin': origin_production},
-                        subtype_id=self.env.ref('mail.mt_note').id)
-
-                res[procurement.id] = production.id
-            else:
-                res[procurement.id] = False
-                procurement.message_post(body=_("No BoM exists for this product!"))
-        return res
+    def _get_date_planned(self, product_id, values):
+        format_date_planned = fields.Datetime.from_string(values['date_planned'])
+        date_planned = format_date_planned - relativedelta(days=product_id.produce_delay or 0.0)
+        date_planned = date_planned - relativedelta(days=values['company_id'].manufacturing_lead)
+        return date_planned

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import calendar
+
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
@@ -18,11 +20,14 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'holiday_type': 'Confirmed and Approved' if holiday_type == 'both' else holiday_type
         }
 
+    def _date_is_day_off(self, date):
+        return date.weekday() in (calendar.SATURDAY, calendar.SUNDAY,)
+
     def _get_day(self, start_date):
         res = []
         start_date = fields.Date.from_string(start_date)
         for x in range(0, 60):
-            color = '#ababab' if start_date.strftime('%a') == 'Sat' or start_date.strftime('%a') == 'Sun' else ''
+            color = '#ababab' if self._date_is_day_off(start_date) else ''
             res.append({'day_str': start_date.strftime('%a'), 'day': start_date.day , 'color': color})
             start_date = start_date + relativedelta(days=1)
         return res
@@ -49,13 +54,13 @@ class HrHolidaySummaryReport(models.AbstractModel):
         for index in range(0, 60):
             current = start_date + timedelta(index)
             res.append({'day': current.day, 'color': ''})
-            if current.strftime('%a') == 'Sat' or current.strftime('%a') == 'Sun':
+            if self._date_is_day_off(current) :
                 res[index]['color'] = '#ababab'
         # count and get leave summary details.
         holiday_type = ['confirm','validate'] if holiday_type == 'both' else ['confirm'] if holiday_type == 'Confirmed' else ['validate']
-        holidays = self.env['hr.holidays'].search([
+        holidays = self.env['hr.leave'].search([
             ('employee_id', '=', empid), ('state', 'in', holiday_type),
-            ('type', '=', 'remove'), ('date_from', '<=', str(end_date)),
+            ('date_from', '<=', str(end_date)),
             ('date_to', '>=', str(start_date))
         ])
         for holiday in holidays:
@@ -97,19 +102,18 @@ class HrHolidaySummaryReport(models.AbstractModel):
 
     def _get_holidays_status(self):
         res = []
-        for holiday in self.env['hr.holidays.status'].search([]):
+        for holiday in self.env['hr.leave.type'].search([]):
             res.append({'color': holiday.color_name, 'name': holiday.name})
         return res
 
     @api.model
-    def render_html(self, docids, data=None):
+    def get_report_values(self, docids, data=None):
         if not data.get('form'):
             raise UserError(_("Form content is missing, this report cannot be printed."))
 
-        Report = self.env['report']
-        holidays_report = Report._get_report_from_name('hr_holidays.report_holidayssummary')
-        holidays = self.env['hr.holidays'].browse(self.ids)
-        docargs = {
+        holidays_report = self.env['ir.actions.report']._get_report_from_name('hr_holidays.report_holidayssummary')
+        holidays = self.env['hr.leave'].browse(self.ids)
+        return {
             'doc_ids': self.ids,
             'doc_model': holidays_report.model,
             'docs': holidays,
@@ -119,4 +123,3 @@ class HrHolidaySummaryReport(models.AbstractModel):
             'get_data_from_report': self._get_data_from_report(data['form']),
             'get_holidays_status': self._get_holidays_status(),
         }
-        return Report.render('hr_holidays.report_holidayssummary', docargs)

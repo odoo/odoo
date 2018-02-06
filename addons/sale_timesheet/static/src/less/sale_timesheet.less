@@ -6,6 +6,12 @@
         cursor: pointer;
     }
 
+    .o_timesheet_plan_stat_buttons {
+        text-align: right;
+        float: none;
+        width: auto;
+    }
+
     .o_timesheet_plan_sale_timesheet_dashboard {
 
         .table {
@@ -30,20 +36,31 @@
         .o_progress_billable_time {
             background-color: #f0ad4e;
             color: white;
+            cursor: pointer;
         }
         .o_progress_billable_fixed {
             background-color: #5bc0de;
             color: white;
+            cursor: pointer;
+        }
+        .o_progress_non_billable_project {
+            background-color: @brand-primary;
+            color: white;
+            cursor: pointer;
         }
         .o_progress_non_billable {
             background-color: gray;
             color: white;
+            cursor: pointer;
         }
 
         >.o_timesheet_plan_badge {
             margin-bottom: 10px;
             > .badge {
                 border: none;
+                    a {
+                    color: white;
+                }
             }
         }
 

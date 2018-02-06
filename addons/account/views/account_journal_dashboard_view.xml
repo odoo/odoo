@@ -12,11 +12,11 @@
                 <field name="kanban_dashboard"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div>
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)}">
                             <t t-value="JSON.parse(record.kanban_dashboard.raw_value)" t-set="dashboard"/>
                             <t t-value="record.type.raw_value" t-set="journal_type"/>
                             <t t-call="JournalTop"/>
-                            <div class="container o_kanban_card_content o_visible">
+                            <div class="container o_kanban_card_content">
                                 <div class="row">
                                     <t t-if="(journal_type == 'bank' || journal_type == 'cash')" t-call="JournalBodyBankCash"/>
                                     <t t-if="journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodySalePurchase"/>
@@ -29,14 +29,14 @@
                                     </t>
                                 </div>
                                 <t t-if="journal_type == 'bank' || journal_type == 'cash' || journal_type == 'sale' || journal_type == 'purchase'" t-call="JournalBodyGraph"/>
-                            </div><div class="container o_kanban_card_manage_pane o_invisible">
+                            </div><div class="container o_kanban_card_manage_pane">
                                 <t t-call="JournalManage"/>
                             </div>
                         </div>
                     </t>
 
                     <t t-name="JournalTop">
-                        <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                        <div t-attf-class="o_kanban_card_header">
                             <div class="o_kanban_card_header_title">
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
@@ -209,7 +209,7 @@
 
                         <div groups="account.group_account_manager" class="row o_kanban_card_settings">
                             <div class="col-xs-6">
-                                <a type="object" name="toggle_favorite"><i t-attf-class="fa o_dashboard_star #{record.show_on_dashboard.raw_value ? 'fa-star' : 'fa-star-o'}" title="Click to add/remove from favorite"/> Favorite</a>
+                                <field name="show_on_dashboard" widget="boolean_favorite" />
                             </div>
                             <div class="col-xs-6 text-right">
                                 <a t-if="widget.editable" type="edit">Settings</a>
@@ -221,7 +221,7 @@
                         <!-- On the left, display :
                             - A button corresponding to the bank_statements_source, if it wasn't configured, a button for each of them
                             - If there are statements to reconcile, a link to reconcile them -->
-                        <div class="col-xs-6 o_kanban_primary_left">
+                        <div class="col-xs-5 o_kanban_primary_left">
                             <t t-if="dashboard.number_to_reconcile > 0">
                                 <button type="object" name="action_open_reconcile" class="btn btn-primary btn-sm"> Reconcile <t t-esc="dashboard.number_to_reconcile"/> Items</button>
                             </t>
@@ -243,27 +243,27 @@
                             </t>
                         </div>
                         <!-- On the right, show other common informations/actions -->
-                        <div class="col-xs-6 o_kanban_primary_right">
+                        <div class="col-xs-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <span title="Balance in Odoo">Balance in GL</span>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.account_balance"/></span>
                                 </div>
                             </div>
                             <div class="row" name="latest_statement" t-if="dashboard.last_balance != dashboard.account_balance">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <span title="Latest Statement">Latest Statement</span>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.last_balance"/></span>
                                 </div>
                             </div>
                         </div>
                     </t>
-                    <t t-name="JournalBodySalePurchase">
-                        <div class="col-xs-6 o_kanban_primary_left">
+                    <t t-name="JournalBodySalePurchase" id="account.JournalBodySalePurchase">
+                        <div class="col-xs-5 o_kanban_primary_left">
                             <t t-if="journal_type == 'sale'">
                                 <button type="object" name="action_create_new" class="btn btn-primary btn-sm o_invoice_new">
                                     <span>New Invoice</span>
@@ -275,26 +275,31 @@
                                 </button>
                             </t>
                         </div>
-                        <div class="col-xs-6 o_kanban_primary_right">
+                        <div class="col-xs-7 o_kanban_primary_right">
                             <div class="row">
-                                <div class="col-xs-6">
+                                <div class="col-xs-7">
                                     <a type="object" name="open_action" context="{'search_default_draft': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Invoices to validate"><t t-esc="dashboard.number_draft"/> Invoices to validate</span>
-                                        <span t-if="journal_type == 'purchase'" title="Draft bills"><t t-esc="dashboard.number_draft"/> Draft bills</span>
+                                        <span t-if="journal_type == 'sale'" title="Invoices to Validate"><t t-esc="dashboard.number_draft"/> Invoices to Validate</span>
+                                        <span t-if="journal_type == 'purchase'" title="Bills to Validate"><t t-esc="dashboard.number_draft"/> Bills to Validate</span>
                                     </a>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.sum_draft"/></span>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-6">
-                                    <a type="object" name="open_action" context="{'search_default_unpaid': '1'}">
-                                        <span t-if="journal_type == 'sale'" title="Awaiting payments"><t t-esc="dashboard.number_waiting"/>  Awaiting payments</span>
-                                        <span t-if="journal_type == 'purchase'" title="Payments to do"><t t-esc="dashboard.number_waiting"/> Payments to do</span>
+                                <div class="col-xs-7">
+                                    <a type="object" t-if="journal_type == 'sale'" name="open_action"
+                                    context="{'search_default_unpaid':1}" id="account_dashboard_sale_pay_link">
+                                        <t t-esc="dashboard.number_waiting"/> Payments to Receive
+                                    </a>
+
+                                    <a type="object" t-if="journal_type == 'purchase'" name="open_action"
+                                    context="{'search_default_unpaid':1}" id="account_dashboard_purchase_pay_link">
+                                        <t t-esc="dashboard.number_waiting"/> Payments to Do
                                     </a>
                                 </div>
-                                <div class="col-xs-6 text-right">
+                                <div class="col-xs-5 text-right">
                                     <span><t t-esc="dashboard.sum_waiting"/></span>
                                 </div>
                             </div>
@@ -313,17 +318,19 @@
         <field name="res_model">account.journal</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,form</field>
+        <field name="view_id" ref="account_journal_dashboard_kanban_view"/>
         <field name="usage">menu</field>
         <field name="context">{'search_default_dashboard':1}</field>
         <field name="domain">[('belongs_to_company', '=', True)]</field>
         <field name="help" type="html">
-            <p>
-                This is the accounting dashboard. If you have not yet
-                installed a chart of account, please install one first.
+            <p class="o_view_nocontent_neutral_face">
+                This is the accounting dashboard
+            </p><p>
+                If you have not installed a chart of account, please install one first.<br/>
                <a type="action" name="%(open_account_charts_modules)d">Browse available countries.</a>
             </p>
         </field>
     </record>
 
-    <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1" groups="group_account_user"/>
+    <menuitem id="menu_board_journal_1" name="Dashboard" action="open_account_journal_dashboard_kanban" parent="menu_finance" sequence="1" groups="account.group_account_user"/>
 </odoo>

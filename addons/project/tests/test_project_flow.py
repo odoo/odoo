@@ -54,8 +54,6 @@ class TestProjectFlow(TestProjectBase):
         # Test: messages
         self.assertEqual(len(task.message_ids), 2,
                          'project: message_process: newly created task should have 2 messages: creation and email')
-        self.assertEqual(task.message_ids[1].subtype_id.name, 'Task Opened',
-                         'project: message_process: first message of new task should have Task Created subtype')
         self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
         self.assertEqual(task.message_ids[0].subject, 'Frogs',
@@ -91,3 +89,31 @@ class TestProjectFlow(TestProjectBase):
         self.assertEqual(task.name, 'Cats', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
+
+    def test_subtask_process(self):
+        """ Check subtask mecanism and change it from project. """
+        Task = self.env['project.task'].with_context({'tracking_disable': True})
+        parent_task = Task.create({
+            'name': 'Mother Task',
+            'user_id': self.user_projectuser.id,
+            'project_id': self.project_pigs.id,
+            'partner_id': self.partner_2.id,
+            'planned_hours': 12,
+        })
+        child_task = Task.create({
+            'name': 'Task Child',
+            'parent_id': parent_task.id,
+            'project_id': self.project_pigs.id,
+            'planned_hours': 3,
+        })
+
+        self.assertEqual(parent_task.partner_id, child_task.partner_id, "Subtask should have the same partner than its parent")
+        self.assertEqual(parent_task.subtask_count, 1, "Parent task should have 1 child")
+        self.assertEqual(parent_task.subtask_planned_hours, 3, "Planned hours of subtask should impact parent task")
+
+        # change project
+        child_task.write({
+            'project_id': self.project_goats.id  # customer is partner_1
+        })
+
+        self.assertEqual(parent_task.partner_id, child_task.partner_id, "Subtask partner should not change when changing project")

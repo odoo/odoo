@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_mail_channel']" position="replace"/>
+</template>
 
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
+<template id="subscribe" inherit_id="website.snippets" name="Snippet Subscribe">
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <div>
             <div class="oe_snippet_thumbnail">
-                <img class="oe_snippet_thumbnail_img" src="/website_mail_channel/static/src/img/blocks/button_channel_subscribe.png"/>
+                <img class="oe_snippet_thumbnail_img" src="/website/static/src/img/blocks/button_channel_subscribe.png"/>
                 <span class="oe_snippet_thumbnail_title">Discussion Group</span>
             </div>
 
@@ -32,9 +35,7 @@
                 <p class="js_mg_confirmation hidden well well-sm">
                     a confirmation email has been sent.
                 </p>
-
             </div>
-
         </div>
     </xpath>
 
@@ -44,7 +45,7 @@
             data-selector=".js_follow_alias"
             data-drop-near="p, h1, h2, h3, blockquote, .well, .panel"
            >
-            <li data-select_mailing_list=""><a>Change Discussion List</a></li>
+            <li data-select_mailing_list="" data-no-preview="true"><a>Change Discussion List</a></li>
         </div>
     </xpath>
 

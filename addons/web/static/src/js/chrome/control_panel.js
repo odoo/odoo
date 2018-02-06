@@ -5,6 +5,36 @@ odoo.define('web.ControlPanelMixin', function (require) {
  * Mixin allowing widgets to communicate with the ControlPanel. Widgets needing a
  * ControlPanel should use this mixin and call update_control_panel(cp_status) where
  * cp_status contains information for the ControlPanel to update itself.
+ *
+ * Note that the API is slightly awkward.  Hopefully we will improve this when
+ * we get the time to refactor the control panel.
+ *
+ * For example, here is what a typical client action would need to do to add
+ * support for a control panel with some buttons::
+ *
+ *     var ControlPanelMixin = require('web.ControlPanelMixin');
+ *
+ *     var SomeClientAction = Widget.extend(ControlPanelMixin, {
+ *         ...
+ *         start: function () {
+ *             this._renderButtons();
+ *             this._updateControlPanel();
+ *             ...
+ *         },
+ *         do_show: function () {
+ *              ...
+ *              this._updateControlPanel();
+ *         },
+ *         _renderButtons: function () {
+ *             this.$buttons = $(QWeb.render('SomeTemplate.Buttons'));
+ *             this.$buttons.on('click', ...);
+ *         },
+ *         _updateControlPanel: function () {
+ *             this.update_control_panel({
+ *                 cp_content: {
+ *                    $buttons: this.$buttons,
+ *                 },
+ *          });
  */
 var ControlPanelMixin = {
     need_control_panel: true,
@@ -20,7 +50,9 @@ var ControlPanelMixin = {
      * @param {Object} [options] see web.ControlPanel.update() for a description
      */
     update_control_panel: function(cp_status, options) {
-        this.cp_bus.trigger("update", cp_status || {}, options || {});
+        if (this.cp_bus) {
+            this.cp_bus.trigger("update", cp_status || {}, options || {});
+        }
     },
 };
 
@@ -57,7 +89,6 @@ var ControlPanel = Widget.extend({
     start: function() {
         // Exposed jQuery nodesets
         this.nodes = {
-            $breadcrumbs: this.$('.breadcrumb'),
             $buttons: this.$('.o_cp_buttons'),
             $pager: this.$('.o_cp_pager'),
             $searchview: this.$('.o_cp_searchview'),
@@ -75,10 +106,6 @@ var ControlPanel = Widget.extend({
         this._toggle_visibility(false);
 
         return this._super();
-    },
-    destroy: function() {
-        this._clear_breadcrumbs_handlers();
-        return this._super.apply(this, arguments);
     },
     /**
      * @return {Object} the Bus the ControlPanel is listening on
@@ -112,9 +139,7 @@ var ControlPanel = Widget.extend({
 
             // Render the breadcrumbs
             if (status.breadcrumbs) {
-                this._clear_breadcrumbs_handlers();
-                this.$breadcrumbs = this._render_breadcrumbs(status.breadcrumbs);
-                new_cp_content.$breadcrumbs = this.$breadcrumbs;
+                this.$('.breadcrumb').html(this._render_breadcrumbs(status.breadcrumbs));
             }
 
             // Detach control_panel old content and attach new elements
@@ -129,7 +154,7 @@ var ControlPanel = Widget.extend({
             this._attach_content(new_cp_content);
 
             // Update the searchview and switch buttons
-            this._update_search_view(status.searchview, status.search_view_hidden);
+            this._update_search_view(status.searchview, status.search_view_hidden, status.groupable);
             if (status.active_view_selector) {
                 this._update_switch_buttons(status.active_view_selector);
             }
@@ -208,38 +233,33 @@ var ControlPanel = Widget.extend({
             .toggleClass('active', is_last);
         if (!is_last) {
             $bc.click(function () {
-                self.trigger("on_breadcrumb_click", bc.action, bc.index);
+                self.trigger_up('breadcrumb_clicked', {controllerID: bc.controllerID});
             });
         }
         return $bc;
     },
     /**
-     * Private function that removes event handlers attached on the currently
-     * displayed breadcrumbs.
-     */
-    _clear_breadcrumbs_handlers: function () {
-        if (this.$breadcrumbs) {
-            _.each(this.$breadcrumbs, function ($bc) {
-                $bc.off();
-            });
-        }
-    },
-    /**
      * Private function that updates the SearchView's visibility and extend the
      * breadcrumbs area if the SearchView is not visible
-     * @param {openerp.web.SearchView} [searchview] the searchview Widget
-     * @param {Boolean} [is_hidden] visibility of the searchview
+     *
+     * @private
+     * @param {SearchView} [searchview] the searchview Widget
+     * @param {boolean} [isHidden] visibility of the searchview
+     * @param {boolean} [groupable] visibility of the groupable menu (only
+     *      relevant if searchview is visible)
      */
-    _update_search_view: function(searchview, is_hidden) {
+    _update_search_view: function (searchview, isHidden, groupable) {
         if (searchview) {
             // Set the $buttons div (in the DOM) of the searchview as the $buttons
             // have been appended to a jQuery node not in the DOM at SearchView initialization
             searchview.$buttons = this.nodes.$searchview_buttons;
-            searchview.toggle_visibility(!is_hidden);
+            searchview.toggle_visibility(!isHidden);
+            if (groupable !== undefined){
+                searchview.groupby_menu.do_toggle(groupable);
+            }
         }
-
-        this.nodes.$searchview.toggle(!is_hidden);
-        this.$el.toggleClass('o_breadcrumb_full', !!is_hidden);
+        this.nodes.$searchview.toggle(!isHidden);
+        this.$el.toggleClass('o_breadcrumb_full', !!isHidden);
     },
 });
 

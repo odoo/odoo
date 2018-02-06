@@ -15,12 +15,12 @@ class PhoneValidationMixin(models.AbstractModel):
 
     def _phone_get_always_international(self):
         if 'company_id' in self:
-            return self.company_id.phone_international_format
-        return self.env.user.company_id.phone_international_format
+            return self.company_id.phone_international_format == 'prefix'
+        return self.env.user.company_id.phone_international_format == 'prefix'
 
     def phone_format(self, number, country=None, company=None):
         country = country or self._phone_get_country()
-        always_international = company.phone_international_format if company else self._phone_get_always_international()
+        always_international = company.phone_international_format == 'prefix' if company else self._phone_get_always_international()
         return phone_validation.phone_format(
             number,
             country.code if country else None,

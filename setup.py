@@ -24,9 +24,9 @@ def py2exe_datafiles():
     import babel
     data_files['babel/localedata'] = glob(join(dirname(babel.__file__), 'localedata', '*'))
     others = ['global.dat', 'numbers.py', 'support.py', 'plural.py']
-    data_files['babel'] = map(lambda f: join(dirname(babel.__file__), f), others)
+    data_files['babel'] = [join(dirname(babel.__file__), f) for f in others]
     others = ['frontend.py', 'mofile.py']
-    data_files['babel/messages'] = map(lambda f: join(dirname(babel.__file__), 'messages', f), others)
+    data_files['babel/messages'] = [join(dirname(babel.__file__), 'messages', f) for f in others]
 
     import pytz
     tzdir = dirname(pytz.__file__)
@@ -51,7 +51,7 @@ def py2exe_datafiles():
                                 for f in filenames
                                 if not f.endswith(('.py', '.pyc', '.pyo'))]
 
-    return data_files.items()
+    return list(data_files.items())
 
 
 def py2exe_options():
@@ -86,7 +86,6 @@ def py2exe_options():
                         'mock',
                         'ofxparse',
                         'odoo',
-                        'openid',
                         'passlib',
                         'PIL',
                         'poplib',
@@ -94,7 +93,7 @@ def py2exe_options():
                         'pychart',
                         'pydot',
                         'pyparsing',
-                        'pyPdf',
+                        'PyPDF2',
                         'pytz',
                         'reportlab',
                         'requests',
@@ -109,7 +108,6 @@ def py2exe_options():
                         'xlsxwriter',
                         'xlwt',
                         'xml', 'xml.dom',
-                        'yaml',
                     ],
                     'excludes': ['Tkconstants', 'Tkinter', 'tcl'],
                 }
@@ -128,7 +126,7 @@ setup(
     url=url,
     author=author,
     author_email=author_email,
-    classifiers=filter(None, classifiers.split('\n')),
+    classifiers=[c for c in classifiers.split('\n') if c],
     license=license,
     scripts=['setup/odoo'],
     packages=find_packages(),
@@ -140,6 +138,7 @@ setup(
         'docutils',
         'feedparser',
         'gevent',
+        'html2text',
         'Jinja2',
         'lxml',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'mako',
@@ -148,19 +147,15 @@ setup(
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
-        'psycogreen',
         'psycopg2 >= 2.2',
-        'python-chart',
         'pydot',
         'pyldap',  # optional
         'pyparsing',
-        'pypdf',
+        'pypdf2',
         'pyserial',
         'python-dateutil',
-        'python-openid',
         'pytz',
         'pyusb >= 1.0.0b1',
-        'pyyaml',
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
@@ -171,6 +166,7 @@ setup(
         'xlsxwriter',
         'xlwt',
     ],
+    python_requires='>=3.5',
     extras_require={
         'SSL': ['pyopenssl'],
     },

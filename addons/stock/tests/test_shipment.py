@@ -6,14 +6,13 @@ from odoo.addons.stock.tests.common2 import TestStockCommon
 class TestInventory(TestStockCommon):
 
     def test_shipment(self):
-        # TDE NOTE: this test replaces test/shipment.yml present until saas-10
         # TDE TODO
         # pickign.action_confirm -> confirm moves
         # picking.do_prepare_partial, should create pack ops, write on it ?
 
         # create and confirm an incoming move of product 3
         incoming_move = self._create_move_in(self.product_3, self.warehouse_1, create_picking=True, product_uom_qty=50)
-        incoming_move.action_confirm()
+        incoming_move._action_confirm()
 
         # receive only 40 units of products; this will create a backorder of incoming shipment for the remaining 10
         pack_operation = self._create_pack_operation(

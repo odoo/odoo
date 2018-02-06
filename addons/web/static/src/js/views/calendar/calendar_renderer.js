@@ -330,7 +330,11 @@ return AbstractRenderer.extend({
                 self.$calendar.fullCalendar('unselect');
             },
             select: function (target_date, end_date, event, _js_event, _view) {
-                self.trigger_up('openCreate', {'start': target_date, 'end': end_date});
+                var data = {'start': target_date, 'end': end_date};
+                if (self.state.context.default_name) {
+                    data.title = self.state.context.default_name;
+                }
+                self.trigger_up('openCreate', data);
                 self.$calendar.fullCalendar('unselect');
             },
             eventRender: function (event, element) {
@@ -351,7 +355,7 @@ return AbstractRenderer.extend({
             },
             // Dirty hack to ensure a correct first render
             eventAfterAllRender: function () {
-                window.dispatchEvent(new Event('resize'));
+                $(window).trigger('resize');
             },
             viewRender: function (view) {
                 // compute mode from view.name which is either 'month', 'agendaWeek' or 'agendaDay'

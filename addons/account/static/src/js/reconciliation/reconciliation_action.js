@@ -64,7 +64,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         if (!this.action_manager) {
             this.set_cp_bus(new Widget());
         }
-        // Adding values from the context ​​is necessary to put this information in the url via the action manager so that
+        // Adding values from the context is necessary to put this information in the url via the action manager so that
         // you can retrieve it if the person shares his url or presses f5
         _.each(params.params, function (value, name) {
             params.context[name] = name.indexOf('_ids') !== -1 ? _.map((value+'').split(), parseFloat) : value;
@@ -106,8 +106,7 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
         var self = this;
 
         this.set("title", this.title);
-        var breadcrumbs = this.action_manager && this.action_manager.get_breadcrumbs() || [{ title: this.title, action: this }];
-        this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
+        this.update_control_panel({search_view_hidden: true}, {clear: true});
 
         this.renderer.prependTo(self.$('.o_form_sheet'));
         this._renderLines();
@@ -122,18 +121,11 @@ var StatementAction = Widget.extend(ControlPanelMixin, {
     do_show: function () {
         this._super.apply(this, arguments);
         if (this.action_manager) {
-            var breadcrumbs = this.action_manager && this.action_manager.get_breadcrumbs() || [{ title: this.title, action: this }];
-            while (breadcrumbs.length) {
-                if (breadcrumbs[breadcrumbs.length-1].action.widget === this) {
-                    break;
-                }
-                breadcrumbs.pop();
-            }
-            this.update_control_panel({breadcrumbs: breadcrumbs, search_view_hidden: true}, {clear: true});
+            this.update_control_panel({search_view_hidden: true}, {clear: true});
             this.action_manager.do_push_state({
                 action: this.params.tag,
                 active_id: this.params.res_id,
-            });   
+            });
         }
     },
 

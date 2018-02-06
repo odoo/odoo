@@ -7,21 +7,6 @@
             <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
         </record>
 
-        <!-- Requests Links -->
-        <record id="req_link_project" model="res.request.link">
-            <field name="name">Project</field>
-            <field name="object">project.project</field>
-        </record>
-
-        <record id="req_link_task" model="res.request.link">
-            <field name="name">Project task</field>
-            <field name="object">project.task</field>
-        </record>
-
-        <!-- alias domain: project.config.settings -->
-        <function id="default_alias_domain_project" model="ir.values" name="set_default" eval="('project.config.settings', 'generate_project_alias', 1)"/>
-
-
         <!-- sale_timesheet and project define the same field without depending on each, which causes the field to be deleted when the module that created it
         is deleted. To avoid this, we create xmlids manually for this field in both modules to prevent accidental deletion. To fix in saas-7 by moving the field definition-->
         <record id="duplicate_field_xmlid" model="ir.model.data">
@@ -30,6 +15,15 @@
             <field name="module">project</field>
             <field name="name">project_time_mode_id_duplicate_xmlid</field>
             <field name="noupdate">True</field>
+        </record>
+
+        <record id="ir_cron_rating_project" model="ir.cron">
+            <field name="name">Project: Send rating</field>
+            <field name="model_id" ref="project.model_project_project"/>
+            <field name="state">code</field>
+            <field name="code">model._send_rating_all()</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
         </record>
 
     </data>
@@ -60,6 +54,12 @@
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
             <field name="description">Stage changed</field>
+        </record>
+        <record id="mt_task_rating" model="mail.message.subtype">
+            <field name="name">Task Rating</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="True"/>
+            <field name="description">Ratings</field>
         </record>
         <!-- Project-related subtypes for messaging / Chatter -->
         <record id="mt_project_task_new" model="mail.message.subtype">
@@ -94,6 +94,14 @@
             <field name="parent_id" eval="ref('mt_task_stage')"/>
             <field name="relation_field">project_id</field>
         </record>
+        <record id="mt_project_task_rating" model="mail.message.subtype">
+            <field name="name">Task Rating</field>
+            <field name="sequence">14</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" eval="ref('mt_task_rating')"/>
+            <field name="relation_field">project_id</field>
+        </record>
 
     <data noupdate="1">
 
@@ -102,7 +110,6 @@
             <field name="privacy_visibility">followers</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="active" eval="False"/>
-            <field name="alias_model">project.task</field>
             <field name="alias_name">discover</field>
             <field name="alias_model_id" ref="model_project_task"/>
             <field name="alias_contact">everyone</field>
@@ -235,39 +242,6 @@
             <field name="stage_id" ref="project_stage_data_1"/>
         </record>
 
-        <record forcecreate="False" id="project_task_data_8" model="project.task">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="priority">0</field>
-            <field name="project_id" ref="project.project_project_data"/>
-            <field name="active" eval="False"/>
-            <field name="name">Do you want to learn more? Try our implementation guide!</field>
-            <field name="stage_id" ref="project_stage_data_2"/>
-            <field name="description">Click on the bar in the upper right corner</field>
-        </record>
-
-        <record forcecreate="False" id="msg_task_data_8_attach" model="ir.attachment">
-            <field name="name">planner_icon.png</field>
-            <field name="datas_fname">planner_icon.png</field>
-            <field name="datas" type="base64" file="project/static/src/img/planner_icon.png"></field>
-            <field name="res_model">project.task</field>
-            <field name="res_id" ref="project_task_data_8"/>
-        </record>
-        
-        <record forcecreate="False" id="msg_task_data_8" model="mail.message">
-            <field name="subject">How to open the implementation guide ?</field>
-            <field name="model">project.task</field>
-            <field name="res_id" ref="project_task_data_8"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="body"><![CDATA[Click on this icon in the upper right corner to open the planner<br/>
-            Best regards,<br/>Me.</p>]]></field>
-            <field name="message_type">comment</field>
-            <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_8_attach')])]"/>
-        </record>
-
-        <record forcecreate="False" id="project_task_data_8" model="project.task">
-            <field name="displayed_image_id" ref="msg_task_data_8_attach"/>
-        </record>
-
         <record forcecreate="False" id="project_task_data_7" model="project.task">
             <field name="user_id" ref="base.user_root"/>
             <field name="priority">0</field>
@@ -308,47 +282,5 @@
             <field name="description">In the chatter, sending an email with an attachment will display the picture on the card. When there are several image attachments, you can choose which one you want to display.</field>
         </record>
 
-        <record forcecreate="False" id="msg_task_data_14_attach" model="ir.attachment">
-            <field name="name">bird.jpg</field>
-            <field name="datas_fname">bird.jpg</field>
-            <field name="datas" type="base64" file="project/static/src/img/bird.jpg"></field>
-            <field name="res_model">project.task</field>
-            <field name="res_id" ref="project_task_data_14"/>
-        </record>
-
-
-        <record forcecreate="False" id="msg_task_data_14" model="mail.message">
-            <field name="subject">How to open the planner?</field>
-            <field name="model">project.task</field>
-            <field name="res_id" ref="project_task_data_14"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="body"><![CDATA[Look at this beautiful bird !]]></field>
-            <field name="message_type">comment</field>
-            <field name="attachment_ids" eval="[(6, 0, [ref('msg_task_data_14_attach')])]"/>
-        </record>
-
-        <record forcecreate="False" id="project_task_data_14" model="project.task">
-            <field name="displayed_image_id" ref="msg_task_data_14_attach"/>
-        </record>
-
-
     </data>
-    <template id="mail_template_task_merge">
-        <t t-if="target">
-            <t t-if="len(tasks) == 1"><p>The following task has been merged into this one:</p></t>
-            <t t-if="len(tasks) &gt; 1"><p>The following tasks have been merged into this one:</p></t>
-            <ul>
-                <t t-foreach="tasks" t-as="task">
-                    <li><a href="#" t-att-data-oe-model="task._name" t-att-data-oe-id="task.id"><t t-esc="task.name"/></a></li>
-                </t>
-            </ul>
-        </t>
-        <t t-if="not target">
-            <p>This task has been merged into the following task:</p>
-            <ul>
-                <li><a href="#" t-att-data-oe-model="task._name" t-att-data-oe-id="task.id"><t t-esc="task.name"/></a></li>
-            </ul>
-        </t>
-    </template>
-
 </odoo>

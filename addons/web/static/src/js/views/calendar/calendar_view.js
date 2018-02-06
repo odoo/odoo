@@ -21,15 +21,19 @@ var fieldsToGather = [
 var CalendarView = AbstractView.extend({
     display_name: _lt('Calendar'),
     icon: 'fa-calendar',
+    jsLibs: ['/web/static/lib/fullcalendar/js/fullcalendar.js'],
+    cssLibs: ['/web/static/lib/fullcalendar/css/fullcalendar.css'],
     config: {
         Model: CalendarModel,
         Controller: CalendarController,
         Renderer: CalendarRenderer,
     },
+    viewType: 'calendar',
+    groupable: false,
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
-        var arch = viewInfo.arch;
-        var fields = viewInfo.fields;
+        var arch = this.arch;
+        var fields = this.fields;
         var attrs = arch.attrs;
 
         if (!attrs.date_start) {

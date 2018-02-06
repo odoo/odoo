@@ -25,16 +25,16 @@
                                     All records matching your current search filter will be mailed,
                                     not only the ids selected in the list view.
                                 </strong><br />
-                                If you want to send a lot of emails, we recommend you to use the mass mailing module.<br />
+                                The email will be sent for all the records selected in the list.<br />
                                 Confirming this wizard will probably take a few minutes blocking your browser.
                             </p>
                             <p attrs="{'invisible': [('use_active_domain', '=', True)]}">
                                 <strong>Only records checked in list view will be used.</strong><br />
-                                If you want to send a lot of emails, we recommend you to use the mass mailing module.
+                                The email will be sent for all the records selected in the list.
                             </p>
                             <p class="mt8">
                                 <span attrs="{'invisible': [('use_active_domain', '=', True)]}">
-                                    If you want to use all records according to you search criterion instead check this selection box :
+                                    If you want to send it for all the records matching your search criterion, check this box :
                                 </span>
                                 <span attrs="{'invisible': [('use_active_domain', '=', False)]}">
                                     If you want to use only selected records please uncheck this selection box :
@@ -74,7 +74,8 @@
                                context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
                     </group>
                     <footer>
-                        <button string="Send" name="send_mail_action" type="object" class="btn-primary"/>
+                        <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="send_mail_action" type="object" class="btn-primary o_mail_send"/>
+                        <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="send_mail_action" type="object" class="btn-primary"/>
                         <button string="Cancel" class="btn-default" special="cancel" />
 
                         <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"

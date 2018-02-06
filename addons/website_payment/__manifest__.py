@@ -9,7 +9,7 @@
     'depends': [
         'website',
         'payment',
-        'website_portal',
+        'portal',
     ],
     'data': [
         'views/website_payment_view.xml',

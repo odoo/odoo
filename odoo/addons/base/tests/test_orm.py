@@ -297,7 +297,7 @@ class TestO2MSerialization(TransactionCase):
     def test_CREATE_commands(self):
         " returns the VALUES dict as-is "
         values = [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]
-        results = self.env['res.partner'].resolve_2many_commands('child_ids', map(CREATE, values))
+        results = self.env['res.partner'].resolve_2many_commands('child_ids', [CREATE(v) for v in values])
         self.assertEqual(results, values)
 
     def test_LINK_TO_command(self):
@@ -307,7 +307,7 @@ class TestO2MSerialization(TransactionCase):
             self.env['res.partner'].create({'name': 'bar'}).id,
             self.env['res.partner'].create({'name': 'baz'}).id,
         ]
-        commands = map(LINK_TO, ids)
+        commands = [LINK_TO(v) for v in ids]
 
         results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertItemsEqual(results, [
@@ -356,7 +356,7 @@ class TestO2MSerialization(TransactionCase):
             self.env['res.partner'].create({'name': 'bar'}).id,
             self.env['res.partner'].create({'name': 'baz'}).id,
         ]
-        commands = map(DELETE, ids)
+        commands = [DELETE(v) for v in ids]
 
         results = self.env['res.partner'].resolve_2many_commands('child_ids', commands, ['name'])
         self.assertEqual(results, [])

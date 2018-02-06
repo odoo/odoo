@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-import urlparse
 import werkzeug.urls
 
 from odoo import api, fields, models, tools
@@ -29,20 +28,20 @@ class MailMail(models.Model):
 
     def _get_tracking_url(self, partner=None):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        track_url = urlparse.urljoin(
+        track_url = werkzeug.urls.url_join(
             base_url, 'mail/track/%(mail_id)s/blank.gif?%(params)s' % {
                 'mail_id': self.id,
-                'params': werkzeug.url_encode({'db': self.env.cr.dbname})
+                'params': werkzeug.urls.url_encode({'db': self.env.cr.dbname})
             }
         )
         return '<img src="%s" alt=""/>' % track_url
 
     def _get_unsubscribe_url(self, email_to):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        url = urlparse.urljoin(
+        url = werkzeug.urls.url_join(
             base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
                 'mailing_id': self.mailing_id.id,
-                'params': werkzeug.url_encode({
+                'params': werkzeug.urls.url_encode({
                     'db': self.env.cr.dbname,
                     'res_id': self.res_id,
                     'email': email_to,
@@ -66,7 +65,7 @@ class MailMail(models.Model):
                 href = match[0]
                 url = match[1]
 
-                parsed = urlparse.urlparse(url, scheme='http')
+                parsed = werkzeug.urls.url_parse(url, scheme='http')
 
                 if parsed.scheme.startswith('http') and parsed.path.startswith('/r/'):
                     new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
@@ -78,7 +77,7 @@ class MailMail(models.Model):
         body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
         # resolve relative image url to absolute for outlook.com
         def _sub_relative2absolute(match):
-            return match.group(1) + urlparse.urljoin(domain, match.group(2))
+            return match.group(1) + werkzeug.urls.url_join(domain, match.group(2))
         body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)', _sub_relative2absolute, body)
         body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
 

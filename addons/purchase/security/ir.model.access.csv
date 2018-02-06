@@ -1,18 +1,21 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_purchase_order,purchase.order,model_purchase_order,group_purchase_user,1,1,1,1
 access_purchase_order_manager,purchase.order,model_purchase_order,group_purchase_manager,1,1,1,1
+access_purchase_order_stock_worker,purchase.order,model_purchase_order,stock.group_stock_user,1,0,0,0
+access_purchase_order_invoicing_payments,purchase.order,model_purchase_order,account.group_account_invoice,1,1,0,0
+access_purchase_order_portal,purchase.order.portal,purchase.model_purchase_order,base.group_portal,1,0,0,0
 access_purchase_order_line,purchase.order.line user,model_purchase_order_line,group_purchase_user,1,1,1,1
-access_purchase_order_line_manager,purchase.order.line manager,model_purchase_order_line,group_purchase_manager,1,0,0,0
+access_purchase_order_line_manager,purchase.order.line,model_purchase_order_line,group_purchase_manager,1,1,1,1
+access_purchase_order_line_stock_worker,purchase.order.line,model_purchase_order_line,stock.group_stock_user,1,0,0,0
+access_purchase_order_line_invoicing_payments,purchase.order.line,model_purchase_order_line,account.group_account_invoice,1,1,0,0
+access_purchase_order_line_portal,purchase.order.line.portal,purchase.model_purchase_order_line,base.group_portal,1,0,0,0
 access_stock_location_purchase_user,stock.location,stock.model_stock_location,group_purchase_user,1,0,0,0
 access_stock_warehouse_purchase_user,stock.warehouse,stock.model_stock_warehouse,group_purchase_user,1,0,0,0
 access_stock_picking_purchase_user,stock.picking,stock.model_stock_picking,group_purchase_user,1,1,1,1
 access_stock_move_purchase_user,stock.move,stock.model_stock_move,group_purchase_user,1,1,1,0
-access_purchase_order_stock_worker,purchase.order,model_purchase_order,stock.group_stock_user,1,0,0,0
-access_purchase_order_line_stock_worker,purchase.order.line,model_purchase_order_line,stock.group_stock_user,1,0,0,0
 access_account_tax_purchase_user,account.tax,account.model_account_tax,group_purchase_user,1,0,0,0
 access_report_purchase_order,purchase.report,model_purchase_report,group_purchase_manager,1,0,0,0
 access_report_purchase_order_user,purchase.report user,model_purchase_report,group_purchase_user,1,0,0,0
-access_purchase_order_line_manager,purchase.order.line,model_purchase_order_line,group_purchase_manager,1,1,1,1
 access_stock_location_purchase_user_manager,stock.location,stock.model_stock_location,group_purchase_manager,1,0,0,0
 access_stock_warehouse_purchase_user_manager,stock.warehouse,stock.model_stock_warehouse,group_purchase_manager,1,0,0,0
 access_stock_picking_purchase_user_manager,stock.picking,stock.model_stock_picking,group_purchase_manager,1,1,1,1
@@ -21,7 +24,6 @@ access_account_tax_purchase_user_manager,account.tax,account.model_account_tax,g
 access_product_product_purchase_user,product.product.purchase.user,product.model_product_product,group_purchase_user,1,0,0,0
 access_product_product_purchase_manager,product.product purchase_manager,product.model_product_product,purchase.group_purchase_manager,1,1,1,1
 access_product_template_purchase_user,product.template purchase_user,product.model_product_template,group_purchase_user,1,0,0,0
-access_product_template_purchase_manager,product.template purchase_manager,product.model_product_template,group_purchase_manager,1,0,0,0
 access_account_invoice_purchase,account_invoice purchase,account.model_account_invoice,group_purchase_user,1,1,1,1
 access_account_invoice_line_purchase,account_invoice.line purchase,account.model_account_invoice_line,group_purchase_user,1,1,1,1
 access_account_invoice_purchase_manager,account_invoice purchase manager,account.model_account_invoice,group_purchase_manager,1,0,0,0
@@ -47,8 +49,6 @@ access_account_account_purchase_manager,account.account purchase manager,account
 access_account_journal_purchase_manager,account.journal purchase manager,account.model_account_journal,purchase.group_purchase_manager,1,0,0,0
 access_stock_location_purchase_manager,stock.location purchase manager,stock.model_stock_location,purchase.group_purchase_manager,1,0,0,0
 access_stock_warehouse_orderpoint_manager,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,purchase.group_purchase_manager,1,0,0,0
-access_stock_warehouse_orderpoint_manager,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,group_purchase_user,1,0,0,0
+access_stock_warehouse_orderpoint_user,stock.warehouse.orderpoint,stock.model_stock_warehouse_orderpoint,group_purchase_user,1,0,0,0
 access_product_price_history_purchase_user,prices.history purchase user,product.model_product_price_history,purchase.group_purchase_user,1,0,0,0
 access_product_price_history_purchase_manager,prices.history purchase manager,product.model_product_price_history,purchase.group_purchase_manager,1,1,1,1
-access_purchase_order_invoicing_payments,purchase.order,model_purchase_order,account.group_account_invoice,1,1,0,0
-access_purchase_order_line_invoicing_payments,purchase.order.line,model_purchase_order_line,account.group_account_invoice,1,1,0,0

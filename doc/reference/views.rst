@@ -357,7 +357,13 @@ system. Available semantic components are:
 
 ``button``
   call into the Odoo system, similar to :ref:`list view buttons
-  <reference/views/list/button>`
+  <reference/views/list/button>`. In addition, the following attribute can be
+  specified:
+
+  ``special``
+    for form views opened in dialogs: ``save`` to save the record and close the
+    dialog, ``cancel`` to close the dialog without saving.
+
 ``field``
   renders (and allow edition of, possibly) a single field of the current
   record. Possible attributes are:
@@ -793,7 +799,7 @@ following attributes:
 Pivots
 ------
 
-The pivot view is used to visualize aggregations as a `pivot table`_. Its root 
+The pivot view is used to visualize aggregations as a `pivot table`_. Its root
 element is ``<pivot>`` which can take the following attributes:
 
 ``disable_linking``
@@ -850,6 +856,24 @@ Possible children of the view element are:
   ``name`` (required)
     the name of the field to fetch
 
+``progressbar``
+  declares a progressbar element to put on top of kanban columns.
+
+  Possible attributes are:
+
+  ``field`` (required)
+    the name of the field whose values are used to subgroup column's records in
+    the progressbar
+
+  ``colors`` (required)
+    JSON mapping the above field values to either "danger", "warning" or
+    "success" colors
+
+  ``sum_field`` (optional)
+    the name of the field whose column's records' values will be summed and
+    displayed next to the progressbar (if omitted, displays the total number of
+    records)
+
 ``templates``
   defines a list of :ref:`reference/qweb` templates. Cards definition may be
   split into multiple templates for clarity, but kanban views *must* define at
@@ -859,8 +883,6 @@ Possible children of the view element are:
   The kanban view uses mostly-standard :ref:`javascript qweb
   <reference/qweb/javascript>` and provides the following context variables:
 
-  ``instance``
-    the current :ref:`reference/javascript/client` instance
   ``widget``
     the current :js:class:`KanbanRecord`, can be used to fetch some
     meta-information. These methods are also available directly in the
@@ -872,8 +894,6 @@ Possible children of the view element are:
     a :meth:`~odoo.models.Model.read` (except for date and datetime fields
     that are `formatted according to user's locale
     <https://github.com/odoo/odoo/blob/a678bd4e/addons/web_kanban/static/src/js/kanban_record.js#L102>`_)
-  ``formats``
-    the :js:class:`web.formats` module to manipulate and convert values
   ``read_only_mode``
     self-explanatory
 
@@ -907,40 +927,7 @@ Possible children of the view element are:
        * kanban-specific CSS
        * kanban structures/widgets (vignette, details, ...)
 
-Javascript API
---------------
-
-.. js:class:: KanbanRecord
-
-   :js:class:`Widget` handling the rendering of a single record to a
-   card. Available within its own rendering as ``widget`` in the template
-   context.
-
-   .. js:function:: kanban_color(raw_value)
-
-      Converts a color segmentation value to a kanban color class
-      :samp:`oe_kanban_color_{color_index}`. The built-in CSS provides classes
-      up to a ``color_index`` of 9.
-
-   .. js:function:: kanban_getcolor(raw_value)
-
-      Converts a color segmentation value to a color index (between 0 and 9 by
-      default). Color segmentation values can be either numbers or strings.
-
-   .. js:function:: kanban_image(model, field, id[, cache][, options])
-
-      Generates the URL to the specified field as an image access.
-
-      :param String model: model hosting the image
-      :param String field: name of the field holding the image data
-      :param id: identifier of the record contaning the image to display
-      :param Number cache: caching duration (in seconds) of the browser
-                           default should be overridden. ``0`` disables
-                           caching entirely
-      :returns: an image URL
-
-   .. warning::
-      ``kanban_text_ellipsis`` has been removed in Odoo 9. CSS ``text-overflow`` should be used instead.
+If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>`.
 
 .. _reference/views/calendar:
 
@@ -988,12 +975,16 @@ calendar view are:
   declares fields to aggregate or to use in kanban *logic*. If the field is
   simply displayed in the calendar cards.
 
-On each field can have additional attributes:
-  ``invisible``: use "True" to hide the value in the cards
-  ``avatar_field``: only for x2many field, to display the avatar instead the
-      display_name in the cards
-  ``write_model`` and ``write_field``: you can add a filter and save the result
-      in the defined model, the filter is added in the sidebar
+  Fields can have additional attributes:
+
+    ``invisible``
+        use "True" to hide the value in the cards
+    ``avatar_field``
+        only for x2many field, to display the avatar instead the display_name
+        in the cards
+    ``write_model`` and ``write_field``
+        you can add a filter and save the result in the defined model, the
+        filter is added in the sidebar
 
 ``templates``
   defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition
@@ -1003,8 +994,6 @@ On each field can have additional attributes:
   The kanban view uses mostly-standard :ref:`javascript qweb
   <reference/qweb/javascript>` and provides the following context variables:
 
-  ``instance``
-    the current :ref:`reference/javascript/client` instance
   ``widget``
     the current :js:class:`KanbanRecord`, can be used to fetch some
     meta-information. These methods are also available directly in the
@@ -1059,7 +1048,7 @@ take the following attributes:
   ``gantt`` classic gantt view (default)
 
   ``consolidate`` values of the first children are consolidated in the gantt's task
-  
+
   ``planning`` children are displayed in the gantt's task
 ``consolidation``
   field name to display consolidation value in record cell
@@ -1071,6 +1060,9 @@ take the following attributes:
   .. warning::
       The dictionnary definition must use double-quotes, ``{'user_id': 100}`` is
       not a valid value
+``create``, ``edit``
+    allows *dis*\ abling the corresponding action in the view by setting the
+    corresponding attribute to ``false``
 ``string``
   string to display next to the consolidation value, if not specified, the label
   of the consolidation field will be used

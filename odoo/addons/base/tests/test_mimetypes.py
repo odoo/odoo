@@ -1,11 +1,12 @@
 import base64
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools.mimetypes import guess_mimetype
 
-PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
-GIF = "R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
-BMP = """Qk1+AAAAAAAAAHoAAABsAAAAAQAAAAEAAAABABgAAAAAAAQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAAAAAA
+PNG = b'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVQI12P4//8/AAX+Av7czFnnAAAAAElFTkSuQmCC'
+GIF = b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs="
+BMP = b"""Qk1+AAAAAAAAAHoAAABsAAAAAQAAAAEAAAABABgAAAAAAAQAAAATCwAAEwsAAAAAAAAAAAAAQkdScwAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAD///8A"""
 JPG = """/9j/4AAQSkZJRgABAQEASABIAAD//gATQ3JlYXRlZCB3aXRoIEdJTVD/2wBDAP
 //////////////////////////////////////////////////////////////////////////////////////2wBDAf///////
@@ -17,21 +18,22 @@ AE/IX//2gAMAwEAAgADAAAAEB//xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oACAEDAQE/EH//xAAUEQEAA
 /9oACAECAQE/EH//xAAUEAEAAAAAAAAAAAAAAAAAAAAA/9oACAEBAAE/EH//2Q=="""
 
 
+@tagged('standard', 'at_install')
 class test_guess_mimetype(unittest.TestCase):
 
     def test_default_mimetype_empty(self):
-        mimetype = guess_mimetype('')
+        mimetype = guess_mimetype(b'')
         # odoo implementation returns application/octet-stream by default
         # if available, python-magic returns application/x-empty
         self.assertIn(mimetype, ('application/octet-stream', 'application/x-empty'))
 
     def test_default_mimetype(self):
-        mimetype = guess_mimetype('', default='test')
+        mimetype = guess_mimetype(b'', default='test')
         # if available, python-magic returns application/x-empty
         self.assertIn(mimetype, ('test', 'application/x-empty'))
 
     def test_mimetype_octet_stream(self):
-        mimetype = guess_mimetype('\0')
+        mimetype = guess_mimetype(b'\0')
         self.assertEqual(mimetype, 'application/octet-stream')
 
     def test_mimetype_png(self):

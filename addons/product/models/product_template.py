@@ -4,7 +4,7 @@
 import itertools
 import psycopg2
 
-import odoo.addons.decimal_precision as dp
+from odoo.addons import decimal_precision as dp
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, RedirectWarning, except_orm
@@ -13,7 +13,7 @@ from odoo.tools import pycompat
 
 class ProductTemplate(models.Model):
     _name = "product.template"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Product Template"
     _order = "name"
 
@@ -21,14 +21,12 @@ class ProductTemplate(models.Model):
         if self._context.get('categ_id') or self._context.get('default_categ_id'):
             return self._context.get('categ_id') or self._context.get('default_categ_id')
         category = self.env.ref('product.product_category_all', raise_if_not_found=False)
-        if category and category.type == 'normal':
-            return category.id
-        # fallback if no category "All" exists, because yes, users do delete default data!
-        category = self.env['product.category'].search([('type', '=', 'normal')], limit=1)
+        if not category:
+            category = self.env['product.category'].search([], limit=1)
         if category:
             return category.id
         else:
-            err_msg = _('You must define at least one product category (that is not a view) in order to be able to create products.')
+            err_msg = _('You must define at least one product category in order to be able to create products.')
             redir_msg = _('Go to Internal Categories')
             raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
@@ -58,8 +56,8 @@ class ProductTemplate(models.Model):
              'the e-commerce such as e-books, music, pictures,... The "Digital Product" module has to be installed.')
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
-        'product.category', 'Internal Category',
-        change_default=True, default=_get_default_category_id, domain="[('type','=','normal')]",
+        'product.category', 'Product Category',
+        change_default=True, default=_get_default_category_id,
         required=True, help="Select category for the current product")
 
     currency_id = fields.Many2one(
@@ -70,7 +68,7 @@ class ProductTemplate(models.Model):
         'Price', compute='_compute_template_price', inverse='_set_template_price',
         digits=dp.get_precision('Product Price'))
     list_price = fields.Float(
-        'Sale Price', default=1.0,
+        'Sales Price', default=1.0,
         digits=dp.get_precision('Product Price'),
         help="Base price to compute the customer price. Sometimes called the catalog price.")
     lst_price = fields.Float(
@@ -80,7 +78,9 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="Cost of the product, in the default unit of measure of the product.")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+               "Also used as a base price for pricelists. "
+               "Expressed in the default unit of measure of the product. ")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
@@ -89,8 +89,9 @@ class ProductTemplate(models.Model):
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
+    weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
 
-    warranty = fields.Float('Warranty')
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
         help="Specify if the product can be selected in a sales order line.")
@@ -113,6 +114,7 @@ class ProductTemplate(models.Model):
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
+    variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
     color = fields.Integer('Color Index')
@@ -172,7 +174,7 @@ class ProductTemplate(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, basestring):
+            if isinstance(pricelist_id_or_name, pycompat.string_types):
                 pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_data:
                     pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
@@ -234,6 +236,25 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.weight = 0.0
 
+    @api.model
+    def _get_weight_uom_id_from_ir_config_parameter(self):
+        """ Get the unit of measure to interpret the `weight` field. By default, we considerer
+        that weights are expressed in kilograms. Users can configure to express them in pounds
+        by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
+        and "1" as value.
+        """
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
+        if product_weight_in_lbs_param == '1':
+            return self.env.ref('product.product_uom_lb')
+        else:
+            return self.env.ref('product.product_uom_kgm')
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = self._get_weight_uom_id_from_ir_config_parameter()
+        for product_template in self:
+            product_template.weight_uom_id = weight_uom_id
+
     @api.one
     def _set_weight(self):
         if len(self.product_variant_ids) == 1:
@@ -267,11 +288,6 @@ class ProductTemplate(models.Model):
         for p in self:
             if len(p.product_variant_ids) == 1:
                 p.product_variant_ids.packaging_ids = p.packaging_ids
-
-    @api.constrains('categ_id')
-    def _check_category(self):
-        if self.categ_id.type == 'view':
-            raise ValidationError(_("You cannot create a product with an Internal Category set as View. Please change the category or the category type."))
 
     @api.constrains('uom_id', 'uom_po_id')
     def _check_uom(self):
@@ -448,3 +464,10 @@ class ProductTemplate(models.Model):
                     variant.write({'active': False})
                     pass
         return True
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductTemplate, self).get_empty_list_help(help)

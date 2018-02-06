@@ -6,24 +6,7 @@
     'category': 'Discuss',
     'sequence': 25,
     'summary': 'Discussions, Mailing Lists, News',
-    'description': """
-Business oriented Social Networking
-===================================
-The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete
-communication history on documents with a fully-integrated email and message management system.
-
-It enables the users to read and send messages as well as emails. It also provides a feeds page combined to a subscription mechanism that allows to follow documents and to be constantly updated about recent news.
-
-Main Features
--------------
-* Clean and renewed communication history for any Odoo document that can act as a discussion topic
-* Subscription mechanism to be updated about new messages on interesting documents
-* Unified feeds page to see recent messages and activity on followed documents
-* User communication through the feeds page
-* Threaded discussion design on documents
-* Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
-* Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
-    """,
+    'description': "",
     'website': 'https://www.odoo.com/page/enterprise-social-network',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
@@ -37,7 +20,7 @@ Main Features
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
-        'views/res_config_views.xml',
+        'views/res_config_settings_views.xml',
         'data/mail_data.xml',
         'data/mail_channel_data.xml',
         'data/mail_shortcode_data.xml',
@@ -61,9 +44,9 @@ Main Features
     'application': True,
     'qweb': [
         'static/src/xml/activity.xml',
-        'static/src/xml/client_action.xml',
         'static/src/xml/composer.xml',
         'static/src/xml/chatter.xml',
+        'static/src/xml/discuss.xml',
         'static/src/xml/followers.xml',
         'static/src/xml/systray.xml',
         'static/src/xml/thread.xml',

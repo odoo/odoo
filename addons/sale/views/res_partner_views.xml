@@ -8,12 +8,10 @@
             <field name="context">{'search_default_partner_id': active_id}</field>
             <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Create a Quotation, the first step of a new sale.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new quotation, the first step of a new sale!
               </p><p>
-                Your next actions should flow efficiently: confirm the Quotation to a Sales Order, then create the Invoice and collect the Payment.
-              </p><p>
-                Note that once a Quotation becomes a Sales Order, it will be moved from the Quotations list to the Sales Order list.
+                Once the quotation is confirmed by the customer, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
               </p>
             </field>
         </record>
@@ -29,7 +27,7 @@
                 <field name="mobile" position="after">
                     <field name="sale_order_count"/>
                 </field>
-                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
                     <span t-if="record.sale_order_count.value>0" class="badge"><i class="fa fa-fw fa-usd"/><t t-esc="record.sale_order_count.value"/></span>
                 </xpath>
             </field>
@@ -54,7 +52,7 @@
                         <separator string="Warning on the Sales Order" colspan="4" />
                             <field name="sale_warn" nolabel="1" />
                             <field name="sale_warn_msg" colspan="3" nolabel="1" 
-                                    attrs="{'required':[('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
+                                    attrs="{'required':[('sale_warn', '!=', False), ('sale_warn','!=','no-message')],'readonly':[('sale_warn','=','no-message')]}"/>
                     </group>
                 </page>
             </field>

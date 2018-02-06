@@ -91,8 +91,8 @@ class IrUiView(models.Model):
     @api.model
     def to_field_ref(self, el):
         # filter out meta-information inserted in the document
-        attributes = dict((k, v) for k, v in el.items()
-                          if not k.startswith('data-oe-'))
+        attributes = {k: v for k, v in el.attrib.items()
+                           if not k.startswith('data-oe-')}
         attributes['t-field'] = el.get('data-oe-expression')
 
         out = html.html_parser.makeelement(el.tag, attrib=attributes)
@@ -127,7 +127,7 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_obj(self, view_id):
-        if isinstance(view_id, basestring):
+        if isinstance(view_id, pycompat.string_types):
             return self.env.ref(view_id)
         elif isinstance(view_id, pycompat.integer_types):
             return self.browse(view_id)

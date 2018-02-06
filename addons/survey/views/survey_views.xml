@@ -12,13 +12,13 @@
                     <field name="email"/>
                     <field name="partner_id"/>
                     <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
-                    <filter string="Partially completed" domain="[('state', '=', 'skip')]"/>
-                    <filter string="New" domain="[('state', '=', 'new')]"/>
-                    <filter string="Test" domain="[('test_entry','=', True)]"/>
+                    <filter string="Partially completed" name="partially_completed" domain="[('state', '=', 'skip')]"/>
+                    <filter string="New" name="new" domain="[('state', '=', 'new')]"/>
+                    <filter string="Test" name="test" domain="[('test_entry','=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter name="group_by_survey" string="Survey" domain="[]" context="{'group_by': 'survey_id'}"/>
-                        <filter string="Email" domain="[]" context="{'group_by': 'email'}"/>
-                        <filter string="Partner" domain="[]" context="{'group_by': ['partner_id']}"/>
+                        <filter string="Email" name="group_by_email" domain="[]" context="{'group_by': 'email'}"/>
+                        <filter string="Partner" name="group_by_partner" domain="[]" context="{'group_by': ['partner_id']}"/>
                     </group>
                 </search>
             </field>
@@ -83,15 +83,52 @@
             </field>
         </record>
 
+        <record id="view_survey_user_input_kanban" model="ir.ui.view">
+            <field name="name">survey.user_input.kanban</field>
+            <field name="model">survey.user_input</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="survey_id"/>
+                    <field name="date_create"/>
+                    <field name="partner_id"/>
+                    <field name="email"/>
+                    <field name="type"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><t t-esc="record.survey_id.value"/></strong>
+                                    </div>
+                                    <span class="badge"><t t-esc="record.type.value"/></span>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="date_create"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right mr4">
+                                        <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'done': 'success', 'skip':'warning'}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record model="ir.actions.act_window" id="action_survey_user_input">
             <field name="name">Answers</field>
             <field name="res_model">survey.user_input</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="survey_user_input_tree"></field>
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
             <field name="help" type="html">
-                <p>Nobody has replied to your surveys yet.</p>
+              <p class="o_view_nocontent_empty_folder">
+                Nobody has replied to your surveys yet
+              </p>
             </field>
         </record>
         <record id="action_selected_survey_user_input" model="ir.actions.act_window">
@@ -102,7 +139,9 @@
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_survey_id': active_id, 'default_survey_id': active_id}</field>
             <field name="help" type="html">
-                <p>Nobody has replied to your survey yet.</p>
+              <p class="o_view_nocontent_empty_folder">
+                Nobody has replied to your surveys yet
+              </p>
             </field>
         </record>
 
@@ -202,17 +241,21 @@
                             <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
 
                                 <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
+                                    <span class="fa fa-ellipsis-v"/>
                                 </a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                                     <li><a type="edit">Edit Survey</a></li>
                                     <li t-if="widget.deletable"><a type="delete">Delete</a></li>
+                                    <li class="divider"/>
+                                    <li>Color</li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
                             </div>
-                            <div class="oe_kanban_content">
-                                <h4 class="oe_center"><field name="title" /></h4>
-                                <div><ul>
+                            <div class="o_kanban_record_top">
+                                <h4 class="o_kanban_record_title mb4"><field name="title" /></h4>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <ul class="list-unstyled">
                                     <li>
                                         <a name="action_test_survey" type="object">Design</a>
                                     </li>
@@ -228,7 +271,10 @@
                                         <t t-if="record.tot_start_survey.raw_value &gt; 0"><a name="action_result_survey" type="object">Analyze Answers</a> <span t-if="record.tot_start_survey.raw_value &gt; 0">(<field name="tot_start_survey" />)</span></t>
                                         <t t-if="record.tot_start_survey.raw_value &lt;= 0"><a style="color: #aaaaaa;">Analyze Answers</a></t>
                                     </li>
-                                </ul></div>
+                                </ul>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left"/>
                                 <div class="oe_kanban_bottom_right">
                                     <field name="activity_ids" widget="kanban_activity" />
                                 </div>
@@ -248,15 +294,15 @@
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
-                    <filter string="Today Activities" name="activities_today"
-                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Upcoming Activities (7 days)" name="activities_week"
-                        domain="['&amp;', ('activity_ids.date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                 ('activity_ids.date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                        ]"/>
-                    <filter string="Overdue Activities" name="activities_overdue"
+                    <separator/>
+                    <filter string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Upcoming Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 </search>
             </field>
         </record>
@@ -267,9 +313,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">Click to add a survey.</p>
-                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>
-                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new survey
+              </p><p>
+                You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
+              </p><p>
+                Design easily your survey, send invitations to answer by email and analyse answers.
+              </p>
             </field>
         </record>
         <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_pages" name="Pages" res_model="survey.page" src_model="survey.survey"/>
@@ -331,6 +381,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_page_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No pages found
+              </p>
+            </field>
         </record>
         <act_window context="{'search_default_page_id': active_id, 'default_page_id': active_id}" id="act_survey_page_question" name="Questions" res_model="survey.question" src_model="survey.page"/>
 
@@ -371,8 +426,8 @@
                                         <i class="fa fa-2x">123..</i>
                                     </div>
                                     <!-- Date and Time -->
-                                    <div attrs="{'invisible': [('type', '!=', 'datetime')]}">
-                                        <p class="o_datetime">YYYY-MM-DD hh:mm:ss
+                                    <div attrs="{'invisible': [('type', '!=', 'date')]}">
+                                        <p class="o_datetime">YYYY-MM-DD
                                             <i class="fa fa-calendar fa-2x"/>
                                         </p>
                                     </div>
@@ -445,7 +500,7 @@
                                         <field name="constr_mandatory" string="Mandatory Answer"/>
                                         <field name="constr_error_msg" attrs="{'invisible': [('constr_mandatory', '=', False)]}"/>
                                     </group>
-                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'datetime'])]}">
+                                    <div colspan="2" attrs="{'invisible': [('type', 'not in', ['textbox', 'numerical_box', 'date'])]}">
                                         <group>
                                             <field name="validation_required" attrs="{'invisible': [('validation_email', '=', True), ('type', '=', 'textbox')]}"/>
                                         </group>
@@ -454,8 +509,8 @@
                                             <field name="validation_length_max" attrs="{'invisible': [('type', '!=', 'textbox')]}"/>
                                             <field name="validation_min_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
                                             <field name="validation_max_float_value" attrs="{'invisible': [('type', '!=', 'numerical_box')]}"/>
-                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
-                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'datetime')]}"/>
+                                            <field name="validation_min_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
+                                            <field name="validation_max_date" attrs="{'invisible': [('type', '!=', 'date')]}"/>
                                             <field name="validation_error_msg" colspan="4"/>
                                         </group>
                                     </div>
@@ -515,6 +570,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_question_search"/>
             <field name="context">{'search_default_group_by_page': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No questions found
+              </p>
+            </field>
         </record>
 
         <!-- LABELS -->
@@ -549,6 +609,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_label_search"/>
             <field name="context">{'search_default_group_by_question': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No survey labels found
+              </p>
+            </field>
         </record>
 
         <!-- USER INPUT LINES
@@ -615,6 +680,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_response_line_search"/>
             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No user input lines found
+              </p>
+            </field>
         </record>
 
 
@@ -637,21 +707,12 @@
             <field name="name">Survey: Clean test answers</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_survey_survey" />
+            <field name="binding_model_id" ref="model_survey_survey" />
             <field name="state">code</field>
             <field name="code">
 if records:
     env['survey.user_input'].search([('survey_id', 'in', records.ids), ('test_entry', '=', 'True')]).unlink()
             </field>
-        </record>
-
-        <record id="survey_values_action_clean_test_answers" model="ir.values">
-            <field name="name">Survey clean test answers</field>
-            <field name="action_id" ref="survey_action_server_clean_test_answers" />
-            <field name="value" eval="'ir.actions.server,' + str(ref('survey_action_server_clean_test_answers'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_survey_survey" />
-            <field name="model">survey.survey</field>
-            <field name="key2">client_action_multi</field>
         </record>
 
         <!-- MENU ELEMENTS -->

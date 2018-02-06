@@ -7,7 +7,6 @@
             <field name="model">product.pricelist.item</field>
             <field name="arch" type="xml">
                 <tree string="Pricelist Items">
-                    <field name="sequence" widget="handle"/>
                     <field colspan="4" name="name"/>
                     <field name="product_id" groups="product.group_product_variant"/>
                     <field name="product_tmpl_id"/>
@@ -107,6 +106,28 @@
                 </tree>
             </field>
         </record>
+
+        <record id="product_pricelist_view_kanban" model="ir.ui.view">
+            <field name="name">product.pricelist.kanban</field>
+            <field name="model">product.pricelist</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div id="product_pricelist" class="o_kanban_record_top mb0">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
+                                    </div>
+                                    <strong><i class="fa fa-money" aria-hidden="true"></i> <field name="currency_id"/></strong>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="product_pricelist_view" model="ir.ui.view">
             <field name="name">product.pricelist.form</field>
             <field name="model">product.pricelist</field>
@@ -138,7 +159,6 @@
                                     <field name="date_end"/>
                                     <field name="price" string="Price"/>
                                     <field name="base" invisible="1"/>
-                                    <field name="sequence" invisible="1"/>
                                     <field name="price_discount" invisible="1"/>
                                     <field name="applied_on" invisible="1"/>
                                     <field name="compute_price" invisible="1"/>
@@ -164,19 +184,17 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.pricelist</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
             <field name="context">{"default_base":'list_price'}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a pricelist.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new pricelist
               </p><p>
-                A price list contains rules to be evaluated in order to compute
-                the sale price of the products.
+                A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.
+                This is the perfect tool to handle several pricings, seasonal discounts, etc.
               </p><p>
-                Each rule include a set of applicability criteria (date range,
-                product category...) and a computation that easily helps to achieve
-                any kind of pricing.
+                You can assign pricelists to your customers or select one when creating a new sales quotation.
               </p>
             </field>
         </record>

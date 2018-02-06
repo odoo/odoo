@@ -3,7 +3,7 @@
 
 {
     'name': 'Assets Management',
-    'depends': ['account_accountant'],
+    'depends': ['account'],
     'description': """
 Assets management
 =================
@@ -14,9 +14,6 @@ Keeps track of depreciations, and creates corresponding journal entries.
     'website': 'https://www.odoo.com/page/accounting',
     'category': 'Accounting',
     'sequence': 32,
-    'demo': [
-        'data/account_asset_demo.yml',
-    ],
     'data': [
         'security/account_asset_security.xml',
         'security/ir.model.access.csv',
@@ -26,7 +23,7 @@ Keeps track of depreciations, and creates corresponding journal entries.
         'views/account_invoice_views.xml',
         'views/account_asset_templates.xml',
         'views/product_views.xml',
-        'views/res_config_view.xml',
+        'views/res_config_settings_views.xml',
         'report/account_asset_report_views.xml',
         'data/account_asset_data.xml',
     ],

@@ -10,6 +10,7 @@ class ChooseDeliveryPackage(models.TransientModel):
 
     stock_quant_package_id = fields.Many2one(
         'stock.quant.package',
+        string="Physical Package",
         default=lambda self: self._default_stock_quant_package_id()
     ) 
     delivery_packaging_id = fields.Many2one(
@@ -40,10 +41,18 @@ class ChooseDeliveryPackage(models.TransientModel):
             return stock_quant_package.shipping_weight
         else:
             picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])
-            pack_operation_product_ids = [po for po in picking_id.pack_operation_product_ids if po.qty_done > 0 and not po.result_package_id]
-            pack_operation_pack_ids = [po for po in picking_id.pack_operation_pack_ids if po.qty_done > 0 and not po.result_package_id]
-            total_weight = sum([po.qty_done * po.product_id.weight for po in pack_operation_product_ids]) + sum([po.package_id.weight for po in pack_operation_pack_ids])
+            move_line_ids = [po for po in picking_id.move_line_ids if po.qty_done > 0 and not po.result_package_id]
+            total_weight = sum([po.qty_done * po.product_id.weight for po in move_line_ids])
             return total_weight
+
+    @api.onchange('delivery_packaging_id', 'shipping_weight')
+    def _onchange_packaging_weight(self):
+        if self.delivery_packaging_id.max_weight and self.shipping_weight > self.delivery_packaging_id.max_weight:
+            warning_mess = {
+                'title': _('Package too heavy!'),
+                'message': _('The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type.')
+            }
+            return {'warning': warning_mess}
 
     def put_in_pack(self):
         picking_id = self.env['stock.picking'].browse(self.env.context['active_id'])

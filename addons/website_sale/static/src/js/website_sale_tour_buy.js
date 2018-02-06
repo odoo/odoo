@@ -29,23 +29,28 @@ tour.register('shop_buy_product', {
             trigger: 'label:contains(32 GB) input',
         },
         {
+            content: "select ipod 16GB",
+            extra_trigger: '#product_detail',
+            trigger: 'label:contains(16 GB) input',
+        },
+        {
             content: "click on add to cart",
-            extra_trigger: 'label:contains(32 GB) input:propChecked',
+            extra_trigger: 'label:contains(16 GB) input:propChecked',
             trigger: '#product_detail form[action^="/shop/cart/update"] .btn',
         },
         {
             content: "add suggested",
             extra_trigger: '#wrap:not(:has(#cart_products:contains("[A8767] Apple In-Ear Headphones")))',
-            trigger: '.oe_cart:has(tr:contains("32 GB")) a:contains("Add to Cart")',
+            trigger: '.oe_cart:has(tr:contains("16 GB")) a:contains("Add to Cart")',
         },
         {
             content: "add one more iPod",
-            extra_trigger: '.my_cart_quantity:contains(2)',
-            trigger: '#cart_products tr:contains("32 GB") a.js_add_cart_json:eq(1)',
+            extra_trigger: '#cart_products tr:contains("Headphones")',
+            trigger: '#cart_products tr:contains("16 GB") a.js_add_cart_json:eq(1)',
         },
         {
             content: "remove Headphones",
-            extra_trigger: '#cart_products tr:contains("32 GB") input.js_quantity:propValue(2)',
+            extra_trigger: '#cart_products tr:contains("16 GB") input.js_quantity:propValue(2)',
             trigger: '#cart_products tr:contains("Apple In-Ear Headphones") a.js_add_cart_json:first',
         },
         {
@@ -66,12 +71,13 @@ tour.register('shop_buy_product', {
         },
         {
             content: "select payment",
-            trigger: '#payment_method label:contains("Wire Transfer") input',
+            trigger: '#payment_method label:contains("Wire Transfer")',
         },
         {
             content: "Pay Now",
-            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked',
-            trigger: '.oe_sale_acquirer_button .btn[type="submit"]:visible',
+            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+            trigger: 'button[id="o_payment_form_pay"]:visible',
         },
         {
             content: "finish",

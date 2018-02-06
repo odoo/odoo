@@ -5,8 +5,10 @@ from datetime import datetime
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestPurchaseOrder(AccountingTestCase):
 
     def setUp(self):
@@ -75,8 +77,8 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.force_assign()
-        self.picking.pack_operation_product_ids.write({'qty_done': 5.0})
-        self.picking.do_new_transfer()
+        self.picking.move_line_ids.write({'qty_done': 5.0})
+        self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
         self.invoice = self.AccountInvoice.create({
@@ -109,8 +111,8 @@ class TestPurchaseOrder(AccountingTestCase):
         self.assertEqual(self.po.picking_count, 1, 'Purchase: one picking should be created"')
         self.picking = self.po.picking_ids[0]
         self.picking.force_assign()
-        self.picking.pack_operation_product_ids.write({'qty_done': 5.0})
-        self.picking.do_new_transfer()
+        self.picking.move_line_ids.write({'qty_done': 5.0})
+        self.picking.button_validate()
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
         #After Receiving all products create vendor bill.
@@ -126,7 +128,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Check quantity received
         received_qty = sum(pol.qty_received for pol in self.po.order_line)
-        self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incomming shipment' % received_qty)
+        self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incoming shipment' % received_qty)
 
         # Create return picking
         StockReturnPicking = self.env['stock.return.picking']
@@ -139,8 +141,9 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Validate picking
         return_pick.force_assign()
-        return_pick.pack_operation_product_ids.write({'qty_done': 2})
-        return_pick.do_new_transfer()
+        return_pick.move_line_ids.write({'qty_done': 2})
+        
+        return_pick.button_validate()
 
         # Check Received quantity
         self.assertEqual(self.po.order_line[0].qty_received, 3.0, 'Purchase: delivered quantity should be 3.0 instead of "%s" after picking return' % self.po.order_line[0].qty_received)

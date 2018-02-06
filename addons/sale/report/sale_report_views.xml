@@ -7,7 +7,7 @@
          <field name="arch" type="xml">
              <pivot string="Sales Analysis" disable_linking="True">
                  <field name="team_id" type="col"/>
-                 <field name="date" interval="month" type="row"/>
+                 <field name="confirmation_date" interval="month" type="row"/>
                  <field name="price_subtotal" type="measure"/>
              </pivot>
          </field>
@@ -22,33 +22,6 @@
                  <field name="price_subtotal" type="measure"/>
              </graph>
          </field>
-    </record>
-
-    <!-- Custom reports (aka filters) -->
-    <record id="filter_sale_report_sales_funnel" model="ir.filters">
-        <field name="name">Sales Funnel</field>
-        <field name="model_id">sale.report</field>
-        <field name="domain">['&amp;', ('date','&lt;=', time.strftime('%%Y-12-31')), '&amp;', ('date','&gt;=',time.strftime('%%Y-01-01')), ('state','not in',('cancel',))]</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['state'], 'measures': ['price_subtotal']}</field>
-    </record>
-    <record id="filter_sale_report_salespersons" model="ir.filters">
-        <field name="name">By Salespersons</field>
-        <field name="model_id">sale.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date:month', 'user_id']}</field>
-    </record>
-    <record id="filter_sale_report_salesteam" model="ir.filters">
-        <field name="name">By Salesteam</field>
-        <field name="model_id">sale.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date:month', 'team_id']}</field>
-    </record>
-    <record id="filter_isale_report_product" model="ir.filters">
-        <field name="name">By Product</field>
-        <field name="model_id">sale.report</field>
-        <field name="user_id" eval="False"/>
-        <field name="context">{'group_by': ['date:month', 'product_id']}</field>
     </record>
 
     <record id="view_order_product_search" model="ir.ui.view">
@@ -70,14 +43,15 @@
                 </group>
                 <group expand="1" string="Group By">
                     <filter string="Salesperson" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Sales Channel" context="{'group_by':'team_id'}"/>
-                    <filter string="Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
+                    <filter string="Sales Channel" name="sales_channel" context="{'group_by':'team_id'}"/>
+                    <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
+                    <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter name="status" string="Status" context="{'group_by':'state'}"/>
-                    <filter string="Company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <filter string="Company" name="company" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator/>
-                    <filter string="Order Month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
+                    <filter string="Confirmation Date" name="order_month" context="{'group_by':'date:month'}" help="Ordered date of the sales order"/>
                 </group>
             </search>
         </field>
@@ -93,7 +67,4 @@
         <field name="context">{'search_default_Sales':1, 'group_by_no_leaf':1,'group_by':[]}</field>
         <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
-
-    <menuitem name="Sales" action="action_order_report_all" id="menu_report_product_all" parent="sales_team.menu_sale_report" sequence="8"/>
-
 </odoo>

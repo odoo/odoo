@@ -10,10 +10,15 @@
 
 Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
 """,
-    "depends" : ["account", "base_iban", "base_vat"],
+    "depends" : [
+        "account",
+        "base_iban",
+        "base_vat",
+    ],
     "data": ['data/l10n_no_chart_data.xml',
+             'data/account_data.xml',
              'data/account_tax_data.xml',
-             'data/account_chart_template_data.yml'],
+             'data/account_chart_template_data.xml'],
     "active": False,
     'post_init_hook': '_preserve_tag_on_taxes',
 }

@@ -28,11 +28,10 @@ With this module you will have:
  - Minimal chart of account tested in production environments.
  - Minimal chart of taxes, to comply with SAT_ requirements.
 
-.. SAT: http://www.sat.gob.mx/
+.. _SAT: http://www.sat.gob.mx/
     """,
     "depends": [
-        "account",
-        "base_vat",
+        "account", "account_cancel"
     ],
     "data": [
         "data/account_tag_data.xml",
@@ -40,7 +39,8 @@ With this module you will have:
         "data/account_data.xml",
         "data/account_tax_data.xml",
         "data/fiscal_position_data.xml",
-        "data/account_chart_template_data.yml",
-        "views/res_config_view.xml",
+        "data/account_chart_template_data.xml",
+        "views/res_config_settings_views.xml",
+        "views/account_views.xml",
     ],
 }

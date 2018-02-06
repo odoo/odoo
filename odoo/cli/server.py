@@ -12,7 +12,7 @@ GNU Public Licence.
 """
 
 import atexit
-import csv
+import csv # pylint: disable=deprecated-module
 import logging
 import os
 import signal
@@ -46,7 +46,7 @@ def check_postgres_user():
     This function assumes the configuration has been initialized.
     """
     config = odoo.tools.config
-    if config['db_user'] == 'postgres':
+    if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
 
@@ -98,7 +98,7 @@ def export_translation():
 
     fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
 
-    with open(config["translate_out"], "w") as buf:
+    with open(config["translate_out"], "wb") as buf:
         registry = odoo.modules.registry.Registry.new(dbname)
         with odoo.api.Environment.manage():
             with registry.cursor() as cr:

@@ -5,13 +5,14 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,10 +29,15 @@ msgstr "&nbsp;&nbsp;GOEDKEURINGSCODE:"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:186
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:180
 #, python-format
 msgid "128 bit CryptoAPI failed"
 msgstr "128 bit CryptoAPI mislukt"
+
+#. module: pos_mercury
+#: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
+msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Koop een kaartlezer"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -64,7 +70,7 @@ msgstr "GOEDKEURINGSCODE:"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:190
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:184
 #, python-format
 msgid "All Connections Failed"
 msgstr "All connecties zijn mislukt"
@@ -111,7 +117,7 @@ msgstr "Kaartlezer"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:196
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:190
 #, python-format
 msgid "Clear Text Request Not Supported"
 msgstr "Zichtbare tekst verzoeken zijn niet ondersteund"
@@ -123,21 +129,21 @@ msgstr "Klik om uw kaartlezer te configureren."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:164
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:158
 #, python-format
 msgid "Connect Canceled"
 msgstr "Connectie geannuleerd"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:161
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:155
 #, python-format
 msgid "Connection Lost"
 msgstr "Verbinding verloren"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:185
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:179
 #, python-format
 msgid "Control failed to find branded serial (password lookup failed)"
 msgstr ""
@@ -146,10 +152,17 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:202
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:196
 #, python-format
 msgid "Could Not Encrypt Response- Call Provider"
 msgstr "Kon reactie- aanvraag aanbieder niet encrypteren"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:351
+#, python-format
+msgid "Could not read card"
+msgstr "Kan kaart niet lezen"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
@@ -171,7 +184,7 @@ msgstr "Kredietkaart"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:178
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:172
 #, python-format
 msgid "Disconnecting Socket"
 msgstr "Verbinding socket verbreken"
@@ -184,7 +197,7 @@ msgstr "Schermnaam"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:180
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:174
 #, python-format
 msgid "Duplicate Serial Number Detected"
 msgstr "Duplicaat serienummer gevonden"
@@ -198,21 +211,28 @@ msgstr "Electronische betaling"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:167
 #, python-format
 msgid "Empty Command String"
 msgstr "Lege commando string"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:641
+#, python-format
+msgid "Error"
+msgstr "Fout"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:192
 #, python-format
 msgid "Error Occurred While Decrypting Request"
 msgstr "Er is een fout opgetreden tijdens het decrypteren van het verzoek"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:188
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:182
 #, python-format
 msgid "Failed to start Event Thread."
 msgstr "Mislukt om event thread te starten."
@@ -230,42 +250,42 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:170
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:164
 #, python-format
 msgid "General Failure"
 msgstr "Algemene mislukking"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:155
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:149
 #, python-format
 msgid "Global API Not Initialized"
 msgstr "Globale API niet geïnitialiseerd"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:192
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:186
 #, python-format
 msgid "Global Response Length Error (Too Short)"
 msgstr "Globale reactie lengte fout (te kort)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:194
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:188
 #, python-format
 msgid "Global String Error"
 msgstr "Globale string fout"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:262
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
 msgstr "Ga naar het betaalscherm om kaarten te gebruiken"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:393
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:387
 #, python-format
 msgid "Handling transaction..."
 msgstr "Transactie verwerken..."
@@ -293,232 +313,232 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:184
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:178
 #, python-format
 msgid "In Process with server"
 msgstr "In proces met server"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:165
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:159
 #, python-format
 msgid "Initialize Failed"
 msgstr "Initialisatie mislukt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:172
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:166
 #, python-format
 msgid "Insufficient Fields"
 msgstr "Onvoldoende velden"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:183
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:177
 #, python-format
 msgid "Internal Server Error – Call Provider"
 msgstr "Interne server fout - bel aanbieder"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:206
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:200
 #, python-format
 msgid "Invalid Account Number"
 msgstr "Foute rekeningnummer"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:210
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
 #, python-format
 msgid "Invalid Authorization Amount"
 msgstr "Fout Authorization bedrag"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:208
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:209
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:202
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:203
 #, python-format
 msgid "Invalid Authorization Code"
 msgstr "Foute Authorization code"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:225
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:219
 #, python-format
 msgid "Invalid Batch Item Count"
 msgstr "Foutieve batchitem aantal"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:224
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:218
 #, python-format
 msgid "Invalid Batch Number"
 msgstr "Foutieve batch nummer"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:230
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:224
 #, python-format
 msgid "Invalid Card Type"
 msgstr "Ongeldige kaartsoort"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:211
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:205
 #, python-format
 msgid "Invalid Cash Back Amount"
 msgstr "Foutieve geld terug bedrag"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:193
 #, python-format
 msgid "Invalid Check Digit"
 msgstr "Foutieve cheque cijfer"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:219
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:213
 #, python-format
 msgid "Invalid Check Type"
 msgstr "Foutieve cheque soort"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:165
 #, python-format
 msgid "Invalid Command Format"
 msgstr "Foutieve commando formaat"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:218
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:212
 #, python-format
 msgid "Invalid Date of Birth"
 msgstr "Foutieve geboortedatum"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:210
 #, python-format
 msgid "Invalid Derived Key Data"
 msgstr "Foutieve afgeleide sleuteldata"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:227
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:221
 #, python-format
 msgid "Invalid Driver’s License"
 msgstr "Foutief rijbewijs"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:207
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:201
 #, python-format
 msgid "Invalid Expiration Date"
 msgstr "Foute vervaldatum"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:212
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:206
 #, python-format
 msgid "Invalid Gratuity Amount"
 msgstr "Ongeldig fooi bedrag"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:226
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:220
 #, python-format
 msgid "Invalid MICR Input Type"
 msgstr "Foutieve MICR invoer soort"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:208
 #, python-format
 msgid "Invalid Magnetic Stripe Data"
 msgstr "Foutieve magneetstreep gegevens"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:205
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
 #, python-format
 msgid "Invalid Memo"
 msgstr "Ongeldige memo"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:222
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
 #, python-format
 msgid "Invalid Merchant ID"
 msgstr "Foutieve handelaar ID"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
 #, python-format
 msgid "Invalid Operator ID"
 msgstr "Foutieve operator ID"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:215
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:209
 #, python-format
 msgid "Invalid PIN Block Data"
 msgstr "Foutieve PIN blokkeer data"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:229
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:223
 #, python-format
 msgid "Invalid Pass Data"
 msgstr "Foutieve pass data"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:213
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:207
 #, python-format
 msgid "Invalid Purchase Amount"
 msgstr "Foutief inkoopbedrag"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:220
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
 #, python-format
 msgid "Invalid Routing Number"
 msgstr "Foutief routenummer"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:228
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:222
 #, python-format
 msgid "Invalid Sequence Number"
 msgstr "Foutief reeksnummer"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:217
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:211
 #, python-format
 msgid "Invalid State Code"
 msgstr "Foutieve postcode"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:223
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:217
 #, python-format
 msgid "Invalid TStream Type"
 msgstr "Foutieve TStream soort"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:221
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:215
 #, python-format
 msgid "Invalid TranCode"
 msgstr "Foutieve TranCode"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:203
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
 #, python-format
 msgid "Invalid Transaction Type"
 msgstr "Foutieve transactie soort"
@@ -563,7 +583,7 @@ msgstr "Merchant ID"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:200
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:194
 #, python-format
 msgid "Merchant ID Missing"
 msgstr "Handelaar ID ontbreekt"
@@ -581,8 +601,8 @@ msgstr "Mercury configuratie"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
-msgid "Mercury configuration"
-msgstr "Mercury configuratie"
+msgid "Mercury Credentials"
+msgstr "Mercury inloggevens"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
@@ -610,15 +630,27 @@ msgid "Name of this Mercury configuration"
 msgstr "Naam van deze Mercury configuratie"
 
 #. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr "Geen mercury configuratie geassocieerd met het dagboek."
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr "Geen geopende kassa sessie gevonden voor gebruiker %s"
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
 msgstr "Geen reacties van Mercury (Mercury plat?)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:336
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
 msgstr "Geen reacties van server (geconnecteerd met netwerk?)"
@@ -626,14 +658,14 @@ msgstr "Geen reacties van server (geconnecteerd met netwerk?)"
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:414
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:562
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:567
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Odoo error tijdens transactie verwerking."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:639
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:642
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Er is al een creditcard swipe in behandeling."
@@ -652,28 +684,28 @@ msgstr "Deels goedgekeurd"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:181
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:175
 #, python-format
 msgid "Password Failed (Client / Server)"
 msgstr "Wachtwoord mislukt (Client / Server)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:176
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:170
 #, python-format
 msgid "Password Failed – Disconnecting"
 msgstr "Wachtwoord mislukt - ontkoppelen"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:174
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:168
 #, python-format
 msgid "Password Verified"
 msgstr "Wachtwoord geverifieerd"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:182
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:176
 #, python-format
 msgid "Password failed (Challenge / Response)"
 msgstr "Wachtwoord mislukt (Uitdaging / Reactie)"
@@ -705,12 +737,12 @@ msgstr "Zet aub uw Mercury handelaar account op."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
-msgid "Point of Sale"
-msgstr "Kassa"
+msgid "Point of Sale Orders"
+msgstr "Kassa orders"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:175
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:169
 #, python-format
 msgid "Queue Full"
 msgstr "Wachtrij vol"
@@ -722,63 +754,63 @@ msgstr "RecordNummerAangevraagd"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:179
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
 #, python-format
 msgid "Refused ‘Max Connections’"
 msgstr "Geweigerd 'Max connecties'"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:540
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:539
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Omkering mislukt, VoidSale verzenden..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:576
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:581
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Omkering gelukt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:543
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:542
 #, python-format
 msgid "Sending reversal..."
 msgstr "Omkering verzenden..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:191
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:185
 #, python-format
 msgid "Server Login Failed"
 msgstr "Server login mislukt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:160
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:154
 #, python-format
 msgid "Socket Connection Failed"
 msgstr "Socket connectie mislukt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:159
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:153
 #, python-format
 msgid "Socket Creation Failed"
 msgstr "Socket aanmaak mislukt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:157
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:151
 #, python-format
 msgid "Socket Error sending request"
 msgstr "Socket fout bij verzenden van verzoek"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:158
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:152
 #, python-format
 msgid "Socket already open or in use"
 msgstr "Socket is al open of in gebruik"
@@ -790,14 +822,14 @@ msgstr "Swiped"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:177
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
 #, python-format
 msgid "System Going Offline"
 msgstr "Systeem gaat offline"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:162
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:156
 #, python-format
 msgid "TCP/IP Failed to Initialize"
 msgstr "TCP/IP mislukt om te initialiseren"
@@ -811,7 +843,7 @@ msgstr "OVEREENKOMST KAARTHOUDER"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:201
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
 #, python-format
 msgid "TStream Type Missing"
 msgstr "Tstream soort ontbreekt"
@@ -843,7 +875,7 @@ msgstr "De naam van de kaarteigenaar"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:358
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:352
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
@@ -854,56 +886,56 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:187
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:181
 #, python-format
 msgid "Threaded Auth Started Expect Response"
 msgstr "Threaded Auth gestart, verwacht reactie"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:163
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:157
 #, python-format
 msgid "Time Out waiting for server response"
 msgstr "Time-out wachtende op server reactie"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:169
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:163
 #, python-format
 msgid "Timeout error"
 msgstr "Time-out fout"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:156
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:150
 #, python-format
 msgid "Timeout on Response"
 msgstr "Time-out op reactie"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:152
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
 msgstr "Transactie goedgekeurd"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:193
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:187
 #, python-format
 msgid "Unable to Parse Response from Global (Indistinguishable)"
 msgstr "Kan reactie niet omzetten van Global (niet te onderscheiden)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:166
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:160
 #, python-format
 msgid "Unknown Error"
 msgstr "Onbekende fout"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:191
 #, python-format
 msgid "Unrecognized Request Format"
 msgstr "Niet herkend verzoekformaat"
@@ -922,8 +954,13 @@ msgstr ""
 "geswiped worden door de kaartlezer."
 
 #. module: pos_mercury
+#: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "Vantiv Accounts"
+msgstr "Vantiv Accounts"
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:584
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:589
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "VoidSale succesvol voltooid"
@@ -946,14 +983,14 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:189
 #, python-format
 msgid "Weak Encryption Request Not Supported"
 msgstr "Zwakker encryptie verzoeken zijn niet ondersteund"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:189
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:183
 #, python-format
 msgid "XML Parse Error"
 msgstr "XML Parse Error"

@@ -25,15 +25,8 @@
         <field name="view_mode">form</field>
         <field name="view_id" ref="account_report_general_ledger_view"/>
         <field name="target">new</field>
-    </record>
-
-    <record id="action_account_general_ledger_values" model="ir.values">
-        <field name="model_id" ref="account.model_account_account" />
-        <field name="name">General Ledger</field>
-        <field name="key2">client_print_multi</field>
-        <field name="value" eval="'ir.actions.act_window,' +str(ref('action_account_general_ledger_menu'))" />
-        <field name="key">action</field>
-        <field name="model">account.account</field>
+        <field name="binding_model_id" ref="account.model_account_account" />
+        <field name="binding_type">report</field>
     </record>
 
     <menuitem
@@ -41,7 +34,7 @@
         name="General Ledger"
         parent="account.menu_finance_legal_statement"
         action="action_account_general_ledger_menu"
-        groups="group_account_manager,group_account_user"
+        groups="account.group_account_user"
        />
 
 </odoo>

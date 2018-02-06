@@ -5,9 +5,12 @@
         <record id="crm_case_form_view_salesteams_lead" model="ir.actions.act_window">
             <field name="name">Leads</field>
             <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,kanban,form</field>
             <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
-            <field name="view_id" ref="crm_case_tree_view_leads"/>
+            <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')}),
+                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_crm_lead_kanban')})]"/>
             <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="context">{
                     'search_default_team_id': [active_id],
@@ -16,14 +19,13 @@
                 }
             </field>
             <field name="help" type="html">
-                <p>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new lead
+                </p><p>
                     Use leads if you need a qualification step before creating an
                     opportunity or a customer. It can be a business card you received,
                     a contact form filled in your website, or a file of unqualified
                     prospects you import, etc.
-                </p><p>
-                    Once qualified, the lead can be converted into a business
-                    opportunity and/or a new customer in your address book.
                 </p>
             </field>
         </record>
@@ -44,11 +46,13 @@
                 }
             </field>
             <field name="help" type="html">
-                <p>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new lead
+                </p><p>
                     Odoo helps you keep track of your sales pipeline to follow
                     up potential sales and better forecast your future revenues.
                 </p><p>
-                    You will be able to plan meetings and log activities from
+                    You will be able to plan meetings and phone calls from
                     opportunities, convert them into quotations, attach related
                     documents, track all discussions, and much more.
                 </p>
@@ -184,9 +188,9 @@
                         <field name="use_opportunities"/>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_primary')]" position="after">
+                    <xpath expr="//div[hasclass('o_primary')]" position="after">
                         <div t-if="record.use_leads.raw_value and record.alias_name.value and record.alias_domain.value">
-                            <small><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
+                            <small t-translation="off"><i class="fa fa-envelope-o"></i>&amp;nbsp; <field name="alias_id"/></small>
                         </div>
                     </xpath>
 
@@ -212,7 +216,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_view')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">
                                 Leads
@@ -225,7 +229,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_new')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_new')]" position="inside">
                         <div t-if="record.use_opportunities.raw_value">
                             <a  name="%(action_opportunity_form)d" type="action">
                                 Opportunity
@@ -233,7 +237,7 @@
                         </div>
                     </xpath>
 
-                    <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                    <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                         <div t-if="record.use_leads.raw_value" groups="crm.group_use_lead">
                             <a name="%(action_report_crm_lead_salesteam)d" type="action">
                                 Leads

@@ -90,7 +90,6 @@ QUnit.module('Views', {
         });
     });
 
-
     QUnit.test('default type attribute', function (assert) {
         assert.expect(1);
 
@@ -105,7 +104,6 @@ QUnit.module('Views', {
         assert.strictEqual(graph.renderer.state.mode, "pie", "should be in pie chart mode by default");
         graph.destroy();
     });
-
 
     QUnit.test('switching mode', function (assert) {
         assert.expect(6);
@@ -150,7 +148,7 @@ QUnit.module('Views', {
         });
         return concurrency.delay(0).then(function () {
             assert.ok(!graph.$('svg').length, "should not have a svg");
-            assert.ok(graph.$('.oe_view_nocontent').length, "should have an error message");
+            assert.ok(graph.$('.o_view_nocontent').length, "should have an error message");
             graph.destroy();
             done();
         });
@@ -191,7 +189,6 @@ QUnit.module('Views', {
         });
     });
 
-
     QUnit.test('no content helper', function (assert) {
         var done = assert.async();
         assert.expect(4);
@@ -207,13 +204,13 @@ QUnit.module('Views', {
         return concurrency.delay(0).then(function () {
             assert.ok(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should contain a div with a svg element");
-            assert.notOk(graph.$('div.oe_view_nocontent').length,
+            assert.notOk(graph.$('div.o_view_nocontent').length,
                 "should not display the no content helper");
             graph.update({domain: [['product_id', '=', 4]]});
 
             assert.notOk(graph.$('div.o_graph_svg_container svg.nvd3-svg').length,
                         "should not contain a div with a svg element");
-            assert.ok(graph.$('div.oe_view_nocontent').length,
+            assert.ok(graph.$('div.o_view_nocontent').length,
                 "should display the no content helper");
             graph.destroy();
             done();
@@ -441,6 +438,43 @@ QUnit.module('Views', {
         graph.reload({groupBy: []});
 
         graph.destroy();
+    });
+
+    QUnit.test('initial groupby is kept when reloading', function (assert) {
+        var done = assert.async();
+        assert.expect(4);
+
+        var graph = createView({
+            View: GraphView,
+            model: 'foo',
+            data: this.data,
+            arch: '<graph>' +
+                    '<field name="product_id" type="row"/>' +
+                    '<field name="foo" type="measure"/>' +
+                '</graph>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.groupby, ['product_id'],
+                        "should group by the correct field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+
+        return concurrency.delay(0).then(function () {
+            assert.strictEqual(graph.$('.nv-groups rect').length, 2,
+                "should display two groups");
+
+            graph.reload({groupBy: []});
+            return concurrency.delay(0).then(function () {
+                assert.strictEqual(graph.$('.nv-groups rect').length, 2,
+                    "should still display two groups");
+
+                graph.destroy();
+                done();
+            });
+        });
     });
 });
 

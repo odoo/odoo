@@ -1,0 +1,150 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_stripe
+# 
+# Translators:
+# Sergey Vilizhanin <sv@grimmette.ru>, 2017
+# Эдуард Манятовский <manyatovskiy@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Anishchuk Sergei <anishukserg@l-profit.ru>, 2017
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Anishchuk Sergei <anishukserg@l-profit.ru>, 2017\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
+#, python-format
+msgid "&times;"
+msgstr "&раз;"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer_stripe_image_url
+msgid ""
+"A relative or absolute URL pointing to a square image of your brand or "
+"product. As defined in your Stripe profile. See: "
+"https://stripe.com/docs/checkout"
+msgstr ""
+"Относительный или абсолютный URL, указывающий квадратное изображение вашего "
+"бренда или продукта. Как определено в вашем профиле полосой. См.: "
+"https://stripe.com/docs/checkout"
+
+#. module: payment_stripe
+#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "CVC"
+msgstr "CVC"
+
+#. module: payment_stripe
+#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "Card number"
+msgstr "Номер карты"
+
+#. module: payment_stripe
+#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "Cardholder name"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_image_url
+msgid "Checkout Image URL"
+msgstr "URL изображения оформление заказа"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
+#, python-format
+msgid "Close"
+msgstr "Закрыть"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
+#, python-format
+msgid "Error"
+msgstr "Ошибка"
+
+#. module: payment_stripe
+#: model:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "Expires (MM / YY)"
+msgstr ""
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:32
+#, python-format
+msgid "Just one more second, confirming your payment..."
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Платежи клиентов"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Операция Оплаты"
+
+#. module: payment_stripe
+#. openerp-web
+#: code:addons/payment_stripe/static/src/js/stripe.js:57
+#, python-format
+msgid "Payment error"
+msgstr "Ошибка платежа"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:167
+#, python-format
+msgid ""
+"Perhaps the problem can be solved by double-checking your credit card "
+"details, or contacting your bank?"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_publishable_key
+msgid "Stripe Publishable Key"
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer_stripe_secret_key
+msgid "Stripe Secret Key"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:165
+#, python-format
+msgid "Stripe gave us the following info about the problem: '%s'"
+msgstr ""
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:177
+#, python-format
+msgid "Stripe: %s orders found for reference %s"
+msgstr "Stripe: %s заказы нашли для ссылки %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:173
+#, python-format
+msgid "Stripe: no order found for reference %s"
+msgstr "Stripe: не найдены заказы для ссылки %s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:163
+#, python-format
+msgid "We're sorry to report that the transaction has failed."
+msgstr ""
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "payment.token"
+msgstr "payment.token"

@@ -9,16 +9,30 @@ class ProductTemplate(models.Model):
 
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
+    used_in_bom_count = fields.Integer('# of BoM Where is Used', compute='_compute_used_in_bom_count')
     mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
     produce_delay = fields.Float(
         'Manufacturing Lead Time', default=0.0,
-        help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
+        help="Average lead time in days to manufacture this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added.")
 
     def _compute_bom_count(self):
         read_group_res = self.env['mrp.bom'].read_group([('product_tmpl_id', 'in', self.ids)], ['product_tmpl_id'], ['product_tmpl_id'])
         mapped_data = dict([(data['product_tmpl_id'][0], data['product_tmpl_id_count']) for data in read_group_res])
         for product in self:
             product.bom_count = mapped_data.get(product.id, 0)
+
+    @api.multi
+    def _compute_used_in_bom_count(self):
+        for template in self:
+            template.used_in_bom_count = self.env['mrp.bom'].search_count(
+                [('bom_line_ids.product_id', 'in', template.product_variant_ids.ids)])
+
+    @api.multi
+    def action_used_in_bom(self):
+        self.ensure_one()
+        action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
+        action['domain'] = [('bom_line_ids.product_id', 'in', self.product_variant_ids.ids)]
+        return action
 
     @api.one
     def _compute_mo_count(self):
@@ -38,6 +52,7 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
+    used_in_bom_count = fields.Integer('# BoM Where Used', compute='_compute_used_in_bom_count')
     mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
 
     def _compute_bom_count(self):
@@ -50,6 +65,17 @@ class ProductProduct(models.Model):
                 bom_count = mapped_data.get(product.id, 0)
             product.bom_count = bom_count
 
+    @api.multi
+    def _compute_used_in_bom_count(self):
+        for product in self:
+            product.used_in_bom_count = self.env['mrp.bom'].search_count([('bom_line_ids.product_id', '=', product.id)])
+
+    @api.multi
+    def action_used_in_bom(self):
+        self.ensure_one()
+        action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
+        action['domain'] = [('bom_line_ids.product_id', '=', self.id)]
+        return action
 
     def _compute_mo_count(self):
         read_group_res = self.env['mrp.production'].read_group([('product_id', 'in', self.ids)], ['product_id'], ['product_id'])
@@ -66,5 +92,5 @@ class ProductProduct(models.Model):
             'default_product_tmpl_id': template_ids[0],
             'default_product_id': self.ids[0],
         }
-        action['domain'] = ['|', ('product_id', 'in', [self.ids]), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
+        action['domain'] = ['|', ('product_id', 'in', self.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', template_ids)]
         return action

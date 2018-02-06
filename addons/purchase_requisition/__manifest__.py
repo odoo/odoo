@@ -19,7 +19,7 @@ are agreements you have with vendors to benefit from a predetermined pricing.
         'security/ir.model.access.csv',
         'data/purchase_requisition_data.xml',
         'views/purchase_requisition_views.xml',
-        'views/purchase_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'report/purchase_requisition_report.xml',
         'report/report_purchaserequisition.xml',
     ],

@@ -5,16 +5,14 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2017
-# fausthuang <faust_huang@hotmail.com>, 2017
-# liAnGjiA <liangjia@qq.com>, 2017
-# niulinlnc <admin@niulin.net>, 2017
+# niulin lnc. <admin@niulin.net>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: niulinlnc <admin@niulin.net>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: niulin lnc. <admin@niulin.net>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,8 +31,24 @@ msgid "API Transaction Key"
 msgstr "API 事务密匙"
 
 #. module: payment_authorize
+#: code:addons/payment_authorize/models/authorize_request.py:67
+#, python-format
+msgid ""
+"Authorize.net Error Message(s):\n"
+" %s"
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token_authorize_profile
 msgid "Authorize.net Profile ID"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:167
+#, python-format
+msgid ""
+"Authorize: received data with missing reference (%s) or trans_id (%s) or "
+"fingerprint (%s)"
 msgstr ""
 
 #. module: payment_authorize
@@ -49,30 +63,18 @@ msgstr "卡号"
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Confirm <span class=\"fa fa-long-arrow-right\"/>"
-msgstr "确认<span class=\"fa fa-long-arrow-right\"/>"
+msgid "Cardholder name"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Expires"
-msgstr "过期"
+msgid "Expires (MM / YY)"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
-msgid ""
-"How to configure your Authorize.Net account (look for Getting Started Guide)"
-" ?"
-msgstr "如何配置你的Authorize.Net账户(可以查看启动向导)?"
-
-#. module: payment_authorize
-#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "MM / YY"
-msgstr "月/年"
-
-#. module: payment_authorize
-#: model:ir.ui.view,arch_db:payment_authorize.authorize_s2s_form
-msgid "Name"
-msgstr "名称"
+msgid "How to get paid with Authorize.Net"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -85,10 +87,35 @@ msgid "Payment Transaction"
 msgstr "付款交易"
 
 #. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_provider
+msgid "Provider"
+msgstr "服务商"
+
+#. module: payment_authorize
+#: model:ir.model.fields,field_description:payment_authorize.field_payment_token_save_token
+msgid "Save Cards"
+msgstr ""
+
+#. module: payment_authorize
+#: code:addons/payment_authorize/models/payment.py:372
+#, python-format
+msgid "The Customer Profile creation in Authorize.NET failed."
+msgstr ""
+
+#. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_token_authorize_profile
 msgid ""
 "This contains the unique reference for this partner/payment token "
 "combination in the Authorize.net backend"
+msgstr ""
+
+#. module: payment_authorize
+#: model:ir.model.fields,help:payment_authorize.field_payment_token_save_token
+msgid ""
+"This option allows customers to save their credit card as a payment token "
+"and to reuse it for a later purchase.If you manage subscriptions (recurring "
+"invoicing), you need it to automatically charge the customer when you issue "
+"an invoice."
 msgstr ""
 
 #. module: payment_authorize

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
-import urllib2
+
+import requests
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -10,11 +11,9 @@ from odoo.exceptions import UserError
 def geo_find(addr):
     if not addr:
         return None
-    url = 'https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address='
-    url += urllib2.quote(addr.encode('utf8'))
-
+    url = 'https://maps.googleapis.com/maps/api/geocode/json'
     try:
-        result = json.load(urllib2.urlopen(url))
+        result = requests.get(url, params={'sensor': 'false', 'address': addr}).json()
     except Exception as e:
         raise UserError(_('Cannot contact geolocation servers. Please make sure that your Internet connection is up and running (%s).') % e)
 
@@ -33,10 +32,10 @@ def geo_query_address(street=None, zip=None, city=None, state=None, country=None
         # put country qualifier in front, otherwise GMap gives wrong results,
         # e.g. 'Congo, Democratic Republic of the' => 'Democratic Republic of the Congo'
         country = '{1} {0}'.format(*country.split(',', 1))
-    return tools.ustr(', '.join(filter(None, [street,
-                                              ("%s %s" % (zip or '', city or '')).strip(),
-                                              state,
-                                              country])))
+    return tools.ustr(', '.join(
+        field for field in [street, ("%s %s" % (zip or '', city or '')).strip(), state, country]
+        if field
+    ))
 
 
 class ResPartner(models.Model):

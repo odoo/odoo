@@ -35,14 +35,14 @@
                         <field name="scheduled_date"/>
                     </group>
                     <group expand="1" string="Group By...">
-                        <filter string="Mass Mailing Campaign"
+                        <filter string="Mass Mailing Campaign" name="mass_mailing_campaign"
                             domain="[]" context="{'group_by':'campaign'}"/>
-                        <filter string="State" domain="[]"
+                        <filter string="State" domain="[]" name="state"
                             context="{'group_by':'state'}"/>
-                        <filter string="Sent By" domain="[]"
+                        <filter string="Sent By" domain="[]" name="sent_by"
                             context="{'group_by':'email_from'}"/>
                         <separator/>
-                        <filter string="Scheduled Month"
+                        <filter string="Scheduled Month" name="scheduled_month"
                             domain="[]" context="{'group_by':'scheduled_date:month'}"/>
                     </group>
                 </search>

@@ -9,7 +9,7 @@
 @o-we-color-divider: #33363e;
 @o-we-color-light: #4e525b;
 @o-we-color-normal: #50545d;
-@o-we-color-paper: #fbfbfd;
+@o-we-color-paper: #fcfcfc;
 @o-we-color-text-normal: #999999;
 @o-we-color-text-light: #d4d5d7;
 @o-we-color-danger: #e6586c;
@@ -24,64 +24,23 @@
 // Transitions
 @o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1);
 
-// Animations
-@-webkit-keyframes fadeInDownSmall {
-    0% {
-        opacity: 0;
-        .translate(0, -5px);
-    }
-    100% {
-        opacity: 1;
-        .translate(0, 0);
-    }
-}
-@keyframes fadeInDownSmall {
-    0% {
-        opacity: 0;
-        .translate(0, -5px);
-    }
-    100% {
-        opacity: 1;
-        .translate(0, 0);
-    }
+// ============    'Preview' component Mixins    ===============
+// Create a "preview" work-area to edit/customize specific elements
+
+.o-we-preview-box(@padding: 0px 25px 25px 25px, @color-text: white) {
+    padding: @padding;
+    border-top: 1px solid black;
+    border-bottom: 1px solid white;
+    .o-linear-gradient(-150deg, @o-we-color-dark, @o-we-color-darker);
+
+    color:  @color-text;
 }
 
-@-webkit-keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    75% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    75% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@-webkit-keyframes inputHighlighter {
-    from { background: @odoo-brand-optional; }
-    to   { width: 0; background: transparent; }
-}
-@keyframes inputHighlighter {
-    from { background: @odoo-brand-optional; }
-    to   { width: 0; background: transparent; }
+.o-we-preview-content() {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    box-shadow: 0 0 15px 2px #000;
 }
 
 
@@ -115,6 +74,12 @@
             outline: none!important;
         }
     }
+
+    .label {
+        &:hover a, a {
+            color: #fff;
+        }
+    }
 }
 
 .o-w-preserve-forms() {
@@ -127,6 +92,13 @@
         color: #555;
         background-color: #fff;
         border-radius: 0;
+    }
+
+    select.form-control {
+        .o-appearance(none);
+        background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1 sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyNCcgaGVpZ2 h0PScyNCcgdmlld0JveD0nMCAwIDI0IDI0Jz48cGF0aCBpZD0nc3ZnXzEnIGQ9J203LjQwNiw3L jgyOGw0LjU5NCw0LjU5NGw0LjU5NCwtNC41OTRsMC40MDYsMS40MDZsLTUsNC43NjZsLTUsLTQu NzY2bDAuNDA2LC0xLjQwNnonIGZpbGw9JyM4ODgnLz48L3N2Zz4=');
+        background-position: 100% 65%;
+        background-repeat: no-repeat;
     }
 }
 
@@ -146,6 +118,31 @@
     }
 }
 
+.o-w-preserve-tabs() {
+    .nav-tabs {
+        border-bottom: 1px solid @gray-lighter;
+
+        > li  {
+            > a {
+                line-height: 1.42857143;
+                color: @o-we-color-light;
+                &:hover {
+                    border-color: @gray-lighter;
+                }
+            }
+
+            &.active > a {
+                &, &:hover, &:focus {
+                    color: @o-we-color-normal;
+                    background-color: @o-we-color-paper;
+                    border-color: @gray-lighter;
+                    border-bottom-color: transparent;
+                }
+            }
+        }
+    }
+}
+
 .o-w-preserve-btn() {
     .btn:not(.o_btn_preview) {
         border-width: 1px;
@@ -155,11 +152,9 @@
 
         &.btn-primary {
             .button-variant(white, @odoo-brand-optional, darken(@odoo-brand-optional,5%));
-            text-transform: uppercase;
         }
         &.btn-default {
-            .button-variant(@odoo-brand-optional, white, @o-we-color-text-light);
-            text-transform: uppercase;
+            .button-variant(@o-we-color-normal, white, @o-we-color-text-light);
         }
         &.btn-link {
             .button-variant(@odoo-brand-optional, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));

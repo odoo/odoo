@@ -9,15 +9,13 @@
     'summary': 'Allow cashier to reprint receipts',
     'description': """
 
-=======================
-
 Allow cashier to reprint receipts
 
 """,
     'depends': ['point_of_sale'],
     'data': [
         'views/pos_reprint_templates.xml',
-        'views/pos_config_views.xml',
+        'views/pos_config_views.xml'
     ],
     'qweb': [
         'static/src/xml/reprint.xml',

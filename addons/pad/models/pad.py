@@ -5,7 +5,8 @@ import logging
 import random
 import re
 import string
-import urllib2
+
+import requests
 
 from odoo import api, models, _
 from odoo.exceptions import UserError
@@ -52,7 +53,7 @@ class PadCommon(models.AbstractModel):
             myPad = EtherpadLiteClient(pad["key"], pad["server"] + '/api')
             try:
                 myPad.createPad(path)
-            except urllib2.URLError:
+            except IOError:
                 raise UserError(_("Pad creation failed, either there is a problem with your pad server URL or with your connection."))
 
             # get attr on the field model
@@ -81,14 +82,18 @@ class PadCommon(models.AbstractModel):
             path = len(split_url) == 2 and split_url[1]
             try:
                 content = myPad.getHtml(path).get('html', '')
-            except urllib2.HTTPError:
+            except IOError:
                 _logger.warning('Http Error: the credentials might be absent for url: "%s". Falling back.' % url)
-                page = urllib2.urlopen('%s/export/html' % url).read()
-                mo = re.search('<body>(.*)</body>', page, re.DOTALL)
-                if mo:
-                    content = mo.group(1)
-            except Exception:
-                _logger.warning("No pad found with url '%s'.", url)
+                try:
+                    r = requests.get('%s/export/html' % url)
+                    r.raise_for_status()
+                except Exception:
+                    _logger.warning("No pad found with url '%s'.", url)
+                else:
+                    mo = re.search('<body>(.*)</body>', r.content.decode(), re.DOTALL)
+                    if mo:
+                        content = mo.group(1)
+
         return content
 
     # TODO
@@ -106,7 +111,9 @@ class PadCommon(models.AbstractModel):
 
         # In case the pad is created programmatically, the content is not filled in yet since it is
         # normally initialized by the JS layer
-        for k, field in self._fields.iteritems():
+        if self.env.context.get('pad_no_create', False):
+            return pad
+        for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and k not in vals:
                 ctx = {
                     'model': self._name,
@@ -119,15 +126,17 @@ class PadCommon(models.AbstractModel):
 
     # Set the pad content in vals
     def _set_pad_value(self, vals):
+
         # Update the pad if the `pad_content_field` is modified
-        for k, field in self._fields.iteritems():
+        for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field') and vals.get(field.pad_content_field) and self[k]:
                 company = self.env.user.sudo().company_id
                 myPad = EtherpadLiteClient(company.pad_key, company.pad_server + '/api')
                 path = self[k].split('/p/')[1]
                 myPad.setHtmlFallbackText(path, vals[field.pad_content_field])
+
         # Update the `pad_content_field` if the pad is modified
-        for k, v in vals.items():
+        for k, v in list(vals.items()):
             field = self._fields.get(k)
             if hasattr(field, 'pad_content_field'):
                 vals[field.pad_content_field] = self.pad_get_content(v)
@@ -137,8 +146,11 @@ class PadCommon(models.AbstractModel):
         self.ensure_one()
         if not default:
             default = {}
-        for k, field in self._fields.iteritems():
+        for k, field in self._fields.items():
             if hasattr(field, 'pad_content_field'):
-                pad = self.pad_generate_url()
-                default[k] = pad.get('url')
+                if self.env.context.get('pad_no_create', False):
+                    default[k] = ''
+                else:
+                    pad = self.pad_generate_url()
+                    default[k] = pad.get('url')
         return super(PadCommon, self).copy(default)

@@ -9,10 +9,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +48,7 @@ msgid "#Questions"
 msgstr "#Vragen"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:125
+#: code:addons/survey/models/survey.py:122
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -205,6 +205,12 @@ msgstr ""
 "                        Sorry, nog niemand heeft deze enquête beantwoord"
 
 #. module: survey
+#: code:addons/survey/models/survey.py:687
+#, python-format
+msgid "A label must be attached to one and only one question"
+msgstr "Een label mag slechts aan een vraag gekoppeld zijn"
+
+#. module: survey
 #: sql_constraint:survey.question:0
 msgid "A length must be positive!"
 msgstr "Lengte moet positief zijn!"
@@ -229,7 +235,7 @@ msgid "A problem has occured"
 msgstr "Er heeft zich een probleem voorgedaan"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:809
+#: code:addons/survey/models/survey.py:806
 #, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr "Een vraag moet ingevuld worden en kan niet overgeslagen worden"
@@ -247,16 +253,16 @@ msgstr "Actief"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"Add list of email of recipients (will not converted in partner), separated "
-"by commas, semicolons or newline..."
+"Add a list of email of recipients (will not be converted into contacts). "
+"Separated by commas, semicolons or newline..."
 msgstr ""
-"Voeg een e-mail lijst toe van de geadresseerden (wordt niet toegevoegd aan "
-"relaties in odoo), gescheiden door komma's, puntkomma's of nieuwe regel ..."
+"Voeg een lijst met e-mail van ontvangers toe (wordt niet omgezet in "
+"contacten). Gescheiden door komma's, puntkomma's of nieuwe regels ..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Add list of existing contacts..."
-msgstr "Voeg lijst van bestaande contacten toe..."
+msgid "Add existing contacts..."
+msgstr "Voeg bestaande contacten toe..."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -339,7 +345,7 @@ msgid "Choose..."
 msgstr "Kies..."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:113
+#: code:addons/survey/models/survey.py:110
 #, python-format
 msgid "Click here to start survey"
 msgstr "Klik hier om de enquête te starten"
@@ -360,6 +366,11 @@ msgstr "Sluiten"
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
 msgstr "Afgesloten"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_kanban
+msgid "Color"
+msgstr "Kleur"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
@@ -451,14 +462,10 @@ msgid "Creation Date"
 msgstr "Aanmaakdatum"
 
 #. module: survey
+#: selection:survey.question,type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "Datum"
-
-#. module: survey
-#: selection:survey.question,type:0
-msgid "Date and Time"
-msgstr "Datum en tijd"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_date
@@ -646,7 +653,7 @@ msgstr ""
 "Indien gesloten kunnen mensen niet antwoorden op enquêtes in deze kolom."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:474
+#: code:addons/survey/models/survey.py:471
 #, python-format
 msgid "If other, please specify:"
 msgstr "Indien anders, specificeer: "
@@ -662,10 +669,10 @@ msgid "In progress"
 msgstr "In behandeling"
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:66
+#: code:addons/survey/wizard/survey_email_compose_message.py:68
 #, python-format
 msgid "Incorrect Email Address: %s"
-msgstr "Incorrect E-mailadres: %s"
+msgstr "Foutief e-mailadres: %s"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
@@ -738,6 +745,11 @@ msgstr "Laatst bijgewerkt op"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_last_displayed_page_id
 msgid "Last displayed page"
 msgstr "Laatst weergegeven pagina"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Late Activities"
+msgstr "Te late activiteiten"
 
 #. module: survey
 #: selection:survey.user_input,type:0
@@ -947,11 +959,6 @@ msgstr "één keuze per rij"
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
 msgstr "Opties"
-
-#. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Overdue Activities"
-msgstr "Activiteiten over tijd"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_page_id
@@ -1254,7 +1261,7 @@ msgstr "Toon commentaar veld"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1415,7 +1422,7 @@ msgstr "Enquête pagina"
 #. module: survey
 #: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
 msgid "Survey: Clean test answers"
-msgstr ""
+msgstr "Enquête: schone test antwoorden"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -1433,7 +1440,7 @@ msgstr "Test"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
 msgid "Test Entry"
-msgstr ""
+msgstr "Test invoer"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
@@ -1461,19 +1468,19 @@ msgid "Thanks Message"
 msgstr "Bedanktbericht"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:822
+#: code:addons/survey/models/survey.py:819
 #, python-format
 msgid "The answer must be in the right type"
 msgstr "Het antwoord moet van het juiste type zijn"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:488
+#: code:addons/survey/models/survey.py:485
 #, python-format
 msgid "The answer you entered has an invalid format."
 msgstr "Het antwoord dat u heeft ingevuld heeft een ongeldig formaat."
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:138
+#: code:addons/survey/wizard/survey_email_compose_message.py:139
 #, python-format
 msgid ""
 "The content of the text don't contain '__URL__'.                     __URL__"
@@ -1488,21 +1495,21 @@ msgid "The deadline cannot be in the past"
 msgstr "De deadline kan niet in het verleden zijn"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:547
+#: code:addons/survey/models/survey.py:544
 #: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr "Dit antwoord moet een geildig e-mailadres zijn"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:591
+#: code:addons/survey/models/survey.py:588
 #: code:addons/survey/tests/test_survey.py:107
 #, python-format
-msgid "This is not a date/time"
-msgstr "Dit is geen datum/tijd"
+msgid "This is not a date"
+msgstr "Dit is niet een datum"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:568
+#: code:addons/survey/models/survey.py:565
 #: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
@@ -1524,7 +1531,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr "Dit bericht wordt getoond als de enquête voltooid is"
 
 #. module: survey
-#: code:addons/survey/models/survey.py:492
+#: code:addons/survey/models/survey.py:489
 #, python-format
 msgid "This question requires an answer."
 msgstr "Deze vraagt moet beantwoord worden."
@@ -1577,8 +1584,8 @@ msgstr "Type antwoorden"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_survey_view_search
-msgid "Upcoming Activities (7 days)"
-msgstr ""
+msgid "Upcoming Activities"
+msgstr "Aankomende activiteiten"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1669,17 +1676,12 @@ msgid "Vote"
 msgstr "Stem"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.datetime
-msgid "YYYY-MM-DD hh:mm:ss"
-msgstr "YYYY-MM-DD hh:mm:ss"
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"YYYY-MM-DD hh:mm:ss\n"
+"YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
-"YYYY-MM-DD hh:mm:ss\n"
+"YYYY-MM-DD\n"
 "                                            <i class=\"fa fa-calendar fa-2x\"/>"
 
 #. module: survey
@@ -1707,7 +1709,7 @@ msgstr ""
 "geval, moet de instelling \"Login nodig\" worden uitgeschakeld)."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:319
+#: code:addons/survey/models/survey.py:316
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
@@ -1715,7 +1717,7 @@ msgstr ""
 "vragen heeft."
 
 #. module: survey
-#: code:addons/survey/models/survey.py:322
+#: code:addons/survey/models/survey.py:319
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr "Het is niet mogelijk uitnodigingen versturen voor gesloten enquêtes."

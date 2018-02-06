@@ -4,7 +4,7 @@
 {
     'name': 'Default Theme',
     'description': 'Default website theme to showcase customization possibilities.',
-    'category': 'Theme/Hidden',
+    'category': 'Theme/Corporate',
     'sequence': 1000,
     'version': '1.0',
     'depends': ['website'],
@@ -14,6 +14,7 @@
     ],
     'images': [
         'static/description/cover.png',
+        'static/description/theme_default_screenshot.jpg',
     ],
     'application': False,
 }

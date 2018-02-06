@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.crm</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="CRM" string="CRM" data-key="crm" groups="sales_team.group_sale_manager">
+                    <h2>CRM</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead"
+                            title="Use leads if you need a qualification step before creating an opportunity or a customer. It can be a business card you received, a contact form filled in your website, or a file of unqualified prospects you import, etc. Once qualified, the lead can be converted into a business opportunity and/or a new customer in your address book.">
+                            <div class="o_setting_left_pane">
+                                <field name="group_use_lead"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_use_lead"/>
+                                <div class="text-muted">
+                                    Add a qualification step before creating an opportunity
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box" id="crm_lead"
+                                attrs="{'invisible': [('group_use_lead','=',False)]}"
+                                title="Emails received to that address generate new leads not assigned to any sales channel yet. This can be made when converting them into opportunities. Incoming emails can be automatically assigned to specific sales channels. To do so, set an email alias on the sales channel."
+                                groups="base.group_no_one">
+                            <div class="o_setting_left_pane">
+                                <field name="generate_lead_from_alias"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label string="Manual Assignation of Incoming Emails"/>
+                                <div class="text-muted">
+                                    Generate leads from incoming emails and assign them
+                                    to a sales channel manually
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('generate_lead_from_alias','=',False)]}">
+                                    <div class="mt16">
+                                        <label string="Alias" class="o_light_label"/>
+                                        <field name="crm_alias_prefix" class="oe_inline"
+                                            attrs="{'required': [('generate_lead_from_alias', '=', True)]}"/>
+                                        <span>@</span>
+                                        <field name="alias_domain" readonly="1" class="oe_inline"/>
+                                    </div>
+                                    <div attrs="{'invisible': [('alias_domain', 'not in', ['localhost', '', False])]}">
+                                        <button type="action"
+                                            name="base_setup.action_general_configuration"
+                                            string="Use an External Email Server" icon="fa-arrow-right" class="oe_link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Contacts</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-md-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_crm_phone_validation"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_crm_phone_validation"/>
+                                <div class="text-muted" id="module_crm_phone_validation">
+                                    Validate and normalize phone numbers
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box" title="When populating your address book, Odoo relies on Clearbit’s API to provide you with a list of matching contacts or companies.When selecting one item, the partner name, logo and website get automatically set.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_web_clearbit" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_web_clearbit"/>
+                                <div class="text-muted">
+                                    Look up company information (name, logo, etc.)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form"/>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'crm'}</field>
+    </record>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Portal Assets">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/less" href="/portal/static/src/less/bootstrap.extend.less"/>
+            <link rel="stylesheet" type="text/less" href="/portal/static/src/less/portal.less"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/portal/static/src/js/portal.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_tour.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_chatter.js"></script>
+            <script type="text/javascript" src="/portal/static/src/js/portal_signature.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_common" inherit_id="web.assets_common" name="Portal Common Assets">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
+        </xpath>
+    </template>
+</odoo>

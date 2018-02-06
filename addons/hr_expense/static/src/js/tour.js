@@ -6,34 +6,48 @@ var tour = require('web_tour.tour');
 
 var _t = core._t;
 
-tour.register('hr_expense_tour', [{
+tour.register('hr_expense_tour' ,
+{
+    url: "/web"
+},
+[tour.STEPS.MENU_MORE,
+{
     trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"], .oe_menu_toggler[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
-    content: _t("Want to manage your employee expenses and receipts? <i>Start here</i>."),
+    content: _t("Want to manage your expenses? It starts here."),
     position: 'bottom',
 }, {
-    trigger: 'a#o_mail_test',
-    content: _t("Click to try <b>submitting an expense by email</b>. You can attach a photo of the receipt to the mail."),
+    trigger: '.o_list_button_add',
+    extra_trigger: ".o_expense_tree",
+    content: _t('<p>Let’s start by creating your first expense.</p>'),
+    position: 'bottom'
+}, {
+    trigger: '.o_form_button_save',
+    extra_trigger: ".o_expense_sheet",
+    content: _t("<p>Once your <b>Expense report</b> is ready, you can save it and wait for the approval from your manager.</p>"),
+    position: 'bottom',
+}, {
+    trigger: '.o_expense_form .o_chatter_button_new_message',
+    content: _t("Attach your receipt here."),
+    position: 'top',
+}, {
+    trigger: '.o_expense_tree .o_checkbox > input[type=checkbox]',
+    content: _t('<p>Select expenses to submit them to your manager</p>'),
+    position: 'bottom'
+}, {
+    trigger: '.o_dropdown_toggler_btn',
+    extra_trigger: ".o_expense_tree",
+    content: _t('<p>Click on <b> Action Submit To Manager </b> to submit selected expenses to your manager</p>'),
     position: 'right',
 }, {
-    trigger: '.o_expense_submit:visible',
-    content: _t("<p>Once completed, you can <b>submit the expense</b> for approval.</p><p><i>Tip: from the list view, select all expenses to submit them all at once, in a single report.</i></p>"),
-    extra_trigger: '.o_form_readonly',
+    trigger: '.o_expense_sheet_approve',
+    content: _t("<p>Approve the sheet here.</p><p>Tip: if you refuse, don’t forget to give the reason thanks to the hereunder message tool</p>"),
     position: 'bottom',
 }, {
-    trigger: '.o_form_button_save:visible',
-    extra_trigger: '.o_expense_sheet',
-    content: _t("Save the report, your manager will receive a notification by email to approve it."),
-    position: 'right',
-}, {
-    trigger: '.o_expense_sheet_approve:visible',
-    content: _t("<p>Managers can validate or refuse expense reports.</p><p>If you refuse a report, explain the reason using the <i>New Message</i> button in the bottom.</p>"),
-    position: 'bottom',
-}, {
-    trigger: '.o_expense_sheet_post:visible',
+    trigger: '.o_expense_sheet_post',
     content: _t("<p>The accountant receive approved expense reports.</p><p>He can post journal entries in one click if taxes and accounts are right.</p>"),
     position: 'bottom',
 }, {
-    trigger: '.o_expense_sheet_pay:visible',
+    trigger: '.o_expense_sheet_pay',
     content: _t("The accountant can register a payment to reimburse the employee directly."),
     position: 'bottom',
 }, {

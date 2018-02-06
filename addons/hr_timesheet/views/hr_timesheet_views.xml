@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="timesheet_menu_root"
+            name="Timesheets"
+            sequence="55"
+            groups="group_hr_timesheet_user"
+            web_icon="hr_timesheet,static/description/icon_timesheet.png"/>
+
+        <menuitem id="menu_hr_time_tracking"
+            name="Timesheet"
+            parent="timesheet_menu_root"
+            sequence="5"/>
+
+        <!--
+            Timesheet line Views
+        -->
+        <record id="hr_timesheet_line_tree" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.hr_timesheet</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <tree editable="top" string="Timesheet Activities" import="false">
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="project_id" required="1"/>
+                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="unit_amount" string="Time (Hours)" sum="Total time" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="timesheet_view_tree_user" model="ir.ui.view">
+            <field name="name">account.analytic.line.view.tree.with.user</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet_line_tree"/>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                    <field name="user_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_timesheet_line_pivot" model="ir.ui.view">
+            <field name="name">account.analytic.line.pivot</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Timesheet">
+                    <field name="employee_id" type="row"/>
+                    <field name="date" interval="month" type="col"/>
+                    <field name="unit_amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_line_form" model="ir.ui.view">
+            <field name="name">account.analytic.line.form</field>
+            <field name="model">account.analytic.line</field>
+            <field name="priority">1</field>
+            <field name="inherit_id" eval="False"/>
+            <field name="arch" type="xml">
+                <form string="Analytic Entry">
+                    <sheet string="Analytic Entry">
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="name"/>
+                                <field name="project_id" required="1"/>
+                                <field name="task_id" domain="[('project_id', '=', project_id)]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                                <field name="unit_amount"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="timesheet_view_form_user" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.with.user</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='company_id']" position="before">
+                    <field name="employee_id" required="1" options='{"no_open": True}'/>
+                    <field name="user_id" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="timesheet_view_calendar" model="ir.ui.view">
+            <field name="name">account.analytic.line.calendar</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <calendar string="Timesheets" date_start="date" color="employee_id">
+                    <field name="name"/>
+                    <field name="project_id"/>
+                </calendar>
+            </field>
+        </record>
+
+        <record id="hr_timesheet_line_search" model="ir.ui.view">
+            <field name="name">account.analytic.line.search</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <search string="Timesheet">
+                    <field name="date"/>
+                    <field name="employee_id"/>
+                    <field name="project_id"/>
+                    <field name="task_id"/>
+                    <field name="name"/>
+                    <filter name="mine" string="My Timesheets" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter name="week" string="This Week"
+                            domain="[
+                                '&amp;',
+                                ('date', '>=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
+                                ('date', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
+                            ]"/>
+                    <filter name="month" string="This Month"
+                            domain="[
+                                '&amp;',
+                                ('date', '>=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                ('date', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
+                            ]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Employee" name="groupby_employee" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Project" name="groupby_project" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Task" name="groupby_task" domain="[]" context="{'group_by':'task_id'}"/>
+                        <filter string="Timesheet Month" name="groupby_date" domain="[]" context="{'group_by':'date'}" help="Timesheet by Month"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="view_kanban_account_analytic_line" model="ir.ui.view">
+            <field name="name">account.analytic.line.kanban</field>
+            <field name="model">account.analytic.line</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="name"/>
+                    <field name="project_id"/>
+                    <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="unit_amount"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="row">
+                                    <div class="col-xs-2">
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="40" height="40" class="oe_kanban_avatar pull-left"/>
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <div>
+                                            <strong><t t-esc="record.project_id.value"/></strong>
+                                        </div>
+                                        <div class="text-muted">
+                                            <span>
+                                                <t t-esc="record.name.value"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <span>
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    <t t-esc="record.date.value"/>
+                                </span>
+                                <span class="pull-right">
+                                    <strong>Duration: </strong><field name="unit_amount" widget="float_time"/>
+                                </span>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!--
+            Menus and Actions
+        -->
+        <record id="act_hr_timesheet_line" model="ir.actions.act_window">
+            <field name="name">My Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
+            <field name="context">{"search_default_week":1}</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
+              </p><p>
+                You can register and track your workings hours by project every
+                day. Every time spent on a project will become a cost and can be re-invoiced to
+                customers if required.
+              </p>
+            </field>
+        </record>
+
+        <record id="act_hr_timesheet_line_view_tree" model="ir.actions.act_window.view">
+            <field name="view_mode">tree</field>
+            <field name="sequence" eval="4"/>
+            <field name="view_id" ref="hr_timesheet_line_tree"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_view_form" model="ir.actions.act_window.view">
+            <field name="view_mode">form</field>
+            <field name="sequence" eval="5"/>
+            <field name="view_id" ref="hr_timesheet_line_form"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record id="act_hr_timesheet_line_view_kanban" model="ir.actions.act_window.view">
+            <field name="view_mode">kanban</field>
+            <field name="sequence">3</field>
+            <field name="view_id" ref="hr_timesheet.view_kanban_account_analytic_line"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <record id="timesheet_action_view_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="8"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="timesheet_view_calendar"/>
+            <field name="act_window_id" ref="act_hr_timesheet_line"/>
+        </record>
+
+        <menuitem id="timesheet_menu_activity_mine"
+            name="My Timesheets"
+            parent="menu_hr_time_tracking"
+            action="act_hr_timesheet_line"/>
+
+        <record id="timesheet_action_all" model="ir.actions.act_window">
+            <field name="name">All Timesheets</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="search_view_id" ref="hr_timesheet_line_search"/>
+            <field name="domain">[('project_id', '!=', False)]</field>
+            <field name="context">{
+                'search_default_week':1,
+                'search_default_groupby_employee':1,
+                'search_default_groupby_project':1,
+                'search_default_groupby_task':1
+            }</field>
+        </record>
+
+        <record id="timesheet_action_view_all_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="4"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="timesheet_view_tree_user"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
+        <record id="timesheet_action_view_all_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="5"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="timesheet_view_form_user"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
+        <record id="timesheet_action_view_all_calendar" model="ir.actions.act_window.view">
+            <field name="sequence" eval="8"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="timesheet_view_calendar"/>
+            <field name="act_window_id" ref="timesheet_action_all"/>
+        </record>
+
+        <menuitem id="timesheet_menu_activity_all"
+            name="All Timesheets"
+            parent="menu_hr_time_tracking"
+            action="timesheet_action_all"/>
+
+    </data>
+</odoo>

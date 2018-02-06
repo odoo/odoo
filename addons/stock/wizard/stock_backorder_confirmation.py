@@ -2,37 +2,33 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools.float_utils import float_compare
 
 
 class StockBackorderConfirmation(models.TransientModel):
     _name = 'stock.backorder.confirmation'
     _description = 'Backorder Confirmation'
 
-    pick_id = fields.Many2one('stock.picking')
-
-    @api.model
-    def default_get(self, fields):
-        res = super(StockBackorderConfirmation, self).default_get(fields)
-        if 'pick_id' in fields and self._context.get('active_id') and not res.get('pick_id'):
-            res = {'pick_id': self._context['active_id']}
-        return res
+    pick_ids = fields.Many2many('stock.picking', 'stock_picking_backorder_rel')
 
     @api.one
     def _process(self, cancel_backorder=False):
-        operations_to_delete = self.pick_id.pack_operation_ids.filtered(lambda o: o.qty_done <= 0)
-        for pack in self.pick_id.pack_operation_ids - operations_to_delete:
-            pack.product_qty = pack.qty_done
-        operations_to_delete.unlink()
-        self.pick_id.do_transfer()
         if cancel_backorder:
-            backorder_pick = self.env['stock.picking'].search([('backorder_id', '=', self.pick_id.id)])
-            backorder_pick.action_cancel()
-            self.pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (backorder_pick.name))
+            for pick_id in self.pick_ids:
+                moves_to_log = {}
+                for move in pick_id.move_lines:
+                    if float_compare(move.product_uom_qty, move.quantity_done, move.product_uom.rounding) > 0:
+                        moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
+                pick_id._log_less_quantities_than_expected(moves_to_log)
+        self.pick_ids.action_done()
+        if cancel_backorder:
+            for pick_id in self.pick_ids:
+                backorder_pick = self.env['stock.picking'].search([('backorder_id', '=', pick_id.id)])
+                backorder_pick.action_cancel()
+                pick_id.message_post(body=_("Back order <em>%s</em> <b>cancelled</b>.") % (backorder_pick.name))
 
-    @api.multi
     def process(self):
         self._process()
 
-    @api.multi
     def process_cancel_backorder(self):
         self._process(cancel_backorder=True)

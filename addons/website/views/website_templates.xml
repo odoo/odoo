@@ -2,11 +2,13 @@
 <odoo>
 <!-- Assets -->
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" href="/website/static/src/less/website.backend.less"/>
+    </xpath>
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.backend.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.backendDashboard.js"></script>
-        <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
+        <script type="text/javascript" src="/website/static/src/js/backend/dashboard.js"/>
+        <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
     </xpath>
 </template>
 
@@ -18,18 +20,22 @@
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.wrapwrap.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/bootstrap.extend.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/website/static/src/js/website.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.share.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.snippets.animation.js"></script>
-        <script type="text/javascript" src="/website/static/src/js/website.zoomodoo.js"></script>
+        <script type="text/javascript" src="/website/static/src/js/utils.js"/>
+        <script type="text/javascript" src="/website/static/src/js/website.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/lazy_template_call.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/menu.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/snippets.animation.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
+        <script type="text/javascript" src="/website/static/src/js/content/zoomodoo.js"/>
+
+        <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
     </xpath>
 </template>
 
@@ -38,35 +44,39 @@
 
     <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.edit_mode.less"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.tour.rte.js"></script>
+    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.editor.js"></script>
-    <script type="text/javascript" src="/website/static/lib/jQuery.transfo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.mobile.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.seo.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.tour.banner.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.ace.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.translator.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.theme.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/web_planner_website.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.contentMenu.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.editor.js"></script>
-    <script type="text/javascript" src="/website/static/src/js/website.snippets.gallery.js"></script>
+    <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/edit.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/mobile_view.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
+    <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/rte.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
+    <script type="text/javascript" src="/website/static/src/js/widgets/theme.js"/>
 </template>
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <li t-if="not submenu.child_id" t-att-class="
-        'active' if submenu.url and submenu.url != '/' and request.httprequest.path == submenu.url.replace('/page/website.', '/page/') else None
+    <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="
+        'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
         ">
-        <a t-att-href="(website.menu_id.child_id[0] == submenu) and '/' or submenu.url" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
+        <a t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id" t-attf-class="dropdown #{
-        (submenu.url and submenu.url != '/' and any([request.httprequest.path == child.url.replace('/page/website.', '/page/') for child in submenu.child_id if child.url]) or
-         (submenu.url and request.httprequest.path == submenu.url.replace('/page/website.', '/page/'))) and 'active'
+    <li t-if="submenu.is_visible and submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
+        (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
+         (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <span t-field="submenu.name"/> <span class="caret" t-ignore="true"></span>
@@ -79,8 +89,8 @@
     </li>
 </template>
 
-<template id="layout" name="Main layout">
-    <t t-call="web.layout">
+<template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
+    <xpath expr="//t[@t-set='head_website']" position="before">
         <t t-set="html_data" t-value="{
             'lang': lang and lang.replace('_', '-'),
             'data-website-id': website.id if website else None,
@@ -88,6 +98,7 @@
             'data-translatable': '1' if translatable else None,
             'data-edit_translations': '1' if edit_translations else None,
             'data-view-xmlid': xmlid if editable or translatable else None,
+            'data-viewid': viewid if editable or translatable else None,
             'data-main-object': repr(main_object) if editable or translatable else None,
             'data-oe-company-name': res_company.name
         }"/>
@@ -103,7 +114,11 @@
             </t>
         </t>
         <t t-set="x_icon" t-value="'/web/image/website/%s/favicon/' % website.id"/>
+    </xpath>
+    <xpath expr="//t[@t-set='head_website']" position="replace">
         <t t-set="head_website">
+            <meta t-if="main_object and 'website_indexed' in main_object
+                and not main_object.website_indexed" name="robots" content="noindex"/>
             <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
                 and main_object.website_meta_description or website_meta_description"/>
             <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
@@ -121,17 +136,22 @@
             </t>
 
             <t t-set="languages" t-value="website.get_languages() if website else None"/>
-            <t t-if="request and request.website_multilang and website">
+            <t t-if="request and request.is_frontend_multilang and website">
                 <t t-foreach="website.get_alternate_languages(request.httprequest)" t-as="lg">
                     <link rel="alternate" t-att-hreflang="lg['hreflang']" t-att-href="lg['href']"/>
                 </t>
             </t>
 
             <script type="text/javascript">
+                <t groups="website.group_website_publisher">
+                    odoo.snippetsURL = '/website/snippets';
+                </t>
+
                 odoo.session_info = {
                     is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
                     is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
                     is_frontend: true,
+                    translationURL: '/website/translations',
                     is_website_user: <t t-esc="json.dumps(request.env.user.id == request.website.user_id.id)" />,
                     user_id: <t t-esc="json.dumps(request.env.user.id)" />
                 };
@@ -149,51 +169,30 @@
             <t t-call-assets="web_editor.assets_editor" t-css="false" groups="website.group_website_publisher"/>
             <t t-call-assets="website.assets_editor" t-css="false" groups="website.group_website_publisher"/>
         </t>
-        <t t-set="head" t-value="head_website + (head or '')"/>
-
-        <div id="wrapwrap" t-att-class="pageName or ''">
-            <header>
-                <div class="navbar navbar-default navbar-static-top">
-                    <div class="container">
-                        <div class="navbar-header">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
-                        </div>
-                        <div class="collapse navbar-collapse navbar-top-collapse">
-                            <ul class="nav navbar-nav navbar-right" id="top_menu">
-                                <t t-foreach="website.menu_id.child_id" t-as="submenu">
-                                    <t t-call="website.submenu"/>
-                                </t>
-                                <li class="divider" t-ignore="true" t-if="website.user_id != user_id"/>
-                                <li class="dropdown" t-ignore="true" t-if="website.user_id != user_id">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <b>
-                                            <span t-esc="(len(user_id.name)&gt;25) and (user_id.name[:23]+'...') or user_id.name"/>
-                                            <span class="caret"></span>
-                                        </b>
-                                    </a>
-                                    <ul class="dropdown-menu js_usermenu" role="menu">
-                                        <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            <main>
-                <t t-raw="0"/>
-            </main>
-            <footer >
-                <div id="footer">
-                </div>
-            </footer>
+    </xpath>
+    <xpath expr="//header//div[hasclass('navbar-header')]" position="replace">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-top-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/" t-if="website" t-field="website.name">My Website</a>
         </div>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="attributes">
+        <attribute name="t-if">website.user_id != user_id</attribute>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('dropdown')]" position="attributes">
+        <attribute name="t-if">website.user_id != user_id</attribute>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="before">
+        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+            <t t-call="website.submenu"/>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='wrapwrap']" position="after">
         <script id='tracking_code' t-if="website and website.google_analytics_key and not editable">
             (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
             (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -203,7 +202,7 @@
             ga('create', _.str.trim('<t t-esc="website.google_analytics_key"/>'), 'auto');
             ga('send','pageview');
         </script>
-    </t>
+    </xpath>
 </template>
 
 <template id="layout_footer_copyright" inherit_id="website.layout" name="Footer Copyright">
@@ -221,12 +220,28 @@
 </template>
 
 <template id="layout_logo_show" inherit_id="website.layout" customize_show="True" name="Show Logo">
-    <xpath expr="//header//a[@class='navbar-brand']" position="replace">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
             <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name" />
         </a>
     </xpath>
 </template>
+
+<template id="affix_top_menu" inherit_id="website.layout" customize_show="True" name="Affix Top Menu">
+    <xpath expr="//div[@id='wrapwrap']/header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_affix_enabled'}" separator=" "/>
+    </xpath>
+</template>
+
+<template id="no_autohide_menu" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'o_no_autohide_menu'}" separator=" "/>
+    </xpath>
+</template>
+
+<record id="portal.portal_show_sign_in" model="ir.ui.view">
+    <field name="customize_show" eval="True"/>
+</record>
 
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout">
@@ -234,17 +249,6 @@
         <t t-call="website.layout">
             <div class="oe_website_login_container" t-raw="0"/>
         </t>
-    </xpath>
-</template>
-
-<template id="show_sign_in" customize_show="True" inherit_id="website.layout" name="Show Sign In">
-    <xpath expr="//ul[@id='top_menu']" position="inside">
-        <li class="divider" groups="base.group_public"/>
-        <li groups="base.group_public">
-            <a t-attf-href="/web/login">
-                <b>Sign in</b>
-            </a>
-        </li>
     </xpath>
 </template>
 
@@ -280,7 +284,7 @@
 </template>
 
 <template id="language_selector">
-    <ul class="list-inline js_language_selector mt16" t-if="(request and request.website_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
+    <ul class="list-inline js_language_selector mt16" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
         <li t-foreach="languages" t-as="lg">
           <a
             t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang=lg[0])"
@@ -314,7 +318,7 @@
                 <div class="col-md-4  col-lg-3" id="info">
                     <h4>Connect with us</h4>
                     <ul class="list-unstyled">
-                        <li><a href="/page/website.contactus">Contact us</a></li>
+                        <li><a href="/contactus">Contact us</a></li>
                     </ul>
                     <ul class="list-unstyled">
                         <li t-ignore="true"><i class="fa fa-phone"></i> <span t-field="res_company.phone"></span></li>
@@ -332,7 +336,7 @@
                 <div class="col-md-4 col-lg-5 col-lg-offset-1">
                     <h4>
                         <span t-field="res_company.name" />
-                        <small> - <a href="/page/website.aboutus">About us</a></small>
+                        <small> - <a href="/aboutus">About us</a></small>
                     </h4>
                     <div>
                         <p>
@@ -381,18 +385,7 @@
     </t>
 </template>
 
-<template id="pager" name="Pager">
-    <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
-        <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
-            <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
-        </li>
-        <t t-foreach="pager['pages']" t-as="page">
-            <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
-        </t>
-        <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
-            <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
-        </li>
-    </ul>
+<template id="pager" name="Pager" inherit_id="portal.pager">
 </template>
 
 <!--
@@ -558,12 +551,40 @@
     </t>
 </template>
 
+<template id="default_js">
+    <script type="text/javascript">
+        if (0 &gt; 1) {
+            let it_cant_be = false;
+        }
+    </script>
+</template>
+<template id="default_xml">
+    &lt;?xml version="1.0" encoding="utf-8"?&gt;
+</template>
+<template id="default_css">
+    <style type="text/css">
+        div#wrap div &gt; h1{
+            color: #875A7B;
+        }
+    </style>
+</template>
+<template id="default_less">
+    <style type="text/less">
+        div#wrap div &gt; h1 {
+            color: @odoo-brand-primary;
+        }
+    </style>
+</template>
+<template id="default_csv">
+    1,2,3
+</template>
+
 <template id="page_404">
     <t t-call="website.404">
         <div class="container">
             <div class="well mt32">
-                <p>This page does not exists, but you can create it as you are administrator of this site.</p>
-                <a class="btn btn-primary" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                <p>This page does not exist, but you can create it as you are administrator of this site.</p>
+                <a class="btn btn-primary js_disable_on_click" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
             </div>
             <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
         </div>
@@ -599,7 +620,7 @@
                     <p t-if="website_controller">The following error was raised in the website controller <code t-esc="website_controller"/></p>
                     <p>
                         <strong>Error message:</strong>
-                        <pre t-esc="exception.message"/>
+                        <pre t-esc="exception"/>
                     </p>
                 </div>
             </div>
@@ -654,7 +675,7 @@
                 <p>Maybe you were looking for one of these popular pages ?</p>
                 <ul>
                     <li><a href="/">Homepage</a></li>
-                    <li><a href="/page/website.contactus/">Contact Us</a></li>
+                    <li><a href="/contactus">Contact Us</a></li>
                 </ul>
             </div>
             <t t-if="editable or request.debug">
@@ -679,7 +700,7 @@
                     <p>Maybe you were looking for one of these popular pages ?</p>
                     <ul>
                         <li><a href="/">Homepage</a></li>
-                        <li><a href="/page/website.contactus/">Contact Us</a></li>
+                        <li><a href="/contactus">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
@@ -757,7 +778,7 @@
                     <div class="navbar navbar-default navbar-static-top">
                         <div class="container">
                             <div class="collapse navbar-collapse navbar-top-collapse">
-                                <ul class="nav navbar-nav navbar-right" id="top_menu">
+                                <ul class="nav navbar-nav pull-right" id="top_menu">
                                     <li><a href="/">Home</a></li>
                                     <li><a href="javascript: window.history.back()">Back</a></li>
                                 </ul>
@@ -827,20 +848,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 </sitemapindex>
 </template>
 
-<!-- Actual pages -->
-<template id="homepage" name="Homepage" page="True" priority="29">
-    <t t-call="website.layout">
-        <t t-set="pageName" t-value="'homepage'"/>
-        <div id="wrap" class="oe_structure oe_empty"/>
-    </t>
-</template>
-
 <template id="company_description" name="Company Description">
     <address itemscope="itemscope" itemtype="http://schema.org/Organization">
         <!-- TODO widget contact must add itemprop attributes -->
         <div t-field="res_company.partner_id" t-options='{
                 "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "fax", "email"]}'/>
+                "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
             <span class="fa fa-map-marker fa-fw mt16"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
         </t>
@@ -849,77 +862,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <a t-att-href="res_company.google_map_link()" target="_BLANK">
            <img class="thumbnail img-responsive" t-att-src="res_company.google_map_img()" />
         </a>
-    </t>
-</template>
-
-<template id="contactus" name="Contact us" page="True">
-    <t t-call="website.layout">
-      <div id="wrap">
-        <div class="oe_structure"/>
-        <div class="container">
-            <h1>Contact us</h1>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="oe_structure">
-                        <div>
-                            <p>Contact us about anything related to our company or services.</p>
-                            <p>We'll do our best to get back to you as soon as possible.</p>
-                        </div>
-                    </div>
-                    <div class="text-center mt64" name="mail_button">
-                        <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
-                    </div>
-                </div>
-                <div class="col-md-4 mb32">
-                    <t t-call="website.company_description"/>
-                </div>
-            </div>
-        </div>
-        <div class="oe_structure"/>
-      </div>
-    </t>
-</template>
-
-<template id="aboutus" name="About us" page="True">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h1 class="text-center">About us</h1>
-                                <h3 class="text-muted text-center">Great products for great people</h3>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 mt32">
-                                <p>
-                                      We are a team of passionate people whose goal is to improve everyone's
-                                      life through disruptive products. We build great products to solve your
-                                      business problems.
-                                </p>
-                                <p>
-                                      Our products are designed for small to medium size companies willing to optimize
-                                      their performance.
-                                </p>
-                            </div>
-                            <div class="col-md-4 col-md-offset-2 mt16 mb16">
-                                <img src="/website/static/src/img/library/business_conference.jpg" class="img img-responsive shadow" alt="Our Team"/>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-            <div class="oe_structure"></div>
-        </div>
     </t>
 </template>
 
@@ -933,4 +875,82 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         </span>
     </div>
 </template>
+
+<template id="index_management">
+    <t groups="website.group_website_publisher" t-ignore="true">
+        <div t-attf-class="pull-right js_index_management #{object.website_indexed and 'css_published' or 'css_unpublished'}" t-att-data-id="object.id" t-att-data-object="object._name">
+            <button class="btn btn-danger js_index_btn">Unindexed</button>
+            <button class="btn btn-success js_index_btn">Indexed</button>
+        </div>
+    </t>
+</template>
+
+<template id="edit_website_pages" name="Website Pages Management">
+  <t t-call="website.layout">
+    <div id="wrap">
+      <div class="container" id="edit_website_pages">
+          <form class="mt8 pull-right" role="search" t-attf-action="/website/pages" method="get">
+              <t t-call="website.website_search_box"/>
+          </form>
+          <div t-if="searchbar_sortings" class="dropdown pull-right mt8 mr8">
+              <button class="btn btn-default" type="button" data-toggle="dropdown">
+                  <span class="fa fa-sort fa-lg" />
+                  <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                  <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                  <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                      <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                          <span t-esc="searchbar_sortings[option].get('label')"/>
+                      </a>
+                  </li>
+              </ul>
+          </div>
+          <h3 class="mt16">Manage Your Pages</h3>
+          <t t-if="not pages">
+              <div t-if="search" class="alert alert-warning mt8" role="alert">
+                  Your search '<t t-esc="search" />' did not match any pages.
+              </div>
+              <div t-else="" class="alert alert-warning mt8" role="alert">
+                  There are currently no pages for your website.
+              </div>
+          </t>
+          <div t-if="pages" class="table-responsive">
+              <table class="table table-hover o_my_status_table">
+                  <thead>
+                    <tr class="active">
+                      <th>Name</th>
+                      <th>Url</th>
+                      <th class="col-md-1 text-center"><i title="Is the page included in the main menu?" class="fa fa-thumb-tack" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page published?" class="fa fa-eye" aria-hidden="true"></i></th>
+                      <th class="col-md-1 text-center"><i title="Is the page indexed by search engines?" class="fa fa-globe" aria-hidden="true"></i></th>
+                      <th class="col-sm-3 col-md-2"></th>
+                    </tr>
+                  </thead>
+                  <t t-foreach="pages" t-as="page">
+                      <tr>
+                          <td><i t-if="page.is_homepage" class="fa fa-home"></i> <span style="word-break: break-all;" t-esc="page.name"/></td>
+                          <td><a style="word-break: break-all;" t-attf-href="{{page.url}}"><t t-esc="page.url"/></a></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.menu_ids else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <t t-set='date_formatted'><t  t-options='{"widget": "date"}' t-esc="page.date_publish"/></t>
+                          <td class="text-center"><i t-att-title="not page.is_visible and page.website_published and 'This page will be visible on ' + date_formatted" t-att-class="'fa fa-check' if page.is_visible and page.website_published else 'fa fa-eye-slash' if not page.is_visible and page.website_published else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-center"><i t-att-class="'fa fa-check' if page.website_indexed else 'fa fa-times text-muted'" aria-hidden="true"></i></td>
+                          <td class="text-right">
+                              <a class="mr4 fa fa-lg fa-cog js_page_properties" t-att-data-id="page.id" href="#" title="Manage this page"></a>
+                              <a class="mr4 fa fa-lg fa-pencil-square-o" t-attf-href="/web#id=#{page.view_id.id}&amp;view_type=form&amp;model=ir.ui.view" title="Edit code in backend"></a>
+                              <a class="mr4 fa fa-lg fa-clone js_clone_page" t-att-data-id="page.id" href="#" title="Clone this page"></a>
+                              <a class="fa fa-lg fa-trash js_delete_page" t-att-data-id="page.id" href="#" title="Delete this page"></a>
+                          </td>
+                      </tr>
+                  </t>
+              </table>
+          </div>
+          <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
+          </div>
+      </div>
+    </div>
+  </t>
+</template>
+
 </odoo>

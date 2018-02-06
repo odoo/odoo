@@ -119,7 +119,7 @@ QUnit.test('edit, save and cancel buttons', function (assert) {
     // dummy change to check that it correctly discards
     form.$('.o_field_widget').val('test').trigger('input');
     // O-CMD.CANCEL
-    _.each(["O","-","C","M","D",".","C","A","N","C","E","L","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","D","I","S","C","A","R","D","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$(".o_form_readonly").length, 1,
         "should have switched to 'readonly' mode");
     assert.verifySteps(['save'], 'should not have saved');
@@ -144,10 +144,10 @@ QUnit.test('pager buttons', function (assert) {
 
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
     // O-CMD.PAGER-NEXT
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","N","E","X","T","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$('.o_field_widget').text(), 'Mouse, Optical');
     // O-CMD.PAGER-PREV
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","P","R","E","V","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","P","R","E","V","Enter"], triggerKeypressEvent);
     assert.strictEqual(form.$('.o_field_widget').text(), 'iPad Mini');
     // O-CMD.PAGER-LAST
     _.each(["O","-","C","M","D",".","P","A","G","E","R","-","L","A","S","T","Enter"], triggerKeypressEvent);
@@ -164,11 +164,12 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
 
     var delay = barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms;
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = 0;
-    var formUpdate = FormController.prototype.update;
-    FormController.prototype.update = function () {
-        assert.step('update');
-        return formUpdate.apply(this, arguments);
-    };
+    testUtils.patch(FormController, {
+        update: function () {
+            assert.step('update');
+            return this._super.apply(this, arguments);
+        },
+    });
 
     var form = createView({
         View: FormView,
@@ -194,7 +195,7 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
     assert.verifySteps(['read'], "update should not have been called yet");
 
     // switch to next record
-    _.each(["O","-","C","M","D",".","P","A","G","E","R","-","N","E","X","T","Enter"], triggerKeypressEvent);
+    _.each(["O","-","C","M","D",".","N","E","X","T","Enter"], triggerKeypressEvent);
     // a first update is done to reload the data (thus followed by a read), but
     // update shouldn't be called afterwards
     assert.verifySteps(['read', 'update', 'read']);
@@ -206,7 +207,7 @@ QUnit.test('do no update form twice after a command barcode scanned', function (
 
     form.destroy();
     barcodeEvents.BarcodeEvents.max_time_between_keys_in_ms = delay;
-    FormController.prototype.update = formUpdate;
+    testUtils.unpatch(FormController);
 });
 
 QUnit.test('widget field_float_scannable', function (assert) {

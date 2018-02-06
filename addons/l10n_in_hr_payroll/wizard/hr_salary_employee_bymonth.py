@@ -36,4 +36,4 @@ class HrSalaryEmployeeBymonth(models.TransientModel):
         res = self.read()
         res = res and res[0] or {}
         data.update({'form': res})
-        return self.env['report'].get_action(self, 'l10n_in_hr_payroll.report_hrsalarybymonth', data=data)
+        return self.env.ref('l10n_in_hr_payroll.action_report_hrsalarybymonth').report_action(self, data=data)

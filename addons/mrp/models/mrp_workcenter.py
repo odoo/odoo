@@ -36,14 +36,14 @@ class MrpWorkcenter(models.Model):
     workorder_count = fields.Integer('# Work Orders', compute='_compute_workorder_count')
     workorder_ready_count = fields.Integer('# Read Work Orders', compute='_compute_workorder_count')
     workorder_progress_count = fields.Integer('Total Running Orders', compute='_compute_workorder_count')
-    workorder_pending_count = fields.Integer('Total Running Orders', compute='_compute_workorder_count')
+    workorder_pending_count = fields.Integer('Total Pending Orders', compute='_compute_workorder_count')
     workorder_late_count = fields.Integer('Total Late Orders', compute='_compute_workorder_count')
 
     time_ids = fields.One2many('mrp.workcenter.productivity', 'workcenter_id', 'Time Logs')
     working_state = fields.Selection([
         ('normal', 'Normal'),
         ('blocked', 'Blocked'),
-        ('done', 'In Progress')], 'Status', compute="_compute_working_state", store=True)
+        ('done', 'In Progress')], 'Workcenter Status', compute="_compute_working_state", store=True)
     blocked_time = fields.Float(
         'Blocked Time', compute='_compute_blocked_time',
         help='Blocked hour(s) over the last month', digits=(16, 2))
@@ -187,6 +187,7 @@ class MrpWorkcenterProductivity(models.Model):
     _order = "id desc"
     _rec_name = "loss_id"
 
+    production_id = fields.Many2one('mrp.production', string='Manufacturing Order', related='workorder_id.production_id', readonly='True')
     workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True)
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order')
     user_id = fields.Many2one(
@@ -221,4 +222,3 @@ class MrpWorkcenterProductivity(models.Model):
     def button_block(self):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
-        return {'type': 'ir.actions.client', 'tag': 'reload'}

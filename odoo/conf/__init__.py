@@ -15,8 +15,6 @@ must be used.
 
 """
 
-from . import deprecation
-
 # Paths to search for OpenERP addons.
 addons_paths = []
 

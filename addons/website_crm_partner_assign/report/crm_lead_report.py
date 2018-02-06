@@ -32,7 +32,6 @@ class CrmLeadReportAssign(models.Model):
     opening_date = fields.Datetime('Opening Date', readonly=True)
     date_closed = fields.Datetime('Close Date', readonly=True)
     nbr_cases = fields.Integer('# of Cases', readonly=True, oldname='nbr')
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, 'Priority')
     type = fields.Selection([
         ('lead', 'Lead'),

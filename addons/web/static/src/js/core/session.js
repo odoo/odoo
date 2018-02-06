@@ -3,6 +3,7 @@ odoo.define('web.Session', function (require) {
 
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var mixins = require('web.mixins');
 var utils = require('web.utils');
@@ -37,8 +38,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         this.avoid_recursion = false;
         this.use_cors = options.use_cors || false;
         this.setup(origin);
-        var debug_param = $.deparam($.param.querystring()).debug;
-        this.debug = (debug_param !== undefined ? debug_param || 1 : false);
+        this.debug = config.debug;
 
         // for historic reasons, the session requires a name to properly work
         // (see the methods get_cookie and set_cookie).  We should perhaps
@@ -87,14 +87,19 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * Init a session, reloads from cookie, if it exists
      */
     session_init: function () {
-        var def = this.session_reload();
-        if (this.is_frontend) return def;
-
         var self = this;
+        var def = this.session_reload();
+
+        if (this.is_frontend) {
+            return def.then(function () {
+                return self.load_translations();
+            });
+        }
+
         return def.then(function () {
             var modules = self.module_list.join(',');
             var deferred = self.load_qweb(modules);
-            if(self.session_is_valid()) {
+            if (self.session_is_valid()) {
                 return deferred.then(function () { return self.load_modules(); });
             }
             return $.when(
@@ -217,7 +222,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
        });
     },
     load_translations: function () {
-        return _t.database.load_translations(this, this.module_list, this.user_context.lang);
+        return _t.database.load_translations(this, this.module_list, this.user_context.lang, this.translationURL);
     },
     load_css: function (files) {
         var self = this;
@@ -303,11 +308,8 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
             }).always(function () {
                 self.avoid_recursion = false;
             });
-        } else {
-            // normal use case, just use the cookie
-            self.session_id = utils.get_cookie("session_id");
-            return $.when();
         }
+        return $.when();
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -319,8 +321,6 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
      * @param {Object} options additional options for rpc call
-     * @param {Function} success_callback function to execute on RPC call success
-     * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function (url, params, options) {
@@ -411,7 +411,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      * (host system settings) to UTC, for a given date. The offset is positive
      * if the local timezone is behind UTC, and negative if it is ahead.
      *
-     * @param {string || moment} date a valid string date or moment instance
+     * @param {string | moment} date a valid string date or moment instance
      * @returns {integer}
      */
     getTZOffset: function (date) {

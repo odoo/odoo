@@ -12,9 +12,14 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import api, fields, models, _
-from odoo.addons.base.res.res_partner import _tz_get
+from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
+
+# Default hour per day value. The one should
+# only be used when the one from the calendar
+# is not available.
+HOURS_PER_DAY = 8
 
 
 def float_to_time(float_hour):
@@ -34,7 +39,7 @@ def to_naive_utc(datetime, record):
 
 
 def to_tz(datetime, tz_name):
-    tz = pytz.timezone(tz_name)
+    tz = pytz.timezone(tz_name) if tz_name else pytz.UTC
     return pytz.UTC.localize(datetime.replace(tzinfo=None), is_dst=False).astimezone(tz).replace(tzinfo=None)
 
 
@@ -87,6 +92,15 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
         domain=[('resource_id', '=', False)]
         )
+    hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY, help="Average hours per day a resource is supposed to work with this calendar.")
+
+    @api.onchange('attendance_ids')
+    def _onchange_hours_per_day(self):
+        attendances = self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
+        hour_count = 0.0
+        for attendance in attendances:
+            hour_count += attendance.hour_to - attendance.hour_from
+        self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
 
     # --------------------------------------------------
     # Utility methods
@@ -128,6 +142,8 @@ class ResourceCalendar(models.Model):
         )
 
     def _interval_and(self, interval, interval_dst):
+        if interval.start_datetime > interval_dst.end_datetime or interval.end_datetime < interval_dst.start_datetime:
+            return None
         return self._interval_obj(
             interval.start_datetime > interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
             interval.end_datetime < interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
@@ -247,7 +263,7 @@ class ResourceCalendar(models.Model):
         """ Return the list of weekdays that contain at least one working
         interval. """
         self.ensure_one()
-        return list(set(map(int, (self.attendance_ids.mapped('dayofweek')))))
+        return list({int(d) for d in self.attendance_ids.mapped('dayofweek')})
 
     @api.multi
     def _get_next_work_day(self, day_date):
@@ -392,10 +408,10 @@ class ResourceCalendar(models.Model):
             start_datetime=datetime.datetime.combine(day_date, start_time),
             end_datetime=datetime.datetime.combine(day_date, end_time))
 
-        final_intervals = [
-            self._interval_and(leave_interval, work_interval)
-            for leave_interval in leaves_intervals
-            for work_interval in working_intervals]
+        final_intervals = [i for i in
+                           [self._interval_and(leave_interval, work_interval)
+                            for leave_interval in leaves_intervals
+                            for work_interval in working_intervals] if i]
 
         # adapt tz
         return [self._interval_new(
@@ -420,8 +436,12 @@ class ResourceCalendar(models.Model):
                                dtstart=start_dt,
                                until=end_dt,
                                byweekday=self._get_weekdays()):
-            start_time = day.date() == start_dt.date() and start_dt.time() or datetime.time.min
-            end_time = day.date() == end_dt.date() and end_dt.time() or datetime.time.max
+            start_time = datetime.time.min
+            if day.date() == start_dt.date():
+                start_time = start_dt.time()
+            end_time = datetime.time.max
+            if day.date() == end_dt.date() and end_dt.time() != datetime.time():
+                end_time = end_dt.time()
 
             intervals = self._get_day_work_intervals(
                 day.date(),
@@ -445,8 +465,12 @@ class ResourceCalendar(models.Model):
                                dtstart=start_dt,
                                until=end_dt,
                                byweekday=self._get_weekdays()):
-            start_time = day.date() == start_dt.date() and start_dt.time() or datetime.time.min
-            end_time = day.date() == end_dt.date() and end_dt.time() or datetime.time.max
+            start_time = datetime.time.min
+            if day.date() == start_dt.date():
+                start_time = start_dt.time()
+            end_time = datetime.time.max
+            if day.date() == end_dt.date() and end_dt.time() != datetime.time():
+                end_time = end_dt.time()
 
             intervals = self._get_day_leave_intervals(
                 day.date(),
@@ -637,6 +661,12 @@ class ResourceCalendarAttendance(models.Model):
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
 
+    @api.constrains('hour_from', 'hour_to')
+    def _check_hours(self):
+        for attendance in self:
+            if attendance.hour_from > attendance.hour_to:
+                raise ValidationError(_("The start-hour must be lower than end-hour."))
+
 
 class ResourceResource(models.Model):
     _name = "resource.resource"
@@ -668,6 +698,10 @@ class ResourceResource(models.Model):
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
         required=True,
         help="Define the schedule of resource")
+
+    _sql_constraints = [
+        ('check_time_efficiency', 'CHECK(time_efficiency>0)', 'Time efficiency must be strictly positive'),
+    ]
 
     @api.multi
     @api.constrains('time_efficiency')
@@ -710,7 +744,7 @@ class ResourceCalendarLeaves(models.Model):
     date_to = fields.Datetime('End Date', required=True)
     tz = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self._context.get('tz', self.env.user.tz or 'UTC'),
-        help="Timezone used when encoding the leave. It is used to correctly"
+        help="Timezone used when encoding the leave. It is used to correctly "
              "localize leave hours when computing time intervals.")
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',

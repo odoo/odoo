@@ -6,7 +6,7 @@
 <p>Dear ${object.partner_id.name}
 % set access_action = object.with_context(force_website=True).get_access_action()
 % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
-% set access_url = is_online and '/mail/view?model=account.invoice&res_id=%d' % (object.id) or '/report/pdf/account.report_invoice/' + str(object.id)
+% set access_url = is_online and object.get_mail_url() or '/report/pdf/account.report_invoice/' + str(object.id)
 
 % if object.partner_id.parent_id:
     (<i>${object.partner_id.parent_id.name}</i>)
@@ -21,7 +21,7 @@ pro-forma invoice
 % if object.origin:
 (with reference: ${object.origin} )
 % endif
-amounting in <strong>${object.amount_total} ${object.currency_id.name}</strong>
+amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
 from ${object.company_id.name}.
 </p>
 

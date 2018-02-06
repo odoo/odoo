@@ -24,7 +24,7 @@ class GoogleCalendarController(http.Controller):
             if not client_id or client_id == '':
                 action_id = ''
                 if GoogleCal.can_authorize_google():
-                    action_id = request.env.ref('google_calendar.action_config_settings_google_calendar').id
+                    action_id = request.env.ref('base_setup.action_general_configuration').id
                 return {
                     "status": "need_config_from_admin",
                     "url": '',

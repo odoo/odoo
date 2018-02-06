@@ -1,0 +1,215 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <record id="view_hr_leave_allocation_filter" model="ir.ui.view">
+        <field name="name">hr.holidays.filter_allocations</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <search string="Search allocations">
+                <field name="name"/>
+                <filter domain="[('state','in',('confirm', 'validate1'))]" string="To Approve" name="approve"/>
+                <filter string="Approved Allocations" domain="[('state', '=', 'validate')]" name="validated"/>
+                <separator/>
+                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on allocations that belong to an leave type that is 'active' (active field is True)"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <separator/>
+                <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
+                <filter name="my_team_leaves" string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Leaves of Your Team Member"/>
+                <separator/>
+                <filter name="year" string="Current Year"
+                    domain="[('holiday_status_id.active', '=', True)]" help="Active Allocations"/>
+                <separator/>
+                <filter string="My Allocations" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <separator/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="holiday_status_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
+                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
+                    <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="edit_new_allocation" model="ir.ui.view">
+        <field name="name">Allocation Request</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <form string="Allocation Request">
+                <field name="can_reset" invisible="1"/>
+                <header>
+                    <button string="Confirm" name="action_confirm" states="draft" type="object" class="oe_highlight"/>
+                    <button string="Approve" name="action_approve" states="confirm" type="object" groups="hr_holidays.group_hr_holidays_user" class="oe_highlight"/>
+                    <button string="Validate" name="action_validate" states="validate1" type="object" groups="hr_holidays.group_hr_holidays_manager" class="oe_highlight"/>
+                    <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object" groups="hr_holidays.group_hr_holidays_user"/>
+                    <button string="Reset to Draft" name="action_draft" type="object"
+                            attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+                            <label for="number_of_days_temp" string="Duration"/>
+                            <div>
+                                <div>
+                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                </div>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}" />
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','!=','employee')]}" groups="hr_holidays.group_hr_holidays_user"/>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','!=','category')]}"/>
+                            <field name="department_id" groups="hr_holidays.group_hr_holidays_user" attrs="{'invisible':[('holiday_type','=','category')]}"/>
+                        </group>
+                        <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_allocation_tree" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.tree</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
+                   decoration-bf="message_needaction == True">
+                <field name="employee_id"/>
+                <field name="department_id" invisible="1"/>
+                <field name="holiday_status_id"/>
+                <field name="name"/>
+                <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_holidays_view_list_my_allocation" model="ir.ui.view">
+        <field name="name">hr.holidays.my.allocation.tree</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'refuse'" decoration-info="state == 'draft'" string="Allocation Requests"
+                   decoration-bf="message_needaction == True">
+                <field name="employee_id"/>
+                <field name="holiday_status_id"/>
+                <field name="name"/>
+                <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
+                <field name="message_needaction" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_allocation_tree_customize" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.tree.customize</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="arch" type="xml">
+            <tree string="Allocation Requests" editable="top">
+                <field name="employee_id"/>
+                <field name="holiday_type"/>
+                <field name="holiday_status_id"/>
+                <field name="name" readonly="1"/>
+                <field name="number_of_days_temp" string="Allocated Days" sum="Remaining Days"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_allocation" model="ir.actions.act_window">
+        <field name="name">Allocation Request</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_create">
+                Click here to create a new leave allocation request.
+            </p>
+        </field>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
+        <field name="view_id" ref="edit_new_allocation"/>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
+    <record id="request_approve_allocation" model="ir.actions.act_window">
+        <field name="name">Allocation Request</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_type">form</field>
+        <field name="context">{
+            'search_default_approve':1,
+        }</field>
+        <field name="view_id" ref="edit_new_allocation"/>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
+    <record id="open_department_holidays_allocation_approve" model="ir.actions.act_window">
+        <field name="name">Department Leaves Allocation</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_department':1, 'search_default_approve':1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_create">
+                Click here to create a new leave allocation.
+            </p>
+        </field>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
+    <record id="hr_holidays_action_allocation_from_department" model="ir.actions.act_window">
+        <field name="name">Allocation Requests to Approve</field>
+        <field name="res_model">hr.leave.allocation</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'search_default_department_id': [active_id],
+            'default_department_id': active_id,
+            'search_default_approve':1}
+        </field>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
+    <record id="action_open_allocation_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_allocation_tree"/>
+        <field name="act_window_id" ref="open_allocation"/>
+    </record>
+
+    <record id="action_open_allocation_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="edit_new_allocation"/>
+        <field name="act_window_id" ref="open_allocation"/>
+    </record>
+
+    <record id="action_request_approve_allocation_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_allocation_tree"/>
+        <field name="act_window_id" ref="request_approve_allocation"/>
+    </record>
+
+    <record id="action_request_approve_allocation_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="edit_new_allocation"/>
+        <field name="act_window_id" ref="request_approve_allocation"/>
+    </record>
+
+</odoo>

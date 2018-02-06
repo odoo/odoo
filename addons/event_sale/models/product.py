@@ -6,7 +6,7 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    event_ok = fields.Boolean(string='Event Registration', help='Determine if a product needs '
+    event_ok = fields.Boolean(string='Is an Event Ticket', help='Determine if a product needs '
       'to create automatically an event registration at the confirmation of a sales order line.')
 
     @api.onchange('event_ok')

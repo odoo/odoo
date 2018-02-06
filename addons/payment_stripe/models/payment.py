@@ -18,9 +18,9 @@ STRIPE_HEADERS = {'Stripe-Version': '2016-03-07'}
 
 # The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
 INT_CURRENCIES = [
-    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYGí', u'RWF', u'KRW',
+    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYG', u'RWF', u'KRW',
     u'VUV', u'VND', u'XOF'
-];
+]
 
 
 class PaymentAcquirerStripe(models.Model):
@@ -72,7 +72,7 @@ class PaymentAcquirerStripe(models.Model):
             'acquirer_id': int(data['acquirer_id']),
             'partner_id': int(data['partner_id'])
         })
-        return payment_token.id
+        return payment_token
 
     @api.multi
     def stripe_s2s_form_validate(self, data):
@@ -83,6 +83,21 @@ class PaymentAcquirerStripe(models.Model):
             if not data.get(field_name):
                 return False
         return True
+
+    def _get_feature_support(self):
+        """Get advanced feature support by provider.
+
+        Each provider should add its technical in the corresponding
+        key for the following features:
+            * fees: support payment fees computations
+            * authorize: support authorizing payment (separates
+                         authorization and capture)
+            * tokenize: support saving payment data in a payment.tokenize
+                        object
+        """
+        res = super(PaymentAcquirerStripe, self)._get_feature_support()
+        res['tokenize'].append('stripe')
+        return res
 
 
 class PaymentTransactionStripe(models.Model):
@@ -102,16 +117,46 @@ class PaymentTransactionStripe(models.Model):
             charge_params['card'] = str(tokenid)
         if email:
             charge_params['receipt_email'] = email.strip()
+
+        _logger.info('_create_stripe_charge: Sending values to URL %s, values:\n%s', api_url_charge, pprint.pformat(charge_params))
         r = requests.post(api_url_charge,
                           auth=(self.acquirer_id.stripe_secret_key, ''),
                           params=charge_params,
                           headers=STRIPE_HEADERS)
-        return r.json()
+        res = r.json()
+        _logger.info('_create_stripe_charge: Values received:\n%s', pprint.pformat(res))
+        return res
 
     @api.multi
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
         result = self._create_stripe_charge(acquirer_ref=self.payment_token_id.acquirer_ref)
+        return self._stripe_s2s_validate_tree(result)
+
+
+    def _create_stripe_refund(self):
+        api_url_refund = 'https://%s/refunds' % (self.acquirer_id._get_stripe_api_url())
+
+        refund_params = {
+            'charge': self.acquirer_reference,
+            'amount': int(self.amount*100), # by default, stripe refund the full amount (we don't really need to specify the value)
+            'metadata[reference]': self.reference,
+        }
+
+        _logger.info('_create_stripe_refund: Sending values to URL %s, values:\n%s', api_url_refund, pprint.pformat(refund_params))
+        r = requests.post(api_url_refund,
+                            auth=(self.acquirer_id.stripe_secret_key, ''),
+                            params=refund_params,
+                            headers=STRIPE_HEADERS)
+        res = r.json()
+        _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
+        return res
+
+    @api.multi
+    def stripe_s2s_do_refund(self, **kwargs):
+        self.ensure_one()
+        self.state = 'refunding'
+        result = self._create_stripe_refund()
         return self._stripe_s2s_validate_tree(result)
 
     @api.model
@@ -145,18 +190,21 @@ class PaymentTransactionStripe(models.Model):
     @api.multi
     def _stripe_s2s_validate_tree(self, tree):
         self.ensure_one()
-        if self.state not in ('draft', 'pending'):
+        if self.state not in ('draft', 'pending', 'refunding'):
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
         status = tree.get('status')
         if status == 'succeeded':
+            new_state = 'refunded' if self.state == 'refunding' else 'done'
             self.write({
-                'state': 'done',
+                'state': new_state,
                 'date_validate': fields.datetime.now(),
                 'acquirer_reference': tree.get('id'),
             })
             self.execute_callback()
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             return True
         else:
             error = tree['error']['message']
@@ -222,6 +270,10 @@ class PaymentTokenStripe(models.Model):
 
 
     def _stripe_create_customer(self, token, description=None, acquirer_id=None):
+        if token.get('error'):
+            _logger.error('payment.token.stripe_create_customer: Token error:\n%s', pprint.pformat(token['error']))
+            raise Exception(token['error']['message'])
+
         if token['object'] != 'token':
             _logger.error('payment.token.stripe_create_customer: Cannot create a customer for object type "%s"', token.get('object'))
             raise Exception('We are unable to process your credit card information.')
@@ -229,10 +281,6 @@ class PaymentTokenStripe(models.Model):
         if token['type'] != 'card':
             _logger.error('payment.token.stripe_create_customer: Cannot create a customer for token type "%s"', token.get('type'))
             raise Exception('We are unable to process your credit card information.')
-
-        if token.get('error'):
-            _logger.error('payment.token.stripe_create_customer: Token error:\n%s', pprint.pformat(token['error']))
-            raise Exception(token['error']['message'])
 
         payment_acquirer = self.env['payment.acquirer'].browse(acquirer_id or self.acquirer_id.id)
         url_customer = 'https://%s/customers' % payment_acquirer._get_stripe_api_url()

@@ -12,6 +12,7 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields, models, modules, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import pycompat, misc
 
 _logger = logging.getLogger(__name__)
 
@@ -37,10 +38,8 @@ class Forum(models.Model):
 
     @api.model
     def _get_default_faq(self):
-        fname = modules.get_module_resource('website_forum', 'data', 'forum_default_faq.html')
-        with open(fname, 'r') as f:
+        with misc.file_open('website_forum/data/forum_default_faq.html', 'r') as f:
             return f.read()
-        return False
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
@@ -49,9 +48,9 @@ class Forum(models.Model):
     description = fields.Text(
         'Description',
         translate=True,
-        default='This community is for professionals and enthusiasts of our products and services. '
-                'Share and discuss the best content and new marketing ideas, '
-                'build your professional profile and become a better marketer together.')
+        default=lambda s: _('This community is for professionals and enthusiasts of our products and services. '
+                            'Share and discuss the best content and new marketing ideas, '
+                            'build your professional profile and become a better marketer together.'))
     welcome_message = fields.Html(
         'Welcome Message',
         default = """<section class="bg-info" style="height: 168px;"><div class="container">
@@ -166,7 +165,7 @@ class Forum(models.Model):
         post_tags = []
         existing_keep = []
         user = self.env.user
-        for tag in filter(None, tags.split(',')):
+        for tag in (tag for tag in tags.split(',') if tag):
             if tag.startswith('_'):  # it's a new tag
                 # check that not arleady created meanwhile or maybe excluded by the limit on the search
                 tag_ids = Tag.search([('name', '=', tag[1:])])
@@ -208,11 +207,7 @@ class Post(models.Model):
         ('link', 'Article'),
         ('discussion', 'Discussion')],
         string='Type', default='question', required=True)
-    website_message_ids = fields.One2many(
-        'mail.message', 'res_id',
-        domain=lambda self: ['&', ('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])],
-        string='Post Messages', help="Comments on forum post",
-    )
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
 
     # history
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
@@ -379,7 +374,7 @@ class Post(models.Model):
         is_admin = user.id == SUPERUSER_ID
         # sudoed recordset instead of individual posts so values can be
         # prefetched in bulk
-        for post, post_sudo in itertools.izip(self, self.sudo()):
+        for post, post_sudo in pycompat.izip(self, self.sudo()):
             is_creator = post.create_uid == user
 
             post.karma_accept = post.forum_id.karma_answer_accept_own if post.parent_id.create_uid == user else post.forum_id.karma_answer_accept_all
@@ -786,7 +781,7 @@ class Post(models.Model):
         return True
 
     @api.multi
-    def get_access_action(self):
+    def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {
@@ -808,7 +803,7 @@ class Post(models.Model):
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, message_type='notification', subtype=None, **kwargs):
+    def message_post(self, message_type='notification', **kwargs):
         question_followers = self.env['res.partner']
         if self.ids and message_type == 'comment':  # user comments have a restriction on karma
             # add followers of comments on the parent post
@@ -828,7 +823,7 @@ class Post(models.Model):
                 raise KarmaError('Not enough karma to comment')
             if not kwargs.get('record_name') and self.parent_id:
                 kwargs['record_name'] = self.parent_id.name
-        return super(Post, self).message_post(message_type=message_type, subtype=subtype, **kwargs)
+        return super(Post, self).message_post(message_type=message_type, **kwargs)
 
     @api.multi
     def message_get_message_notify_values(self, message, message_values):

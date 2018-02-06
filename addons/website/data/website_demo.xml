@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record id="default_website" model="website">
+        <record id="base.main_company" model="res.company">
             <field name="social_twitter">https://twitter.com/Odoo</field>
             <field name="social_facebook">https://www.facebook.com/Odoo</field>
             <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
@@ -97,7 +97,7 @@ response = request.website.render("website.template_partner_post", {'partner': p
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" class="btn btn-default btn-primary">
+                            <button type="submit" class="btn btn-primary">
                                 Send <span class="fa fa-long-arrow-right"/>
                             </button>
                         </div>
@@ -129,19 +129,14 @@ response = request.render("website.template_partner_comment", {
         <record id="website2" model="website">
             <field name="name">Website 0.0.0.0</field>
             <field name="domain">0.0.0.0</field>
-            <field name="social_twitter">https://twitter.com/Odoo</field>
-            <field name="social_facebook">https://www.facebook.com/Odoo</field>
-            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
-            <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
         </record>
 
         <record id="website2_homepage" model="ir.ui.view">
-            <field name="name">Homepage</field>
+            <field name="name">Home</field>
             <field name="type">qweb</field>
-            <field name="key">website.homepage</field>
-            <field name="website_id" ref="website2"/>
+            <field name="key">website2.homepage</field>
             <field name="arch" type="xml">
-                <t name="Homepage" priority="29" t-name="website.homepage">
+                <t name="Home" priority="29" t-name="website2.homepage">
                   <t t-call="website.layout">
                     <div id="wrap" class="oe_structure oe_empty">
                       <div class="carousel slide mb32" id="myCarousel0" style="height: 320px;">
@@ -156,7 +151,7 @@ response = request.render("website.template_partner_comment", {
                                   <h2>Homepage 0.0.0.0</h2>
                                   <h3>Click to customize this text</h3>
                                   <p>
-                                    <a class="btn btn-success btn-large" href="/page/website.contactus">Contact us</a>
+                                    <a class="btn btn-success btn-large" href="/contactus">Contact us</a>
                                   </p>
                                 </div>
                                 <span class="carousel-img col-md-6 hidden-sm hidden-xs"> </span>
@@ -176,27 +171,77 @@ response = request.render("website.template_partner_comment", {
                 </t>
             </field>
         </record>
+        <record id="website2_homepage_page" model="website.page">
+            <field name="website_published">True</field>
+            <field name="url">/</field>
+            <field name="view_id" ref="website2_homepage" />
+            <field name="website_ids" eval="[(4, ref('website2'))]" />
+        </record>
 
+        <record id="website2_contactus" model="ir.ui.view">
+            <field name="name">Contact Us</field>
+            <field name="type">qweb</field>
+            <field name="key">website2.contactus</field>
+            <field name="arch" type="xml">
+                <t name="Contact Us" t-name="website2.contactus">
+                  <t t-call="website.layout">
+                    <div id="wrap">
+                      <div class="oe_structure"/>
+                      <div class="container">
+                          <h1>Contact us</h1>
+                          <div class="row">
+                              <div class="col-md-8">
+                                  <div class="oe_structure">
+                                      <div>
+                                          <p>Contact us about anything related to our company or services.</p>
+                                          <p>We'll do our best to get back to you as soon as possible.</p>
+                                      </div>
+                                  </div>
+                                  <div class="text-center mt64" name="mail_button">
+                                      <a t-attf-href="mailto:{{ res_company.email }}" class="btn btn-primary" id="o_contact_mail">Send us an email</a>
+                                  </div>
+                              </div>
+                              <div class="col-md-4 mb32">
+                                  <t t-call="website.company_description"/>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="oe_structure"/>
+                    </div>
+                  </t>
+                </t>
+            </field>
+        </record>
+        <record id="website2_contactus_page" model="website.page">
+            <field name="website_published">True</field>
+            <field name="url">/contactus</field>
+            <field name="view_id" ref="website2_contactus" />
+            <field name="website_ids" eval="[(4, ref('website2'))]" />
+        </record>
+
+        <!-- Menu & Homepage -->
+        <record id="website2" model="website">
+            <field name="homepage_id" ref="website2_homepage_page" />
+        </record>
         <record id="website2_main_menu" model="website.menu">
             <field name="name">Top Menu</field>
             <field name="website_id" ref="website2"/>
         </record>
-
         <record id="website2_menu_homepage" model="website.menu">
             <field name="name">Home</field>
-            <field name="url">/page/homepage</field>
+            <field name="url">/</field>
             <field name="parent_id" ref="website.website2_main_menu"/>
             <field name="sequence" type="int">10</field>
             <field name="website_id" ref="website2"/>
+            <field name="page_id" ref="website2_homepage_page" />
         </record>
-
         <record id="website2_menu_contactus" model="website.menu">
             <field name="name">Contact us</field>
-            <field name="url">/page/website.contactus</field>
+            <field name="url">/contactus</field>
             <field name="parent_id" ref="website.website2_main_menu"/>
             <field name="sequence" type="int">60</field>
             <field name="website_id" ref="website2"/>
+            <field name="page_id" ref="website2_contactus_page" />
         </record>
-
     </data>
 </odoo>

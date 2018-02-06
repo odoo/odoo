@@ -6,16 +6,26 @@
         <field name="arch" type="xml">
             <form string="Activities">
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="toggle_active" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
                     </div>
                     <group>
                         <group>
+                            <field name="category" invisible="1"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="summary"/>
                             <field name="icon" groups="base.group_no_one"/>
-                            <field name="days"/>
+                            <label for="days"/>
+                            <div>
+                                <field name="days" class="oe_inline"/>
+                                <span class="oe_inline">days</span>
+                            </div>
                         </group>
                         <group>
                             <field name="next_type_ids" widget="many2many_tags"/>
@@ -23,6 +33,17 @@
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="mail_activity_type_view_search" model="ir.ui.view">
+        <field name="name">mail.activity.type.search</field>
+        <field name="model">mail.activity.type</field>
+        <field name="arch" type="xml">
+            <search string="Activities">
+                <field name="name"/>
+                <filter string="Archived" domain="[('active', '=', False)]" name="archived"/>
+            </search>
         </field>
     </record>
 
@@ -62,6 +83,7 @@
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
                     <group invisible="1">
+                        <field name="activity_category" invisible="1" />
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1"/>
@@ -92,7 +114,8 @@
                         <button string="Schedule" name="action_close_dialog"
                             type="object" class="btn-primary"/>
                         <button string="Mark as Done" name="action_done"
-                            type="object" class="btn-primary"/>
+                            type="object" class="btn-default"/>
+                        <button string="Done &amp; Schedule Next" name="action_done_schedule_next" type="object" class="btn-default"/>
                         <button string="Discard" class="btn-default" special="cancel" />
                     </footer>
                 </sheet>
@@ -111,20 +134,20 @@
                 <separator/>
                 <filter string="My Activities" name="activities_my"
                         domain="[('create_uid', '=', uid)]"/>
-                <filter string="Today Activities" name="activities_today"
-                        domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter string="Upcoming Activities (7 days)" name="activities_week"
-                        domain="['&amp;', ('date_deadline', '&gt;=', context_today().strftime('%Y-%m-%d')),
-                                 ('date_deadline', '&lt;=', (context_today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d'))
-                        ]"/>
-                <filter string="Overdue Activities" name="activities_overdue"
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
                         domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                        ]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Deadline" context="{'group_by': 'date_deadline'}"/>
-                    <filter string="Created By" context="{'group_by': 'create_uid'}"/>
-                    <filter string="Activity Type" context="{'group_by': 'activity_type_id'}"/>
+                    <filter string="Deadline" name="date_deadline" context="{'group_by': 'date_deadline'}"/>
+                    <filter string="Created By" name="createdby" context="{'group_by': 'create_uid'}"/>
+                    <filter string="Activity Type" name="activittype" context="{'group_by': 'activity_type_id'}"/>
                 </group>
             </search>
         </field>

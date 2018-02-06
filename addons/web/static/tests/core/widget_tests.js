@@ -82,17 +82,15 @@ QUnit.module('core', {}, function () {
 
 
     QUnit.test('renderElement, no template, default', function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         var widget = new (Widget.extend({ }))();
 
-        var $original = widget.$el;
-        assert.ok($original, "should initially have a root element");
+        assert.strictEqual(widget.$el, undefined, "should not have a root element");
 
         widget.renderElement();
 
         assert.ok(widget.$el, "should have generated a root element");
-        assert.ok($original !== widget.$el, "should have generated a new root element");
         assert.strictEqual(widget.$el, widget.$el, "should provide $el alias");
         assert.ok(widget.$el.is(widget.el), "should provide raw DOM alias");
 
@@ -306,7 +304,7 @@ QUnit.module('core', {}, function () {
         assert.ok(newclicked, "should trigger bound events");
 
         clicked = newclicked = false;
-        widget.undelegateEvents();
+        widget._undelegateEvents();
         widget.$('li').click();
         assert.ok(!clicked, "undelegate should unbind events delegated");
         assert.ok(newclicked, "undelegate should only unbind events it created");

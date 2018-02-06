@@ -10,7 +10,9 @@ import traceback
 from hashlib import md5
 
 from PIL import Image
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as ET
+
+from odoo.tools import pycompat
 
 try:
     import jcconv
@@ -27,7 +29,7 @@ from .exceptions import *
 
 def utfstr(stuff):
     """ converts stuff to string and does without failing if stuff is a utf8 string """
-    if isinstance(stuff,basestring):
+    if isinstance(stuff,pycompat.string_types):
         return stuff
     else:
         return str(stuff)
@@ -168,7 +170,7 @@ class StyleStack:
     def to_escpos(self):
         """ converts the current style to an escpos command string """
         cmd = ''
-        ordered_cmds = sorted(self.cmds.keys(), key=lambda x: self.cmds[x]['_order'])
+        ordered_cmds = sorted(self.cmds, key=lambda x: self.cmds[x]['_order'])
         for style in ordered_cmds:
             cmd += self.cmds[style][self.get(style)]
         return cmd
@@ -431,7 +433,7 @@ class Escpos:
 
         print('print_b64_img')
 
-        id = md5(img).digest()
+        id = md5(img.encode('utf-8')).digest()
 
         if id not in self.img_cache:
             print('not in cache')
@@ -788,7 +790,7 @@ class Escpos:
                     if encoding in remaining:
                         del remaining[encoding]
                     if len(remaining) >= 1:
-                        encoding = remaining.items()[0][0]
+                        (encoding, _) = remaining.popitem()
                     else:
                         encoding = 'cp437'
                         encoded  = '\xb1'    # could not encode, output error character

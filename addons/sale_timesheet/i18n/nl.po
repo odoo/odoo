@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Martin Trigaux, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,9 +23,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_account_id
-msgid "Account"
-msgstr "Rekening"
+#: code:addons/sale_timesheet/models/account_invoice.py:32
+#: code:addons/sale_timesheet/models/project.py:26
+#, python-format
+msgid ""
+"\n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    Click to record timesheets.\n"
+"                </p><p>\n"
+"                    You can register and track your workings hours by project every\n"
+"                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
+"                    customers if required.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"\n"
+"                <p class=\"oe_view_nocontent_create\">\n"
+"                    Klik voor het maken van urenstaten.\n"
+"                </p><p>\n"
+"U kunt uw tijd registreren en per dag volgen per project.\n"
+"                    Alle tijd die aan een project wordt besteed, wordt een kostenpost en kan, indien nodig, worden gefactureerd aan\n"
+"                     klanten.                </p>\n"
+"            "
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "<b>Total</b>"
+msgstr "<b>Totaal</b>"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
+msgid "<span class=\"o_label\">Overview</span>"
+msgstr "<span class=\"o_label\">Overzicht</span>"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_analytic_line
@@ -33,22 +62,81 @@ msgid "Analytic Line"
 msgstr "Kostenplaatsregel"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_project_task_procurement_id
-msgid "Assign to Order"
-msgstr "Toewijzen aan order"
+#: selection:account.analytic.line,timesheet_invoice_type:0
+msgid "Billable Fixed"
+msgstr "Factureerbaar vast"
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_res_company
-msgid "Companies"
-msgstr "Bedrijven"
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Billable Hours"
+msgstr "Factureerbare uren"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
-#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
-msgid ""
-"Create a task under this project on sales order validation. This setting "
-"must be set for each company."
-msgstr ""
+#: selection:account.analytic.line,timesheet_invoice_type:0
+msgid "Billable Time"
+msgstr "Factureerbare tijd"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_type
+msgid "Billable Type"
+msgstr "Factureerbare soort"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Billable fixed"
+msgstr "Factureerbaar vast"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Billable time"
+msgstr "Factureerbare tijd"
+
+#. module: sale_timesheet
+#: model:ir.filters,name:sale_timesheet.timesheet_filter_billing
+msgid "Billing Rate"
+msgstr "Facturatietarief"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
+#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
+msgid "By Billing Rate"
+msgstr "Op facturatietarief"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Cost"
+msgstr "Kostprijs"
+
+#. module: sale_timesheet
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_report_cost_revenue
+#: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_report_cost_revenue
+msgid "Costs and Revenues"
+msgstr "Kosten en Opbrengsten"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Create a new project but no task"
+msgstr "Maak een nieuw project maar geen taak"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Create a task in a new project"
+msgstr "Maak een taak in een nieuw project"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Create a task in an existing project"
+msgstr "Maak een taak in een bestaand project"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: sale_timesheet
+#: selection:product.template,service_tracking:0
+msgid "Don't create task"
+msgstr "Geen taak aanmaken"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_hr_employee
@@ -56,70 +144,109 @@ msgid "Employee"
 msgstr "Werknemer"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_alert_time
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Fixed"
+msgstr "Vast"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Fixed Price Projects"
+msgstr "Vaste prijs projecten"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
+msgid "Fixed price services"
+msgstr "Vaste prijs diensten"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Hours"
+msgstr "Uren"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_account_invoice
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
+msgid "Invoice"
+msgstr "Factuur"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_policy
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_policy
+msgid "Invoice based on"
+msgstr "Factuur gebaseerd op"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line_timesheet_invoice_id
+msgid "Invoice created from the timesheet"
+msgstr "Factuur aangemaakt van urenstaat"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Invoiced"
+msgstr "Gefactureerd"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_is_service
+msgid "Is a Service"
+msgstr "Is een dienst"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
+msgid "Milestone services"
+msgstr "Mijlpaal diensten"
+
+#. module: sale_timesheet
+#: selection:product.template,service_policy:0
+msgid "Milestones (manually set quantities on order)"
+msgstr "Mijlpalen (handmatig ingestelde hoeveelheden op order)"
+
+#. module: sale_timesheet
+#: selection:account.analytic.line,timesheet_invoice_type:0
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "No task found"
+msgstr "Geen taak gevonden"
+
+#. module: sale_timesheet
+#: selection:account.analytic.line,timesheet_invoice_type:0
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Non Billable"
+msgstr "Niet factureerbaar"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
+msgid "Non Billable Hours"
+msgstr "Niet factureerbare uren"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Non billable"
+msgstr "Niet factureerbaar"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_count
+msgid "Number of timesheets"
+msgstr "Aantal urenstaten"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_service_tracking
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_service_tracking
 msgid ""
-"Number of days before an alert should be raised on the lot/serial number."
+"On Sales order confirmation, this product can generate a project and/or "
+"task. From those, you can track the service you are selling."
 msgstr ""
-"Aantal dagen voordat een waarschuwing getoond moet worden op het "
-"lot/serienummer."
+"Bij het bevestiging van een verkooporder kan dit product een project en/of "
+"een taak genereren. Van hieruit kunt u de service volgen die u verkoopt."
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_life_time
-msgid ""
-"Number of days before the goods may become dangerous and must not be "
-"consumed. It will be computed on the lot/serial number."
-msgstr ""
+#: selection:product.template,service_policy:0
+msgid "Ordered quantities"
+msgstr "Bestelde hoeveelheden"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_removal_time
-msgid ""
-"Number of days before the goods should be removed from the stock. It will be"
-" computed on the lot/serial number."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_product_product_use_time
-msgid ""
-"Number of days before the goods starts deteriorating, without being "
-"dangerous yet. It will be computed on the lot/serial number."
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
-msgid "Order Line"
-msgstr "Orderregel"
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_procurement_order
-msgid "Procurement"
-msgstr "Verwerving"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.field_project_task_procurement_id
-msgid ""
-"Procurement of the sale order line on which the timesheets should be "
-"assigned"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_product_product
-msgid "Product"
-msgstr "Product"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_alert_time
-msgid "Product Alert Time"
-msgstr "Product signalering tijd"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_life_time
-msgid "Product Life Time"
-msgstr "Product levensduur"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_removal_time
-msgid "Product Removal Time"
-msgstr "Product verwijdertijd"
+#: code:addons/sale_timesheet/models/project.py:45
+#, python-format
+msgid "Overview"
+msgstr "Overzicht"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_product_template
@@ -127,14 +254,21 @@ msgid "Product Template"
 msgstr "Productsjabloon"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_use_time
-msgid "Product Use Time"
-msgstr "Product gebruiksduur"
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_fixed
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_milestone
+#: model:ir.actions.act_window,name:sale_timesheet.product_template_action_time_based
+msgid "Products"
+msgstr "Producten"
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Profitability"
+msgstr "Winstgevend"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_project_project
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product_project_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template_project_id
-#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project"
 msgstr "Project"
 
@@ -144,25 +278,111 @@ msgid "Project associated to this sale"
 msgstr "Project geassocieerd aan deze verkoop. "
 
 #. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+msgid "Project(s) Overview"
+msgstr "Project(en) overzicht"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:107
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_project_ids
+#, python-format
+msgid "Projects"
+msgstr "Projecten"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_project_ids
+msgid "Projects used in this sales order."
+msgstr "Project gebruikt op deze verkooporder."
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_sale_order
+msgid "Quotation"
+msgstr "Offerte"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Rates"
+msgstr "Tarieven"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line_timesheet_revenue
+msgid "Revenue"
+msgstr "Opbrengst"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_project_project_sale_line_id
+msgid ""
+"Sale order line from which the project has been created. Used for "
+"tracability."
+msgstr ""
+"Verkooporderlijn van waaruit het project is aangemaakt. Gebruikt voor "
+"traceerbaarheid."
+
+#. module: sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
 msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale_timesheet
-#: model:ir.model,name:sale_timesheet.model_sale_order_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_sale_line_id
+#: model:ir.ui.view,arch_db:sale_timesheet.view_sale_service_inherit_form2
+msgid "Sales Order Item"
+msgstr "Verkooporder item"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_sale_order_line
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project_sale_line_id
 msgid "Sales Order Line"
 msgstr "Verkooporderregel"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_is_service
+msgid ""
+"Sales Order item should generate a task and/or a project, depending on the "
+"product settings."
+msgstr ""
+"Een verkooporderregel dient een taak en/of een project aan te maken, "
+"afhankelijk van de productinstellingen."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_product_product_project_id
+#: model:ir.model.fields,help:sale_timesheet.field_product_template_project_id
+msgid ""
+"Select a non billable project on which tasks can be created. This setting "
+"must be set for each company."
+msgstr ""
+"Selecteer een niet factureerbaar project waarop taken kunnen worden "
+"aangemaakt. Deze instelling dient te worden gemaakt voor ieder bedrijf."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_product_service_tracking
+#: model:ir.model.fields,field_description:sale_timesheet.field_product_template_service_tracking
+msgid "Service Tracking"
+msgstr "Dienstopvolging"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Setup your fixed price services"
+msgstr "Stel uw vaste prijzen diensten in"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Setup your milestone services"
+msgstr "Stel uw milestone diensten in"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
+msgid "Setup your time-based services"
+msgstr "Stel uw nacalculatie diensten in"
+
+#. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task
-#: model:ir.model.fields,field_description:sale_timesheet.field_procurement_order_task_id
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line_task_id
 msgid "Task"
 msgstr "Taak"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/procurement.py:80
+#: code:addons/sale_timesheet/models/sale_order.py:234
 #, python-format
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
@@ -171,8 +391,16 @@ msgstr ""
 "id=%d>%s</a>"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,help:sale_timesheet.field_sale_order_line_task_id
+msgid "Task generated by the sales order item"
+msgstr "Taak gegenereerd door het verkooporder item"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/main.py:109
+#: code:addons/sale_timesheet/controllers/main.py:141
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_tasks_count
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#, python-format
 msgid "Tasks"
 msgstr "Taken"
 
@@ -182,7 +410,12 @@ msgid "Tasks associated to this sale"
 msgstr "Taken die bij deze verkoop horen"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/procurement.py:84
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "There is no timesheet for now."
+msgstr "Er zijn momenteel geen urenstaten."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:237
 #, python-format
 msgid ""
 "This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
@@ -192,23 +425,35 @@ msgstr ""
 "id=%d>%s</a> (%s)"
 
 #. module: sale_timesheet
-#: model:ir.model.fields,help:sale_timesheet.project_time_mode_id_duplicate_xmlid
-msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects, don't forget to setup the right unit of measure in your employees."
-msgstr ""
-"Hiermee wordt de gebruikte maateenheid ingesteld die wordt gebruikt in projecten en taken.\n"
-"Wanneer u gebruik maakt van urenstaten gekoppeld aan projecten, vergeet dan niet de juiste eenheid voor uw werknemers in te stellen."
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Time and material"
+msgstr "Tijd en materiaal"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "Time by people"
+msgstr "Tijd per persoon"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.product_template_search_view_sale_timesheet
+msgid "Time-based services"
+msgstr "Tijd gebaseerde diensten"
+
+#. module: sale_timesheet
+#. openerp-web
+#: code:addons/sale_timesheet/static/src/js/timesheet_plan.js:143
+#: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_plan
+#: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
+#, python-format
+msgid "Timesheet"
+msgstr "Urenstaat"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_hr_employee_timesheet_cost
 msgid "Timesheet Cost"
 msgstr "Kostprijs urenstaat"
-
-#. module: sale_timesheet
-#: model:ir.model.fields,field_description:sale_timesheet.project_time_mode_id_duplicate_xmlid
-msgid "Timesheet UoM"
-msgstr "Urenstaat maateenheid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_timesheet_count
@@ -221,22 +466,44 @@ msgid "Timesheet activities associated to this sale"
 msgstr "Urenstaat activiteiten gerelateerd met deze verkoop"
 
 #. module: sale_timesheet
-#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
+#: code:addons/sale_timesheet/controllers/main.py:101
+#: code:addons/sale_timesheet/controllers/main.py:130
+#: code:addons/sale_timesheet/models/account_invoice.py:26
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_invoice_timesheet_ids
+#: model:ir.ui.view,arch_db:sale_timesheet.account_invoice_view_form_inherit_sale_timesheet
 #: model:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#, python-format
 msgid "Timesheets"
 msgstr "Urenstaten"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/sale_order.py:55
+#: code:addons/sale_timesheet/models/project.py:20
 #, python-format
-msgid ""
-"You can use only one product on timesheet within the same sales order. You "
-"should split your order to include only one contract based on time and "
-"material."
-msgstr ""
+msgid "Timesheets of %s"
+msgstr "Urenstaten van %s"
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/project.py:17
+#: selection:product.template,service_policy:0
+msgid "Timesheets on tasks"
+msgstr "Urenstaten op taken"
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
+msgid "To invoice"
+msgstr "Naar factuur"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:32
+#, python-format
+msgid ""
+"You can not modify already invoiced timesheets (linked to a Sales order "
+"items invoiced on Time and material)."
+msgstr ""
+"U kan reeds gefactureerde facturen niet wijzigen (gelinkt aan een "
+"verkooporder zijn gefactureerde items op tijd en materiaal)."
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/project.py:74
 #, python-format
 msgid ""
 "You cannot delete a task related to a Sales Order. You can only archive this"
@@ -244,3 +511,8 @@ msgid ""
 msgstr ""
 "U kan geen taak verwijderen gerelateerd aan een verkooporder. U kan deze "
 "taak alleen archiveren."
+
+#. module: sale_timesheet
+#: model:ir.ui.view,arch_db:sale_timesheet.hr_timesheet_employee_extd_form
+msgid "per hour"
+msgstr "per uur"

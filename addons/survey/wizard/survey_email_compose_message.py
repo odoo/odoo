@@ -3,10 +3,12 @@
 
 import re
 import uuid
-import urlparse
+
+from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 emails_split = re.compile(r"[;,\n\r]+")
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -85,7 +87,7 @@ class SurveyMailComposeMessage(models.TransientModel):
             #set url
             url = wizard.survey_id.public_url
 
-            url = urlparse.urlparse(url).path[1:]  # dirty hack to avoid incorrect urls
+            url = urls.url_parse(url).path[1:]  # dirty hack to avoid incorrect urls
 
             if token:
                 url = url + '/' + token
@@ -118,7 +120,7 @@ class SurveyMailComposeMessage(models.TransientModel):
             if wizard.public != 'email_private':
                 return None
             else:
-                token = uuid.uuid4().__str__()
+                token = pycompat.text_type(uuid.uuid4())
                 # create response with token
                 survey_user_input = SurveyUserInput.create({
                     'survey_id': wizard.survey_id.id,

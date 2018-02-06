@@ -23,6 +23,7 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo import SUPERUSER_ID, api
+from odoo.tools import pycompat
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -138,18 +139,18 @@ def initialize_sys_path():
 
     # add base module path
     base_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'addons'))
-    if base_path not in ad_paths:
+    if base_path not in ad_paths and os.path.isdir(base_path):
         ad_paths.append(base_path)
 
     # add odoo.addons.__path__
     for ad in __import__('odoo.addons').addons.__path__:
         ad = os.path.abspath(ad)
-        if ad not in ad_paths:
+        if ad not in ad_paths and os.path.isdir(ad):
             ad_paths.append(ad)
 
     if not hooked:
-        sys.meta_path.append(AddonsHook())
-        sys.meta_path.append(OdooHook())
+        sys.meta_path.insert(0, OdooHook())
+        sys.meta_path.insert(0, AddonsHook())
         hooked = True
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -323,13 +324,13 @@ def load_information_from_description_file(module, mod_path=None):
             'sequence': 100,
             'summary': '',
         }
-        info.update(itertools.izip(
+        info.update(pycompat.izip(
             'depends data demo test init_xml update_xml demo_xml'.split(),
             iter(list, None)))
 
-        f = tools.file_open(manifest_file)
+        f = tools.file_open(manifest_file, mode='rb')
         try:
-            info.update(ast.literal_eval(f.read()))
+            info.update(ast.literal_eval(pycompat.to_native(f.read())))
         finally:
             f.close()
 
@@ -395,7 +396,11 @@ def get_modules():
             for mname in MANIFEST_NAMES:
                 if os.path.isfile(opj(dir, name, mname)):
                     return True
-        return map(clean, filter(is_really_module, os.listdir(dir)))
+        return [
+            clean(it)
+            for it in os.listdir(dir)
+            if is_really_module(it)
+        ]
 
     plist = []
     initialize_sys_path()
@@ -427,12 +432,19 @@ def get_test_modules(module):
     modpath = 'odoo.addons.' + module
     try:
         mod = importlib.import_module('.tests', modpath)
-    except Exception as e:
-        # If module has no `tests` sub-module, no problem.
-        if str(e) != 'No module named tests':
-            _logger.exception('Can not `import %s`.', module)
+    except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
+        # Hide ImportErrors on `tests` sub-module, but display other exceptions
+        if pycompat.PY2:
+            if e.message.startswith('No module named') and e.message.endswith("tests"):
+                return []
+        else:
+            if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
+                return []
+        _logger.exception('Can not `import %s`.', module)
         return []
-
+    except Exception as e:
+        _logger.exception('Can not `import %s`.', module)
+        return []
     if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
         _logger.warn(
             "Found deprecated fast_suite or checks attribute in test module "
@@ -463,36 +475,23 @@ class TestStream(object):
 
 current_test = None
 
-def runs_at(test, hook, default):
-    # by default, tests do not run post install
-    test_runs = getattr(test, hook, default)
-
-    # for a test suite, we're done
-    if not isinstance(test, unittest.TestCase):
-        return test_runs
-
-    # otherwise check the current test method to see it's been set to a
-    # different state
-    method = getattr(test, test._testMethodName)
-    return getattr(method, hook, test_runs)
-
-runs_at_install = functools.partial(runs_at, hook='at_install', default=True)
-runs_post_install = functools.partial(runs_at, hook='post_install', default=False)
-
-def run_unit_tests(module_name, dbname, position=runs_at_install):
+def run_unit_tests(module_name, dbname, position='at_install'):
     """
     :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
               if any of them failed.
     :rtype: bool
     """
     global current_test
+    from odoo.tests.common import TagsSelector # Avoid import loop
     current_test = module_name
     mods = get_test_modules(module_name)
     threading.currentThread().testing = True
+    config_tags = TagsSelector(tools.config['test_tags'])
+    position_tag = TagsSelector(position)
     r = True
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = unittest.TestSuite(itertools.ifilter(position, tests))
+        suite = unittest.TestSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
 
         if suite.countTestCases():
             t0 = time.time()
@@ -532,5 +531,5 @@ def unwrap_suite(test):
         return
 
     for item in itertools.chain.from_iterable(
-            itertools.imap(unwrap_suite, subtests)):
+            unwrap_suite(t) for t in subtests):
         yield item

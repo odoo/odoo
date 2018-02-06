@@ -6,21 +6,21 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
+var utils = require('mail.utils');
 
 var QWeb = core.qweb;
 var _t = core._t;
 
 /**
  * Set the 'label_delay' entry in activity data according to the deadline date
- * @param {Array} list of activity Object
+ * @param {Array} activities list of activity Object
  * @return {Array} : list of modified activity Object
  */
 var setDelayLabel = function(activities){
     var today = moment().startOf('day');
     _.each(activities, function(activity){
         var to_display = '';
-        var deadline = moment(activity.date_deadline + ' 00:00:00');
-        var diff = deadline.diff(today, 'days', true); // true means no rounding
+        var diff = activity.date_deadline.diff(today, 'days', true); // true means no rounding
         if(diff === 0){
             to_display = _t('Today');
         }else{
@@ -71,10 +71,17 @@ var AbstractActivityField = AbstractField.extend({
                 });
         }
         return $.when(fetch_def).then(function (results) {
+            // convert create_date and date_deadline to moments
+            _.each(results, function (activity) {
+                activity.create_date = moment(time.auto_str_to_date(activity.create_date));
+                activity.date_deadline = moment(time.auto_str_to_date(activity.date_deadline));
+            });
+
             // filter out activities that are no longer linked to this record
             self.activities = _.filter(self.activities.concat(results || []), function (activity) {
                 return _.contains(self.value.res_ids, activity.id);
             });
+
             // sort activities by due date
             self.activities = _.sortBy(self.activities, 'date_deadline');
         });
@@ -104,6 +111,7 @@ var AbstractActivityField = AbstractField.extend({
 var Activity = AbstractActivityField.extend({
     className: 'o_mail_activity',
     events: {
+        'click a': '_onClickRedirect',
         'click .o_activity_edit': '_onEditActivity',
         'click .o_activity_unlink': '_onUnlinkActivity',
         'click .o_activity_done': '_onMarkActivityDone',
@@ -121,11 +129,24 @@ var Activity = AbstractActivityField.extend({
         var fetch_def = this.dp.add(this._readActivities());
         return fetch_def.then(function () {
             _.each(self.activities, function (activity) {
-                activity.time_ago = moment(time.auto_str_to_date(activity.create_date)).fromNow();
+                if (activity.note) {
+                    activity.note = utils.parse_and_transform(activity.note, utils.add_link);
+                }
             });
-            self.$el.html(QWeb.render('mail.activity_items', {
-                activities: setDelayLabel(self.activities),
-            }));
+            var activities = setDelayLabel(self.activities);
+            if (activities.length) {
+                var nbActivities = _.countBy(activities, 'state');
+                self.$el.html(QWeb.render('mail.activity_items', {
+                    activities: activities,
+                    nbPlannedActivities: nbActivities.planned,
+                    nbTodayActivities: nbActivities.today,
+                    nbOverdueActivities: nbActivities.overdue,
+                    date_format: time.getLangDateFormat(),
+                    datetime_format: time.getLangDatetimeFormat(),
+                }));
+            } else {
+                self.$el.empty();
+            }
         });
     },
     _reset: function (record) {
@@ -145,11 +166,22 @@ var Activity = AbstractActivityField.extend({
     },
 
     // handlers
-    _onEditActivity: function (event) {
+    _onClickRedirect: function (ev) {
+        var id = $(ev.target).data('oe-id');
+        if (id) {
+            ev.preventDefault();
+            var model = $(ev.target).data('oe-model');
+            this.trigger_up('redirect', {
+                res_id: id,
+                res_model: model,
+            });
+        }
+    },
+    _onEditActivity: function (event, options) {
         event.preventDefault();
         var self = this;
         var activity_id = $(event.currentTarget).data('activity-id');
-        var action = {
+        var action = _.defaults(options || {}, {
             type: 'ir.actions.act_window',
             res_model: 'mail.activity',
             view_mode: 'form',
@@ -161,7 +193,7 @@ var Activity = AbstractActivityField.extend({
                 default_res_model: this.model,
             },
             res_id: activity_id,
-        };
+        });
         return this.do_action(action, {
             on_close: function () {
                 // remove the edited activity from the array of fetched activities to
@@ -171,13 +203,17 @@ var Activity = AbstractActivityField.extend({
             },
         });
     },
-    _onUnlinkActivity: function (event) {
+    _onUnlinkActivity: function (event, options) {
         event.preventDefault();
         var activity_id = $(event.currentTarget).data('activity-id');
+        options = _.defaults(options || {}, {
+            model: 'mail.activity',
+            args: [[activity_id]],
+        });
         return this._rpc({
-                model: 'mail.activity',
+                model: options.model,
                 method: 'unlink',
-                args: [[activity_id]],
+                args: options.args,
             })
             .then(this._reload.bind(this, {activity: true}));
     },

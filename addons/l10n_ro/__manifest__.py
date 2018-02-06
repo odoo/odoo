@@ -12,7 +12,10 @@
     "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
     "website": "http://www.forbiom.eu",
     'category': 'Localization',
-    "depends" : ['account','base_vat'],
+    "depends" : [
+        'account',
+        'base_vat',
+    ],
     "description": """
 This is the module to manage the Accounting Chart, VAT structure, Fiscal Position and Tax Mapping.
 It also adds the Registration Number for Romania in Odoo.
@@ -22,9 +25,10 @@ Romanian accounting chart and localization.
     """,
     "data": ['views/res_partner_view.xml',
              'data/l10n_ro_chart_data.xml',
+             'data/account_data.xml',
              'data/account_tax_data.xml',
              'data/account_fiscal_position_data.xml',
-             'data/account_chart_template_data.yml',
+             'data/account_chart_template_data.xml',
              'data/res.country.state.csv',
              'data/res.bank.csv',
              ],

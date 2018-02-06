@@ -21,8 +21,8 @@
             <field name="context">{'search_default_partner_id': active_id}</field>
             <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    This vendor has no purchase order. Click to create a new RfQ.
+                <p class="o_view_nocontent_smiling_face">
+                    This vendor has no purchase order. Create a new RfQ
                 </p><p>
                     The request for quotation is the first step of the purchases flow. Once
                     converted into a purchase order, you will be able to control the receipt
@@ -41,7 +41,7 @@
                 <field name="mobile" position="after">
                     <field name="purchase_order_count"/>
                 </field>
-                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
                     <span t-if="record.purchase_order_count.value>0" class="badge"><i class="fa fa-fw fa-shopping-cart"/><t t-esc="record.purchase_order_count.value"/></span>
                 </xpath>
             </field>
@@ -55,8 +55,8 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'search_default_partner_id': active_id, 'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click here to record a vendor bill.
+                <p class="o_view_nocontent_smiling_face">
+                    Record a new vendor bill
                 </p><p>
                     Vendors bills can be pre-generated based on purchase
                     orders or receipts. This allows you to control bills
@@ -84,7 +84,7 @@
                         <separator string="Warning on the Purchase Order" colspan="4"/>
                         <field name="purchase_warn" nolabel="1" />
                         <field name="purchase_warn_msg" colspan="3" nolabel="1" 
-                                attrs="{'required':[('purchase_warn','!=','no-message')],'readonly':[('purchase_warn','=','no-message')]}"/>
+                                attrs="{'required':[('purchase_warn', '!=', False), ('purchase_warn','!=','no-message')],'readonly':[('purchase_warn','=','no-message')]}"/>
                     </group>
                 </page>
             </field>
@@ -100,7 +100,7 @@
                 <button name="toggle_active" position="before">
                     <button class="oe_stat_button" name="%(purchase.act_res_partner_2_supplier_invoices)d" type="action"
                         attrs="{'invisible': [('supplier', '=', False)]}" icon="fa-pencil-square-o" help="Vendor Bills">
-                        <field string="Vendor Bills." name="supplier_invoice_count" widget="statinfo"/>
+                        <field string="Vendor Bills" name="supplier_invoice_count" widget="statinfo"/>
                     </button>
                 </button>
             </field>

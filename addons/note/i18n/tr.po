@@ -1,23 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
-# Ahmet Altınışık <aaltinisik@altinkaya.com.tr>, 2016
-# AYHAN KIZILTAN <akiziltan76@hotmail.com>, 2016
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2016
+# Murat Kaplan <muratk@projetgrup.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-03-24 18:55+0000\n"
-"Last-Translator: AYHAN KIZILTAN <akiziltan76@hotmail.com>\n"
-"Language-Team: Turkish (http://www.transifex.com/odoo/odoo-9/language/tr/)\n"
-"Language: tr\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: tr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: note
@@ -34,12 +33,17 @@ msgstr "Arşiv"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "By sticky note Category"
-msgstr "Yapışkan not Kategorilerine göre"
+msgstr "Yapışkan nota göre Kategori"
+
+#. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Yeni bir etiket eklemek için tıklayın."
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
-msgstr "Yeni bir kişisel not eklemek için tıklayın."
+msgstr "Kişisel bir not eklemek için tıklayın."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_color
@@ -64,12 +68,12 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:note.field_note_stage_create_date
 #: model:ir.model.fields,field_description:note.field_note_tag_create_date
 msgid "Created on"
-msgstr "Oluşturuldu"
+msgstr "Oluşturulma"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_date_done
 msgid "Date done"
-msgstr "Bitim tarih"
+msgstr "Tamamlanma Tarihi"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_kanban
@@ -81,12 +85,17 @@ msgstr "Sil"
 #: model:ir.model.fields,field_description:note.field_note_stage_display_name
 #: model:ir.model.fields,field_description:note.field_note_tag_display_name
 msgid "Display Name"
-msgstr "Adı Göster"
+msgstr "Görünüm Adı"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_fold
 msgid "Folded by Default"
-msgstr "Öntanımlı Katlanmış"
+msgstr "Varsayılan Olarak Katlanmış"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "Sonraki Aktiviteler"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -105,7 +114,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:note.field_note_stage___last_update
 #: model:ir.model.fields,field_description:note.field_note_tag___last_update
 msgid "Last Modified on"
-msgstr "Son değiştirme tarihi"
+msgstr "Son Değiştiren"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_uid
@@ -119,24 +128,28 @@ msgstr "Son Güncelleyen"
 #: model:ir.model.fields,field_description:note.field_note_stage_write_date
 #: model:ir.model.fields,field_description:note.field_note_tag_write_date
 msgid "Last Updated on"
-msgstr "Son Güncellenen"
+msgstr "Son Güncelleme"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "Geciken Aktiviteler"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
-msgstr "Daha Sonra"
+msgstr "Sonra"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr "Aktivitelerim"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "Yeni"
-
-#. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr "Yeni Not"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -163,7 +176,7 @@ msgstr "Not Özeti"
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr "Not Başlığı"
+msgstr "Not Etiketi"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_note
@@ -181,14 +194,19 @@ msgstr "Sahibi"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Not aşaması sahibi"
+msgid "Owner of the note stage"
+msgstr "Not aşamasının sahini"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
 msgstr "Sıra"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -199,12 +217,12 @@ msgstr "Aşama"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage_name
 msgid "Stage Name"
-msgstr "Aşama"
+msgstr "Aşama Adı"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr "Notların Aşaması"
+msgstr "Not Aşaması"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -216,17 +234,17 @@ msgstr "Aşamalar"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr "Notların Aşamaları"
+msgstr "Not Aşamaları"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_ids
 msgid "Stages of Users"
-msgstr "Kullanıcıların Aşamaları"
+msgstr "Kullanıcı Aşamaları"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag_name
 msgid "Tag Name"
-msgstr "Başlık Adı"
+msgstr "Etiket Adı"
 
 #. module: note
 #: sql_constraint:note.tag:0
@@ -234,13 +252,16 @@ msgid "Tag name already exists !"
 msgstr "Etiket adı halihazırda mevcut !"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiketler"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
 msgstr "Bu Hafta"
@@ -252,6 +273,11 @@ msgid "Today"
 msgstr "Bugün"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Bugünkü Aktiviteler"
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_02
 msgid "Tomorrow"
 msgstr "Yarın"
@@ -260,24 +286,21 @@ msgstr "Yarın"
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
-"Notları, kişisel görevleri ya da notları düzenlemek\n"
-"için kullanın. Bütün notlar özeldir; onları başka kimse göremeyecektir.\n"
-"Yine de izleyicileri bu nota davet ederek onları başkalarıyla "
-"paylaşabilirsiniz.\n"
-"(Toplantı tutanakları için kullanışlıdır, özellikle ortak yazışmalar için\n"
-"pad özelliğini etkinleştirdiyseniz)."
+"Kişisel görevleri veya notları düzenlemek için notlar kullanın.\n"
+"            Tüm notlar özel, kimse onları göremeyecek. ancak\n"
+"            Takipçilerini davet ederek bazı notları diğer insanlarla paylaşabilirsiniz\n"
+"            (Özellikle toplantı tutanakları için yararlıdır.\n"
+"            Iş birlikçi yazılar için pad özelliğini etkinleştirirsiniz)."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
 msgid "Used to order the note stages"
-msgstr "Not aşamalarını sıralamak için kullanın"
+msgstr "Not aşamalarını sıralamak için kullanılır"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
@@ -290,53 +313,5 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-"Sütunlar ekleyerek, kaldırarak veya onları düzenleyerek, notlarınızı/"
-"görevlerinizi nasıl işleyeceğinizi kişiselleştirebilirsiniz."
-
-#~ msgid "Action Needed"
-#~ msgstr "Eylem Gerekiyor"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Kayıta işlenmiş son mesajın tarihi."
-
-#~ msgid "Followers"
-#~ msgstr "İzleyiciler"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "İzleyiciler (Kanallar)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "İzleyiciler (İş ortakları)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "İşaretliyse, yeni mesajlar dikkatinizi gerektirir."
-
-#~ msgid "Is Follower"
-#~ msgstr "Takipçi mi"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Son Mesaj Tarihi"
-
-#~ msgid "Messages"
-#~ msgstr "Mesajlar"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Mesajlar ve iletişim geçmişi"
-
-#~ msgid "Number of Actions"
-#~ msgstr "İşlem Sayısı"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Eylem gerektiren mesaj sayısı"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Okunmamış mesaj sayısı"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Okunmamış Mesajlar"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Okunmamış Mesaj Sayacı"
+"Notlarınızı / görevlerinizi nasıl işlediğinizi özelleştirin.\n"
+"            Sütunları kaldırma veya değiştirme."

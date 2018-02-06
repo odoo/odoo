@@ -11,7 +11,7 @@
                     <field name="is_ssl"/>
                     <field name="object_id"/>
                     <field name="date"/>
-                    <field name="message_ids" string="# of emails"/>
+                    <field name="message_ids" string="Email Count"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -76,10 +76,10 @@
             <field name="arch" type="xml">
                 <search string="Search Incoming Mail Servers">
                     <field name="name" string="Incoming Mail Server"/>
-                    <filter string="IMAP" domain="[('type','=','imap')]" help="Server type IMAP."/>
-                    <filter string="POP" domain="[('type','=','pop')]" help="Server type POP."/>
+                    <filter string="IMAP" name="imap" domain="[('type','=','imap')]" help="Server type IMAP."/>
+                    <filter string="POP" name="pop" domain="[('type','=','pop')]" help="Server type POP."/>
                     <separator/>
-                    <filter string="SSL" domain="[('is_ssl','=',True)]" help="If SSL required."/>
+                    <filter string="SSL" name="ssl" domain="[('is_ssl','=',True)]" help="If SSL required."/>
                 </search>
             </field>
         </record>
@@ -92,27 +92,6 @@
             <field name="view_id" ref="view_email_server_tree"/>
             <field name="search_view_id" ref="view_email_server_search"/>
         </record>
-
-        <record id="base_config_settings_view_form_inherit_fetchmail" model="ir.ui.view">
-            <field name="name">base.config.settings.inherit.fetchmail</field>
-            <field name="model">base.config.settings</field>
-            <field name="inherit_id" ref="mail.base_config_settings_view_form_inherit_mail"/>
-            <field name="arch" type="xml">
-                <div id="mail_alias_domain" position="after">
-                    <div>
-                        <button type="action"
-                        name="%(action_email_server_tree)d"
-                        string="Incoming Email Servers" icon="fa-arrow-right" class="btn-link"/>
-                    </div>
-                    <div>
-                        <button type="action"
-                        name="%(base.action_ir_mail_server_list)d"
-                        string="Outgoing Email Servers" icon="fa-arrow-right" class="btn-link"/>
-                    </div>
-                </div>
-            </field>
-        </record>
-
 
         <menuitem
             parent="base.menu_email"

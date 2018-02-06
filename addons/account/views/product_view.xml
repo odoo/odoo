@@ -7,25 +7,29 @@
             <field name="priority">5</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page name="sales" position="after">
-                    <page string="Invoicing" name="invoicing" groups="account.group_account_invoice">
+                <page name="inventory" position="after">
+                    <page string="Accounting" name="invoicing" groups="account.group_account_user">
                         <group name="properties">
-                            <group>
+                            <group string="Receivables">
                                 <field name="property_account_income_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
-                                <field name="taxes_id" widget="many2many_tags"/>
                             </group>
-                            <group>
+                            <group string="Payables" name="payables">
                                 <field name="property_account_expense_id"
                                     domain="[('internal_type','=','other'),('deprecated','=',False)]"
                                     groups="account.group_account_user"/>
-                                <field name="supplier_taxes_id" widget="many2many_tags"/>
                             </group>
                         </group>
                         <group name="accounting"/>
                     </page>
                 </page>
+                <field name="list_price" position="after">
+                    <field name="taxes_id" widget="many2many_tags"/>
+                </field>
+                <group name="bill" position="inside">
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                </group>
             </field>
         </record>
 
@@ -35,8 +39,8 @@
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
                 <group name="first" position="after">
-                    <group name="account_property" groups="account.group_account_manager">
-                        <group string="Account Properties">
+                    <group name="account_property" >
+                        <group string="Account Properties" groups="account.group_account_user">
                             <field name="property_account_income_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
                             <field name="property_account_expense_categ_id" domain="[('internal_type','=','other'),('deprecated', '=', False)]"/>
                         </group>

@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -28,9 +28,19 @@ msgid "$15k"
 msgstr "€15k"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "1/5"
+msgstr "1/5"
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "10  / 40 people"
 msgstr "10 / 40 mensen"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "2/5"
+msgstr "2/5"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -38,9 +48,44 @@ msgid "3 months"
 msgstr "3 maanden"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "3/5"
+msgstr "3/5"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "4/5"
+msgstr "4/5"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "5/5"
+msgstr "5/5"
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "50% YoY"
 msgstr "50% JoJ"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-bolt\"/> Bolts"
+msgstr "<i class=\"fa fa-bolt\"/> Bouten"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-heart\"/> Hearts"
+msgstr "<i class=\"fa fa-heart\"/> Hartjes"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-star\"/> Stars"
+msgstr "<i class=\"fa fa-star\"/>Sterren"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "<i class=\"fa fa-tasks\"/> Bar"
+msgstr "<i class=\"fa fa-tasks\"/> Bar"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -50,6 +95,21 @@ msgid ""
 msgstr ""
 "<span class=\"btn btn-primary btn-lg o_website_form_send\">Verstuur</span>\n"
 "                                <span id=\"o_website_form_result\"/>"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid ""
+"<span>\n"
+"                                            We usually reply between one and three days.<br/>\n"
+"                                            Feel free to contact him/her if you have further questions.\n"
+"                                        </span>"
+msgstr ""
+"<span>\n"
+"We reageren normaal binnen één tot drie dagen.<br/>\n"
+"Voel je vrij om hem/haar te e-mailen indien u nog vragen heeft.\n"
+"</span>"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -136,12 +196,21 @@ msgid "Company Maturity:"
 msgstr "Bedrijfs maturiteit:"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Congratulations!"
+msgstr "Gefeliciteerd!"
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index
 msgid "Contact us"
 msgstr "Contacteer ons"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
 msgid "Continue To Our Website"
 msgstr "Doorgaan naar onze website"
 
@@ -192,6 +261,13 @@ msgid "High commissions for good performers"
 msgstr "Hoge commissie voor goede performers"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "In the meantime,"
+msgstr "In de tussentijd,"
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Job Application Form"
 msgstr "Sollicitatie formulier"
@@ -213,6 +289,7 @@ msgstr "Functie"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating
 msgid "Job Security:"
 msgstr "Baan zekerheid:"
 
@@ -251,6 +328,13 @@ msgid ""
 "Large apps scope: CRM, MRP, Accounting, Inventory, HR, Project Mgt, etc."
 msgstr ""
 "Grote apps: CRM, MRP, Boekhouding, Voorraadbeheer, HR, Project Mgmt, etc."
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Look around on our website:"
+msgstr "Kijk eens rond op onze website"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -324,6 +408,16 @@ msgid "Profitable"
 msgstr "Winstgevend"
 
 #. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "Rating type"
+msgstr "Soort beoordeling"
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.s_hr_rating_options
+msgid "Rating value"
+msgstr "Beoordelingswaarde"
+
+#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.apply
 msgid "Resume"
 msgstr "Hervatten"
@@ -379,11 +473,6 @@ msgid "Team / Company Size:"
 msgstr "Team / Bedrijfsgrootte:"
 
 #. module: website_hr_recruitment
-#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-msgid "Thank you!"
-msgstr "Dank u!"
-
-#. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "The culture"
 msgstr "De cultuur"
@@ -413,8 +502,8 @@ msgstr "Url Parameters"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
-msgid "Vacation, Sick, and Holiday paid leaves"
-msgstr "Vakantie, ziekte en betaalde vakantiedagen"
+msgid "Vacation, Sick, and paid leaves"
+msgstr "Vakantie, ziekte en betaalde afwezigheden"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
@@ -462,12 +551,17 @@ msgstr "Uw telefoonnummer"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
-msgid ""
-"Your job application has been successfully registered,\n"
-"                        we will get back to you soon."
-msgstr ""
-"Uw sollicitatie is succesvol ontvangen,\n"
-"                        wij zullen binnenkort contact met u opnemen."
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Your application has been posted successfully."
+msgstr "Uw sollicitatie is succesvol ingediend."
+
+#. module: website_hr_recruitment
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou
+#: model:ir.ui.view,arch_db:website_hr_recruitment.thankyou_page_ir_ui_view
+#: model:website.page,arch_db:website_hr_recruitment.thankyou_page
+msgid "Your application has been sent to:"
+msgstr "Uw sollicitatie is verzonden naar:"
 
 #. module: website_hr_recruitment
 #: model:ir.ui.view,arch_db:website_hr_recruitment.index

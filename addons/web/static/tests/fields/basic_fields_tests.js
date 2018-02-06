@@ -3,6 +3,7 @@ odoo.define('web.basic_fields_tests', function (require) {
 
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
@@ -24,7 +25,7 @@ QUnit.module('basic_fields', {
                     date: {string: "A date", type: "date", searchable: true},
                     datetime: {string: "A datetime", type: "datetime", searchable: true},
                     display_name: {string: "Displayed name", type: "char", searchable: true},
-                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true},
+                    foo: {string: "Foo", type: "char", default: "My little Foo Value", searchable: true, trim: true},
                     bar: {string: "Bar", type: "boolean", default: true, searchable: true},
                     txt: {string: "txt", type: "text", default: "My little txt Value\nHo-ho-hoooo Merry Christmas"},
                     int_field: {string: "int_field", type: "integer", sortable: true, searchable: true},
@@ -38,6 +39,8 @@ QUnit.module('basic_fields', {
                     selection: {string: "Selection", type: "selection", searchable:true,
                         selection: [['normal', 'Normal'],['blocked', 'Blocked'],['done', 'Done']]},
                     document: {string: "Binary", type: "binary"},
+                    image_selection: {string: "Image Selection", type: "selection", searchable:true,
+                        selection: [['background', 'Background'],['boxed', 'Boxed'],['clean', 'Clean'],['standard', 'Standard']]},
                 },
                 records: [{
                     id: 1,
@@ -353,6 +356,24 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.module('FieldBooleanToggle');
+
+    QUnit.test('use boolean toggle widget in form view', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="bar" widget="boolean_toggle"/></form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$(".o_checkbox.o_boolean_toggle").length, 1, "Boolean toggle widget applied to boolean field");
+        assert.strictEqual(form.$(".o_checkbox.o_boolean_toggle").find(".slider").length, 1, "Boolean toggle contains slider to toggle");
+        form.destroy();
+    });
+
     QUnit.module('FieldToggleButton');
 
     QUnit.test('use toggle_button in list view', function (assert) {
@@ -563,6 +584,52 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(form.$('.o_field_widget[name=monetary]').text(), '9.99',
             'value should be correctly formatted (with the float formatter)');
+
+        form.destroy();
+    });
+
+    QUnit.test('float field with monetary widget and decimal precision', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records = [{
+            id: 1,
+            qux: -8.89859,
+            currency_id: 1,
+        }]
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary" options="{\'field_digits\': True}"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a0-8.9',
+            'The value should be displayed properly.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input').val(), '-8.9',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(form.$('input').parent().children().first().text(), '$',
+            'The input should be preceded by a span containing the currency symbol.');
+
+        form.$('input').val('109.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input').val(), '109.2458938598598',
+            'The value should not be formated yet.');
+
+        form.$buttons.find('.o_form_button_save').click();
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a0109.2',
+            'The new value should be rounded properly.');
 
         form.destroy();
     });
@@ -888,6 +955,43 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('char field trim (or not) characters', function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.foo2 = {string: "Foo2", type: "char", trim: false};
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="foo2"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        form.$('input[name="foo"]').val('  abc  ').trigger('input');
+        form.$('input[name="foo2"]').val('  def  ').trigger('input');
+
+        form.$buttons.find('.o_form_button_save').click();
+
+        // edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+
+        assert.strictEqual(form.$('input[name="foo"]').val(), 'abc', 'Foo value should have been trimmed');
+        assert.strictEqual(form.$('input[name="foo2"]').val(), '  def  ', 'Foo2 value should not have been trimmed');
+
+        form.destroy();
+    });
+
     QUnit.test('input field: change value before pending onchange returns', function (assert) {
         assert.expect(3);
 
@@ -1007,7 +1111,7 @@ QUnit.module('basic_fields', {
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var form = createView({
             View: FormView,
@@ -1027,6 +1131,8 @@ QUnit.module('basic_fields', {
             "should have a anchor with correct classes");
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').attr('href'), 'yop',
             "should have proper href link");
+        assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').attr('target'), '_blank',
+            "should have target attribute set to _blank");
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'yop',
             "the value should be displayed properly");
 
@@ -1049,6 +1155,24 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'limbo',
             'the new value should be displayed');
 
+        form.destroy();
+    });
+
+    QUnit.test('url widget takes text from proper attribute', function (assert) {
+        assert.expect(1);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<field name="foo" widget="url" text="kebeclibre"/>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('a[name="foo"]').text(), 'kebeclibre',
+            "url text should come from the text attribute");
         form.destroy();
     });
 
@@ -1590,43 +1714,45 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
-    QUnit.module('JournalDashboardGraph');
+    QUnit.module('JournalDashboardGraph', {
+        beforeEach: function () {
+            _.extend(this.data.partner.fields, {
+                graph_data: { string: "Graph Data", type: "text" },
+                graph_type: {
+                    string: "Graph Type",
+                    type: "selection",
+                    selection: [['line', 'Line'], ['bar', 'Bar']]
+                },
+            });
+            this.data.partner.records[0].graph_type = "bar";
+            this.data.partner.records[1].graph_type = "line";
+            var graph_values = [
+                {'value': 300, 'label': '5-11 Dec'},
+                {'value': 500, 'label': '12-18 Dec'},
+                {'value': 100, 'label': '19-25 Dec'},
+            ];
+            this.data.partner.records[0].graph_data = JSON.stringify([{
+                color: 'red',
+                title: 'Partner 0',
+                values: graph_values,
+                key: 'A key',
+                area: true,
+            }]);
+            this.data.partner.records[1].graph_data = JSON.stringify([{
+                color: 'blue',
+                title: 'Partner 1',
+                values: graph_values,
+                key: 'A key',
+                area: true,
+            }]);
+        },
+    });
 
     QUnit.test('graph dashboard widget is rendered correctly', function (assert) {
         var done = assert.async();
         assert.expect(4);
 
-        var graph_key = "";
-        _.extend(this.data.partner.fields, {
-            graph_data: { string: "Graph Data", type: "text" },
-            graph_type: {
-                string: "Graph Type",
-                type: "selection",
-                selection: [['line', 'Line'], ['bar', 'Bar']]
-            },
-        });
-        this.data.partner.records[0].graph_type = "bar";
-        this.data.partner.records[1].graph_type = "line";
-        var graph_values = [
-            {'value': 300, 'label': '5-11 Dec'},
-            {'value': 500, 'label': '12-18 Dec'},
-            {'value': 100, 'label': '19-25 Dec'},
-        ];
-        this.data.partner.records[0].graph_data = JSON.stringify([{
-            color: 'red',
-            title: 'Partner 0',
-            values: graph_values,
-            key: 'A key',
-            area: true,
-        }]);
-        graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key
-        this.data.partner.records[1].graph_data = JSON.stringify([{
-            color: 'blue',
-            title: 'Partner 1',
-            values: graph_values,
-            key: 'A key',
-            area: true,
-        }]);
+        var graph_key = JSON.parse(this.data.partner.records[0].graph_data)[0].key;
         var kanban = createView({
             View: KanbanView,
             model: 'partner',
@@ -1659,7 +1785,7 @@ QUnit.module('basic_fields', {
             evt.initMouseEvent("mouseover", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
             $('.discreteBar')[0].dispatchEvent(evt);
             var tooltip = $('.nvtooltip').find('table').find('.key')[0].innerText;
-            assert.equal(tooltip,graph_key, "graph tooltip should be generated ");
+            assert.equal(tooltip, graph_key, "graph tooltip should be generated ");
             $('.nvtooltip').remove();
 
             // force a re-rendering of the first record (to check if the
@@ -1676,6 +1802,41 @@ QUnit.module('basic_fields', {
             done();
         });
 
+    });
+
+    QUnit.test('graph dashboard widget does not need nv to be destroyed', function (assert) {
+        // this test ensures that the JournalDashboardGraph widget doesn't crash
+        // when being destroyed before nv has been loaded
+        assert.expect(2);
+
+        var destroy = basicFields.JournalDashboardGraph.prototype.destroy;
+        basicFields.JournalDashboardGraph.prototype.destroy = function () {
+            assert.step('destroy');
+            var nv = window.nv;
+            delete window.nv;
+            destroy.apply(this, arguments);
+            window.nv = nv;
+        };
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<field name="graph_type"/>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="graph_data" t-att-graph_type="record.graph_type.raw_value" widget="dashboard_graph"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+
+        kanban.destroy();
+        basicFields.JournalDashboardGraph.prototype.destroy = destroy;
+
+        assert.verifySteps(['destroy']);
     });
 
     QUnit.module('AceEditor');
@@ -1778,6 +1939,25 @@ QUnit.module('basic_fields', {
         var $span = form.$('span.o_field_widget');
         assert.strictEqual($span.length, 1, "should have one span in the form view");
         assert.strictEqual($span.text(), "", "and it should be empty");
+        form.destroy();
+    });
+
+    QUnit.test('date field value should not set on first click', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 4,
+        });
+        form.$buttons.find('.o_form_button_edit').click();
+        form.$('.o_datepicker_input').click();
+        assert.strictEqual(form.$('.o_datepicker_input').val(), '', "date field's input should be empty on first click");
+        $('.day:contains(22)').click();
+        form.$('.o_datepicker_input').click(); // Open Datepicker second time
+        assert.strictEqual($('.day.active').text(), '22', 'datepicker should be highlight with 22nd day of month');
         form.destroy();
     });
 
@@ -2326,6 +2506,63 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('monetary field with currency digits != 2', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records = [{
+            id: 1,
+            bar: false,
+            foo: "pouet",
+            int_field: 68,
+            qux: 99.1234,
+            currency_id: 1,
+        }];
+        this.data.currency.records = [{
+            id: 1,
+            display_name: "VEF",
+            symbol: "Bs.F",
+            position: "after",
+            digits: [16, 4],
+        }];
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '99.1234\u00a0Bs.F',
+            'The value should be displayed properly.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input').first().val(), '99.1234',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(form.$('input').parent().children().eq(1).text(), 'Bs.F',
+            'The input should be followed by a span containing the currency symbol.');
+
+        form.$('input').first().val('99.111111111').trigger('input');
+        assert.strictEqual(form.$('input').first().val(), '99.111111111',
+            'The value should not be formated yet.');
+
+        form.$buttons.find('.o_form_button_save').click();
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '99.1111\u00a0Bs.F',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.test('monetary field in editable list view', function (assert) {
         assert.expect(9);
 
@@ -2379,9 +2616,14 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('monetary field with real monetary field in model', function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         this.data.partner.fields.qux.type = "monetary";
+        this.data.partner.fields.quux = {
+            string: "Quux", type: "monetary", digits: [16,1], searchable: true, readonly: true,
+        };
+
+        (_.find(this.data.partner.records, function (record) { return record.id === 5 })).quux = 4.2;
 
         this.data.partner.onchanges = {
             bar: function (obj) {
@@ -2396,6 +2638,7 @@ QUnit.module('basic_fields', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<field name="qux"/>' +
+                        '<field name="quux"/>' +
                         '<field name="currency_id"/>' +
                         '<field name="bar"/>' +
                     '</sheet>' +
@@ -2406,7 +2649,9 @@ QUnit.module('basic_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_field_monetary').html(), "$&nbsp;9.10",
+        assert.strictEqual(form.$('.o_field_monetary').first().html(), "$&nbsp;9.10",
+            "readonly value should contain the currency");
+        assert.strictEqual(form.$('.o_field_monetary').first().next().html(), "$&nbsp;4.20",
             "readonly value should contain the currency");
 
         form.$buttons.find('.o_form_button_edit').click();
@@ -2417,12 +2662,16 @@ QUnit.module('basic_fields', {
         form.$('input[type="checkbox"]').click(); // Change the field on which the monetary depends
         assert.strictEqual(form.$('.o_field_monetary > input').length, 1,
             "After the onchange, the monetary <input/> should not have been duplicated");
+        assert.strictEqual(form.$('.o_field_monetary[name=quux]').length, 1,
+            "After the onchange, the monetary readonly field should not have been duplicated");
 
         var $dropdown = form.$('.o_field_many2one input').autocomplete('widget');
         form.$('.o_field_many2one input').click();
         $dropdown.find('li:not(.o_m2o_dropdown_option):last').mouseenter().click();
         assert.strictEqual(form.$('.o_field_monetary > span').html(), "€",
             "After currency change, the monetary field currency should have been updated");
+        assert.strictEqual(form.$('.o_field_monetary').first().next().html(), "4.20&nbsp;€",
+            "readonly value should contain the updated currency");
 
         form.destroy();
     });
@@ -2741,9 +2990,8 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: 0, // Screen XS
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
@@ -2786,9 +3034,8 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: 0, // Screen XS
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
@@ -2827,10 +3074,10 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field in form view on normal screens', function (assert) {
-        // The behavior of this widget is completely altered by crm_voip so this
-        // test is irrelevant and fails if crm_voip is installed. The enterprise
+        // The behavior of this widget is completely altered by voip so this
+        // test is irrelevant and fails if voip is installed. The enterprise
         // module is responsible for testing its own behavior in its own tests.
-        if ('crm.voip' in odoo.__DEBUG__.services) {
+        if ('voip.user_agent' in odoo.__DEBUG__.services) {
             assert.expect(0);
             return;
         }
@@ -2851,9 +3098,8 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: 1, // Screen SM
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.SM,
+                },
             },
         });
 
@@ -2882,10 +3128,10 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('phone field in editable list view on normal screens', function (assert) {
-        // The behavior of this widget is completely altered by crm_voip so this
-        // test is irrelevant and fails if crm_voip is installed. The enterprise
+        // The behavior of this widget is completely altered by voip so this
+        // test is irrelevant and fails if voip is installed. The enterprise
         // module is responsible for testing its own behavior in its own tests.
-        if ('crm.voip' in odoo.__DEBUG__.services) {
+        if ('voip.user_agent' in odoo.__DEBUG__.services) {
             assert.expect(0);
             return;
         }
@@ -2899,9 +3145,8 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: 1, // Screen SM
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.SM,
+                },
             },
         });
 
@@ -2953,9 +3198,8 @@ QUnit.module('basic_fields', {
             },
             config: {
                 device: {
-                    size_class: 0,
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
@@ -3397,6 +3641,129 @@ QUnit.module('basic_fields', {
             "should have two green status");
         assert.strictEqual(list.$('ul.dropdown-menu.state:visible').length, 0,
             "there should not be a dropdown");
+
+        list.destroy();
+    });
+
+
+    QUnit.module('FavoriteWidget');
+
+    QUnit.test('favorite widget in kanban view', function (assert) {
+        assert.expect(4);
+
+        var kanban = createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban class="o_kanban_test">' +
+                    '<templates>' +
+                        '<t t-name="kanban-box">' +
+                            '<div>' +
+                                '<field name="bar" widget="boolean_favorite" />' +
+                            '</div>' +
+                        '</t>' +
+                    '</templates>' +
+                  '</kanban>',
+            domain: [['id', '=', 1]],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record .o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(kanban.$('.o_kanban_record .o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        // click on favorite
+        kanban.$('.o_field_widget.o_favorite').click();
+        assert.strictEqual(kanban.$('.o_kanban_record  .o_field_widget.o_favorite > a i.fa.fa-star').length, 0,
+            'should not be favorite');
+        assert.strictEqual(kanban.$('.o_kanban_record  .o_field_widget.o_favorite > a').text(), ' Add to Favorites',
+            'the label should say "Add to Favorites"');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('favorite widget in form view', function (assert) {
+        assert.expect(10);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="bar" widget="boolean_favorite" />' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        // click on favorite
+        form.$('.o_field_widget.o_favorite').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 0,
+            'should not be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Add to Favorites',
+            'the label should say "Add to Favorites"');
+
+        // switch to edit mode
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star-o').length, 1,
+            'should not be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Add to Favorites',
+            'the label should say "Add to Favorites"');
+
+        // click on favorite
+        form.$('.o_field_widget.o_favorite').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        // save
+        form.$buttons.find('.o_form_button_save').click();
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+        assert.strictEqual(form.$('.o_field_widget.o_favorite > a').text(), ' Remove from Favorites',
+            'the label should say "Remove from Favorites"');
+
+        form.destroy();
+    });
+
+    QUnit.test('favorite widget in editable list view without label', function (assert) {
+        assert.expect(4);
+
+        var list = createView({
+            View: ListView,
+            model: 'partner',
+            data: this.data,
+            arch: '<tree editable="bottom">' +
+                    '<field name="bar" widget="boolean_favorite" nolabel="1" />' +
+                  '</tree>',
+        });
+
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+
+        // switch to edit mode
+        list.$('tbody td:not(.o_list_record_selector)').first().click();
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star').length, 1,
+            'should be favorite');
+
+        // click on favorite
+        list.$('.o_data_row:first .o_field_widget.o_favorite').click();
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star').length, 0,
+            'should not be favorite');
+
+        // save
+        list.$buttons.find('.o_list_button_save').click();
+        assert.strictEqual(list.$('.o_data_row:first .o_field_widget.o_favorite > a i.fa.fa-star-o').length, 1,
+            'should not be favorite');
 
         list.destroy();
     });
@@ -4060,6 +4427,45 @@ QUnit.module('basic_fields', {
         // we don't actually check that it doesn't open the record because even
         // if it tries to, it will crash as we don't define an arch in this test
         $('.modal .o_list_view .o_data_row:first .o_data_cell').click();
+
+        form.destroy();
+    });
+
+    QUnit.module('FieldImageSelection');
+
+    QUnit.test('image selection widget in form view', function (assert) {
+        assert.expect(3);
+
+        var nodeOptions = {
+            background: {
+                image_link: '/base/static/img/preview_background.png',
+                preview_link: '/base/static/pdf/preview_background.pdf',
+            },
+            boxed: {
+                image_link: '/base/static/img/preview_boxed.png',
+                preview_link: '/base/static/pdf/preview_boxed.pdf',
+            },
+        };
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<field name="image_selection" widget="image_selection"' +
+                    ' options=\'' + JSON.stringify(nodeOptions) + '\'/> '+
+                  '</form>',
+            res_id: 2,
+        });
+
+        assert.strictEqual(form.$('.img.img-responsive').length, 2,
+            "Two images should be rendered");
+        assert.strictEqual(form.$('.img.btn-info').length, 0,
+            "No image should be selected");
+
+        // select first image
+        form.$(".img.img-responsive:first").click();
+        assert.ok(form.$(".img.img-responsive:first").hasClass('btn-info'),
+            "First image should be selected");
 
         form.destroy();
     });

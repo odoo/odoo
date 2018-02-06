@@ -93,8 +93,6 @@ QUnit.module('Google Calendar', {
                         {id: 7, user_id: 4, partner_id: 4, name: "event from google calendar", start: "2016-12-28 15:55:05", stop: "2016-12-29 18:55:05", allday: false, partner_ids: [], type: 2}
                     );
                     return $.when({status: 'need_refresh'});
-                } else if (route === '/google_calendar/static/src/img/calendar_32.png') {
-                    return $.when();
                 } else if (route === '/web/dataset/call_kw/calendar.event/search_read') {
                     assert.step(route);
                 }

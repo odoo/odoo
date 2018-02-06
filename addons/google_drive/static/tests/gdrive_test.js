@@ -75,7 +75,7 @@ QUnit.module('gdrive_integration', {
                     '<field name="display_name"/>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/google.drive.config/get_google_drive_config') {
                     assert.deepEqual(args.args, ['partner', 1],

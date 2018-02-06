@@ -105,6 +105,10 @@ var db = {
             {id: 9, display_name: "Delta PC - Delta PC"},
         ]
     },
+    'account.analytic.tag': {
+        fields: {},
+        records: []
+    },
     'account.bank.statement': {
         fields: {},
         reconciliation_widget_preprocess: function () {
@@ -572,8 +576,8 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create .o_input').length, 6,
-            "create panel should display 5 fields (account_id, tax_id, analytic_account_id, label, amount)");
+        assert.strictEqual(widget.$('.create input.o_input').length, 7,
+            "create panel should contain 7 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount)");
         assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',
@@ -643,13 +647,15 @@ QUnit.module('account', {
                                                                   "counterpart_aml_id": 109,
                                                                   "credit": 650,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0002"
+                                                                  "name": "INV/2017/0002",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 },
                                                                 {
                                                                   "counterpart_aml_id": 112,
                                                                   "credit": 525,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0003"
+                                                                  "name": "INV/2017/0003",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_reconciliations with ids");
@@ -691,7 +697,8 @@ QUnit.module('account', {
                                         account_id: 287,
                                         credit: 1175,
                                         debit: 0,
-                                        name: 'SAJ/2014/002 and SAJ/2014/003'
+                                        name: 'SAJ/2014/002 and SAJ/2014/003',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }]}]],
                 "Should call process_reconciliations with ids");
         });
@@ -736,7 +743,8 @@ QUnit.module('account', {
                                         counterpart_aml_id: 109,
                                         credit: 650,
                                         debit: 0,
-                                        name: 'INV/2017/0002'
+                                        name: 'INV/2017/0002',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }],
                                     payment_aml_ids: [], 
                                     new_aml_dicts: [{
@@ -933,7 +941,7 @@ QUnit.module('account', {
         widget.$('.o_input_dropdown input').val('').trigger('keyup').trigger('blur');
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "", "the partner many2one should be empty");
         assert.strictEqual(widget.$('.match table tr.mv_line').length, 5, "should have 5 propositions for reconciliation if partner is false");
-        assert.strictEqual(widget.$('.match .match_controls .fa:not(.disabled)').length, 1, "should not display the right arrow");
+        assert.strictEqual(widget.$('.match .match_controls > .fa:not(.disabled)').length, 1, "should display the right arrow");
 
         clientAction.destroy();
     });

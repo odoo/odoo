@@ -12,17 +12,17 @@
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # oihane <oihanecruce@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2016
 # RGB Consulting <odoo@rgbconsulting.com>, 2016
-# Luis Martínez Ontalba <luismaront@gmail.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Luis Martínez Ontalba <luismaront@gmail.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,10 +41,16 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:64
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
 msgstr "Todos los países"
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
+msgstr "Todos los sectores de actividad"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
@@ -65,6 +71,11 @@ msgstr "Clase"
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
 msgstr "Click para crear una nueva etiqueta de empresa"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
@@ -128,11 +139,6 @@ msgid "Our References"
 msgstr "Nuestras referencias"
 
 #. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
 msgstr "Etiqueta de empresa"
@@ -160,6 +166,11 @@ msgstr "Referencias"
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
 msgstr "Referencias por país"
+
+#. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
+msgstr "Referencias por sectores de actividad"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
@@ -191,6 +202,7 @@ msgstr "Etiquetas del sitio web"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
 msgstr "Etiquetas del sitio web"
 

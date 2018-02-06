@@ -28,7 +28,7 @@ class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
     mercury_card_number = fields.Char(string='Card Number', help='The last 4 numbers of the card used to pay')
-    mercury_prefixed_card_number = fields.Char(string='Card Number', compute='_compute_prefixed_card_number', help='The card number used for the payment.')
+    mercury_prefixed_card_number = fields.Char(string='Card Number Prefix', compute='_compute_prefixed_card_number', help='The card number used for the payment.')
     mercury_card_brand = fields.Char(string='Card Brand', help='The brand of the payment card (e.g. Visa, AMEX, ...)')
     mercury_card_owner_name = fields.Char(string='Card Owner Name', help='The name of the card owner')
     mercury_ref_no = fields.Char(string='Mercury reference number', help='Payment reference number from Mercury Pay')
@@ -46,7 +46,7 @@ class AccountBankStatementLine(models.Model):
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    pos_mercury_config_id = fields.Many2one('pos_mercury.configuration', string='Mercury configuration', help='The configuration of Mercury used for this journal')
+    pos_mercury_config_id = fields.Many2one('pos_mercury.configuration', string='Mercury Credentials', help='The configuration of Mercury used for this journal')
 
 
 class PosOrder(models.Model):

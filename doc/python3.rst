@@ -4,9 +4,16 @@
 Python 3 compatibility/conversions
 ==================================
 
-Goal (notsure?): for v11 to provide an alpha/beta Python 3 compatibility, for
-v12 to provide official Python 3 support and drop Python 2 in either v12 or
-v13.
+Official compatibility: Odoo 11 will be the first LTS release to introduce
+Python 3 compatibility, starting with Python 3.5. It will also be the first
+LTS release to drop official support for Python 2.
+
+Rationale: Python 3 has been around since 2008, and all Python libraries
+used by the official Odoo distribution have been ported and are considered
+stable. Most supported platforms have a Python 3.5 package, or a similar
+way to deploy it. Preserving dual compatibility is therefore considered
+unnecessary, and would represent a significant overhead in testing for the
+lifetime of Odoo 11.
 
 Python 2 and Python 3 are somewhat different language, but following
 backports, forward ports and cross-compatibility library it is possible to
@@ -58,8 +65,42 @@ features whereas:
 .. warning::
 
     While Python 3 adds plenty of great features (keyword-only parameters,
-    generator delegation, pathlib, ...), you must *not *use them in Odoo
+    generator delegation, pathlib, ...), you must *not* use them in Odoo
     until Python 2 support is dropped
+
+.. note::
+
+    In the *very rare* cases where you *need* to differentiate between
+    Python 2 and Python 3, use the :data:`odoo.tools.pycompat.PY2` flag.
+
+Semantics changes
+=================
+
+Dict & set iteration order ("Hash Randomisation")
+-------------------------------------------------
+
+In Python 2, the iteration order depends on the value's hash (modulo the
+collection's capacity and conflict resolution), which provides a
+spec-undefined but implementation-defined order. While that's not supposed to
+happen, it turns out code may depend on the specific order of iteration over
+a hash collection (``dict`` or ``set``).
+
+Python 3.3 enables `hash randomisation`_ by default (this can be optionally
+enabled on previous versions including Python 2 by providing the ``-R``
+command-line parameter), which means *the order of iteration changes from one
+run to the next*.
+
+When discovered, this can be fixed by one of:
+
+* making iteration steps properly independent (removing the dependency of
+  order of iteration)
+* using different checking method (e.g. when serialising sets or dictionaries
+  and checking against the specific serialised value)
+* fixing dependencies
+* using a ``collections.OrderedDict`` or ``odoo.tools.misc.OrderedSet`` instead
+  of a regular one, they guarantee order of iteration is order of insertion
+* sorting the collection's items before iterating over them (this may require
+  adding some sort of iteration key to the items)
 
 Moved and removed
 =================
@@ -74,9 +115,22 @@ library:
   ``io.StringIO`` to replace them in a cross-version manner (``io.BytesIO``
   for binary data, ``io.StringIO`` for text/unicode data).
 * ``urllib``, ``urllib2`` and ``urlparse`` were redistributed across
-  ``urllib.parse`` and ``urllib.request``, you may want to use conditional
-  imports e.g. try to import the Python 3 version and fallback on the Python
-  2 version.
+  ``urllib.parse`` and ``urllib.request``.
+
+  Since `requests`_ and `werkzeug`_ are already hard dependencies of Odoo,
+  replace ``urllib[2].urlopen``/``urllib2.Request`` uses by `requests`_, and
+  ``urlparse`` and a few utilty functions (``urllib.quote``,
+  ``urllib.urlencode``) are available through ``werkzeug.urls``, a backport
+  of Python 3's ``urllib.parse``.
+
+  .. warning:: `requests`_ does not raise by default on non-200 responses
+
+* ``cgi.escape`` (HTML escaping) is deprecated in Python 3, prefer Odoo's own
+  :func:`odoo.tools.misc.html_encode`.
+* Most of ``types``'s content has been stripped out in Python 3: only
+  "internal" interpreter types (e.g. CodeType, FrameType, ...) have been left
+  in, other types can be obtained directly from the corresponding builtin or
+  by getting the ``type()`` of a literal value.
 
 Absolute Imports (:pep:`328`)
 -----------------------------
@@ -172,6 +226,32 @@ statement to the following cross-language forms::
     exec(source, globals)
     exec(source, globals, locals)
 
+List/iteration builtins and methods
+-----------------------------------
+
+In Python 3, a number of builtins and methods formerly returning *lists* were
+converted to return *iterators* or *views*, with the corresponding redundant
+methods or functions having been *removed entirely*:
+
+* In Python 3, ``map``, ``filter`` and ``zip`` return iterators,
+  ``itertools.imap``, ``itertools.ifilter`` and ``itertools.izip`` have been
+  removed.
+
+  .. important::
+
+      When possible, use comprehensions (list, generator, ...) rather than
+      ``map`` or ``filter``.
+
+* In Python 3, ``dict.keys``, ``dict.values`` and ``dict.items`` return
+  *views* rather than lists, and the ``iter*`` and ``view*`` methods have
+  been removed.
+
+  .. important::
+
+      When the result of the above methods is used for more than a one-shot
+      loop (e.g. to be included in returned value), or when the dict needs
+      to be modified during iteration, wrap the calls in a ``list()``.
+
 builtins
 --------
 
@@ -258,21 +338,12 @@ code by replacing it with some other method altogether.
 ``xrange``
 ##########
 
-In Python 3, ``range()`` behaves the same as Python 3's ``xrange``. For
-cross-versions code you can:
+In Python 3, ``range()`` behaves the same as Python 2's ``xrange``.
 
-* just use ``range()`` everywhere and ignore the allocation cost of a list in
-  Python 2 (often not an issue)
-* conditionally alias ``xrange`` to ``range`` in Python 3 and use that
-* use a combination of ``itertools.count`` and ``takewhile`` for a
-  cross-compatible lazy increasing sequence of numbers
-
-.. warning::
-
-    In the *rare* cases where you need conditional code (code which applies
-    for one version of python and not the other), use ``sys.version_info``
-    e.g. ``sys.version_info() >= (3,)`` for Python3+ code or
-    ``sys.version_info() < (3,)`` for Python 2 code.
+For cross-version code, you can just use ``range()`` everywhere: while this
+will incur a slight allocation cost on Python 2, Python 3's ``range`` supports
+the entire Sequence protocol and thus behaves very much like a regular
+list or tuple.
 
 Removed/renamed methods
 -----------------------
@@ -304,3 +375,122 @@ Minor syntax changes
   In Python 3, leading zeroes followed by neither a 0 nor a period is an
   error, octal literals now follow the hexadecimal convention with a ``0o``
   prefix.
+
+.. _changed-strings:
+
+Bytes/String/Text: The Big One
+==============================
+
+The most impactful Python 3 change by far is to the text model: for historical
+reasons the distinction Python 2's bytestrings (``bytes``/``str``) and text
+strings (``unicode``) is fuzzy and it will try to implicitly convert between
+one and the other using the ASCII encoding.
+
+Python 3 changes this, it removes the implicit conversions, removes APIs which
+contribute to the fuzz and tends to strictly segregate other to work on either
+bytes or text.
+
+This is fundamentally good and mostly sensible, but it means lots of breakage:
+
+the builtins
+------------
+
+Python 3 removes both ``unicode`` and ``basestring``, and ``str`` now
+corresponds to *text* strings (the old ``unicode``) with ``bytes`` being
+bytestrings in both languages [#bytes]_.
+
+Both versions have the following prefixes for string literals:
+
+* ``b'foo'`` is a bytestring (``bytes`` object).
+
+* ``'foo'`` is that version's ``str`` type, which may be either a bytestring
+  or a text string [#native-string]_.
+
+* ``u'foo'`` is that version's text string.
+
+For best cross-version compatibility you should avoid unprefixed string
+literals unless you *specifically* need a "native string" [#native-string]_.
+
+For easier type-testing, :mod:`odoo.tools.pycompat` provides the following
+constants:
+
+* :data:`~odoo.tools.pycompat.string_types` is an alias/type tuple for testing
+  string types, essentially a replacement of testing for ``basestring`` or
+  ``(str, unicode)``.
+* :data:`~odoo.tools.pycompat.text_type` is the proper *text* type for the
+  current version, it should mostly be used for converting non-bytes objects
+  to text.
+* ``bytes`` should be avoided for type conversions, though it can be used to
+  check if an object is a bytestring.
+
+``open``
+--------
+
+.. important::
+
+    the ``open`` builtin should always be explicitly used in binary mode
+    (``rb``, ``wb``, ...)
+
+    To read *text* files, use ``io.open``.
+
+On both P2 and P3, ``open`` defaults to returning *native strings* in default
+("text") mode, however in P3 that means it actually decodes the file's bytes
+using whatever encoding was set up (default: UTF-8) while on Python 2 it has
+no concept of encoding.
+
+Using ``open`` in binary mode provides bytestrings on both versions and works
+fine. To read *text* files, use ``io.open`` and provide an explicit encoding.
+
+base64
+------
+
+base64 is a bytes->bytes conversion. bytes->bytes codecs were removed from the
+"native" encoding/decoding system which is now exclusively for bytes<->text
+conversions: text is *encoded* to bytes and bytes are *decoded* to text.
+
+.. important::
+
+    both ``bytes.encode('base64')`` and ``bytes.decode('base64')`` must be
+    migrated to using ``base64.b64encode`` and ``base64.b64decode``
+    respectively.
+
+csv
+---
+
+``csv`` is a fairly vicious one: not only is it not a very good format, the
+Python 2 and Python 3 versions of the library are text-model incompatible in
+significant ways:
+
+* Python 2's CSV only works on *ascii-compatible byte streams* (it has no
+  encoding support at all) and extracts bytestring values
+* Python 3's CSV only works on *text streams* and extract text values
+* And ``io`` doesn't provide "native string" streaming facilities.
+
+However with respect to Odoo it turns out most or all uses of ``csv`` fit
+inside a model of *byte stream to and from text values*.
+
+The latter is thus a model implemented by cross-version wrappers
+:func:`odoo.tools.pycompat.csv_reader` and
+:func:`odoo.tools.pycompat.csv_writer`: they take a *UTF-8 byte stream* and
+read or write *text* values.
+
+.. _hash randomisation: http://bugs.python.org/issue13703
+
+.. _requests: http://docs.python-requests.org/
+
+.. _werkzeug: http://werkzeug.pocoo.org/docs/urls/
+
+.. [#bytes]
+
+    with the caveat that Python 3 makes them less text-y and more byte-y e.g.
+    in Python 2 ``b"foo"[0]`` is ``b"f"``, but in Python 3 it's ``102`` (the
+    value of the first byte), you'll want to *slice* bytestrings for
+    compatibility.
+
+.. [#native-string]
+
+    this is important because some API/contexts take a *native string* rather
+    than either bytes or text. The ``csv`` module of the standard library is
+    one such problematic API (it is also notoriously problematic for its
+    terrible support of non-ascii-compatible encodings in Python 2).
+    ``email.message_from_string`` is an other one.

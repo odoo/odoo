@@ -1,12 +1,19 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import os.path
 import posixpath
 import re
-import urllib
+try:
+    from urllib.request import url2pathname  # pylint: disable=deprecated-module
+except ImportError:
+    from urllib import url2pathname  # pylint: disable=deprecated-module
 
 from docutils import nodes
 from sphinx import addnodes, util
 from sphinx.locale import admonitionlabels
+
+from odoo.tools import pycompat
 
 
 def _parents(node):
@@ -59,7 +66,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         self.param_separator = ','
 
     def encode(self, text):
-        return unicode(text).translate({
+        return pycompat.text_type(text).translate({
             ord('&'): u'&amp;',
             ord('<'): u'&lt;',
             ord('"'): u'&quot;',
@@ -68,12 +75,12 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         })
 
     def starttag(self, node, tagname, **attributes):
-        tagname = unicode(tagname).lower()
+        tagname = pycompat.text_type(tagname).lower()
 
         # extract generic attributes
-        attrs = {name.lower(): value for name, value in attributes.iteritems()}
+        attrs = {name.lower(): value for name, value in attributes.items()}
         attrs.update(
-            (name, value) for name, value in node.attributes.iteritems()
+            (name, value) for name, value in node.attributes.items()
             if name.startswith('data-')
         )
 
@@ -97,19 +104,19 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             prefix=u''.join(prefix),
             tag=tagname,
             attrs=u' '.join(u'{}="{}"'.format(name, self.attval(value))
-                            for name,  value in attrs.iteritems()),
+                            for name,  value in attrs.items()),
             postfix=u''.join(postfix),
         )
     # only "space characters" SPACE, CHARACTER TABULATION, LINE FEED,
     # FORM FEED and CARRIAGE RETURN should be collapsed, not al White_Space
-    def attval(self, value, whitespace=re.compile(u'[ \t\n\f\r]')):
-        return self.encode(whitespace.sub(u' ', unicode(value)))
+    def attval(self, value, whitespace=re.compile(u'[ \t\n\f\r]+')):
+        return self.encode(whitespace.sub(u' ', pycompat.text_type(value)))
 
     def astext(self):
         return u''.join(self.body)
 
     def unknown_visit(self, node):
-        print "unknown node", node.__class__.__name__
+        print("unknown node", node.__class__.__name__)
         self.body.append(u'[UNKNOWN NODE {}]'.format(node.__class__.__name__))
         raise nodes.SkipNode
 
@@ -136,6 +143,11 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
         # close last section of document
         if not self.section_level:
             self.body.append(u'</section>')
+
+    def visit_topic(self, node):
+        self.body.append(self.starttag(node, 'nav'))
+    def depart_topic(self, node):
+        self.body.append(u'</nav>')
 
     def is_compact_paragraph(self, node):
         parent = node.parent
@@ -300,9 +312,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
 
     def visit_title(self, node):
         parent = node.parent
-        closing = u'</p>'
+        closing = u'</h3>'
         if isinstance(parent, nodes.Admonition):
-            self.body.append(self.starttag(node, 'p', CLASS='alert-title'))
+            self.body.append(self.starttag(node, 'h3', CLASS='alert-title'))
         elif isinstance(node.parent, nodes.document):
             self.body.append(self.starttag(node, 'h1'))
             closing = u'</h1>'
@@ -369,6 +381,10 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     "Unsupported alignment value \"%s\"" % node['align'],
                     location=doc
                 )
+        elif 'align' in node.parent and node.parent['align'] == 'center':
+            # figure > image
+            attrs['class'] += ' center-block'
+
         # todo: explicit width/height/scale?
         self.body.append(self.starttag(node, 'img', **attrs))
     def depart_image(self, node): pass
@@ -617,9 +633,9 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
             classes = env.metadata[ref].get('types', 'tutorials')
             classes += ' toc-single-entry' if not toc else ' toc-section'
             self.body.append(self.starttag(node, 'div', CLASS="row " + classes))
-            self.body.append(u'<h2 class="col-sm-12">')
+            self.body.append(u'<div class="col-sm-12"><h2>')
             self.body.append(title if title else util.nodes.clean_astext(env.titles[ref]))
-            self.body.append(u'</h2>')
+            self.body.append(u'</h2></div>')
 
             entries = [(title, ref)] if not toc else ((e[0], e[1]) for e in toc[0]['entries'])
             for subtitle, subref in entries:
@@ -636,7 +652,7 @@ class BootstrapTranslator(nodes.NodeVisitor, object):
                     banner = '_static/' + cover
                     base, ext = os.path.splitext(banner)
                     small = "{}.small{}".format(base, ext)
-                    if os.path.isfile(urllib.url2pathname(small)):
+                    if os.path.isfile(url2pathname(small)):
                         banner = small
                     style = u"background-image: url('{}')".format(
                         util.relative_uri(baseuri, banner) or '#')

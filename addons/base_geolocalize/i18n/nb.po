@@ -1,80 +1,82 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_geolocalize
-#
+# 
 # Translators:
+# Jorunn D. Newth <jdn@eyenetworks.no>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 16:34+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Norwegian Bokmål (http://www.transifex.com/odoo/odoo-9/"
-"language/nb/)\n"
-"Language: nb\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Jorunn D. Newth <jdn@eyenetworks.no>, 2017\n"
+"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span class=\"oe_inline\"> ( On  </span>"
-msgstr ""
+msgstr "<span class=\"oe_inline\"> ( På </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> : Lat : </span>"
-msgstr ""
+msgstr "<span> : Breddegrad : </span>"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "<span> ;  Long:  </span>"
-msgstr ""
+msgstr "<span> : Lengdegrad : </span>"
 
 #. module: base_geolocalize
-#: code:addons/base_geolocalize/models/res_partner.py:17
+#: code:addons/base_geolocalize/models/res_partner.py:18
 #, python-format
 msgid ""
 "Cannot contact geolocation servers. Please make sure that your Internet "
 "connection is up and running (%s)."
 msgstr ""
+"Kan ikke kontakte servere for geolokasjon. Sjekk at du har kontakt med "
+"internett (%s)."
+
+#. module: base_geolocalize
+#: model:ir.model,name:base_geolocalize.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_latitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_latitude
 msgid "Geo Latitude"
-msgstr ""
+msgstr "Breddegrad"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_partner_longitude
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_partner_longitude
 msgid "Geo Longitude"
-msgstr ""
+msgstr "Lengdegrad"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocate"
-msgstr ""
+msgstr "Geolokaliser"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Geolocation"
-msgstr ""
+msgstr "Geolokasjon"
 
 #. module: base_geolocalize
 #: model:ir.model.fields,field_description:base_geolocalize.field_res_partner_date_localization
+#: model:ir.model.fields,field_description:base_geolocalize.field_res_users_date_localization
 msgid "Geolocation Date"
-msgstr ""
-
-#. module: base_geolocalize
-#: model:ir.model,name:base_geolocalize.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+msgstr "Geolokaliseringsdato"
 
 #. module: base_geolocalize
 #: model:ir.ui.view,arch_db:base_geolocalize.view_crm_partner_geo_form
 msgid "Partner Assignation"
-msgstr ""
-
-#~ msgid "Geo Localize"
-#~ msgstr "Geo lokalisert."
+msgstr "Tilknyttet partner"

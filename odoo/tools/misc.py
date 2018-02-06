@@ -5,7 +5,6 @@
 """
 Miscellaneous tools used by OpenERP.
 """
-
 from functools import wraps
 import babel
 from contextlib import contextmanager
@@ -13,22 +12,25 @@ import datetime
 import subprocess
 import io
 import os
+
+import collections
 import passlib.utils
+import pickle as pickle_
 import re
 import socket
 import sys
 import threading
 import time
+import types
+import unicodedata
 import werkzeug.utils
 import zipfile
-from collections import defaultdict, Iterable, Mapping, MutableSet, OrderedDict
-from itertools import islice, izip, groupby, repeat
+from collections import defaultdict, Iterable, Mapping, MutableMapping, MutableSet, OrderedDict
+from itertools import islice, groupby as itergroupby, repeat
 from lxml import etree
 
 from .which import which
-from threading import local
 import traceback
-import csv
 from operator import itemgetter
 
 try:
@@ -37,16 +39,6 @@ try:
 except ImportError:
     import profile as cProfile
 
-try:
-    # pylint: disable=bad-python3-import
-    import cPickle as pickle_
-except ImportError:
-    import pickle as pickle_
-
-try:
-    from html2text import html2text
-except ImportError:
-    html2text = None
 
 from .config import config
 from .cache import *
@@ -154,7 +146,6 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
-    >>> file_open('../../base/report/rml_template.xsl', subdir='addons/hr/report', pathinfo=True)
 
     @param name name of the file
     @param mode file open mode
@@ -225,7 +216,10 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
     # Give higher priority to module directories, which is
     # a more common case than zipped modules.
     if os.path.isfile(name):
-        fo = open(name, mode)
+        if 'b' in mode:
+            fo = open(name, mode)
+        else:
+            fo = io.open(name, mode, encoding='utf-8')
         if pathinfo:
             return fo, name
         return fo
@@ -259,7 +253,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
                 pass
     # Not found
     if name.endswith('.rml'):
-        raise IOError('Report %r doesn\'t exist or deleted' % basename)
+        raise IOError('Report %r does not exist or has been deleted' % basename)
     raise IOError('File not found: %s' % basename)
 
 
@@ -267,7 +261,7 @@ def _fileopen(path, mode, basedir, pathinfo, basename=None):
 # iterables
 #----------------------------------------------------------
 def flatten(list):
-    """Flatten a list of elements into a uniqu list
+    """Flatten a list of elements into a unique list
     Author: Christophe Simonis (christophe@tinyerp.com)
 
     Examples::
@@ -285,16 +279,12 @@ def flatten(list):
     >>> flatten(t)
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
     """
-
-    def isiterable(x):
-        return hasattr(x, "__iter__")
-
     r = []
     for e in list:
-        if isiterable(e):
-            map(r.append, flatten(e))
-        else:
+        if isinstance(e, (bytes, pycompat.text_type)) or not isinstance(e, collections.Iterable):
             r.append(e)
+        else:
+            r.extend(flatten(e))
     return r
 
 def reverse_enumerate(l):
@@ -314,7 +304,7 @@ def reverse_enumerate(l):
       File "<stdin>", line 1, in <module>
     StopIteration
     """
-    return izip(pycompat.range(len(l)-1, -1, -1), reversed(l))
+    return pycompat.izip(range(len(l)-1, -1, -1), reversed(l))
 
 def partition(pred, elems):
     """ Return a pair equivalent to:
@@ -347,10 +337,12 @@ def topological_sort(elems):
             visited.add(n)
             if n in elems:
                 # first visit all dependencies of n, then append n to result
-                map(visit, elems[n])
+                for it in elems[n]:
+                    visit(it)
                 result.append(n)
 
-    map(visit, elems)
+    for el in elems:
+        visit(el)
 
     return result
 
@@ -358,7 +350,7 @@ def topological_sort(elems):
 try:
     import xlwt
 
-    # add some sanitizations to respect the excel sheet name restrictions
+    # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedWorkbook(xlwt.Workbook):
         def add_sheet(self, name, cell_overwrite_ok=False):
@@ -377,7 +369,7 @@ except ImportError:
 try:
     import xlsxwriter
 
-    # add some sanitizations to respect the excel sheet name restrictions
+    # add some sanitization to respect the excel sheet name restrictions
     # as the sheet name is often translatable, can not control the input
     class PatchedXlsxWorkbook(xlsxwriter.Workbook):
 
@@ -412,17 +404,18 @@ def scan_languages():
     :returns: a list of (lang_code, lang_name) pairs
     :rtype: [(str, unicode)]
     """
-    csvpath = odoo.modules.module.get_resource_path('base', 'res', 'res.lang.csv')
+    csvpath = odoo.modules.module.get_resource_path('base', 'data', 'res.lang.csv')
     try:
-        # read (code, name) from languages in base/res/res.lang.csv
-        result = []
-        with open(csvpath) as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        # read (code, name) from languages in base/data/res.lang.csv
+        with open(csvpath, 'rb') as csvfile:
+            reader = pycompat.csv_reader(csvfile, delimiter=',', quotechar='"')
             fields = next(reader)
             code_index = fields.index("code")
             name_index = fields.index("name")
-            for row in reader:
-                result.append((ustr(row[code_index]), ustr(row[name_index])))
+            result = [
+                (row[code_index], row[name_index])
+                for row in reader
+            ]
     except Exception:
         _logger.error("Could not read %s", csvpath)
         result = []
@@ -475,7 +468,7 @@ def human_size(sz):
     if not sz:
         return False
     units = ('bytes', 'Kb', 'Mb', 'Gb')
-    if isinstance(sz,basestring):
+    if isinstance(sz,pycompat.string_types):
         sz=len(sz)
     s, i = float(sz), 0
     while s >= 1024 and i < len(units)-1:
@@ -556,9 +549,9 @@ def detect_ip_addr():
 
             # try 32 bit kernel:
             if ip_addr is None:
-                ifaces = filter(None, [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)])
+                ifaces = [namestr[i:i+32].split('\0', 1)[0] for i in range(0, outbytes, 32)]
 
-                for ifname in [iface for iface in ifaces if iface != 'lo']:
+                for ifname in [iface for iface in ifaces if iface if iface != 'lo']:
                     ip_addr = socket.inet_ntoa(fcntl.ioctl(s.fileno(), 0x8915, pack('256s', ifname[:15]))[20:24])
                     break
 
@@ -708,29 +701,6 @@ def split_every(n, iterable, piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
-
-class upload_data_thread(threading.Thread):
-    def __init__(self, email, data, type):
-        self.args = [('email',email),('type',type),('data',data)]
-        super(upload_data_thread,self).__init__()
-    def run(self):
-        try:
-            import urllib
-            args = urllib.urlencode(self.args)
-            fp = urllib.urlopen('http://www.openerp.com/scripts/survey.php', args)
-            fp.read()
-            fp.close()
-        except Exception:
-            pass
-
-def upload_data(email, data, type='SURVEY'):
-    a = upload_data_thread(email, data, type)
-    a.start()
-    return True
-
 def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
     """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
 
@@ -762,6 +732,19 @@ def attrgetter(*items):
         def g(obj):
             return tuple(resolve_attr(obj, attr) for attr in items)
     return g
+
+# ---------------------------------------------
+# String management
+# ---------------------------------------------
+
+# Inspired by http://stackoverflow.com/questions/517923
+def remove_accents(input_str):
+    """Suboptimal-but-better-than-nothing way to replace accented
+    latin letters by an ASCII equivalent. Will obviously change the
+    meaning of input_str and work only for some cases"""
+    input_str = ustr(input_str)
+    nkfd_form = unicodedata.normalize('NFKD', input_str)
+    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 class unquote(str):
     """A subclass of str that implements repr() without enclosing quotation marks
@@ -831,7 +814,7 @@ class mute_logger(object):
 
     def __enter__(self):
         for logger in self.loggers:
-            assert isinstance(logger, basestring),\
+            assert isinstance(logger, pycompat.string_types),\
                 "A logger name must be a string, got %s" % type(logger)
             logging.getLogger(logger).addFilter(self)
 
@@ -886,7 +869,7 @@ def stripped_sys_argv(*strip_args):
     assert all(config.parser.has_option(s) for s in strip_args)
     takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
 
-    longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
+    longs, shorts = list(tuple(y) for _, y in itergroupby(strip_args, lambda x: x.startswith('--')))
     longs_eq = tuple(l + '=' for l in longs if takes_value[l])
 
     args = sys.argv[:]
@@ -917,7 +900,7 @@ class ConstantMapping(Mapping):
 
     def __iter__(self):
         """
-        same as len, defaultdict udpates its iterable keyset with each key
+        same as len, defaultdict updates its iterable keyset with each key
         requested, is there a point for this?
         """
         return iter([])
@@ -938,16 +921,15 @@ def dumpstacks(sig=None, frame=None):
 
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
-    threads_info = {th.ident: {'name': th.name,
+    threads_info = {th.ident: {'repr': repr(th),
                                'uid': getattr(th, 'uid', 'n/a'),
                                'dbname': getattr(th, 'dbname', 'n/a'),
                                'url': getattr(th, 'url', 'n/a')}
                     for th in threading.enumerate()}
     for threadId, stack in sys._current_frames().items():
         thread_info = threads_info.get(threadId, {})
-        code.append("\n# Thread: %s (id:%s) (db:%s) (uid:%s) (url:%s)" %
-                    (thread_info.get('name', 'n/a'),
-                     threadId,
+        code.append("\n# Thread: %s (db:%s) (uid:%s) (url:%s)" %
+                    (thread_info.get('repr', threadId),
                      thread_info.get('dbname', 'n/a'),
                      thread_info.get('uid', 'n/a'),
                      thread_info.get('url', 'n/a')))
@@ -974,7 +956,7 @@ def freehash(arg):
         if isinstance(arg, Mapping):
             return hash(frozendict(arg))
         elif isinstance(arg, Iterable):
-            return hash(frozenset(map(freehash, arg)))
+            return hash(frozenset(freehash(item) for item in arg))
         else:
             return id(arg)
 
@@ -995,7 +977,7 @@ class frozendict(dict):
     def update(self, *args, **kwargs):
         raise NotImplementedError("'update' not supported on frozendict")
     def __hash__(self):
-        return hash(frozenset((key, freehash(val)) for key, val in self.iteritems()))
+        return hash(frozenset((key, freehash(val)) for key, val in self.items()))
 
 class Collector(Mapping):
     """ A mapping from keys to lists. This is essentially a space optimization
@@ -1014,6 +996,49 @@ class Collector(Mapping):
         return iter(self._map)
     def __len__(self):
         return len(self._map)
+
+
+@pycompat.implements_to_string
+class StackMap(MutableMapping):
+    """ A stack of mappings behaving as a single mapping, and used to implement
+        nested scopes. The lookups search the stack from top to bottom, and
+        returns the first value found. Mutable operations modify the topmost
+        mapping only.
+    """
+    __slots__ = ['_maps']
+
+    def __init__(self, m=None):
+        self._maps = [] if m is None else [m]
+
+    def __getitem__(self, key):
+        for mapping in reversed(self._maps):
+            try:
+                return mapping[key]
+            except KeyError:
+                pass
+        raise KeyError(key)
+
+    def __setitem__(self, key, val):
+        self._maps[-1][key] = val
+
+    def __delitem__(self, key):
+        del self._maps[-1][key]
+
+    def __iter__(self):
+        return iter({key for mapping in self._maps for key in mapping})
+
+    def __len__(self):
+        return sum(1 for key in self)
+
+    def __str__(self):
+        return u"<StackMap %s>" % self._maps
+
+    def pushmap(self, m=None):
+        self._maps.append({} if m is None else m)
+
+    def popmap(self):
+        return self._maps.pop()
+
 
 class OrderedSet(MutableSet):
     """ A set collection that remembers the elements first insertion order. """
@@ -1036,6 +1061,19 @@ class LastOrderedSet(OrderedSet):
     def add(self, elem):
         OrderedSet.discard(self, elem)
         OrderedSet.add(self, elem)
+
+def groupby(iterable, key=None):
+    """ Return a collection of pairs ``(key, elements)`` from ``iterable``. The
+        ``key`` is a function computing a key value for each element. This
+        function is similar to ``itertools.groupby``, but aggregates all
+        elements under the same key, not only consecutive elements.
+    """
+    if key is None:
+        key = lambda arg: arg
+    groups = defaultdict(list)
+    for elem in iterable:
+        groups[key(elem)].append(elem)
+    return groups.items()
 
 def unique(it):
     """ "Uniquifier" for the provided iterable: will output each element of
@@ -1106,7 +1144,7 @@ def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False,
                 if not digits and digits is not 0:
                     digits = DEFAULT_DIGITS
 
-    if isinstance(value, (str, unicode)) and not value:
+    if isinstance(value, pycompat.string_types) and not value:
         return ''
 
     lang = env.context.get('lang') or env.user.company_id.partner_id.lang or 'en_US'
@@ -1141,7 +1179,7 @@ def format_date(env, value, lang_code=False, date_format=False):
         return ''
     if isinstance(value, datetime.datetime):
         value = value.date()
-    elif isinstance(value, basestring):
+    elif isinstance(value, pycompat.string_types):
         if len(value) < DATE_LENGTH:
             return ''
         value = value[:DATE_LENGTH]
@@ -1157,27 +1195,27 @@ def format_date(env, value, lang_code=False, date_format=False):
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
         known length only, because length difference is optimized. """
-    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in zip(str1, str2)) == 0
+    return len(str1) == len(str2) and sum(ord(x)^ord(y) for x, y in pycompat.izip(str1, str2)) == 0
 
 consteq = getattr(passlib.utils, 'consteq', _consteq)
 
-class Pickle(object):
-    @classmethod
-    def load(cls, stream, errors=False):
-        unpickler = pickle_.Unpickler(stream)
-        # pickle builtins: str/unicode, int/long, float, bool, tuple, list, dict, None
-        unpickler.find_global = None
-        try:
-            return unpickler.load()
-        except Exception:
-            _logger.warning('Failed unpickling data, returning default: %r', errors, exc_info=True)
-            return errors
-
-    @classmethod
-    def loads(cls, text):
-        return cls.load(io.BytesIO(text))
-
-    dumps = pickle_.dumps
-    dump = pickle_.dump
-
-pickle = Pickle
+# forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
+class Unpickler(pickle_.Unpickler, object):
+    find_global = None # Python 2
+    find_class = None # Python 3
+def _pickle_load(stream, encoding='ASCII', errors=False):
+    if sys.version_info[0] == 3:
+        unpickler = Unpickler(stream, encoding=encoding)
+    else:
+        unpickler = Unpickler(stream)
+    try:
+        return unpickler.load()
+    except Exception:
+        _logger.warning('Failed unpickling data, returning default: %r',
+                        errors, exc_info=True)
+        return errors
+pickle = types.ModuleType(__name__ + '.pickle')
+pickle.load = _pickle_load
+pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
+pickle.dump = pickle_.dump
+pickle.dumps = pickle_.dumps

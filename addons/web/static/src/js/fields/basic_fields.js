@@ -8,7 +8,6 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var ajax = require('web.ajax');
 var config = require('web.config');
 var core = require('web.core');
 var crash_manager = require('web.crash_manager');
@@ -348,7 +347,64 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         this.$el = this.$el.add(this._renderTranslateButton());
         return def;
     },
+    /**
+     * Trim the value input by the user.
+     *
+     * @override
+     * @private
+     * @param {any} value
+     * @param {Object} [options]
+     */
+    _setValue: function (value, options) {
+        if (this.field.trim) {
+            value = value.trim();
+        }
+        return this._super(value, options);
+    },
 });
+
+
+var LinkButton = AbstractField.extend({
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click': '_onClick'
+    }),
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Display button
+     * @override
+     * @private
+     */
+    _render: function () {
+        if (this.value) {
+            var className = this.attrs.icon || 'fa-globe';
+
+            this.$el.html("<span />");
+            this.$el.addClass("fa "+ className);
+            this.$el.attr('title', this.value);
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Open link button
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClick: function (event) {
+        event.stopPropagation();
+        window.open(this.value, '_blank');
+    },
+
+});
+
+
 
 var FieldDate = InputField.extend({
     className: "o_field_date",
@@ -382,7 +438,7 @@ var FieldDate = InputField.extend({
             def = this.datewidget.appendTo('<div>').done(function () {
                 self.datewidget.$el.addClass(self.$el.attr('class'));
                 self._prepareInput(self.datewidget.$input);
-                self.replaceElement(self.datewidget.$el);
+                self._replaceElement(self.datewidget.$el);
             });
         }
         return $.when(def, this._super.apply(this, arguments));
@@ -520,12 +576,13 @@ var FieldMonetary = InputField.extend({
             this.tagName = 'div';
             this.className += ' o_input';
 
-            // use the formatFloat function in edit
-            this.formatType = 'float';
+            // do not display currency symbol in edit
+            this.formatOptions.noSymbol = true;
         }
 
         this.formatOptions.currency = this.currency;
         this.formatOptions.digits = [16, 2];
+        this.formatOptions.field_digits = this.nodeOptions.field_digits;
     },
 
     //--------------------------------------------------------------------------
@@ -596,6 +653,7 @@ var FieldMonetary = InputField.extend({
         var currencyField = this.nodeOptions.currency_field || this.field.currency_field || 'currency_id';
         var currencyID = this.record.data[currencyField] && this.record.data[currencyField].res_id;
         this.currency = session.get_currency(currencyID);
+        this.formatOptions.currency = this.currency; // _formatValue() uses formatOptions
     },
 });
 
@@ -979,7 +1037,7 @@ var FieldPhone = FieldEmail.extend({
      * @private
      */
     _canCall: function () {
-        return config.device.size_class <= config.device.SIZES.XS;
+        return config.device.isMobile;
     }
 });
 
@@ -1022,8 +1080,9 @@ var UrlWidget = InputField.extend({
      * @private
      */
     _renderReadonly: function () {
-        this.$el.text(this.value)
+        this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
+            .attr('target', '_blank')
             .attr('href', this.value);
     }
 });
@@ -1484,6 +1543,58 @@ var StateSelectionWidget = AbstractField.extend({
     },
 });
 
+var FavoriteWidget = AbstractField.extend({
+    className: 'o_favorite',
+    events: {
+        'click': '_setFavorite'
+    },
+    supportedFieldTypes: ['boolean'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * A boolean field is always set since false is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return true;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Render favorite icon based on state
+     *
+     * @override
+     * @private
+     */
+    _render: function () {
+        var template = this.attrs.nolabel ? '<a href="#"><i class="fa %s" title="%s"></i></a>' : '<a href="#"><i class="fa %s"></i> %s</a>';
+        this.$el.empty().append(_.str.sprintf(template, this.value ? 'fa-star' : 'fa-star-o', this.value ? _t('Remove from Favorites') : _t('Add to Favorites')));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggle favorite state
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _setFavorite: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this._setValue(!this.value);
+    },
+});
+
 var LabelSelection = AbstractField.extend({
     supportedFieldTypes: ['selection'],
 
@@ -1566,6 +1677,52 @@ var FieldBooleanButton = AbstractField.extend({
         var $hover = $('<span>').addClass('o_stat_text o_hover ' + hover_color).text(hover);
         this.$el.append($val).append($hover);
     },
+});
+
+var BooleanToggle = FieldBoolean.extend({
+    events: {
+        'click': '_onClick'
+    },
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        this._super.apply(this, arguments);
+        this._renderToggleSwitch();
+    },
+
+    /**
+     * Display toggle switch
+     *
+     * @private
+     */
+    _renderToggleSwitch: function () {
+        this.$el.addClass("o_boolean_toggle");
+        var $div = $('<div class="slider"></div>');
+        $div.insertAfter(this.$("input[type=checkbox]"));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggle active value
+     *
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onClick: function (event) {
+        event.stopPropagation();
+        this._setValue(!this.value);
+        this.$el.closest(".o_data_row").toggleClass('text-muted', this.value);
+    },
+
 });
 
 var StatInfo = AbstractField.extend({
@@ -1668,10 +1825,9 @@ var FieldPercentPie = AbstractField.extend({
 });
 
 /**
- * FieldProgressBar
- * parameters
- * - title: title of the bar, displayed on top of the bar
- * options
+ * Node options:
+ *
+ * - title: title of the bar, displayed on top of the bar options
  * - editable: boolean if value is editable
  * - current_value: get the current_value from the field that must be present in the view
  * - max_value: get the max_value from the field that must be present in the view
@@ -1875,6 +2031,14 @@ var FieldToggleBoolean = AbstractField.extend({
 
 var JournalDashboardGraph = AbstractField.extend({
     className: "o_dashboard_graph",
+    cssLibs: [
+        '/web/static/lib/nvd3/nv.d3.css'
+    ],
+    jsLibs: [
+        '/web/static/lib/nvd3/d3.v3.js',
+        '/web/static/lib/nvd3/nv.d3.js',
+        '/web/static/src/js/libs/nvd3.js'
+    ],
     init: function () {
         this._super.apply(this, arguments);
         this.graph_type = this.attrs.graph_type;
@@ -1886,7 +2050,12 @@ var JournalDashboardGraph = AbstractField.extend({
         return this._super.apply(this, arguments);
     },
     destroy: function () {
-        nv.utils.offWindowResize(this._onResize);
+        if ('nv' in window) {
+            // if the widget is destroyed before the lazy loaded libs (nv) are
+            // actually loaded (i.e. after the widget has actually started),
+            // nv is undefined, but the handler isn't bound yet anyway
+            nv.utils.offWindowResize(this._onResize);
+        }
         this._super.apply(this, arguments);
     },
 
@@ -1959,7 +2128,8 @@ var JournalDashboardGraph = AbstractField.extend({
                         .y(function (d) { return d.value; })
                         .showValues(false)
                         .showYAxis(false)
-                        .margin({'left': 0, 'right': 0, 'top': 0, 'bottom': 40});
+                        .color(['#875A7B', '#526774', '#FA8072'])
+                        .margin({'left': 0, 'right': 0, 'top': 20, 'bottom': 20});
 
                     self.chart.xAxis.axisLabel(self.data[0].title);
                     self.chart.yAxis.tickFormat(d3.format(',.2f'));
@@ -1975,7 +2145,7 @@ var JournalDashboardGraph = AbstractField.extend({
             }
             d3.select(self.$('svg')[0])
                 .datum(self.data)
-                .transition().duration(1200)
+                .transition().duration(600)
                 .call(self.chart);
 
             self._customizeChart();
@@ -1995,7 +2165,6 @@ var JournalDashboardGraph = AbstractField.extend({
             this._customizeChart();
         }
     },
-
 });
 
 /**
@@ -2227,25 +2396,14 @@ var FieldDomain = AbstractField.extend({
  */
 var AceEditor = DebouncedField.extend({
     template: "AceEditor",
+    jsLibs: [
+        '/web/static/lib/ace/ace.odoo-custom.js',
+        [
+            '/web/static/lib/ace/mode-python.js',
+            '/web/static/lib/ace/mode-xml.js'
+        ]
+    ],
     events: {}, // events are triggered manually for this debounced widget
-    /**
-     * @override willStart from AbstractField (Widget)
-     * Loads the ace library if not already loaded.
-     *
-     * @returns {Deferred}
-     */
-    willStart: function () {
-        var loadJSDef;
-        if (!window.ace) {
-            loadJSDef = ajax.loadJS('/web/static/lib/ace/ace.odoo-custom.js').then(function () {
-                return $.when(
-                    ajax.loadJS('/web/static/lib/ace/mode-python.js'),
-                    ajax.loadJS('/web/static/lib/ace/mode-xml.js')
-                );
-            });
-        }
-        return $.when(this._super.apply(this, arguments), loadJSDef);
-    },
     /**
      * @override start from AbstractField (Widget)
      *
@@ -2331,6 +2489,56 @@ var AceEditor = DebouncedField.extend({
     },
 });
 
+var ImageSelection = AbstractField.extend({
+    supportedFieldTypes: ['selection'],
+    events: _.extend({}, AbstractField.prototype.events, {
+        'click img': '_onImgClicked',
+    }),
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        this.$el.empty();
+        _.each(this.nodeOptions, function (val, key) {
+            var $container = $('<div>').addClass('col-xs-3 text-center');
+            var $img = $('<img>')
+                .addClass('img img-responsive img-thumbnail ml16')
+                .toggleClass('btn-info', key === self.value)
+                .attr('src', val.image_link)
+                .data('key', key);
+            $container.append($img);
+            if (val.preview_link) {
+                var $previewLink = $('<a>')
+                    .text('Preview')
+                    .attr('href', val.preview_link)
+                    .attr('target', '_blank');
+                $container.append($previewLink);
+            }
+            self.$el.append($container);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onImgClicked: function (event) {
+        this._setValue($(event.currentTarget).data('key'));
+    },
+});
+
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
@@ -2339,7 +2547,9 @@ return {
     FieldBinaryImage: FieldBinaryImage,
     FieldBoolean: FieldBoolean,
     FieldBooleanButton: FieldBooleanButton,
+    BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
+    LinkButton: LinkButton,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
     FieldDomain: FieldDomain,
@@ -2355,8 +2565,10 @@ return {
     HandleWidget: HandleWidget,
     InputField: InputField,
     AttachmentImage: AttachmentImage,
+    ImageSelection: ImageSelection,
     LabelSelection: LabelSelection,
     StateSelectionWidget: StateSelectionWidget,
+    FavoriteWidget: FavoriteWidget,
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
     UrlWidget: UrlWidget,

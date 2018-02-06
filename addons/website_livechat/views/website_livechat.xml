@@ -9,7 +9,9 @@
         <template id="assets_frontend" name="im_livechat assets frontend" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
+                <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
+                <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
                 <link rel="stylesheet" href="/mail/static/src/less/chat_window.less"></link>
@@ -37,7 +39,7 @@
         </template>
 
         <!-- Page Layout -->
-        <template id="channel_page" name="Livechat Channel Satisfaction Page" page="True">
+        <template id="channel_page" name="Livechat Channel Satisfaction Page">
             <t t-call="website.layout">
               <div id="wrap">
                 <div class="container">
@@ -125,7 +127,7 @@
                             <t t-foreach="team" t-as="user" class="media">
                                 <div class="media">
                                     <div class="pull-left" t-if='user.image_small'>
-                                        <img t-att-src="user.image_small and ('data:image/png;base64,' + user.image_small) or '/web/static/src/img/placeholder.png'"
+                                        <img t-att-src="user.image_small and ('data:image/png;base64,' + to_text(user.image_small)) or '/web/static/src/img/placeholder.png'"
                                             class="img-rounded" t-att-alt="user.name"/>
                                     </div>
                                     <div class="media-body">
@@ -158,7 +160,7 @@
                                     <t t-foreach="channels" t-as="channel">
                                         <div class="media">
                                             <a class="pull-left" t-attf-href="/livechat/channel/#{ slug(channel)}">
-                                                <img t-att-src="channel.image_small and ('data:image/png;base64,' + channel.image_small) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
+                                                <img t-att-src="channel.image_small and ('data:image/png;base64,' + to_text(channel.image_small)) or '/web/static/src/img/placeholder.png'" t-att-alt="channel.name" />
                                             </a>
                                             <div class="media-body">
                                                 <h4 class="media-heading"><t t-esc="channel.name"/></h4>

@@ -4,15 +4,15 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,7 @@ msgstr "%(empl_name)s van %(check_in)s t/m %(check_out)s"
 #. module: hr_attendance
 #: model:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Attendance</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Aanwezigheid</span>"
 
 #. module: hr_attendance
 #. openerp-web
@@ -57,11 +57,6 @@ msgstr "An apple a day keeps the doctor away"
 #, python-format
 msgid "Another good day's work! See you soon!"
 msgstr "Weer een dag goed gewerkt! Tot snel!"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "Toepassen"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -81,17 +76,13 @@ msgid "Attendance Analysis"
 msgstr "Aanwezigheid analyse"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
-msgid "Attendance Settings"
-msgstr "Aanwezigheidsinstellingen"
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "Aanwezigheden"
 
@@ -99,11 +90,6 @@ msgstr "Aanwezigheden"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
 msgstr "Badge ID"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Cancel"
-msgstr "Annuleer"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -127,13 +113,13 @@ msgstr ""
 " al uitgeklokt op %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr "Kan inchecken of uitchecken niet doen op meerdere werknemers."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -151,7 +137,7 @@ msgstr "Inchecken"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr ""
+msgstr "Check in / check uit"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_check_out
@@ -171,6 +157,11 @@ msgstr "Check in"
 #, python-format
 msgid "Check out"
 msgstr "Check uit"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out"
+msgstr "Inchecken/Uitchecken"
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -220,7 +211,6 @@ msgstr "Bedrijfslogo"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Configuration"
 msgstr "Instellingen"
 
@@ -287,7 +277,8 @@ msgid "Employee Image"
 msgstr "Afbeelding werknemer"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr "PIN werknemer"
 
@@ -309,30 +300,9 @@ msgid "Employees"
 msgstr "Werknemers"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-"Werknemer moeten hun pincode niet ingeven om manueel in te checken in de "
-"\"Kiosk modus\"."
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-"Werknemers moeten hun PIN ingeven om manueel in te checken in de \"Kiosk "
-"Mode\"."
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "PIN gebruik inschakelen"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
-msgstr "In of uitschakelen van werknemer PIN identificatie bij inchecken"
 
 #. module: hr_attendance
 #. openerp-web
@@ -477,7 +447,7 @@ msgstr "Kiosk Modus"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_last_attendance_id
 msgid "Last Attendance"
-msgstr ""
+msgstr "Laatste aanwezigheid"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance___last_update
@@ -506,6 +476,7 @@ msgstr "Manager"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "Handmatige aanwezigheid"
 
@@ -532,7 +503,7 @@ msgstr "Geen check-out"
 #. module: hr_attendance
 #: model:ir.actions.act_window,help:hr_attendance.hr_attendance_action_employee
 msgid "No attendance records to display."
-msgstr ""
+msgstr "Geen aanwezigheid records om te tonen."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:72
@@ -586,7 +557,7 @@ msgid "Please return to the main menu."
 msgstr "Ga terug naar het hoofdmenu"
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
+#: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
 msgstr "Badge afdrukken"
 
@@ -610,9 +581,26 @@ msgid "Select Employee"
 msgstr "Selecteer werknemer"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
+"Stel pincodes in de werknemer zijn detail formulier in (onder het tabblad HR"
+" instellingen)."
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
 msgid "Settings"
 msgstr "Instellingen"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed In"
+msgstr "Aangemeld"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed Out"
+msgstr "Afgemeld"
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -650,6 +638,15 @@ msgstr ""
 " en uit de checken vanuit deze sessie"
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"De gebruiker krijgt toegang tot het HR aanwezigheid menu, dit geeft de "
+"mogelijkheid om eigen aanwezigheid aan te passen."
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
@@ -669,6 +666,11 @@ msgid "Today"
 msgstr "Vandaag"
 
 #. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr "Gebruik PIN codes om in de kiosk modus aan te melden"
+
+#. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:102
 #, python-format
@@ -686,7 +688,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:112
 #, python-format
 msgid "Welcome"
-msgstr "Welko"
+msgstr "Welkom"
 
 #. module: hr_attendance
 #. openerp-web
@@ -713,18 +715,6 @@ msgid "You cannot duplicate an attendance."
 msgstr "U kan een deelnemer niet kopiëren."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:20
-#, python-format
-msgid "employee presence<br/>green: checked in<br/>red: checked out"
-msgstr "medewerker aanwezig <br/>groen: aanwezig <br/> rood: afwezig"
-
-#. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
 msgstr "lijst van aanwezigheden voor de werknemer"
@@ -742,3 +732,8 @@ msgstr "ok"
 #, python-format
 msgid "or"
 msgstr "of"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

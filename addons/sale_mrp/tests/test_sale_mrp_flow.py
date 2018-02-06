@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo.tests import common
+from odoo.tests import common, Form
 from odoo.exceptions import UserError
 
 
@@ -12,52 +12,30 @@ class TestSaleMrpFlow(common.TransactionCase):
     def setUp(self):
         super(TestSaleMrpFlow, self).setUp()
         # Useful models
-        self.SaleOrderLine = self.env['sale.order.line']
-        self.SaleOrder = self.env['sale.order']
-        self.MrpBom = self.env['mrp.bom']
         self.StockMove = self.env['stock.move']
-        self.MrpBomLine = self.env['mrp.bom.line']
         self.ProductUom = self.env['product.uom']
         self.MrpProduction = self.env['mrp.production']
-        self.Product = self.env['product.product']
-        self.ProcurementOrder = self.env['procurement.order']
         self.Inventory = self.env['stock.inventory']
         self.InventoryLine = self.env['stock.inventory.line']
         self.ProductProduce = self.env['mrp.product.produce']
 
-        self.partner_agrolite = self.env.ref('base.res_partner_2')
         self.categ_unit = self.env.ref('product.product_uom_categ_unit')
         self.categ_kgm = self.env.ref('product.product_uom_categ_kgm')
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.warehouse = self.env.ref('stock.warehouse0')
-        self.procurement_jit = self.env.ref('base.module_procurement_jit')
 
     def test_00_sale_mrp_flow(self):
         """ Test sale to mrp flow with diffrent unit of measure."""
-        route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
-        route_mto = self.warehouse.mto_pull_id.route_id.id
-
-        def create_product(name, uom_id, route_ids=[]):
-            return self.Product.create({
-                'name': name,
-                'type': 'product',
-                'uom_id': uom_id,
-                'uom_po_id': uom_id,
-                'route_ids': route_ids})
-
-        def create_bom_lines(bom_id, product_id, qty, uom_id, procure_method): #TODO: remove procure_method
-            self.MrpBomLine.create({
-                'product_id': product_id,
-                'product_qty': qty,
-                'bom_id': bom_id,
-                'product_uom_id': uom_id})
-
-        def create_bom(product_tmpl_id, qty, uom_id, type):
-            return self.MrpBom.create({
-                'product_tmpl_id': product_tmpl_id,
-                'product_qty': qty,
-                'type': type,
-                'product_uom_id': uom_id})
+        def create_product(name, uom_id, routes=()):
+            p = Form(self.env['product.product'])
+            p.name = name
+            p.type = 'product'
+            p.uom_id = uom_id
+            p.uom_po_id = uom_id
+            p.route_ids.clear()
+            for r in routes:
+                p.route_ids.add(r)
+            return p.save()
 
         self.uom_kg = self.ProductUom.create({
             'name': 'Test-KG',
@@ -87,48 +65,67 @@ class TestSaleMrpFlow(common.TransactionCase):
 
         # Create product A, B, C, D.
         # --------------------------
-        product_a = create_product('Product A', self.uom_unit.id, route_ids=[(6, 0, [route_manufacture, route_mto])])
-        product_c = create_product('Product C', self.uom_kg.id, route_ids=[])
-        product_b = create_product('Product B', self.uom_dozen.id, route_ids=[(6, 0, [route_manufacture, route_mto])])
-        product_d = create_product('Product D', self.uom_unit.id, route_ids=[(6, 0, [route_manufacture, route_mto])])
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+        route_mto = self.warehouse.mto_pull_id.route_id
+        product_a = create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
+        product_c = create_product('Product C', self.uom_kg)
+        product_b = create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
+        product_d = create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
 
         # ------------------------------------------------------------------------------------------
         # Bill of materials for product A, B, D.
         # ------------------------------------------------------------------------------------------
 
         # Bill of materials for Product A.
-        bom_a = create_bom(product_a.product_tmpl_id.id, 2, self.uom_dozen.id, 'normal')
-        create_bom_lines(bom_a.id, product_b.id, 3, self.uom_unit.id, 'make_to_order')
-        create_bom_lines(bom_a.id, product_c.id, 300.5, self.uom_gm.id, 'make_to_stock')
-        create_bom_lines(bom_a.id, product_d.id, 4, self.uom_unit.id, 'make_to_order')
+        with Form(self.env['mrp.bom']) as f:
+            f.product_tmpl_id = product_a.product_tmpl_id
+            f.product_qty = 2
+            f.product_uom_id = self.uom_dozen
+            with f.bom_line_ids.new() as line:
+                line.product_id = product_b
+                line.product_qty = 3
+                line.product_uom_id = self.uom_unit
+            with f.bom_line_ids.new() as line:
+                line.product_id = product_c
+                line.product_qty = 300.5
+                line.product_uom_id = self.uom_gm
+            with f.bom_line_ids.new() as line:
+                line.product_id = product_d
+                line.product_qty = 4
+                line.product_uom_id = self.uom_unit
 
         # Bill of materials for Product B.
-        bom_b = create_bom(product_b.product_tmpl_id.id, 1, self.uom_unit.id, 'phantom')
-        create_bom_lines(bom_b.id, product_c.id, 0.400, self.uom_kg.id, 'make_to_stock')
+        with Form(self.env['mrp.bom']) as f:
+            f.product_tmpl_id = product_b.product_tmpl_id
+            f.product_qty = 1
+            f.product_uom_id = self.uom_unit
+            f.type = 'phantom'
+            with f.bom_line_ids.new() as line:
+                line.product_id = product_c
+                line.product_qty = 0.400
+                line.product_uom_id = self.uom_kg
 
         # Bill of materials for Product D.
-        bom_d = create_bom(product_d.product_tmpl_id.id, 1, self.uom_unit.id, 'normal')
-        create_bom_lines(bom_d.id, product_c.id, 1, self.uom_kg.id, 'make_to_stock')
+        with Form(self.env['mrp.bom']) as f:
+            f.product_tmpl_id = product_d.product_tmpl_id
+            f.product_qty = 1
+            f.product_uom_id = self.uom_unit
+            with f.bom_line_ids.new() as line:
+                line.product_id = product_c
+                line.product_qty = 1
+                line.product_uom_id = self.uom_kg
 
         # ----------------------------------------
         # Create sales order of 10 Dozen product A.
         # ----------------------------------------
 
-        order = self.SaleOrder.create({
-            'partner_id': self.partner_agrolite.id,
-            'partner_invoice_id': self.partner_agrolite.id,
-            'partner_shipping_id': self.partner_agrolite.id,
-            'date_order': datetime.today(),
-            'pricelist_id': self.env.ref('product.list0').id,
-        })
-        self.SaleOrderLine.create({
-            'name': product_a.name,
-            'order_id': order.id,
-            'product_id': product_a.id,
-            'product_uom_qty': 10,
-            'product_uom': self.uom_dozen.id
-        })
-        self.assertTrue(order, "Sales order not created.")
+        order_form = Form(self.env['sale.order'])
+        order_form.partner_id = self.env.ref('base.res_partner_2')
+        with order_form.order_line.new() as line:
+            line.product_id = product_a
+            line.product_uom = self.uom_dozen
+            line.product_uom_qty = 10
+        order = order_form.save()
         order.action_confirm()
 
         # ===============================================================================
@@ -163,18 +160,14 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Check manufacturing order for product A.
         # <><><><><><><><><><><><><><><><><><><><>
 
-        # Run procurement.
-        # ----------------
-        self.ProcurementOrder.run_scheduler()
-
-        mnf_product_a = self.ProcurementOrder.search([('product_id', '=', product_a.id), ('group_id', '=', order.procurement_group_id.id), ('production_id', '!=', False)]).production_id
-
         # Check quantity, unit of measure and state of manufacturing order.
         # -----------------------------------------------------------------
+        self.env['procurement.group'].run_scheduler()
+        mnf_product_a = self.env['mrp.production'].search([('product_id', '=', product_a.id)])
 
         self.assertTrue(mnf_product_a, 'Manufacturing order not created.')
         self.assertEqual(mnf_product_a.product_qty, 10, 'Wrong product quantity in manufacturing order.')
-        self.assertEqual(mnf_product_a.product_uom_id.id, self.uom_dozen.id, 'Wrong unit of measure in manufacturing order.')
+        self.assertEqual(mnf_product_a.product_uom_id, self.uom_dozen, 'Wrong unit of measure in manufacturing order.')
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
         # ------------------------------------------------------------------------------------------
@@ -226,11 +219,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         # Manufacturing order for product D (20 unit).
         # <><><><><><><><><><><><><><><><><><><><><><>
 
-        procurement_d = self.ProcurementOrder.search([('product_id', '=', product_d.id), ('group_id', '=', order.procurement_group_id.id)])
-        # Check total consume line with product c and uom kg.
-        self.assertEqual(len(procurement_d), 1, 'Procurement order not generated.')
-        self.assertTrue(procurement_d.production_id, 'Production order not generated from procurement.')
-        mnf_product_d = procurement_d.production_id
+        # FP Todo: find a better way to look for the production order
+        mnf_product_d = self.MrpProduction.search([('product_id', '=', product_d.id), ('move_dest_ids.group_id', '=', order.procurement_group_id.id)], order='id desc', limit=1)
         # Check state of production order D.
         self.assertEqual(mnf_product_d.state, 'confirmed', 'Manufacturing order should be confirmed.')
 
@@ -253,7 +243,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_id': product_c.id,
             'filter': 'product'})
 
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         self.InventoryLine.create({
             'inventory_id': inventory.id,
@@ -303,7 +293,7 @@ class TestSaleMrpFlow(common.TransactionCase):
             'product_id': product_c.id,
             'filter': 'product'})
 
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertFalse(inventory.line_ids, "Inventory line should not created.")
         self.InventoryLine.create({
             'inventory_id': inventory.id,
@@ -341,45 +331,50 @@ class TestSaleMrpFlow(common.TransactionCase):
     def test_01_sale_mrp_delivery_kit(self):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
-        self.partner = self.env.ref('base.res_partner_1')
-        self.product = self.env.ref('mrp.product_product_build_kit')
-        self.product.invoice_policy = 'delivery'
-        so_vals = {
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': self.product.name, 'product_id': self.product.id, 'product_uom_qty': 5, 'product_uom': self.product.uom_id.id, 'price_unit': self.product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
-        }
-        self.so = self.SaleOrder.create(so_vals)
+        product = self.env.ref('mrp.product_product_build_kit')
+        product.invoice_policy = 'delivery'
+        # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
+        product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
+
+        partner = self.env.ref('base.res_partner_1')
+        # if `delivery` module is installed, a default property is set for the carrier to use
+        # However this will lead to an extra line on the SO (the delivery line), which will force
+        # the SO to have a different flow (and `invoice_state` value)
+        partner.property_delivery_carrier_id = False
+
+        f = Form(self.env['sale.order'])
+        f.partner_id = partner
+        with f.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 5
+        so = f.save()
 
         # confirm our standard so, check the picking
-        self.so.action_confirm()
-        self.assertTrue(self.so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
+        so.action_confirm()
+        self.assertTrue(so.picking_ids, 'Sale MRP: no picking created for "invoice on delivery" stockable products')
 
         # invoice in on delivery, nothing should be invoiced
         with self.assertRaises(UserError):
-            self.so.action_invoice_create()
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
+            so.action_invoice_create()
+        self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "nothing to invoice" after invoicing')
 
         # deliver partially (1 of each instead of 5), check the so's invoice_status and delivered quantities
-        pick = self.so.picking_ids
+        pick = so.picking_ids
         pick.force_assign()
-        pick.pack_operation_product_ids.write({'qty_done': 1})
-        wiz_act = pick.do_new_transfer()
+        pick.move_lines.write({'quantity_done': 1})
+        wiz_act = pick.button_validate()
         wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
         wiz.process()
-
-        self.assertEqual(self.so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
-        del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
+        self.assertEqual(so.invoice_status, 'no', 'Sale MRP: so invoice_status should be "no" after partial delivery of a kit')
+        del_qty = sum(sol.qty_delivered for sol in so.order_line)
         self.assertEqual(del_qty, 0.0, 'Sale MRP: delivered quantity should be zero after partial delivery of a kit')
         # deliver remaining products, check the so's invoice_status and delivered quantities
-        self.assertEqual(len(self.so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
-        pick_2 = self.so.picking_ids[0]
+        self.assertEqual(len(so.picking_ids), 2, 'Sale MRP: number of pickings should be 2')
+        pick_2 = so.picking_ids[0]
         pick_2.force_assign()
-        pick_2.pack_operation_product_ids.write({'qty_done': 4})
-        pick_2.do_new_transfer()
+        pick_2.move_lines.write({'quantity_done': 4})
+        pick_2.button_validate()
 
-        del_qty = sum(sol.qty_delivered for sol in self.so.order_line)
+        del_qty = sum(sol.qty_delivered for sol in so.order_line)
         self.assertEqual(del_qty, 5.0, 'Sale MRP: delivered quantity should be 5.0 after complete delivery of a kit')
-        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
+        self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')

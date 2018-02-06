@@ -93,12 +93,13 @@ en Odoo):
         'data/account_account_tag_data.xml',
         'data/account.account.template.csv',
         'data/account_chart_template_data.xml',
+        'data/account_data.xml',
         'data/account.tax.template.xml',
         # Country States
         'data/l10n_do_state_data.xml',
         # Adds fiscal position
         'data/fiscal_position_template.xml',
         # configuration wizard, views, reports...
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_configure_data.xml',
     ],
 }

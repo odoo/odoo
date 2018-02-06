@@ -3,12 +3,12 @@
 
 import babel.messages.pofile
 import base64
-import csv
 import datetime
 import functools
 import glob
 import hashlib
 import imghdr
+import io
 import itertools
 import jinja2
 import json
@@ -19,24 +19,28 @@ import re
 import sys
 import tempfile
 import time
+import zlib
+
 import werkzeug
 import werkzeug.utils
 import werkzeug.wrappers
-import zlib
+import werkzeug.wsgi
+from collections import OrderedDict
+from werkzeug.urls import url_decode, iri_to_uri
 from xml.etree import ElementTree
-from cStringIO import StringIO
 
 
 import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_resource_path
-from odoo.tools import topological_sort
+from odoo.tools import crop_image, topological_sort, html_escape, pycompat
 from odoo.tools.translate import _
-from odoo.tools.misc import str2bool, xlwt
+from odoo.tools.misc import str2bool, xlwt, file_open
+from odoo.tools.safe_eval import safe_eval
 from odoo import http
 from odoo.http import content_disposition, dispatch_rpc, request, \
-                      serialize_exception as _serialize_exception
+    serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError
 from odoo.models import check_method_name
 from odoo.service import db
@@ -118,12 +122,11 @@ def ensure_db(redirect='/web/database/selector'):
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
         r = request.httprequest
-        url_redirect = r.base_url
+        url_redirect = werkzeug.urls.url_parse(r.base_url)
         if r.query_string:
-            # Can't use werkzeug.wrappers.BaseRequest.url with encoded hashes:
-            # https://github.com/amigrave/werkzeug/commit/b4a62433f2f7678c234cdcac6247a869f90a7eb7
-            url_redirect += '?' + r.query_string
-        response = werkzeug.utils.redirect(url_redirect, 302)
+            # in P3, request.query_string is bytes, the rest is text, can't mix them
+            query_string = iri_to_uri(r.query_string)
+            url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
         abort_and_redirect(url_redirect)
 
@@ -149,16 +152,16 @@ def ensure_db(redirect='/web/database/selector'):
 
 def module_installed(environment):
     # Candidates module the current heuristic is the /static dir
-    loadable = http.addons_manifest.keys()
+    loadable = list(http.addons_manifest)
 
     # Retrieve database installed modules
     # TODO The following code should move to ir.module.module.list_installed_modules()
     Modules = environment['ir.module.module']
     domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = {
-        module.name: module.dependencies_id.mapped('name')
+    modules = OrderedDict(
+        (module.name, module.dependencies_id.mapped('name'))
         for module in Modules.search(domain)
-    }
+    )
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
@@ -300,10 +303,6 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def load_actions_from_ir_values(action_slot, model, res_id):
-    actions = request.env['ir.values'].get_actions(action_slot, model, res_id)
-    return [(id, name, clean_action(action)) for id, name, action in actions]
-
 def clean_action(action):
     action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
@@ -422,10 +421,13 @@ def xml2json_from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
-def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False, filename=None, filename_field='datas_fname', download=False, mimetype=None, default_mimetype='application/octet-stream', env=None):
+def binary_content(xmlid=None, model='ir.attachment', id=None, field='datas', unique=False,
+                   filename=None, filename_field='datas_fname', download=False, mimetype=None,
+                   default_mimetype='application/octet-stream', access_token=None, env=None):
     return request.registry['ir.http'].binary_content(
-        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field,
-        download=download, mimetype=mimetype, default_mimetype=default_mimetype, env=env)
+        xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+        filename_field=filename_field, download=download, mimetype=mimetype,
+        default_mimetype=default_mimetype, access_token=access_token, env=env)
 
 #----------------------------------------------------------
 # Odoo Web web Controllers
@@ -459,7 +461,10 @@ class Home(http.Controller):
         ensure_db()
         return werkzeug.utils.redirect(redirect, 303)
 
-    @http.route('/web/login', type='http', auth="none")
+    def _login_redirect(self, uid, redirect=None):
+        return redirect if redirect else '/web'
+
+    @http.route('/web/login', type='http', auth="none", sitemap=False)
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
@@ -480,14 +485,18 @@ class Home(http.Controller):
             uid = request.session.authenticate(request.session.db, request.params['login'], request.params['password'])
             if uid is not False:
                 request.params['login_success'] = True
-                if not redirect:
-                    redirect = '/web'
-                return http.redirect_with_hash(redirect)
+                return http.redirect_with_hash(self._login_redirect(uid, redirect=redirect))
             request.uid = old_uid
             values['error'] = _("Wrong login/password")
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
                 values['error'] = _('Only employee can access this database. Please contact the administrator.')
+
+        if 'login' not in values and request.session.get('auth_login'):
+            values['login'] = request.session.get('auth_login')
+
+        if not odoo.tools.config['list_db']:
+            values['disable_database_manager'] = True
 
         response = request.render('web.login', values)
         response.headers['X-Frame-Options'] = 'DENY'
@@ -508,21 +517,24 @@ class WebClient(http.Controller):
     @http.route('/web/webclient/locale/<string:lang>', type='http', auth="none")
     def load_locale(self, lang):
         magic_file_finding = [lang.replace("_", '-').lower(), lang.split('_')[0]]
-        addons_path = http.addons_manifest['web']['addons_path']
-        # load momentjs locale
-        momentjs_locale = ""
         for code in magic_file_finding:
             try:
-                with open(os.path.join(addons_path, 'web', 'static', 'lib', 'moment', 'locale', code + '.js'), 'r') as f:
-                    momentjs_locale = f.read()
-                # we found a locale matching so we can exit
-                break
+                return http.Response(
+                    werkzeug.wsgi.wrap_file(
+                        request.httprequest.environ,
+                        file_open('web/static/lib/moment/locale/%s.js' % code, 'rb')
+                    ),
+                    content_type='application/javascript; charset=utf-8',
+                    headers=[('Cache-Control', 'max-age=36000')],
+                    direct_passthrough=True,
+                )
             except IOError:
-                continue
+                _logger.debug("No moment locale for code %s", code)
 
-        # return the content of the locale
-        headers = [('Content-Type', 'application/javascript'), ('Cache-Control', 'max-age=%s' % (36000))]
-        return request.make_response(momentjs_locale, headers)
+        return request.make_response("", headers=[
+            ('Content-Type', 'application/javascript'),
+            ('Cache-Control', 'max-age=36000'),
+        ])
 
     @http.route('/web/webclient/qweb', type='http', auth="none", cors="*")
     def qweb(self, mods=None, db=None):
@@ -573,7 +585,7 @@ class WebClient(http.Controller):
         if langs:
             lang_params = langs.read([
                 "name", "direction", "date_format", "time_format",
-                "grouping", "decimal_point", "thousands_sep"])[0]
+                "grouping", "decimal_point", "thousands_sep", "week_start"])[0]
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
@@ -602,6 +614,10 @@ class WebClient(http.Controller):
     @http.route('/web/tests', type='http', auth="user")
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
+
+    @http.route('/web/tests/mobile', type='http', auth="none")
+    def test_mobile_suite(self, mod=None, **kwargs):
+        return request.render('web.qunit_mobile_suite')
 
     @http.route('/web/benchmarks', type='http', auth="none")
     def benchmarks(self, mod=None, **kwargs):
@@ -645,7 +661,7 @@ class Database(http.Controller):
 
     def _render_template(self, **d):
         d.setdefault('manage',True)
-        d['insecure'] = odoo.tools.config['admin_passwd'] == 'admin'
+        d['insecure'] = odoo.tools.config.verify_admin_password('admin')
         d['list_db'] = odoo.tools.config['list_db']
         d['langs'] = odoo.service.db.exp_list_lang()
         d['countries'] = odoo.service.db.exp_list_countries()
@@ -772,7 +788,7 @@ class Session(http.Controller):
     @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
+            {f['name']: f['value'] for f in fields})
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
             return {'error':_('You cannot leave any password empty.'),'title': _('Change Password')}
         if new_password != confirm_password:
@@ -964,7 +980,7 @@ class Binary(http.Controller):
     def force_contenttype(self, headers, contenttype='image/png'):
         dictheaders = dict(headers)
         dictheaders['Content-Type'] = contenttype
-        return dictheaders.items()
+        return list(dictheaders.items())
 
     @http.route(['/web/content',
         '/web/content/<string:xmlid>',
@@ -975,8 +991,13 @@ class Binary(http.Controller):
         '/web/content/<int:id>-<string:unique>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
         '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
-    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename=None, filename_field='datas_fname', unique=None, mimetype=None, download=None, data=None, token=None):
-        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype)
+    def content_common(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                       filename=None, filename_field='datas_fname', unique=None, mimetype=None,
+                       download=None, data=None, token=None, access_token=None):
+        status, headers, content = binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            access_token=access_token)
         if status == 304:
             response = werkzeug.wrappers.Response(status=status, headers=headers)
         elif status == 301:
@@ -1008,8 +1029,13 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
-    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas', filename_field='datas_fname', unique=None, filename=None, mimetype=None, download=None, width=0, height=0):
-        status, headers, content = binary_content(xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename, filename_field=filename_field, download=download, mimetype=mimetype, default_mimetype='image/png')
+    def content_image(self, xmlid=None, model='ir.attachment', id=None, field='datas',
+                      filename_field='datas_fname', unique=None, filename=None, mimetype=None,
+                      download=None, width=0, height=0, crop=False, access_token=None):
+        status, headers, content = binary_content(
+            xmlid=xmlid, model=model, id=id, field=field, unique=unique, filename=filename,
+            filename_field=filename_field, download=download, mimetype=mimetype,
+            default_mimetype='image/png', access_token=access_token)
         if status == 304:
             return werkzeug.wrappers.Response(status=304, headers=headers)
         elif status == 301:
@@ -1019,7 +1045,11 @@ class Binary(http.Controller):
 
         height = int(height or 0)
         width = int(width or 0)
-        if content and (width or height):
+
+        if crop and (width or height):
+            content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
+
+        elif content and (width or height):
             # resize maximum 500*500
             if width > 500:
                 width = 500
@@ -1063,7 +1093,7 @@ class Binary(http.Controller):
             args = [len(data), ufile.filename,
                     ufile.content_type, base64.b64encode(data)]
         except Exception as e:
-            args = [False, e.message]
+            args = [False, str(e)]
         return out % (json.dumps(callback), json.dumps(args))
 
     @http.route('/web/binary/upload_attachment', type='http', auth="user")
@@ -1137,8 +1167,8 @@ class Binary(http.Controller):
                                    """, (uid,))
                     row = cr.fetchone()
                     if row and row[0]:
-                        image_base64 = str(row[0]).decode('base64')
-                        image_data = StringIO(image_base64)
+                        image_base64 = base64.b64decode(row[0])
+                        image_data = io.BytesIO(image_base64)
                         imgext = '.' + (imghdr.what(None, h=image_base64) or 'png')
                         response = http.send_file(image_data, filename=imgname + imgext, mtime=row[1])
                     else:
@@ -1168,7 +1198,7 @@ class Action(http.Controller):
         if base_action:
             ctx = dict(request.context)
             action_type = base_action[0]['type']
-            if action_type == 'ir.actions.report.xml':
+            if action_type == 'ir.actions.report':
                 ctx.update({'bin_size': True})
             if additional_context:
                 ctx.update(additional_context)
@@ -1194,7 +1224,7 @@ class Export(http.Controller):
         """
         return [
             {'tag': 'csv', 'label': 'CSV'},
-            {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
+            {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT 1.3.0 required"},
         ]
 
     def fields_get(self, model):
@@ -1217,7 +1247,7 @@ class Export(http.Controller):
         else:
             fields['.id'] = fields.pop('id', {'string': 'ID'})
 
-        fields_sequence = sorted(fields.iteritems(),
+        fields_sequence = sorted(fields.items(),
             key=lambda field: odoo.tools.ustr(field[1].get('string', '')))
 
         records = []
@@ -1260,7 +1290,7 @@ class Export(http.Controller):
         export_fields_list = request.env['ir.exports.line'].browse(export['export_fields']).read()
 
         fields_data = self.fields_info(
-            model, map(operator.itemgetter('name'), export_fields_list))
+            model, [f['name'] for f in export_fields_list])
 
         return [
             {'name': field['name'], 'label': fields_data[field['name']]}
@@ -1320,7 +1350,7 @@ class Export(http.Controller):
         export_fields = [field.split('/', 1)[1] for field in fields]
         return (
             (prefix + '/' + k, prefix_string + '/' + v)
-            for k, v in self.fields_info(model, export_fields).iteritems())
+            for k, v in self.fields_info(model, export_fields).items())
 
 class ExportFormat(object):
     raw_data = False
@@ -1358,14 +1388,13 @@ class ExportFormat(object):
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
 
-        field_names = map(operator.itemgetter('name'), fields)
+        field_names = [f['name'] for f in fields]
         import_data = records.export_data(field_names, self.raw_data).get('datas',[])
 
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
-
 
         return request.make_response(self.from_data(columns_headers, import_data),
             headers=[('Content-Disposition',
@@ -1388,32 +1417,22 @@ class CSVExport(ExportFormat, http.Controller):
         return base + '.csv'
 
     def from_data(self, fields, rows):
-        fp = StringIO()
-        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+        fp = io.BytesIO()
+        writer = pycompat.csv_writer(fp, quoting=1)
 
-        writer.writerow([name.encode('utf-8') for name in fields])
+        writer.writerow(fields)
 
         for data in rows:
             row = []
             for d in data:
-                if isinstance(d, unicode):
-                    try:
-                        d = d.encode('utf-8')
-                    except UnicodeError:
-                        pass
-                if d is False: d = None
-
                 # Spreadsheet apps tend to detect formulas on leading =, + and -
-                if type(d) is str and d.startswith(('=', '-', '+')):
+                if isinstance(d, pycompat.string_types) and d.startswith(('=', '-', '+')):
                     d = "'" + d
 
-                row.append(d)
+                row.append(pycompat.to_text(d))
             writer.writerow(row)
 
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return data
+        return fp.getvalue()
 
 class ExcelExport(ExportFormat, http.Controller):
     # Excel needs raw data to correctly handle numbers and date values
@@ -1449,15 +1468,26 @@ class ExcelExport(ExportFormat, http.Controller):
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
                 cell_style = base_style
-                if isinstance(cell_value, basestring):
-                    cell_value = re.sub("\r", " ", cell_value)
+
+                if isinstance(cell_value, bytes) and not isinstance(cell_value, pycompat.string_types):
+                    # because xls uses raw export, we can get a bytes object
+                    # here. xlwt does not support bytes values in Python 3 ->
+                    # assume this is base64 and decode to a string, if this
+                    # fails note that you can't export
+                    try:
+                        cell_value = pycompat.to_text(cell_value)
+                    except UnicodeDecodeError:
+                        raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % fields[cell_index])
+
+                if isinstance(cell_value, pycompat.string_types):
+                    cell_value = re.sub("\r", " ", pycompat.to_text(cell_value))
                 elif isinstance(cell_value, datetime.datetime):
                     cell_style = datetime_style
                 elif isinstance(cell_value, datetime.date):
                     cell_style = date_style
                 worksheet.write(row_index + 1, cell_index, cell_value, cell_style)
 
-        fp = StringIO()
+        fp = io.BytesIO()
         workbook.save(fp)
         fp.seek(0)
         data = fp.read()
@@ -1512,7 +1542,7 @@ class Reports(http.Controller):
             report_struct['format'], 'octet-stream')
         file_name = action.get('name', 'report')
         if 'name' not in action:
-            reports = request.env['ir.actions.report.xml']
+            reports = request.env['ir.actions.report']
             reports = reports.search([('report_name', '=', action['report_name'])])
             if reports:
                 file_name = reports[0].name
@@ -1549,3 +1579,115 @@ class Apps(http.Controller):
         sakey = Session().save_session_action(action)
         debug = '?debug' if req.debug else ''
         return werkzeug.utils.redirect('/web{0}#sa={1}'.format(debug, sakey))
+
+
+class ReportController(http.Controller):
+
+    #------------------------------------------------------
+    # Report controllers
+    #------------------------------------------------------
+    @http.route([
+        '/report/<converter>/<reportname>',
+        '/report/<converter>/<reportname>/<docids>',
+    ], type='http', auth='user', website=True)
+    def report_routes(self, reportname, docids=None, converter=None, **data):
+        report = request.env['ir.actions.report']._get_report_from_name(reportname)
+        context = dict(request.env.context)
+
+        if docids:
+            docids = [int(i) for i in docids.split(',')]
+        if data.get('options'):
+            data.update(json.loads(data.pop('options')))
+        if data.get('context'):
+            # Ignore 'lang' here, because the context in data is the one from the webclient *but* if
+            # the user explicitely wants to change the lang, this mechanism overwrites it.
+            data['context'] = json.loads(data['context'])
+            if data['context'].get('lang'):
+                del data['context']['lang']
+            context.update(data['context'])
+        if converter == 'html':
+            html = report.with_context(context).render_qweb_html(docids, data=data)[0]
+            return request.make_response(html)
+        elif converter == 'pdf':
+            pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
+            pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
+            return request.make_response(pdf, headers=pdfhttpheaders)
+        else:
+            raise werkzeug.exceptions.HTTPException(description='Converter %s not implemented.' % converter)
+
+    #------------------------------------------------------
+    # Misc. route utils
+    #------------------------------------------------------
+    @http.route(['/report/barcode', '/report/barcode/<type>/<path:value>'], type='http', auth="public")
+    def report_barcode(self, type, value, width=600, height=100, humanreadable=0):
+        """Contoller able to render barcode images thanks to reportlab.
+        Samples:
+            <img t-att-src="'/report/barcode/QR/%s' % o.name"/>
+            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
+                ('QR', o.name, 200, 200)"/>
+
+        :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
+        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
+        'UPCA', 'USPS_4State'
+        :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
+        at the bottom of the output image
+        """
+        try:
+            barcode = request.env['ir.actions.report'].barcode(type, value, width=width, height=height, humanreadable=humanreadable)
+        except (ValueError, AttributeError):
+            raise werkzeug.exceptions.HTTPException(description='Cannot convert into barcode.')
+
+        return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
+
+    @http.route(['/report/download'], type='http', auth="user")
+    def report_download(self, data, token):
+        """This function is used by 'action_manager_report.js' in order to trigger the download of
+        a pdf/controller report.
+
+        :param data: a javascript array JSON.stringified containg report internal url ([0]) and
+        type [1]
+        :returns: Response with a filetoken cookie and an attachment header
+        """
+        requestcontent = json.loads(data)
+        url, type = requestcontent[0], requestcontent[1]
+        try:
+            if type == 'qweb-pdf':
+                reportname = url.split('/report/pdf/')[1].split('?')[0]
+
+                docids = None
+                if '/' in reportname:
+                    reportname, docids = reportname.split('/')
+
+                if docids:
+                    # Generic report:
+                    response = self.report_routes(reportname, docids=docids, converter='pdf')
+                else:
+                    # Particular report:
+                    data = url_decode(url.split('?')[1]).items()  # decoding the args represented in JSON
+                    response = self.report_routes(reportname, converter='pdf', **dict(data))
+
+                report = request.env['ir.actions.report']._get_report_from_name(reportname)
+                filename = "%s.%s" % (report.name, "pdf")
+                if docids:
+                    ids = [int(x) for x in docids.split(",")]
+                    obj = request.env[report.model].browse(ids)
+                    if report.print_report_name and not len(obj) > 1:
+                        report_name = safe_eval(report.print_report_name, {'object': obj, 'time': time})
+                        filename = "%s.%s" % (report_name, "pdf")
+                response.headers.add('Content-Disposition', content_disposition(filename))
+                response.set_cookie('fileToken', token)
+                return response
+            else:
+                return
+        except Exception as e:
+            se = _serialize_exception(e)
+            error = {
+                'code': 200,
+                'message': "Odoo Server Error",
+                'data': se
+            }
+            return request.make_response(html_escape(json.dumps(error)))
+
+    @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
+    def check_wkhtmltopdf(self):
+        return request.env['ir.actions.report'].get_wkhtmltopdf_state()

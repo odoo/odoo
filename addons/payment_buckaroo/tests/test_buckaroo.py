@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from lxml import objectify
-import urlparse
+from werkzeug import urls
 
 import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
@@ -10,8 +10,7 @@ from odoo.addons.payment_buckaroo.controllers.main import BuckarooController
 from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(False)
+@odoo.tests.tagged('-post_install', '-at_install')
 class BuckarooCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -20,8 +19,7 @@ class BuckarooCommon(PaymentAcquirerCommon):
         self.buckaroo = self.env.ref('payment.payment_acquirer_buckaroo')
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(False)
+@odoo.tests.tagged('-post_install', '-at_install')
 class BuckarooForm(BuckarooCommon):
 
     def test_10_Buckaroo_form_render(self):
@@ -41,10 +39,10 @@ class BuckarooForm(BuckarooCommon):
             'Brq_invoicenumber': 'SO004',
             'Brq_signature': '1b8c10074c622d965272a91a9e88b5b3777d2474',  # update me
             'brq_test': 'True',
-            'Brq_return': '%s' % urlparse.urljoin(base_url, BuckarooController._return_url),
-            'Brq_returncancel': '%s' % urlparse.urljoin(base_url, BuckarooController._cancel_url),
-            'Brq_returnerror': '%s' % urlparse.urljoin(base_url, BuckarooController._exception_url),
-            'Brq_returnreject': '%s' % urlparse.urljoin(base_url, BuckarooController._reject_url),
+            'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
+            'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
+            'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
+            'Brq_returnreject': urls.url_join(base_url, BuckarooController._reject_url),
             'Brq_culture': 'en-US',
         }
 

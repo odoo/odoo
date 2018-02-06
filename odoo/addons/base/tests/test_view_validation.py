@@ -5,13 +5,14 @@ from lxml import etree
 import io
 import unittest
 
+from odoo.tests.common import tagged
 from odoo.tools.view_validation import (
     valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
     valid_type_in_col, valid_att_in_field, valid_att_in_label,
     valid_field_in_graph, valid_field_in_tree,
 )
 
-invalid_form = etree.parse(io.BytesIO('''\
+invalid_form = etree.parse(io.BytesIO(b'''\
 <form>
     <label></label>
     <group>
@@ -34,7 +35,7 @@ invalid_form = etree.parse(io.BytesIO('''\
 </form>
 ''')).getroot()
 
-valid_form = etree.parse(io.BytesIO('''\
+valid_form = etree.parse(io.BytesIO(b'''\
 <form string="">
     <field name=""></field>
     <field name=""></field>
@@ -54,7 +55,7 @@ valid_form = etree.parse(io.BytesIO('''\
 </form>
 ''')).getroot()
 
-invalid_graph = etree.parse(io.BytesIO('''\
+invalid_graph = etree.parse(io.BytesIO(b'''\
 <graph>
     <label/>
     <group>
@@ -66,14 +67,14 @@ invalid_graph = etree.parse(io.BytesIO('''\
 </graph>
 ''')).getroot()
 
-valid_graph = etree.parse(io.BytesIO('''\
+valid_graph = etree.parse(io.BytesIO(b'''\
 <graph string="">
     <field name=""></field>
     <field name=""></field>
 </graph>
 ''')).getroot()
 
-invalid_tree = etree.parse(io.BytesIO('''\
+invalid_tree = etree.parse(io.BytesIO(b'''\
 <tree>
   <group>
     <div>
@@ -84,7 +85,7 @@ invalid_tree = etree.parse(io.BytesIO('''\
 </tree>
 ''')).getroot()
 
-valid_tree = etree.parse(io.BytesIO('''\
+valid_tree = etree.parse(io.BytesIO(b'''\
 <tree string="">
     <field name=""></field>
     <field name=""></field>
@@ -94,6 +95,7 @@ valid_tree = etree.parse(io.BytesIO('''\
 ''')).getroot()
 
 
+@tagged('standard', 'at_install')
 class TestViewValidation(unittest.TestCase):
     """ Test the view validation code (but not the views themselves). """
 

@@ -54,19 +54,19 @@ if ($.blockUI) {
 
 var throbbers = [];
 
-function blockUI () {
+function blockUI() {
     var tmp = $.blockUI.apply($, arguments);
     var throbber = new Throbber();
     throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
-    $('body').addClass('o_ui_blocked');
+    $(document.body).addClass('o_ui_blocked');
     return tmp;
 }
 
-function unblockUI () {
+function unblockUI() {
     _.invoke(throbbers, 'destroy');
     throbbers = [];
-    $('body').removeClass('o_ui_blocked');
+    $(document.body).removeClass('o_ui_blocked');
     return $.unblockUI.apply($, arguments);
 }
 
@@ -104,7 +104,7 @@ function redirect (url, wait) {
 //  * Client action to reload the whole interface.
 //  * If params.menu_id, it opens the given menu entry.
 //  * If params.wait, reload will wait the openerp server to be reachable before reloading
- 
+
 function Reload(parent, action) {
     var params = action.params || {};
     var menu_id = params.menu_id || false;
@@ -122,6 +122,9 @@ function Reload(parent, action) {
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
 
+    // Clear cache
+    core.bus.trigger('clear_cache');
+
     redirect(url, params.wait);
 }
 
@@ -136,17 +139,6 @@ function Home (parent, action) {
     redirect(url, action && action.params && action.params.wait);
 }
 core.action_registry.add("home", Home);
-
-/**
- * Client action to go back in breadcrumb history.
- * If can't go back in history stack, will go back to home.
- */
-function HistoryBack (parent) {
-    parent.history_back().fail(function () {
-        Home(parent);
-    });
-}
-core.action_registry.add("history_back", HistoryBack);
 
 function login() {
     redirect('/web/login');

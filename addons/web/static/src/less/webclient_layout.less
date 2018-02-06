@@ -40,7 +40,8 @@
             .o-flex(0, 0, @odoo-submenu-width);
             .o-flex-display();
             .o-flex-flow(column, nowrap);
-            border-right: 1px solid #afafb6;
+            border-right: 1px solid darken(@odoo-control-panel-background-color, 20%);
+            background-color: @odoo-control-panel-background-color;
 
             .o_sub_menu_logo {
                 .o-flex(0, 0, auto);
@@ -154,14 +155,9 @@
                 overflow: auto;
                 position: relative;
 
-                .o_view_manager_content {
+                > .o_view_controller {
                     .o-position-absolute(0, 0, 0, 0);  // Get the 100% height of its flex parent
                     height: 100%;
-
-                    .o_view_manager_content {
-                        position: static;  // Reset position for nested view managers
-                        height: auto;  // reset height inheritance for nested view managers
-                    }
                 }
             }
         }

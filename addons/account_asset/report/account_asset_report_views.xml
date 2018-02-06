@@ -31,8 +31,8 @@
             <search string="Assets Analysis">
                 <field name="date"/>
                 <field name="depreciation_date"/>
-                <filter string="Draft" domain="[('state','=','draft')]" help="Assets in draft state"/>
-                <filter string="Running" domain="[('state','=','open')]" help="Assets in running state"/>
+                <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Assets in draft state"/>
+                <filter string="Running" name="running" domain="[('state','=','open')]" help="Assets in running state"/>
                 <separator/>
                 <filter string="Posted" name="posted" domain="[('move_check','=',True)]" help="Posted depreciation lines" context="{'unposted_value_visible': 0}"/>
                 <field name="asset_id"/>
@@ -44,11 +44,11 @@
                 <group expand="1" string="Group By">
                     <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
                     <filter string="Asset Category" name="asset_category" context="{'group_by':'asset_category_id'}"/>
-                    <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator/>
-                    <filter string="Purchase Month" help="Date of asset purchase"
+                    <filter string="Purchase Month" name="purchase_month" help="Date of asset purchase"
                         context="{'group_by':'date:month'}"/>
-                    <filter string="Depreciation Month" help="Date of depreciation"
+                    <filter string="Depreciation Month" name="deprecation_month" help="Date of depreciation"
                         context="{'group_by':'depreciation_date:month'}"/>
                 </group>
             </search>
@@ -64,7 +64,9 @@
         <field name="domain">[('asset_category_id.type', '=', 'purchase')]</field>
         <field name="context">{}</field>  <!-- force empty -->
         <field name="help" type="html">
-          <p>
+          <p class="o_view_nocontent_empty_folder">
+            No content
+          </p><p>
             From this report, you can have an overview on all depreciations. The
             search bar can also be used to personalize your assets depreciation reporting.
           </p>

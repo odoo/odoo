@@ -17,13 +17,16 @@
 # Andrés Felipe Casas Palomino <afcasas@nubark.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Fernando San Martín Woerner <fsnmartin@gmail.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Christopher Ormaza <chris.ormaza@gmail.com>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,6 +109,11 @@ msgstr "Replegado por defecto"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "Actividades futuras"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "Agrupar por"
 
@@ -138,6 +146,12 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "Actividades tardías"
+
+#. module: note
+#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Más tarde"
@@ -145,7 +159,7 @@ msgstr "Más tarde"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "My Activities"
-msgstr ""
+msgstr "Mis actividades"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
@@ -188,11 +202,6 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Overdue Activities"
-msgstr "Actividades Atrasadas"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -201,7 +210,7 @@ msgstr "Propietario"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
 msgid "Owner of the note stage"
-msgstr ""
+msgstr "Propietario de la etapa de la nota"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
@@ -213,6 +222,8 @@ msgstr "Secuencia"
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
+"Mostrar todos los registros que tienen la próxima fecha de acción antes de "
+"hoy"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -262,6 +273,7 @@ msgstr "¡El nombre de etiqueta ya existe!"
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Etiquetas"
@@ -272,6 +284,7 @@ msgid "This Week"
 msgstr "Esta semana"
 
 #. module: note
+#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Hoy"
@@ -282,9 +295,9 @@ msgid "Today Activities"
 msgstr "Actividades de Hoy"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Upcoming Activities (7 days)"
-msgstr ""
+#: model:note.stage,name:note.demo_note_stage_02
+msgid "Tomorrow"
+msgstr "Mañana"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note

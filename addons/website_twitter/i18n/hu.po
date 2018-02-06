@@ -4,14 +4,14 @@
 # 
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -26,45 +26,19 @@ msgid "<span class=\"oe_snippet_thumbnail_title\">Twitter Scroller</span>"
 msgstr "<span class=\"oe_snippet_thumbnail_title\">Twitter görgető</span>"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Callback URL: </strong> leave it blank"
-msgstr "<strong>Visszahívó URL: </strong> hagyja üresen"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Description: </strong> Odoo Tweet Scroller"
-msgstr "<strong>Leírás: </strong> Odoo rendszer Tweet görgetője"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Name: </strong> Odoo Tweet Scroller"
-msgstr "<strong>Név: </strong> Odoo rendszer Tweet görgetője"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "<strong>Website: </strong>"
-msgstr "<strong>Weboldal: </strong>"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_key
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_key
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API Key"
 msgstr "API kulcs"
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_api_secret
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_api_secret
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "API secret"
 msgstr ""
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Accept terms of use and click on the Create button at the bottom"
-msgstr ""
-"Fogadja el a használati feltételeket és kattintson lent a Létrehozás gombra"
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:14
+#: code:addons/website_twitter/models/res_config_settings.py:16
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
@@ -72,21 +46,6 @@ msgid ""
 msgstr ""
 "Hitelesítési azonosítók hiányoznak vagy nem megfelőek. Talán a képernyő név "
 "tweet-ek védettek."
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Close"
-msgstr "Bezárás"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Copy/Paste API Key and Secret below"
-msgstr "Másolás/beillesztés API kulcs és titkosítás lentebb"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Create a new Twitter application on"
-msgstr "Hozzon létre egy új Twitter elkelmazást ezen"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_create_uid
@@ -104,17 +63,8 @@ msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid ""
-"Enter the screen name from which you want to load favorite Tweets (does not "
-"need to be the same as the API keys)"
-msgstr ""
-"Írja be a képernyő nevet melyre beakarja tölteni a kedvenc Tweet-jeit (nem "
-"kell az API kulcsokkal megegyeznie)"
-
-#. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_screen_name
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_screen_name
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Favorites From"
 msgstr ""
 
@@ -124,15 +74,10 @@ msgid "Get favorites from this screen name"
 msgstr "Ehhez a képernyő képhez kapcsolódó kedvenceket kapja"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:46
+#: code:addons/website_twitter/models/res_config_settings.py:48
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP hiba: Valami tévesen konfigurált"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "How to configure the Twitter API access"
-msgstr "Hogyan állítsa be a Twitter API hozzáférést?"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_id
@@ -140,7 +85,7 @@ msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:57
+#: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "Internet connection refused"
 msgstr "Internet kapcsolat visszautasított"
@@ -161,8 +106,8 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:59
-#: code:addons/website_twitter/models/website_twitter_config.py:60
+#: code:addons/website_twitter/models/res_config_settings.py:61
+#: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Please double-check your Twitter API Key and Secret!"
 msgstr "Kérem kétszer-ellenőrizni a Twitter API kulcsot és titkosítást!"
@@ -193,7 +138,7 @@ msgid "Reload"
 msgstr "Újratöltés"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:16
+#: code:addons/website_twitter/models/res_config_settings.py:18
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
@@ -209,7 +154,7 @@ msgid "Screen Name"
 msgstr "Képernyő neve"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_screen_name
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_screen_name
 msgid ""
 "Screen Name of the Twitter Account from which you want to load favorites.It "
 "does not have to match the API Key/Secret."
@@ -218,24 +163,19 @@ msgstr ""
 "egyezik az API kulcs/Titkosítás."
 
 #. module: website_twitter
-#: model:ir.model.fields,field_description:website_twitter.field_website_config_settings_twitter_tutorial
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings_twitter_tutorial
 msgid "Show me how to obtain the Twitter API Key and Secret"
 msgstr "Mutassa meg, hogyan szerzi be a Twitter API kulcsot és titkosítást!"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "Switch to the API Keys tab: <br/>"
-msgstr "Váltson az API kulcsok fülre: <br/>"
-
-#. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:19
+#: code:addons/website_twitter/models/res_config_settings.py:21
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr "A Twitter szerverek működnek, de túlterheltek. Próbálja később."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:20
+#: code:addons/website_twitter/models/res_config_settings.py:22
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
@@ -245,7 +185,7 @@ msgstr ""
 "felhalmozódott hiba miatt. Próbálja később."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:15
+#: code:addons/website_twitter/models/res_config_settings.py:17
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
@@ -255,7 +195,7 @@ msgstr ""
 "engedélyezett. Kérem ellenőrizze a Twitter API kulcsot és titkosítást."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:13
+#: code:addons/website_twitter/models/res_config_settings.py:15
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
@@ -265,13 +205,13 @@ msgstr ""
 "Hitelesítás nélküli igény kérés érvénytelen és ehhez a válaszhoz vezet."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:12
+#: code:addons/website_twitter/models/res_config_settings.py:14
 #, python-format
 msgid "There was no new data to return."
 msgstr "Nem volt vissza nyerhető új adat."
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
 msgid "Tutorial"
 msgstr ""
 
@@ -284,6 +224,11 @@ msgstr "Tweet ID azonosító"
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet_tweet
 msgid "Tweets"
 msgstr "Tweet-ek"
+
+#. module: website_twitter
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter API Credentials"
+msgstr ""
 
 #. module: website_twitter
 #: model:ir.model.fields,help:website_twitter.field_website_twitter_api_key
@@ -301,7 +246,7 @@ msgid "Twitter API key"
 msgstr "Twitter API kulcs"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_key
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_key
 msgid "Twitter API key you can get it from https://apps.twitter.com/"
 msgstr ""
 
@@ -311,7 +256,7 @@ msgid "Twitter API secret"
 msgstr "Twitter API titkosítás"
 
 #. module: website_twitter
-#: model:ir.model.fields,help:website_twitter.field_website_config_settings_twitter_api_secret
+#: model:ir.model.fields,help:website_twitter.field_res_config_settings_twitter_api_secret
 msgid "Twitter API secret you can get it from https://apps.twitter.com/"
 msgstr ""
 
@@ -323,19 +268,24 @@ msgid "Twitter Configuration"
 msgstr "Twitter beállítás"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:60
+#: model:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
+msgid "Twitter Roller"
+msgstr "Twitter gördítősáv"
+
+#. module: website_twitter
+#: code:addons/website_twitter/models/res_config_settings.py:62
 #, python-format
 msgid "Twitter authorization error!"
 msgstr "Twitter azonosítási hiba!"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:18
+#: code:addons/website_twitter/models/res_config_settings.py:20
 #, python-format
 msgid "Twitter is down or being upgraded."
 msgstr "Twitter ne működik vagy frissítés alatt ál."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:17
+#: code:addons/website_twitter/models/res_config_settings.py:19
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
@@ -362,8 +312,8 @@ msgid "Twitter: Fetch new favorites"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/website_twitter_config.py:56
-#: code:addons/website_twitter/models/website_twitter_config.py:57
+#: code:addons/website_twitter/models/res_config_settings.py:58
+#: code:addons/website_twitter/models/res_config_settings.py:59
 #, python-format
 msgid "We failed to reach a twitter server."
 msgstr "Nem értünk el twitter szervert."
@@ -375,26 +325,11 @@ msgid "Website"
 msgstr "Weboldal"
 
 #. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "https://apps.twitter.com/"
-msgstr ""
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "https://www.odoo.com"
-msgstr "https://www.odoo.com"
-
-#. module: website_twitter
-#: model:ir.model,name:website_twitter.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
+#: model:ir.model,name:website_twitter.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet
 msgid "website.twitter.tweet"
 msgstr "website.twitter.tweet"
-
-#. module: website_twitter
-#: model:ir.ui.view,arch_db:website_twitter.website_config_settings_view_form_inherit_website_twitter
-msgid "with the following values:"
-msgstr "a következő értékekkel:"

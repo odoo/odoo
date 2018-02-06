@@ -3,24 +3,13 @@
 
 import logging
 import re
-import unicodedata
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import ustr
+from odoo.tools import remove_accents
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
-
-
-# Inspired by http://stackoverflow.com/questions/517923
-def remove_accents(input_str):
-    """Suboptimal-but-better-than-nothing way to replace accented
-    latin letters by an ASCII equivalent. Will obviously change the
-    meaning of input_str and work only for some cases"""
-    input_str = ustr(input_str)
-    nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 
 class Alias(models.Model):

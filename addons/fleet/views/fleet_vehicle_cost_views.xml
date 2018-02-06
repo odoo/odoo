@@ -14,6 +14,31 @@
             </field>
         </record>
 
+        <record id='fleet_vehicle_cost_view_kanban' model='ir.ui.view'>
+            <field name="name">fleet.vehicle.cost.kanban</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong>
+                                        <field name="vehicle_id"/>
+                                        <span class="pull-right"><field name="date"/></span>
+                                    </strong>
+                                </div>
+                                <div>
+                                    <field name="cost_subtype_id"/>
+                                    <span class="pull-right"><field name="amount"/></span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id='fleet_vehicle_cost_view_pivot' model='ir.ui.view'>
             <field name="name">fleet.vehicle.cost.pivot</field>
             <field name="model">fleet.vehicle.cost</field>
@@ -126,15 +151,14 @@
             <field name="name">Vehicle Costs</field>
             <field name="res_model">fleet.vehicle.cost</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,kanban,form,graph</field>
             <field name="context">{"search_default_parent_false" : True, "search_default_groupby_vehicle_id" : True,}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new cost.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new cost
               </p><p>
-                Odoo helps you managing the costs for your different
-                vehicles. Costs are created automatically from services,
-                contracts (fixed or recurring) and fuel logs.
+                Manage the costs for your different vehicles.
+                Costs are created automatically from services, contracts and fuel logs.
               </p>
             </field>
         </record>
@@ -148,9 +172,8 @@
         <field name="arch" type="xml">
             <form string="Contract logs">
                 <header>
-                    <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.fleet_group_manager"/>
-                    <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="toclose" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.fleet_group_manager"/>
-                    <button modifiers="{'invisible': [['state', 'not in', ['closed']]]}" name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_close" states="open,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
                     <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
@@ -225,6 +248,10 @@
                         <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                </div>
             </form>
         </field>
     </record>
@@ -237,7 +264,6 @@
         view_mode="form"
         view_type="form"
         />
-
 
     <record id='fleet_vehicle_log_contract_view_tree' model='ir.ui.view'>
         <field name="name">fleet.vehicle.log.contract.tree</field>
@@ -256,6 +282,36 @@
                 <field name="cost_frequency"/>
                 <field name="state" />
             </tree>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_log_contract_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.contract.kanban</field>
+        <field name="model">fleet.vehicle.log.contract</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong>
+                                    <field name="vehicle_id"/>
+                                    <span class="pull-right label label-default">
+                                        <field name="state"/>
+                                    </span>
+                                </strong>
+                            </div>
+                            <div>
+                                <field name="start_date"/> - <field name="expiration_date"/>
+                            </div>
+                            <div>
+                                <field name="insurer_id"/>
+                                <span class="pull-right"><field name="cost_subtype_id"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -278,6 +334,11 @@
             <search string="Vehicles Contracts">
                 <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
+                <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
+                <filter string="Expiring Soon" name="expire_soon" domain="[('state', '=', 'diesoon')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -286,11 +347,11 @@
         <field name="name">Vehicles Contracts</field>
         <field name="res_model">fleet.vehicle.log.contract</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{'search_default_open': 1}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new contract.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new contract
           </p><p>
             Manage all your contracts (leasing, insurances, etc.) with
             their related services, costs. Odoo will automatically warn
@@ -348,15 +409,43 @@
             <tree string="Fuel Logs">
                 <field name="date" />
                 <field name="vehicle_id" />
-                <field name="odometer" invisible="1"/>
-                <field name="odometer_unit" invisible="1"/>
                 <field name="purchaser_id" />
                 <field name="inv_ref" invisible="1"/>
                 <field name="vendor_id" invisible="1"/>
+                <field name="odometer" />
+                <field name="odometer_unit" />
                 <field name="liter" />
                 <field name="price_per_liter" invisible="1"/>
                 <field name="amount" sum="Price"/>
             </tree>
+        </field>
+    </record>
+
+    <record id='fleet_vehicle_log_fuel_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.fuel.kanban</field>
+        <field name="model">fleet.vehicle.log.fuel</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong>
+                                    <field name="vehicle_id"/>
+                                    <span class="pull-right"><field name="date"/></span>
+                                </strong>
+                            </div>
+                            <div>
+                                <span><field name="purchaser_id"/></span>
+                            </div>
+                            <div>
+                                <span><field name="liter"/> Liter</span>
+                                <span class="pull-right"><field name="amount"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -392,15 +481,13 @@
         <field name="name">Vehicles Fuel Logs</field>
         <field name="res_model">fleet.vehicle.log.fuel</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
         <field name="context">{"search_default_groupby_vehicle" : True}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new fuel log.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new fuel log
           </p><p>
-            Here you can add refuelling entries for all vehicles.  You can
-            also filter logs of a particular vehicle using the search
-            field.
+            Here you can add refuelling entries for all vehicles.
           </p>
         </field>
     </record>
@@ -468,6 +555,37 @@
         </field>
     </record>
 
+    <record id='fleet_vehicle_log_services_view_kanban' model='ir.ui.view'>
+        <field name="name">fleet.vehicle.log.services.kanban</field>
+        <field name="model">fleet.vehicle.log.services</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong>
+                                    <field name="vehicle_id"/>
+                                    <span class="pull-right"><field name="date"/></span>
+                                </strong>
+                            </div>
+                            <div>
+                                <field name="cost_subtype_id"/>
+                            </div>
+                            <div>
+                                <field name="purchaser_id"/>
+                            </div>
+                            <div>
+                                <span><field name="vendor_id"/></span>
+                                <span class="pull-right"><field name="amount"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="fleet_vehicle_log_services_view_graph" model="ir.ui.view">
        <field name="name">fleet.vehicle.log.services.graph</field>
        <field name="model">fleet.vehicle.log.services</field>
@@ -495,14 +613,13 @@
         <field name="name">Vehicles Services Logs</field>
         <field name="res_model">fleet.vehicle.log.services</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form,graph</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to create a new service entry.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new service entry
           </p><p>
-            Odoo helps you keeping track of all the services done
-            on your vehicle. Services can be of many type: occasional
-            repair, fixed maintenance, etc.
+            Track all the services done on your vehicle.
+            Services can be of many types: occasional repair, fixed maintenance, etc.
           </p>
         </field>
     </record>

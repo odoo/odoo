@@ -6,6 +6,8 @@ var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
 var testUtils = require('web.test_utils');
+var widgetRegistry = require('web.widget_registry');
+var Widget = require('web.Widget');
 
 var createView = testUtils.createView;
 
@@ -148,12 +150,12 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree delete="0"><field name="foo"/></tree>',
         });
 
         assert.ok(list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be invisible');
-        assert.ok(list.$('tbody td.o_list_record_selector').length, "should have at least one record");
+        assert.ok(list.$('tbody td.o_list_record_selector').length, 'should have at least one record');
 
         list.$('tbody td.o_list_record_selector:first input').click();
         assert.ok(!list.sidebar.$el.hasClass('o_hidden'), 'sidebar should be visible');
@@ -259,7 +261,7 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '<field name="m2o" invisible="1"/>' +
                 '</tree>',
-            mockRPC: function (route, args) {
+            mockRPC: function (route) {
                 assert.step(_.last(route.split('/')));
                 return this._super.apply(this, arguments);
             },
@@ -413,11 +415,12 @@ QUnit.module('Views', {
     QUnit.test('editable list: add a line and discard', function (assert) {
         assert.expect(11);
 
-        var oldDestroy = basicFields.FieldChar.prototype.destroy;
-        basicFields.FieldChar.prototype.destroy = function () {
-            assert.step('destroy');
-            oldDestroy.apply(this, arguments);
-        };
+        testUtils.patch(basicFields.FieldChar, {
+            destroy: function () {
+                assert.step('destroy');
+                this._super.apply(this, arguments);
+            },
+        });
 
         var list = createView({
             View: ListView,
@@ -454,7 +457,7 @@ QUnit.module('Views', {
         assert.verifySteps(['destroy'],
             "should have destroyed the widget of the removed line");
 
-        basicFields.FieldChar.prototype.destroy = oldDestroy;
+        testUtils.unpatch(basicFields.FieldChar);
         list.destroy();
     });
 
@@ -471,13 +474,13 @@ QUnit.module('Views', {
 
         var n = 0;
         testUtils.intercept(list, "field_changed", function () {
-            n = 1;
+            n += 1;
         });
         $td.click();
         $td.find('input').val('abc').trigger('input');
-        assert.strictEqual(n, 1, "field_changed should not have been triggered");
-        list.$('td:not(.o_list_record_selector)').eq(2).click();
         assert.strictEqual(n, 1, "field_changed should have been triggered");
+        list.$('td:not(.o_list_record_selector)').eq(2).click();
+        assert.strictEqual(n, 1, "field_changed should not have been triggered");
         list.destroy();
     });
 
@@ -762,7 +765,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
         });
 
@@ -792,7 +795,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 if (route === '/web/dataset/call_kw/ir.attachment/search_read') {
@@ -986,7 +989,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('use default_order on editable tree: sort on demand', function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         this.data.foo.records[0].o2m = [1, 3];
         this.data.bar.fields = {name: {string: "Name", type: "char", sortable: true}};
@@ -1026,12 +1029,21 @@ QUnit.module('Views', {
             "Value 2 should be third (shouldn't be sorted)");
 
         form.$('.o_form_sheet_bg').click(); // validate the row before sorting
-        $o2m.find('.o_column_sortable').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
-            "Value 3 should be first");
-        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 2)').length,
+
+        $o2m.find('.o_column_sortable').click(); // resort list after edition
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 1',
+            "Value 1 should be first");
+        assert.strictEqual(form.$('tbody tr:eq(1)').text(), 'Value 2',
             "Value 2 should be second (should be sorted after saving)");
-        assert.ok(form.$('tbody tr:eq(2) td:contains(Value 1)').length,
+        assert.strictEqual(form.$('tbody tr:eq(2)').text(), 'Value 3',
+            "Value 3 should be third");
+
+        $o2m.find('.o_column_sortable').click();
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 3',
+            "Value 3 should be first");
+        assert.strictEqual(form.$('tbody tr:eq(1)').text(), 'Value 2',
+            "Value 2 should be second (should be sorted after saving)");
+        assert.strictEqual(form.$('tbody tr:eq(2)').text(), 'Value 1',
             "Value 1 should be third");
 
         form.destroy();
@@ -1048,7 +1060,7 @@ QUnit.module('Views', {
             ids.push(id);
             this.data.bar.records.push({
                 id: id,
-                name: "Value " + id,
+                name: "Value " + (id < 10 ? '0' : '') + id,
             });
         }
         this.data.foo.records[0].o2m = ids;
@@ -1071,22 +1083,22 @@ QUnit.module('Views', {
 
         // Change page
         form.$('.o_pager_next').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 44)').length,
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 44',
             "record 44 should be first");
-        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 48)').length,
+        assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 48',
             "record 48 should be last");
 
         form.$('.o_column_sortable').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 48)').length,
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 08',
             "record 48 should be first");
-        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 44)').length,
+        assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 04',
             "record 44 should be first");
 
         form.destroy();
     });
 
     QUnit.test('can display button in edit mode', function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var list = createView({
             View: ListView,
@@ -1094,10 +1106,11 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<tree editable="bottom">' +
                     '<field name="foo"/>' +
-                    '<button name="notafield" type="object" icon="fa-asterisk"/>' +
+                    '<button name="notafield" type="object" icon="fa-asterisk" class="o_yeah"/>' +
                 '</tree>',
         });
         assert.ok(list.$('tbody button').length, "should have a button");
+        assert.ok(list.$('tbody button').hasClass('o_yeah'), "class should be set on the button");
         list.destroy();
     });
 
@@ -1257,18 +1270,18 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should display the no content helper");
 
         assert.strictEqual(list.$('table').length, 0, "should not have a table in the dom");
 
-        assert.strictEqual(list.$('.oe_view_nocontent p.hello:contains(add a partner)').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent p.hello:contains(add a partner)').length, 1,
             "should have rendered no content helper from action");
 
         this.data.foo.records = records;
         list.reload();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
         assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
         list.destroy();
@@ -1286,7 +1299,7 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/></tree>',
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
 
         assert.strictEqual(list.$('tr.o_data_row').length, 0,
@@ -1326,7 +1339,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should have a no content helper displayed");
 
         assert.strictEqual(list.$('div.table-responsive').length, 0,
@@ -1335,7 +1348,7 @@ QUnit.module('Views', {
 
         list.$buttons.find('.o_list_button_add').click();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not have a no content helper displayed");
         assert.strictEqual(list.$('table').length, 1, "should have rendered a table");
         assert.strictEqual(list.$el.css('height'), list.$('div.table-responsive').css('height'),
@@ -1673,7 +1686,7 @@ QUnit.module('Views', {
                         "'switch_view' event has been triggered");
                 },
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -2018,7 +2031,7 @@ QUnit.module('Views', {
                     '<field name="bar"/>' +
                 '</tree>',
             intercepts: {
-                warning: function (ev) {
+                warning: function () {
                     warnings++;
                 },
             },
@@ -2057,14 +2070,13 @@ QUnit.module('Views', {
             arch: '<tree><field name="name"/></tree>',
         });
 
-        testUtils.intercept(list, "switch_view", function (event) {
-            assert.deepEqual(event.data, {
-                    'model': 'event',
-                    'res_id': '2-20170808020000',
-                    'view_type': 'form',
-                    'mode': 'readonly'
-                },
-                "should trigger switch to the form view for the record virtual id");
+        testUtils.intercept(list, 'switch_view', function (event) {
+            assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                mode: 'readonly',
+                model: 'event',
+                res_id: '2-20170808020000',
+                view_type: 'form',
+            }, "should trigger a switch_view event to the form view for the record virtual id");
         });
         list.$('td:contains(virtual)').click();
 
@@ -2079,7 +2091,7 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
-            mockRPC: function (route, args) {
+            mockRPC: function (route) {
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
@@ -2207,7 +2219,7 @@ QUnit.module('Views', {
                 print: [],
             },
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
         });
 
@@ -2470,6 +2482,8 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="bottom">' +
+                    // Adding a button column makes conversions between column and field position trickier
+                    '<button name="kikou" string="Kikou" type="object"/>' +
                     '<field name="foo"/>' +
                     '<button name="kikou" string="Kikou" type="object"/>' +
                     '<field name="int_field"/>' +
@@ -2477,7 +2491,7 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        list.$('tbody tr:eq(2) td:eq(1)').click();
+        list.$('tbody tr:eq(2) td:eq(2)').click();
         assert.strictEqual(list.$('tbody tr:eq(2) input[name="foo"]')[0], document.activeElement,
             "foo should be focused");
         list.$('tbody tr:eq(2) input[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
@@ -3156,6 +3170,34 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('th.o_group_name').eq(1).children().eq(0).is('span'), true,
             "The first element of the row name should be a span");
         list.destroy();
+    });
+
+
+    QUnit.test('basic support for widgets', function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            start: function () {
+                this.$el.text(JSON.stringify(this.data));
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="int_field"/><widget name="test"/></tree>',
+        });
+
+        assert.strictEqual(list.$('.o_widget').first().text(), '{"foo":"yop","int_field":10,"id":1}',
+            "widget should have been instantiated");
+
+        list.destroy();
+        delete widgetRegistry.map.test;
     });
 
     QUnit.test('use the limit attribute in arch', function (assert) {

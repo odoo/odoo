@@ -20,8 +20,8 @@ class AccountingReport(models.TransientModel):
     account_report_id = fields.Many2one('account.financial.report', string='Account Reports', required=True, default=_get_account_report)
     label_filter = fields.Char(string='Column Label', help="This label will be displayed on report to show the balance computed for the given comparison filter.")
     filter_cmp = fields.Selection([('filter_no', 'No Filters'), ('filter_date', 'Date')], string='Filter by', required=True, default='filter_no')
-    date_from_cmp = fields.Date(string='Start Date')
-    date_to_cmp = fields.Date(string='End Date')
+    date_from_cmp = fields.Date(string='Start Date Comparison')
+    date_to_cmp = fields.Date(string='End Date Comparison')
     debit_credit = fields.Boolean(string='Display Debit/Credit Columns', help="This option allows you to get more details about the way your balances are computed. Because it is space consuming, we do not allow to use it while doing a comparison.")
 
     def _build_comparison_context(self, data):
@@ -48,4 +48,4 @@ class AccountingReport(models.TransientModel):
 
     def _print_report(self, data):
         data['form'].update(self.read(['date_from_cmp', 'debit_credit', 'date_to_cmp', 'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter', 'target_move'])[0])
-        return self.env['report'].get_action(self, 'account.report_financial', data=data, config=False)
+        return self.env.ref('account.action_report_financial').report_action(self, data=data, config=False)

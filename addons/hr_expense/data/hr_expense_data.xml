@@ -52,6 +52,12 @@
             <field name="description">Expense report paid</field>
             <field name="default" eval="False"/>
         </record>
+        <record id="mt_expense_responsible" model="mail.message.subtype">
+            <field name="name">Responsible</field>
+            <field name="res_model">hr.expense.sheet</field>
+            <field name="description">Changes of responsible</field>
+            <field name="default" eval="True"/>
+        </record>
         <!-- Department (Parent) related subtypes for messaging / Chatter -->
         <record id="mt_department_expense_confirmed" model="mail.message.subtype">
             <field name="name">Expenses To Approve</field>
@@ -61,6 +67,14 @@
             <field name="relation_field">department_id</field>
             <field name="sequence" eval="10"/>
         </record>
+
+        <!-- Email Templates -->
+        <template id="hr_expense_template_refuse_reason">
+            <p>Your Expense <t t-if="is_sheet">Report </t><t t-esc="name"/> has been refused</p>
+            <ul class="o_timeline_tracking_value_list">
+                <li>Reason : <t t-esc="reason"/></li>
+            </ul>
+        </template>
 
     </data>
 </odoo>

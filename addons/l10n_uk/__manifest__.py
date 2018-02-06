@@ -16,15 +16,20 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
     - a few other adaptations""",
     'author': 'SmartMode LTD',
     'website': 'http://www.smartmode.co.uk',
-    'depends': ['base_iban', 'base_vat'],
+    'depends': [
+        'account',
+        'base_iban',
+        'base_vat',
+    ],
     'data': [
         'data/l10n_uk_chart_data.xml',
         'data/account.account.template.csv',
         'data/account.chart.template.csv',
         'data/account.account.tag.csv',
+        'data/account.tax.group.csv',
         'data/account.tax.template.csv',
         'data/res.country.state.csv',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
     ],
     'demo' : ['demo/l10n_uk_demo.xml'],
 }

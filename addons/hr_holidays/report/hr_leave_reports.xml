@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<odoo>
+    
+    <record id="view_hr_holidays_filter_report" model="ir.ui.view">
+        <field name="name">hr.holidays.filter</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Leave">
+                <field name="name"/>
+                <filter domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
+                <filter string="Approved Requests" domain="[('state', '=', 'validate')]" name="validated"/>
+                <separator/>
+                <filter name="active_types" string="Active Types" domain="[('holiday_status_id.active', '=', True)]" help="Filters only on requests that belong to an leave type that is 'active' (active field is True)"/>
+                <separator/>
+                <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                <separator/>
+                <filter string="My Department Leaves" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Leaves"/>
+                <filter name="my_team_leaves" string="My Team Leaves" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Leaves of Your Team Member"/>
+                <separator/>
+                <filter string="To Report in Payslip" name="gray" domain="[('payslip_status', '=', False)]" groups="hr_holidays.group_hr_holidays_manager"/>
+                <separator/>
+                <filter string="To Do" name="todo" domain="[('payslip_status', '=', False), ('holiday_status_id.active', '=', True)]"/>
+                <separator/>
+                <filter name="year" string="Current Year"
+                    domain="[('holiday_status_id.active', '=', True)]" help="Active Leaves"/>
+                <separator/>
+                <filter string="My Requests" name="my_leaves" domain="[('employee_id.user_id', '=', uid)]"/>
+                <separator/>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="holiday_status_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_name" string="Description" context="{'group_by':'name'}"/>
+                    <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
+                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
+                    <filter name="group_manager" string="Manager" context="{'group_by':'manager_id'}"/>
+                    <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
+                    <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <separator/>
+                    <filter name="group_date_from" string="Start Month" context="{'group_by':'date_from'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_tree" model="ir.ui.view">
+        <field name="name">report.hr.holidays.report.leave_all.tree</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" delete="0">
+                <field name="type"/>
+                <field name="name"/>
+                <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- TODO: See if we need to keep this -->
+    <record id="hr_leave_report_kanban" model="ir.ui.view">
+        <field name="name">report.hr.holidays.report.leave_all.kanban</field>
+        <field name="model">hr.leave.report</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0">
+                <field name="employee_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="name"/>
+                <field name="number_of_days"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <span>
+                                    <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="40" height="40" class="oe_kanban_avatar pull-left mr4"/>
+                                </span>
+                                <span>
+                                    <div>
+                                        <strong class="o_kanban_record_title"><t t-esc="record.employee_id.value"/></strong>
+                                        <span class="pull-right">
+                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'default', 'validate': 'success','confirm': 'default', 'cancel': 'danger'}}"/>
+                                        </span>
+                                    </div>
+                                    <div class="text-muted o_kanban_record_subtitle">
+                                        <t t-esc="record.name.value"/>
+                                    </div>
+                                </span>
+                            </div>
+                            <hr class="mt4 mb8"/>
+                            <div class="o_kanban_record_bottom mt8 mb4">
+                                <div t-attf-class="oe_kanban_bottom_left #{record.date_from.value ? 'mt8 mb4': ''}">
+                                    <table class="text-right" t-if="record.date_from.value">
+                                        <tr>
+                                            <td style="padding-bottom:4px"><small class="text-muted">from</small></td>
+                                            <td style="padding:0 0 4px 4px"><t t-esc="record.date_from.value"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><small class="text-muted">to</small></td>
+                                            <td style="padding-left:4px"><t t-esc="record.date_to.value"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div t-attf-class="oe_kanban_bottom_right #{record.date_from.value ? 'mt8': ''}">
+                                    <span class="badge"><t t-esc="record.number_of_days.value"/> days</span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="open_company_allocation" model="ir.actions.act_window">
+        <field name="name">Leaves Summary</field>
+        <field name="res_model">hr.leave.report</field>
+        <field name="src_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban</field>
+        <field name="view_id" eval="hr_leave_report_tree"/>
+        <field name="context">{
+            'search_default_group_type': 1,
+            'search_default_year': 1 ,
+            'search_default_my_leaves': 1,
+            'needaction_menu_ref':
+            [
+                'hr_holidays.menu_open_ask_holidays_new',
+                'hr_holidays.menu_open_allocation_holidays',
+                'hr_holidays.menu_request_approve_allocation',
+                'hr_holidays.menu_open_employee_leave',
+            ]
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_create">
+                Click here to create a new leave request.
+            </p>
+        </field>
+        <field name="domain">[('holiday_type','=','employee')]</field>
+        <field name="search_view_id" ref="view_hr_holidays_filter_report"/>
+    </record>
+
+    <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
+        <field name="name">Leaves</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave.report</field>
+        <field name="src_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id, 'search_default_group_type': 1,
+            'search_default_year': 1}</field>
+        <field name="domain">[('holiday_type','=','employee'), ('holiday_status_id.limit', '=', False), ('state','!=', 'refuse')]</field>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
+    <menuitem
+        id="menu_open_company_allocation"
+        name="Leaves Summary"
+        parent="menu_hr_holidays_my_leaves"
+        action="open_company_allocation"
+        sequence="21"/>
+
+</odoo>

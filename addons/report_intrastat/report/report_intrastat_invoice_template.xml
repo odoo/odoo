@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="report_intrastatinvoice_document">
-    <t t-call="report.external_layout">
+    <t t-call="web.external_layout">
         <t t-set="o" t-value="o.with_context(lang = o.partner_id.lang)"/>
         <div class="page">
             <div class="row">
@@ -64,8 +64,12 @@
                         <td groups="product.group_uom"><span t-field="l.uom_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
-                        <td class="text-right">
+                        <td class="text-right" groups="sale.group_show_price_subtotal">
                             <span t-field="l.price_subtotal"
+                                t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                        </td>
+                        <td class="text-right" groups="sale.group_show_price_total">
+                            <span t-field="l.price_total"
                                 t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
                         </td>
                     </tr>
@@ -140,7 +144,7 @@
 </template>
 
 <template id="report_intrastatinvoice">
-    <t t-call="report.html_container">
+    <t t-call="web.html_container">
         <t t-foreach="docs" t-as="o">
             <t t-call="report_intrastat.report_intrastatinvoice_document" t-lang="o.partner_id.lang"/>
         </t>

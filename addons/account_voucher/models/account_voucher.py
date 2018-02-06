@@ -3,8 +3,8 @@
 
 
 from odoo import fields, models, api, _
-import odoo.addons.decimal_precision as dp
-from odoo.exceptions import UserError
+from odoo.addons import decimal_precision as dp
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountVoucher(models.Model):
@@ -45,9 +45,9 @@ class AccountVoucher(models.Model):
         states={'draft': [('readonly', False)]})
     narration = fields.Text('Notes', readonly=True, states={'draft': [('readonly', False)]})
     currency_id = fields.Many2one('res.currency', compute='_get_journal_currency',
-        string='Currency', readonly=True, required=True, default=lambda self: self._get_currency())
+        string='Currency', readonly=True, store=True, default=lambda self: self._get_currency())
     company_id = fields.Many2one('res.company', 'Company',
-        required=True, readonly=True, states={'draft': [('readonly', False)]},
+        store=True, readonly=True, states={'draft': [('readonly', False)]},
         related='journal_id.company_id', default=lambda self: self._get_company())
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -90,6 +90,14 @@ class AccountVoucher(models.Model):
     @api.model
     def _get_company(self):
         return self._context.get('company_id', self.env.user.company_id.id)
+
+    @api.constrains('company_id', 'currency_id')
+    def _check_company_id(self):
+        for voucher in self:
+            if not voucher.company_id:
+                raise ValidationError(_("Missing Company"))
+            if not voucher.currency_id:
+                raise ValidationError(_("Missing Currency"))
 
     @api.multi
     @api.depends('name', 'number')
@@ -134,8 +142,10 @@ class AccountVoucher(models.Model):
                 self.account_id = self.partner_id.property_account_receivable_id \
                     if self.voucher_type == 'sale' else self.partner_id.property_account_payable_id
             else:
-                self.account_id = self.journal_id.default_debit_account_id \
-                    if self.voucher_type == 'sale' else self.journal_id.default_credit_account_id
+                account_type = self.voucher_type == 'purchase' and 'payable' or 'receivable'
+                domain = [('deprecated', '=', False), ('internal_type', '=', account_type)]
+
+                self.account_id = self.env['account.account'].search(domain, limit=1)
 
     @api.multi
     def proforma_voucher(self):
@@ -270,6 +280,7 @@ class AccountVoucher(models.Model):
                 'move_id': move_id,
                 'partner_id': self.partner_id.id,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
+                'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'quantity': 1,
                 'credit': abs(amount) if self.voucher_type == 'sale' else 0.0,
                 'debit': abs(amount) if self.voucher_type == 'purchase' else 0.0,
@@ -356,6 +367,7 @@ class AccountVoucherLine(models.Model):
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         required=True, default=1)
     account_analytic_id = fields.Many2one('account.analytic.account', 'Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags')
     company_id = fields.Many2one('res.company', related='voucher_id.company_id', string='Company', store=True, readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Tax', help="Only for tax excluded from price")
     currency_id = fields.Many2one('res.currency', related='voucher_id.currency_id')
@@ -379,7 +391,7 @@ class AccountVoucherLine(models.Model):
             self.company_id.id,
             self.voucher_id.currency_id.id,
             self.voucher_id.voucher_type)
-        for fname, fvalue in onchange_res['value'].iteritems():
+        for fname, fvalue in onchange_res['value'].items():
             setattr(self, fname, fvalue)
 
     def _get_account(self, product, fpos, type):

@@ -202,6 +202,11 @@
     </xpath>
 </template>
 
+<template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'" />
+    </xpath>
+</template>
 <template id="layout">
     <t t-call="website.layout">
       <div id="wrap" class="js_event o_website_event">
@@ -226,13 +231,6 @@
                         </t>
                     </ol>
                 </div>
-                <div class="col-sm-5" groups="event.group_event_manager">
-                    <t t-call="website.publish_management">
-                      <t t-set="object" t-value="event"/>
-                      <t t-set="publish_edit" t-value="True"/>
-                      <t t-set="action" t-value="'event.action_event_view'"/>
-                    </t>
-                </div>
             </div>
         </div>
         <t t-raw="0"/>
@@ -250,7 +248,7 @@
         <h4 class="text-center text-muted"
             t-field="event.address_id" t-options='{
                 "widget": "contact",
-                "fields": ["name", "address", "phone", "mobile", "fax"]
+                "fields": ["name", "address", "phone", "mobile"]
             }'/>
         <div class="oe_structure"/>
     </t>
@@ -354,7 +352,7 @@
                         </t>
                         <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
-                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
+                            "fields": ["name", "address", "phone", "mobile", "email"]
                             }'/>
                     </div>
                 </div>
@@ -376,7 +374,7 @@
                 </div>
                 <div class="panel-body" t-field="event.organizer_id" t-options='{
                     "widget": "contact",
-                    "fields": ["name", "phone", "mobile", "fax", "email"]
+                    "fields": ["name", "phone", "mobile", "email"]
                     }'/>
             </div>
 
@@ -598,7 +596,7 @@
                     <i class="fa fa-clock-o"></i> <span itemprop="startDate" t-esc="event.date_begin_located"> </span> <i>to</i> <span itemprop="endDate" t-esc="event.date_end_located"> </span>
                     <div itemprop="location" class="mt16 mb8" t-field="event.address_id" t-options='{
                             "widget": "contact",
-                            "fields": ["name", "address", "phone", "mobile", "fax", "email"]
+                            "fields": ["name", "address", "phone", "mobile", "email"]
                             }'/>
                 </div>
                 <div class="col-md-3 mt16">
@@ -631,9 +629,13 @@
     </t>
 </template>
 
+<!-- External snippets -->
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_event']" position="replace"/>
+</template>
 <!-- Snippets -->
 <template id="country_events" name="Country Events" inherit_id="website.snippets">
-    <xpath expr="//div[@id='snippet_content']/div[@class='o_panel_body']" position="inside">
+    <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <div>
             <div class="oe_snippet_thumbnail">
                 <div style="background: white;box-shadow:none;-webkit-box-shadow:none;" class="oe_snippet_thumbnail_img" >
@@ -720,8 +722,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"></i><p>New Event</p></a></li>
+    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
+        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
     </xpath>
 </template>
 </odoo>

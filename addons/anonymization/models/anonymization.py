@@ -6,6 +6,7 @@ from operator import itemgetter
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 FIELD_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('not_existing', 'Not Existing'), ('new', 'New')]
 ANONYMIZATION_HISTORY_STATE = [('started', 'Started'), ('done', 'Done'), ('in_exception', 'Exception occured')]
@@ -13,7 +14,7 @@ ANONYMIZATION_DIRECTION = [('clear -> anonymized', 'clear -> anonymized'), ('ano
 
 
 def group(lst, cols):
-    if isinstance(cols, basestring):
+    if isinstance(cols, pycompat.string_types):
         cols = [cols]
     return dict((k, [v for v in itr]) for k, itr in groupby(sorted(lst, key=itemgetter(*cols)), itemgetter(*cols)))
 
@@ -76,7 +77,7 @@ class IrModelFieldsAnonymization(models.Model):
     @api.multi
     def write(self, vals):
         # check field state: all should be clear before we can modify a field:
-        if not len(vals.keys()) == 1 and vals.get('state') == 'clear':
+        if not len(vals) == 1 and vals.get('state') == 'clear':
             self._check_write()
         if vals.get('field_name') and vals.get('model_name'):
             vals['model_id'], vals['field_id'] = self._get_model_and_field_ids(vals)
@@ -143,5 +144,5 @@ class IrModelFieldsAnonymizationMigrationFix(models.Model):
     model_name = fields.Char('Model')
     field_name = fields.Char('Field')
     query = fields.Text()
-    query_type = fields.Selection(selection=[('sql', 'sql'), ('python', 'python')], string='Query')
+    query_type = fields.Selection(selection=[('sql', 'sql'), ('python', 'python')], string='Query Type')
     sequence = fields.Integer()

@@ -9,76 +9,32 @@
         <div class="o_dashboards">
             <div class="container-fluid o_website_dashboard">
                 <t t-call="website.dashboard_header"/>
-                <div class="o_website_dashboard_content"/>
+                <t t-call="website.dashboard_content"/>
             </div>
         </div>
     </t>
 
     <t t-name="website.dashboard_header">
-        <div class="row o_dashboard_common">
-            <div class="o_box">
-                <a href="#" class="o_box_item o_dashboard_action" name="website.action_website" title="Go to Website">
-                    <div class="o_inner_box o_primary">
-                        <i class="fa fa-globe fa-3x"></i><br/>
-                        Go to Website
-                    </div>
-                </a>
-                <t t-if="widget.groups.system">
-                    <t t-set="apps" t-value="{
-                        'website_crm':              {'icon': 'fa-file-text-o', 'help': _('Add a contact form to your Contact Us page.')},
-                        'website_sale':             {'icon': 'fa-shopping-cart', 'help': _('Sell online to reach new customers.')},
-                        'website_blog':             {'icon': 'fa-rss-square', 'help': _('Build up a community with an efficient content strategy.')},
-                        'website_hr_recruitment':   {'icon': 'fa-suitcase', 'help': _('Promote your job announces to attract new talents.')},
-                        'website_event':            {'icon': 'fa-ticket', 'help': _('Promote your events, manage attendance and sell tickets.')},
-                        'im_livechat':              {'icon': 'fa-comments-o', 'help': _('Chat with your visitors in real time.')},
-                    }"/>
-                </t>
-                <t t-if="! widget.groups.system"><t t-set="apps" t-value="{}"/></t>
-                <t t-set="vignette_max" t-value="6"/>
-                <t t-set="vignette_nbr" t-value="1"/>
-                <t t-foreach="apps" t-as="app">
-                    <t t-set="app_data" t-value="widget.dashboards_data.apps_data[app]"/>
-                    <t t-set="app_dashboard" t-value="apps[app]"/>
-                    <t t-if="vignette_nbr &lt; vignette_max &amp;&amp; widget.hidden_apps.indexOf(app_data['id']) == -1 &amp;&amp; app_data['state'] == 'uninstalled'">
-                        <t t-set="vignette_nbr" t-value="vignette_nbr + 1"/>
-                        <a href="#" class="o_box_item o_dashboard_action_form"
-                                name="Apps"
-                                data-res_model="ir.module.module"
-                                t-att-data-res_id="app_data['id']"
-                                t-att-title="app_dashboard['help']">
-                            <div class="o_inner_box o_apps">
-                                <div class="o_apps_show">
-                                    <i t-attf-class="fa #{app_dashboard['icon']} fa-3x"></i><br/>
-                                    <t t-esc="app_data['shortdesc']"/>
-                                </div>
-                                <div class="o_apps_hidden">
-                                    <i class="fa fa-plus-circle fa-3x"></i><br/>
-                                    Add this feature
-                                </div>
-                                <i class="o_apps_hidden o_dashboard_hide_panel fa fa-close" t-att-data-module_id="app_data['id']" title="Remove this suggestion from dashboard"/>
-                            </div>
-                        </a>
-                    </t>
-                </t>
-            </div>
-        </div>
+        <div class="row o_dashboard_common"/>
     </t>
 
-    <t t-name="website.dashboard_visits">
-        <div class="row o_dashboard_visits" t-if="widget.groups.website_designer">
-            <div class="col-xs-12 o_box">
-                <h2>Visits</h2>
-                <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
-                    <div class="row js_analytics_components"/>
-                    <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
-                </div>
-                <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
-                    <div class="o_demo_background">
-                        <div class="o_layer">
-                        </div>
-                        <div class="o_buttons text-center">
-                            <h3>There is no data currently available.</h3>
-                            <button class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+    <t t-name="website.dashboard_content">
+        <div class="o_website_dashboard_content">
+            <div class="row o_dashboard_visits" t-if="widget.groups.website_designer">
+                <div class="col-xs-12 o_box">
+                    <h2>Visits</h2>
+                    <div t-if="widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id">
+                        <div class="row js_analytics_components"/>
+                        <a href="#" class="js_link_analytics_settings">Edit my Analytics Client ID</a>
+                    </div>
+                    <div t-if="!(widget.dashboards_data.visits &amp;&amp; widget.dashboards_data.visits.ga_client_id)" class="col-md-12">
+                        <div class="o_demo_background">
+                            <div class="o_layer">
+                            </div>
+                            <div class="o_buttons text-center">
+                                <h3>There is no data currently available.</h3>
+                                <button class="btn btn-sm btn-primary js_link_analytics_settings center-block mb8">Link my Analytics Account</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -89,11 +45,19 @@
     <div t-name="website.unauthorized_analytics" class="col-xs-12 js_unauthorized_message mb16">
         <span t-if="reason === 'not_connected'">You need to log in to your Google Account before: </span>
         <span t-if="reason === 'no_right'">You do not seem to have access to this Analytics Account.</span>
+        <span t-if="reason === 'not_initialized'">Google Analytics initialization failed. Maybe this domain is not whitelisted in your Google Analytics project for this client ID.</span>
     </div>
 
     <div t-name="website.ga_dialog_content">
-        Your Google Analytic Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
-        <br/>Go to our <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html" target="_blank">User Documentation</a> to get more information.
+        Your Tracking ID: <input type="text" name="ga_analytics_key" placeholder="UA-XXXXXXXX-Y" t-att-value="ga_analytics_key" style="width: 100%"></input>
+        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics.html" class="oe_link fa fa-arrow-right" target="_blank">
+            How to get my Tracking ID
+        </a>
+        <br/><br/>
+        Your Client ID: <input type="text" name="ga_client_id" t-att-value="ga_key" style="width: 100%"></input>
+        <a href="https://www.odoo.com/documentation/user/online/website/optimize/google_analytics_dashboard.html" class="oe_link fa fa-arrow-right" target="_blank">
+            How to get my Client ID
+        </a>
     </div>
 
     <t t-name="website.DateRangeButtons">
@@ -103,4 +67,31 @@
             <button class="btn btn-sm btn-default js_date_range" data-date="year">Last Year</button>
         </div>
     </t>
+
+    <t t-name="website.SalesChartTooltip">
+        <table>
+            <thead>
+                <tr><td colspan="3"><strong><t t-esc="chartData.series[0].key"/></strong></td></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="legend-color-guide"><div class="o_legend0"/></td>
+                    <td class="key o_tooltip_key"><t t-esc="format.date(moment(chartData.value))"/></td>
+                    <td class="value"><t t-esc="format.float(chartData.series[0].data[1])"/></td>
+                </tr>
+                <tr>
+                    <td class="legend-color-guide"><div class="o_legend1"/></td>
+                    <td class="key o_tooltip_key"><t t-esc="format.date(moment(chartData.value).subtract(1, dateRange))"/></td>
+                    <td class="value"><t t-esc="format.float(chartData.series[1].data[1])"/></td>
+                </tr>
+            </tbody>
+        </table>
+    </t>
+
+    <t t-name="website.GoToButtons">
+        <a href="/" class="btn btn-primary" title="Go to Website">
+            Go to Website
+        </a>
+    </t>
+
 </templates>

@@ -382,15 +382,15 @@ return AbstractModel.extend({
             allDayText: _t("All day"),
             views: {
                 week: {
-                    columnFormat: 'ddd ' + time.strftime_to_moment_format(_t.database.parameters.date_format),
-                    titleFormat: time.strftime_to_moment_format(_t.database.parameters.time_format),
+                    columnFormat: 'ddd ' + time.getLangDateFormat(),
+                    titleFormat: time.getLangTimeFormat(),
                 }
             },
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
-            firstDay: moment().startOf('week').isoWeekday(),
+            firstDay: _t.database.parameters.week_start,
         };
     },
     /**

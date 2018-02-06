@@ -14,11 +14,16 @@ This is the base module to manage the accounting chart for Greece.
 
 Greek accounting chart and localization.
     """,
-    'depends': ['base', 'account', 'base_iban', 'base_vat'],
+    'depends': [
+        'account',
+        'base_iban',
+        'base_vat',
+    ],
     'data': [ 'data/account_type_data.xml',
               'data/l10n_gr_chart_data.xml',
               'data/account_chart_template_data.xml',
+              'data/account_data.xml',
               'data/account_tax_data.xml',
-              'data/account_chart_template_data.yml'
+              'data/account_chart_template_configure_data.xml'
     ],
 }

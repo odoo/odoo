@@ -8,25 +8,37 @@
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <!-- 2 steps to avoid making reference to xml id not defined yet -->
-    <record id="group_account_invoice" model="res.groups">
-        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    <record id="group_account_user" model="res.groups">
+        <field name="name">Show Full Accounting Features</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
-    <record id="group_account_user" model="res.groups">
-        <field name="name">Accountant</field>
+    <record id="group_account_manager" model="res.groups">
+        <field name="name">Billing Manager</field>
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
         <field name="implied_ids" eval="[(4, ref('group_account_invoice'))]"/>
     </record>
 
-    <record id="group_account_manager" model="res.groups">
-        <field name="name">Adviser</field>
-        <field name="category_id" ref="base.module_category_accounting_and_finance"/>
-        <field name="implied_ids" eval="[(4, ref('group_account_user'))]"/>
+    <record id="base.user_root" model="res.users">
+        <field name="groups_id" eval="[(4, ref('account.group_account_invoice')), (4, ref('account.group_account_manager'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('account.group_account_manager'))]"/>
     </record>
 
     <record id="group_warning_account" model="res.groups">
         <field name="name">A warning can be set on a partner (Account)</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_allow_recurring" model="res.groups">
+        <field name="name">Allow to create recurring vendor bills</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_cash_rounding" model="res.groups">
+        <field name="name">Allow the cash rounding management</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
@@ -128,5 +140,19 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <!-- Portal for invoice and invoice lines -->
+    <record id="account_invoice_rule_portal" model="ir.rule">
+        <field name="name">Portal Personal Account Invoices</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="domain_force">[('message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="account_invoice_line_rule_portal" model="ir.rule">
+        <field name="name">Portal Invoice Lines</field>
+        <field name="model_id" ref="account.model_account_invoice_line"/>
+        <field name="domain_force">[('invoice_id.message_partner_ids','child_of',[user.commercial_partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
 </data>
 </odoo>

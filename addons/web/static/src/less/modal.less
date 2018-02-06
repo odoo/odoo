@@ -1,4 +1,4 @@
-.modal {
+.modal.o_technical_modal {
 
     .modal-content {
         border-radius: 0;
@@ -22,10 +22,6 @@
                 .o_pager {
                     float: right;
                 }
-            }
-
-            .o_view_manager_content {
-                position: static;  // Reset position for view managers in modals (default value: absolute)
             }
         }
 
@@ -76,3 +72,12 @@
         }
     }
 }
+
+// Temporary fix for modals which are not instantiated thanks to the Dialog
+// JS classes (deprecated case) (see bootstrap_overridden.less) + Frontend.
+//
+// TODO the following code was disabled because it is saas-incompatible
+//
+// :not(body) > .modal {
+//     z-index: @zindex-modal-background + 1;
+// }

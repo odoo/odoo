@@ -10,9 +10,11 @@
     </xpath>
 </template>
 
-<template id="assets_frontend" inherit_id="website.assets_frontend" name="Forum Assets">
-    <xpath expr="." position="inside">
-        <link rel='stylesheet' href='/website_forum/static/src/css/website_forum.css'/>
+<template id="assets_frontend" inherit_id="website.assets_frontend">
+    <xpath expr="link[last()]" position="after">
+        <link rel="stylesheet" type="text/less" href="/website_forum/static/src/less/website_forum.less"/>
+    </xpath>
+    <xpath expr="script[last()]" position="after">
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_forum.share.js"/>
         <script type="text/javascript" src="/website_forum/static/src/js/website_tour_forum_question.js"/>
@@ -1382,10 +1384,6 @@
         <h1 class="mt0 page-header">
             <span t-field="user.name"/>
             <small>profile</small>
-            <t t-call="website.publish_management">
-                <t t-set="object" t-value="user"/>
-                <t t-set="publish_edit" t-value="True"/>
-            </t>
         </h1>
         <div class="row">
             <div class="col-sm-2">
@@ -1561,7 +1559,7 @@
 
 <!-- User Navbar -->
 <template id="content_new_forum" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
         <li groups="website.group_website_designer"><a href="#" data-action="new_forum"><i class="fa fa-comment"/><p>New Forum</p></a></li>
     </xpath>
 </template>

@@ -64,7 +64,7 @@
             <field name="state">done</field>
             <field name="sent_date" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
-            <field name="mailing_model">res.partner</field>
+            <field name="mailing_model_id" ref="base.model_res_partner"/>
             <field name="mailing_domain">[('customer', '=', True)]</field>
             <field name="reply_to_mode">email</field>
             <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
@@ -77,7 +77,7 @@
             <field name="name">Second Newsletter</field>
             <field name="state">draft</field>
             <field name="mass_mailing_campaign_id" eval="ref('mass_mail_campaign_1')"/>
-            <field name="mailing_model">res.partner</field>
+            <field name="mailing_model_id" ref="base.model_res_partner"/>
             <field name="mailing_domain">[('customer', '=', True)]</field>
             <field name="reply_to_mode">email</field>
             <field name="reply_to"><![CDATA[Info <info@yourcompany.example.com>]]></field>
@@ -113,6 +113,13 @@
             <field name="message_id">1111004@OpenERP.com</field>
             <field name="sent" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="bounced" eval="(DateTime.today() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+
+        <record id="base.main_company" model="res.company">
+            <field name="social_twitter">https://twitter.com/Odoo</field>
+            <field name="social_facebook">https://www.facebook.com/Odoo</field>
+            <field name="social_googleplus">https://plus.google.com/+Odooapps</field>
+            <field name="social_linkedin">https://www.linkedin.com/company/odoo</field>
         </record>
 
     </data>

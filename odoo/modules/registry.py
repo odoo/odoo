@@ -15,8 +15,9 @@ import threading
 
 import odoo
 from .. import SUPERUSER_ID
-from odoo.tools import (assertion_report, lazy_classproperty, config,
-                        lazy_property, table_exists, topological_sort, OrderedSet)
+from odoo.tools import (assertion_report, config, existing_tables,
+                        lazy_classproperty, lazy_property, table_exists,
+                        topological_sort, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -110,7 +111,7 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._init = True
-        self._init_parent = {}
+        self._init_parent = set()
         self._assertion_report = assertion_report.assertion_report()
         self._fields_by_model = None
         self._post_init_queue = deque()
@@ -160,7 +161,7 @@ class Registry(Mapping):
     def delete_all(cls):
         """ Delete all the registries. """
         with cls._lock:
-            for db_name in cls.registries.keys():
+            for db_name in list(cls.registries.keys()):
                 cls.delete(db_name)
 
     #
@@ -196,8 +197,8 @@ class Registry(Mapping):
         # map fields on their dependents
         dependents = {
             field: set(dep for dep, _ in model._field_triggers[field] if dep != field)
-            for model in self.itervalues()
-            for field in model._fields.itervalues()
+            for model in self.values()
+            for field in model._fields.values()
         }
         # sort them topologically, and associate a sequence number to each field
         mapping = {
@@ -265,7 +266,7 @@ class Registry(Mapping):
             env['ir.model']._add_manual_models()
 
         # prepare the setup on all models
-        models = env.values()
+        models = list(env.values())
         for model in models:
             model._prepare_setup()
 
@@ -313,10 +314,10 @@ class Registry(Mapping):
             models[0].recompute()
 
         # make sure all tables are present
-        missing = [name
-                   for name, model in env.items()
-                   if not model._abstract and not table_exists(cr, model._table)]
-        if missing:
+        table2model = {model._table: name for name, model in env.items() if not model._abstract}
+        missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+        if missing_tables:
+            missing = {table2model[table] for table in missing_tables}
             _logger.warning("Models have no table: %s.", ", ".join(missing))
             # recreate missing tables following model dependencies
             deps = {name: model._depends for name, model in env.items()}
@@ -325,9 +326,9 @@ class Registry(Mapping):
                     _logger.info("Recreate table of model %s.", name)
                     env[name].init()
             # check again, and log errors if tables are still missing
-            for name, model in env.items():
-                if not model._abstract and not table_exists(cr, model._table):
-                    _logger.error("Model %s has no table.", name)
+            missing_tables = set(table2model).difference(existing_tables(cr, table2model))
+            for table in missing_tables:
+                _logger.error("Model %s has no table.", table2model[table])
 
     @lazy_property
     def cache(self):
@@ -344,7 +345,7 @@ class Registry(Mapping):
         """ Clear the caches associated to methods decorated with
         ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
         """
-        for model in self.models.itervalues():
+        for model in self.models.values():
             model.clear_caches()
 
     def setup_signaling(self):

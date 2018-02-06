@@ -35,6 +35,7 @@
 
         <record id="route_warehouse0_manufacture" model='stock.location.route'>
             <field name="name">Manufacture</field>
+            <field name="company_id"></field>
             <field name="sequence">5</field>
         </record>
 
@@ -81,5 +82,18 @@
             <field name="manual" eval="False"/>
             <field name="sequence">0</field>
         </record>
+
+        <function model="ir.model.data" name="_update">
+            <value>stock.picking.type</value>
+            <value>mrp</value>
+            <value eval="{}"/>
+            <value>picking_type_manufacturing</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').manu_type_id.id"/>
+        </function>
+
     </data>
+
 </odoo>

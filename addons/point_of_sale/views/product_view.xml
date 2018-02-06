@@ -30,16 +30,11 @@
         <field name="search_view_id" eval="False"/> <!-- Force empty -->
         <field name="view_id" ref="product.product_product_tree_view"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new product.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
             </p><p>
                 You must define a product for everything you sell through
                 the point of sale interface.
-            </p><p>
-                Do not forget to set the price and the point of sale category
-                in which it should appear. If a product has no point of sale
-                category, you can not sell it through the point of sale
-                interface.
             </p>
         </field>
     </record>
@@ -57,10 +52,10 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="stock.view_template_property_form"/>
         <field name="arch" type="xml">
-            <group name="sale_condition" position="after">
+            <group name="email_template_and_project" position="before">
                 <group name="pos" string="Point of Sale">
                     <field name="available_in_pos"/>
-                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="PoS Category"/>
                     <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
                 </group>
             </group>
@@ -87,20 +82,15 @@
         groups="product.group_sale_pricelist"
         sequence="20"/>
 
-    <!-- Config > Products sub menus -->
-    <menuitem id="pos_config_menu_action_product_attribute"
-        parent="point_of_sale.pos_config_menu_configuration_product"
-        action="product.attribute_action"
-        groups="product.group_product_variant"
-        sequence="10"/>
-    <menuitem id="pos_config_menu_action_product_attribute_val"
-        parent="point_of_sale.pos_config_menu_configuration_product"
-        action="product.variants_action"
-        groups="product.group_product_variant"
-        sequence="20"/>
-    <menuitem id="pos_config_menu_action_product_category"
-        name="Internal Categories"
-        parent="point_of_sale.pos_config_menu_configuration_product"
-        action="product_category_action"
-        sequence="40"/>
+    <record id="product_uom_categ_form_view" model="ir.ui.view">
+        <field name="name">product.uom.categ.form.inherit</field>
+        <field name="model">product.uom.categ</field>
+        <field name="inherit_id" ref="product.product_uom_categ_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_pos_groupable" groups="base.group_no_one"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

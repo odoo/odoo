@@ -93,7 +93,7 @@ class MailComposer(models.TransientModel):
             result['res_id'] = self.env.user.partner_id.id
 
         if fields is not None:
-            [result.pop(field, None) for field in result.keys() if field not in fields]
+            [result.pop(field, None) for field in list(result) if field not in fields]
         return result
 
     @api.model
@@ -140,7 +140,7 @@ class MailComposer(models.TransientModel):
             for mid, rmod, rid in self._cr.fetchall():
                 message_values[mid] = {'model': rmod, 'res_id': rid}
             # remove from the set to check the ids that mail_compose_message accepts
-            author_ids = [mid for mid, message in message_values.iteritems()
+            author_ids = [mid for mid, message in message_values.items()
                           if message.get('model') and not message.get('res_id')]
             self = self.browse(list(set(self.ids) - set(author_ids)))  # not sure slef = ...
 
@@ -197,6 +197,7 @@ class MailComposer(models.TransientModel):
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
+        notif_layout = self._context.get('custom_layout')
         for wizard in self:
             # Duplicate attachments linked to the email.template.
             # Indeed, basic mail.compose.message wizard duplicates attachments in mass
@@ -248,13 +249,14 @@ class MailComposer(models.TransientModel):
             for res_ids in sliced_res_ids:
                 batch_mails = Mail
                 all_mail_values = wizard.get_mail_values(res_ids)
-                for res_id, mail_values in all_mail_values.iteritems():
+                for res_id, mail_values in all_mail_values.items():
                     if wizard.composition_mode == 'mass_mail':
                         batch_mails |= Mail.create(mail_values)
                     else:
                         ActiveModel.browse(res_id).message_post(
                             message_type=wizard.message_type,
                             subtype_id=subtype_id,
+                            notif_layout=notif_layout,
                             **mail_values)
 
                 if wizard.composition_mode == 'mass_mail':
@@ -277,8 +279,8 @@ class MailComposer(models.TransientModel):
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
-            # reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).browse(res_ids).message_get_reply_to(default=self.email_from)
-            reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).message_get_reply_to(res_ids, default=self.email_from)
+            # reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).browse(res_ids)._notify_get_reply_to(default=self.email_from)
+            reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model)._notify_get_reply_to(res_ids, default=self.email_from)
 
         for res_id in res_ids:
             # static wizard (mail.message) values
@@ -298,8 +300,8 @@ class MailComposer(models.TransientModel):
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                if self.model in self.env and hasattr(self.env[self.model], 'message_get_email_values'):
-                    mail_values.update(self.env[self.model].browse(res_id).message_get_email_values())
+                if self.model in self.env and hasattr(self.env[self.model], '_notify_specific_email_values'):
+                    mail_values.update(self.env[self.model].browse(res_id)._notify_specific_email_values(False))
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
@@ -325,9 +327,11 @@ class MailComposer(models.TransientModel):
                 for attach_id in mail_values.pop('attachment_ids'):
                     new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
                     attachment_ids.append(new_attach_id.id)
-                mail_values['attachment_ids'] = self.env['mail.thread']._message_preprocess_attachments(
+                mail_values['attachment_ids'] = self.env['mail.thread']._message_post_process_attachments(
                     mail_values.pop('attachments', []),
-                    attachment_ids, 'mail.message', 0)
+                    attachment_ids,
+                    {'model': 'mail.message', 'res_id': 0}
+                )
 
             results[res_id] = mail_values
         return results
@@ -341,7 +345,7 @@ class MailComposer(models.TransientModel):
     def onchange_template_id_wrapper(self):
         self.ensure_one()
         values = self.onchange_template_id(self.template_id.id, self.composition_mode, self.model, self.res_id)['value']
-        for fname, value in values.iteritems():
+        for fname, value in values.items():
             setattr(self, fname, value)
 
     @api.multi

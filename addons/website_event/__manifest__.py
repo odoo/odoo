@@ -6,13 +6,11 @@
     'sequence': 166,
     'summary': 'Publish Events and Manage Online Registrations on your Website',
     'website': 'https://www.odoo.com/page/website-builder',
-    'description': """
-Online Events
-        """,
+    'description': "",
     'depends': ['website', 'website_partner', 'website_mail', 'event'],
     'data': [
         'data/event_data.xml',
-        'views/event_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/event_templates.xml',
         'views/event_views.xml',
         'security/ir.model.access.csv',

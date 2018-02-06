@@ -640,6 +640,14 @@ var FloorScreenWidget = screens.ScreenWidget.extend({
             this.table_widgets.push(tw);
         }
 
+        $('body').on('keyup', function (event) {
+            if (event.which === $.ui.keyCode.ESCAPE) {
+                if(self.editing) {
+                    self.toggle_editing();
+                }
+            }
+        });
+
         this.$('.floor-selector .button').click(function(event){
             self.click_floor_button(event,$(this));
         });

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from __future__ import print_function
-import commands
 import logging
 import math
 import os
@@ -18,7 +17,10 @@ try:
 except ImportError:
     escpos = printer = None
 
-from Queue import Queue
+try:
+    from queue import Queue
+except ImportError:
+    from Queue import Queue # pylint: disable=deprecated-module
 from threading import Thread, Lock
 
 try:
@@ -28,7 +30,7 @@ except ImportError:
 
 from odoo import http, _
 
-import odoo.addons.hw_proxy.controllers.main as hw_proxy
+from odoo.addons.hw_proxy.controllers import main as hw_proxy
 
 _logger = logging.getLogger(__name__)
 
@@ -81,7 +83,7 @@ class EscposDriver(Thread):
             try:
                 description = usb.util.get_string(printer, 256, printer.iManufacturer) + " " + usb.util.get_string(printer, 256, printer.iProduct)
             except Exception as e:
-                _logger.error("Can not get printer description: %s" % (e.message or repr(e)))
+                _logger.error("Can not get printer description: %s" % e)
                 description = 'Unknown printer'
             connected.append({
                 'vendor': printer.idVendor,
@@ -196,7 +198,7 @@ class EscposDriver(Thread):
         hosting_ap = os.system('pgrep hostapd') == 0
         ssid = subprocess.check_output('iwconfig 2>&1 | grep \'ESSID:"\' | sed \'s/.*"\\(.*\\)"/\\1/\'', shell=True).rstrip()
         mac = subprocess.check_output('ifconfig | grep -B 1 \'inet addr\' | grep -o \'HWaddr .*\' | sed \'s/HWaddr //\'', shell=True).rstrip()
-        ips =  [ c.split(':')[1].split(' ')[0] for c in commands.getoutput("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
+        ips =  [ c.split(':')[1].split(' ')[0] for c in subprocess.check_output("/sbin/ifconfig").split('\n') if 'inet addr' in c ]
         ips =  [ ip for ip in ips if ip not in localips ] 
         eprint.text('\n\n')
         eprint.set(align='center',type='b',height=2,width=2)

@@ -23,7 +23,7 @@ and the Lempira currency.""",
     'depends': ['base', 'account'],
     'data': [
         'data/l10n_hn_chart_data.xml',
+        'data/account_data.xml',
         'data/account_chart_template_data.xml',
-        'data/account_chart_template_data.yml',
     ],
 }

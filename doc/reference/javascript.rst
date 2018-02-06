@@ -8,6 +8,10 @@
 Javascript
 ==========
 
+.. automodule:: *
+    :members:
+
+=======
 Widgets
 =======
 
@@ -1406,4 +1410,3 @@ the OpenERP Web test suite.
 .. [#terminal]
     with a small twist: :py:meth:`sqlalchemy.orm.query.Query.group_by` is not
     terminal, it returns a query which can still be altered.
-

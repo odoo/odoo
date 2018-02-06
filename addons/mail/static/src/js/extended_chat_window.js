@@ -1,9 +1,6 @@
 odoo.define('mail.ExtendedChatWindow', function (require) {
 "use strict";
 
-var core = require('web.core');
-
-var chat_manager = require('mail.chat_manager');
 var ChatWindow = require('mail.ChatWindow');
 var composer = require('mail.composer');
 
@@ -19,27 +16,29 @@ return ChatWindow.extend({
             this.$el.addClass('o_thread_less');
             this.$('.o_chat_search_input input')
                 .autocomplete({
-                    source: function(request, response) {
-                        chat_manager.search_partner(request.term, 10).done(response);
+                    source: function (request, response) {
+                        self.call('chat_manager', 'searchPartner', request.term, 10).done(response);
                     },
-                    select: function(event, ui) {
+                    select: function (event, ui) {
                         self.trigger('open_dm_session', ui.item.id);
                     },
                 })
                 .focus();
         } else if (!self.options.input_less) {
-            var basic_composer = new composer.BasicComposer(self, {mention_partners_restricted: true});
-            basic_composer.on('post_message', self, function (message) {
-                this.trigger('post_message', message, this.channel_id);
+            var basicComposer = new composer.BasicComposer(self, {mention_partners_restricted: true, isMini: true});
+            basicComposer.on('post_message', self, function (message) {
+                self.call('chat_manager', 'postMessage', message, {
+                    channelID: self.channel_id,
+                });
             });
-            basic_composer.once('input_focused', self, function () {
-                var channel = chat_manager.get_channel(this.channel_id);
-                var commands = chat_manager.get_commands(channel);
-                var partners = chat_manager.get_mention_partner_suggestions(channel);
-                basic_composer.mention_set_enabled_commands(commands);
-                basic_composer.mention_set_prefetched_partners(partners);
+            basicComposer.once('input_focused', self, function () {
+                var channel = self.call('chat_manager', 'getChannel', self.channel_id);
+                var commands = self.call('chat_manager', 'getCommands', channel);
+                var partners = self.call('chat_manager', 'getMentionPartnerSuggestions', channel);
+                basicComposer.mention_set_enabled_commands(commands);
+                basicComposer.mention_set_prefetched_partners(partners);
             });
-            def = basic_composer.replace(self.$('.o_chat_composer'));
+            def = basicComposer.replace(self.$('.o_chat_composer'));
         }
         return $.when(this._super(), def);
     },
@@ -48,11 +47,16 @@ return ChatWindow.extend({
     on_keydown: function (event) {
         event.stopPropagation();
     },
+    on_reverse_breadcrumb: function () {
+        var chatBus = this.call('chat_manager', 'getChatBus');
+        chatBus.trigger('discuss_open', false);
+     },
     on_click_expand: _.debounce(function (event) {
         event.preventDefault();
-        var options = {clear_breadcrumbs: true, active_id: this.channel_id};
-        this.do_action('mail.mail_channel_action_client_chat', options).then(function () {
-            core.bus.trigger('change_menu_section', chat_manager.get_discuss_menu_id());
+        this.do_action('mail.mail_channel_action_client_chat', {
+            clear_breadcrumbs: false,
+            active_id: this.channel_id,
+            on_reverse_breadcrumb: this.on_reverse_breadcrumb
         });
     }, 1000, true),
 });

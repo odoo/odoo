@@ -12,11 +12,6 @@ file_filter = addons/account/i18n/<lang>.po
 source_file = addons/account/i18n/account.pot
 source_lang = en
 
-[odoo-master.account_accountant]
-file_filter = addons/account_accountant/i18n/<lang>.po
-source_file = addons/account_accountant/i18n/account_accountant.pot
-source_lang = en
-
 [odoo-master.account_analytic_default]
 file_filter = addons/account_analytic_default/i18n/<lang>.po
 source_file = addons/account_analytic_default/i18n/account_analytic_default.pot
@@ -45,6 +40,16 @@ source_lang = en
 [odoo-master.account_check_printing]
 file_filter = addons/account_check_printing/i18n/<lang>.po
 source_file = addons/account_check_printing/i18n/account_check_printing.pot
+source_lang = en
+
+[odoo-master.account_invoicing]
+file_filter = addons/account_invoicing/i18n/<lang>.po
+source_file = addons/account_invoicing/i18n/account_invoicing.pot
+source_lang = en
+
+[odoo-master.account_payment]
+file_filter = addons/account_payment/i18n/<lang>.po
+source_file = addons/account_payment/i18n/account_payment.pot
 source_lang = en
 
 [odoo-master.account_tax_python]
@@ -142,19 +147,24 @@ file_filter = addons/base_import_module/i18n/<lang>.po
 source_file = addons/base_import_module/i18n/base_import_module.pot
 source_lang = en
 
-[odoo-master.base_sparse_field]
-file_filter = addons/base_sparse_field/i18n/<lang>.po
-source_file = addons/base_sparse_field/i18n/base_sparse_field.pot
-source_lang = en
-
 [odoo-master.base_setup]
 file_filter = addons/base_setup/i18n/<lang>.po
 source_file = addons/base_setup/i18n/base_setup.pot
 source_lang = en
 
+[odoo-master.base_sparse_field]
+file_filter = addons/base_sparse_field/i18n/<lang>.po
+source_file = addons/base_sparse_field/i18n/base_sparse_field.pot
+source_lang = en
+
 [odoo-master.base_vat]
 file_filter = addons/base_vat/i18n/<lang>.po
 source_file = addons/base_vat/i18n/base_vat.pot
+source_lang = en
+
+[odoo-master.base_vat_autocomplete]
+file_filter = addons/base_vat_autocomplete/i18n/<lang>.po
+source_file = addons/base_vat_autocomplete/i18n/base_vat_autocomplete.pot
 source_lang = en
 
 [odoo-master.board]
@@ -170,6 +180,11 @@ source_lang = en
 [odoo-master.calendar]
 file_filter = addons/calendar/i18n/<lang>.po
 source_file = addons/calendar/i18n/calendar.pot
+source_lang = en
+
+[odoo-master.calendar_sms]
+file_filter = addons/calendar_sms/i18n/<lang>.po
+source_file = addons/calendar_sms/i18n/calendar_sms.pot
 source_lang = en
 
 [odoo-master.contacts]
@@ -192,9 +207,9 @@ file_filter = addons/crm_phone_validation/i18n/<lang>.po
 source_file = addons/crm_phone_validation/i18n/crm_phone_validation.pot
 source_lang = en
 
-[odoo-master.crm_project_issue]
-file_filter = addons/crm_project_issue/i18n/<lang>.po
-source_file = addons/crm_project_issue/i18n/crm_project_issue.pot
+[odoo-master.crm_project]
+file_filter = addons/crm_project/i18n/<lang>.po
+source_file = addons/crm_project/i18n/crm_project.pot
 source_lang = en
 
 [odoo-master.decimal_precision]
@@ -337,19 +352,14 @@ file_filter = addons/hr_timesheet_attendance/i18n/<lang>.po
 source_file = addons/hr_timesheet_attendance/i18n/hr_timesheet_attendance.pot
 source_lang = en
 
-[odoo-master.hr_timesheet_sheet]
-file_filter = addons/hr_timesheet_sheet/i18n/<lang>.po
-source_file = addons/hr_timesheet_sheet/i18n/hr_timesheet_sheet.pot
+[odoo-master.iap]
+file_filter = addons/iap/i18n/<lang>.po
+source_file = addons/iap/i18n/iap.pot
 source_lang = en
 
 [odoo-master.im_livechat]
 file_filter = addons/im_livechat/i18n/<lang>.po
 source_file = addons/im_livechat/i18n/im_livechat.pot
-source_lang = en
-
-[odoo-master.l10n_multilang]
-file_filter = addons/l10n_multilang/i18n/<lang>.po
-source_file = addons/l10n_multilang/i18n/l10n_multilang.pot
 source_lang = en
 
 [odoo-master.link_tracker]
@@ -370,16 +380,6 @@ source_lang = en
 [odoo-master.maintenance]
 file_filter = addons/maintenance/i18n/<lang>.po
 source_file = addons/maintenance/i18n/maintenance.pot
-source_lang = en
-
-[odoo-master.marketing_campaign]
-file_filter = addons/marketing_campaign/i18n/<lang>.po
-source_file = addons/marketing_campaign/i18n/marketing_campaign.pot
-source_lang = en
-
-[odoo-master.marketing_campaign_crm_demo]
-file_filter = addons/marketing_campaign_crm_demo/i18n/<lang>.po
-source_file = addons/marketing_campaign_crm_demo/i18n/marketing_campaign_crm_demo.pot
 source_lang = en
 
 [odoo-master.mass_mailing]
@@ -412,9 +412,9 @@ file_filter = addons/mrp_byproduct/i18n/<lang>.po
 source_file = addons/mrp_byproduct/i18n/mrp_byproduct.pot
 source_lang = en
 
-[odoo-master.mrp_repair]
-file_filter = addons/mrp_repair/i18n/<lang>.po
-source_file = addons/mrp_repair/i18n/mrp_repair.pot
+[odoo-master.repair]
+file_filter = addons/repair/i18n/<lang>.po
+source_file = addons/repair/i18n/repair.pot
 source_lang = en
 
 [odoo-master.note]
@@ -497,6 +497,11 @@ file_filter = addons/point_of_sale/i18n/<lang>.po
 source_file = addons/point_of_sale/i18n/point_of_sale.pot
 source_lang = en
 
+[odoo-master.portal]
+file_filter = addons/portal/i18n/<lang>.po
+source_file = addons/portal/i18n/portal.pot
+source_lang = en
+
 [odoo-master.pos_cache]
 file_filter = addons/pos_cache/i18n/<lang>.po
 source_file = addons/pos_cache/i18n/pos_cache.pot
@@ -530,11 +535,6 @@ source_lang = en
 [odoo-master.pos_sale]
 file_filter = addons/pos_sale/i18n/<lang>.po
 source_file = addons/pos_sale/i18n/pos_sale.pot
-source_lang = en
-
-[odoo-master.procurement]
-file_filter = addons/procurement/i18n/<lang>.po
-source_file = addons/procurement/i18n/procurement.pot
 source_lang = en
 
 [odoo-master.procurement_jit]
@@ -572,16 +572,6 @@ file_filter = addons/project/i18n/<lang>.po
 source_file = addons/project/i18n/project.pot
 source_lang = en
 
-[odoo-master.project_issue]
-file_filter = addons/project_issue/i18n/<lang>.po
-source_file = addons/project_issue/i18n/project_issue.pot
-source_lang = en
-
-[odoo-master.project_issue_sheet]
-file_filter = addons/project_issue_sheet/i18n/<lang>.po
-source_file = addons/project_issue_sheet/i18n/project_issue_sheet.pot
-source_lang = en
-
 [odoo-master.project_timesheet_holidays]
 file_filter = addons/project_timesheet_holidays/i18n/<lang>.po
 source_file = addons/project_timesheet_holidays/i18n/project_timesheet_holidays.pot
@@ -607,21 +597,6 @@ file_filter = addons/rating/i18n/<lang>.po
 source_file = addons/rating/i18n/rating.pot
 source_lang = en
 
-[odoo-master.rating_project]
-file_filter = addons/rating_project/i18n/<lang>.po
-source_file = addons/rating_project/i18n/rating_project.pot
-source_lang = en
-
-[odoo-master.rating_project_issue]
-file_filter = addons/rating_project_issue/i18n/<lang>.po
-source_file = addons/rating_project_issue/i18n/rating_project_issue.pot
-source_lang = en
-
-[odoo-master.report]
-file_filter = addons/report/i18n/<lang>.po
-source_file = addons/report/i18n/report.pot
-source_lang = en
-
 [odoo-master.report_intrastat]
 file_filter = addons/report_intrastat/i18n/<lang>.po
 source_file = addons/report_intrastat/i18n/report_intrastat.pot
@@ -642,6 +617,16 @@ file_filter = addons/sale_crm/i18n/<lang>.po
 source_file = addons/sale_crm/i18n/sale_crm.pot
 source_lang = en
 
+[odoo-master.sale_expense]
+file_filter = addons/sale_expense/i18n/<lang>.po
+source_file = addons/sale_expense/i18n/sale_expense.pot
+source_lang = en
+
+[odoo-master.sale_management]
+file_filter = addons/sale_management/i18n/<lang>.po
+source_file = addons/sale_management/i18n/sale_management.pot
+source_lang = en
+
 [odoo-master.sale_margin]
 file_filter = addons/sale_margin/i18n/<lang>.po
 source_file = addons/sale_margin/i18n/sale_margin.pot
@@ -657,9 +642,9 @@ file_filter = addons/sale_order_dates/i18n/<lang>.po
 source_file = addons/sale_order_dates/i18n/sale_order_dates.pot
 source_lang = en
 
-[odoo-master.sale_service_rating]
-file_filter = addons/sale_service_rating/i18n/<lang>.po
-source_file = addons/sale_service_rating/i18n/sale_service_rating.pot
+[odoo-master.sale_payment]
+file_filter = addons/sale_payment/i18n/<lang>.po
+source_file = addons/sale_payment/i18n/sale_payment.pot
 source_lang = en
 
 [odoo-master.sale_stock]
@@ -677,6 +662,11 @@ file_filter = addons/sales_team/i18n/<lang>.po
 source_file = addons/sales_team/i18n/sales_team.pot
 source_lang = en
 
+[odoo-master.sms]
+file_filter = addons/sms/i18n/<lang>.po
+source_file = addons/sms/i18n/sms.pot
+source_lang = en
+
 [odoo-master.stock]
 file_filter = addons/stock/i18n/<lang>.po
 source_file = addons/stock/i18n/stock.pot
@@ -685,11 +675,6 @@ source_lang = en
 [odoo-master.stock_account]
 file_filter = addons/stock_account/i18n/<lang>.po
 source_file = addons/stock_account/i18n/stock_account.pot
-source_lang = en
-
-[odoo-master.stock_calendar]
-file_filter = addons/stock_calendar/i18n/<lang>.po
-source_file = addons/stock_calendar/i18n/stock_calendar.pot
 source_lang = en
 
 [odoo-master.stock_dropshipping]
@@ -702,9 +687,9 @@ file_filter = addons/stock_landed_costs/i18n/<lang>.po
 source_file = addons/stock_landed_costs/i18n/stock_landed_costs.pot
 source_lang = en
 
-[odoo-master.stock_picking_wave]
-file_filter = addons/stock_picking_wave/i18n/<lang>.po
-source_file = addons/stock_picking_wave/i18n/stock_picking_wave.pot
+[odoo-master.stock_picking_batch]
+file_filter = addons/stock_picking_batch/i18n/<lang>.po
+source_file = addons/stock_picking_batch/i18n/stock_picking_batch.pot
 source_lang = en
 
 [odoo-master.survey]
@@ -727,6 +712,11 @@ file_filter = addons/theme_default/i18n/<lang>.po
 source_file = addons/theme_default/i18n/theme_default.pot
 source_lang = en
 
+[odoo-master.transifex]
+file_filter = addons/transifex/i18n/<lang>.po
+source_file = addons/transifex/i18n/transifex.pot
+source_lang = en
+
 [odoo-master.utm]
 file_filter = addons/utm/i18n/<lang>.po
 source_file = addons/utm/i18n/utm.pot
@@ -747,19 +737,9 @@ file_filter = addons/web_editor/i18n/<lang>.po
 source_file = addons/web_editor/i18n/web_editor.pot
 source_lang = en
 
-[odoo-master.web_kanban]
-file_filter = addons/web_kanban/i18n/<lang>.po
-source_file = addons/web_kanban/i18n/web_kanban.pot
-source_lang = en
-
 [odoo-master.web_kanban_gauge]
 file_filter = addons/web_kanban_gauge/i18n/<lang>.po
 source_file = addons/web_kanban_gauge/i18n/web_kanban_gauge.pot
-source_lang = en
-
-[odoo-master.web_planner]
-file_filter = addons/web_planner/i18n/<lang>.po
-source_file = addons/web_planner/i18n/web_planner.pot
 source_lang = en
 
 [odoo-master.web_settings_dashboard]
@@ -887,49 +867,14 @@ file_filter = addons/website_payment/i18n/<lang>.po
 source_file = addons/website_payment/i18n/website_payment.pot
 source_lang = en
 
-[odoo-master.website_portal]
-file_filter = addons/website_portal/i18n/<lang>.po
-source_file = addons/website_portal/i18n/website_portal.pot
-source_lang = en
-
-[odoo-master.website_portal_sale]
-file_filter = addons/website_portal_sale/i18n/<lang>.po
-source_file = addons/website_portal_sale/i18n/website_portal_sale.pot
-source_lang = en
-
-[odoo-master.website_portal_purchase]
-file_filter = addons/website_portal_purchase/i18n/<lang>.po
-source_file = addons/website_portal_purchase/i18n/website_portal_purchase.pot
-source_lang = en
-
-[odoo-master.website_project]
-file_filter = addons/website_project/i18n/<lang>.po
-source_file = addons/website_project/i18n/website_project.pot
-source_lang = en
-
-[odoo-master.website_project_issue]
-file_filter = addons/website_project_issue/i18n/<lang>.po
-source_file = addons/website_project_issue/i18n/website_project_issue.pot
-source_lang = en
-
-[odoo-master.website_project_issue_sheet]
-file_filter = addons/website_project_issue_sheet/i18n/<lang>.po
-source_file = addons/website_project_issue_sheet/i18n/website_project_issue_sheet.pot
-source_lang = en
-
-[odoo-master.website_project_timesheet]
-file_filter = addons/website_project_timesheet/i18n/<lang>.po
-source_file = addons/website_project_timesheet/i18n/website_project_timesheet.pot
-source_lang = en
-
 [odoo-master.website_quote]
 file_filter = addons/website_quote/i18n/<lang>.po
 source_file = addons/website_quote/i18n/website_quote.pot
 source_lang = en
 
-[odoo-master.website_rating_project_issue]
-file_filter = addons/website_rating_project_issue/i18n/<lang>.po
-source_file = addons/website_rating_project_issue/i18n/website_rating_project_issue.pot
+[odoo-master.website_rating]
+file_filter = addons/website_rating/i18n/<lang>.po
+source_file = addons/website_rating/i18n/website_rating.pot
 source_lang = en
 
 [odoo-master.website_sale]
@@ -950,6 +895,16 @@ source_lang = en
 [odoo-master.website_sale_digital]
 file_filter = addons/website_sale_digital/i18n/<lang>.po
 source_file = addons/website_sale_digital/i18n/website_sale_digital.pot
+source_lang = en
+
+[odoo-master.website_sale_link_tracker]
+file_filter = addons/website_sale_link_tracker/i18n/<lang>.po
+source_file = addons/website_sale_link_tracker/i18n/website_sale_link_tracker.pot
+source_lang = en
+
+[odoo-master.website_sale_management]
+file_filter = addons/website_sale_management/i18n/<lang>.po
+source_file = addons/website_sale_management/i18n/website_sale_management.pot
 source_lang = en
 
 [odoo-master.website_sale_options]

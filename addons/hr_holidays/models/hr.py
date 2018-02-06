@@ -23,22 +23,23 @@ class Department(models.Model):
 
     @api.multi
     def _compute_leave_count(self):
-        Holiday = self.env['hr.holidays']
+        Requests = self.env['hr.leave']
+        Allocations = self.env['hr.leave.allocation']
         today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
 
-        leave_data = Holiday.read_group(
+        leave_data = Requests.read_group(
             [('department_id', 'in', self.ids),
-             ('state', '=', 'confirm'), ('type', '=', 'remove')],
+             ('state', '=', 'confirm')],
             ['department_id'], ['department_id'])
-        allocation_data = Holiday.read_group(
+        allocation_data = Allocations.read_group(
             [('department_id', 'in', self.ids),
-             ('state', '=', 'confirm'), ('type', '=', 'add')],
+             ('state', '=', 'confirm')],
             ['department_id'], ['department_id'])
-        absence_data = Holiday.read_group(
+        absence_data = Requests.read_group(
             [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
-             ('date_from', '<=', today_end), ('date_to', '>=', today_start), ('type', '=', 'remove')],
+             ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
             ['department_id'], ['department_id'])
 
         res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
@@ -74,10 +75,10 @@ class Employee(models.Model):
             ('validate', 'Approved'),
             ('cancel', 'Cancelled')
         ])
-    current_leave_id = fields.Many2one('hr.holidays.status', compute='_compute_leave_status', string="Current Leave Type")
+    current_leave_id = fields.Many2one('hr.leave.type', compute='_compute_leave_status', string="Current Leave Type")
     leave_date_from = fields.Date('From Date', compute='_compute_leave_status')
     leave_date_to = fields.Date('To Date', compute='_compute_leave_status')
-    leaves_count = fields.Integer('Number of Leaves', compute='_compute_leaves_count')
+    leaves_count = fields.Float('Number of Leaves', compute='_compute_leaves_count')
     show_leaves = fields.Boolean('Able to see Remaining Leaves', compute='_compute_show_leaves')
     is_absent_totay = fields.Boolean('Absent Today', compute='_compute_absent_employee', search='_search_absent_employee')
 
@@ -90,8 +91,16 @@ class Employee(models.Model):
                 sum(h.number_of_days) AS days,
                 h.employee_id
             FROM
-                hr_holidays h
-                join hr_holidays_status s ON (s.id=h.holiday_status_id)
+                (
+                    SELECT holiday_status_id, number_of_days,
+                        state, employee_id
+                    FROM hr_leave_allocation
+                    UNION
+                    SELECT holiday_status_id, number_of_days,
+                        state, employee_id
+                    FROM hr_leave
+                ) h
+                join hr_leave_type s ON (s.id=h.holiday_status_id)
             WHERE
                 h.state='validate' AND
                 s.limit=False AND
@@ -107,7 +116,7 @@ class Employee(models.Model):
 
     @api.multi
     def _inverse_remaining_leaves(self):
-        status_list = self.env['hr.holidays.status'].search([('limit', '=', False)])
+        status_list = self.env['hr.leave.type'].search([('limit', '=', False)])
         # Create leaves (adding remaining leaves) or raise (reducing remaining leaves)
         actual_remaining = self._get_remaining_leaves()
         for employee in self.filtered(lambda employee: employee.remaining_leaves):
@@ -125,11 +134,10 @@ class Employee(models.Model):
             # if a status is found, then compute remaing leave for current employee
             difference = employee.remaining_leaves - actual_remaining.get(employee.id, 0)
             if difference > 0:
-                leave = self.env['hr.holidays'].create({
+                leave = self.env['hr.leave.allocation'].create({
                     'name': _('Allocation for %s') % employee.name,
                     'employee_id': employee.id,
                     'holiday_status_id': status.id,
-                    'type': 'add',
                     'holiday_type': 'employee',
                     'number_of_days_temp': difference
                 })
@@ -142,11 +150,10 @@ class Employee(models.Model):
     @api.multi
     def _compute_leave_status(self):
         # Used SUPERUSER_ID to forcefully get status of other user's leave, to bypass record rule
-        holidays = self.env['hr.holidays'].sudo().search([
+        holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', 'in', self.ids),
             ('date_from', '<=', fields.Datetime.now()),
             ('date_to', '>=', fields.Datetime.now()),
-            ('type', '=', 'remove'),
             ('state', 'not in', ('cancel', 'refuse'))
         ])
         leave_data = {}
@@ -165,12 +172,12 @@ class Employee(models.Model):
 
     @api.multi
     def _compute_leaves_count(self):
-        leaves = self.env['hr.holidays'].read_group([
+        all_leaves = self.env['hr.leave.report'].read_group([
             ('employee_id', 'in', self.ids),
             ('holiday_status_id.limit', '=', False),
             ('state', '=', 'validate')
         ], fields=['number_of_days', 'employee_id'], groupby=['employee_id'])
-        mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in leaves])
+        mapping = dict([(leave['employee_id'][0], leave['number_of_days']) for leave in all_leaves])
         for employee in self:
             employee.leaves_count = mapping.get(employee.id)
 
@@ -188,12 +195,11 @@ class Employee(models.Model):
         today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
-        data = self.env['hr.holidays'].read_group([
+        data = self.env['hr.leave'].read_group([
             ('employee_id', 'in', self.ids),
             ('state', 'not in', ['cancel', 'refuse']),
             ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start),
-            ('type', '=', 'remove')
+            ('date_to', '>=', today_start)
         ], ['employee_id'], ['employee_id'])
         result = dict.fromkeys(self.ids, False)
         for item in data:
@@ -207,11 +213,10 @@ class Employee(models.Model):
         today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
-        holidays = self.env['hr.holidays'].sudo().search([
+        holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
             ('state', 'not in', ['cancel', 'refuse']),
             ('date_from', '<=', today_end),
-            ('date_to', '>=', today_start),
-            ('type', '=', 'remove')
+            ('date_to', '>=', today_start)
         ])
         return [('id', 'in', holidays.mapped('employee_id').ids)]

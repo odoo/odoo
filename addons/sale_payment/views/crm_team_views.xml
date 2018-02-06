@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_team_salesteams_view_kanban_inherit_website_portal_sale" model="ir.ui.view"> 
+        <field name="name">crm.team.kanban</field>
+        <field name="model">crm.team</field>
+        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//t[@name='third_options']" position="after">
+                    <div class="row" t-if="record.pending_payment_transactions_count.raw_value">
+                        <div class="col-xs-8">
+                            <div>
+                                <a name="%(sale_payment.payment_transaction_action_pending)d" type="action">
+                                    <field name="pending_payment_transactions_count"/>
+                                    <t t-if="record.pending_payment_transactions_count.raw_value == 1">Awaiting Payment</t>
+                                    <t t-else="">Awaiting Payments</t>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <field name="pending_payment_transactions_amount" widget="monetary"/>
+                        </div>
+                    </div>
+                    <div class="row" t-if="record.authorized_payment_transactions_count.raw_value">
+                        <div class="col-xs-8">
+                            <a name="%(sale_payment.payment_transaction_action_authorized)d" type="action">
+                                <field name="authorized_payment_transactions_count"/>
+                                <t t-if="record.authorized_payment_transactions_count.raw_value == 1">Payment to Capture</t>
+                                <t t-else="">Payments to Capture</t>
+                            </a>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <field name="authorized_payment_transactions_amount" widget="monetary"/>
+                        </div>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

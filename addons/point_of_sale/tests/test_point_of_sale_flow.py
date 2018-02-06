@@ -3,11 +3,11 @@ import time
 
 import odoo
 from odoo import fields
-from odoo.tools import float_compare, mute_logger
+from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+
+@odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_register_open(self):
@@ -480,6 +480,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,
@@ -513,6 +514,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,
@@ -546,6 +548,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,

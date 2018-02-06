@@ -102,7 +102,7 @@ class test_ids_stuff(ImporterCase):
         self.assertEqual(len(result['ids']), 1)
         self.assertFalse(result['messages'])
         self.assertEqual(
-            'somexmlid',
+            '__import__.somexmlid',
             self.xid(self.browse()[0]))
 
     def test_update_with_id(self):
@@ -965,7 +965,7 @@ class test_o2m_multiple(ImporterCase):
 
 class test_realworld(common.TransactionCase):
     def test_bigfile(self):
-        data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json'))
+        data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json').decode('utf-8'))
         result = self.env['res.partner'].load(['name', 'mobile', 'email', 'image'], data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
@@ -973,7 +973,7 @@ class test_realworld(common.TransactionCase):
     def test_backlink(self):
         fnames = ["name", "type", "street", "city", "country_id", "category_id",
                   "supplier", "customer", "is_company", "parent_id"]
-        data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json'))
+        data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json').decode('utf-8'))
         result = self.env['res.partner'].load(fnames, data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))

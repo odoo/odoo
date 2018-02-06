@@ -41,7 +41,7 @@ class ChangeProductionQty(models.TransientModel):
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for wizard in self:
             production = wizard.mo_id
-            produced = sum(production.move_finished_ids.mapped('quantity_done'))
+            produced = sum(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).mapped('quantity_done'))
             if wizard.product_qty < produced:
                 raise UserError(_("You have already processed %d. Please input a quantity higher than %d ")%(produced, produced))
             production.write({'product_qty': wizard.product_qty})
@@ -57,8 +57,7 @@ class ChangeProductionQty(models.TransientModel):
                     operation_bom_qty[operation.id] = bom_data['qty']
             self._update_product_to_produce(production, production.product_qty - qty_produced)
             moves = production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
-            moves.do_unreserve()
-            moves.action_assign()
+            moves._action_assign()
             for wo in production.workorder_ids:
                 operation = wo.operation_id
                 if operation_bom_qty.get(operation.id):
@@ -73,7 +72,7 @@ class ChangeProductionQty(models.TransientModel):
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):
                     wo.final_lot_id = False
-                    wo.active_move_lot_ids.unlink()
+                    wo.active_move_line_ids.unlink()
                 wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
@@ -84,8 +83,8 @@ class ChangeProductionQty(models.TransientModel):
                 if wo == production.workorder_ids[-1]:
                     moves_raw |= production.move_raw_ids.filtered(lambda move: not move.operation_id)
                 moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
-                moves_raw.mapped('move_lot_ids').write({'workorder_id': wo.id})
+                moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
-                if quantity > 0 and wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_lot_ids:
+                if quantity > 0 and wo.move_raw_ids.filtered(lambda x: x.product_id.tracking != 'none') and not wo.active_move_line_ids:
                     wo._generate_lot_ids()
         return {}

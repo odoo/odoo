@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models
 from odoo.tools.translate import _, html_translate
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class TrackTag(models.Model):
@@ -13,7 +13,7 @@ class TrackTag(models.Model):
 
     name = fields.Char('Tag')
     track_ids = fields.Many2many('event.track', string='Tracks')
-    color = fields.Integer(string='Color Index', default=10)
+    color = fields.Integer(string='Color Index')
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists !"),
@@ -50,7 +50,6 @@ class Track(models.Model):
     _description = 'Event Track'
     _order = 'priority, date'
     _inherit = ['mail.thread', 'mail.activity.mixin', 'website.seo.metadata', 'website.published.mixin']
-    _mail_mass_mailing = _('Track Speakers')
 
     @api.model
     def _get_default_stage_id(self):
@@ -160,7 +159,7 @@ class Track(models.Model):
                 track._message_add_suggested_recipient(recipients, email=track.partner_email, reason=_('Speaker Email'))
         return recipients
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.partner_email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -172,7 +171,7 @@ class Track(models.Model):
                     ('partner_email', '=', new_partner.email),
                     ('stage_id.is_cancel', '=', False),
                 ]).write({'partner_id': new_partner.id})
-        return super(Track, self)._message_post_after_hook(message)
+        return super(Track, self)._message_post_after_hook(message, values, notif_layout)
 
     @api.multi
     def open_track_speakers_list(self):

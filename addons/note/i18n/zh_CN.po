@@ -5,13 +5,16 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,6 +97,11 @@ msgstr "默认折叠"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "未来活动"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "分组"
 
@@ -126,6 +134,12 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "逾期活动"
+
+#. module: note
+#: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "稍后"
@@ -176,11 +190,6 @@ msgid "Notes"
 msgstr "便签"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Overdue Activities"
-msgstr "逾期活动"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_user_id
 #: model:ir.model.fields,field_description:note.field_note_stage_user_id
 msgid "Owner"
@@ -200,7 +209,7 @@ msgstr "序号"
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "显示在今天之前的下一个行动日期的所有记录"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -250,6 +259,7 @@ msgstr "标签名已存在!"
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
 #: model:ir.ui.menu,name:note.notes_tag_menu
 #: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "标签"
@@ -260,6 +270,7 @@ msgid "This Week"
 msgstr "本周"
 
 #. module: note
+#: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "今日"
@@ -270,9 +281,9 @@ msgid "Today Activities"
 msgstr "今天的活动"
 
 #. module: note
-#: model:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Upcoming Activities (7 days)"
-msgstr ""
+#: model:note.stage,name:note.demo_note_stage_02
+msgid "Tomorrow"
+msgstr "明天"
 
 #. module: note
 #: model:ir.actions.act_window,help:note.action_note_note

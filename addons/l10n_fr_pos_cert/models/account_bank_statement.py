@@ -1,6 +1,8 @@
-from openerp import models, api
-from openerp.tools.translate import _
-from openerp.exceptions import UserError
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import models
+from odoo.tools.translate import _
+from odoo.exceptions import UserError
 
 
 class AccountBankStatement(models.Model):

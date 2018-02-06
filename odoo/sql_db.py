@@ -13,19 +13,13 @@ from functools import wraps
 import logging
 import time
 import uuid
-try:
-    from urllib import parse as urlparse
-except ImportError:
-    #pylint: disable=bad-python3-import
-    import urlparse
 
 import psycopg2
 import psycopg2.extras
 import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
-
-from .tools import pycompat
+from werkzeug import urls
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -54,6 +48,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 from . import tools
 from .tools.func import frame_codeinfo
+from .tools import pycompat
 
 from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
@@ -64,8 +59,8 @@ if pv(psycopg2.__version__) < pv('2.7'):
             raise ValueError("A string literal cannot contain NUL (0x00) characters.")
         return QuotedString(adapted)
 
-    psycopg2.extensions.register_adapter(str, adapt_string)
-    psycopg2.extensions.register_adapter(unicode, adapt_string)
+    for type_ in pycompat.string_types:
+        psycopg2.extensions.register_adapter(type_, adapt_string)
 
 from datetime import timedelta
 import threading
@@ -203,9 +198,9 @@ class Cursor(object):
         row = self._obj.fetchone()
         return row and self.__build_dict(row)
     def dictfetchmany(self, size):
-        return map(self.__build_dict, self._obj.fetchmany(size))
+        return [self.__build_dict(row) for row in self._obj.fetchmany(size)]
     def dictfetchall(self):
-        return map(self.__build_dict, self._obj.fetchall())
+        return [self.__build_dict(row) for row in self._obj.fetchall()]
 
     def __del__(self):
         if not self._closed and not self._cnx.closed:
@@ -486,7 +481,7 @@ class LazyCursor(object):
         if cr is None:
             from odoo import registry
             cr = self._cursor = registry(self.dbname).cursor()
-            for _ in pycompat.range(self._depth):
+            for _ in range(self._depth):
                 cr.__enter__()
         return getattr(cr, name)
 
@@ -646,15 +641,9 @@ class Connection(object):
     # serialized_cursor is deprecated - cursors are serialized by default
     serialized_cursor = cursor
 
-    def __nonzero__(self):
-        """Check if connection is possible"""
-        try:
-            _logger.info("__nonzero__() is deprecated. (It is too expensive to test a connection.)")
-            cr = self.cursor()
-            cr.close()
-            return True
-        except Exception:
-            return False
+    def __bool__(self):
+        raise NotImplementedError()
+    __nonzero__ = __bool__
 
 def connection_info_for(db_or_uri):
     """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)
@@ -669,7 +658,7 @@ def connection_info_for(db_or_uri):
     """
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
-        us = urlparse.urlsplit(db_or_uri)
+        us = urls.url_parse(db_or_uri)
         if len(us.path) > 1:
             db_name = us.path[1:]
         elif us.username:
@@ -679,7 +668,7 @@ def connection_info_for(db_or_uri):
         return db_name, {'dsn': db_or_uri}
 
     connection_info = {'database': db_or_uri}
-    for p in ('host', 'port', 'user', 'password'):
+    for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
         if cfg:
             connection_info[p] = cfg

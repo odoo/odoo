@@ -12,7 +12,6 @@ from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
 
-
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
     _description = 'Pay Slip'
@@ -204,7 +203,8 @@ class HrPayslip(models.Model):
                 'contract_id': contract.id,
             }
 
-            res += [attendances] + leaves.values()
+            res.append(attendances)
+            res.extend(leaves.values())
         return res
 
     @api.model
@@ -312,7 +312,10 @@ class HrPayslip(models.Model):
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
-        structure_ids = contracts.get_all_structures()
+        if len(contracts) == 1 and payslip.struct_id:
+            structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
+        else:
+            structure_ids = contracts.get_all_structures()
         #get the rules of the structure and thier children
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence
@@ -368,7 +371,7 @@ class HrPayslip(models.Model):
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
-        return [value for code, value in result_dict.items()]
+        return list(result_dict.values())
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
     # employee_id and contract_id could be browse records
@@ -379,9 +382,9 @@ class HrPayslip(models.Model):
             'value': {
                 'line_ids': [],
                 #delete old input lines
-                'input_line_ids': map(lambda x: (2, x,), self.input_line_ids.ids),
+                'input_line_ids': [(2, x,) for x in self.input_line_ids.ids],
                 #delete old worked days lines
-                'worked_days_line_ids': map(lambda x: (2, x,), self.worked_days_line_ids.ids),
+                'worked_days_line_ids': [(2, x,) for x in self.worked_days_line_ids.ids],
                 #'details_by_salary_head':[], TODO put me back
                 'name': '',
                 'contract_id': False,
@@ -440,6 +443,7 @@ class HrPayslip(models.Model):
         employee = self.employee_id
         date_from = self.date_from
         date_to = self.date_to
+        contract_ids = []
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         locale = self.env.context.get('lang') or 'en_US'

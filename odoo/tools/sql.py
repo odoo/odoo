@@ -21,11 +21,22 @@ _CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+def existing_tables(cr, tablenames):
+    """ Return the names of existing tables among ``tablenames``. """
+    query = """
+        SELECT c.relname
+          FROM pg_class c
+          JOIN pg_namespace n ON (n.oid = c.relnamespace)
+         WHERE c.relname IN %s
+           AND c.relkind IN ('r', 'v', 'm')
+           AND n.nspname = 'public'
+    """
+    cr.execute(query, [tuple(tablenames)])
+    return [row[0] for row in cr.fetchall()]
+
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
-    query = "SELECT 1 FROM pg_class WHERE relkind IN ('r', 'v', 'm') AND relname=%s"
-    cr.execute(query, (tablename,))
-    return cr.rowcount
+    return len(existing_tables(cr, {tablename})) == 1
 
 def table_kind(cr, tablename):
     """ Return the kind of a table: ``'r'`` (regular table), ``'v'`` (view),
@@ -46,7 +57,11 @@ def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
         a dict with the data from the table ``information_schema.columns``.
     """
-    query = 'SELECT * FROM information_schema.columns WHERE table_name=%s'
+    # Do not select the field `character_octet_length` from `information_schema.columns`
+    # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
+    # might prevent a postgres user to read this field.
+    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
+               FROM information_schema.columns WHERE table_name=%s'''
     cr.execute(query, (tablename,))
     return {row['column_name']: row for row in cr.dictfetchall()}
 

@@ -17,9 +17,9 @@
         <field name="groups_id" eval="[(4,ref('hr_holidays.group_hr_holidays_manager'))]"/>
     </record>
 
-    <record id="property_rule_holidays_employee" model="ir.rule">
-        <field name="name">Employee Holidays</field>
-        <field name="model_id" ref="model_hr_holidays"/>
+    <record id="property_rule_request_employee" model="ir.rule">
+        <field name="name">Employee Leaves</field>
+        <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_write" eval="False"/>
@@ -27,31 +27,56 @@
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="property_rule_holidays_employee_write" model="ir.rule">
-        <field name="name">Employee Holidays Create, Write, Unlink</field>
-        <field name="model_id" ref="model_hr_holidays"/>
+    <record id="property_rule_request_employee_write" model="ir.rule">
+        <field name="name">Employee Leaves Create, Write, Unlink</field>
+        <field name="model_id" ref="model_hr_leave"/>
         <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>
         <field name="perm_read" eval="False"/>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
-    <record id="property_rule_holidays_officer" model="ir.rule">
-        <field name="name">Holidays Officer</field>
-        <field name="model_id" ref="model_hr_holidays"/>
+    <record id="property_rule_request_officer" model="ir.rule">
+        <field name="name">Leaves Officer</field>
+        <field name="model_id" ref="model_hr_leave"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
+    </record>
+
+    <record id="property_rule_allocation_employee" model="ir.rule">
+        <field name="name">Employee Allocations</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
+        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="property_rule_allocation_employee_write" model="ir.rule">
+        <field name="name">Employee Allocations Create, Write, Unlink</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
+        <field name="domain_force">[('employee_id.user_id','=',user.id), ('state', 'in', ['draft', 'confirm', 'cancel', 'refuse'])]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="property_rule_allocation_officer" model="ir.rule">
+        <field name="name">Leaves Officer</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
     <record id="resource_leaves_officer" model="ir.rule">
-        <field name="name">Leaves Officer</field>
+        <field name="name">Leaves Resources Officer</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="domain_force">[(1,'=',1)]</field>
         <field name="groups" eval="[(4,ref('hr_holidays.group_hr_holidays_user'))]"/>
     </record>
 
     <record id="hr_holidays_status_rule_multi_company" model="ir.rule">
-        <field name="name">HR Holiday multi company rule</field>
-        <field name="model_id" ref="model_hr_holidays_status"/>
+        <field name="name">Leaves multi company rule</field>
+        <field name="model_id" ref="model_hr_leave_type"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','in',[user.company_id.id])]</field>
     </record>

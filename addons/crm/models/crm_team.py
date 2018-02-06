@@ -23,7 +23,7 @@ class Team(models.Model):
         string='Number of open opportunities', readonly=True)
     opportunities_amount = fields.Integer(
         compute='_compute_opportunities',
-        string='Amount of quotations to invoice', readonly=True)
+        string='Opportunities Revenues', readonly=True)
     dashboard_graph_model = fields.Selection(selection_add=[('crm.opportunity.report', 'Pipeline')])
     dashboard_graph_period_pipeline = fields.Selection([
         ('week', 'Within a Week'),
@@ -37,7 +37,7 @@ class Team(models.Model):
         ('month', 'Expected Closing Month'),
         ('user', 'Salesperson'),
         ('stage', 'Stage'),
-    ], string='Group by', default='day', help="How this channel's dashboard graph will group the results.")
+    ], string='Grouping Method', default='day', help="How this channel's dashboard graph will group the results.")
 
     def _compute_unassigned_leads_count(self):
         leads_data = self.env['crm.lead'].read_group([
@@ -120,13 +120,6 @@ class Team(models.Model):
         if not self.use_opportunities and self.dashboard_graph_model == 'crm.opportunity.report':
             raise ValidationError(_("Dashboard graph content cannot be Pipeline if the sales channel doesn't use it. (Pipeline is unchecked.)"))
 
-    @api.model
-    def create(self, vals):
-        generate_alias_name = self.env['ir.values'].get_default('sale.config.settings', 'generate_sales_team_alias')
-        if generate_alias_name and not vals.get('alias_name'):
-            vals['alias_name'] = vals.get('name')
-        return super(Team, self).create(vals)
-
     @api.multi
     def write(self, vals):
         result = super(Team, self).write(vals)
@@ -142,10 +135,10 @@ class Team(models.Model):
         user_team_id = self.env.user.sale_team_id.id
         if not user_team_id:
             user_team_id = self.search([], limit=1).id
-            action['help'] = """<p class='oe_view_nocontent_create'>Click here to add new opportunities</p><p>
+            action['help'] = _("""<p class='o_view_nocontent_smiling_face'>Add new opportunities</p><p>
     Looks like you are not a member of a sales channel. You should add yourself
     as a member of one of the sales channel.
-</p>"""
+</p>""")
             if user_team_id:
                 action['help'] += "<p>As you don't belong to any sales channel, Odoo opens the first one by default.</p>"
 

@@ -27,10 +27,10 @@ FormController.include({
             form_view: {
                 commands: {
                     'O-CMD.EDIT': this._barcodeEdit.bind(this),
-                    'O-CMD.CANCEL': this._barcodeDiscard.bind(this),
+                    'O-CMD.DISCARD': this._barcodeDiscard.bind(this),
                     'O-CMD.SAVE': this._barcodeSave.bind(this),
-                    'O-CMD.PAGER-PREV': this._barcodePagerPrevious.bind(this),
-                    'O-CMD.PAGER-NEXT': this._barcodePagerNext.bind(this),
+                    'O-CMD.PREV': this._barcodePagerPrevious.bind(this),
+                    'O-CMD.NEXT': this._barcodePagerNext.bind(this),
                     'O-CMD.PAGER-FIRST': this._barcodePagerFirst.bind(this),
                     'O-CMD.PAGER-LAST': this._barcodePagerLast.bind(this),
                 },
@@ -284,7 +284,7 @@ FormController.include({
                 // Handle the case where there are several barcode widgets on the same page. Since the
                 // event is global on the page, all barcode widgets will be triggered. However, we only
                 // want to keep the event on the target widget.
-                if (self.target && !$.contains(target, self.target.el)) {
+                if (! $.contains(target, self.el)) {
                     continue;
                 }
 
@@ -358,18 +358,20 @@ FormController.include({
                 });
             }}, {text: _t('Discard'), close: true}],
             $content: $content,
-        }).open();
-        // This line set the value of the key which triggered the _set_quantity in the input
-        var $input = this.dialog.$content.find('.o_set_qty_input').focus().val(character);
-
-        var $selectBtn = this.dialog.$footer.find('.btn-primary');
-        $input.on('keypress', function (event){
-            if (event.which === 13) {
-                event.preventDefault();
-                $input.off();
-                $selectBtn.click();
-            }
         });
+        this.dialog.opened().then(function () {
+            // This line set the value of the key which triggered the _set_quantity in the input
+            var $input = self.dialog.$('.o_set_qty_input').focus().val(character);
+            var $selectBtn = self.dialog.$footer.find('.btn-primary');
+            $input.on('keypress', function (event){
+                if (event.which === 13) {
+                    event.preventDefault();
+                    $input.off();
+                    $selectBtn.click();
+                }
+            });
+        });
+        this.dialog.open();
     },
 });
 

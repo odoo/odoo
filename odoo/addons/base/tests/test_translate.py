@@ -3,11 +3,15 @@
 
 import unittest
 
+from odoo.tools import pycompat
 from odoo.tools.translate import quote, unquote, xml_translate, html_translate
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, tagged
 
 
+@tagged('standard', 'at_install')
 class TranslationToolsTestCase(unittest.TestCase):
+    def assertItemsEqual(self, a, b, msg=None):
+        self.assertEqual(sorted(a), sorted(b), msg)
 
     def test_quote_unquote(self):
 
@@ -255,7 +259,7 @@ class TestTranslation(TransactionCase):
         category = self.customers.with_context({'lang': 'fr_FR'}).copy({'name': 'Clients (copie)'})
 
         category_no = category.with_context({})
-        self.assertEqual(category_no.name, 'Customers', "Duplication erased original untranslated value")
+        self.assertEqual(category_no.name, 'Clients (copie)', "Duplication should set untranslated value")
 
         category_fr = category.with_context({'lang': 'fr_FR'})
         self.assertEqual(category_fr.name, 'Clients (copie)', "Did not used default value for translated value")
@@ -290,7 +294,7 @@ class TestXMLTranslation(TransactionCase):
             'model': 'res.partner',
             'arch': archf % terms_en,
         })
-        for src, value in zip(terms_en, terms_fr):
+        for src, value in list(pycompat.izip(terms_en, terms_fr)):
             self.env['ir.translation'].create({
                 'type': 'model',
                 'name': 'ir.ui.view,arch_db',
@@ -330,7 +334,7 @@ class TestXMLTranslation(TransactionCase):
             'model': 'res.partner',
             'arch': archf % terms_en,
         })
-        for src, value in zip(terms_en, terms_fr):
+        for src, value in list(pycompat.izip(terms_en, terms_fr)):
             self.env['ir.translation'].create({
                 'type': 'model',
                 'name': 'ir.ui.view,arch_db',

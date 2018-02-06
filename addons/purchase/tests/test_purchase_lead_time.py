@@ -19,29 +19,29 @@ class TestPurchaseLeadTime(TestPurchase):
         company.write({'po_lead': 3.00})
 
         # Make procurement request from product_1's form view, create procurement and check it's state
-        procurement_product_1 = self._create_make_procurement(self.product_1, 15.00)
-        procurement_act_dict = procurement_product_1.make_procurement()
-        procurement = self.env['procurement.order'].browse(procurement_act_dict.get("res_id"))
-        self.assertEqual(procurement.state, 'running', 'Procurement should be in running state.')
+        date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
+        self._create_make_procurement(self.product_1, 15.00, date_planned=date_planned)
+        purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
+        
 
         # Confirm purchase order
-        procurement.purchase_id.button_confirm()
+        purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(procurement.date_planned) - timedelta(days=company.po_lead) - timedelta(days=self.product_1.seller_ids.delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=company.po_lead) - timedelta(days=self.product_1.seller_ids.delay)
         po_order_date = fields.Datetime.to_string(order_date)
-        self.assertEqual(procurement.purchase_id.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Purchase Lead Time - Delivery Lead Time.')
+        self.assertEqual(purchase.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Purchase Lead Time - Delivery Lead Time.')
 
         # Check scheduled date of purchase order
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
         po_schedule_date = fields.Datetime.to_string(schedule_date)
-        self.assertEqual(procurement.purchase_id.date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
+        self.assertEqual(purchase.date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
-        # check the picking crated or not
-        self.assertTrue(procurement.purchase_id.picking_ids, "Picking should be created.")
+        # check the picking created or not
+        self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
         # Check scheduled date of In Type shipment
-        self.assertEqual(procurement.purchase_id.picking_ids.min_date, po_schedule_date, 'Schedule date of In type shipment should be equal to: schedule date of purchase order.')
+        self.assertEqual(purchase.picking_ids.scheduled_date, po_schedule_date, 'Schedule date of In type shipment should be equal to: schedule date of purchase order.')
 
     def test_01_product_level_delay(self):
         """ To check schedule dates of multiple purchase order line of the same purchase order,
@@ -49,29 +49,27 @@ class TestPurchaseLeadTime(TestPurchase):
             and different Delivery Lead Time."""
 
         # Make procurement request from product_1's form view, create procurement and check it's state
-        procurement_product_1 = self._create_make_procurement(self.product_1, 10.00)
-        procurement_act_dict = procurement_product_1.make_procurement()
-        procurement_1 = self.env['procurement.order'].browse(procurement_act_dict.get("res_id"))
-        self.assertEqual(procurement_1.state, 'running', 'Procurement of product_1 should be in running state.')
+        date_planned1 = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
+        self._create_make_procurement(self.product_1, 10.00, date_planned=date_planned1)
+        purchase1 = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
 
         # Make procurement request from product_2's form view, create procurement and check it's state
-        procurement_product_2 = self._create_make_procurement(self.product_2, 5.00)
-        procurement_act_dict_2 = procurement_product_2.make_procurement()
-        procurement_2 = self.env['procurement.order'].browse(procurement_act_dict_2.get("res_id"))
-        self.assertEqual(procurement_2.state, 'running', 'Procurement of product_2 should be in running state.')
+        date_planned2 = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
+        self._create_make_procurement(self.product_2, 5.00, date_planned=date_planned2)
+        purchase2 = self.env['purchase.order.line'].search([('product_id', '=', self.product_2.id)], limit=1).order_id
 
         # Check purchase order is same or not
-        self.assertEqual(procurement_1.purchase_id, procurement_2.purchase_id, 'Purchase orders should be same for the two different product with same vendor.')
+        self.assertEqual(purchase1, purchase2, 'Purchase orders should be same for the two different product with same vendor.')
 
         # Confirm purchase order
-        procurement_2.purchase_id.button_confirm()
+        purchase1.button_confirm()
 
         # Check order date of purchase order
-        order_line_pro_1 = procurement_2.purchase_id.order_line.filtered(lambda r: r.product_id == self.product_1)
-        order_line_pro_2 = procurement_2.purchase_id.order_line.filtered(lambda r: r.product_id == self.product_2)
-        order_date = fields.Datetime.from_string(procurement_1.date_planned) - timedelta(days=self.product_1.seller_ids.delay)
+        order_line_pro_1 = purchase2.order_line.filtered(lambda r: r.product_id == self.product_1)
+        order_line_pro_2 = purchase2.order_line.filtered(lambda r: r.product_id == self.product_2)
+        order_date = fields.Datetime.from_string(date_planned1) - timedelta(days=self.product_1.seller_ids.delay)
         po_order_date = fields.Datetime.to_string(order_date)
-        self.assertEqual(procurement_2.purchase_id.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
+        self.assertEqual(purchase2.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
 
         # Check scheduled date of purchase order line for product_1
         schedule_date_1 = order_date + timedelta(days=self.product_1.seller_ids.delay)
@@ -85,13 +83,13 @@ class TestPurchaseLeadTime(TestPurchase):
 
         # Check scheduled date of purchase order
         po_schedule_date = min(schedule_date_line_1, schedule_date_line_2)
-        self.assertEqual(procurement_2.purchase_id.date_planned, po_schedule_date, 'Schedule date of purchase order should be minimum of schedule dates of purchase order lines.')
+        self.assertEqual(purchase2.date_planned, po_schedule_date, 'Schedule date of purchase order should be minimum of schedule dates of purchase order lines.')
 
-        # Check the picking crated or not
-        self.assertTrue(procurement_2.purchase_id.picking_ids, "Picking should be created.")
+        # Check the picking created or not
+        self.assertTrue(purchase2.picking_ids, "Picking should be created.")
 
         # Check scheduled date of In Type shipment
-        self.assertEqual(procurement_2.purchase_id.picking_ids.min_date, po_schedule_date, 'Schedule date of In type shipment should be same as schedule date of purchase order.')
+        self.assertEqual(purchase2.picking_ids.scheduled_date, po_schedule_date, 'Schedule date of In type shipment should be same as schedule date of purchase order.')
 
     def test_02_product_route_level_delays(self):
         """ In order to check dates, set product's Delivery Lead Time
@@ -104,45 +102,45 @@ class TestPurchaseLeadTime(TestPurchase):
         for push_rule in self.warehouse_1.reception_route_id.push_ids:
             push_rule.write({'delay': 2})
 
+        date_planned = fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))
         # Create procurement order of product_1
-        procurement = self.env['procurement.order'].create({
-            'product_id': self.product_1.id,
-            'product_qty': 5.000,
-            'name': 'Test scheduler for RFQ',
-            'product_uom': self.uom_unit.id,
-            'warehouse_id': self.warehouse_1.id,
-            'location_id': self.warehouse_1.lot_stock_id.id,
-            'date_planned': fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
-            'rule_id': self.warehouse_1.buy_pull_id.id
+        self.env['procurement.group'].run(self.product_1, 5.000, self.uom_unit, self.warehouse_1.lot_stock_id, 'Test scheduler for RFQ', '/', {
+            'warehouse_id': self.warehouse_1,
+            'date_planned': date_planned,  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+            'rule_id': self.warehouse_1.buy_pull_id,
+            'group_id': False,
+            'route_ids': [],
         })
 
         # Confirm purchase order
-        procurement.purchase_id.button_confirm()
+
+        purchase = self.env['purchase.order.line'].search([('product_id', '=', self.product_1.id)], limit=1).order_id
+        purchase.button_confirm()
 
         # Check order date of purchase order
-        order_date = fields.Datetime.from_string(procurement.date_planned) - timedelta(days=self.product_1.seller_ids.delay)
+        order_date = fields.Datetime.from_string(date_planned) - timedelta(days=self.product_1.seller_ids.delay)
         po_order_date = fields.Datetime.to_string(order_date)
-        self.assertEqual(procurement.purchase_id.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
+        self.assertEqual(purchase.date_order, po_order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
 
         # Check scheduled date of purchase order
         schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
         po_schedule_date = fields.Datetime.to_string(schedule_date)
-        self.assertEqual(procurement.date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
+        self.assertEqual(date_planned, po_schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # Check the picking crated or not
-        self.assertTrue(procurement.purchase_id.picking_ids, "Picking should be created.")
+        self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
         # Check scheduled date of In Type shipment
-        incomming_shipment = procurement.purchase_id.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.in_type_id and r.location_dest_id == self.warehouse_1.wh_input_stock_loc_id)
-        self.assertEqual(incomming_shipment.min_date, po_schedule_date, 'Schedule date of In type shipment should be same as schedule date of purchase order.')
+        incoming_shipment = purchase.picking_ids.filtered(lambda r: r.picking_type_id == self.warehouse_1.in_type_id and r.location_dest_id == self.warehouse_1.wh_input_stock_loc_id)
+        self.assertEqual(incoming_shipment.scheduled_date, po_schedule_date, 'Schedule date of In type shipment should be same as schedule date of purchase order.')
 
         # Check scheduled date of Internal Type shipment
-        incomming_shipment1 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
-        incomming_shipment1_date = schedule_date + timedelta(days=incomming_shipment1.move_lines[0].push_rule_id.delay)
-        incomming_shipment1_schedule_date = fields.Datetime.to_string(incomming_shipment1_date)
-        self.assertEqual(incomming_shipment1.min_date, incomming_shipment1_schedule_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
+        incoming_shipment1 = self.env['stock.picking'].search([('move_lines.product_id', 'in', (self.product_1.id, self.product_2.id)), ('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_input_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id)])
+        incoming_shipment1_date = schedule_date + timedelta(days=incoming_shipment1.move_lines[0].push_rule_id.delay)
+        incoming_shipment1_schedule_date = fields.Datetime.to_string(incoming_shipment1_date)
+        self.assertEqual(incoming_shipment1.scheduled_date, incoming_shipment1_schedule_date, 'Schedule date of Internal Type shipment for input stock location should be equal to: schedule date of purchase order + push rule delay.')
 
-        incomming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
-        incomming_shipment2_date = incomming_shipment1_date + timedelta(days=incomming_shipment2.move_lines[0].push_rule_id.delay)
-        incomming_shipment2_schedule_date = fields.Datetime.to_string(incomming_shipment2_date)
-        self.assertEqual(incomming_shipment2.min_date, incomming_shipment2_schedule_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
+        incoming_shipment2 = self.env['stock.picking'].search([('picking_type_id', '=', self.warehouse_1.int_type_id.id), ('location_id', '=', self.warehouse_1.wh_qc_stock_loc_id.id), ('location_dest_id', '=', self.warehouse_1.lot_stock_id.id)])
+        incoming_shipment2_date = incoming_shipment1_date + timedelta(days=incoming_shipment2.move_lines[0].push_rule_id.delay)
+        incoming_shipment2_schedule_date = fields.Datetime.to_string(incoming_shipment2_date)
+        self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_schedule_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')

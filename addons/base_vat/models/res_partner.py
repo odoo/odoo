@@ -116,7 +116,7 @@ class ResPartner(models.Model):
                 vat = country_code + vat
         return vat
 
-    @api.constrains('vat', 'commercial_partner_country_id')
+    @api.constrains('vat')
     def check_vat(self):
         if self.env.context.get('company_id'):
             company = self.env['res.company'].browse(self.env.context['company_id'])
@@ -182,7 +182,7 @@ class ResPartner(models.Model):
         match = self.__check_vat_ch_re2.match(vat)
         if match:
             # For new TVA numbers, do a mod11 check
-            num = filter(lambda s: s.isdigit(), match.group(1))        # get the digits only
+            num = [s for s in match.group(1) if s.isdigit()]        # get the digits only
             factor = (5, 4, 3, 2, 7, 6, 5, 4)
             csum = sum([int(num[i]) * factor[i] for i in range(8)])
             check = (11 - (csum % 11)) % 11
@@ -220,11 +220,11 @@ class ResPartner(models.Model):
 
     # Mexican VAT verification, contributed by Vauxoo
     # and Panos Christeas <p_christ@hol.gr>
-    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
-                                   r"[ \-_]?" \
-                                   r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
-                                   r"[ \-_]?" \
-                                   r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    __check_vat_mx_re = re.compile(br"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
+                                   br"[ \-_]?" \
+                                   br"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
+                                   br"[ \-_]?" \
+                                   br"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
 
     def check_vat_mx(self, vat):
         ''' Mexican VAT verification

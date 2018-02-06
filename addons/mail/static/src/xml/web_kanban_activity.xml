@@ -4,7 +4,7 @@
 <t t-name="mail.KanbanActivity">
     <div class="o_kanban_inline_block dropdown o_kanban_selection o_mail_activity">
         <a class="dropdown-toggle o_activity_btn" data-toggle="dropdown">
-            <span class="fa fa-chevron-circle-right fa-lg fa-fw"/>
+            <span class="fa fa-clock-o fa-lg fa-fw"/>
         </a>
         <ul class="dropdown-menu o_activity" role="menu">
         </ul>
@@ -22,7 +22,7 @@
         <span>No activities planned.</span>
     </li>
     <li t-if="!_.isEmpty(records)">
-        <ul class="o_activity_log">
+        <ul class="nav o_activity_log">
             <t t-foreach="_.keys(records)" t-as="key">
                 <t t-set="logs" t-value="records[key]" />
                 <li class="o_activity_label">
@@ -53,7 +53,9 @@
         </ul>
     </li>
     <li class="o_schedule_activity text-center">
-        <strong>Schedule an activity</strong>
+        <span class="btn btn-link btn-block">
+            <i class="fa fa-plus fa-fw" aria-hidden="true"></i><strong>Schedule an activity</strong>
+        </span>
     </li>
 </t>
 

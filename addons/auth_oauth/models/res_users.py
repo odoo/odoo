@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import werkzeug.urls
-import urlparse
-import urllib2
 import json
 
+import requests
+
 from odoo import api, fields, models
-from odoo.exceptions import AccessDenied
+from odoo.exceptions import AccessDenied, UserError
 from odoo.addons.auth_signup.models.res_users import SignupError
 
 from odoo.addons import base
-base.res.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
+base.models.res_users.USER_PRIVATE_FIELDS.append('oauth_access_token')
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -26,14 +25,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _auth_oauth_rpc(self, endpoint, access_token):
-        params = werkzeug.url_encode({'access_token': access_token})
-        if urlparse.urlparse(endpoint)[4]:
-            url = endpoint + '&' + params
-        else:
-            url = endpoint + '?' + params
-        f = urllib2.urlopen(url)
-        response = f.read()
-        return json.loads(response)
+        return requests.get(endpoint, params={'access_token': access_token}).json()
 
     @api.model
     def _auth_oauth_validate(self, provider, access_token):
@@ -90,7 +82,7 @@ class ResUsers(models.Model):
             try:
                 _, login, _ = self.signup(values, token)
                 return login
-            except SignupError:
+            except (SignupError, UserError):
                 raise access_denied_exception
 
     @api.model

@@ -1,13 +1,19 @@
 odoo.define('web.StandaloneFieldManagerMixin', function (require) {
 "use strict";
 
-/**
- * The StandaloneFieldManagerMixin is a mixin, designed to be used by a widget
- * that instanciates its own field widgets.
- */
 
 var FieldManagerMixin = require('web.FieldManagerMixin');
 
+/**
+ * The StandaloneFieldManagerMixin is a mixin, designed to be used by a widget
+ * that instanciates its own field widgets.
+ *
+ * @mixin
+ * @name StandaloneFieldManagerMixin
+ * @mixes FieldManagerMixin
+ * @property {Function} _confirmChange
+ * @property {Function} _registerWidget
+ */
 var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
 
     /**

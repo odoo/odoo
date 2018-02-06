@@ -2,6 +2,17 @@
 <odoo>
     <data>
 
+        <record id="view_move_form_inherit" model="ir.ui.view">
+            <field name="name">stock.move.form.inherit</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="action_get_account_moves" icon="fa-usd" class="oe_stat_button" string="Accounting Entries" type="object"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_inventory_form_inherit" model="ir.ui.view">
             <field name="name">stock.inventory.form.inherit</field>
             <field name="model">stock.inventory</field>
@@ -27,27 +38,17 @@
             </field>
         </record>
 
-        <record id="view_picking_inherit_form2" model="ir.ui.view">
-            <field name="name">stock.picking.form.inherit</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-                <field name="move_lines" position="attributes">
-                    <attribute name="context">{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'default_picking_type_id': picking_type_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id}</attribute>
-                </field>
-            </field>
-        </record>
-
         <record id="view_stock_return_picking_form_inherit_stock_account" model="ir.ui.view">
             <field name="name">stock.return.picking.stock.account.form</field>
             <field name="inherit_id" ref="stock.view_stock_return_picking_form"/>
             <field name="model">stock.return.picking</field>
             <field name="arch" type="xml">
-                <field name="quantity" position="after">
+                <xpath expr="//field[@name='product_return_moves']/tree" position="inside">
                     <field name="to_refund"/>
-                </field>
+                </xpath>
             </field>
         </record>
 
+        <menuitem id="menu_valuation" name="Inventory Valuation" parent="stock.menu_warehouse_report" sequence="110" action="stock_account.action_stock_account_valuation_report"/>
     </data>
 </odoo>

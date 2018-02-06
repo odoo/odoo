@@ -2,13 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from .common import TestAccountBudgetCommon
-from mock import patch
+try:
+    from unittest.mock import patch
+except ImportError:
+    from mock import patch
 
 from odoo.fields import Datetime
+from odoo.tests import tagged
 
 # ---------------------------------------------------------
 # Tests
 # ---------------------------------------------------------
+@tagged('post_install', '-at_install')
 class TestTheoreticalAmount(TestAccountBudgetCommon):
     def setUp(self):
         super(TestTheoreticalAmount, self).setUp()

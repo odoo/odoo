@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" inherit_id="sales_team.assets_backend" name="Sale backend assets">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale/static/src/js/sale.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Sale frontend assets">
+        <xpath expr="." position="inside">
+            <link rel='stylesheet' href='/sale/static/src/less/sale_portal.less'/>
+        </xpath>
+    </template>
+</odoo>

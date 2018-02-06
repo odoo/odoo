@@ -108,7 +108,7 @@ var UsernameWidget = PosBaseWidget.extend({
         });
     },
     get_name: function(){
-        var user = this.pos.cashier || this.pos.user;
+        var user = this.pos.get_cashier();
         if(user){
             return user.name;
         }else{
@@ -607,7 +607,6 @@ var Chrome = PosBaseWidget.extend({
         $(window).off();
         $('html').off();
         $('body').off();
-        this.$el.parent().off();
         // The above lines removed the bindings, but we really need them for the barcode
         BarcodeEvents.start();
     },

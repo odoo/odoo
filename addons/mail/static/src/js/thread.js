@@ -2,6 +2,8 @@ odoo.define('mail.ChatThread', function (require) {
 "use strict";
 
 var core = require('web.core');
+var time = require('web.time');
+var DocumentViewer = require('mail.DocumentViewer');
 var Widget = require('web.Widget');
 
 var QWeb = core.qweb;
@@ -30,6 +32,8 @@ var Thread = Widget.extend({
         "click img": "on_click_redirect",
         "click strong": "on_click_redirect",
         "click .o_thread_show_more": "on_click_show_more",
+        "click .o_attachment_download": "_onAttachmentDownload",
+        "click .o_attachment_view": "_onAttachmentView",
         "click .o_thread_message_needaction": function (event) {
             var message_id = $(event.currentTarget).data('message-id');
             this.trigger("mark_as_read", message_id);
@@ -63,9 +67,14 @@ var Thread = Widget.extend({
         },
     },
 
+    /**
+     * @override
+     * @param {widget} parent
+     * @param {Object} options
+     */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.options = _.defaults(options || {}, {
+        this.enabledOptions = _.defaults(options || {}, {
             display_order: ORDER.ASC,
             display_needactions: true,
             display_stars: true,
@@ -75,17 +84,37 @@ var Thread = Widget.extend({
             display_email_icon: true,
             display_reply_icon: false,
         });
+        this.disabledOptions = {
+            display_order: this.enabledOptions.display_order,
+            display_needactions: false,
+            display_stars: false,
+            display_document_link: false,
+            display_avatar: this.enabledOptions.display_avatar,
+            squash_close_messages: false,
+            display_email_icon: false,
+            display_reply_icon: false,
+        };
         this.expanded_msg_ids = [];
         this.selected_id = null;
     },
 
+    /**
+     * @param {Object[]} messages
+     * @param {Object} [options]
+     * @param {integer} [options.display_order=ORDER.ASC]
+     * @param {boolean} [options.display_load_more]
+     * @param {boolean} [options.isCreateMode]
+     * @param {boolean} [options.squash_close_messages]
+     */
     render: function (messages, options) {
         var self = this;
-        var msgs = _.map(messages, this._preprocess_message.bind(this));
-        if (this.options.display_order === ORDER.DESC) {
+        var msgs = _.map(messages, this._preprocessMessage.bind(this));
+
+        var modeOptions = options.isCreateMode ? this.disabledOptions : this.enabledOptions;
+        if (modeOptions.display_order === ORDER.DESC) {
             msgs.reverse();
         }
-        options = _.extend({}, this.options, options);
+        options = _.extend({}, modeOptions, options);
 
         // Hide avatar and info of a message if that message and the previous
         // one are both comments wrote by the same author at the same minute
@@ -108,9 +137,12 @@ var Thread = Widget.extend({
             messages: msgs,
             options: options,
             ORDER: ORDER,
+            date_format: time.getLangDatetimeFormat(),
         }));
 
-        _.each(msgs, function(msg) {
+        this.attachments = _.uniq(_.flatten(_.map(messages, 'attachment_ids')));
+
+        _.each(msgs, function (msg) {
             var $msg = self.$('.o_thread_message[data-message-id="'+ msg.id +'"]');
             $msg.find('.o_mail_timestamp').data('date', msg.date);
 
@@ -118,18 +150,18 @@ var Thread = Widget.extend({
         });
 
         if (!this.update_timestamps_interval) {
-            this.update_timestamps_interval = setInterval(function() {
+            this.update_timestamps_interval = setInterval(function () {
                 self.update_timestamps();
             }, 1000*60);
         }
     },
 
     /**
-     *  Modifies $element to add the 'read more/read less' functionality
-     *  All element nodes with "data-o-mail-quote" attribute are concerned.
-     *  All text nodes after a ""#stopSpelling" element are concerned.
-     *  Those text nodes need to be wrapped in a span (toggle functionality).
-     *  All consecutive elements are joined in one 'read more/read less'.
+     * Modifies $element to add the 'read more/read less' functionality
+     * All element nodes with "data-o-mail-quote" attribute are concerned.
+     * All text nodes after a ``#stopSpelling`` element are concerned.
+     * Those text nodes need to be wrapped in a span (toggle functionality).
+     * All consecutive elements are joined in one 'read more/read less'.
      */
     insert_read_more: function ($element) {
         var self = this;
@@ -140,17 +172,17 @@ var Thread = Widget.extend({
         // nodeType 1: element_node
         // nodeType 3: text_node
         var $children = $element.contents()
-            .filter(function() {
+            .filter(function () {
                 return this.nodeType === 1 || this.nodeType === 3 && this.nodeValue.trim();
             });
 
-        _.each($children, function(child) {
+        _.each($children, function (child) {
             var $child = $(child);
 
             // Hide Text nodes if "stopSpelling"
             if (child.nodeType === 3 && $child.prevAll("[id*='stopSpelling']").length > 0) {
                 // Convert Text nodes to Element nodes
-                var $child = $('<span>', {
+                $child = $('<span>', {
                     text: child.textContent,
                     "data-o-mail-quote": "1",
                 });
@@ -171,7 +203,7 @@ var Thread = Widget.extend({
             }
         });
 
-        _.each(groups, function(group) {
+        _.each(groups, function (group) {
             // Insert link just before the first node
             var $read_more = $('<a>', {
                 class: "o_mail_read_more",
@@ -181,7 +213,7 @@ var Thread = Widget.extend({
 
             // Toggle All next nodes
             var is_read_more = true;
-            $read_more.click(function(e) {
+            $read_more.click(function (e) {
                 e.preventDefault();
                 is_read_more = !is_read_more;
                 _.each(group, function ($child) {
@@ -193,10 +225,14 @@ var Thread = Widget.extend({
         });
     },
     update_timestamps: function () {
-        this.$('.o_mail_timestamp').each(function() {
+        var isAtBottom = this.is_at_bottom();
+        this.$('.o_mail_timestamp').each(function () {
             var date = $(this).data('date');
             $(this).html(time_from_now(date));
         });
+        if (isAtBottom && !this.is_at_bottom()) {
+            this.scroll_to();
+        }
     },
     on_click_redirect: function (event) {
         var id = $(event.target).data('oe-id');
@@ -208,40 +244,8 @@ var Thread = Widget.extend({
         }
     },
 
-    _redirect: _.debounce(function (options) {
-        if ('channel_id' in options) {
-            this.trigger('redirect_to_channel', options.channel_id);
-        } else {
-            this.trigger('redirect', options.model, options.id);
-        }
-    }, 200, true),
-
     on_click_show_more: function () {
         this.trigger('load_more_messages');
-    },
-
-    _preprocess_message: function (message) {
-        var msg = _.extend({}, message);
-
-        msg.date = moment.min(msg.date, moment());
-        msg.hour = time_from_now(msg.date);
-
-        var date = msg.date.format('YYYY-MM-DD');
-        if (date === moment().format('YYYY-MM-DD')) {
-            msg.day = _t("Today");
-        } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
-            msg.day = _t("Yesterday");
-        } else {
-            msg.day = msg.date.format('LL');
-        }
-
-        if (_.contains(this.expanded_msg_ids, message.id)) {
-            msg.expanded = true;
-        }
-
-        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
-        msg.is_selected = msg.id === this.selected_id;
-        return msg;
     },
 
     /**
@@ -295,6 +299,79 @@ var Thread = Widget.extend({
     },
     destroy: function () {
         clearInterval(this.update_timestamps_interval);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Object} message
+     * @param {integer} [message.id]
+     * @param {string} [message.model]
+     * @param {string} [message.subject]
+     * @param {string} [message.message_type]
+     */
+    _preprocessMessage: function (message) {
+        var msg = _.extend({}, message);
+
+        msg.date = moment.min(msg.date, moment());
+        msg.hour = time_from_now(msg.date);
+
+        var date = msg.date.format('YYYY-MM-DD');
+        if (date === moment().format('YYYY-MM-DD')) {
+            msg.day = _t("Today");
+        } else if (date === moment().subtract(1, 'days').format('YYYY-MM-DD')) {
+            msg.day = _t("Yesterday");
+        } else {
+            msg.day = msg.date.format('LL');
+        }
+
+        if (_.contains(this.expanded_msg_ids, message.id)) {
+            msg.expanded = true;
+        }
+
+        msg.display_subject = message.subject && message.message_type !== 'notification' && !(message.model && (message.model !== 'mail.channel'));
+        msg.is_selected = msg.id === this.selected_id;
+        return msg;
+    },
+    /**
+     * @private
+     * @param {Object} options
+     * @param {integer} [options.channel_id]
+     * @param {string} options.model
+     * @param {integer} options.id
+     */
+    _redirect: _.debounce(function (options) {
+        if ('channel_id' in options) {
+            this.trigger('redirect_to_channel', options.channel_id);
+        } else {
+            this.trigger('redirect', options.model, options.id);
+        }
+    }, 200, true),
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentDownload: function (event) {
+        event.stopPropagation();
+    },
+    /**
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onAttachmentView: function (event) {
+        var activeAttachmentID = $(event.currentTarget).data('id');
+        if (activeAttachmentID) {
+            var attachmentViewer = new DocumentViewer(this, this.attachments, activeAttachmentID);
+            attachmentViewer.appendTo($('body'));
+        }
     },
 });
 

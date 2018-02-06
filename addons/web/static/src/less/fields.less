@@ -33,7 +33,7 @@
     }
 
     // Block fields
-    &.note-editor, &.oe_form_field_html, &.oe_form_field_html_text, &.oe_form_field_text, &.o_view_manager_content, &.o_field_domain, &.o_graph_linechart, &.o_graph_barchart {
+    &.note-editor, &.oe_form_field_html, &.oe_form_field_html_text, &.oe_form_field_text, &.o_field_domain, &.o_graph_linechart, &.o_graph_barchart {
         display: block;
     }
 
@@ -91,18 +91,6 @@
         .o-flex-flow(row, wrap);
         .o-align-items(baseline);
 
-        .o_tag_color_0 { background-color: #4D4D4D; }
-        .o_tag_color_1 { background-color: #61BD4F; }
-        .o_tag_color_2 { background-color: #F2D600; }
-        .o_tag_color_3 { background-color: #FFAB4A; }
-        .o_tag_color_4 { background-color: #EB5A46; }
-        .o_tag_color_5 { background-color: #875A7B; }
-        .o_tag_color_6 { background-color: #0079BF; }
-        .o_tag_color_7 { background-color: #00C2E0; }
-        .o_tag_color_8 { background-color: #4CD98E; }
-        .o_tag_color_9 { background-color: #FF80CE; }
-        .o_tag_color_10 { background-color: #B6BBBF; }
-
         > .o_field_widget {
             .o-flex(1, 0, 100px);
             position: initial;
@@ -121,36 +109,75 @@
                 max-width: 200px;
             }
 
-            > ul {
-                @colored-tag-width: 45px;
-                width: 5*@colored-tag-width + 3px;
-                > li {
-                    float: left;
-                    color: black;
-                    > span {
-                        border-radius: 6px;
-                        width: @colored-tag-width;
-                        height: 30px;
-                        display: inline-block;
-                        border: 2px solid white;
-                        cursor: pointer;
-                        padding: 0;
+            // o-kanban-colorpicker without customizing
+            // '&:first-child > a::before' (transparent red-crossed colorpick)
+            .o-tag-colorpicker() {
+                @o-tag-colorpicker-padding-right: @odoo-dropdown-hpadding - 2 * @o-kanban-inner-hmargin;
 
-                        &:hover {
-                            opacity: 0.8;
+                max-width: 100%;
+                padding: 3px @o-tag-colorpicker-padding-right 3px @odoo-dropdown-hpadding;
+
+                > li {
+                    display: inline-block;
+                    margin: @o-kanban-inner-hmargin @o-kanban-inner-hmargin 0 0;
+                    border: 1px solid white;
+                    box-shadow: 0 0 0 1px @gray-lighter-dark;
+
+                    > a {
+                        display: block;
+
+                        &::after {
+                            content: "";
+                            display: block;
+                            width: 20px;
+                            height: 15px;
                         }
                     }
+
+                    &:last-of-type {
+                        box-shadow: 0 0 0 0px white; // remove grey border on hide in kanban
+                        color: @odoo-main-text-color;
+                    }
                 }
-                > li:last-child {
-                    margin-top: 7px;
-                    cursor: auto;
-                }
+            }
+
+            > .tagcolor_dropdown_menu {
+                min-width: 150px; // down from 160px of .dropdown-menu
+                margin-right: 0px; // cancel right margin of .dropdown-menu
+            }
+
+            > .o_colorpicker > ul {
+                .o-tag-colorpicker();
+                white-space: normal;
             }
 
             .o_delete {
                 cursor: pointer;
             }
         }
+
+        .o-tag-color(@size: 0) when (@size = 0) {
+            .o_tag_color_@{size} {
+                & {
+                    background-color: white;
+                    color: ~"@{odoo-color-@{size}}";
+                    box-shadow: inset 0 0 0 2px ~"@{odoo-color-@{size}}";
+                }
+                &::after {
+                    background-color: ~"@{odoo-color-@{size}}";
+                }
+            }
+            .o-tag-color(@size + 1);
+        }
+        .o-tag-color(@size: 0) when (@size > 0) and (@size < @odoo-nb-ui-color) {
+            .o_tag_color_@{size} {
+                &, &::after {
+                    background-color: ~"@{odoo-color-@{size}}";
+                }
+            }
+            .o-tag-color(@size + 1);
+        }
+        .o-tag-color();
     }
 
     // Stars
@@ -177,6 +204,22 @@
             &.fa-star {
                 color: gold;
             }
+        }
+    }
+
+    // Favorite
+    &.o_favorite {
+        i.fa {
+            font-size: 16px;
+        }
+        i.fa-star-o {
+            color: @odoo-main-color-muted;
+            &:hover {
+                color: gold;
+            }
+        }
+        i.fa-star {
+            color: gold;
         }
     }
 
@@ -230,6 +273,8 @@
 
         > .o_pie {
             position: relative;
+            display: inline-block;
+            vertical-align: middle;
             margin-right: 10px;
             border-radius: 100%;
             overflow: hidden;

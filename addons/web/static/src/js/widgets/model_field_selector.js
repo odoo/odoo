@@ -200,10 +200,11 @@ var ModelFieldSelector = Widget.extend({
                     args: [
                         false,
                         ["store", "searchable", "type", "string", "relation", "selection", "related"]
-                    ]
+                    ],
+                    context: this.getSession().user_context,
                 })
                 .then((function (fields) {
-                    modelFieldsCache.cache[model] = sortFields(fields);
+                    modelFieldsCache.cache[model] = sortFields(fields, model);
                 }).bind(this));
         }
         return def.then((function () {
@@ -256,7 +257,7 @@ var ModelFieldSelector = Widget.extend({
 
         if (this.dirty) {
             this.dirty = false;
-            this.pages = this.pages.slice(0, this.chain.length);
+            this.pages = this.pages.slice(0, this.chain.length || 1);
             this.trigger_up("field_chain_changed", {chain: this.chain});
         }
     },
@@ -298,7 +299,7 @@ var ModelFieldSelector = Widget.extend({
     _pushPageData: function (model) {
         var def;
         if (this.model === model && this.options.fields) {
-            def = $.when(sortFields(this.options.fields));
+            def = $.when(sortFields(this.options.fields, model));
         } else {
             def = this._getModelFieldsFromCache(model, this.options.filters);
         }
@@ -538,14 +539,21 @@ return ModelFieldSelector;
  * the final array contain an additional key "name" with the field name.
  *
  * @param {Object} fields - the mapping field name -> field info
+ * @param {string} model
  * @returns {Object[]} the field infos sorted by field "string" (field infos
- *                     contain an additional key "name" with the field name)
+ *                     contain additional keys "model" and "name" with the field
+ *                     name)
  */
-function sortFields(fields) {
+function sortFields(fields, model) {
     return _.chain(fields)
         .pairs()
         .sortBy(function (p) { return p[1].string; })
-        .map(function (p) { return _.extend({name: p[0]}, p[1]); })
+        .map(function (p) {
+            return _.extend({
+                name: p[0],
+                model: model,
+            }, p[1]);
+        })
         .value();
 }
 });
