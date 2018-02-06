@@ -635,19 +635,15 @@ table.table_desc tr td {
     position: relative;
     z-index: 0;
 
-    .oe_structure {
-        > :first-child {
-            margin-top: 32px;
-        }
-        > :last-child {
-            margin-bottom: 32px;
-        }
+    .s_parallax_content {
+        position: relative;
     }
 
     > .s_parallax_bg {
         .o-position-absolute(0, 0, 0, 0);
         background-size: cover;
         background-attachment: scroll;
+        background-position: 50% 50%;
         pointer-events: none;
     }
     &.s_parallax_is_fixed > .s_parallax_bg {

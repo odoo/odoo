@@ -711,9 +711,19 @@
 </template>
 
 <template id="s_parallax" name="Parallax">
-    <section class="parallax s_parallax oe_img_bg pt96 pb96"
-        style="background-image: url(/web/image/website.s_background_image_04);"
-        data-scroll-background-ratio="1.6"><div class="oe_structure"/></section>
+    <section class="parallax s_parallax oe_img_bg" style="background-image: url(/web/image/website.s_parallax_default_image);" data-scroll-background-ratio="1">
+        <div class="oe_structure s_parallax_content bg-black-50">
+            <section class="s_title pt160 pb160">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center pt48 pb48">
+                            <h1 class="s_title_boxed" style="font-size: 48px;">Your Website Title</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
 </template>
 
 <template id="s_quotes_slider" name="Quotes Slider">
@@ -960,6 +970,19 @@
         data-palette-title="Overlay Color">
         <li class="dropdown-submenu">
             <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Overlay color</a>
+            <ul class="dropdown-menu">
+                <li></li>
+            </ul>
+        </li>
+    </div>
+
+    <div data-js="colorpicker"
+        data-selector=".s_parallax" data-target=".s_parallax_content"
+        data-palette-exclude="grayscale, theme, ui"
+        data-palette-default="transparent_grayscale"
+        data-palette-title="Background Color">
+        <li class="dropdown-submenu">
+            <a tabindex="-1" href="#"><i class="fa fa-eyedropper"/>Background Filter</a>
             <ul class="dropdown-menu">
                 <li></li>
             </ul>
