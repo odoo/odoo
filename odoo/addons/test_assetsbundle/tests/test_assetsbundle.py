@@ -332,22 +332,21 @@ class TestAssetsBundleInBrowser(HttpCase):
     def test_02_js_interpretation_inline(self):
         """ Checks that the javascript of a bundle is correctly interpretet when mixed with inline.
         """
-        with self.registry.cursor() as test_cursor:
-            view_arch = """
-            <data>
-                <xpath expr="." position="inside">
-                    <script type="text/javascript">
-                        var d = 4;
-                    </script>
-                </xpath>
-            </data>
-            """
-            self.env(cr=test_cursor)['ir.ui.view'].create({
-                'name': 'test bundle inheritance inline js',
-                'type': 'qweb',
-                'arch': view_arch,
-                'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
-            })
+        view_arch = """
+        <data>
+            <xpath expr="." position="inside">
+                <script type="text/javascript">
+                    var d = 4;
+                </script>
+            </xpath>
+        </data>
+        """
+        self.env['ir.ui.view'].create({
+            'name': 'test bundle inheritance inline js',
+            'type': 'qweb',
+            'arch': view_arch,
+            'inherit_id': self.browse_ref('test_assetsbundle.bundle1').id,
+        })
 
         self.phantom_js(
             "/test_assetsbundle/js",

@@ -15,6 +15,7 @@ import threading
 
 import odoo
 from .. import SUPERUSER_ID
+from odoo.sql_db import TestCursor
 from odoo.tools import (assertion_report, config, existing_tables,
                         lazy_classproperty, lazy_property, table_exists,
                         topological_sort, OrderedSet)
@@ -123,8 +124,9 @@ class Registry(Mapping):
         self.db_name = db_name
         self._db = odoo.sql_db.db_connect(db_name)
 
-        # special cursor for test mode; None means "normal" mode
+        # cursor for test mode; None means "normal" mode
         self.test_cr = None
+        self.test_lock = None
 
         # Indicates that the registry is
         self.loaded = False             # whether all modules are loaded
@@ -443,10 +445,11 @@ class Registry(Mapping):
         """ Test whether the registry is in 'test' mode. """
         return self.test_cr is not None
 
-    def enter_test_mode(self):
+    def enter_test_mode(self, cr):
         """ Enter the 'test' mode, where one cursor serves several requests. """
         assert self.test_cr is None
-        self.test_cr = self._db.test_cursor()
+        self.test_cr = cr
+        self.test_lock = threading.RLock()
         assert Registry._saved_lock is None
         Registry._saved_lock = Registry._lock
         Registry._lock = DummyRLock()
@@ -454,9 +457,8 @@ class Registry(Mapping):
     def leave_test_mode(self):
         """ Leave the test mode. """
         assert self.test_cr is not None
-        self.clear_caches()
-        self.test_cr.force_close()
         self.test_cr = None
+        self.test_lock = None
         assert Registry._saved_lock is not None
         Registry._lock = Registry._saved_lock
         Registry._saved_lock = None
@@ -465,14 +467,10 @@ class Registry(Mapping):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
-        cr = self.test_cr
-        if cr is not None:
-            # While in test mode, we use one special cursor across requests. The
-            # test cursor uses a reentrant lock to serialize accesses. The lock
-            # is granted here by cursor(), and automatically released by the
-            # cursor itself in its method close().
-            cr.acquire()
-            return cr
+        if self.test_cr is not None:
+            # When in test mode, we use a proxy object that uses 'self.test_cr'
+            # underneath.
+            return TestCursor(self.test_cr, self.test_lock)
         return self._db.cursor()
 
 

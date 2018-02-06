@@ -242,7 +242,7 @@ class TestCustomFields(common.TransactionCase):
         super(TestCustomFields, self).setUp()
 
         # use a test cursor instead of a real cursor
-        self.registry.enter_test_mode()
+        self.registry.enter_test_mode(self.cr)
         self.addCleanup(self.registry.leave_test_mode)
 
         # do not reload the registry after removing a field
