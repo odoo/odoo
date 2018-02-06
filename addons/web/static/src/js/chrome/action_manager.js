@@ -385,7 +385,7 @@ var ActionManager = Widget.extend({
         if (widget.need_control_panel) {
             // set the ControlPanel bus on the controller to allow it to
             // communicate its status
-            widget.set_cp_bus(new Bus());
+            widget.set_cp_bus(new Bus(widget));
         }
 
         return this._startController(controller).then(function (controller) {
