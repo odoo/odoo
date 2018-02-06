@@ -1293,6 +1293,45 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('correctly uses pivot_row_groupby key with default groupBy from the context', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.amount = {string: "Amount", type: "float"};
+
+        var pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="customer" type="col"/>' +
+                        '<field name="date" interval="day" type="row"/>' +
+                '</pivot>',
+            groupBy: ['customer'],
+            viewOptions: {
+                context: {
+                    pivot_row_groupby: ['product_id'],
+                },
+            },
+        });
+
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            "column: should have one opened header");
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(First)').length, 1,
+            "column: should display one closed header with 'First'");
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(Second)').length, 1,
+            "column: should display one closed header with 'Second'");
+
+        // With pivot_row_groupby, groupBy customer should replace and eventually display product_id
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            "row: should have one opened header");
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xphone)').length, 1,
+            "row: should display one closed header with 'xphone'");
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xpad)').length, 1,
+            "row: should display one closed header with 'xpad'");
+
+        pivot.destroy();
+    });
+
     QUnit.test('pivot still handles __count__ measure', async function (assert) {
         // for retro-compatibility reasons, the pivot view still handles
         // '__count__' measure.
