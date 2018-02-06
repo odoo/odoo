@@ -16,7 +16,7 @@ tour.register("banner", {
     extra_trigger: ".homepage",
     position: "bottom",
 }, {
-    trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+    trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail:eq(3)",
     content: _t("Drag the <i>Cover</i> block and drop it in your page."),
     position: "bottom",
     run: "drag_and_drop",
@@ -32,7 +32,7 @@ tour.register("banner", {
     content: _t("Customize any block through this menu. Try to change the background of the banner."),
     position: "bottom",
 }, {
-    trigger: "#snippet_structure .oe_snippet:eq(9) .oe_snippet_thumbnail",
+    trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail:eq(9)",
     content: _t("Drag another block in your page, below the cover."),
     position: "bottom",
     run: "drag_and_drop",
