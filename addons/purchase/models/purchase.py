@@ -980,7 +980,7 @@ class ProcurementRule(models.Model):
                     })
                     break
         if not po_line:
-            vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, supplier)
+            vals = self._prepare_purchase_order_line(product_id, product_qty, product_uom, values, po, partner)
             self.env['purchase.order.line'].create(vals)
 
     def _get_purchase_schedule_date(self, values):
@@ -1002,10 +1002,10 @@ class ProcurementRule(models.Model):
         return schedule_date - relativedelta(days=int(seller.delay))
 
     @api.multi
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, supplier):
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, values, po, partner):
         procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
         seller = product_id._select_seller(
-            partner_id=supplier.name,
+            partner_id=partner,
             quantity=procurement_uom_po_qty,
             date=po.date_order and po.date_order[:10],
             uom_id=product_id.uom_po_id)
@@ -1021,8 +1021,8 @@ class ProcurementRule(models.Model):
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
         product_lang = product_id.with_context({
-            'lang': supplier.name.lang,
-            'partner_id': supplier.name.id,
+            'lang': partner.lang,
+            'partner_id': partner.id,
         })
         name = product_lang.display_name
         if product_lang.description_purchase:
