@@ -3,8 +3,7 @@
 
 import logging
 import time
-from os import listdir
-from os.path import join
+from os import listdir, path
 from Queue import Queue, Empty
 from select import select
 from threading import Thread, Lock
@@ -121,18 +120,18 @@ class Scanner(Thread):
             if not evdev:
                 return []
 
-            if not os.path.isdir(self.input_dir):
+            if not path.isdir(self.input_dir):
                 return []
 
             new_devices = [device for device in listdir(self.input_dir)
-                           if join(self.input_dir, device) not in [dev.evdev.fn for dev in self.open_devices]]
+                           if path.join(self.input_dir, device) not in [dev.evdev.fn for dev in self.open_devices]]
             scanners = [device for device in new_devices
                         if (('kbd' in device) and ('keyboard' not in device.lower()))
                         or ('barcode' in device.lower()) or ('scanner' in device.lower())]
 
             for device in scanners:
-                _logger.debug('opening device %s', join(self.input_dir,device))
-                self.open_devices.append(ScannerDevice(join(self.input_dir,device)))
+                _logger.debug('opening device %s', path.join(self.input_dir,device))
+                self.open_devices.append(ScannerDevice(path.join(self.input_dir,device)))
 
             if self.open_devices:
                 self.set_status('connected','Connected to '+ str([dev.evdev.name for dev in self.open_devices]))
