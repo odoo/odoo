@@ -928,7 +928,7 @@ class ProcurementRule(models.Model):
         seller = product_id._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
-            date=po.date_order and po.date_order[:10],
+            date=line.order_id.date_order and line.order_id.date_order[:10],
             uom_id=product_id.uom_po_id)
 
         price_unit = self.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, values['company_id']) if seller else 0.0
@@ -936,7 +936,7 @@ class ProcurementRule(models.Model):
             price_unit = seller.currency_id.compute(price_unit, po.currency_id)
 
         return {
-            'product_qty': product_qty,
+            'product_qty': line.product_qty + procurement_uom_po_qty,
             'price_unit': price_unit,
             'move_dest_ids': [(4, x.id) for x in values.get('move_dest_ids', [])]
         }
