@@ -136,19 +136,22 @@
                     <notebook>
                         <page name="settings" string="Settings">
                             <group>
-                                <field name="user_id" string="Project Manager"
-                                        attrs="{'readonly':[('active','=',False)]}"/>
-                                <field name="privacy_visibility" widget="radio"/>
-                                <field name="partner_id" string="Customer"/>
-                                <label for="rating_status" groups="project.group_project_rating"/>
-                                <div groups="project.group_project_rating">
-                                    <field name="rating_status" widget="radio"/>
-                                    <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
-                                        Edit project's stages and set an email template on the stages on which you want to activate the rating.
-                                    </p>
-                                </div>
-                                <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
-                                <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
+                                <group>
+                                    <field name="user_id" string="Project Manager" attrs="{'readonly':[('active','=',False)]}"/>
+                                    <field name="privacy_visibility" widget="radio"/>
+                                </group>
+                                <group>
+                                    <field name="partner_id" string="Customer"/>
+                                    <label for="rating_status" groups="project.group_project_rating"/>
+                                    <div groups="project.group_project_rating">
+                                        <field name="rating_status" widget="radio"/>
+                                        <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                                            Edit project's stages and set an email template on the stages on which you want to activate the rating.
+                                        </p>
+                                    </div>
+                                    <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
+                                    <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
+                                </group>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one">
