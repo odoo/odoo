@@ -14,6 +14,7 @@ var FormController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
+        do_action: '_onDoAction',
         freeze_order: '_onFreezeOrder',
         open_one2many_record: '_onOpenOne2ManyRecord',
         open_record: '_onOpenRecord',
@@ -433,6 +434,26 @@ var FormController = BasicController.extend({
      */
     _onDiscard: function () {
         this._discardChanges();
+    },
+    /**
+     * Destroy subdialog widgets after an action is finished.
+     *
+     * @param {OdooEvent} event
+     * @private
+     */
+    _onDoAction: function (event) {
+        var self=this;
+        // A priori, different widgets could write on the "on_success" key. 
+        // Below we ensure that all the actions required by those widgets
+        // are executed in a suitable order before every cycle of destruction.
+        var callback = event.data.on_success || function () {};
+        event.data.on_success = function () { 
+            callback();
+            function isDialog (widget) {
+                return (widget instanceof Dialog);
+            }
+            _.invoke(self.getChildren().filter(isDialog), 'destroy');
+        };
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the sidebar
