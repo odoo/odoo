@@ -43,7 +43,7 @@ class TestSafeEval(unittest.TestCase):
     @mute_logger('odoo.tools.safe_eval')
     def test_05_safe_eval_forbiddon(self):
         """ Try forbidden expressions in safe_eval to verify they are not allowed (open) """
-        with self.assertRaises(ValueError):
+        with self.assertRaises(NameError):
             safe_eval('open("/etc/passwd","r")')
 
 

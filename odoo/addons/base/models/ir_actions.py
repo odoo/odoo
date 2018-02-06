@@ -329,8 +329,7 @@ class IrActionsServer(models.Model):
     DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment on which the action is triggered
 #  - model: Odoo Model of the record on which the action is triggered; is a void recordset
-#  - record: record on which the action is triggered; may be be void
-#  - records: recordset of all records on which the action is triggered in multi-mode; may be void
+#  - self: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - Warning: Warning Exception to use with raise
@@ -422,7 +421,11 @@ class IrActionsServer(models.Model):
 
     @api.model
     def run_action_code_multi(self, action, eval_context=None):
-        safe_eval(action.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        ctx = {'fname': 'server_action_' + str(action.id),
+               'filestore': tools.config.filestore(self._cr.dbname)}
+        safe_eval(action.sudo().code.strip(), eval_context, mode="exec",
+                  # nocopy allows to return 'action'
+                  nocopy=True, context=ctx)
         if 'action' in eval_context:
             return eval_context['action']
 
@@ -498,14 +501,16 @@ class IrActionsServer(models.Model):
         eval_context = super(IrActionsServer, self)._get_eval_context(action=action)
         model_name = action.model_id.sudo().model
         model = self.env[model_name]
-        record = None
-        records = None
-        if self._context.get('active_model') == model_name and self._context.get('active_id'):
-            record = model.browse(self._context['active_id'])
-        if self._context.get('active_model') == model_name and self._context.get('active_ids'):
-            records = model.browse(self._context['active_ids'])
+        records = model
+
+        if self._context.get('active_model') == model_name:
+            if self._context.get('active_id'):
+                records = model.browse(self._context['active_id'])
+            if self._context.get('active_ids'):
+                records = model.browse(self._context['active_ids'])
         if self._context.get('onchange_self'):
-            record = self._context['onchange_self']
+            records |= self._context['onchange_self']
+
         eval_context.update({
             # orm
             'env': self.env,
@@ -513,8 +518,9 @@ class IrActionsServer(models.Model):
             # Exceptions
             'Warning': odoo.exceptions.Warning,
             # record
-            'record': record,
-            'records': records,
+            'record': records, # backwards compatibility
+            'records': records, # backwards compatibility
+            'self': records,
             # helpers
             'log': log,
         })

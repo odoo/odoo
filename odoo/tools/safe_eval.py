@@ -20,13 +20,13 @@ from opcode import HAVE_ARGUMENT, opmap, opname
 import functools
 from psycopg2 import OperationalError
 from types import CodeType
+from tempfile import NamedTemporaryFile
 import logging
 import sys
 import werkzeug
 
 from . import pycompat
 from .misc import ustr
-from . import pycompat
 
 import odoo
 
@@ -190,7 +190,7 @@ def assert_valid_codeobj(allowed_codes, code_obj, expr):
         if isinstance(const, CodeType):
             assert_valid_codeobj(allowed_codes, const, 'lambda')
 
-def test_expr(expr, allowed_codes, mode="eval"):
+def test_expr(expr, allowed_codes, mode="eval", fname=""):
     """test_expr(expression, allowed_codes[, mode]) -> code_object
 
     Test that the expression contains only the allowed opcodes.
@@ -202,7 +202,7 @@ def test_expr(expr, allowed_codes, mode="eval"):
         if mode == 'eval':
             # eval() does not like leading/trailing whitespace
             expr = expr.strip()
-        code_obj = compile(expr, "", mode)
+        code_obj = compile(expr, fname, mode)
     except (SyntaxError, TypeError, ValueError):
         raise
     except Exception as e:
@@ -301,8 +301,12 @@ _BUILTINS = {
     'zip': zip,
     'Exception': Exception,
 }
-def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False, locals_builtins=False):
-    """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
+
+
+def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval",
+              nocopy=False, locals_builtins=False, context={}):
+    """
+    safe_eval(expression[, globals[, locals[, mode[, nocopy[, builtins[, context]]]]]])
 
     System-restricted Python expression evaluation
 
@@ -343,32 +347,26 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         if locals_dict is None:
             locals_dict = {}
         locals_dict.update(_BUILTINS)
-    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
+
+    # In order to debug code inside an eval/exec, the code must be in a file
+    # this also provides a stack frame if an exception is raised
+    if context.get('fname') and context.get('filestore'):
+        f = NamedTemporaryFile('w+', suffix='_%s.py' % context['fname'],
+                               dir=context['filestore'])
+    else:
+        f = NamedTemporaryFile('w+', suffix='_undefined', dir='/tmp')
+    f.write(pycompat.to_text(expr))
+    f.seek(0)
+
     try:
+        c = test_expr(expr, _SAFE_OPCODES, mode=mode, fname=f.name)
         return unsafe_eval(c, globals_dict, locals_dict)
-    except odoo.exceptions.except_orm:
+    except Exception:
         raise
-    except odoo.exceptions.Warning:
-        raise
-    except odoo.exceptions.RedirectWarning:
-        raise
-    except odoo.exceptions.AccessDenied:
-        raise
-    except odoo.exceptions.AccessError:
-        raise
-    except werkzeug.exceptions.HTTPException:
-        raise
-    except odoo.http.AuthenticationError:
-        raise
-    except OperationalError:
-        # Do not hide PostgreSQL low-level exceptions, to let the auto-replay
-        # of serialized transactions work its magic
-        raise
-    except odoo.exceptions.MissingError:
-        raise
-    except Exception as e:
-        exc_info = sys.exc_info()
-        pycompat.reraise(ValueError, ValueError('%s: "%s" while evaluating\n%r' % (ustr(type(e)), ustr(e), expr)), exc_info[2])
+    finally:
+        f.close()
+
+
 def test_python_expr(expr, mode="eval"):
     try:
         test_expr(expr, _SAFE_OPCODES, mode=mode)
