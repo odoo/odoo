@@ -756,6 +756,28 @@ class StockMove(TransactionCase):
         self.assertEqual(customer_quants.quantity, 30)
         self.assertEqual(customer_quants.reserved_quantity, 0)
 
+    def test_availability_5(self):
+        """ Check that rerun action assign only create new stock move
+        lines instead of adding quantity in existing one.
+        """
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 2.0)
+        # move from shelf1
+        move = self.env['stock.move'].create({
+            'name': 'test_edit_moveline_1',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 4.0,
+        })
+        move._action_confirm()
+        move._action_assign()
+
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 4.0)
+        move._action_assign()
+
+        self.assertEqual(len(move.move_line_ids), 4.0)
+
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and
         set the state back to confirmed.
