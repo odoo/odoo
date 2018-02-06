@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="openacademy.portal_user_dashboard">
+    <div class="container-fluid o_web_settings_dashboard o_portal_user_dashboard">
+        <div class="row">
+            <t t-if="waiting_feedback_sessions.length === 0">
+                <div class="col-md-12 o_web_settings_dashboard_col">
+                    <div class="o_welcome_message box">
+                        <div class="o_welcome_image"><span class="fa fa-smile-o fa-5x"/></div>
+                        <div class="o_welcome_content">
+                            <h2>Hi there!</h2>
+                            <p class="mt0">You have already gave feedback for your attended sessions.</p>
+                            <p class="mt0">Thanks!</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-if="waiting_feedback_sessions.length !== 0">
+                <div class="col-md-12 o_web_settings_dashboard_col">
+                    <t t-foreach="waiting_feedback_sessions" t-as="session">
+                        <div class="o_web_settings_dashboard_header">
+                            <h3>
+                                <t t-esc="session.name"/>
+                                <a class="o_session_details_link" t-att-data-id='session.id' title='See session details'>
+                                    <i class="fa fa-arrow-right" aria-hidden="true"/>
+                                </a>
+                            </h3>
+                            <span>from: <t t-esc="session.start_date"/> to: <t t-esc="session.end_date"/></span>
+                        </div>
+                        <div>
+                            <textarea
+                                placeholder="Your feedback is important for us!"
+                                rows="6"
+                                style="resize: None;"
+                            />
+                            <button
+                                class="mt8 btn btn-primary o_send_feedback"
+                                disabled="disabled"
+                                t-att-data-id='session.id'
+                            >
+                                Send
+                            </button>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+
+</templates>

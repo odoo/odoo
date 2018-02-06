@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="customer_map_view" model="ir.ui.view">
+            <field name="name">customer.map.view</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <map latitude="partner_latitude" longitude="partner_longitude">
+                    <field name="name"/>
+                    <template>
+                        <div>
+                            Name <t t-esc="record.name"/>
+                        </div>
+                    </template>
+                </map>
+            </field>
+        </record>
+    </data>
+</odoo>

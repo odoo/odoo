@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="technical_training_course" model="openacademy.course">
+            <field name="name">Technical Training</field>
+            <field name="responsible_id" ref="base.user_root"/>
+            <field name="level" eval="2"/>
+        </record>
+
+        <record id="functional_training_course" model="openacademy.course">
+            <field name="name">Functional Training</field>
+            <field name="responsible_id" ref="base.user_demo"/>
+            <field name="level" eval="2"/>
+        </record>
+
+        <record id="technical_training_course_session_1" model="openacademy.session">
+            <field name="name">Session 1 (Technical Training)</field>
+            <field name="course_id" ref="technical_training_course"/>
+            <field name="duration">2</field>
+            <field name="seats">10</field>
+            <field name="attendee_ids" eval="[(6, 0, [ref('base.res_partner_address_4')])]"/>
+        </record>
+
+        <record id="technical_training_course_session_2" model="openacademy.session">
+            <field name="name">Session 2 (Technical Training)</field>
+            <field name="course_id" ref="technical_training_course"/>
+            <field name="duration">2</field>
+            <field name="seats">10</field>
+            <field name="attendee_ids" eval="[(6, 0, [ref('base.res_partner_address_5')])]"/>
+        </record>
+
+    </data>
+</odoo>

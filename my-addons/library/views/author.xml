@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="author_view_form_id" model="ir.ui.view">
+            <field name="name">author.form.view</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="image" widget='image' class="oe_left oe_avatar" />
+                        <div class="oe_title oe_left">
+                            <h1>
+                                <field name="name" placeholder="Name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="birthdate"/>
+                            <field name="nationality_id" />
+                        </group>
+                        <notebook>
+                            <page string="Books" name="books" >
+                                <field name="book_ids">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="edition_date"/>
+                                        <field name="isbn"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="author_view_tree_id" model="ir.ui.view">
+            <field name="name">author.tree.view</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="birthdate"/>
+                    <field name="nationality_id"/>
+                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_author">
+            <field name="name">Authors</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('author','=',True)]</field>
+            <field name="context">{'default_author': True}</field>
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {
+                    'view_mode': 'tree',
+                    'view_id': ref('library.author_view_tree_id'),
+                    }),
+                (0, 0, {
+                    'view_mode': 'form',
+                    'view_id': ref('library.author_view_form_id'),
+                    }),
+                ]"/>
+        </record>
+
+        <!-- actions -->
+        <menuitem name="Authors" id="menu_author" parent="menu_book_top"
+                  action="action_author"/>
+
+    </data>
+</odoo>

@@ -1,0 +1,25 @@
+@dashboard-bg-color: white;
+
+.o_portal_user_dashboard {
+    margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
+    .o-flex(1, 0, 100%);
+    padding: 10px (@odoo-horizontal-padding - 10px);
+
+    background-color: @dashboard-bg-color;
+    position: relative;
+
+    .o_welcome_message {
+        width: 100%;
+        .o-position-absolute(@left: 0, @top: 0);
+        .o-flex-display();
+        .o-justify-content(center);
+
+        .o_welcome_image {
+            padding: 20px;
+        }
+        .o_welcome_content > a {
+            color: white;
+            display: inline-block;
+        }
+    }
+}

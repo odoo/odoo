@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rental_view_form_id" model="ir.ui.view">
+            <field name="name">rental.form.view</field>
+            <field name="model">library.rental</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="customer_id" context="{'default_customer': True}"/>
+                            <field name="book_id" context="{'default_book': True}"/>
+                            <field name="rental_date"/>
+                            <field name="return_date"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rental_view_tree_id" model="ir.ui.view">
+            <field name="name">rental.tree.view</field>
+            <field name="model">library.rental</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="book_id"/>
+                    <field name="customer_id"/>
+                    <field name="rental_date"/>
+                    <field name="return_date"/>
+                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_rental">
+            <field name="name">Rentals</field>
+            <field name="res_model">library.rental</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- actions -->
+        <menuitem name="Rentals" id="menu_rental" parent="menu_rental_top"
+                  action="action_rental"/>
+
+    </data>
+</odoo>

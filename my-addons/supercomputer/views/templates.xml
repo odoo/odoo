@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="commission_view_form_id" model="ir.ui.view">
+            <field name="priority" eval="99"/>
+            <field name="name">commission.form.view</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div class="oe_title oe_left">
+                            <h1>
+                                Commission data
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="rate"/>
+                            <field name="minimum_margin"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="commission_view_tree_id" model="ir.ui.view">
+            <field name="priority" eval="99"/>
+            <field name="name">commission.tree.view</field>
+            <field name="model">product.category</field>
+            <!--<field name="inherit_id" ref="product.product_category_tree_view"/>-->
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="rate"/>
+                    <field name="minimum_margin"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_commission">
+            <field name="name">Commission</field>
+            <field name="res_model">product.category</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field name="view_id" ref="supercomputer.commission_view_tree_id"/>-->
+            <field name="view_ids" eval="[
+                (5, 0, 0),
+                (0, 0, {
+                    'view_mode': 'tree',
+                    'view_id': ref('supercomputer.commission_view_tree_id'),
+                    }),
+                (0, 0, {
+                    'view_mode': 'form',
+                    'view_id': ref('supercomputer.commission_view_form_id'),
+                    }),
+                ]"/>
+        </record>
+
+        <menuitem name="Commissions" id="menu_commission" parent="menu_commission_top"
+                  action="action_commission"/>
+
+        <record id="commission_saleorder_form_id" model="ir.ui.view">
+            <field name="name">commission.saleorder.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="after">
+                    <h1> Commission </h1>
+                    <field name="sum_commission"/>
+                </xpath>
+                <!--<xpath expr="//notebook//page//field[@name='order_line']//field[@name='price_unit']" position="after">-->
+                        <!--<field name="margin_per_product"/>-->
+                        <!--<field name="margin_rate"/>-->
+                        <!--<field name="margin"/>-->
+                <!--</xpath>-->
+                <xpath expr="//notebook//page//field[@name='order_line']//field[@name='price_subtotal']" position="after">
+                        <field name="margin_per_product"/>
+                        <field name="margin_rate"/>
+                        <field name="margin"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="commission_orderline_form_id" model="ir.ui.view">
+            <field name="name">commission.orderline.form.view</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position="after">
+                        <field name="margin_per_product"/>
+                        <field name="margin_rate"/>
+                        <field name="margin_rate"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--<record id="view_order_line_tree" model="ir.ui.view">-->
+            <!--<field name="name">sale.order.line.tree</field>-->
+            <!--<field name="model">sale.order.line</field>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<tree string="Sales Order Lines" create="false">-->
+                    <!--<field name="product_id" invisible="1"/>-->
+                    <!--<field name="order_id"/>-->
+                    <!--<field name="order_partner_id"/>-->
+                    <!--<field name="name"/>-->
+                    <!--<field name="salesman_id"/>-->
+                    <!--<field name="product_uom_qty" string="Qty"/>-->
+                    <!--<field name="qty_delivered"/>-->
+                    <!--<field name="qty_invoiced"/>-->
+                    <!--<field name="qty_to_invoice"/>-->
+                    <!--<field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>-->
+                    <!--<field name="price_subtotal" sum="Total" widget="monetary"/>-->
+                <!--</tree>-->
+            <!--</field>-->
+        <!--</record>-->
+
+        <!--<record id="commission_saleorder_form_id" model="ir.ui.view">-->
+            <!--<field name="name">commission.saleorder.form.view</field>-->
+            <!--<field name="model">sale.order</field>-->
+            <!--<field name="inherit_id" ref="sale.view_order_form"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<form>-->
+                    <!--<sheet>-->
+                        <!--&lt;!&ndash;groups="sales_team.group.salesman">&ndash;&gt;-->
+                        <!--<div class="oe_title oe_left">-->
+                            <!--<h1>-->
+                                <!--Commission data-->
+                            <!--</h1>-->
+                        <!--</div>-->
+                            <!--<group>-->
+                                <!--<field name="sum_commission"/>-->
+
+                            <!--</group>-->
+                    <!--</sheet>-->
+                <!--</form>-->
+            <!--</field>-->
+        <!--</record>-->
+    </data>
+</odoo>
