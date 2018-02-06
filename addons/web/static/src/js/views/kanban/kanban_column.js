@@ -64,7 +64,6 @@ var KanbanColumn = Widget.extend({
                 progressBarStates: options.progressBarStates,
             };
         }
-
         this.record_options = _.clone(recordOptions);
 
         if (options.grouped_by_m2o) {
@@ -146,9 +145,14 @@ var KanbanColumn = Widget.extend({
         this.$header.find('.o_column_title').text(title);
 
         this.$el.toggleClass('o_column_folded', this.folded && !config.device.isMobile);
-        var tooltip = this.data.count + _t(' records');
-        tooltip = '<p>' + tooltip + '</p>' + this.tooltipInfo;
-        this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
+        var recordTooltip = this.data.progressBarValues && !this.data.progressBarValues.sum_field ? "" : '<p>' + this.data.count + _t(' records') + '</p>';
+        var tooltip =  recordTooltip + this.tooltipInfo;
+
+        if (tooltip) {
+            this.$header.find('.o_kanban_header_title').tooltip({html: true}).attr('data-original-title', tooltip);
+        } else {
+            this.$header.find('.o_kanban_header_title').removeAttr('data-original-title');
+        }
         if (!this.remaining) {
             this.$('.o_kanban_load_more').remove();
         } else {
