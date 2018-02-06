@@ -198,26 +198,28 @@
 </template>
 
 <template id="s_big_picture" name="Big Picture">
-    <section class="s_big_picture bg-gray-lighter pb16">
+    <section class="s_big_picture bg-gray-lighter pt48 pb48">
         <div class="container">
-            <h2 class="text-center">A Punchy Headline</h2>
             <div class="row">
-                <div class="col-md-12">
-                  <img class="img img-responsive" src="/web/image/website.s_big_picture_default_image" style="margin: 0 auto;"  alt="Odoo CMS - a big picture"/>
+                <div class="col-md-12 text-center pb24">
+                    <h2>A punchy Headline</h2>
                 </div>
-                <div class="col-md-6 col-md-offset-3 mt16">
-                    <p class="text-center">
-                        <b>A Small Subtitle</b>
-                    </p>
-                    <p class="text-center">
-                        Choose a vibrant image and write an inspiring paragraph
-                        about it. It does not have to be long, but it should
-                        reinforce your image.
-                    </p>
-                    <p class="text-center">
-                        <a href="/contactus">Contact us »</a>
-                    </p>
+                <div class="col-md-12 text-center pb24">
+                    <p> Choose a vibrant image and write an inspiring paragraph about it.<br/> It does not have to be long, but it should reinforce your image.</p>
                 </div>
+                <div class="col-md-8 col-md-offset-2 pb24">
+                    <div class="panel panel-default mb0">
+                        <div class="panel-body">
+                            <a role="button" data-toggle="modal" data-target="#s_big_picture_modal">
+                                <img class="img img-responsive s_big_picture_hover" src="/web/image/website.s_big_picture_default_image_2" alt="Odoo CMS - An other big picture"/>
+                            </a>
+                        </div>
+                        <div class="panel-footer text-center">
+                            <i class="fa fa-1x fa-picture-o"/> Add a caption to enhance the meaning of this image.
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
