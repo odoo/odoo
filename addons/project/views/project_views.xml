@@ -66,6 +66,7 @@
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
             <field name="context">{
                 'group_by': 'stage_id',
+                'pivot_row_groupby': ['user_id'],
                 'search_default_project_id': [active_id],
                 'default_project_id': active_id,
             }</field>
@@ -654,7 +655,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <pivot string="Project Tasks">
-                    <field name="project_id" type="row"/>
+                    <field name="user_id" type="row"/>
                     <field name="stage_id" type="col"/>
                 </pivot>
             </field>
