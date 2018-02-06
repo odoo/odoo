@@ -626,7 +626,7 @@ var ChatManager =  Class.extend(Mixins.EventDispatcherMixin, ServicesMixin, {
         Mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
 
-        this.bus = new Bus();
+        this.bus = new Bus(this);
         this.bus.on('client_action_open', null, function (open) {
             client_action_open = open;
         });
