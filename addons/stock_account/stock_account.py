@@ -24,17 +24,78 @@ class stock_inventory(osv.osv):
             ctx['force_period_date'] = inv.accounting_date
         return super(stock_inventory, self).post_inventory(cr, uid, inv, context=ctx)
 
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    @api.model
+    def _anglo_saxon_sale_move_lines(self, name, product, uom, qty, price_unit, currency=False, amount_currency=False, fiscal_position=False, account_analytic=False):
+        """Prepare dicts describing new journal COGS journal items for a product sale.
+
+        Returns a dict that should be passed to `_convert_prepared_anglosaxon_line()` to
+        obtain the creation value for the new journal items.
+
+        :param Model product: a product.product record of the product being sold
+        :param Model uom: a product.uom record of the UoM of the sale line
+        :param Integer qty: quantity of the product being sold
+        :param Integer price_unit: unit price of the product being sold
+        :param Model currency: a res.currency record from the order of the product being sold
+        :param Interger amount_currency: unit price in the currency from the order of the product being sold
+        :param Model fiscal_position: a account.fiscal.position record from the order of the product being sold
+        :param Model account_analytic: a account.account.analytic record from the line of the product being sold
+        """
+
+        if product.type == 'product' and product.valuation == 'real_time':
+            accounts = product.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
+            # debit account dacc will be the output account
+            dacc = accounts['stock_output'].id
+            # credit account cacc will be the expense account
+            cacc = accounts['expense'].id
+            if dacc and cacc:
+                return [
+                    {
+                        'type': 'src',
+                        'name': name[:64],
+                        'price_unit': price_unit,
+                        'quantity': qty,
+                        'price': price_unit * qty,
+                        'currency_id': currency and currency.id,
+                        'amount_currency': amount_currency,
+                        'account_id': dacc,
+                        'product_id': product.id,
+                        'uom_id': uom.id,
+                        'account_analytic_id': account_analytic and account_analytic.id,
+                    },
+
+                    {
+                        'type': 'src',
+                        'name': name[:64],
+                        'price_unit': price_unit,
+                        'quantity': qty,
+                        'price': -1 * price_unit * qty,
+                        'currency_id': currency and currency.id,
+                        'amount_currency': -1 * amount_currency,
+                        'account_id': cacc,
+                        'product_id': product.id,
+                        'uom_id': uom.id,
+                        'account_analytic_id': account_analytic and account_analytic.id,
+                    },
+                ]
+        return []
+
+    @api.model
+    def _get_anglo_saxon_price_unit(self, uom=False):
+        price = self.standard_price
+        if not uom or self.uom_id.id == uom.id:
+            return price
+        return self.uom_id._compute_price(self.uom_id.id, price, to_uom_id=uom.id)
+
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
     def _get_anglo_saxon_price_unit(self):
         self.ensure_one()
-        price = self.product_id.standard_price
-        if not self.uom_id or self.product_id.uom_id == self.uom_id:
-            return price
-        else:
-            return self.product_id.uom_id._compute_price(self.product_id.uom_id.id, price, to_uom_id=self.uom_id.id)
+        return self.product_id._get_anglo_saxon_price_unit(uom=self.uom_id)
 
     def _get_price(self, cr, uid, inv, company_currency, i_line, price_unit):
         cur_obj = self.pool.get('res.currency')
@@ -72,53 +133,17 @@ class account_invoice(osv.osv):
         res: The move line entries produced so far by the parent move_line_get.
         """
         inv = i_line.invoice_id
-        company_currency = inv.company_id.currency_id.id
+        company_currency = inv.company_id.currency_id
+        price_unit = i_line._get_anglo_saxon_price_unit()
+        if inv.currency_id != company_currency:
+            currency_id = inv.currency_id.id
+            amount_currency = i_line._get_price(inv, company_currency.id, i_line, price_unit)
+        else:
+            currency_id = False
+            amount_currency = False
 
-        if i_line.product_id.type in ('product', 'consu') and i_line.product_id.valuation == 'real_time':
-            fpos = i_line.invoice_id.fiscal_position_id
-            accounts = i_line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fpos)
-            # debit account dacc will be the output account
-            dacc = accounts['stock_output'].id
-            # credit account cacc will be the expense account
-            cacc = accounts['expense'].id
-            if dacc and cacc:
-                price_unit = i_line._get_anglo_saxon_price_unit()
-                if inv.currency_id.id != company_currency:
-                    currency_id = inv.currency_id.id
-                    amount_currency = self.env['account.invoice.line']._get_price(inv, company_currency, i_line, price_unit)
-                else:
-                    currency_id = False
-                    amount_currency = False
-                return [
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit': price_unit,
-                        'quantity': i_line.quantity,
-                        'price': price_unit * i_line.quantity,
-                        'currency_id': currency_id,
-                        'amount_currency': amount_currency,
-                        'account_id':dacc,
-                        'product_id':i_line.product_id.id,
-                        'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': i_line.account_analytic_id.id,
-                    },
+        return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency_id, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id)
 
-                    {
-                        'type':'src',
-                        'name': i_line.name[:64],
-                        'price_unit': price_unit,
-                        'quantity': i_line.quantity,
-                        'price': -1 * price_unit * i_line.quantity,
-                        'currency_id': currency_id,
-                        'amount_currency': -1 * amount_currency,
-                        'account_id':cacc,
-                        'product_id':i_line.product_id.id,
-                        'uom_id':i_line.uom_id.id,
-                        'account_analytic_id': i_line.account_analytic_id.id,
-                    },
-                ]
-        return []
 
 #----------------------------------------------------------
 # Stock Location
