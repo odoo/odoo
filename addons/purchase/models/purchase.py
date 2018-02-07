@@ -350,7 +350,7 @@ class PurchaseOrder(models.Model):
         return True
     
     @api.model
-    def validate_cancel_order_purchase (self):
+    def check_cancelation_order_purchase (self):
         '''
         Hook sera utilizado en un metodo superior
         self se envia la orden de compra para validar el picking y facturas.
@@ -368,7 +368,7 @@ class PurchaseOrder(models.Model):
     def button_cancel(self):
         for order in self:
             #siguiente linea fue agregada por Trescloud
-            order.validate_cancel_order_purchase()
+            order.check_cancelation_order_purchase()
             # TDE FIXME: I don' think context key is necessary, as actions are not related / called from each other
             if not self.env.context.get('cancel_procurement'):
                 procurements = order.order_line.mapped('procurement_ids')
