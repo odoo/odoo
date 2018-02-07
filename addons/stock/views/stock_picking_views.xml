@@ -277,6 +277,7 @@
                             </field>
                             <field name="entire_package_detail_ids" context="{'picking_id': id, 'tree_view_ref': 'stock.view_quant_package_picking_tree'}" attrs="{'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', False)]}" readonly="0"/>
                             <button class="oe_highlight" name="put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
+                            <button class="ml16 oe_highlight" name="%(act_stock_pick_packages)d" string="Pick a Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" type="action" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Operations">
                             <field name="id" invisible="1"/>
@@ -308,6 +309,7 @@
                             </field>
                             <field name="entire_package_ids" context="{'picking_id': id, 'tree_view_ref': 'stock.view_quant_package_picking_tree'}" attrs="{'invisible': ['|', ('picking_type_entire_packs', '=', False), ('show_operations', '=', True)]}" readonly="0"/>
                             <button class="oe_highlight" name="put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
+                            <button class="ml16 oe_highlight" name="%(act_stock_pick_packages)d" string="Pick a Pack" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}" type="action" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Additional Info" name="extra">
                             <group>

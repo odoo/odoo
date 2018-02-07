@@ -409,7 +409,10 @@ class Picking(models.Model):
                 .filtered(lambda ml: ml.result_package_id and ml.package_id.id == ml.result_package_id.id)\
                 .mapped('package_id')
             for package_to_check in packages_to_check:
-                if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(package_to_check):
+                package_move_lines = picking.move_line_ids.filtered(lambda ml: ml.result_package_id == package_to_check and ml.package_id == package_to_check)
+                if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(package_to_check, without_reservation=True) or\
+                        picking._check_move_lines_map_quant_package(package_to_check) or\
+                        all(package_move_lines.qty_done == 0 and package_move_lines.product_uom_qty == 0):
                     packages |= package_to_check
             picking.entire_package_ids = packages
             picking.entire_package_detail_ids = packages
@@ -637,21 +640,16 @@ class Picking(models.Model):
         self.write({'date_done': fields.Datetime.now()})
         return True
 
-    def _check_move_lines_map_quant_package(self, package):
+    def _check_move_lines_map_quant_package(self, package, without_reservation=False):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
         pack_move_lines = self.move_line_ids.filtered(lambda ml: ml.package_id == package)
-        keys = ['product_id', 'lot_id']
-
-        grouped_quants = {}
-        for k, g in groupby(sorted(package.quant_ids, key=itemgetter(*keys)), key=itemgetter(*keys)):
-            grouped_quants[k] = sum(self.env['stock.quant'].concat(*list(g)).mapped('quantity'))
-
-        grouped_ops = {}
-        for k, g in groupby(sorted(pack_move_lines, key=itemgetter(*keys)), key=itemgetter(*keys)):
-            grouped_ops[k] = sum(self.env['stock.move.line'].concat(*list(g)).mapped('product_qty'))
-        if any(grouped_quants.get(key, 0) - grouped_ops.get(key, 0) != 0 for key in grouped_quants) \
-                or any(grouped_ops.get(key, 0) - grouped_quants.get(key, 0) != 0 for key in grouped_ops):
+        grouped_quants, grouped_ml = package._group_move_lines_and_package_quants(pack_move_lines)
+        field = without_reservation and 'qty_done' or 'product_uom_qty'
+        if any(sum(grouped_quants.get(key, self.env['stock.quant']).mapped('quantity')) -
+               sum(grouped_ml.get(key, self.env['stock.move.line']).mapped(field)) != 0 for key in grouped_quants or
+           any(sum(grouped_quants.get(key, self.env['stock.quant']).mapped('quantity')) -
+               sum(grouped_ml.get(key, self.env['stock.move.line']).mapped(field)) != 0 for key in grouped_ml)):
             all_in = False
         return all_in
 
