@@ -606,6 +606,55 @@ class StockMove(TransactionCase):
         quants = self.env['stock.quant']._gather(self.product2, self.stock_location)
         self.assertEqual(len(quants), 0)
 
+    def test_mixed_tracking_reservation_8(self):
+        """ Send one product tracked by lot to a customer. In your stock, there are one tracked and
+        one untracked quant. Reserve the move, then edit the lot to one not present in stock. The
+        system will update the reservation and use the untracked quant. Now unreserve, no error
+        should happen
+        """
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.product2.id,
+        })
+
+        # at first, we only make the tracked quant available in stock to make sure this one is selected
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1, lot_id=lot1)
+
+        # creation
+        move1 = self.env['stock.move'].create({
+            'name': 'test_mixed_tracking_reservation_7',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product2.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+        move1._action_assign()
+
+        self.assertEqual(move1.reserved_availability, 1.0)
+        self.assertEqual(move1.move_line_ids.lot_id.id, lot1.id)
+
+        # change the lot_id to one not available in stock while an untracked quant is available
+        self.env['stock.quant']._update_available_quantity(self.product2, self.stock_location, 1)
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.product2.id,
+        })
+        move1.move_line_ids.lot_id = lot2
+        self.assertEqual(move1.reserved_availability, 1.0)
+        self.assertEqual(move1.move_line_ids.lot_id.id, lot2.id)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+
+        # unreserve
+        move1._do_unreserve()
+
+        self.assertEqual(move1.reserved_availability, 0.0)
+        self.assertEqual(len(move1.move_line_ids), 0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, strict=True), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product2, self.stock_location, lot_id=lot1, strict=True), 1.0)
+
     def test_putaway_1(self):
         """ Receive products from a supplier. Check that putaway rules are rightly applied on
         the receipt move line.
