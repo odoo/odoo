@@ -30,16 +30,23 @@ class ResPartner(models.Model):
                     city = lines.pop()
                     return (cp, city)
             else:
-                result = re.match('((?:L-|AT-)?[0-9\-]+) (.+)', lines[-1])
+                result = re.match('((?:L-|AT-)?[0-9\-]+[A-Z]{,2}) (.+)', lines[-1])
                 if result:
                     lines.pop()
                     return (result.group(1), result.group(2))
             return False
 
+        def _set_address_field(partner, field, value):
+            partner[field] = value
+            non_set_address_fields.remove(field)
+
         if stdnum_vat is None:
             return {}
 
         for partner in self:
+            # If a field is non set in this algorithm
+            # wipe it anyway
+            non_set_address_fields = set(['street', 'street2', 'city', 'zip', 'state_id', 'country_id'])
             if not partner.vat:
                 return {}
             if len(partner.vat) > 5 and partner.vat[:2].lower() in stdnum_vat.country_codes:
@@ -68,14 +75,20 @@ class ResPartner(models.Model):
                     lines = [x.strip() for x in lines[0].split(',') if x]
                 if len(lines) == 1:
                     lines = [x.strip() for x in lines[0].split('   ') if x]
-                partner.street = lines.pop(0)
+
+                _set_address_field(partner, 'street', lines.pop(0))
+
                 if len(lines) > 0:
                     res = _check_city(lines, result['countryCode'])
                     if res:
-                        partner.zip = res[0]
-                        partner.city = res[1]
+                        _set_address_field(partner, 'zip', res[0])
+                        _set_address_field(partner, 'city', res[1])
                 if len(lines) > 0:
-                    partner.street2 = lines.pop(0)
+                    _set_address_field(partner, 'street2', lines.pop(0))
 
                 country = self.env['res.country'].search([('code', '=', result['countryCode'])], limit=1)
-                partner.country_id = country and country.id or False
+                _set_address_field(partner, 'country_id', country and country.id or False)
+
+                for field in non_set_address_fields:
+                    if partner[field]:
+                        partner[field] = False
