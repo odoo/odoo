@@ -26,11 +26,6 @@ If you also installed the Warehouse Management, you can deal with the following 
 * Invoicing: choose how invoices will be paid
 * Incoterms: International Commercial terms
 
-You can choose flexible invoicing methods:
-
-* *On Demand*: Invoices are created manually from Sales Orders when needed
-* *On Delivery Order*: Invoices are generated from picking (delivery)
-* *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
 With this module you can personnalize the sales order and invoice report with
 categories, subtotals or page-breaks.
