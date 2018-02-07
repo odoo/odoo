@@ -2038,6 +2038,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
 
             invoiced.fail(function(error){
                 self.invoicing = false;
+                order.finalized = false;
                 if (error.message === 'Missing Customer') {
                     self.gui.show_popup('confirm',{
                         'title': _t('Please select the Customer'),
