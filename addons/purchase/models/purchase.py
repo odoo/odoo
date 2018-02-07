@@ -702,7 +702,7 @@ class PurchaseOrderLine(models.Model):
         qty = 0.0
         price_unit = self._get_stock_move_price_unit()
         for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
-            qty += move.product_qty
+            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         template = {
             'name': self.name or '',
             'product_id': self.product_id.id,
@@ -726,7 +726,14 @@ class PurchaseOrderLine(models.Model):
         }
         diff_quantity = self.product_qty - qty
         if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
-            template['product_uom_qty'] = diff_quantity
+            quant_uom = self.product_id.uom_id
+            get_param = self.env['ir.config_parameter'].sudo().get_param
+            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
+                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
+                template['product_uom'] = quant_uom.id
+                template['product_uom_qty'] = product_qty
+            else:
+                template['product_uom_qty'] = diff_quantity
             res.append(template)
         return res
 
