@@ -801,27 +801,28 @@ class SaleOrderLine(models.Model):
                 self.order_id._create_analytic_account()
         return line
 
-    def _update_line_quantity(self, values):
+    def _update_lines(self, values):
+        product_uom_qty_val = values.get('product_uom_qty')
+        price_unit_val = values.get('price_unit')
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         orders = self.mapped('order_id')
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = "<b>The ordered quantity has been updated.</b><ul>"
             for line in order_lines:
-                msg += "<li> %s:" % (line.product_id.display_name,)
-                msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
-                line.product_uom_qty, float(values['product_uom_qty']),)
-                if line.product_id.type in ('consu', 'product'):
-                    msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
-                msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
-            msg += "</ul>"
-            order.message_post(body=msg)
+                check_product_uom_qty = product_uom_qty_val and float_compare(line.product_uom_qty, product_uom_qty_val, precision_digits=precision)
+                check_price_unit = price_unit_val and float_compare(line.price_unit, price_unit_val, precision_digits=precision)
+                line.order_id.message_post_with_view('sale.track_lines',
+                values={'price_unit_val': price_unit_val, 'product_uom_qty_val': product_uom_qty_val,
+                'check_price_unit': check_price_unit, 'check_product_uom_qty': check_product_uom_qty, 'line': line},
+                subtype_id=self.env.ref('mail.mt_note').id)
 
     @api.multi
     def write(self, values):
-        if 'product_uom_qty' in values:
+        if 'product_uom_qty' in values or 'price_unit' in values:
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            self.filtered(
-                lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
+            if values.get('product_uom_qty'):
+                self.filtered(lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+            self.filtered(lambda r: r.state == 'sale')._update_lines(values)
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
@@ -1136,7 +1137,8 @@ class SaleOrderLine(models.Model):
                 uom=self.product_uom.id,
                 fiscal_position=self.env.context.get('fiscal_position')
             )
-            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
+            if not self.price_unit:
+                self.price_unit = self.env['account.tax']._fix_tax_included_price_company(self._get_display_price(product), product.taxes_id, self.tax_id, self.company_id)
 
     @api.multi
     def name_get(self):
