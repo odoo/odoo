@@ -133,6 +133,8 @@ var FieldTextHtmlSimple = basic_fields.DebouncedField.extend(TranslatableFieldMi
         this.$textarea.summernote(this._getSummernoteConfig());
         this.$content = this.$('.note-editable:first');
         this.$content.html(this._textToHtml(this.value));
+        this.$content.data('oe-id', this.recordData.res_id || this.res_id);
+        this.$content.data('oe-model', this.recordData.model || this.model);
         // trigger a mouseup to refresh the editor toolbar
         this.$content.trigger('mouseup');
         if (this.nodeOptions['style-inline']) {
