@@ -437,8 +437,10 @@
                                 name="action_schedule_meeting" icon="fa-calendar">
                                 <div class="o_stat_info">
                                     <field name="meeting_count" class="o_stat_value"/>
-                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 2)]}"> Meetings</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 5)]}"> Meetings</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 2),('meeting_count', '&gt;', 4)]}"> Meetings</span>
                                     <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '!=', 0)]}"> Meetings</span>
                                 </div>
                             </button>
                             <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
