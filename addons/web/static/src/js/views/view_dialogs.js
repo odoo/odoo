@@ -165,9 +165,6 @@ var FormViewDialog = ViewDialog.extend({
         }
 
         fields_view_def.then(function (viewInfo) {
-            if (self.recordID) {
-                self.model.addFieldsInfo(self.recordID, viewInfo);
-            }
             var formview = new FormView(viewInfo, {
                 modelName: self.res_model,
                 context: self.context,
@@ -175,8 +172,9 @@ var FormViewDialog = ViewDialog.extend({
                 currentId: self.res_id || undefined,
                 index: 0,
                 mode: self.res_id && self.options.readonly ? 'readonly' : 'edit',
-                footer_to_buttons: true,
+                footerToButtons: true,
                 default_buttons: false,
+                withControlPanel: false,
                 model: self.model,
                 parentID: self.parentID,
                 recordID: self.recordID,
@@ -190,9 +188,9 @@ var FormViewDialog = ViewDialog.extend({
             }
             self.form_view.appendTo(fragment)
                 .then(function () {
-                    var $buttons = $('<div>');
-                    self.form_view.renderButtons($buttons);
                     self.opened().always(function () {
+                        var $buttons = $('<div>');
+                        self.form_view.renderButtons($buttons);
                         if ($buttons.children().length) {
                             self.$footer.empty().append($buttons.contents());
                         }
@@ -257,7 +255,7 @@ var SelectCreateDialog = ViewDialog.extend({
             this.$footer.find(".o_select_button").prop('disabled', !event.data.selection.length);
         },
         search: function (event) {
-            event.stopPropagation(); // prevent this event from bubbling up to the view manager
+            event.stopPropagation(); // prevent this event from bubbling up to the action manager
             var d = event.data;
             var searchData = this._process_search_data(d.domains, d.contexts, d.groupbys);
             this.list_controller.reload(searchData);
@@ -410,7 +408,7 @@ var SelectCreateDialog = ViewDialog.extend({
             on_saved: function (record) {
                 var values = [{
                     id: record.res_id,
-                    display_name: record.data.display_name,
+                    display_name: record.data.display_name || record.data.name,
                 }];
                 self.on_selected(values);
             },

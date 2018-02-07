@@ -81,6 +81,8 @@ var _t = core._t;
  *              id: integer
  *              display_name: string
  *          }
+ *          analytic_tag_ids: {
+ *          }
  *          label: string
  *          amount: number,
  *          [journal_id]: {
@@ -92,7 +94,7 @@ var _t = core._t;
  */
 var StatementModel = BasicModel.extend({
     avoidCreate: false,
-    quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_id'],
+    quickCreateFields: ['account_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'analytic_tag_ids'],
 
     /**
      * @override
@@ -449,7 +451,7 @@ var StatementModel = BasicModel.extend({
     quickCreateProposition: function (handle, reconcileModelId) {
         var line = this.getLine(handle);
         var reconcileModel = _.find(this.reconcileModels, function (r) {return r.id === reconcileModelId;});
-        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'tax_id'];
+        var fields = ['account_id', 'amount', 'amount_type', 'analytic_account_id', 'journal_id', 'label', 'tax_id', 'analytic_tag_ids'];
         this._blurProposition(handle);
 
         var focus = this._formatQuickCreate(line, _.pick(reconcileModel, fields));
@@ -501,7 +503,7 @@ var StatementModel = BasicModel.extend({
         var amount = line.balance.amount;
         var amount_str = _.str.sprintf('%.2f', Math.abs(amount));
         amount_str = (amount > '0' ? '-' : '+') + amount_str;
-        if (line.balance.amount_currency) {
+        if (line.balance.currency_id && line.balance.amount_currency) {
             var amount_currency = line.balance.amount_currency;
             var amount_currency_str = _.str.sprintf('%.2f', Math.abs(amount_currency));
             amount_str += '|' + (amount_currency > '0' ? '-' : '+') + amount_currency_str;
@@ -575,6 +577,7 @@ var StatementModel = BasicModel.extend({
      * @returns {Deferred}
      */
     updateProposition: function (handle, values) {
+        var self = this;
         var line = this.getLine(handle);
         var prop = _.last(_.filter(line.reconciliation_proposition, '__focus'));
         if (!prop) {
@@ -582,7 +585,23 @@ var StatementModel = BasicModel.extend({
             line.reconciliation_proposition.push(prop);
         }
         _.each(values, function (value, fieldName) {
-            prop[fieldName] = values[fieldName];
+            if (fieldName === 'analytic_tag_ids') {
+                switch (value.operation) {
+                    case "ADD_M2M":
+                        if (!_.findWhere(prop.analytic_tag_ids, {id: value.ids.id})) {
+                            prop.analytic_tag_ids.push(value.ids);
+                        }
+                        break;
+                    case "FORGET":
+                        var id = self.localData[value.ids[0]].ref;
+                        prop.analytic_tag_ids = _.filter(prop.analytic_tag_ids, function (val) {
+                            return val.id !== id;
+                        });
+                        break;
+                }
+            } else {
+                prop[fieldName] = values[fieldName];
+            }
         });
         if ('account_id' in values) {
             prop.account_code = prop.account_id ? this.accounts[prop.account_id.id] : '';
@@ -842,14 +861,13 @@ var StatementModel = BasicModel.extend({
                 amount: total,
                 amount_str: field_utils.format.monetary(Math.abs(total), {}, formatOptions),
                 currency_id: isOtherCurrencyId,
-                amount_currency: isOtherCurrencyId ? amount_currency : false,
+                amount_currency: isOtherCurrencyId ? amount_currency : total,
                 amount_currency_str: isOtherCurrencyId ? field_utils.format.monetary(Math.abs(amount_currency), {}, {
                     currency_id: isOtherCurrencyId
                 }) : false,
                 account_code: self.accounts[line.st_line.open_balance_account_id],
             };
-            line.balance.type = (isOtherCurrencyId && amount_currency || line.balance.amount) ?
-                (line.balance.amount > 0 && line.st_line.partner_id ? 0 : -1) : 1;
+            line.balance.type = line.balance.amount_currency ? (line.balance.amount_currency > 0 && line.st_line.partner_id ? 0 : -1) : 1;
         });
     },
     /**
@@ -878,6 +896,13 @@ var StatementModel = BasicModel.extend({
      */
     _formatNameGet: function (value) {
         return value ? (value.id ? value : {'id': value[0], 'display_name': value[1]}) : false;
+    },
+    _formatMany2ManyTags: function (value) {
+        var res = [];
+        for (var i=0, len=value.length; i<len; i++) {
+            res[i] = {data: {'id': value[i][0], 'display_name': value[i][1]}};
+        }
+        return res;
     },
     /**
      * Format each propositions (amount, label, account_id)
@@ -971,6 +996,7 @@ var StatementModel = BasicModel.extend({
             'account_id': account,
             'account_code': account ? this.accounts[account.id] : '',
             'analytic_account_id': this._formatNameGet(values.analytic_account_id),
+            'analytic_tag_ids': this._formatMany2ManyTags(values.analytic_tag_ids || []),
             'journal_id': this._formatNameGet(values.journal_id),
             'tax_id': this._formatNameGet(values.tax_id),
             'debit': 0,
@@ -1084,6 +1110,7 @@ var StatementModel = BasicModel.extend({
             // But since we need to change the amount (and thus its semantics) into base_amount
             // It might be useful to have a trace in the RPC for debugging purposes
             computed_with_tax: prop.computed_with_tax,
+            analytic_tag_ids: [[6, null, _.pluck(prop.analytic_tag_ids, 'id')]]
         };
         if (!isNaN(prop.id)) {
             result.counterpart_aml_id = prop.id;
@@ -1106,7 +1133,7 @@ var StatementModel = BasicModel.extend({
  * datas allowing manual reconciliation
  */
 var ManualModel = StatementModel.extend({
-    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id'],
+    quickCreateFields: ['account_id', 'journal_id', 'amount', 'analytic_account_id', 'label', 'tax_id', 'analytic_tag_ids'],
 
     //--------------------------------------------------------------------------
     // Public
@@ -1317,7 +1344,7 @@ var ManualModel = StatementModel.extend({
         return this._super(line).then(function () {
             var props = _.reject(line.reconciliation_proposition, 'invalid');
             line.balance.type = -1;
-            if (!line.balance.amount && props.length) {
+            if (!line.balance.amount_currency && props.length) {
                 line.balance.type = 1;
             } else if(_.any(props, function (prop) {return prop.amount > 0;}) &&
                      _.any(props, function (prop) {return prop.amount < 0;})) {

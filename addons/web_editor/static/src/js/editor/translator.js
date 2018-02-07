@@ -49,7 +49,7 @@ var AttributeTranslateDialog = weWidgets.Dialog.extend({
         this._super(parent, _.extend({
             title: _t("Translate Attribute"),
             buttons: [
-                {text:  _t("Close"), classes: 'btn-primary o_save_button', click: this.save}
+                {text:  _t("Close"), classes: 'btn-primary', click: this.save}
             ],
         }, options || {}));
         this.$target = $(node);

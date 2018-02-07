@@ -102,7 +102,7 @@ class ResPartner(models.Model):
         """
         res = defaultdict(dict)
 
-        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.allow_uninvited', 'False').lower() == 'true'
+        allow_signup = self.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c'
         for partner in self:
             if allow_signup and not partner.user_ids:
                 partner.signup_prepare()

@@ -3,7 +3,7 @@
 <!-- Assets -->
 <template id="assets_backend" inherit_id="web.assets_backend" name="Website Backend Assets (used in backend interface)">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" href="/website/static/src/less/website.backendDashboard.less"/>
+        <link rel="stylesheet" href="/website/static/src/less/website.backend.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
@@ -20,8 +20,8 @@
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Website Assets">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.components.less"/>
-        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.snippets.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.less"/>
+        <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.ui.less"/>
         <link rel="stylesheet" type="text/less" href="/website/static/src/less/website.zoomodoo.less"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
@@ -67,14 +67,14 @@
 
 <!-- Layout -->
 <template id="submenu" name="Submenu">
-    <li t-if="not submenu.child_id" t-att-class="
+    <li t-if="submenu.is_visible and not submenu.child_id.filtered(lambda menu: menu.is_visible)" t-att-class="
         'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else None
         ">
         <a t-att-href="submenu.clean_url()" t-ignore="true" t-att-target="'_blank' if submenu.new_window else None">
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="submenu.child_id" t-attf-class="dropdown #{
+    <li t-if="submenu.is_visible and submenu.child_id.filtered(lambda menu: menu.is_visible)" t-attf-class="dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         }">

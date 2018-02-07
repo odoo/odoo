@@ -126,7 +126,9 @@
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
             <field name="help" type="html">
-                <p>Nobody has replied to your surveys yet.</p>
+              <p class="o_view_nocontent_empty_folder">
+                Nobody has replied to your surveys yet
+              </p>
             </field>
         </record>
         <record id="action_selected_survey_user_input" model="ir.actions.act_window">
@@ -137,7 +139,9 @@
             <field name="search_view_id" ref="survey_user_input_search"/>
             <field name="context">{'search_default_survey_id': active_id, 'default_survey_id': active_id}</field>
             <field name="help" type="html">
-                <p>Nobody has replied to your survey yet.</p>
+              <p class="o_view_nocontent_empty_folder">
+                Nobody has replied to your surveys yet
+              </p>
             </field>
         </record>
 
@@ -309,9 +313,13 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">Click to add a survey.</p>
-                <p>You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.</p>
-                <p>Design easily your survey, send invitations to answer by email and analyse answers.</p>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new survey
+              </p><p>
+                You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
+              </p><p>
+                Design easily your survey, send invitations to answer by email and analyse answers.
+              </p>
             </field>
         </record>
         <act_window context="{'search_default_survey_id': [active_id], 'default_survey_id': active_id}" id="act_survey_pages" name="Pages" res_model="survey.page" src_model="survey.survey"/>
@@ -373,6 +381,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_page_search"/>
             <field name="context">{'search_default_group_by_survey': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No pages found
+              </p>
+            </field>
         </record>
         <act_window context="{'search_default_page_id': active_id, 'default_page_id': active_id}" id="act_survey_page_question" name="Questions" res_model="survey.question" src_model="survey.page"/>
 
@@ -557,6 +570,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_question_search"/>
             <field name="context">{'search_default_group_by_page': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No questions found
+              </p>
+            </field>
         </record>
 
         <!-- LABELS -->
@@ -591,6 +609,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_label_search"/>
             <field name="context">{'search_default_group_by_question': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No survey labels found
+              </p>
+            </field>
         </record>
 
         <!-- USER INPUT LINES
@@ -657,6 +680,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="survey_response_line_search"/>
             <field name="context">{'search_default_group_by_survey': True, 'search_default_group_by_user_input': True}</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                No user input lines found
+              </p>
+            </field>
         </record>
 
 

@@ -5,18 +5,19 @@
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 # Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# Melroy van den Berg <webmaster1989@gmail.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
+"Last-Translator: Melroy van den Berg <webmaster1989@gmail.com>, 2018\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -609,6 +610,8 @@ msgid ""
 "product if you directly do a Request for Quotation to one vendor or if you "
 "want a Call for Tenders to compare offers from several vendors."
 msgstr ""
+"Aanbestedingen worden gebruikt wanneer u aanvragen wilt genereren voor offertes naar verschillende leveranciers voor een gegeven set van producten. \n"
+"U kan per product configureren of u direct een offerteaanvraag naar een leverancier wilt sturen of dat u meerdere leveranciers wilt vragen voor een offerte om ze te vergelijken."
 
 #. module: purchase
 #: code:addons/purchase/models/stock.py:118
@@ -1119,6 +1122,10 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Foutmarge op een leverancier aflevertijd. Wanneer het systeem inkooporders "
+"aanmaakt voor het opnieuw rangschikken van producten, dan zullen de "
+"inkooporders zoveel dagen eerder worden aangemaakt, rekening houdende met "
+"onverwachte vertragingen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner_purchase_warn_msg
@@ -1175,7 +1182,7 @@ msgstr "Mijn activiteiten"
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "My Purchases"
-msgstr ""
+msgstr "Mijn aankopen"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:44
@@ -1998,6 +2005,11 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Dit voegt een dropshipping-route toe, welke toegepast kan worden op "
+"producten om uw leveranciers te vragen om direct aan uw klanten te leveren. "
+"Een dropship product genereert een inkoop offerte aanvraag zodra de "
+"verkooporder is bevestigd. Het proces is compleet gebaseerd op vraag. Het "
+"afleveradres is het afleveradres van de klant en niet van uw magazijn."
 
 #. module: purchase
 #: model:ir.ui.view,arch_db:purchase.purchase_order_form

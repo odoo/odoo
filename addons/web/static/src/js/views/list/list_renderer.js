@@ -276,6 +276,7 @@ var ListRenderer = BasicRenderer.extend({
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
             var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            this._handleAttributes($el, node);
             return $td.append($el);
         }
         var name = node.attrs.name;
@@ -286,6 +287,7 @@ var ListRenderer = BasicRenderer.extend({
             escape: true,
             isPassword: 'password' in node.attrs,
         });
+        this._handleAttributes($td, node);
         return $td.html(formattedValue);
     },
     /**
@@ -627,13 +629,15 @@ var ListRenderer = BasicRenderer.extend({
         _.invoke(this.pagers, 'destroy');
         this.pagers = [];
 
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
+        this.$el.toggleClass('o_view_nocontent_container', displayNoContentHelper);
         // display the no content helper if there is no data to display
-        if (!this._hasContent() && this.noContentHelp) {
-            this._renderNoContentHelper();
+        if (displayNoContentHelper) {
+            this.$el.html(this._renderNoContentHelper());
             return this._super();
         }
 
-        var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
+        var $table = $('<table>').addClass('o_list_view table table-condensed table-hover table-striped');
         this.$el
             .addClass('table-responsive')
             .append($table);

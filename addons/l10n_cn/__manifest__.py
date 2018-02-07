@@ -7,7 +7,7 @@
 # Copyright (C) 2008-now  开阖软件 jeff@osbzr.com    < PM and LTS >
 
 {
-    'name': '中国会计科目表',
+    'name': 'China - Accounting',
     'version': '1.8',
     'category': 'Localization',
     'author': 'www.openerp-china.org',
@@ -22,9 +22,10 @@
     增加小企业会计科目表
 
     """,
-    'depends': ['base', 'account'],
+    'depends': ['base', 'account', 'l10n_multilang'],
     'data': [
         'data/res_country_state_data.xml',
         'data/account_account_type_data.xml',
+        'data/account_tax_group_data.xml',
     ],
 }

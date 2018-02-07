@@ -3,10 +3,12 @@ odoo.define('web.calendar_tests', function (require) {
 
 var CalendarView = require('web.CalendarView');
 var CalendarRenderer = require('web.CalendarRenderer');
+var Dialog = require('web.Dialog');
 var fieldUtils = require('web.field_utils');
 var testUtils = require('web.test_utils');
 var session = require('web.session');
 
+var createActionManager = testUtils.createActionManager;
 
 CalendarRenderer.include({
     getAvatars: function () {
@@ -112,36 +114,12 @@ QUnit.module('Views', {
                     '<field name="stop_date"/>'+
                 '</group>'+
             '</form>',
-        "event,1,form": {
-            attrs: {},
-            children: [
-                {
-                    attrs: {
-                        modifiers: '{"invisible": true}',
-                        name: "allday"
-                    },
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {
-                        modifiers: '{"invisible": [["allday","=",false]]}',
-                        name: "start"
-                    },
-                    children: [],
-                    tag: 'field'
-                },
-                {
-                    attrs: {
-                        modifiers: '{"invisible": [["allday","=",true]]}',
-                        name: "stop"
-                    },
-                    children: [],
-                    tag: 'field'
-                }
-            ],
-            tag: "form"
-        }
+        "event,1,form":
+            '<form>' +
+                '<field name="allday" invisible="1"/>' +
+                '<field name="start" attrs=\'{"invisible": [["allday","=",false]]}\'/>' +
+                '<field name="stop" attrs=\'{"invisible": [["allday","=",true]]}\'/>' +
+            '</form>',
     };
 
     QUnit.test('simple calendar rendering', function (assert) {
@@ -1650,6 +1628,92 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('create an event (async dialog) [REQUIRE FOCUS]', function (assert) {
+        assert.expect(3);
+
+        var def = $.Deferred();
+        testUtils.patch(Dialog, {
+            open: function () {
+                var _super = this._super.bind(this);
+                def.then(_super);
+                return this;
+            },
+        });
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" '+
+                'string="Events" ' +
+                'event_open_popup="true" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday" '+
+                'mode="month" '+
+                'readonly_form_view_id="1">'+
+                    '<field name="name"/>'+
+            '</calendar>',
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        // create an event
+        var $cell = calendar.$('.fc-day-grid .fc-row:eq(2) .fc-day:eq(2)');
+        testUtils.triggerMouseEvent($cell, "mousedown");
+        testUtils.triggerMouseEvent($cell, "mouseup");
+
+        assert.strictEqual($('.modal').length, 0,
+            "should not have opened the dialog yet");
+
+        def.resolve();
+
+        assert.strictEqual($('.modal').length, 1,
+            "should have opened the dialog");
+        assert.strictEqual($('.modal input')[0], document.activeElement,
+            "should focus the input in the dialog");
+
+        calendar.destroy();
+        testUtils.unpatch(Dialog);
+    });
+
+    QUnit.test('calendar is configured to hide the groupby menu', function (assert) {
+        assert.expect(2);
+
+        var archs = {
+            'event,1,calendar': '<calendar class="o_calendar_test" '+
+                'date_start="start" '+
+                'date_stop="stop" '+
+                'all_day="allday"> '+
+                    '<field name="name"/>'+
+            '</calendar>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            name: 'some action',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']]
+        }];
+
+        var actionManager = createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        actionManager.doAction(1);
+        var $groupBy = actionManager.controlPanel.$('span.fa.fa-bars');
+        assert.strictEqual($groupBy.length, 1, 'just making sure we have the groupby menu');
+        assert.ok(!$groupBy.is(':visible'), 'groupby menu should not be visible');
+        actionManager.destroy();
+    });
+
 });
 
 });

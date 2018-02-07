@@ -83,21 +83,11 @@ class StockMove(models.Model):
                 'purchase_line_id').sudo()._update_received_qty()
         return res
 
-    def _action_cancel(self):
-        for move in self:
-            if move.created_purchase_line_id:
-                try:
-                    activity_type_id = self.env.ref('mail.mail_activity_data_todo').id
-                except ValueError:
-                    activity_type_id = False
-                self.env['mail.activity'].create({
-                    'activity_type_id': activity_type_id,
-                    'note': _('A sale order that generated this purchase order has been deleted. Check if an action is needed.'),
-                    'user_id': move.created_purchase_line_id.product_id.responsible_id.id,
-                    'res_id': move.created_purchase_line_id.order_id.id,
-                    'res_model_id': self.env.ref('purchase.model_purchase_order').id,
-                })
-        return super(StockMove, self)._action_cancel()
+    def _get_upstream_documents_and_responsibles(self, visited):
+        if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
+            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
+        else:
+            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
 
 class StockWarehouse(models.Model):

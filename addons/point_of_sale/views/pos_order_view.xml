@@ -37,7 +37,7 @@
                                 <field name="qty"/>
                                 <field name="price_unit" widget="monetary"/>
                                 <field name="discount" widget="monetary"/>
-                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary"/>
                                 <field name="price_subtotal_incl" widget="monetary"/>
@@ -50,7 +50,7 @@
                                     <field name="price_unit" widget="monetary"/>
                                     <field name="price_subtotal" invisible="1" widget="monetary"/>
                                     <field name="price_subtotal_incl" invisible="1" widget="monetary"/>
-                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="notice"/>
                                 </group>
@@ -155,12 +155,10 @@
         <field name="view_id" eval="False"/>
         <field name="domain">[]</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a new order.
+            <p class="o_view_nocontent_empty_folder">
+                No orders found
             </p><p>
-                Use this menu to browse previous orders. To record new
-                orders, you may use the menu <i>Your Session</i> for
-                the touchscreen interface.
+                To record new orders, start a new session.
             </p>
         </field>
     </record>

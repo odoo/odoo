@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
 
     def test_stock_landed_costs_rounding(self):

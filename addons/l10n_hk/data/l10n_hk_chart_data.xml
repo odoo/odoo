@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Account Template -->
+    <record id="l10n_hk_11" model="account.account.template">
+        <field name="name">Fixed Assets</field>
+        <field name="code">11</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_fixed_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1110" model="account.account.template">
+        <field name="name">Furniture and Fixtures</field>
+        <field name="code">1110</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1130" model="account.account.template">
+        <field name="name">Equipment</field>
+        <field name="code">1130</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1140" model="account.account.template">
+        <field name="name">Decoration</field>
+        <field name="code">1140</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1160" model="account.account.template">
+        <field name="name">Investments</field>
+        <field name="code">1160</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_non_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_12" model="account.account.template">
+        <field name="name">Current Assets</field>
+        <field name="code">12</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1240" model="account.account.template">
+        <field name="name">Account Receivable</field>
+        <field name="code">1240</field>
+        <field name="reconcile" eval="True" />
+        <field name="user_type_id" ref="account.data_account_type_receivable" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1241" model="account.account.template">
+        <field name="name">Utility &amp; Rental Deposit</field>
+        <field name="code">1241</field>
+        <field name="reconcile" eval="True" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1242" model="account.account.template">
+        <field name="name">Supplier Prepayments</field>
+        <field name="code">1242</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1245" model="account.account.template">
+        <field name="name">Sundry Deposits</field>
+        <field name="code">1245</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1246" model="account.account.template">
+        <field name="name">Other Receivable</field>
+        <field name="code">1246</field>
+        <field name="reconcile" eval="True" />
+        <field name="user_type_id" ref="account.data_account_type_receivable" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1250" model="account.account.template">
+        <field name="name">Stock Interim Account (Received)</field>
+        <field name="code">1250</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1260" model="account.account.template">
+        <field name="name">Stock Interim Account (Delivered)</field>
+        <field name="code">1260</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_1270" model="account.account.template">
+        <field name="name">Stock Valuation Account</field>
+        <field name="code">1270</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_assets" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_21" model="account.account.template">
+        <field name="name">Non-current Liabilities</field>
+        <field name="code">21</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_non_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_22" model="account.account.template">
+        <field name="name">Current Liabilities</field>
+        <field name="code">22</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_2210" model="account.account.template">
+        <field name="name">Accruals</field>
+        <field name="code">2210</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_2211" model="account.account.template">
+        <field name="name">Account Payable</field>
+        <field name="code">2211</field>
+        <field name="reconcile" eval="True" />
+        <field name="user_type_id" ref="account.data_account_type_payable" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_2212" model="account.account.template">
+        <field name="name">Receipt in Advance (Customer Prepayments)</field>
+        <field name="code">2212</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_2214" model="account.account.template">
+        <field name="name">Provision for Taxation</field>
+        <field name="code">2214</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_2215" model="account.account.template">
+        <field name="name">Proposed Dividend</field>
+        <field name="code">2215</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_2216" model="account.account.template">
+        <field name="name">Other Payable</field>
+        <field name="code">2216</field>
+        <field name="reconcile" eval="True" />
+        <field name="user_type_id" ref="account.data_account_type_payable" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_31" model="account.account.template">
+        <field name="name">Paid Capital</field>
+        <field name="code">31</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_32" model="account.account.template">
+        <field name="name">Accumulated Profit &amp; Loss</field>
+        <field name="code">32</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_33" model="account.account.template">
+        <field name="name">Profit &amp; Loss Account</field>
+        <field name="code">33</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_current_liabilities" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_41" model="account.account.template">
+        <field name="name">Trade Income</field>
+        <field name="code">41</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_42" model="account.account.template">
+        <field name="name">Other Income and Gains</field>
+        <field name="code">42</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_4210" model="account.account.template">
+        <field name="name">Sundry Income</field>
+        <field name="code">4210</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_4220" model="account.account.template">
+        <field name="name">Exchange Adjustment</field>
+        <field name="code">4220</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_4230" model="account.account.template">
+        <field name="name">Bank Interest Income</field>
+        <field name="code">4230</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_4240" model="account.account.template">
+        <field name="name">Foreign Exchange Gain</field>
+        <field name="code">4240</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_revenue" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_51" model="account.account.template">
+        <field name="name">Costs</field>
+        <field name="code">51</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5101" model="account.account.template">
+        <field name="name">Trade Costs</field>
+        <field name="code">5101</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5105" model="account.account.template">
+        <field name="name">Misc. Costs</field>
+        <field name="code">5105</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5106" model="account.account.template">
+        <field name="name">Costs of Transportation</field>
+        <field name="code">5106</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5111" model="account.account.template">
+        <field name="name">Declaration Fees</field>
+        <field name="code">5111</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5112" model="account.account.template">
+        <field name="name">Packing Fees</field>
+        <field name="code">5112</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_52" model="account.account.template">
+        <field name="name">Expenses</field>
+        <field name="code">52</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5201" model="account.account.template">
+        <field name="name">Bank Charges</field>
+        <field name="code">5201</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5202" model="account.account.template">
+        <field name="name">Entertainment</field>
+        <field name="code">5202</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5203" model="account.account.template">
+        <field name="name">Electricity &amp; Water Fees</field>
+        <field name="code">5203</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5205" model="account.account.template">
+        <field name="name">Postage &amp; Stamps</field>
+        <field name="code">5205</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5206" model="account.account.template">
+        <field name="name">Printing &amp; Stationery</field>
+        <field name="code">5206</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5207" model="account.account.template">
+        <field name="name">Rent &amp; Rates</field>
+        <field name="code">5207</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5208" model="account.account.template">
+        <field name="name">Sundry Expenses</field>
+        <field name="code">5208</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5209" model="account.account.template">
+        <field name="name">Telecommunication Expenses</field>
+        <field name="code">5209</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5210" model="account.account.template">
+        <field name="name">Traffic Fees</field>
+        <field name="code">5210</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5211" model="account.account.template">
+        <field name="name">IT Expenses</field>
+        <field name="code">5211</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5214" model="account.account.template">
+        <field name="name">Insurance</field>
+        <field name="code">5214</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5215" model="account.account.template">
+        <field name="name">Sales Commission</field>
+        <field name="code">5215</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5216" model="account.account.template">
+        <field name="name">Overseas Traveling</field>
+        <field name="code">5216</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5217" model="account.account.template">
+        <field name="name">MPF Contribution</field>
+        <field name="code">5217</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5218" model="account.account.template">
+        <field name="name">Wages &amp; Salaries</field>
+        <field name="code">5218</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5219" model="account.account.template">
+        <field name="name">Bonus Payment</field>
+        <field name="code">5219</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5221" model="account.account.template">
+        <field name="name">Taxation</field>
+        <field name="code">5221</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5222" model="account.account.template">
+        <field name="name">Local Delivery</field>
+        <field name="code">5222</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5223" model="account.account.template">
+        <field name="name">Management Fees</field>
+        <field name="code">5223</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5224" model="account.account.template">
+        <field name="name">Depreciation</field>
+        <field name="code">5224</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5225" model="account.account.template">
+        <field name="name">Audit Fees</field>
+        <field name="code">5225</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5226" model="account.account.template">
+        <field name="name">Bad Debts</field>
+        <field name="code">5226</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5228" model="account.account.template">
+        <field name="name">Legal &amp; Professional Fees</field>
+        <field name="code">5228</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5229" model="account.account.template">
+        <field name="name">Dividend</field>
+        <field name="code">5229</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5231" model="account.account.template">
+        <field name="name">Disposal</field>
+        <field name="code">5231</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5234" model="account.account.template">
+        <field name="name">Repair and Maintenance</field>
+        <field name="code">5234</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5235" model="account.account.template">
+        <field name="name">Advertising</field>
+        <field name="code">5235</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+    <record id="l10n_hk_5240" model="account.account.template">
+        <field name="name">Foreign Exchange Loss</field>
+        <field name="code">5240</field>
+        <field name="reconcile" eval="False" />
+        <field name="user_type_id" ref="account.data_account_type_expenses" />
+        <field name="tag_ids" eval="[(6,0,[ref('account.account_tag_operating')])]" />
+        <field name="chart_template_id" ref="l10n_hk_chart_template" />
+    </record>
+
+    <!-- Account Chart Template -->
+    <record id="l10n_hk_chart_template" model="account.chart.template">
+        <field name="name">Hong Kong - Chart of Accounts</field>
+        <field name="transfer_account_id" ref="l10n_hk_transfer" />
+        <field name="property_account_receivable_id" ref="l10n_hk_1240" />
+        <field name="property_account_payable_id" ref="l10n_hk_2211" />
+        <field name="property_account_income_categ_id" ref="l10n_hk_41" />
+        <field name="property_account_expense_categ_id" ref="l10n_hk_51" />
+        <field name="expense_currency_exchange_account_id" ref="l10n_hk_5240" />
+        <field name="income_currency_exchange_account_id" ref="l10n_hk_4240" />
+        <field name="use_anglo_saxon" eval="True" />
+    </record>
+
+</odoo>

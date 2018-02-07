@@ -405,10 +405,12 @@ class Picking(models.Model):
         """
         for picking in self:
             packages = self.env['stock.quant.package']
-            for ml in picking.move_line_ids:
-                if ml.package_id.id == ml.result_package_id.id:
-                    if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(ml.package_id):
-                        packages |= ml.package_id
+            packages_to_check = picking.move_line_ids\
+                .filtered(lambda ml: ml.result_package_id and ml.package_id.id == ml.result_package_id.id)\
+                .mapped('package_id')
+            for package_to_check in packages_to_check:
+                if picking.state in ('done', 'cancel') or picking._check_move_lines_map_quant_package(package_to_check):
+                    packages |= package_to_check
             picking.entire_package_ids = packages
             picking.entire_package_detail_ids = packages
 
@@ -635,8 +637,6 @@ class Picking(models.Model):
         self.write({'date_done': fields.Datetime.now()})
         return True
 
-    do_transfer = action_done #TODO:replace later
-
     def _check_move_lines_map_quant_package(self, package):
         """ This method checks that all product of the package (quant) are well present in the move_line_ids of the picking. """
         all_in = True
@@ -822,6 +822,163 @@ class Picking(models.Model):
             backorder_picking.action_assign()
             backorders |= backorder_picking
         return backorders
+
+    def _log_activity_get_documents(self, orig_obj_changes, stream_field, stream, sorted_method=False, groupby_method=False):
+        """ Generic method to log activity. To use with
+        _log_activity method. It either log on uppermost
+        ongoing documents or following documents. This method
+        find all the documents and responsible for which a note
+        has to be log. It also generate a rendering_context in
+        order to render a specific note by documents containing
+        only the information relative to the document it. For example
+        we don't want to notify a picking on move that it doesn't
+        contain.
+
+        :param orig_obj_changes dict: contain a record as key and the
+        change on this record as value.
+        eg: {'move_id': (new product_uom_qty, old product_uom_qty)}
+        :param stream_field string: It has to be a field of the
+        records that are register in the key of 'orig_obj_changes'
+        eg: 'move_dest_ids' if we use move as record (previous example)
+            - 'UP' if we want to log on the upper most ongoing
+            documents.
+            - 'DOWN' if we want to log on following documents.
+        :param sorted_method method, groupby_method: Only need when
+        stream is 'DOWN', it should sort/group by tuple(object on
+        which the activity is log, the responsible for this object)
+        """
+        move_to_orig_object_rel = {co: ooc for ooc in orig_obj_changes.keys() for co in ooc[stream_field]}
+        origin_objects = self.env[list(orig_obj_changes.keys())[0]._name].concat(*list(orig_obj_changes.keys()))
+        # The purpose here is to group each destination object by
+        # (document to log, responsible) no matter the stream direction.
+        # example:
+        # {'(delivery_picking_1, admin)': stock.move(1, 2)
+        #  '(delivery_picking_2, admin)': stock.move(3)}
+        visited_documents = {}
+        if stream == 'DOWN':
+            if sorted_method and groupby_method:
+                grouped_moves = groupby(sorted(origin_objects.mapped(stream_field), key=sorted_method), key=groupby_method)
+            else:
+                raise UserError(_('You have to define a groupby and sorted method and pass them as arguments.'))
+        elif stream == 'UP':
+            # When using upstream document it is required to define
+            # _get_upstream_documents_and_responsibles on
+            # destination objects in order to ascend documents.
+            grouped_moves = {}
+            for visited_move in origin_objects.mapped(stream_field):
+                for document, responsible, visited in visited_move._get_upstream_documents_and_responsibles(self.env[visited_move._name]):
+                    if grouped_moves.get((document, responsible)):
+                        grouped_moves[(document, responsible)] |= visited_move
+                        visited_documents[(document, responsible)] |= visited
+                    else:
+                        grouped_moves[(document, responsible)] = visited_move
+                        visited_documents[(document, responsible)] = visited
+            grouped_moves = grouped_moves.items()
+        else:
+            raise UserError(_('Unknow stream.'))
+
+        documents = {}
+        for (parent, responsible), moves in grouped_moves:
+            moves = list(moves)
+            moves = self.env[moves[0]._name].concat(*moves)
+            # Get the note
+            rendering_context = {move: (orig_object, orig_obj_changes[orig_object]) for move in moves for orig_object in move_to_orig_object_rel[move]}
+            if visited_documents:
+                documents[(parent, responsible)] = rendering_context, visited_documents.values()
+            else:
+                documents[(parent, responsible)] = rendering_context
+        return documents
+
+    def _log_activity(self, render_method, documents):
+        """ Log a note for each documents, responsible pair in
+        documents passed as argument. The render_method is then
+        call in order to use a template and render it with a
+        rendering_context.
+
+        :param documents dict: A tuple (document, responsible) as key.
+        An activity will be log by key. A rendering_context as value.
+        If used with _log_activity_get_documents. In 'DOWN' stream
+        cases the rendering_context will be a dict with format:
+        {'stream_object': ('orig_object', new_qty, old_qty)}
+        'UP' stream will add all the documents browsed in order to
+        get the final/upstream document present in the key.
+        :param render_method method: a static function that will generate
+        the html note to log on the activity. The render_method should
+        use the args:
+            - rendering_context dict: value of the documents argument
+        the render_method should return a string with an html format
+        :param stream string:
+        """
+        for (parent, responsible), rendering_context in documents.items():
+            note = render_method(rendering_context)
+
+            self.env['mail.activity'].create({
+                'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
+                'note': note,
+                'user_id': responsible.id,
+                'res_id': parent.id,
+                'res_model_id': self.env['ir.model'].search([('model', '=', parent._name)], limit=1).id,
+            })
+
+    def _log_less_quantities_than_expected(self, moves):
+        """ Log an activity on picking that follow moves. The note
+        contains the moves changes and all the impacted picking.
+
+        :param dict moves: a dict with a move as key and tuple with
+        new and old quantity as value. eg: {move_1 : (4, 5)}
+        """
+        def _keys_in_sorted(move):
+            """ sort by picking and the responsible for the product the
+            move.
+            """
+            return (move.picking_id.id, move.product_id.responsible_id.id)
+
+        def _keys_in_groupby(move):
+            """ group by picking and the responsible for the product the
+            move.
+            """
+            return (move.picking_id, move.product_id.responsible_id)
+
+        def _render_note_exception_quantity(rendering_context):
+            """ :param rendering_context:
+            {'move_dest': (move_orig, (new_qty, old_qty))}
+            """
+            origin_moves = self.env['stock.move'].browse([move.id for move_orig in rendering_context.values() for move in move_orig[0]])
+            origin_picking = origin_moves.mapped('picking_id')
+            move_dest_ids = self.env['stock.move'].concat(*rendering_context.keys())
+            impacted_pickings = origin_picking._get_impacted_pickings(move_dest_ids) - move_dest_ids.mapped('picking_id')
+            values = {
+                'origin_picking': origin_picking,
+                'moves_information': rendering_context.values(),
+                'impacted_pickings': impacted_pickings,
+            }
+            return self.env.ref('stock.exception_on_picking').render(values=values)
+
+        documents = self._log_activity_get_documents(moves, 'move_dest_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
+        self._log_activity(_render_note_exception_quantity, documents)
+
+    def _get_impacted_pickings(self, moves):
+        """ This function is used in _log_less_quantities_than_expected
+        the purpose is to notify a user with all the pickings that are
+        impacted by an action on a chained move.
+        param: 'moves' contain moves that belong to a common picking.
+        return: all the pickings that contain a destination moves
+        (direct and indirect) from the moves given as arguments.
+        """
+
+        def _explore(impacted_pickings, explored_moves, moves_to_explore):
+            for move in moves_to_explore:
+                if move not in explored_moves:
+                    impacted_pickings |= move.picking_id
+                    explored_moves |= move
+                    moves_to_explore |= move.move_dest_ids
+            moves_to_explore = moves_to_explore - explored_moves
+            if moves_to_explore:
+                return _explore(impacted_pickings, explored_moves, moves_to_explore)
+            else:
+                return impacted_pickings
+
+        return _explore(self.env['stock.picking'], self.env['stock.move'], moves)
 
     def _put_in_pack(self):
         package = False

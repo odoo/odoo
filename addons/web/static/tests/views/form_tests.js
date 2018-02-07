@@ -1,13 +1,13 @@
 odoo.define('web.form_tests', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var config = require('web.config');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
 var FormView = require('web.FormView');
 var pyeval = require('web.pyeval');
-var RainbowMan = require('web.RainbowMan');
 var testUtils = require('web.test_utils');
 var widgetRegistry = require('web.widget_registry');
 var Widget = require('web.Widget');
@@ -477,6 +477,37 @@ QUnit.module('Views', {
 
         assert.notOk(form.$('.o_notebook .nav li:first()').is(':visible'),
             'first tab should be invisible');
+        assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
+            'second tab should be active');
+
+        form.destroy();
+    });
+
+    QUnit.test('autofocus on second notebook page', function (assert) {
+        assert.expect(2);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="product_id"/>' +
+                        '<notebook>' +
+                            '<page string="Choucroute">' +
+                                '<field name="foo"/>' +
+                            '</page>' +
+                            '<page string="Cassoulet" autofocus="autofocus">' +
+                                '<field name="bar"/>' +
+                            '</page>' +
+                        '</notebook>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+
+        assert.notOk(form.$('.o_notebook .nav li:first()').hasClass('active'),
+            'first tab should not active');
         assert.ok(form.$('.o_notebook .nav li:nth(1)').hasClass('active'),
             'second tab should be active');
 
@@ -1422,7 +1453,7 @@ QUnit.module('Views', {
                         '<field name="foo"/>' +
                     '</sheet>' +
                 '</form>',
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             res_id: 1,
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
@@ -1568,7 +1599,7 @@ QUnit.module('Views', {
                         '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
@@ -1599,7 +1630,7 @@ QUnit.module('Views', {
                         '<field name="foo"/>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
@@ -1630,7 +1661,7 @@ QUnit.module('Views', {
                         '</footer>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {footer_to_buttons: true},
+            viewOptions: {footerToButtons: true},
         });
 
         assert.ok(form.$buttons.find('button.infooter').length, "footer button should be in footer");
@@ -2021,7 +2052,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners"><field name="date"></field></form>',
             intercepts: {
-                switch_to_previous_view: function (event) {
+                history_back: function () {
                     form.update({}, {reload: false});
                 }
             },
@@ -2057,9 +2088,9 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
             intercepts: {
-                switch_to_previous_view: function (event) {
+                history_back: function () {
                     assert.ok(true, "should have sent correct event");
-                    // simulate the response from the view manager, in the case
+                    // simulate the response from the action manager, in the case
                     // where we have only one active view (the form).  If there
                     // was another view, we would have switched to that view
                     // instead
@@ -2097,7 +2128,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners"><field name="foo"></field></form>',
             intercepts: {
-                switch_to_previous_view: function () {
+                history_back: function () {
                     assert.ok(true, "should have sent correct event");
                 }
             }
@@ -2126,9 +2157,9 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners"><field name="foo"></field></form>',
             intercepts: {
-                switch_to_previous_view: function (event) {
+                history_back: function () {
                     assert.ok(true, "should have sent correct event");
-                    // simulate the response from the view manager, in the case
+                    // simulate the response from the action manager, in the case
                     // where we have only one active view (the form).  If there
                     // was another view, we would have switched to that view
                     // instead
@@ -2168,7 +2199,7 @@ QUnit.module('Views', {
             data: this.data,
             arch: '<form string="Partners"><field name="foo"></field></form>',
             res_id: 1,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     return $.when([]);
@@ -2513,7 +2544,7 @@ QUnit.module('Views', {
             viewOptions: {
                 ids: [1, 2, 4],
                 index: 0,
-                sidebar: true,
+                hasSidebar: true,
             },
             res_id: 1,
             mockRPC: function (route, args) {
@@ -2557,7 +2588,7 @@ QUnit.module('Views', {
             viewOptions: {
                 ids: [1],
                 index: 0,
-                sidebar: true,
+                hasSidebar: true,
             },
             res_id: 1,
             mockRPC: function (route, args) {
@@ -2573,15 +2604,14 @@ QUnit.module('Views', {
         form.sidebar.$('button.o_dropdown_toggler_btn').click();
         form.sidebar.$('a:contains(Delete)').click();
 
-        testUtils.intercept(form, 'do_action', function (event) {
-            assert.strictEqual(event.data.action, 'history_back',
-                "should trigger an history back action");
+        testUtils.intercept(form, 'history_back', function () {
+            assert.step('history_back');
         });
         assert.strictEqual($('.modal').length, 1, 'a confirm modal should be displayed');
         $('.modal .modal-footer button.btn-primary').click();
         assert.strictEqual($('.modal').length, 0, 'no confirm modal should be displayed');
 
-        assert.verifySteps(['read', 'unlink']);
+        assert.verifySteps(['read', 'unlink', 'history_back']);
         form.destroy();
     });
 
@@ -4258,7 +4288,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {
-                footer_to_buttons: true,
+                footerToButtons: true,
                 mode: 'edit',
             },
         });
@@ -4297,7 +4327,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             viewOptions: {
-                footer_to_buttons: true,
+                footerToButtons: true,
             },
         });
 
@@ -4655,7 +4685,7 @@ QUnit.module('Views', {
                 print: [],
             },
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/action/load') {
@@ -5914,7 +5944,7 @@ QUnit.module('Views', {
                         '<field name="display_name"/>' +
                 '</form>',
             res_id: 1,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             mockRPC: function (route, args) {
                 if (args.method === 'search_read' && args.model === 'ir.attachment') {
                     // rpcs done by the sidebar
@@ -6308,5 +6338,114 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('edition in form view on a "noCache" model', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(BasicModel, {
+            noCacheModels: BasicModel.prototype.noCacheModels.concat(['partner']),
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.step('write');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        core.bus.on('clear_cache', form, assert.step.bind(assert, 'clear_cache'));
+
+        form.$('.o_field_widget[name=display_name]').val('new value').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['write', 'clear_cache']);
+
+        form.destroy();
+        testUtils.unpatch(BasicModel);
+    });
+
+    QUnit.test('creation in form view on a "noCache" model', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(BasicModel, {
+            noCacheModels: BasicModel.prototype.noCacheModels.concat(['partner']),
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.step('create');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        core.bus.on('clear_cache', form, assert.step.bind(assert, 'clear_cache'));
+
+        form.$('.o_field_widget[name=display_name]').val('value').trigger('input');
+        form.$buttons.find('.o_form_button_save').click();
+
+        assert.verifySteps(['create', 'clear_cache']);
+
+        form.destroy();
+        testUtils.unpatch(BasicModel);
+    });
+
+    QUnit.test('deletion in form view on a "noCache" model', function (assert) {
+        assert.expect(4);
+
+        testUtils.patch(BasicModel, {
+            noCacheModels: BasicModel.prototype.noCacheModels.concat(['partner']),
+        });
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="display_name"/>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'unlink') {
+                    assert.step('unlink');
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+        core.bus.on('clear_cache', form, assert.step.bind(assert, 'clear_cache'));
+
+        form.sidebar.$('a:contains(Delete)').click();
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+
+        assert.verifySteps(['unlink', 'clear_cache']);
+
+        form.destroy();
+        testUtils.unpatch(BasicModel);
+    });
 });
+
 });

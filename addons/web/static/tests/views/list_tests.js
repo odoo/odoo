@@ -1,7 +1,9 @@
 odoo.define('web.list_tests', function (require) {
 "use strict";
 
+var BasicModel = require('web.BasicModel');
 var config = require('web.config');
+var core = require('web.core');
 var basicFields = require('web.basic_fields');
 var FormView = require('web.FormView');
 var ListView = require('web.ListView');
@@ -150,7 +152,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree delete="0"><field name="foo"/></tree>',
         });
 
@@ -261,7 +263,7 @@ QUnit.module('Views', {
                     '<field name="foo"/>' +
                     '<field name="m2o" invisible="1"/>' +
                 '</tree>',
-            mockRPC: function (route, args) {
+            mockRPC: function (route) {
                 assert.step(_.last(route.split('/')));
                 return this._super.apply(this, arguments);
             },
@@ -765,7 +767,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
         });
 
@@ -795,7 +797,7 @@ QUnit.module('Views', {
             View: ListView,
             model: 'foo',
             data: this.data,
-            viewOptions: {sidebar: true},
+            viewOptions: {hasSidebar: true},
             arch: '<tree><field name="foo"/></tree>',
             mockRPC: function (route) {
                 if (route === '/web/dataset/call_kw/ir.attachment/search_read') {
@@ -989,7 +991,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('use default_order on editable tree: sort on demand', function (assert) {
-        assert.expect(8);
+        assert.expect(11);
 
         this.data.foo.records[0].o2m = [1, 3];
         this.data.bar.fields = {name: {string: "Name", type: "char", sortable: true}};
@@ -1029,12 +1031,21 @@ QUnit.module('Views', {
             "Value 2 should be third (shouldn't be sorted)");
 
         form.$('.o_form_sheet_bg').click(); // validate the row before sorting
-        $o2m.find('.o_column_sortable').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 3)').length,
-            "Value 3 should be first");
-        assert.ok(form.$('tbody tr:eq(1) td:contains(Value 2)').length,
+
+        $o2m.find('.o_column_sortable').click(); // resort list after edition
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 1',
+            "Value 1 should be first");
+        assert.strictEqual(form.$('tbody tr:eq(1)').text(), 'Value 2',
             "Value 2 should be second (should be sorted after saving)");
-        assert.ok(form.$('tbody tr:eq(2) td:contains(Value 1)').length,
+        assert.strictEqual(form.$('tbody tr:eq(2)').text(), 'Value 3',
+            "Value 3 should be third");
+
+        $o2m.find('.o_column_sortable').click();
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 3',
+            "Value 3 should be first");
+        assert.strictEqual(form.$('tbody tr:eq(1)').text(), 'Value 2',
+            "Value 2 should be second (should be sorted after saving)");
+        assert.strictEqual(form.$('tbody tr:eq(2)').text(), 'Value 1',
             "Value 1 should be third");
 
         form.destroy();
@@ -1051,7 +1062,7 @@ QUnit.module('Views', {
             ids.push(id);
             this.data.bar.records.push({
                 id: id,
-                name: "Value " + id,
+                name: "Value " + (id < 10 ? '0' : '') + id,
             });
         }
         this.data.foo.records[0].o2m = ids;
@@ -1074,15 +1085,15 @@ QUnit.module('Views', {
 
         // Change page
         form.$('.o_pager_next').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 44)').length,
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 44',
             "record 44 should be first");
-        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 48)').length,
+        assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 48',
             "record 48 should be last");
 
         form.$('.o_column_sortable').click();
-        assert.ok(form.$('tbody tr:first td:contains(Value 48)').length,
+        assert.strictEqual(form.$('tbody tr:first').text(), 'Value 08',
             "record 48 should be first");
-        assert.ok(form.$('tbody tr:eq(4) td:contains(Value 44)').length,
+        assert.strictEqual(form.$('tbody tr:eq(4)').text(), 'Value 04',
             "record 44 should be first");
 
         form.destroy();
@@ -1261,18 +1272,18 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should display the no content helper");
 
         assert.strictEqual(list.$('table').length, 0, "should not have a table in the dom");
 
-        assert.strictEqual(list.$('.oe_view_nocontent p.hello:contains(add a partner)').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent p.hello:contains(add a partner)').length, 1,
             "should have rendered no content helper from action");
 
         this.data.foo.records = records;
         list.reload();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
         assert.strictEqual(list.$('table').length, 1, "should have a table in the dom");
         list.destroy();
@@ -1290,7 +1301,7 @@ QUnit.module('Views', {
             arch: '<tree><field name="foo"/></tree>',
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");
 
         assert.strictEqual(list.$('tr.o_data_row').length, 0,
@@ -1330,7 +1341,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 1,
             "should have a no content helper displayed");
 
         assert.strictEqual(list.$('div.table-responsive').length, 0,
@@ -1339,7 +1350,7 @@ QUnit.module('Views', {
 
         list.$buttons.find('.o_list_button_add').click();
 
-        assert.strictEqual(list.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(list.$('.o_view_nocontent').length, 0,
             "should not have a no content helper displayed");
         assert.strictEqual(list.$('table').length, 1, "should have rendered a table");
         assert.strictEqual(list.$el.css('height'), list.$('div.table-responsive').css('height'),
@@ -1677,7 +1688,7 @@ QUnit.module('Views', {
                         "'switch_view' event has been triggered");
                 },
                 env_updated: function (event) {
-                    assert.deepEqual(event.data.ids, envIDs,
+                    assert.deepEqual(event.data.env.ids, envIDs,
                         "should notify the environment with the correct ids");
                 },
             },
@@ -2022,7 +2033,7 @@ QUnit.module('Views', {
                     '<field name="bar"/>' +
                 '</tree>',
             intercepts: {
-                warning: function (ev) {
+                warning: function () {
                     warnings++;
                 },
             },
@@ -2061,14 +2072,13 @@ QUnit.module('Views', {
             arch: '<tree><field name="name"/></tree>',
         });
 
-        testUtils.intercept(list, "switch_view", function (event) {
-            assert.deepEqual(event.data, {
-                    'model': 'event',
-                    'res_id': '2-20170808020000',
-                    'view_type': 'form',
-                    'mode': 'readonly'
-                },
-                "should trigger switch to the form view for the record virtual id");
+        testUtils.intercept(list, 'switch_view', function (event) {
+            assert.deepEqual(_.pick(event.data, 'mode', 'model', 'res_id', 'view_type'), {
+                mode: 'readonly',
+                model: 'event',
+                res_id: '2-20170808020000',
+                view_type: 'form',
+            }, "should trigger a switch_view event to the form view for the record virtual id");
         });
         list.$('td:contains(virtual)').click();
 
@@ -2083,7 +2093,7 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree editable="bottom"><field name="foo"/></tree>',
-            mockRPC: function (route, args) {
+            mockRPC: function (route) {
                 assert.step(route);
                 return this._super.apply(this, arguments);
             },
@@ -2211,7 +2221,7 @@ QUnit.module('Views', {
                 print: [],
             },
             viewOptions: {
-                sidebar: true,
+                hasSidebar: true,
             },
         });
 
@@ -2342,7 +2352,6 @@ QUnit.module('Views', {
 
         list.destroy();
     });
-
 
     QUnit.test('navigation with tab on a one2many list with create="0"', function (assert) {
         assert.expect(4);
@@ -3164,7 +3173,6 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-
     QUnit.test('basic support for widgets', function (assert) {
         assert.expect(1);
 
@@ -3215,6 +3223,59 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view on a "noCache" model', function (assert) {
+        assert.expect(8);
+
+        testUtils.patch(BasicModel, {
+            noCacheModels: BasicModel.prototype.noCacheModels.concat(['foo']),
+        });
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree editable="top">' +
+                    '<field name="display_name"/>' +
+                '</tree>',
+            mockRPC: function (route, args) {
+                if (_.contains(['create', 'unlink', 'write'], args.method)) {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            },
+            viewOptions: {
+                hasSidebar: true,
+            },
+        });
+        core.bus.on('clear_cache', list, assert.step.bind(assert, 'clear_cache'));
+
+        // create a new record
+        list.$buttons.find('.o_list_button_add').click();
+        list.$('.o_selected_row .o_field_widget').val('some value').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        // edit an existing record
+        list.$('.o_data_cell:first').click();
+        list.$('.o_selected_row .o_field_widget').val('new value').trigger('input');
+        list.$buttons.find('.o_list_button_save').click();
+
+        // delete a record
+        list.$('.o_data_row:first .o_list_record_selector input').click();
+        list.sidebar.$('a:contains(Delete)').click();
+        $('.modal .modal-footer .btn-primary').click(); // confirm
+
+        assert.verifySteps([
+            'create',
+            'clear_cache',
+            'write',
+            'clear_cache',
+            'unlink',
+            'clear_cache',
+        ]);
+
+        list.destroy();
+        testUtils.unpatch(BasicModel);
+    });
 });
 
 });

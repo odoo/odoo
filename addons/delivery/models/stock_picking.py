@@ -51,12 +51,6 @@ class StockMoveLine(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    def _default_uom(self):
-        weight_uom_id = self.env.ref('product.product_uom_kgm', raise_if_not_found=False)
-        if not weight_uom_id:
-            uom_categ_id = self.env.ref('product.product_uom_categ_kgm').id
-            weight_uom_id = self.env['product.uom'].search([('category_id', '=', uom_categ_id), ('factor', '=', 1)], limit=1)
-        return weight_uom_id
 
     @api.one
     @api.depends('move_line_ids')
@@ -89,8 +83,7 @@ class StockPicking(models.Model):
     weight = fields.Float(compute='_cal_weight', digits=dp.get_precision('Stock Weight'), store=True)
     carrier_tracking_ref = fields.Char(string='Tracking Reference', copy=False)
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
-    number_of_packages = fields.Integer(string='Number of Packages', copy=False)
-    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', required=True, readonly="1", help="Unit of measurement for Weight", default=_default_uom)
+    weight_uom_id = fields.Many2one('product.uom', string='Unit of Measure', compute='_compute_weight_uom_id', help="Unit of measurement for Weight")
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
     weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
     shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight')
@@ -100,23 +93,24 @@ class StockPicking(models.Model):
         for picking in self:
             picking.carrier_tracking_url = picking.carrier_id.get_tracking_link(picking) if picking.carrier_id and picking.carrier_tracking_ref else False
 
-    @api.depends('product_id', 'move_lines')
+    def _compute_weight_uom_id(self):
+        weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
+        for picking in self:
+            picking.weight_uom_id = weight_uom_id
+
+    @api.depends('move_lines')
     def _cal_weight(self):
         for picking in self:
             picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
 
     @api.multi
-    def do_transfer(self):
-        # TDE FIXME: should work in batch
-        self.ensure_one()
-        res = super(StockPicking, self).do_transfer()
-
-        if self.carrier_id and self.carrier_id.integration_level == 'rate_and_ship':
-            self.send_to_shipper()
-
-        if self.carrier_id:
-            self._add_delivery_cost_to_so()
-
+    def action_done(self):
+        res = super(StockPicking, self).action_done()
+        for pick in self:
+            if pick.carrier_id:
+                if pick.carrier_id.integration_level == 'rate_and_ship':
+                    pick.send_to_shipper()
+                pick._add_delivery_cost_to_so()
         return res
 
     @api.multi
@@ -149,7 +143,7 @@ class StockPicking(models.Model):
             default_model='stock.picking',
             default_use_template=bool(delivery_template_id),
             default_template_id=delivery_template_id,
-            custom_layout='delivery.mail_template_data_delivery_notification'
+            custom_layout='mail.mail_notification_borders'
         )
         return {
             'type': 'ir.actions.act_window',

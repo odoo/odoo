@@ -24,6 +24,22 @@ var utils = {
         }
     },
     /**
+     * Check if the value is a bin_size or not.
+     * If not, compute an approximate size out of the base64 encoded string.
+     *
+     * @param  {string} value original format
+     * @return {string} bin_size (human-readable)
+     */
+    binaryToBinsize: function (value) {
+        if (!this.is_bin_size(value)) {
+            // Computing approximate size out of base64 encoded string
+            // http://en.wikipedia.org/wiki/Base64#MIME
+            return this.human_size(value.length / 1.37);
+        }
+        // already bin_size
+        return value;
+    },
+    /**
      * Confines a value inside an interval
      *
      * @param {number} [val] the value to confine
@@ -132,7 +148,7 @@ var utils = {
             size /= 1024;
             ++i;
         }
-        return size.toFixed(2) + ' ' + units[i];
+        return size.toFixed(2) + ' ' + units[i].trim();
     },
     /**
      * Insert "thousands" separators in the provided number (which is actually
@@ -285,6 +301,37 @@ var utils = {
         return fn(mod, Math.floor(x));
     },
     /**
+     * Topological sort of nodes
+     *
+     * @param {Object} nodes where key is name of node, and value is list of
+     *                       names of dependent nodes.
+     * @param {string[]} nodes[name] list of named dependencies of node having
+     *                       'name' as its name.
+     * @return {string[]} topological sort of nodes by their names.
+     * @throws {Error} if there is at least one circular
+     *                       dependency between nodes
+     */
+    topologicalSort: function (nodes) {
+        var sorted = [];
+        var unresolved = nodes;
+        while (!_.isEmpty(unresolved)) {
+            // Get all nodes that have no dependency
+            var resolvable = _.pick(unresolved, function (dependencies, name) {
+                return _.isEmpty(_.difference(dependencies, sorted));
+            });
+            if (_.isEmpty(resolvable)) {
+                throw new Error("Circular dependency detected");
+            }
+            // Append them to sorted
+            sorted = _.union(sorted, _.keys(resolvable));
+            // Remove these nodes from unresolved
+            _.each(resolvable, function (dependencies, name) {
+                unresolved = _.omit(unresolved, name);
+            });
+        }
+        return sorted;
+    },
+    /**
      * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
      * See the corresponding float_round() in server/tools/float_utils.py for more info
      * @param {Number} value the value to be rounded
@@ -347,6 +394,23 @@ var utils = {
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
+    },
+    /**
+     * Sort an array in place, keeping the initial order for identical values.
+     *
+     * @param {Array} array
+     * @param {function} iteratee
+     */
+    stableSort: function (array, iteratee) {
+        var stable = array.slice();
+        return array.sort(function stableCompare (a, b) {
+            var order = iteratee(a, b);
+            if (order !== 0) {
+                return order;
+            } else {
+                return stable.indexOf(a) - stable.indexOf(b);
+            }
+        });
     },
     /**
      * @param {any} array

@@ -30,12 +30,13 @@ return Widget.extend({
             }
         },
     },
-    init: function (parent, query, target_model, action_id, filters) {
+    init: function (parent, query, target_model, action, filters) {
         this._super.apply(this,arguments);
         this.searchview = parent;
         this.query = query;
         this.target_model = target_model;
-        this.action_id = action_id;
+        this.action = action;
+        this.action_id = action.id;
         this.filters = {};
         _.each(filters, this.add_filter.bind(this));
     },
@@ -96,11 +97,7 @@ return Widget.extend({
         }
         var user_context = this.getSession().user_context;
         var search = this.searchview.build_search_data();
-        var view_manager = this.findAncestor(function (a) {
-                // HORRIBLE HACK. PLEASE SAVE ME FROM MYSELF (BUT IN A PAINLESS WAY IF POSSIBLE)
-                return 'active_view' in a;
-            });
-        var view_context = view_manager ? view_manager.active_view.controller.getContext() : {};
+        var view_context = this.action.env.context;
         var results = pyeval.eval_domains_and_contexts({
                 domains: search.domains,
                 contexts: [user_context].concat(search.contexts.concat(view_context || [])),

@@ -55,7 +55,7 @@ from weakref import WeakSet
 from decorator import decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty
+from odoo.tools import frozendict, classproperty, StackMap
 
 _logger = logging.getLogger(__name__)
 
@@ -741,7 +741,7 @@ class Environment(Mapping):
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = Registry(cr.dbname)
         self.cache = envs.cache
-        self._protected = defaultdict(frozenset)    # {field: ids, ...}
+        self._protected = StackMap()                # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
@@ -861,14 +861,15 @@ class Environment(Mapping):
     @contextmanager
     def protecting(self, fields, records):
         """ Prevent the invalidation or recomputation of ``fields`` on ``records``. """
-        saved = {}
+        protected = self._protected
         try:
+            protected.pushmap()
             for field in fields:
-                ids = saved[field] = self._protected[field]
-                self._protected[field] = ids.union(records._ids)
+                ids = protected.get(field, frozenset())
+                protected[field] = ids.union(records._ids)
             yield
         finally:
-            self._protected.update(saved)
+            protected.popmap()
 
     def field_todo(self, field):
         """ Return a recordset with all records to recompute for ``field``. """
@@ -1004,11 +1005,14 @@ class Cache(object):
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        browse = model.browse
-        ids = [record_id
-               for record_id, field_record_cache in self._data[field].items()
-               if field.cache_key(browse(record_id)) in field_record_cache]
-        return browse(ids)
+        key = field.cache_key(model)
+        # optimization: do not field.cache_key(record) for each record in cache
+        ids = [
+            record_id
+            for record_id, field_record_cache in self._data[field].items()
+            if key in field_record_cache
+        ]
+        return model.browse(ids)
 
     def invalidate(self, spec=None):
         """ Invalidate the cache, partially or totally depending on ``spec``. """

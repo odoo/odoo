@@ -22,8 +22,7 @@ class MailController(http.Controller):
 
     @classmethod
     def _redirect_to_messaging(cls):
-        messaging_action = request.env['mail.thread']._get_inbox_action_xml_id()
-        url = '/web#%s' % url_encode({'action': messaging_action})
+        url = '/web#%s' % url_encode({'action': 'mail.mail_channel_action_client_chat'})
         return werkzeug.utils.redirect(url)
 
     @classmethod
@@ -259,8 +258,8 @@ class MailController(http.Controller):
     def needaction(self):
         return request.env['res.partner'].get_needaction_count()
 
-    @http.route('/mail/client_action', type='json', auth='user')
-    def mail_client_action(self):
+    @http.route('/mail/init_messaging', type='json', auth='user')
+    def mail_init_messaging(self):
         values = {
             'needaction_inbox_counter': request.env['res.partner'].get_needaction_count(),
             'starred_counter': request.env['res.partner'].get_starred_count(),

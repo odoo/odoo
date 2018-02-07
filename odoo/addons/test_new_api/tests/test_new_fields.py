@@ -3,7 +3,7 @@
 #
 from datetime import date, datetime
 
-from odoo.exceptions import AccessError, except_orm
+from odoo.exceptions import AccessError, UserError, except_orm
 from odoo.tests import common
 from odoo.tools import mute_logger, float_repr, pycompat
 
@@ -130,6 +130,46 @@ class TestFields(common.TransactionCase):
         })
         check_stored(discussion3)
 
+    def test_11_stored_protected(self):
+        """ test protection against recomputation """
+        model = self.env['test_new_api.compute.protected']
+        field = model._fields['bar']
+
+        record = model.create({'foo': 'unprotected #1'})
+        self.assertEqual(record.bar, 'unprotected #1')
+
+        record.write({'foo': 'unprotected #2'})
+        self.assertEqual(record.bar, 'unprotected #2')
+
+        # by protecting 'bar', we prevent it from being recomputed
+        with self.env.protecting([field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+            # also works when nested
+            with self.env.protecting([field], record):
+                record.write({'foo': 'protected'})
+                self.assertEqual(record.bar, 'unprotected #2')
+
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #2')
+
+        record.write({'foo': 'unprotected #3'})
+        self.assertEqual(record.bar, 'unprotected #3')
+
+        # also works with duplicated fields
+        with self.env.protecting([field, field], record):
+            record.write({'foo': 'protected'})
+            self.assertEqual(record.bar, 'unprotected #3')
+
+        record.write({'foo': 'unprotected #4'})
+        self.assertEqual(record.bar, 'unprotected #4')
+
+        # we protect 'bar' on a different record
+        with self.env.protecting([field], record):
+            record2 = model.create({'foo': 'unprotected'})
+            self.assertEqual(record2.bar, 'unprotected')
+
     def test_11_computed_access(self):
         """ test computed fields with access right errors """
         User = self.env['res.users']
@@ -214,6 +254,11 @@ class TestFields(common.TransactionCase):
         double_size = message.double_size
         self.assertEqual(double_size, message.size)
 
+        record = self.env['test_new_api.cascade'].create({'foo': "Hi"})
+        self.assertEqual(record.baz, "<[Hi]>")
+        record.foo = "Ho"
+        self.assertEqual(record.baz, "<[Ho]>")
+
     def test_13_inverse(self):
         """ test inverse computation of fields """
         Category = self.env['test_new_api.category']
@@ -233,33 +278,70 @@ class TestFields(common.TransactionCase):
         self.assertEqual(ewan.parent, cath)
         self.assertEqual(ewan.name, "Erwan")
 
-        record = self.env['test_new_api.compute.inverse']
-
         # create/write on 'foo' should only invoke the compute method
-        record.counts.update(compute=0, inverse=0)
-        record = record.create({'foo': 'Hi'})
+        log = []
+        model = self.env['test_new_api.compute.inverse'].with_context(log=log)
+        record = model.create({'foo': 'Hi'})
         self.assertEqual(record.foo, 'Hi')
         self.assertEqual(record.bar, 'Hi')
-        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+        self.assertCountEqual(log, ['compute'])
 
-        record.counts.update(compute=0, inverse=0)
+        log.clear()
         record.write({'foo': 'Ho'})
         self.assertEqual(record.foo, 'Ho')
         self.assertEqual(record.bar, 'Ho')
-        self.assertEqual(record.counts, {'compute': 1, 'inverse': 0})
+        self.assertCountEqual(log, ['compute'])
 
         # create/write on 'bar' should only invoke the inverse method
-        record.counts.update(compute=0, inverse=0)
-        record = record.create({'bar': 'Hi'})
+        log.clear()
+        record = model.create({'bar': 'Hi'})
         self.assertEqual(record.foo, 'Hi')
         self.assertEqual(record.bar, 'Hi')
-        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+        self.assertCountEqual(log, ['inverse'])
 
-        record.counts.update(compute=0, inverse=0)
+        log.clear()
         record.write({'bar': 'Ho'})
         self.assertEqual(record.foo, 'Ho')
         self.assertEqual(record.bar, 'Ho')
-        self.assertEqual(record.counts, {'compute': 0, 'inverse': 1})
+        self.assertCountEqual(log, ['inverse'])
+
+        # Test compatibility multiple compute/inverse fields
+        log = []
+        model = self.env['test_new_api.multi_compute_inverse'].with_context(log=log)
+        record = model.create({
+            'bar1': '1',
+            'bar2': '2',
+            'bar3': '3',
+        })
+        self.assertEqual(record.foo, '1/2/3')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '2')
+        self.assertEqual(record.bar3, '3')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
+        log.clear()
+        record.write({'bar2': '4', 'bar3': '5'})
+        self.assertEqual(record.foo, '1/4/5')
+        self.assertEqual(record.bar1, '1')
+        self.assertEqual(record.bar2, '4')
+        self.assertEqual(record.bar3, '5')
+        self.assertCountEqual(log, ['inverse23'])
+
+        log.clear()
+        record.write({'bar1': '6', 'bar2': '7'})
+        self.assertEqual(record.foo, '6/7/5')
+        self.assertEqual(record.bar1, '6')
+        self.assertEqual(record.bar2, '7')
+        self.assertEqual(record.bar3, '5')
+        self.assertCountEqual(log, ['inverse1', 'inverse23'])
+
+        log.clear()
+        record.write({'foo': 'A/B/C'})
+        self.assertEqual(record.foo, 'A/B/C')
+        self.assertEqual(record.bar1, 'A')
+        self.assertEqual(record.bar2, 'B')
+        self.assertEqual(record.bar3, 'C')
+        self.assertCountEqual(log, ['compute'])
 
     def test_14_search(self):
         """ test search on computed fields """
@@ -736,30 +818,6 @@ class TestFields(common.TransactionCase):
         self.assertEqual(len(discussion.important_messages), 2)
         self.assertEqual(len(discussion.very_important_messages), 2)
 
-    def test_70_x2many_write(self):
-        discussion = self.env.ref('test_new_api.discussion_0')
-        Message = self.env['test_new_api.message']
-        # There must be 3 messages, 0 important
-        self.assertEqual(len(discussion.messages), 3)
-        self.assertEqual(len(discussion.important_messages), 0)
-        self.assertEqual(len(discussion.very_important_messages), 0)
-        discussion.important_messages = [(0, 0, {
-            'body': 'What is the answer?',
-            'important': True,
-        })]
-        # There must be 4 messages, 1 important
-        self.assertEqual(len(discussion.messages), 4)
-        self.assertEqual(len(discussion.important_messages), 1)
-        self.assertEqual(len(discussion.very_important_messages), 1)
-        discussion.very_important_messages |= Message.new({
-            'body': '42',
-            'important': True,
-        })
-        # There must be 5 messages, 2 important
-        self.assertEqual(len(discussion.messages), 5)
-        self.assertEqual(len(discussion.important_messages), 2)
-        self.assertEqual(len(discussion.very_important_messages), 2)
-
 
 class TestX2many(common.TransactionCase):
     def test_search_many2many(self):
@@ -932,3 +990,123 @@ class TestMagicFields(common.TransactionCase):
         record = self.env['test_new_api.discussion'].create({'name': 'Booba'})
         self.assertEqual(record.create_uid, self.env.user)
         self.assertEqual(record.write_uid, self.env.user)
+
+
+class Tree(object):
+    def __init__(self, node, *children):
+        self.node = node
+        self.children = children
+
+    def __str__(self):
+        return "%s(%s, %s)" % (self.node.name, self.node.parent_left, self.node.parent_right)
+
+
+class TestParentStore(common.TransactionCase):
+
+    def setUp(self):
+        super(TestParentStore, self).setUp()
+        # pretend the pool has finished loading to avoid deferring parent_store
+        # computation
+        self.patch(self.registry, '_init', False)
+        self.registry.do_parent_store(self.cr)
+
+    def assertTree(self, tree):
+        self.assertLess(tree.node.parent_left, tree.node.parent_right,
+                        "incorrect node %s" % tree)
+        for child in tree.children:
+            self.assertLess(tree.node.parent_left, child.node.parent_left,
+                            "incorrect parent %s - child %s" % (tree, child))
+            self.assertLess(child.node.parent_right, tree.node.parent_right,
+                            "incorrect parent %s - child %s" % (tree, child))
+        self.assertTrees(*tree.children)
+
+    def assertTrees(self, *trees):
+        for tree in trees:
+            self.assertTree(tree)
+        for tree1, tree2 in pycompat.izip(trees, trees[1:]):
+            self.assertLess(tree1.node.parent_right, tree2.node.parent_left,
+                            "wrong node order: %s < %s" % (tree1, tree2))
+
+    def test_parent_store(self):
+        """ Test parent_left/parent_right computation. """
+        Category = self.env['test_new_api.category']
+
+        def descendants(recs):
+            return Category.search([('id', 'child_of', recs.ids)])
+
+        def ascendants(recs):
+            return Category.search([('id', 'parent_of', recs.ids)])
+
+        # create root nodes
+        c = Category.create({'name': 'c'})
+        a = Category.create({'name': 'a'})
+        b = Category.create({'name': 'b'})
+        self.assertTrees(Tree(a), Tree(b), Tree(c))
+
+        # create nodes d, e, f under b
+        f = Category.create({'name': 'f', 'parent': b.id})
+        d = Category.create({'name': 'd', 'parent': b.id})
+        e = Category.create({'name': 'e', 'parent': b.id})
+        self.assertTrees(Tree(a), Tree(b, Tree(d), Tree(e), Tree(f)), Tree(c))
+        self.assertEqual(descendants(a), a)
+        self.assertEqual(descendants(b), b + d + e + f)
+        self.assertEqual(descendants(c), c)
+        self.assertEqual(descendants(d), d)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), b)
+        self.assertEqual(ascendants(c), c)
+        self.assertEqual(ascendants(d), b + d)
+        self.assertEqual(ascendants(e), b + e)
+        self.assertEqual(ascendants(f), b + f)
+
+        # move d, f under c
+        (f + d).write({'parent': c.id})
+        self.assertTrees(Tree(a), Tree(b, Tree(e)), Tree(c, Tree(d), Tree(f)))
+        self.assertEqual(descendants(a), a)
+        self.assertEqual(descendants(b), b + e)
+        self.assertEqual(descendants(c), c + d + f)
+        self.assertEqual(descendants(d), d)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), b)
+        self.assertEqual(ascendants(c), c)
+        self.assertEqual(ascendants(d), c + d)
+        self.assertEqual(ascendants(e), b + e)
+        self.assertEqual(ascendants(f), c + f)
+
+        # move b, c under a
+        (b + c).write({'parent': a.id})
+        self.assertTrees(Tree(a, Tree(b, Tree(e)), Tree(c, Tree(d), Tree(f))))
+        self.assertEqual(descendants(a), a + b + c + d + e + f)
+        self.assertEqual(descendants(b), b + e)
+        self.assertEqual(descendants(c), c + d + f)
+        self.assertEqual(descendants(d), d)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), a + b)
+        self.assertEqual(ascendants(c), a + c)
+        self.assertEqual(ascendants(d), a + c + d)
+        self.assertEqual(ascendants(e), a + b + e)
+        self.assertEqual(ascendants(f), a + c + f)
+
+        # remove node d
+        d.unlink()
+        self.assertTrees(Tree(a, Tree(b, Tree(e)), Tree(c, Tree(f))))
+        self.assertEqual(descendants(a), a + b + c + e + f)
+        self.assertEqual(descendants(b), b + e)
+        self.assertEqual(descendants(c), c + f)
+        self.assertEqual(descendants(e), e)
+        self.assertEqual(descendants(f), f)
+        self.assertEqual(ascendants(a), a)
+        self.assertEqual(ascendants(b), a + b)
+        self.assertEqual(ascendants(c), a + c)
+        self.assertEqual(ascendants(e), a + b + e)
+        self.assertEqual(ascendants(f), a + c + f)
+
+        # not cycle should occur
+        with self.assertRaises(UserError):
+            a.parent = e

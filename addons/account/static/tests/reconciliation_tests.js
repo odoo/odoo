@@ -105,6 +105,10 @@ var db = {
             {id: 9, display_name: "Delta PC - Delta PC"},
         ]
     },
+    'account.analytic.tag': {
+        fields: {},
+        records: []
+    },
     'account.bank.statement': {
         fields: {},
         reconciliation_widget_preprocess: function () {
@@ -448,7 +452,10 @@ var move_lines_for_manual_reconciliation = {
     '[7,12,"",0,6]': [
         {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-08", 'date': "2017-02-08", 'total_amount_str': "$ 11,000.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 17, 'credit': 11000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 11,000.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
         {'account_type': "receivable", 'account_id': [7, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 1,000.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0005: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 19, 'credit': 1000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 1,000.00", 'debit': 0.0, 'account_code': "101200", 'ref': "", 'already_paid': false},
-        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 180.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "BILL/2017/0003: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 21, 'credit': 180.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 180.00", 'debit': 0.0, 'account_code': "101200", 'ref': "fddfgfdgfdgsdfg", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency': 100, 'amount_currency_str': "100.00 €", 'currency_id': 1, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 170.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 21, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 170.00", 'debit': 170.0, 'account_code': "101200", 'ref': "INV fddfgfdgfdgsdfg", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency': 100, 'amount_currency_str': "100.00 €", 'currency_id': 1, 'date_maturity': "2017-02-10", 'date': "2017-02-10", 'total_amount_str': "$ 180.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "BILL/2017/0003: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 22, 'credit': 180.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 180.00", 'debit': 0.0, 'account_code': "101200", 'ref': "fddfgfdgfdgsdfg", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency': 170, 'amount_currency_str': "170.00 €", 'currency_id': 1, 'date_maturity': "2017-02-09", 'date': "2017-02-09", 'total_amount_str': "$ 100.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0003: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 23, 'credit': 0.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 100.00", 'debit': 100.0, 'account_code': "101200", 'ref': "INV fddfgfdgfdgsdfg", 'already_paid': false},
+        {'account_type': "receivable", 'account_id': [287, "101200 Account Receivable"], 'amount_currency': 180, 'amount_currency_str': "180.00 €", 'currency_id': 1, 'date_maturity': "2017-02-10", 'date': "2017-02-10", 'total_amount_str': "$ 100.00", 'partner_id': 12, 'account_name': "101200 Account Receivable", 'name': "BILL/2017/0003: Customer Payment", 'partner_name': "Camptocamp", 'total_amount_currency_str': "", 'id': 24, 'credit': 100.0, 'journal_id': [2, "Vendor Bills"], 'amount_str': "$ 100.00", 'debit': 0.0, 'account_code': "101200", 'ref': "fddfgfdgfdgsdfg", 'already_paid': false},
     ],
     '[284,8,"",0,6]': [
         {'account_type': "receivable", 'account_id': [284, "111100 Account Payable"], 'amount_currency_str': "", 'currency_id': false, 'date_maturity': "2017-02-08", 'date': "2017-02-08", 'total_amount_str': "$ 11,000.00", 'partner_id': 8, 'account_name': "101200 Account Receivable", 'name': "INV/2017/0004: Customer Payment", 'partner_name': "Agrolait", 'total_amount_currency_str': "", 'id': 17, 'credit': 11000.0, 'journal_id': [1, "Customer Invoices"], 'amount_str': "$ 11,000.00", 'debit': 0.0, 'account_code': "111100", 'ref': "", 'already_paid': false},
@@ -569,8 +576,8 @@ QUnit.module('account', {
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(clientAction.widgets[2].$('.o_input_dropdown input').val(), "Camptocamp", "the partner many2one should display Camptocamp");
         widget.$('.accounting_view tfoot td:first').trigger('click');
-        assert.strictEqual(widget.$('.create .o_input').length, 6,
-            "create panel should display 5 fields (account_id, tax_id, analytic_account_id, label, amount)");
+        assert.strictEqual(widget.$('.create input.o_input').length, 7,
+            "create panel should contain 7 fields (account_id, tax_id, journal_id, analytic_account_id, analytic_tag_ids, label, amount)");
         assert.strictEqual(widget.$('.create .create_account_id .o_required_modifier, .create .create_label .o_required_modifier, .create .create_amount .o_required_modifier').length, 3,
             "account_id, label and amount should be required fields");
         assert.strictEqual(widget.$('.create .create_label input').val(), 'SAJ/2014/002 and SAJ/2014/003',
@@ -640,13 +647,15 @@ QUnit.module('account', {
                                                                   "counterpart_aml_id": 109,
                                                                   "credit": 650,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0002"
+                                                                  "name": "INV/2017/0002",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 },
                                                                 {
                                                                   "counterpart_aml_id": 112,
                                                                   "credit": 525,
                                                                   "debit": 0,
-                                                                  "name": "INV/2017/0003"
+                                                                  "name": "INV/2017/0003",
+                                                                  "analytic_tag_ids": [[6, null, []]]
                                                                 }],
                                     payment_aml_ids: [], new_aml_dicts: []}]],
                 "Should call process_reconciliations with ids");
@@ -688,7 +697,8 @@ QUnit.module('account', {
                                         account_id: 287,
                                         credit: 1175,
                                         debit: 0,
-                                        name: 'SAJ/2014/002 and SAJ/2014/003'
+                                        name: 'SAJ/2014/002 and SAJ/2014/003',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }]}]],
                 "Should call process_reconciliations with ids");
         });
@@ -733,7 +743,8 @@ QUnit.module('account', {
                                         counterpart_aml_id: 109,
                                         credit: 650,
                                         debit: 0,
-                                        name: 'INV/2017/0002'
+                                        name: 'INV/2017/0002',
+                                        analytic_tag_ids: [[6, null, []]]
                                     }],
                                     payment_aml_ids: [], 
                                     new_aml_dicts: [{
@@ -1111,7 +1122,7 @@ QUnit.module('account', {
         testUtils.addMockEnvironment(clientAction, {
             'data': this.params.data,
         });
-        clientAction.appendTo($('body'));
+        clientAction.appendTo($('#qunit-fixture'));
 
         clientAction.$('button.o_automatic_reconciliation').trigger('click');
 
@@ -1135,7 +1146,7 @@ QUnit.module('account', {
     });
 
     QUnit.test('Reconciliation manual', function (assert) {
-        assert.expect(8);
+        assert.expect(13);
 
         var clientAction = new ReconciliationClientAction.ManualAction(null, this.params.options);
 
@@ -1164,6 +1175,23 @@ QUnit.module('account', {
             "10,222.00 €", "sould display the monetary information in €");
 
         assert.strictEqual(clientAction.$('.accounting_view:first .o_no_valid:visible').length, 1, "should display the skip button");
+
+        clientAction.$('.accounting_view:eq(1) thead td:first').trigger('click');
+        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="21"] .cell_label').trigger('click');
+        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="22"] .cell_label').trigger('click');
+
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) tfoot tr').length, 0, "should not display the 'Write-off' line because the balance is null in Euro");
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').length, 1, "should display 'Reconcile' button in green");
+
+        clientAction.$('.o_reconciliation_line:eq(1) .o_reconcile:visible').trigger('click');
+
+        assert.strictEqual(clientAction.$('.o_reconciliation_line[data-mode!="inactive"]').length, 1, "should have only one line open");
+
+        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="23"] .cell_label').trigger('click');
+        clientAction.$('.o_reconciliation_line:eq(1) [data-line-id="24"] .cell_label').trigger('click');
+
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) tfoot tr').length, 1, "should display the 'Write-off' line because the balance is not null in Euro");
+        assert.strictEqual(clientAction.$('.o_reconciliation_line:eq(1) .o_validate:visible').length, 1, "should display 'Reconcile' button");
 
         clientAction.destroy();
     });

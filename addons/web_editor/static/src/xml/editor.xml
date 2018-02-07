@@ -47,11 +47,11 @@
     <!-- Media Dialog (allows to choose an img/pictogram/video) -->
     <div t-name="web_editor.dialog.media">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#editor-media-image" data-toggle="tab">Image</a></li>
-            <li><a href="#editor-media-document" data-toggle="tab">Document</a></li>
-            <li><a href="#editor-media-icon" data-toggle="tab">Pictogram</a></li>
-            <li><a href="#editor-media-video" data-toggle="tab">Video</a></li>
-            <li class="search">
+            <li class="active"><a href="#editor-media-image" data-toggle="tab" t-att-class="widget.noImages ? 'hidden' : ''">Image</a></li>
+            <li><a href="#editor-media-document" data-toggle="tab" t-att-class="widget.noDocuments ? 'hidden' : ''">Document</a></li>
+            <li><a href="#editor-media-icon" data-toggle="tab" t-att-class="widget.noIcons ? 'hidden' : ''">Pictogram</a></li>
+            <li><a href="#editor-media-video" data-toggle="tab" t-att-class="widget.noVideos ? 'hidden' : ''">Video</a></li>
+            <li class="search pull-right">
                 <ul class="pager mb0 mt0">
                     <li class="previous">
                         <a class="btn btn-default disabled" href="#"><i class="fa fa-angle-left"/>&#32;Previous</a>
@@ -61,7 +61,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="search">
+            <li class="search pull-right">
                 <div class="form-group">
                     <input class="form-control" id="icon-search" type="search"/>
                     <span class="fa fa-search"/>
@@ -79,48 +79,45 @@
 
     <!-- Image choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.image">
-        <div>
-            <form method="POST"
-                  action="/web_editor/attachment/add"
-                  enctype="multipart/form-data"
-                  target="fileframe"
-                  class="form-inline">
-                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
-                <div class="well">
-                    <div class="form-group pull-left">
-                        <input type="file" name="upload" t-att-accept="widget.accept" multiple="multiple" style="position: absolute; opacity: 0; width: 1px; height: 1px;"/>
-                        <input type="hidden" name="disable_optimization" value=""/>
-                        <div class="btn-group">
-                            <button class="btn btn-primary filepicker" type="button">Upload an image</button>
-                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button">
-                                <span class="caret"/>
-                                <span class="sr-only">Alternate Upload</span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>
-                                    <a class="js_disable_optimization">Upload image without optimization</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <button class="btn hidden wait" disabled="disabled" type="button">Uploading...</button>
-                    </div>
-                    <div>
-                        <span class="text-muted">— or — </span>
-                        <label for="iamgeurl">Add an image URL</label>
-                        <div class="form-group btn-group">
-                            <input class="form-control url pull-left" id="iamgeurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 320px;" type="text"/>
-                            <button class="btn btn-default" type="submit">Add</button>
-                        </div>
+        <form class="form-inline"
+            method="POST"
+            action="/web_editor/attachment/add"
+            enctype="multipart/form-data"
+            target="fileframe">
+            <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+            <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
+            <div class="well">
+                <div class="form-group pull-left">
+                    <input type="file" class="hidden" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
+                    <input type="hidden" name="disable_optimization" value=""/>
+                    <div class="btn-group">
+                        <button class="btn btn-primary o_upload_image_button" type="button">Upload an image</button>
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button">
+                            <span class="caret"/>
+                            <span class="sr-only">Alternate Upload</span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a class="o_upload_image_button_no_optimization">Upload image without optimization</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-                <input type="hidden" name="func"/>
-                <div class="help-block"/>
-                <div class="existing-attachments">
-                    <t t-call="web_editor.dialog.image.existing"/>
+                <div>
+                    <span class="text-muted">— or —</span>
+                    <label for="imageurl">Add an image URL</label>
+                    <div class="form-group btn-group">
+                        <input type="text" class="form-control url pull-left" id="imageurl" name="url" placeholder="https://www.odoo.com/logo.png" style="width: 320px;"/>
+                        <button type="button" class="btn btn-default o_upload_image_url_button" disabled="disabled">Add</button>
+                    </div>
                 </div>
-            </form>
-        </div>
-        <iframe class="hidden" name="fileframe" src="about:blank"/>
+            </div>
+            <div class="help-block"/>
+            <div class="existing-attachments">
+                <t t-call="web_editor.dialog.image.existing"/>
+            </div>
+            <iframe class="hidden" name="fileframe"/>
+        </form>
     </t>
     <t t-name="web_editor.dialog.image.existing">
         <div class="modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -146,7 +143,7 @@
             <div class="row mt16" t-as="row" t-foreach="rows">
                 <div class="col-sm-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
                     <i class="fa fa-times o_existing_attachment_remove" t-att-data-id="attachment.id"/>
-                    <div class="o_attachment_border"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image"/></div>
+                    <div class="o_attachment_border"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image o_image_loading"/></div>
                 </div>
             </div>
         </div>
@@ -168,8 +165,6 @@
     <!-- Icon choosing part of the Media Dialog -->
     <t t-name="web_editor.dialog.font-icons">
         <form action="#">
-            <input type="hidden" id="fa-icon"/>
-            <input type="hidden" id="fa-size" value="fa-1x"/>
             <div class="font-icons-icons">
                 <t t-call="web_editor.dialog.font-icons.icons">
                     <t t-set="iconsParser" t-value="widget.iconsParser"/>
@@ -179,7 +174,11 @@
     </t>
     <t t-name="web_editor.dialog.font-icons.icons">
         <t t-as="data" t-foreach="iconsParser">
-            <span t-as="cssData" t-att-data-id="cssData[2]" t-att-title="cssData[3].join(', ')" t-attf-class="#{data.base} font-icons-icon #{cssData[2]}" t-attf-data-alias=",#{cssData[3]}," t-foreach="data.cssData"/>
+            <span t-foreach="data.cssData" t-as="cssData"
+                t-att-data-id="cssData.names[0]"
+                t-att-title="cssData.names[0]"
+                t-attf-class="font-icons-icon #{data.base} #{cssData.names[0]}"
+                t-att-data-alias="cssData.names.join(',')"/>
         </t>
     </t>
 
@@ -236,26 +235,26 @@
     <div t-name="web_editor.dialog.link" class="o_link_dialog">
         <div class="row">
             <form class="col-md-8 form-horizontal">
-                <div class="form-group">
+                <div t-attf-class="form-group#{widget.needLabel ? '' : ' hidden'}">
                     <label class="control-label col-sm-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-sm-9">
-                        <input class="form-control" id="o_link_dialog_label_input" required="required"/>
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-3" for="o_link_dialog_url_input">URL or Email</label>
                     <div class="col-sm-9">
-                        <input class="form-control url email-address url-source" id="o_link_dialog_url_input" required="required"/>
+                        <input type="text" name="url" class="form-control" id="o_link_dialog_url_input" required="required"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="control-label col-sm-3">Size</label>
                     <div class="col-sm-9">
-                        <select class="form-control col-sm-3 link-style">
-                            <option value="btn-xs">Extra Small</option>
-                            <option value="btn-sm">Small</option>
+                        <select name="link_style_size" class="form-control col-sm-3 link-style">
+                            <option value="xs">Extra Small</option>
+                            <option value="sm">Small</option>
                             <option value="" selected="selected">Medium</option>
-                            <option value="btn-lg">Large</option>
+                            <option value="lg">Large</option>
                         </select>
                     </div>
                 </div>
@@ -265,12 +264,12 @@
                         <div class="o_link_dialog_color">
                             <label t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-link text-center" data-color="">
                                 <span>L</span>
-                                <input class="hidden link-style" name="link-style-type" type="radio" value=""/>
+                                <input class="hidden link-style" name="link_style_color" type="radio" value=""/>
                                 <i class="fa"/>
                             </label>
-                            <t t-foreach="['btn-primary', 'btn-default', 'btn-success', 'btn-info', 'btn-warning', 'btn-danger', 'btn-alpha', 'btn-beta', 'btn-gamma', 'btn-delta', 'btn-epsilon']" t-as="color">
-                                <label t-attf-class="o_link_dialog_color_item o_btn_preview btn #{color}" t-att-data-color="color">
-                                    <input class="hidden link-style" name="link-style-type" type="radio" t-att-value="color"/>
+                            <t t-foreach="['primary', 'default', 'success', 'info', 'warning', 'danger', 'alpha', 'beta', 'gamma', 'delta', 'epsilon']" t-as="color">
+                                <label t-attf-class="o_link_dialog_color_item o_btn_preview btn btn-#{color}">
+                                    <input type="radio" name="link_style_color" class="hidden link-style" t-att-value="color"/>
                                     <i class="fa"/>
                                 </label>
                             </t>
@@ -279,11 +278,11 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-offset-3 col-sm-9">
-                    <label class="o_switch">
-                        <input class="window-new" type="checkbox"/>
-                        <span/>
-                        Open in new window
-                    </label>
+                        <label class="o_switch">
+                            <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                            <span/>
+                            Open in new window
+                        </label>
                     </div>
                 </div>
             </form>

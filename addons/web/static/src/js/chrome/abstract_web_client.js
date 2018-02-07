@@ -18,17 +18,18 @@ var config = require('web.config');
 var crash_manager = require('web.crash_manager');
 var data_manager = require('web.data_manager');
 var Dialog = require('web.Dialog');
+var dom = require('web.dom');
 var Loading = require('web.Loading');
-var mixins = require('web.mixins');
 var NotificationManager = require('web.NotificationManager');
 var RainbowMan = require('web.RainbowMan');
+var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
+var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
     custom_events: {
         clear_uncommitted_changes: function (e) {
             this.clear_uncommitted_changes().then(e.data.callback);
@@ -36,8 +37,8 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         toggle_fullscreen: function (event) {
             this.toggle_fullscreen(event.data.fullscreen);
         },
-        current_action_updated: function (e) {
-            this.current_action_updated(e.data.action);
+        current_action_updated: function (ev) {
+            this.current_action_updated(ev.data.action, ev.data.controller);
         },
         // GENERIC SERVICES
         // the next events are dedicated to generic services required by
@@ -46,11 +47,12 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
 
         // notifications, warnings and effects
         notification: function (e) {
-            if(this.notification_manager) {
+            if (this.notification_manager) {
                 this.notification_manager.notify(e.data.title, e.data.message, e.data.sticky);
             }
         },
         warning: '_onDisplayWarning',
+        load_action: '_onLoadAction',
         load_views: function (event) {
             var params = {
                 model: event.data.modelName,
@@ -66,6 +68,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
                 .load_filters(event.data.dataset, event.data.action_id)
                 .then(event.data.on_success);
         },
+        push_state: '_onPushState',
         show_effect: '_onShowEffect',
         // session
         get_session: function (event) {
@@ -87,8 +90,8 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     },
     init: function (parent) {
         this.client_options = {};
-        mixins.ServiceProvider.init.call(this);
         this._super(parent);
+        ServiceProviderMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
         this.menu_dm = new concurrency.DropMisordered();
@@ -199,8 +202,15 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         };
     },
     set_action_manager: function () {
-        this.action_manager = new ActionManager(this, {webclient: this});
-        return this.action_manager.appendTo(this.$('.o_main_content'));
+        var self = this;
+        this.action_manager = new ActionManager(this, session.user_context);
+        var fragment = document.createDocumentFragment();
+        return this.action_manager.appendTo(fragment).then(function () {
+            dom.append(self.$('.o_main_content'), fragment, {
+                in_DOM: true,
+                callbacks: [{widget: self.action_manager}],
+            });
+        });
     },
     set_notification_manager: function () {
         this.notification_manager = new NotificationManager(this);
@@ -213,11 +223,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
     show_application: function () {
     },
     clear_uncommitted_changes: function () {
-        var def = $.Deferred().resolve();
-        core.bus.trigger('clear_uncommitted_changes', function chain_callbacks(callback) {
-            def = def.then(callback);
-        });
-        return def;
+        return this.action_manager.clearUncommittedChanges();
     },
     destroy_content: function () {
         _.each(_.clone(this.getChildren()), function (el) {
@@ -264,7 +270,7 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
      * This allows to widgets that are not inside the ActionManager to perform do_action
      */
     do_action: function () {
-        return this.action_manager.do_action.apply(this, arguments);
+        return this.action_manager.doAction.apply(this.action_manager, arguments);
     },
     do_reload: function () {
         var self = this;
@@ -274,6 +280,9 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         });
     },
     do_push_state: function (state) {
+        if (!state.menu_id && this.menu) { // this.menu doesn't exist in the POS
+            state.menu_id = this.menu.getCurrentPrimaryMenu();
+        }
         if ('title' in state) {
             this.set_title(state.title);
             delete state.title;
@@ -304,13 +313,14 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
             this.connection_notification = false;
         }
     },
-    // Handler to be overwritten
-    current_action_updated: function () {
-    },
-    // --------------------------------------------------------------
-    // Scrolltop handling
-    // --------------------------------------------------------------
-    getScrollTop: function () {
+    /**
+     * Handler to be overridden, called each time the UI is updated by the
+     * ActionManager.
+     *
+     * @param {Object} action the action of the currently displayed controller
+     * @param {Object} controller the currently displayed controller
+     */
+    current_action_updated: function (action, controller) {
     },
     //--------------------------------------------------------------
     // Misc.
@@ -345,6 +355,27 @@ var AbstractWebClient = Widget.extend(mixins.ServiceProvider, {
         } else if (this.notification_manager) {
             this.notification_manager.warn(e.data.title, e.data.message, e.data.sticky);
         }
+    },
+    /**
+     * Loads an action from the database given its ID.
+     *
+     * @private
+     * @param {OdooEvent} event
+     * @param {integer} event.data.actionID
+     * @param {Object} event.data.context
+     * @param {function} event.data.on_success
+     */
+    _onLoadAction: function (event) {
+        data_manager
+            .load_action(event.data.actionID, event.data.context)
+            .then(event.data.on_success);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} e
+     */
+    _onPushState: function (e) {
+        this.do_push_state(e.data.state);
     },
     /**
      * Displays a visual effect (for example, a rainbowman0

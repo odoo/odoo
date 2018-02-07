@@ -72,7 +72,7 @@ class Lead(models.Model):
     team_id = fields.Many2one('crm.team', string='Sales Channel', oldname='section_id', default=lambda self: self.env['crm.team'].sudo()._get_default_team_id(user_id=self.env.uid),
         index=True, track_visibility='onchange', help='When sending mails, the default email address is taken from the sales channel.')
     kanban_state = fields.Selection([('grey', 'No next activity planned'), ('red', 'Next activity late'), ('green', 'Next activity is planned')],
-        string='Activity State', compute='_compute_kanban_state')
+        string='Kanban State', compute='_compute_kanban_state')
     email_cc = fields.Text('Global CC', help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma")
     description = fields.Text('Notes')
     create_date = fields.Datetime('Create Date', readonly=True)
@@ -89,7 +89,7 @@ class Lead(models.Model):
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True, default=crm_stage.AVAILABLE_PRIORITIES[0][0])
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
 
-    stage_id = fields.Many2one('crm.stage', string='Stage', track_visibility='onchange', index=True,
+    stage_id = fields.Many2one('crm.stage', string='Stage', ondelete='restrict', track_visibility='onchange', index=True,
         domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]",
         group_expand='_read_group_stage_ids', default=lambda self: self._default_stage_id())
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, track_visibility='onchange', default=lambda self: self.env.user)
@@ -111,6 +111,7 @@ class Lead(models.Model):
     color = fields.Integer('Color Index', default=0)
     partner_address_name = fields.Char('Partner Contact Name', related='partner_id.name', readonly=True)
     partner_address_email = fields.Char('Partner Contact Email', related='partner_id.email', readonly=True)
+    partner_address_phone = fields.Char('Partner Contact Phone', related='partner_id.phone', readonly=True)
     company_currency = fields.Many2one(string='Currency', related='company_id.currency_id', readonly=True, relation="res.currency")
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
@@ -908,20 +909,23 @@ class Lead(models.Model):
 
     @api.model
     def get_empty_list_help(self, help):
-        if help:
-            alias_record = self.env.ref("crm.mail_alias_lead_info", raise_if_not_found=False)
-            if alias_record and alias_record.alias_domain and alias_record.alias_name:
-                email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-                email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-                dynamic_help = _("""All email incoming to %s will automatically
-                    create new opportunity. Update your business card, phone book, social media,...
-                    Send an email right now and see it here.""") % (email_link,)
-                return '<p class="oe_view_nocontent_create">%s</p>%s<p>%s</p>' % (_('Click to add a new opportunity'), help, dynamic_help)
-        return super(Lead, self.with_context(
-            empty_list_help_model='crm.team',
-            empty_list_help_id=self._context.get('default_team_id', False),
-            empty_list_help_document_name=_("opportunities"),
-        )).get_empty_list_help(help)
+        help_title, sub_title = "", ""
+        if self._context.get('default_type') == 'lead':
+            help_title = _('Click here to add new Leads')
+        else:
+            help_title = _('Create a new opportunity to add it to your pipeline')
+        alias_record = self.env['mail.alias'].search([
+            ('alias_name', '!=', False),
+            ('alias_name', '!=', ''),
+            ('alias_model_id.model', '=', 'crm.lead'),
+            ('alias_parent_model_id.model', '=', 'crm.team'),
+            ('alias_force_thread_id', '=', False)
+        ], limit=1)
+        if alias_record and alias_record.alias_domain and alias_record.alias_name:
+            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
+            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
+            sub_title = _('or send an email to %s') % (email_link)
+        return '<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>' % (help_title, sub_title)
 
     @api.multi
     def log_meeting(self, meeting_subject, meeting_date, duration):
@@ -1104,9 +1108,9 @@ class Lead(models.Model):
         return [new_group] + groups
 
     @api.model
-    def message_get_reply_to(self, res_ids, default=None):
+    def _notify_get_reply_to(self, res_ids, default=None):
         leads = self.sudo().browse(res_ids)
-        aliases = self.env['crm.team'].message_get_reply_to(leads.mapped('team_id').ids, default=default)
+        aliases = self.env['crm.team']._notify_get_reply_to(leads.mapped('team_id').ids, default=default)
         return {lead.id: aliases.get(lead.team_id.id or 0, False) for lead in leads}
 
     @api.multi
@@ -1188,7 +1192,7 @@ class Lead(models.Model):
                 update_vals[key] = res.group(2).lower()
         return super(Lead, self).message_update(msg_dict, update_vals=update_vals)
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -1199,7 +1203,7 @@ class Lead(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Lead, self)._message_post_after_hook(message)
+        return super(Lead, self)._message_post_after_hook(message, values, notif_layout)
 
     @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
@@ -1209,7 +1213,7 @@ class Lead(models.Model):
                 emails = email_re.findall(partner_info['full_name'] or '')
                 email = emails and emails[0] or ''
                 if email and self.email_from and email.lower() == self.email_from.lower():
-                    partner_info['full_name'] = '%s <%s>' % (self.partner_name or self.contact_name, email)
+                    partner_info['full_name'] = '%s <%s>' % (self.contact_name or self.partner_name, email)
                     break
         return result
 

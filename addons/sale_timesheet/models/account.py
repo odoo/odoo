@@ -3,10 +3,15 @@
 
 from odoo.exceptions import UserError
 from odoo import api, fields, models, _
+from odoo.osv import expression
 
 
 class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
+
+    def _default_sale_line_domain(self):
+        domain = super(AccountAnalyticLine, self)._default_sale_line_domain()
+        return expression.OR([domain, [('qty_delivered_method', '=', 'timesheet')]])
 
     timesheet_invoice_type = fields.Selection([
         ('billable_time', 'Billable Time'),
@@ -42,6 +47,11 @@ class AccountAnalyticLine(models.Model):
         if 'task_id' in values:
             task = self.env['project.task'].sudo().browse(values['task_id'])
             values['so_line'] = task.sale_line_id.id or values.get('so_line', False)
+
+        # Set product_uom_id now so delivered qty is computed in SO line
+        if not 'product_uom_id' in values and all([v in values for v in ['employee_id', 'project_id']]):
+            employee = self.env['hr.employee'].sudo().browse(values['employee_id'])
+            values['product_uom_id'] = employee.company_id.project_time_mode_id.id
         return values
 
     @api.multi

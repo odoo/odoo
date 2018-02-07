@@ -51,7 +51,7 @@ var SwitchCompanyMenu = Widget.extend({
             if (company[0] === session.user_companies.current_company[0]) {
                 a = '<i class="fa fa-check mr8"></i>';
             } else {
-                a = '<span class="mr24"/>';
+                a = '<span style="margin-right: 24px;"/>';
             }
             companiesList += '<li><a href="#" data-menu="company" data-company-id="' +
                             company[0] + '">' + a + company[1] + '</a></li>';

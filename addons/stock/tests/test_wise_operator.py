@@ -58,7 +58,7 @@ class TestWiseOperator(TransactionCase):
         })
 
         # Transfer the receipt
-        pick1_wise.do_transfer()
+        pick1_wise.action_done()
 
         # Check the system created 3 quants
         records = self.env['stock.quant'].search([('product_id', '=', product_wise.id)])
@@ -147,7 +147,7 @@ class TestWiseOperator(TransactionCase):
         self.assertEqual(new_move_lines.location_id.id, self.ref('stock.stock_location_14'))
 
         # Process this picking
-        delivery_order_wise1.do_transfer()
+        delivery_order_wise1.action_done()
 
         # Check there was no negative quant created by this picking
 

@@ -3,6 +3,7 @@ odoo.define('web.basic_fields_tests', function (require) {
 
 var basicFields = require('web.basic_fields');
 var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
@@ -587,6 +588,52 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float field with monetary widget and decimal precision', function (assert) {
+        assert.expect(5);
+
+        this.data.partner.records = [{
+            id: 1,
+            qux: -8.89859,
+            currency_id: 1,
+        }]
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="qux" widget="monetary" options="{\'field_digits\': True}"/>' +
+                        '<field name="currency_id" invisible="1"/>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+            session: {
+                currencies: _.indexBy(this.data.currency.records, 'id'),
+            },
+        });
+
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a0-8.9',
+            'The value should be displayed properly.');
+
+        form.$buttons.find('.o_form_button_edit').click();
+        assert.strictEqual(form.$('input').val(), '-8.9',
+            'The input should be rendered without the currency symbol.');
+        assert.strictEqual(form.$('input').parent().children().first().text(), '$',
+            'The input should be preceded by a span containing the currency symbol.');
+
+        form.$('input').val('109.2458938598598').trigger('input');
+        assert.strictEqual(form.$('input').val(), '109.2458938598598',
+            'The value should not be formated yet.');
+
+        form.$buttons.find('.o_form_button_save').click();
+        // Non-breaking space between the currency and the amount
+        assert.strictEqual(form.$('.o_field_widget').first().text(), '$\u00a0109.2',
+            'The new value should be rounded properly.');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldEmail');
 
     QUnit.test('email field in form view', function (assert) {
@@ -1064,7 +1111,7 @@ QUnit.module('basic_fields', {
     QUnit.module('UrlWidget');
 
     QUnit.test('url widget in form view', function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var form = createView({
             View: FormView,
@@ -1084,6 +1131,8 @@ QUnit.module('basic_fields', {
             "should have a anchor with correct classes");
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').attr('href'), 'yop',
             "should have proper href link");
+        assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').attr('target'), '_blank',
+            "should have target attribute set to _blank");
         assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'yop',
             "the value should be displayed properly");
 
@@ -2941,9 +2990,8 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: 0, // Screen XS
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
@@ -2986,9 +3034,8 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: 0, // Screen XS
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 
@@ -3051,9 +3098,8 @@ QUnit.module('basic_fields', {
             res_id: 1,
             config: {
                 device: {
-                    size_class: 1, // Screen SM
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.SM,
+                },
             },
         });
 
@@ -3099,9 +3145,8 @@ QUnit.module('basic_fields', {
             arch: '<tree editable="bottom"><field name="foo"  widget="phone"/></tree>',
             config: {
                 device: {
-                    size_class: 1, // Screen SM
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.SM,
+                },
             },
         });
 
@@ -3153,9 +3198,8 @@ QUnit.module('basic_fields', {
             },
             config: {
                 device: {
-                    size_class: 0,
-                    SIZES: { XS: 0, SM: 1, MD: 2, LG: 3 },
-                }
+                    size_class: config.device.SIZES.XS,
+                },
             },
         });
 

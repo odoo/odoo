@@ -14,7 +14,12 @@ from operator import itemgetter
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
-from odoo.tools.float_utils import float_compare
+from odoo.tools.float_utils import float_compare, float_round
+
+# Default hour per day value. The one should
+# only be used when the one from the calendar
+# is not available.
+HOURS_PER_DAY = 8
 
 
 def float_to_time(float_hour):
@@ -34,7 +39,7 @@ def to_naive_utc(datetime, record):
 
 
 def to_tz(datetime, tz_name):
-    tz = pytz.timezone(tz_name)
+    tz = pytz.timezone(tz_name) if tz_name else pytz.UTC
     return pytz.UTC.localize(datetime.replace(tzinfo=None), is_dst=False).astimezone(tz).replace(tzinfo=None)
 
 
@@ -87,6 +92,15 @@ class ResourceCalendar(models.Model):
         'resource.calendar.leaves', 'calendar_id', 'Global Leaves',
         domain=[('resource_id', '=', False)]
         )
+    hours_per_day = fields.Float("Average hour per day", default=HOURS_PER_DAY, help="Average hours per day a resource is supposed to work with this calendar.")
+
+    @api.onchange('attendance_ids')
+    def _onchange_hours_per_day(self):
+        attendances = self.attendance_ids.filtered(lambda attendance: not attendance.date_from and not attendance.date_to)
+        hour_count = 0.0
+        for attendance in attendances:
+            hour_count += attendance.hour_to - attendance.hour_from
+        self.hours_per_day = float_round(hour_count / float(len(set(attendances.mapped('dayofweek')))), precision_digits=2)
 
     # --------------------------------------------------
     # Utility methods
@@ -128,6 +142,8 @@ class ResourceCalendar(models.Model):
         )
 
     def _interval_and(self, interval, interval_dst):
+        if interval.start_datetime > interval_dst.end_datetime or interval.end_datetime < interval_dst.start_datetime:
+            return None
         return self._interval_obj(
             interval.start_datetime > interval_dst.start_datetime and interval.start_datetime or interval_dst.start_datetime,
             interval.end_datetime < interval_dst.end_datetime and interval.end_datetime or interval_dst.end_datetime,
@@ -392,10 +408,10 @@ class ResourceCalendar(models.Model):
             start_datetime=datetime.datetime.combine(day_date, start_time),
             end_datetime=datetime.datetime.combine(day_date, end_time))
 
-        final_intervals = [
-            self._interval_and(leave_interval, work_interval)
-            for leave_interval in leaves_intervals
-            for work_interval in working_intervals]
+        final_intervals = [i for i in
+                           [self._interval_and(leave_interval, work_interval)
+                            for leave_interval in leaves_intervals
+                            for work_interval in working_intervals] if i]
 
         # adapt tz
         return [self._interval_new(
@@ -644,6 +660,17 @@ class ResourceCalendarAttendance(models.Model):
     hour_from = fields.Float(string='Work from', required=True, index=True, help="Start and End time of working.")
     hour_to = fields.Float(string='Work to', required=True)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
+
+    @api.onchange('hour_from', 'hour_to')
+    def _onchange_hours(self):
+        # avoid negative or after midnight
+        self.hour_from = min(self.hour_from, 23.99)
+        self.hour_from = max(self.hour_from, 0.0)
+        self.hour_to = min(self.hour_to, 23.99)
+        self.hour_to = max(self.hour_to, 0.0)
+
+        # avoid wrong order
+        self.hour_to = max(self.hour_to, self.hour_from)
 
 
 class ResourceResource(models.Model):

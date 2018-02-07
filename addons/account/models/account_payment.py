@@ -290,7 +290,7 @@ class account_payment(models.Model):
     invoice_ids = fields.Many2many('account.invoice', 'account_invoice_payment_rel', 'payment_id', 'invoice_id', string="Invoices", copy=False, readonly=True)
     has_invoices = fields.Boolean(compute="_get_has_invoices", help="Technical field used for usability purposes")
     payment_difference = fields.Monetary(compute='_compute_payment_difference', readonly=True)
-    payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference", copy=False)
+    payment_difference_handling = fields.Selection([('open', 'Keep open'), ('reconcile', 'Mark invoice as fully paid')], default='open', string="Payment Difference Handling", copy=False)
     writeoff_account_id = fields.Many2one('account.account', string="Difference Account", domain=[('deprecated', '=', False)], copy=False)
     writeoff_label = fields.Char(
         string='Journal Item Label',
@@ -332,7 +332,7 @@ class account_payment(models.Model):
         else:
             if self.payment_type == 'inbound':
                 domain.append(('at_least_one_inbound', '=', True))
-            else:
+            elif self.payment_type == 'outbound':
                 domain.append(('at_least_one_outbound', '=', True))
         return {'domain': domain, 'journal_types': set(journal_type)}
 
@@ -341,9 +341,16 @@ class account_payment(models.Model):
         jrnl_filters = self._compute_journal_domain_and_types()
         journal_types = jrnl_filters['journal_types']
         domain_on_types = [('type', 'in', list(journal_types))]
-        if self.journal_id.type not in journal_types:
-            self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
-        return {'domain': {'journal_id': jrnl_filters['domain'] + domain_on_types}}
+
+        journal_domain = jrnl_filters['domain'] + domain_on_types
+        default_journal_id = self.env.context.get('default_journal_id')
+        if not default_journal_id:
+            if self.journal_id.type not in journal_types:
+                self.journal_id = self.env['account.journal'].search(domain_on_types, limit=1)
+        else:
+            journal_domain = journal_domain.append(('id', '=', default_journal_id))
+
+        return {'domain': {'journal_id': journal_domain}}
 
     @api.one
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
@@ -374,6 +381,8 @@ class account_payment(models.Model):
                 self.partner_type = 'customer'
             elif self.payment_type == 'outbound':
                 self.partner_type = 'supplier'
+            else:
+                self.partner_type = False
         # Set payment method domain
         res = self._onchange_journal()
         if not res.get('domain', {}):
@@ -505,7 +514,7 @@ class account_payment(models.Model):
     @api.multi
     def action_draft(self):
         return self.write({'state': 'draft'})
-        
+
     def action_validate_invoice_payment(self):
         """ Posts a payment used to pay an invoice. This function only posts the
         payment by default but can be overridden to apply specific post or pre-processing.
@@ -624,9 +633,9 @@ class account_payment(models.Model):
         """
         journal = journal or self.journal_id
         if not journal.sequence_id:
-            raise UserError(_('Configuration Error !'), _('The journal %s does not have a sequence, please specify one.') % journal.name)
+            raise UserError(_('Configuration Error !\nThe journal %s does not have a sequence, please specify one.') % journal.name)
         if not journal.sequence_id.active:
-            raise UserError(_('Configuration Error !'), _('The sequence of journal %s is deactivated.') % journal.name)
+            raise UserError(_('Configuration Error !\nThe sequence of journal %s is deactivated.') % journal.name)
         name = self.move_name or journal.with_context(ir_sequence_date=self.payment_date).sequence_id.next_by_id()
         return {
             'name': name,
@@ -669,7 +678,7 @@ class account_payment(models.Model):
                 for inv in invoice:
                     if inv.move_id:
                         name += inv.number + ', '
-                name = name[:len(name)-2] 
+                name = name[:len(name)-2]
         return {
             'name': name,
             'account_id': self.destination_account_id.id,

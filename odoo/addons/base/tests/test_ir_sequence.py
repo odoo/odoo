@@ -29,6 +29,7 @@ def drop_sequence(code):
         seq.unlink()
 
 
+@common.tagged('standard', 'at_install')
 class TestIrSequenceStandard(unittest.TestCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
@@ -67,6 +68,7 @@ class TestIrSequenceStandard(unittest.TestCase):
         drop_sequence('test_sequence_type')
 
 
+@common.tagged('standard', 'at_install')
 class TestIrSequenceNoGap(unittest.TestCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
@@ -104,6 +106,7 @@ class TestIrSequenceNoGap(unittest.TestCase):
         drop_sequence('test_sequence_type_2')
 
 
+@common.tagged('standard', 'at_install')
 class TestIrSequenceChangeImplementation(unittest.TestCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
@@ -141,6 +144,7 @@ class TestIrSequenceChangeImplementation(unittest.TestCase):
         drop_sequence('test_sequence_type_4')
 
 
+@common.tagged('standard', 'at_install')
 class TestIrSequenceGenerate(unittest.TestCase):
     """ Create sequence objects and generate some values. """
 

@@ -86,7 +86,6 @@ var PlanAction = Widget.extend(ControlPanelMixin, {
     },
     update_cp: function () {
         this.update_control_panel({
-            breadcrumbs: this.action_manager.get_breadcrumbs(),
             cp_content: {
                 $buttons: this.$buttons,
                 $searchview: this.searchview.$el,

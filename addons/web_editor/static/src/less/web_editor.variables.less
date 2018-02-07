@@ -24,71 +24,10 @@
 // Transitions
 @o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1);
 
-// Animations
-@-webkit-keyframes fadeInDownSmall {
-    0% {
-        opacity: 0;
-        .translate(0, -5px);
-    }
-    100% {
-        opacity: 1;
-        .translate(0, 0);
-    }
-}
-@keyframes fadeInDownSmall {
-    0% {
-        opacity: 0;
-        .translate(0, -5px);
-    }
-    100% {
-        opacity: 1;
-        .translate(0, 0);
-    }
-}
-
-@-webkit-keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    75% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-@keyframes fadeInOut {
-    0% {
-        opacity: 0;
-    }
-    25% {
-        opacity: 1;
-    }
-    75% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@-webkit-keyframes inputHighlighter {
-    from { background: @odoo-brand-optional; }
-    to   { width: 0; background: transparent; }
-}
-@keyframes inputHighlighter {
-    from { background: @odoo-brand-optional; }
-    to   { width: 0; background: transparent; }
-}
-
-
 // ============    'Preview' component Mixins    ===============
 // Create a "preview" work-area to edit/customize specific elements
 
-.o-we-preview-box(@padding: 0px 25px 25px 25px, @color-text: white ) {
+.o-we-preview-box(@padding: 0px 25px 25px 25px, @color-text: white) {
     padding: @padding;
     border-top: 1px solid black;
     border-bottom: 1px solid white;

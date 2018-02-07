@@ -41,6 +41,7 @@
             <div class="panel panel-default">
                 <t t-set="acquirers_count" t-value="(len(s2s_acquirers) if s2s_acquirers else 0) + (len(form_acquirers) if form_acquirers else 0)"/>
                 <t t-set="pms_count" t-value="len(pms) if pms else 0"/>
+                <t t-set="MAX_BRAND_LINE" t-value="3"/>
                 <t t-foreach="s2s_acquirers" t-as="acq">
                     <div class="panel-body">
                         <label>
@@ -65,20 +66,20 @@
                         <ul class="pull-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
-                                <li t-att-class="'' if (i &lt; 3) else 'hidden'">
+                                <li t-att-class="'' if (i &lt; MAX_BRAND_LINE) else 'hidden'">
                                     <span t-field="pm_icon.image_payment_form"
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
-                                <li t-if="i==3" style="display:block;">
+                                <li t-if="i==MAX_BRAND_LINE" style="display:block;">
                                     <span class="pull-right more_option text-info">
-                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[3:]])">and more</a>
+                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
                                     </span>
                                 </li>
                                 <t t-set="i" t-value="i+1"/>
                             </t>
                         </ul>
                     </div>
-                    <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if (len(s2s_acquirers)&gt;1 and len(pms)==0 and s2s_acquirers[0]!=acq) else 'hidden' if len(pms)&gt;0 else ''}}">
+                    <div t-attf-id="o_payment_add_token_acq_{{acq.id}}" t-attf-class="panel-footer {{'hidden' if(acquirers_count &gt; 1 and pms_count==0 and s2s_acquirers[0]!=acq) else 'hidden' if pms_count &gt;0 else ''}}">
                         <div class="clearfix">
                             <t t-call="{{acq.sudo().get_s2s_form_xml_id()}}">
                                 <t t-set="id" t-value="acq.id"/>
@@ -102,13 +103,13 @@
                         <ul class="pull-right list-inline payment_icon_list">
                             <t t-set="i" t-value="0"/>
                             <t t-foreach="acq.payment_icon_ids" t-as="pm_icon">
-                                <li t-att-class=" '' if (i &lt; 3) else 'hidden'">
+                                <li t-att-class=" '' if (i &lt; MAX_BRAND_LINE) else 'hidden'">
                                     <span t-field="pm_icon.image_payment_form"
                                         t-options='{"widget": "image", "alt-field": "name"}' />
                                 </li>
-                                <li t-if="i==3" style="display:block;">
+                                <li t-if="i==MAX_BRAND_LINE" style="display:block;">
                                     <span class="pull-right more_option text-info">
-                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[3:]])">and more</a>
+                                        <a href="#" class="o_payment_form_pay_icon_more" data-toggle="tooltip" t-att-title="', '.join([opt.name for opt in acq.payment_icon_ids[MAX_BRAND_LINE:]])">and more</a>
                                     </span>
                                 </li>
                                 <t t-set="i" t-value="i+1"/>

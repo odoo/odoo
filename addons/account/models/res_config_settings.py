@@ -28,7 +28,8 @@ class ResConfigSettings(models.TransientModel):
     module_account_accountant = fields.Boolean(string='Accounting')
     group_analytic_accounting = fields.Boolean(string='Analytic Accounting',
         implied_group='analytic.group_analytic_accounting')
-    group_warning_account = fields.Boolean(string="Warnings", implied_group='account.group_warning_account')
+    group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')
+    group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
     module_account_asset = fields.Boolean(string='Assets Management')
     module_account_deferred_revenue = fields.Boolean(string="Revenue Recognition")
@@ -36,7 +37,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_payment = fields.Boolean(string='Online Payment')
     module_account_reports = fields.Boolean("Dynamic Reports")
     module_account_reports_followup = fields.Boolean("Enable payment followup management")
-    module_l10n_us_check_printing = fields.Boolean("Allow check printing and deposits")
+    module_account_check_printing = fields.Boolean("Allow check printing and deposits")
     module_account_batch_deposit = fields.Boolean(string='Use batch deposit',
         help='This allows you to group received checks before you deposit them to the bank.\n'
              '-This installs the module account_batch_deposit.')
@@ -56,10 +57,12 @@ class ResConfigSettings(models.TransientModel):
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility')
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal")
     account_hide_setup_bar = fields.Boolean(string='Hide Setup Bar', related='company_id.account_setup_bar_closed',help="Tick if you wish to hide the setup bar on the dashboard")
+    group_allow_recurring = fields.Boolean(string="Recurring Vendor Bills", implied_group="account.group_allow_recurring")
 
     @api.multi
     def set_values(self):
         super(ResConfigSettings, self).set_values()
+        self.env.ref('account.recurrent_vendor_bills_cron').write({'active': self.group_allow_recurring})
         if self.group_multi_currency:
             self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_sale_pricelist').id)]})
         """ install a chart of accounts for the given company (if required) """
@@ -68,8 +71,10 @@ class ResConfigSettings(models.TransientModel):
                 'company_id': self.company_id.id,
                 'chart_template_id': self.chart_template_id.id,
                 'transfer_account_id': self.chart_template_id.transfer_account_id.id,
+                'code_digits': self.chart_template_id.code_digits,
                 'sale_tax_rate': 15.0,
                 'purchase_tax_rate': 15.0,
+                'code_digits': self.chart_template_id.code_digits,
                 'complete_tax_set': self.chart_template_id.complete_tax_set,
                 'currency_id': self.currency_id.id,
                 'bank_account_code_prefix': self.chart_template_id.bank_account_code_prefix,

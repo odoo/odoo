@@ -756,11 +756,8 @@ class IrModelFields(models.Model):
             # create a corresponding xml id
             module = field._module or self._context.get('module')
             if module:
-                model = self.env[field.model_name]
-                xmlid = 'field_%s_%s' % (model._table, field.name)
-                cr.execute("SELECT name FROM ir_model_data WHERE name=%s", (xmlid,))
-                if cr.fetchone():
-                    xmlid = xmlid + "_" + str(record.id)
+                model_name = field.model_name.replace('.', '_')
+                xmlid = 'field_%s__%s' % (model_name, field.name)
                 cr.execute(""" INSERT INTO ir_model_data (module, name, model, res_id, date_init, date_update)
                                VALUES (%s, %s, %s, %s, (now() at time zone 'UTC'), (now() at time zone 'UTC')) """,
                            (module, xmlid, record._name, record.id))
@@ -786,7 +783,12 @@ class IrModelFields(models.Model):
     def _reflect_model(self, model):
         """ Reflect the given model's fields. """
         self.clear_caches()
+        duplicate_fields_label = {}
         for field in model._fields.values():
+            if field.string in duplicate_fields_label:
+                _logger.warning('Two fields (%s, %s) of %s have the same label: %s.', field.name, duplicate_fields_label[field.string], model, field.string)
+            else:
+                duplicate_fields_label[field.string] = field.name
             self._reflect_field(field)
 
         if not self.pool._init:
@@ -855,6 +857,8 @@ class IrModelFields(models.Model):
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
+        elif field_data['ttype'] == 'monetary' and not self.pool.loaded:
+            return
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])

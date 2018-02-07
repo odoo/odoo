@@ -189,10 +189,10 @@
             <field name="res_model">event.track</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to add a track.
+                <p class="o_view_nocontent_smiling_face">
+                  Add a new track
                 </p><p>
-                    Tracks define the schedule of your event. These can bea talk, a round table, a meeting, etc.
+                  Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
@@ -204,11 +204,11 @@
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to add a track.
-                </p><p>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new track
+              </p><p>
                 Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
-                </p>
+              </p>
             </field>
         </record>
 
@@ -433,14 +433,15 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="event_track_stage_view_tree"/>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click to add a stage in the task pipeline.
-</p><p>
-    Define the steps that will be used in the event from the
-    creation of the track, up to the closing of the track.
-    You will use these stages in order to track the progress in
-    solving an event track.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new stage in the task pipeline
+              </p><p>
+                Define the steps that will be used in the event from the
+                creation of the track, up to the closing of the track.
+                You will use these stages in order to track the progress in
+                solving an event track.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Track Stages"

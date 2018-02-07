@@ -25,8 +25,8 @@
         <field name="domain">[('consumed','=',True), ('parent_res_model','=','project.project')]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
-            <p>
-                There is no rating for this object at the moment.
+            <p class="o_view_nocontent_empty_folder">
+                There is no rating for this object at the moment
             </p>
         </field>
     </record>
@@ -38,7 +38,9 @@
         <field name="domain">[('res_model', '=', 'project.task'), ('res_id', '=', active_id), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
-            <p>
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings yet
+            </p><p>
                 Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
             </p>
         </field>
@@ -51,7 +53,9 @@
         <field name="domain">[('parent_res_model','=','project.project'), ('consumed', '=', True)]</field>
         <field name="search_view_id" ref="rating_rating_view_search_project"/>
         <field name="help" type="html">
-            <p>
+            <p class="o_view_nocontent_empty_folder">
+                No customer ratings yet
+            </p><p>
                 Customer ratings on tasks. If you have no rating, change your project Settings to activate it.
             </p>
         </field>

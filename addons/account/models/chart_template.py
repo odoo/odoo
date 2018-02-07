@@ -108,8 +108,8 @@ class AccountChartTemplate(models.Model):
     account_ids = fields.One2many('account.account.template', 'chart_template_id', string='Associated Account Templates')
     tax_template_ids = fields.One2many('account.tax.template', 'chart_template_id', string='Tax Template List',
         help='List of all the taxes that have to be installed by the wizard')
-    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', oldname="bank_account_code_char")
-    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts')
+    bank_account_code_prefix = fields.Char(string='Prefix of the bank accounts', required=True, oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char(string='Prefix of the main cash accounts', required=True)
     transfer_account_id = fields.Many2one('account.account.template', string='Transfer Account', required=True,
         domain=lambda self: [('reconcile', '=', True), ('user_type_id.id', '=', self.env.ref('account.data_account_type_current_assets').id)],
         help="Intermediary account used when moving money from a liquidity account to another")
@@ -290,7 +290,8 @@ class AccountChartTemplate(models.Model):
             tmp1, tmp2 = self.parent_id._install_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, acc_ref=acc_ref, taxes_ref=taxes_ref)
             acc_ref.update(tmp1)
             taxes_ref.update(tmp2)
-        tmp1, tmp2 = self._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
+        # Ensure, even if individually, that everything is translated according to the company's language.
+        tmp1, tmp2 = self.with_context(lang=company.partner_id.lang)._load_template(company, code_digits=code_digits, transfer_account_id=transfer_account_id, account_ref=acc_ref, taxes_ref=taxes_ref)
         acc_ref.update(tmp1)
         taxes_ref.update(tmp2)
         return acc_ref, taxes_ref
@@ -503,9 +504,8 @@ class AccountTaxTemplate(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
 
     name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None')], string='Tax Scope', required=True, default="sale",
-        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
-    tax_adjustment = fields.Boolean(default=False)
+    type_tax_use = fields.Selection([('sale', 'Sales'), ('purchase', 'Purchases'), ('none', 'None'), ('adjustment', 'Adjustment')], string='Tax Scope', required=True, default="sale",
+        help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group. 'adjustment' is used to perform tax adjustment.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -575,7 +575,6 @@ class AccountTaxTemplate(models.Model):
             'analytic': self.analytic,
             'tag_ids': [(6, 0, [t.id for t in self.tag_ids])],
             'children_tax_ids': [(6, 0, children_ids)],
-            'tax_adjustment': self.tax_adjustment,
             'tax_exigibility': self.tax_exigibility,
         }
 
@@ -685,8 +684,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
     only_one_chart_template = fields.Boolean(string='Only One Chart Template Available')
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
     bank_account_ids = fields.One2many('account.bank.accounts.wizard', 'bank_account_id', string='Cash and Banks', required=True, oldname="bank_accounts_id")
-    bank_account_code_prefix = fields.Char('Bank Accounts Prefix', oldname="bank_account_code_char")
-    cash_account_code_prefix = fields.Char('Cash Accounts Prefix')
+    bank_account_code_prefix = fields.Char('Bank Accounts Prefix', required=True, oldname="bank_account_code_char")
+    cash_account_code_prefix = fields.Char('Cash Accounts Prefix', required=True)
     code_digits = fields.Integer(string='# of Digits', required=True, help="No. of Digits to use for account code")
     sale_tax_id = fields.Many2one('account.tax.template', string='Default Sales Tax', oldname="sale_tax")
     purchase_tax_id = fields.Many2one('account.tax.template', string='Default Purchase Tax', oldname="purchase_tax")
@@ -856,6 +855,8 @@ class WizardMultiChartsAccounts(models.TransientModel):
         all the provided information to create the accounts, the banks, the journals, the taxes, the
         accounting properties... accordingly for the chosen company.
         '''
+        # Ensure everything is translated consitingly to the company's language, not the user's one.
+        self = self.with_context(lang=self.company_id.partner_id.lang)
         if not self.env.user._is_admin():
             raise AccessError(_("Only administrators can change the settings"))
 

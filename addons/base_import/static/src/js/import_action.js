@@ -126,7 +126,6 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.renderButtons();
                 self.renderImportLink();
                 var status = {
-                    breadcrumbs: self.action_manager.get_breadcrumbs(),
                     cp_content: {$buttons: self.$buttons},
                 };
                 self.update_control_panel(status);
@@ -138,6 +137,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 model: 'base_import.import',
                 method: 'create',
                 args: [{res_model: this.res_model}],
+                kwargs: {context: session.user_context},
             });
     },
     renderButtons: function() {
@@ -287,6 +287,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 model: 'base_import.import',
                 method: 'parse_preview',
                 args: [this.id, this.import_options()],
+                kwargs: {context: session.user_context},
             }).done(function (result) {
                 var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                 self[signal](result);
@@ -505,10 +506,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.exit();
     },
     exit: function () {
-        this.do_action({
-            type: 'ir.actions.client',
-            tag: 'history_back'
-        });
+        this.trigger_up('history_back');
     },
     onresults: function (event, from, to, message) {
         var no_messages = _.isEmpty(message);

@@ -24,7 +24,7 @@ class res_partner(models.Model):
     property_purchase_currency_id = fields.Many2one(
         'res.currency', string="Supplier Currency", company_dependent=True,
         help="This currency will be used, instead of the default one, for purchases from the current partner")
-    purchase_order_count = fields.Integer(compute='_purchase_invoice_count', string='# of Purchase Order')
+    purchase_order_count = fields.Integer(compute='_purchase_invoice_count', string='Purchase Order Count')
     supplier_invoice_count = fields.Integer(compute='_purchase_invoice_count', string='# Vendor Bills')
-    purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, required=True, default="no-message")
+    purchase_warn = fields.Selection(WARNING_MESSAGE, 'Purchase Order', help=WARNING_HELP, default="no-message")
     purchase_warn_msg = fields.Text('Message for Purchase Order')

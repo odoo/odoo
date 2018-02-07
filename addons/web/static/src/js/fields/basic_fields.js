@@ -582,6 +582,7 @@ var FieldMonetary = InputField.extend({
 
         this.formatOptions.currency = this.currency;
         this.formatOptions.digits = [16, 2];
+        this.formatOptions.field_digits = this.nodeOptions.field_digits;
     },
 
     //--------------------------------------------------------------------------
@@ -1036,7 +1037,7 @@ var FieldPhone = FieldEmail.extend({
      * @private
      */
     _canCall: function () {
-        return config.device.size_class <= config.device.SIZES.XS;
+        return config.device.isMobile;
     }
 });
 
@@ -1081,6 +1082,7 @@ var UrlWidget = InputField.extend({
     _renderReadonly: function () {
         this.$el.text(this.attrs.text || this.value)
             .addClass('o_form_uri o_text_overflow')
+            .attr('target', '_blank')
             .attr('href', this.value);
     }
 });
@@ -2094,7 +2096,7 @@ var JournalDashboardGraph = AbstractField.extend({
                     self.chart.forceY([0]);
                     self.chart.options({
                         x: function (d, u) { return u; },
-                        margin: {'left': 0, 'right': 0, 'top': 0, 'bottom': 0},
+                        margin: {'left': 0, 'right': 0, 'top': 5, 'bottom': 0},
                         showYAxis: false,
                         showLegend: false,
                     });

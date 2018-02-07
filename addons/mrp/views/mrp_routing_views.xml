@@ -85,7 +85,7 @@
                                 <field name="name"/>
                             </group>
                             <group>
-                                <field name="location_id" groups="stock.group_adv_location"/>
+                                <field name="location_id" groups="stock.group_adv_location" domain="[('usage', '!=', 'view')]"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                            </group>
                         </group>
@@ -162,8 +162,8 @@
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="search_view_id" ref="mrp_routing_search_view"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a new Routing. 
+              <p class="o_view_nocontent_smiling_face">
+                Create a new routing
               </p><p>
                 Routings define the successive operations that need to be
                 done to realize a Manufacturing Order. Each operation from

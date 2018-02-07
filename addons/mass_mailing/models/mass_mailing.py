@@ -131,6 +131,10 @@ class MassMailingList(models.Model):
         if archive:
             (src_lists - self).write({'active': False})
 
+    @api.multi
+    def close_dialog(self):
+        return {'type': 'ir.actions.act_window_close'}
+
 
 class MassMailingContact(models.Model):
     """Model of a contact. This model is different from the partner model
@@ -212,7 +216,7 @@ class MassMailingCampaign(models.Model):
     _rec_name = "campaign_id"
     _inherits = {'utm.campaign': 'campaign_id'}
 
-    stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', required=True, 
+    stage_id = fields.Many2one('mail.mass_mailing.stage', string='Stage', ondelete='restrict', required=True, 
         default=lambda self: self.env['mail.mass_mailing.stage'].search([], limit=1))
     user_id = fields.Many2one(
         'res.users', string='Responsible',
@@ -387,17 +391,17 @@ class MassMailing(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('in_queue', 'In Queue'), ('sending', 'Sending'), ('done', 'Sent')],
         string='Status', required=True, copy=False, default='draft')
     color = fields.Integer(string='Color Index')
+    user_id = fields.Many2one('res.users', string='Mailing Manager', default=lambda self: self.env.user)
     # mailing options
     reply_to_mode = fields.Selection(
-        [('thread', 'Followers of leads/applicants'), ('email', 'Specified Email Address')],
-        string='Reply-To Mode', required=True)
+        [('thread', 'Recipient Followers'), ('email', 'Specified Email Address')], string='Reply-To Mode', required=True)
     reply_to = fields.Char(string='Reply To', help='Preferred Reply-To Address',
         default=lambda self: self.env['mail.message']._get_default_from())
     # recipients
     mailing_model_real = fields.Char(compute='_compute_model', string='Recipients Real Model', default='mail.mass_mailing.contact', required=True)
     mailing_model_id = fields.Many2one('ir.model', string='Recipients Model', domain=[('model', 'in', MASS_MAILING_BUSINESS_MODELS)],
         default=lambda self: self.env.ref('mass_mailing.model_mail_mass_mailing_list').id)
-    mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name')
+    mailing_model_name = fields.Char(related='mailing_model_id.model', string='Recipients Model Name', readonly=True, related_sudo=True)
     mailing_domain = fields.Char(string='Domain', oldname='domain', default=[])
     contact_list_ids = fields.Many2many('mail.mass_mailing.list', 'mail_mass_mailing_list_rel',
         string='Mailing Lists')
@@ -407,10 +411,10 @@ class MassMailing(models.Model):
     statistics_ids = fields.One2many('mail.mail.statistics', 'mass_mailing_id', string='Emails Statistics')
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
-    failed = fields.Integer(compute="_compute_statistics")
     sent = fields.Integer(compute="_compute_statistics")
     delivered = fields.Integer(compute="_compute_statistics")
     opened = fields.Integer(compute="_compute_statistics")
+    clicked = fields.Integer(compute="_compute_statistics")
     replied = fields.Integer(compute="_compute_statistics")
     bounced = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
@@ -454,6 +458,7 @@ class MassMailing(models.Model):
                 COUNT(CASE WHEN s.scheduled is not null AND s.sent is null AND s.exception is not null THEN 1 ELSE null END) AS failed,
                 COUNT(CASE WHEN s.sent is not null AND s.bounced is null THEN 1 ELSE null END) AS delivered,
                 COUNT(CASE WHEN s.opened is not null THEN 1 ELSE null END) AS opened,
+                COUNT(CASE WHEN s.clicked is not null THEN 1 ELSE null END) AS clicked,
                 COUNT(CASE WHEN s.replied is not null THEN 1 ELSE null END) AS replied,
                 COUNT(CASE WHEN s.bounced is not null THEN 1 ELSE null END) AS bounced,
                 COUNT(CASE WHEN s.exception is not null THEN 1 ELSE null END) AS failed
@@ -471,6 +476,7 @@ class MassMailing(models.Model):
             total = row.pop('total') or 1
             row['received_ratio'] = 100.0 * row['delivered'] / total
             row['opened_ratio'] = 100.0 * row['opened'] / total
+            row['clicks_ratio'] = 100.0 * row['clicked'] / total
             row['replied_ratio'] = 100.0 * row['replied'] / total
             row['bounced_ratio'] = 100.0 * row['bounced'] / total
             self.browse(row.pop('mailing_id')).update(row)
@@ -515,13 +521,20 @@ class MassMailing(models.Model):
 
     @api.onchange('mailing_model_id', 'contact_list_ids')
     def _onchange_model_and_list(self):
-        if self.mailing_model_name == 'mail.mass_mailing.list':
-            if self.contact_list_ids:
-                self.mailing_domain = "[('list_ids', 'in', [%s]), ('opt_out', '=', False)]" % (','.join(str(id) for id in self.contact_list_ids.ids),)
-            else:
-                self.mailing_domain = "[(0, '=', 1)]"
-        elif self.mailing_model_name and 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
-            self.mailing_domain = "[('opt_out', '=', False)]"
+        str_tuples = ""
+        if self.mailing_model_name:
+            if self.mailing_model_name == 'mail.mass_mailing.list':
+                if self.contact_list_ids:
+                    str_tuples += "('list_ids', 'in', {}),".format(','.join(str(id) for id in self.contact_list_ids.ids))
+                else:
+                    str_tuples += "(0, '=', 1),"
+            elif self.mailing_model_name == 'res.partner':
+                str_tuples += "('customer', '=', True),"
+            elif 'opt_out' in self.env[self.mailing_model_name]._fields and not self.mailing_domain:
+                str_tuples += "('opt_out', '=', False),"
+        else:
+            str_tuples += "(0, '=', 1),"
+        self.mailing_domain = "[{}]".format(str_tuples)
         self.body_html = "on_change_model_and_list"
 
     #------------------------------------------------------
@@ -585,14 +598,15 @@ class MassMailing(models.Model):
         self.ensure_one()
         mass_mailing_copy = self.copy()
         if mass_mailing_copy:
+            context = dict(self.env.context)
+            context['form_view_initial_mode'] = 'edit'
             return {
                 'type': 'ir.actions.act_window',
                 'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'mail.mass_mailing',
                 'res_id': mass_mailing_copy.id,
-                'context': self.env.context,
-                'flags': {'initial_mode': 'edit'},
+                'context': context,
             }
         return False
 

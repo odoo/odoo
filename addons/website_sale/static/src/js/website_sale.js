@@ -215,7 +215,7 @@ odoo.define('website_sale.website_sale', function (require) {
             return false;
         });
 
-        $('.oe_website_sale .a-submit, #comment .a-submit').off('click').on('click', function (event) {
+        $('.oe_website_sale, #comment').off('click', '.a-submit').on('click', '.a-submit', function (event) {
             if (!event.isDefaultPrevented() && !$(this).is(".disabled")) {
                 event.preventDefault();
                 $(this).closest('form').submit();
@@ -480,7 +480,7 @@ odoo.define('website_sale.website_sale', function (require) {
     });
 
     // Deactivate image zoom for mobile devices, since it might prevent users to scroll
-    if (config.device.size_class > config.device.SIZES.XS) {
+    if (!config.device.isMobile) {
         $('.ecom-zoomable img[data-zoom]').zoomOdoo({ attach: '#o-carousel-product'});
     }
 });

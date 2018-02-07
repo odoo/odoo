@@ -148,7 +148,7 @@ class Message(models.Model):
             given, restrict to messages written in one of those channels. """
         partner_id = self.env.user.partner_id.id
         delete_mode = not self.env.user.share  # delete employee notifs, keep customer ones
-        if domain is None and delete_mode:
+        if not domain and delete_mode:
             query = "DELETE FROM mail_message_res_partner_needaction_rel WHERE res_partner_id IN %s"
             args = [(partner_id,)]
             if channel_ids:
@@ -185,17 +185,6 @@ class Message(models.Model):
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
         return ids
-
-    @api.multi
-    def mark_as_unread(self, channel_ids=None):
-        """ Add needactions to messages for the current partner. """
-        partner_id = self.env.user.partner_id.id
-        for message in self:
-            message.write({'needaction_partner_ids': [(4, partner_id)]})
-
-        ids = [m.id for m in self]
-        notification = {'type': 'mark_as_unread', 'message_ids': ids, 'channel_ids': channel_ids}
-        self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
 
     @api.multi
     def set_message_done(self):
@@ -404,6 +393,7 @@ class Message(models.Model):
                     'id': 59,
                     'subject': False
                     'is_note': True # only if the subtype is internal
+                    'is_discussion': False # only if the message is a discussion (subtype == discussion)
                 }
         """
         message_values = self.read([
@@ -417,13 +407,15 @@ class Message(models.Model):
         message_tree = dict((m.id, m) for m in self.sudo())
         self._message_read_dict_postprocess(message_values, message_tree)
 
-        # add subtype data (is_note flag, subtype_description). Do it as sudo
+        # add subtype data (is_note flag, is_discussion flag , subtype_description). Do it as sudo
         # because portal / public may have to look for internal subtypes
         subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
-        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description'])
+        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
+        xml_comment_id = self.env.ref('mail.mt_comment').id
         for message in message_values:
             message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
+            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == xml_comment_id
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
@@ -468,6 +460,7 @@ class Message(models.Model):
         - if author_id == pid, uid is the author, OR
         - uid belongs to a notified channel, OR
         - uid is in the specified recipients, OR
+        - uid has a notification on the message, OR
         - uid have read access to the related document is model, res_id
         - otherwise: remove the id
         """
@@ -495,17 +488,22 @@ class Message(models.Model):
         # check read access rights before checking the actual rules on the given ids
         super(Message, self.sudo(access_rights_uid or self._uid)).check_access_rights('read')
 
-        self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+        self._cr.execute("""
+            SELECT DISTINCT m.id, m.model, m.res_id, m.author_id,
+                            COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
+                            channel_partner.channel_id as channel_id
             FROM "%s" m
             LEFT JOIN "mail_message_res_partner_rel" partner_rel
-            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
+            LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+            ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
             LEFT JOIN "mail_message_mail_channel_rel" channel_rel
             ON channel_rel.mail_message_id = m.id
             LEFT JOIN "mail_channel" channel
             ON channel.id = channel_rel.mail_channel_id
             LEFT JOIN "mail_channel_partner" channel_partner
-            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
-            WHERE m.id = ANY (%%s)""" % self._table, (pid, pid, ids,))
+            ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
+            WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=pid, ids=ids))
         for id, rmod, rid, author_id, partner_id, channel_id in self._cr.fetchall():
             if author_id == pid:
                 author_ids.add(id)
@@ -533,6 +531,7 @@ class Message(models.Model):
             - read: if
                 - author_id == pid, uid is the author OR
                 - uid is in the recipients (partner_ids) OR
+                - uid has been notified (needaction) OR
                 - uid is member of a listern channel (channel_ids.partner_ids) OR
                 - uid have read access to the related document if model, res_id
                 - otherwise: raise
@@ -583,17 +582,22 @@ class Message(models.Model):
         message_values = dict((res_id, {}) for res_id in self.ids)
 
         if operation in ['read', 'write']:
-            self._cr.execute("""SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id, partner_rel.res_partner_id, channel_partner.channel_id as channel_id
+            self._cr.execute("""
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id,
+                                COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
+                                channel_partner.channel_id as channel_id
                 FROM "%s" m
                 LEFT JOIN "mail_message_res_partner_rel" partner_rel
-                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = (%%s)
+                ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %%(pid)s
+                LEFT JOIN "mail_message_res_partner_needaction_rel" needaction_rel
+                ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
                 LEFT JOIN "mail_message_mail_channel_rel" channel_rel
                 ON channel_rel.mail_message_id = m.id
                 LEFT JOIN "mail_channel" channel
                 ON channel.id = channel_rel.mail_channel_id
                 LEFT JOIN "mail_channel_partner" channel_partner
-                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = (%%s)
-                WHERE m.id = ANY (%%s)""" % self._table, (self.env.user.partner_id.id, self.env.user.partner_id.id, self.ids,))
+                ON channel_partner.channel_id = channel.id AND channel_partner.partner_id = %%(pid)s
+                WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, ids=self.ids))
             for mid, rmod, rid, author_id, parent_id, partner_id, channel_id in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
@@ -687,14 +691,14 @@ class Message(models.Model):
     @api.model
     def _get_reply_to(self, values):
         """ Return a specific reply_to: alias of the document through
-        message_get_reply_to or take the email_from """
+        _notify_get_reply_to or take the email_from """
         model, res_id, email_from = values.get('model', self._context.get('default_model')), values.get('res_id', self._context.get('default_res_id')), values.get('email_from')  # ctx values / defualt_get res ?
-        if model and hasattr(self.env[model], 'message_get_reply_to'):
-            # return self.env[model].browse(res_id).message_get_reply_to([res_id], default=email_from)[res_id]
-            return self.env[model].message_get_reply_to([res_id], default=email_from)[res_id]
+        if model and hasattr(self.env[model], '_notify_get_reply_to'):
+            # return self.env[model].browse(res_id)._notify_get_reply_to([res_id], default=email_from)[res_id]
+            return self.env[model]._notify_get_reply_to([res_id], default=email_from)[res_id]
         else:
-            # return self.env['mail.thread'].message_get_reply_to(default=email_from)[None]
-            return self.env['mail.thread'].message_get_reply_to([None], default=email_from)[None]
+            # return self.env['mail.thread']._notify_get_reply_to(default=email_from)[None]
+            return self.env['mail.thread']._notify_get_reply_to([None], default=email_from)[None]
 
     @api.model
     def _get_message_id(self, values):
@@ -758,9 +762,6 @@ class Message(models.Model):
 
         message._invalidate_documents()
 
-        if not self.env.context.get('message_create_from_mail_mail'):
-            message._notify(force_send=self.env.context.get('mail_notify_force_send', True),
-                            user_signature=self.env.context.get('mail_notify_user_signature', True))
         return message
 
     @api.multi
@@ -794,7 +795,7 @@ class Message(models.Model):
     #------------------------------------------------------
 
     @api.multi
-    def _notify(self, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify(self, layout=False, force_send=False, send_after_commit=True, user_signature=True):
         """ Compute recipients to notify based on specified recipients and document
         followers. Delegate notification to partners to send emails and bus notifications
         and to channels to broadcast messages on channels """
@@ -845,7 +846,7 @@ class Message(models.Model):
                 ('id', 'in', (partners_sudo - notif_partners).ids),
                 ('channel_ids', 'in', email_channels.ids),
                 ('email', '!=', self_sudo.author_id.email or self_sudo.email_from),
-            ])._notify(self, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
+            ])._notify(self, layout=layout, force_send=force_send, send_after_commit=send_after_commit, user_signature=user_signature)
 
         notif_partners._notify_by_chat(self)
 

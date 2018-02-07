@@ -144,5 +144,5 @@ class IrModelFieldsAnonymizationMigrationFix(models.Model):
     model_name = fields.Char('Model')
     field_name = fields.Char('Field')
     query = fields.Text()
-    query_type = fields.Selection(selection=[('sql', 'sql'), ('python', 'python')], string='Query')
+    query_type = fields.Selection(selection=[('sql', 'sql'), ('python', 'python')], string='Query Type')
     sequence = fields.Integer()

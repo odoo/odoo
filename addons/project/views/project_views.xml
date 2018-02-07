@@ -55,8 +55,6 @@
                         <filter string="Assigned to" name="user" context="{'group_by':'user_id'}"/>
                         <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator/>
-                        <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
                     </group>
                 </search>
             </field>
@@ -73,11 +71,11 @@
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Here, you can create new tasks
-                </p>
-                <p>
-                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
+                <p class="o_view_nocontent_smiling_face">
+                    Click <i>Create</i> to start a new task.
+                </p><p>
+                    To get things done, use activities and status on tasks.<br/>
+                    Chat in real time or by email to collaborate efficiently.
                 </p>
             </field>
         </record>
@@ -91,9 +89,7 @@
             {
                 'default_parent_id' : active_id,
                 'default_project_id' : project_id,
-                'default_name' : name + ':',
-                'default_partner_id' : partner_id,
-                'search_default_project_id': [project_id],
+                'default_name' : name + ': ',
             }
             </field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
@@ -111,7 +107,7 @@
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
-                        <button class="oe_stat_button" type="action"
+                        <button class="oe_stat_button" type="action" attrs="{'invisible': [('task_count', '=', 0)]}"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
@@ -141,7 +137,6 @@
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
-                                <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="partner_id" string="Customer"/>
                                 <label for="rating_status" groups="project.group_project_rating"/>
@@ -341,7 +336,7 @@
                                                 <a name="action_view_all_rating" type="object">Customer Ratings</a>
                                             </div>
                                         </div>
-                                        <div class="o_project_kanban_colorpicker">
+                                        <div class="o_no_padding_kanban_colorpicker">
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
                                     </div>
@@ -384,9 +379,10 @@
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="target">main</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a new project.<br/>
-                    <i>Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.</i>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new project
+                </p><p>
+                    Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.
                 </p>
             </field>
         </record>
@@ -403,8 +399,8 @@
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Create a new project.
+                <p class="o_view_nocontent_empty_folder">
+                    Create a new project
                 </p><p>
                     Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
                 </p>
@@ -428,9 +424,9 @@
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
-                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                        <button id="subtask_stat_button" name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
                             attrs="{'invisible' : [('parent_id', '!=', False)]}"
-                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" groups="project.group_subtask_project">
+                            context="{'project_id': project_id, 'name': name, 'parent_id': id}" groups="project.group_subtask_project">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
@@ -473,12 +469,11 @@
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="partner_id"/>
-                                    <field name="email_from"/>
+                                    <field name="partner_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="email_from" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
-                                    <field name="parent_id" groups="project.group_subtask_project"/>
+                                    <field name="parent_id" attrs="{'invisible' : [('subtask_count', '>', 0)]}" groups="project.group_subtask_project"/>
                                     <field name="child_ids" invisible="1" />
-                                    <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="displayed_image_id" groups="base.group_no_one"/>
                                 </group>
@@ -507,12 +502,26 @@
             </field>
         </record>
 
+        <record id="quick_create_task_form" model="ir.ui.view">
+            <field name="name">project.task.form.quick_create</field>
+            <field name="model">project.task</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="user_id" options="{'no_open': True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <!-- Project Task Kanban View -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
@@ -684,8 +693,11 @@
             <field name="context">{'search_default_my_tasks': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-                <p>
-                    Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new task
+                </p><p>
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br/>
+                    You can track progress, discuss on tasks, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -709,8 +721,8 @@
             <field name="context">{'search_default_activities_my':1}</field>
             <field name="domain">[('activity_date_deadline', '!=', False)]</field>
             <field name="help" type="html">
-                <p>
-                    Currently there are not any activity scheduled.
+                <p class="o_view_nocontent_empty_folder">
+                    No scheduled activity at the moment
                 </p>
             </field>
         </record>
@@ -868,8 +880,8 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a stage in the task pipeline.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stage in the task pipeline
               </p><p>
                 Define the steps that will be used in the project from the
                 creation of the task, up to the closing of the task or issue.
@@ -917,8 +929,8 @@
             <field name="res_model">project.tags</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tag
               </p>
             </field>
         </record>

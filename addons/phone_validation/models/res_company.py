@@ -10,7 +10,7 @@ class ResCompany(models.Model):
     phone_international_format = fields.Selection([
         ('no_prefix', 'No prefix'),
         ('prefix', 'Add international prefix'),
-    ],string="Local Numbers", default="no_prefix",
+    ], string="Local Numbers", default="prefix",
         help="Always encode phone numbers using international format. Otherwise "
              "numbers coming from the company's country are nationaly formatted. "
              "International numbers are always using international format."

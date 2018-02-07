@@ -140,7 +140,7 @@ class BlogPost(models.Model):
     teaser = fields.Text('Teaser', compute='_compute_teaser', inverse='_set_teaser')
     teaser_manual = fields.Text(string='Teaser Content')
 
-    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment'), ('path', '=', False)])
+    website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', '=', 'comment')])
 
     # creation / update stuff
     create_date = fields.Datetime('Created on', index=True, readonly=True)
@@ -148,10 +148,10 @@ class BlogPost(models.Model):
     post_date = fields.Datetime('Publishing date', compute='_compute_post_date', inverse='_set_post_date', store=True,
                                 help="The blog post will be visible for your visitors as of this date on the website if it is set as published.")
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
-    write_date = fields.Datetime('Last Modified on', index=True, readonly=True)
+    write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
     author_avatar = fields.Binary(related='author_id.image_small', string="Avatar")
-    visits = fields.Integer('No of Views')
+    visits = fields.Integer('No of Views', copy=False)
     ranking = fields.Float(compute='_compute_ranking', string='Ranking')
 
     @api.multi
@@ -207,11 +207,12 @@ class BlogPost(models.Model):
 
     @api.multi
     def write(self, vals):
-        self.ensure_one()
-        if 'website_published' in vals and 'published_date' not in vals:
-            if (self.published_date or '') <= fields.Datetime.now():
-                vals['published_date'] = vals['website_published'] and fields.Datetime.now()
-        result = super(BlogPost, self).write(vals)
+        result = True
+        for post in self:
+            copy_vals = dict(vals)
+            if 'website_published' in vals and 'published_date' not in vals and (post.published_date or '') <= fields.Datetime.now():
+                copy_vals['published_date'] = vals['website_published'] and fields.Datetime.now() or False
+            result &= super(BlogPost, self).write(copy_vals)
         self._check_for_publication(vals)
         return result
 
