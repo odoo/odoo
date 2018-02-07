@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <act_window name="Pick packages" id="act_stock_pick_packages"
+        res_model="stock.pick.packages"
+        view_mode="form" target="new"/>
+
+    <record id="view_stock_pick_packages_form" model="ir.ui.view">
+        <field name="name">Pick a pack</field>
+        <field name="model">stock.pick.packages</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="picking_id" invisible="1"/>
+                <field name="entire_package_ids" invisible="1"/>
+                <field name="package_ids" domain="[('id', 'not in', entire_package_ids)]" context="{'tree_view_ref': 'stock.view_pick_quant_package_tree'}"/>
+                <footer>
+                    <button name="action_add_packages" string="Add Packages" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pick_quant_package_tree">
+        <field name="name">stock.pick.quant.package.tree</field>
+        <field name="model">stock.quant.package</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree string="Package">
+                <field name="display_name" string="Package Name"/>
+                <field name="location_id"/>
+                <field name="company_id"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
