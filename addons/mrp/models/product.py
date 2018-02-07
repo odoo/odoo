@@ -7,6 +7,7 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
+    bom_line_ids = fields.One2many('mrp.bom.line', 'product_tmpl_id', 'BoM Components')
     bom_ids = fields.One2many('mrp.bom', 'product_tmpl_id', 'Bill of Materials')
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
     used_in_bom_count = fields.Integer('# of BoM Where is Used', compute='_compute_used_in_bom_count')
@@ -49,6 +50,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    variant_bom_ids = fields.One2many('mrp.bom', 'product_id', 'BOM Product Variants')
+    bom_line_ids = fields.One2many('mrp.bom.line', 'product_id', 'BoM Components')
     bom_count = fields.Integer('# Bill of Material', compute='_compute_bom_count')
     used_in_bom_count = fields.Integer('# BoM Where Used', compute='_compute_used_in_bom_count')
     mo_count = fields.Integer('# Manufacturing Orders', compute='_compute_mo_count')
