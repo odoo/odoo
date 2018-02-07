@@ -348,19 +348,27 @@ class PurchaseOrder(models.Model):
             else:
                 order.write({'state': 'to approve'})
         return True
-
+    
+    @api.model
+    def validate_cancel_order_purchase (self):
+        '''
+        Hook sera utilizado en un metodo superior
+        self se envia la orden de compra para validar el picking y facturas.
+        '''
+        for pick in self.picking_ids:
+            if pick.state == 'done':
+                raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (self.name))
+        for inv in self.invoice_ids:
+            if inv and inv.state not in ('cancel', 'draft'):
+                raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
+        for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
+                pick.action_cancel()
+    
     @api.multi
     def button_cancel(self):
         for order in self:
-            for pick in order.picking_ids:
-                if pick.state == 'done':
-                    raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (order.name))
-            for inv in order.invoice_ids:
-                if inv and inv.state not in ('cancel', 'draft'):
-                    raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
-
-            for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
-                pick.action_cancel()
+            #siguiente linea fue agregada por Trescloud
+            order.validate_cancel_order_purchase()
             # TDE FIXME: I don' think context key is necessary, as actions are not related / called from each other
             if not self.env.context.get('cancel_procurement'):
                 procurements = order.order_line.mapped('procurement_ids')
