@@ -368,7 +368,7 @@ def list_dbs(force=False):
             db_user = odoo.tools.config["db_user"]
             if not db_user and os.name == 'posix':
                 import pwd
-                db_user = pwd.getpwuid(os.getuid())[0]
+                db_user = os.environ.get('PGUSER', pwd.getpwuid(os.getuid())[0])
             if not db_user:
                 cr.execute("select usename from pg_user where usesysid=(select datdba from pg_database where datname=%s)", (odoo.tools.config["db_name"],))
                 res = cr.fetchone()
