@@ -9,8 +9,8 @@
                     <h1 style="font-size: 62px;">Catchy Headline</h1>
                     <h2 class="lead">Click to customize this text.</h2>
                     <p class="pb16">Write one or two paragraphs describing your <b>product</b>, <b>services</b> or a <b>specific feature</b>.<br/> To be successful your content needs to be useful to your readers.</p>
-                    <a href="/page/aboutus" class="btn btn-primary">About us</a>
-                    <a href="/page/contactus" class="btn btn-alpha ml8">Contact us</a>
+                    <a href="/page/aboutus" class="btn btn-primary mb8">About us</a>
+                    <a href="/page/contactus" class="btn btn-alpha ml8 mr8">Contact us</a>
                 </div>
             </div>
         </div>
@@ -224,20 +224,20 @@
 </template>
 
 <template id="s_three_columns" name="Three Columns">
-    <section class="s_three_columns pt32 pb32">
+    <section class="s_three_columns pt48 pb24">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 pt16 pb16">
+                <div class="col-md-4 pb24">
                     <img class="img img-responsive" src="/web/image/website.library_image_11" alt="Odoo - Sample 1 for three columns"/>
                     <h3>Feature One</h3>
                     <p>Adapt these three columns to fit you design need. To duplicate, delete or move columns, select the column and use the top icons to perform your action.</p>
                 </div>
-                <div class="col-md-4 pt16 pb16">
+                <div class="col-md-4 pb24">
                     <img class="img img-responsive" src="/web/image/website.library_image_13" alt="Odoo - Sample 2 for three columns"/>
                     <h3>Feature Two</h3>
                     <p>To add a fourth column, reduce the size of these three columns using the right icon of each block. Then, duplicate one of the column to create a new one.</p>
                 </div>
-                <div class="col-md-4 pt16 pb16">
+                <div class="col-md-4 pb24">
                     <img class="img img-responsive" src="/web/image/website.library_image_07" alt="Odoo - Sample 3 for three columns"/>
                     <h3>Feature Three</h3>
                     <p>Delete the above image or replace it with a picture that illustrates your message. Click on the picture to change it's <em>rounded corner</em> style.</p>
@@ -269,8 +269,8 @@
 </template>
 
 <template id="s_hr" name="Separator">
-    <section class="s_hr pt32 pb32">
-        <hr class="s_hr_1px s_hr_solid s_hr_full"/>
+    <section class="s_hr text-center pt48 pb48">
+        <hr class="s_hr_2px s_hr_solid s_hr_full"/>
     </section>
 </template>
 
@@ -812,10 +812,10 @@
                     <t t-snippet="website.s_banner" t-thumbnail="/website/static/src/img/blocks/block_slider.png"/>
                     <t t-snippet="website.s_text_image" t-thumbnail="/website/static/src/img/blocks/block_text_image.png"/>
                     <t t-snippet="website.s_image_text" t-thumbnail="/website/static/src/img/blocks/block_image_text.png"/>
-                    <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_jumbotron.png"/>
-                    <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
                     <t t-snippet="website.s_features" t-thumbnail="/website/static/src/img/blocks/block_features.png"/>
                     <t t-snippet="website.s_three_columns" t-thumbnail="/website/static/src/img/blocks/block_three_columns.png"/>
+                    <t t-snippet="website.s_big_message" t-thumbnail="/website/static/src/img/blocks/block_big_message.png"/>
+                    <t t-snippet="website.s_big_picture" t-thumbnail="/website/static/src/img/blocks/block_big_picture.png"/>
                 </div>
             </div>
 
