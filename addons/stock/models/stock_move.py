@@ -159,6 +159,7 @@ class StockMove(models.Model):
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
     reference = fields.Char(compute='_compute_reference', string="Reference", store=True)
+    in_entire_package = fields.Boolean(compute='_compute_in_entire_package')
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
@@ -231,6 +232,13 @@ class StockMove(models.Model):
     def _compute_product_qty(self):
         rounding_method = self._context.get('rounding_method', 'UP')
         self.product_qty = self.product_uom._compute_quantity(self.product_uom_qty, self.product_id.uom_id, rounding_method=rounding_method)
+
+    def _compute_in_entire_package(self):
+        """ This method check if the move is in an entire pack shown in the picking."""
+        for move in self:
+            picking_id = move.picking_id
+            move.in_entire_package = picking_id and picking_id.picking_type_entire_packs and picking_id.state != 'done'\
+                and all(ml.in_entire_package for ml in move.move_line_ids)
 
     def _get_move_lines(self):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move. 
