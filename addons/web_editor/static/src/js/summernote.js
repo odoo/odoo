@@ -1313,7 +1313,7 @@ function summernote_keydown_clean (field) {
 
 function remove_table_content(r) {
     var ancestor = r.commonAncestor();
-    var nodes = dom.listBetween(r.sc, r.ec);
+    var nodes = dom.listBetween(r.sc, r.ec, r.so, r.eo);
     if (dom.isText(r.sc)) {
         r.sc.textContent = r.sc.textContent.slice(0, r.so);
     }
