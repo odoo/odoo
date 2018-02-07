@@ -75,7 +75,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mrp_production_workcenter_tree_view_inherit">
+    <record model="ir.ui.view" id="mrp_production_workorder_tree_view_inherit">
         <field name="name">mrp.production.work.order.tree</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
@@ -92,7 +92,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mrp_production_workcenter_form_view_inherit">
+    <record model="ir.ui.view" id="mrp_production_workorder_form_view_inherit">
         <field name="name">mrp.production.work.order.form</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
@@ -245,7 +245,7 @@
         </field>
     </record>
 
-    <record id="view_mrp_production_workcenter_form_view_filter" model="ir.ui.view">
+    <record id="view_mrp_production_workorder_form_view_filter" model="ir.ui.view">
         <field name="name">mrp.production.work.order.select</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
@@ -378,7 +378,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_type">form</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
-        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="mrp_workorder_view_gantt"/>
         <field name="context">{'search_default_work_center': True}</field>
         <field name="help" type="html">
@@ -399,7 +399,7 @@
         <field name="view_type">form</field>
         <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
-        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="view_id" ref="workcenter_line_gantt_production"/>
         <field name="context">{'search_default_production': True}</field>
         <field name="help" type="html">
@@ -421,7 +421,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
-        <field name="search_view_id" ref="view_mrp_production_workcenter_form_view_filter"/>
+        <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_progress': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
