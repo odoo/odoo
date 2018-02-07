@@ -70,9 +70,6 @@ odoo.define('payment_stripe.stripe', function(require) {
             var currency = $("input[name='currency']").val();
             var currency_id = $("input[name='currency_id']").val();
             var amount = parseFloat($("input[name='amount']").val() || '0.0');
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
 
             ajax.jsonRpc('/website_payment/transaction', 'call', {
                     reference: $("input[name='invoice_num']").val(),
@@ -84,14 +81,11 @@ odoo.define('payment_stripe.stripe', function(require) {
                     name: $("input[name='merchant']").val(),
                     description: $("input[name='invoice_num']").val(),
                     currency: currency,
-                    amount: amount,
+                    amount: _.contains(int_currencies, currency) ? amount : amount * 100,
                 });
         } else {
             var currency = $("input[name='currency']").val();
             var amount = parseFloat($("input[name='amount']").val() || '0.0');
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
 
             ajax.jsonRpc('/shop/payment/transaction/' + acquirer_id, 'call', {
                     so_id: so_id,
@@ -102,7 +96,7 @@ odoo.define('payment_stripe.stripe', function(require) {
                     name: $("input[name='merchant']").val(),
                     description: $("input[name='invoice_num']").val(),
                     currency: currency,
-                    amount: amount,
+                    amount: _.contains(int_currencies, currency) ? amount : amount * 100,
                 });
             });
         }
