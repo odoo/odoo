@@ -6342,18 +6342,18 @@ QUnit.module('Views', {
         assert.expect(1);
 
         var instanceNumber = 0;
-        var initWidget = mixins.ParentedMixin.init;
-        mixins.ParentedMixin.init = function () {
-            instanceNumber++;
-            return initWidget.apply(this, arguments);
-        };
-        var destroyWidget = mixins.ParentedMixin.destroy;
-        mixins.ParentedMixin.destroy = function () {
-            if (!this.isDestroyed()) {
-                instanceNumber--;
+        testUtils.patch(mixins.ParentedMixin, {
+            init: function () {
+                instanceNumber++;
+                return this._super.apply(this, arguments);
+            },
+            destroy: function () {
+                if (!this.isDestroyed()) {
+                    instanceNumber--;
+                }
+                return this._super.apply(this, arguments);
             }
-            return destroyWidget.apply(this, arguments);
-        };
+        });
 
         var params = {
             View: FormView,
@@ -6413,8 +6413,7 @@ QUnit.module('Views', {
 
         form.destroy();
 
-        mixins.ParentedMixin.init = initWidget;
-        mixins.ParentedMixin.destroy = destroyWidget;
+        testUtils.unpatch(mixins.ParentedMixin);
     });
 
 });
