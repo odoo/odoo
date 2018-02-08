@@ -8,7 +8,7 @@ import math
 from datetime import timedelta
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 
@@ -22,8 +22,19 @@ class HolidaysRequest(models.Model):
     _order = "date_from desc"
     _inherit = ['mail.thread']
 
+    @api.model
+    def default_get(self, fields_list):
+        defaults = super(HolidaysRequest, self).default_get(fields_list)
+
+        LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from'))
+        lt = LeaveType.search([('valid', '=', True), ('employee_applicability', 'in', ['leave', 'both'])])
+
+        defaults['holiday_status_id'] = lt[0].id if len(lt) > 0 else defaults.get('holiday_status_id')
+        return defaults
+
     def _default_employee(self):
         return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+
 
     name = fields.Char('Description')
     state = fields.Selection([
@@ -47,7 +58,8 @@ class HolidaysRequest(models.Model):
     date_to = fields.Datetime('End Date', readonly=True, copy=False, required=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, track_visibility='onchange')
     holiday_status_id = fields.Many2one("hr.leave.type", string="Leave Type", required=True, readonly=True,
-        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
+        domain="[('valid', '=', True), ('employee_applicability', 'in', ['leave', 'both'])]")
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
     manager_id = fields.Many2one('hr.employee', related='employee_id.parent_id', string='Manager', readonly=True, store=True)
@@ -75,7 +87,7 @@ class HolidaysRequest(models.Model):
         help='This area is automatically filled by the user who validate the leave', oldname='manager_id')
     second_approver_id = fields.Many2one('hr.employee', string='Second Approval', readonly=True, copy=False, oldname='manager_id2',
         help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)')
-    double_validation = fields.Boolean('Apply Double Validation', related='holiday_status_id.double_validation')
+    validation_type = fields.Selection('Validation Type', related='holiday_status_id.validation_type')
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
 
     _sql_constraints = [
@@ -208,6 +220,20 @@ class HolidaysRequest(models.Model):
         if employee.user_id:
             self.message_subscribe_users(user_ids=employee.user_id.ids)
 
+    @api.multi
+    @api.constrains('holiday_status_id')
+    def _check_leave_type_validity(self):
+        for leave in self:
+            if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
+                vstart = fields.Datetime.from_string(leave.holiday_status_id.validity_start)
+                vstop  = fields.Datetime.from_string(leave.holiday_status_id.validity_stop)
+                dfrom  = fields.Datetime.from_string(leave.date_from)
+                dto    = fields.Datetime.from_string(leave.date_to)
+
+                if dfrom and dto and (dfrom < vstart or dto > vstop):
+                    raise UserError(_('You can take %s only between %s and %s') % (leave.holiday_status_id.display_name, \
+                                                                                  leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
+
     @api.model
     def create(self, values):
         """ Override to avoid automatic logging of creation """
@@ -331,8 +357,8 @@ class HolidaysRequest(models.Model):
 
     @api.multi
     def action_approve(self):
-        # if double_validation: this method is the first approval approval
-        # if not double_validation: this method calls action_validate() below
+        # if validation_type == 'both': this method is the first approval approval
+        # if validation_type != 'both': this method calls action_validate() below
         if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
             raise UserError(_('Only an HR Officer or Manager can approve leave requests.'))
 
@@ -340,8 +366,17 @@ class HolidaysRequest(models.Model):
         if any(holiday.state != 'confirm' for holiday in self):
             raise UserError(_('Leave request must be confirmed ("To Approve") in order to approve it.'))
 
-        self.filtered(lambda hol: hol.double_validation).write({'state': 'validate1', 'first_approver_id': current_employee.id})
-        self.filtered(lambda hol: not hol.double_validation).action_validate()
+        for holiday in self:
+            validation_type = holiday.holiday_status_id.validation_type
+            manager = holiday.employee_id.parent_id or holiday.employee_id.department_id.manager_id
+            if (validation_type in ['manager', 'both']) and (manager and manager != current_employee)\
+              and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+                raise UserError(_('You must be %s manager to approve this leave') % (holiday.employee_id.name))
+            elif validation_type == 'hr' and not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
+                raise UserError(_('You must be a Human Resource Manager to approve this Leave'))
+
+        self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
+        self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()
         return True
 
     @api.multi
@@ -357,7 +392,7 @@ class HolidaysRequest(models.Model):
                 raise UserError(_('Only an HR Manager can apply the second approval on leave requests.'))
 
             holiday.write({'state': 'validate'})
-            if holiday.double_validation:
+            if holiday.validation_type == 'both':
                 holiday.write({'second_approver_id': current_employee.id})
             else:
                 holiday.write({'first_approver_id': current_employee.id})
@@ -371,7 +406,7 @@ class HolidaysRequest(models.Model):
                     leaves += self.with_context(mail_notify_force_send=False).create(values)
                 # TODO is it necessary to interleave the calls?
                 leaves.action_approve()
-                if leaves and leaves[0].double_validation:
+                if leaves and leaves[0].validation_type == 'both':
                     leaves.action_validate()
         return True
 

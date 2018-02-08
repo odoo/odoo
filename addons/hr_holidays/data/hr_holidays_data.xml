@@ -7,6 +7,8 @@
             <field name="name" eval="'Legal Leaves '+time.strftime('%Y')"/>
             <field name="limit" eval="False"/>
             <field name="color_name">black</field>
+            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
         </record>
 
         <!-- Sick leave -->
@@ -21,6 +23,8 @@
             <field name="name">Compensatory Days</field>
             <field name="limit" eval="False"/>
             <field name="color_name">lavender</field>
+            <field name="validity_start" eval="time.strftime('%Y-01-01')"/>
+            <field name="validity_stop" eval="time.strftime('%Y-12-31')"/>
         </record>
 
         <!--Unpaid Leave -->

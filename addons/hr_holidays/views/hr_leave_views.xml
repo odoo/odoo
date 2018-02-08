@@ -91,7 +91,7 @@
                 <group>
                     <group>
                         <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
-                        <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
+                        <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':date_from}"/>
                         <label for="number_of_days_temp" string="Duration"/>
                         <div>
                             <div>
