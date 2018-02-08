@@ -1327,7 +1327,7 @@ QUnit.module('ActionManager', {
     QUnit.module('Report actions');
 
     QUnit.test('can execute report actions from db ID', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -1358,6 +1358,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             '/report/check_wkhtmltopdf',
+            '/web/static/src/img/spin.png', // block UI image
             '/report/download',
             'on_close',
         ]);
@@ -1366,7 +1367,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('should trigger a notification if wkhtmltopdf is to upgrade', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var actionManager = createActionManager({
             actions: this.actions,
@@ -1398,6 +1399,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'notification',
+            '/web/static/src/img/spin.png', // block UI image
             '/report/download',
         ]);
 

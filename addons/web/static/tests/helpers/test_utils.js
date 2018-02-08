@@ -101,19 +101,12 @@ var createActionManager = function (params) {
     widget.appendTo($target);
     widget.$el.addClass('o_web_client');
 
-    // make sure images and iframes do not trigger a GET on the server
-    // AAB; this should be done in addMockEnvironment
-    $target.on('DOMNodeInserted.removeSRC', function () {
-        removeSrcAttribute($(this), widget);
-    });
-
     var userContext = params.context && params.context.user_context || {};
     var actionManager = new ActionManager(widget, userContext);
 
     var originalDestroy = ActionManager.prototype.destroy;
     actionManager.destroy = function () {
         actionManager.destroy = originalDestroy;
-        $target.off('DOMNodeInserted.removeSRC');
         widget.destroy();
     };
     actionManager.appendTo(widget.$el);
@@ -216,11 +209,6 @@ function createAsyncView(params) {
 
     var view = new params.View(viewInfo, viewOptions);
 
-    // make sure images do not trigger a GET on the server
-    $target.on('DOMNodeInserted.removeSRC', function () {
-        removeSrcAttribute($(this), widget);
-    });
-
     // reproduce the DOM environment of views
     var $web_client = $('<div>').addClass('o_web_client').prependTo($target);
     var controlPanel = new ControlPanel(widget);
@@ -235,7 +223,6 @@ function createAsyncView(params) {
             // when it will be called the second time (by its parent)
             delete view.destroy;
             widget.destroy();
-            $('#qunit-fixture').off('DOMNodeInserted.removeSRC');
         };
 
         // link the view to the control panel
@@ -326,6 +313,11 @@ function addMockEnvironment(widget, params) {
         debug: params.debug,
     });
 
+    // make sure images do not trigger a GET on the server
+    $('body').on('DOMNodeInserted.removeSRC', function () {
+        removeSrcAttribute($(this), widget);
+    });
+
     // make sure the debounce value for input fields is set to 0
     var initialDebounceValue = DebouncedField.prototype.DEBOUNCE;
     DebouncedField.prototype.DEBOUNCE = params.fieldDebounce || 0;
@@ -398,6 +390,9 @@ function addMockEnvironment(widget, params) {
             }
             _.extend(core._t.database.parameters, initialParameters);
         }
+
+        $('body').off('DOMNodeInserted.removeSRC');
+        $('.blockUI').remove();
 
         widgetDestroy.call(this);
     };
