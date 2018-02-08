@@ -6410,7 +6410,8 @@ QUnit.module('Views', {
         // call destroy function of controller to ensure that it correctly destroys everything
         form.__destroy();
 
-        assert.strictEqual(instanceNumber, initialInstanceNumber+1, "every widget must be destroyed exept the parent");
+        // +3 => parent Widget, controlPanel and Bus created in the controlPanel
+        assert.strictEqual(instanceNumber, initialInstanceNumber+3, "every widget must be destroyed exept the parent");
 
         form.destroy();
 

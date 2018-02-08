@@ -31,7 +31,7 @@ function createBusService(bus) {
         init: function (parent) {
             this._super.apply(this, arguments);
             if (!bus) {
-                bus = new Bus();
+                bus = new Bus(this);
             }
             this.bus = new _.extend(bus, {
                 /**
