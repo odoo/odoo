@@ -185,6 +185,7 @@ class Partner(models.Model):
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
                     'body': base_template.render(template_ctx, engine='ir.qweb'),
                 }
+                fol_values['body'] = self.env['mail.thread']._replace_local_links(fol_values['body'])
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
                 # update notifications
