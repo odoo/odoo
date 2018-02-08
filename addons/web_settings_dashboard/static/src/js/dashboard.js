@@ -104,15 +104,17 @@ var DashboardInvitations = Widget.extend({
             }
             emails = _.difference(emails, invalidEmails);
 
-            // filter out already processed or pending addresses
-            var pendingEmails = _.map(this.data.pending_users, function (info) {
-                return info[1];
-            });
-            var existingEmails = _.intersection(emails, this.emails.concat(pendingEmails));
-            if (existingEmails.length) {
-                this.do_warn(_.str.sprintf(_t('The following email addresses already exist: %s.'), existingEmails.join(', ')));
+            if (!this.data.resend_invitation) {
+                // filter out already processed or pending addresses
+                var pendingEmails = _.map(this.data.pending_users, function (info) {
+                    return info[1];
+                });
+                var existingEmails = _.intersection(emails, this.emails.concat(pendingEmails));
+                if (existingEmails.length) {
+                    this.do_warn(_.str.sprintf(_t('The following email addresses already exist: %s.'), existingEmails.join(', ')));
+                }
+                emails = _.difference(emails, existingEmails);
             }
-            emails = _.difference(emails, existingEmails);
 
             // add valid email addresses, if any
             if (emails.length) {

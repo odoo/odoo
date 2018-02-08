@@ -7,6 +7,7 @@ from ast import literal_eval
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools.misc import ustr
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -17,8 +18,33 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
-    state = fields.Selection(compute='_compute_state', string='Status',
+    state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
                  selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
+
+    def _search_state(self, operator, value):
+        negative = operator in expression.NEGATIVE_TERM_OPERATORS
+
+        # In case we have no value
+        if not value:
+            return TRUE_DOMAIN if negative else FALSE_DOMAIN
+
+        if operator in ['in', 'not in']:
+            if len(value) > 1:
+                return FALSE_DOMAIN if negative else TRUE_DOMAIN
+            if value[0] == 'new':
+                comp = '!=' if negative else '='
+            if value[0] == 'active':
+                comp = '=' if negative else '!='
+            return [('log_ids', comp, False)]
+
+        if operator in ['=', '!=']:
+            # In case we search against anything else than new, we have to invert the operator
+            if value != 'new':
+                operator = expression.TERM_OPERATORS_NEGATION[operator]
+
+            return [('log_ids', operator, False)]
+
+        return expression.TRUE_DOMAIN
 
     @api.multi
     def _compute_state(self):
@@ -142,6 +168,15 @@ class ResUsers(models.Model):
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
             template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+
+    @api.model
+    def web_dashboard_create_users(self, emails):
+        inactive_users = self.search([('state', '=', 'new'), '|', ('login', 'in', emails), ('email', 'in', emails)])
+        new_emails = set(emails) - set(inactive_users.mapped('email'))
+        res = super(ResUsers, self).web_dashboard_create_users(list(new_emails))
+        if inactive_users:
+            inactive_users.with_context(create_user=True).action_reset_password()
+        return res
 
     @api.model
     def create(self, values):
