@@ -6,7 +6,7 @@
 # David Tran <david.tran@tvtmarine.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 11.0alpha1\n"
+"Project-Id-Version: Odoo Server 12.0alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-08-05 11:35+0000\n"
 "PO-Revision-Date: 2017-08-05 11:35+0000\n"
@@ -149,7 +149,7 @@ msgid "Cash in transit"
 msgstr "Tiền đang chuyển"
 
 #. module: l10n_vn
-#: model:ir.model.fields,field_description:l10n_vn.field_account_account_tag_code
+#: model:ir.model.fields,field_description:l10n_vn.field_account_account_tag__code
 msgid "Code"
 msgstr "Mã"
 
@@ -400,7 +400,7 @@ msgstr "Chênh lệch tỷ giá hối đoái"
 #: model:account.account,name:l10n_vn.1_chart4132
 #: model:account.account.template,name:l10n_vn.chart4132
 msgid "Exchange rate differences in pre-operating period"
-msgstr "Exchange rate differences in pre-operating period"
+msgstr "Chênh lệch tỷ giá hối đoái trong giai đoạn trước hoạt động"
 
 #. module: l10n_vn
 #: model:account.account,name:l10n_vn.1_chart4131
@@ -1413,7 +1413,7 @@ msgid "Term deposits"
 msgstr "Tiền gửi có kỳ hạn"
 
 #. module: l10n_vn
-#: model:ir.model.fields,help:l10n_vn.field_account_account_tag_code
+#: model:ir.model.fields,help:l10n_vn.field_account_account_tag__code
 msgid "The unique code of the tag. For example, 111 for cash, 112 for cash in banks, etc."
 msgstr "Mã số duy nhất cho thẻ tài khoản. Ví dụ, 111 đối với tiền mặt, 112 đối với tiền gửi ngân hàng, etc."
 
@@ -1598,11 +1598,27 @@ msgid "Value Added Tax (VAT)"
 msgstr "Thuế GTGT phải nộp"
 
 #. module: l10n_vn
+#: model:account.tax.group,name:l10n_vn.tax_group_exemption
+msgid "Value Added Tax - Exemption"
+msgstr "Thuế GTGT - Miễn trừ"
+
+#. module: l10n_vn
+#: model:account.tax.group,name:l10n_vn.tax_group_0
+msgid "Value Added Tax 0%"
+msgstr "Thuế GTGT 0%"
+
+#. module: l10n_vn
 #: model:account.tax,description:l10n_vn.1_tax_sale_vat0
 #: model:account.tax.template,description:l10n_vn.tax_sale_vat0
 msgid "Value Added Tax 0% on sold goods to the State Budget\n"
 "		"
 msgstr "Thuế và các khoản phải nộp Nhà nước 0% đối với hàng hoá bán ra\n"
+""
+
+#. module: l10n_vn
+#: model:account.tax.group,name:l10n_vn.tax_group_10
+msgid "Value Added Tax 10%"
+msgstr "Thuế GTGT 10%"
 
 #. module: l10n_vn
 #: model:account.tax,description:l10n_vn.1_tax_sale_vat10
@@ -1611,6 +1627,12 @@ msgid "Value Added Tax 10% on sold goods to the State\n"
 "			Budget\n"
 "		"
 msgstr "Thuế và các khoản phải nộp Nhà nước 10% đối với hàng hoá bán ra\n"
+""
+
+#. module: l10n_vn
+#: model:account.tax.group,name:l10n_vn.tax_group_5
+msgid "Value Added Tax 5%"
+msgstr "Thuế GTGT 5%"
 
 #. module: l10n_vn
 #: model:account.tax,description:l10n_vn.1_tax_sale_vat5
@@ -1618,6 +1640,7 @@ msgstr "Thuế và các khoản phải nộp Nhà nước 10% đối với hàng
 msgid "Value Added Tax 5% on sold goods to the State Budget\n"
 "		"
 msgstr "Thuế và các khoản phải nộp Nhà nước 5% đối với hàng hoá bán ra\n"
+""
 
 #. module: l10n_vn
 #: model:ir.ui.menu,name:l10n_vn.account_reports_vn_statements_menu
@@ -1627,7 +1650,7 @@ msgstr "Việt Nam"
 #. module: l10n_vn
 #: model:account.account.template,name:l10n_vn.chart1131
 msgid "Vietnam Dong"
-msgstr "Tiền Việt Nam"
+msgstr "Đồng Việt Nam"
 
 #. module: l10n_vn
 #: model:account.account,name:l10n_vn.1_chart1544
