@@ -28,7 +28,7 @@ class ResBank(models.Model):
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    l10n_ch_postal = fields.Char(help='The ISR number of the company within the bank', compute='_compute_l10n_ch_postal')
+    l10n_ch_postal = fields.Char(string='ISR reference', help='The ISR number of the company within the bank')
 
     @api.depends('acc_number')
     def _compute_acc_type(self):
@@ -41,15 +41,15 @@ class ResPartnerBank(models.Model):
             else:
                 super(ResPartnerBank, record)._compute_acc_type()
 
-    @api.depends('acc_number')
-    def _compute_l10n_ch_postal(self):
-        for record in self:
-            if record.acc_type == 'iban':
-                record.l10n_ch_postal = record._retrieve_l10n_ch_postal(record.sanitized_acc_number)
-            else:
-                record.l10n_ch_postal = record.sanitized_acc_number
+    @api.onchange('acc_number')
+    def _onchange_set_l10n_ch_postal(self):
+        if self.acc_type == 'iban':
+            self.l10n_ch_postal = self.retrieve_l10n_ch_postal(self.sanitized_acc_number)
+        else:
+            self.l10n_ch_postal = self.sanitized_acc_number
 
-    def _retrieve_l10n_ch_postal(self, iban):
+    @api.model
+    def retrieve_l10n_ch_postal(self, iban):
         """ Reads a swiss postal account number from a an IBAN and returns it as
         a string. Returns None if no valid postal account number was found, or
         the given iban was not from Switzerland.
