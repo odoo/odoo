@@ -201,7 +201,7 @@ class SaleOrder(models.Model):
     def get_portal_confirmation_action(self):
         """ Template override default behavior of pay / sign chosen in sales settings """
         if self.template_id:
-            return 'sign' if self.require_payment == 1 else 'pay'
+            return 'pay' if self.require_payment == 1 else 'sign'
         return super(SaleOrder, self).get_portal_confirmation_action()
 
     @api.multi
