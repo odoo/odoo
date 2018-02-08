@@ -681,13 +681,6 @@
                             domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d')), ('date_closed', '=', False)]"
                             help="Opportunities with a date of Expected Closing which is in the past"/>
 
-                    <filter string="To Close Today" name="close_today"
-                            domain="[('date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="To Close This Week" name="close_this_week" domain="[
-                                '&amp;',
-                                ('date_deadline', '&gt;=', (context_today() + relativedelta(weeks=-1,days=1,weekday=0)).strftime('%Y-%m-%d')),
-                                ('date_deadline', '&lt;=', (context_today() + relativedelta(weekday=6)).strftime('%Y-%m-%d')),
-                            ]"/>
                     <filter string="To Close This Month" name="close_this_month" domain="[
                                 '&amp;',
                                 ('date_deadline', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
