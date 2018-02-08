@@ -9,5 +9,5 @@ class IrHttp(models.AbstractModel):
 
     def session_info(self):
         result = super(IrHttp, self).session_info()
-        result['show_rainbowman'] = request.env.user.has_group('base_setup.group_rainbowman')
+        result['show_rainbowman'] = request.env['ir.config_parameter'].sudo().get_param('base_setup.show_rainbowman')
         return result
