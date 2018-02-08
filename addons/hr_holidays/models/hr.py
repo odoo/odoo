@@ -142,7 +142,7 @@ class Employee(models.Model):
                     'number_of_days_temp': difference
                 })
                 leave.action_approve()
-                if leave.double_validation:
+                if leave.validation_type == 'both':
                     leave.action_validate()
             elif difference < 0:
                 raise UserError(_('You cannot reduce validated allocation requests'))

@@ -28,13 +28,25 @@
                     <group>
                         <group name="description" string="Description">
                             <field name="name"/>
-                            <field name="double_validation"/>
-                            <field name="limit"/>
                         </group>
-                        <group name="options" string="Options">
+                        <group name="leave_request" string="Leave Request">
+                            <field name="limit"/>
+                            <field name="sequence" attrs="{'invisible': [('limit', '=', 'False')]}" groups="base.group_no_one"/>
+                        </group>
+                        <group name="validation" string="Validation">
+                            <field name="validation_type" widget="radio"/>
+                        </group>
+                        <group name="visibility" string="Visibility">
+                            <field name="employee_applicability" widget="radio"/>
+                        </group>
+                        <group name="calendar" string="Calendar">
                             <field name="categ_id"/>
                             <field name="color_name"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="validity" string="Validity" attrs="{'invisible': [('employee_applicability', '=', 'allocation')]}">
+                            <field name="validity_start"/>
+                            <field name="validity_stop"/>
                         </group>
                     </group>
                 </sheet>
@@ -83,8 +95,13 @@
         <field name="priority">35</field>
         <field name="arch" type="xml">
             <tree string="Leave Type">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="limit"/>
+                <field name="validation_type" />
+                <field name="validity_start" />
+                <field name="validity_stop" />
+                <field name="valid"/>
             </tree>
         </field>
     </record>
