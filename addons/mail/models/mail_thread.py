@@ -23,6 +23,7 @@ from email.message import Message
 from email.utils import formataddr
 from lxml import etree
 from werkzeug import url_encode
+from werkzeug import urls
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.tools import pycompat
@@ -373,6 +374,52 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
     # Technical methods / wrappers / tools
     # ------------------------------------------------------
+
+    def _replace_local_links(self, html, base_url=None):
+        """ Replace local links by absolute links. It is required in various
+        cases, for example when sending emails on chatter or sending mass
+        mailings. It replaces
+
+         * href of links
+         * src of images that are not base64 hardcoded data
+        """
+        if not html:
+            return html
+
+        # form a tree
+        root = lxml.html.fromstring(html)
+        if not len(root) and root.text is None and root.tail is None:
+            html = u'<div>%s</div>' % html
+            root = lxml.html.fromstring(html, encoding='unicode')
+
+        base = False  # compute only if necessary
+
+        def _process_link(url, base):
+            new_url = urls.url_parse(url)
+            if new_url.scheme and (new_url.netloc or new_url.scheme == 'mailto'):
+                return url
+            return new_url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
+
+        # check all nodes, replace :
+        # - img src -> check URL
+        # - a href -> check URL
+        for node in root.iter():
+            if node.tag == 'a' and node.get('href'):
+                if not base:
+                    base_url = base_url if base_url else self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                    base = urls.url_parse(base_url)
+                node.set('href', _process_link(node.get('href'), base))
+            elif node.tag == 'img' and not node.get('src', 'data').startswith(u'data'):
+                if not base:
+                    base_url = base_url if base_url else self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                    base = urls.url_parse(base_url)
+                node.set('src', _process_link(node.get('src'), base))
+
+        html = lxml.html.tostring(root, pretty_print=False, method='html', encoding='unicode')
+        # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
+        if html.startswith(u'<div>') and html.endswith(u'</div>'):
+            html = html[5:-6]
+        return html
 
     @api.model
     def _garbage_collect_attachments(self):
