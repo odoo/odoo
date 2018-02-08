@@ -278,6 +278,10 @@ class PosOrder(models.Model):
                     name = name + ' (' + line.notice + ')'
 
                 # Create a move for the line for the order line
+                # Just like for invoices, a group of taxes must be present on this base line
+                # As well as its children
+                base_line_tax_ids = (line.tax_ids_after_fiscal_position +
+                    line.tax_ids_after_fiscal_position.mapped('children_tax_ids').filtered(lambda tax: tax.type_tax_use in ['sale', 'none']))
                 insert_data('product', {
                     'name': name,
                     'quantity': line.qty,
@@ -286,7 +290,7 @@ class PosOrder(models.Model):
                     'analytic_account_id': self._prepare_analytic_account(line),
                     'credit': ((amount > 0) and amount) or 0.0,
                     'debit': ((amount < 0) and -amount) or 0.0,
-                    'tax_ids': [(6, 0, line.tax_ids_after_fiscal_position.ids)],
+                    'tax_ids': [(6, 0, base_line_tax_ids.ids)],
                     'partner_id': partner_id
                 })
 
