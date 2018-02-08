@@ -38,4 +38,7 @@ class StockMove(models.Model):
                 pickings.write({
                     'carrier_id': proc.sale_line_id.order_id.carrier_id.id,
                 })
+                # Get correct carrier price
+                for picking in pickings:
+                    picking.onchange_carrier()
         return res
