@@ -23,5 +23,8 @@ class StockMove(models.Model):
 
     def _get_new_picking_values(self):
         vals = super(StockMove, self)._get_new_picking_values()
-        vals['carrier_id'] = self.group_id.sale_order_id.carrier_id.id
+        order = self.group_id.sale_order_id
+        vals['carrier_id'] = order.carrier_id.id
+        if order.carrier_id.delivery_type in ['fixed', 'base_on_rule']:
+            vals['carrier_price'] = order.carrier_id.get_price_available(order)
         return vals
