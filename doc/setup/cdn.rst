@@ -37,12 +37,10 @@ Step 2: Configure the odoo instance with your zone
 
 In the Odoo back end, go to the :guilabel:`Website Settings`: menu, then
 activate the CDN support and copy/paste your zone URL in the
-:guilabel:`CDN Base URL` field.
+:guilabel:`CDN Base URL` field. This field is only visible and configurable if you have developer mode activated.
 
 .. image:: cdn/odoo_cdn_base_url.png
    :class: img-responsive
-
-.. note:: You will only be able to see and configure this feature if you have developer mode activated.
 
 Now your website is using the CDN for the resources matching the
 :guilabel:`CDN filters` regular expressions.
