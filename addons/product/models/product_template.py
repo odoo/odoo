@@ -84,7 +84,7 @@ class ProductTemplate(models.Model):
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
-        help="The volume in m3.", store=True)
+        help="The volume in Liter.", store=True)
     weight = fields.Float(
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
