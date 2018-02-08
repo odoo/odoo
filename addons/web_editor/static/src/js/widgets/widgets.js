@@ -432,7 +432,7 @@ var ImageWidget = MediaWidget.extend({
         if (this.multiImages) {
             var img = _.select(this.images, function (v) { return v.id === attachment.id; });
             if (img.length) {
-                this.images.splice(this.images.indexOf(img[0]),1);
+                this.images = this.images.splice(this.images.indexOf(img[0]),1);
             } else {
                 this.images.push(attachment);
             }
