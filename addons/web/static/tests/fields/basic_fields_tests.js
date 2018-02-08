@@ -1666,7 +1666,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('image fields in subviews are loaded correctly', function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         this.data.partner.records[0].__last_update = '2017-02-08 10:00:00';
         this.data.partner.records[0].document = 'myimage';
@@ -1695,6 +1695,10 @@ QUnit.module('basic_fields', {
                     assert.step("The view's image should have been fetched");
                     return $.when('wow');
                 }
+                if (route === 'data:image/png;base64,product_image') {
+                    assert.step("The dialog's image should have been fetched");
+                    return $.when();
+                }
                 return this._super.apply(this, arguments);
             },
         });
@@ -1707,9 +1711,10 @@ QUnit.module('basic_fields', {
         form.$('tbody td:contains(gold)').click();
         assert.strictEqual($('.modal-dialog').length, 1,
             'The modal should have opened');
-        assert.strictEqual($('.modal-dialog').find('.o_field_image > img')[0].src,
-            'data:image/png;base64,product_image',
-            'The image of the many2many in its form view should be present');
+        assert.verifySteps([
+            "The view's image should have been fetched",
+            "The dialog's image should have been fetched",
+        ]);
 
         form.destroy();
     });
