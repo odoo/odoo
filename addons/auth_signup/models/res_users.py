@@ -18,7 +18,13 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     state = fields.Selection(compute='_compute_state', string='Status',
-                 selection=[('new', 'Never Connected'), ('active', 'Confirmed')])
+                 selection=[('new', 'Never Connected'), ('active', 'Confirmed')],
+                 search='_search_state')
+
+    def _search_state(self, operator, value):
+        if value in ['active', 'new']:
+            return [('log_ids', operator, value == 'active')]
+        return []
 
     @api.multi
     def _compute_state(self):
@@ -142,6 +148,15 @@ class ResUsers(models.Model):
                 raise UserError(_("Cannot send email: user %s has no email address.") % user.name)
             template.with_context(lang=user.lang).send_mail(user.id, force_send=True, raise_exception=True)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+
+    @api.model
+    def web_dashboard_create_users(self, emails):
+        inactive_users = self.search([('state', '=', 'new'), '|', ('login', 'in', emails), ('email', 'in', emails)])
+        new_emails = set(emails) - set(inactive_users.mapped('email'))
+        res = super(ResUsers, self).web_dashboard_create_users(list(new_emails))
+        if inactive_users:
+            inactive_users.with_context(create_user=True).action_reset_password()
+        return res
 
     @api.model
     def create(self, values):
