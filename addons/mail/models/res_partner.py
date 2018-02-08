@@ -73,17 +73,15 @@ class Partner(models.Model):
         if message.res_id and message.model in self.env:
             record = self.env[message.model].browse(message.res_id)
 
-        company = user.company_id;
+        company = user.company_id
         if record and hasattr(record, 'company_id'):
-            company = record.company_id;
-        company_name = company.name;
+            company = record.company_id
 
         return {
             'message': message,
             'signature': signature,
             'website_url': website_url,
             'company': company,
-            'company_name': company_name,
             'model_name': model_name,
             'record': record,
             'record_name': record_name,
