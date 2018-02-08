@@ -79,22 +79,13 @@
 
     </data>
     <data noupdate="1">
-
-        <!--
-    Request link
-    -->
-        <record id="req_link_tracking" model="res.request.link">
-            <field name="name">Lot/Serial Number</field>
-            <field name="object">stock.production.lot</field>
-        </record>
-
-
         <!--
              Procurement rules
         -->
         
         <record id="route_warehouse0_mto" model='stock.location.route'>
             <field name="name">Make To Order</field>
+            <field name="company_id"></field>
             <field name="sequence">10</field>
         </record>
 
@@ -110,11 +101,6 @@
             <field name="name">property_stock_customer</field>
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
-        </record>
-        <record forcecreate="True" id="property_stock_procurement" model="ir.property">
-            <field name="name">property_stock_procurement</field>
-            <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
-            <field eval="'stock.location,'+str(location_procurement)" name="value"/>
         </record>
         <record forcecreate="True" id="property_stock_inventory" model="ir.property">
             <field name="name">property_stock_inventory</field>
@@ -157,5 +143,86 @@
             <field name="number_increment">1</field>
         </record>
 
+        <record id="base.main_partner" model="res.partner">
+            <field name="property_stock_customer" model="stock.warehouse" 
+                eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
+        <!-- create xml ids for demo data that are widely used in tests or in other codes, for more convenience -->
+        <function model="ir.model.data" name="_update">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>stock_location_stock</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </function>
+        <function model="ir.model.data" name="_update">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>stock_location_company</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').wh_input_stock_loc_id.id"/>
+        </function>
+        <function model="ir.model.data" name="_update">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>stock_location_output</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').wh_output_stock_loc_id.id"/>
+        </function>
+        <function model="ir.model.data" name="_update">
+            <value>stock.location</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>location_pack_zone</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').wh_pack_stock_loc_id.id"/>
+        </function>
+        <function model="ir.model.data" name="_update">
+            <value>stock.picking.type</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>picking_type_internal</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').int_type_id.id"/>
+        </function>
+        <function model="ir.model.data" name="_update">
+            <value>stock.picking.type</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>picking_type_in</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').in_type_id.id"/>
+        </function>
+        <function model="ir.model.data" name="_update">
+            <value>stock.picking.type</value>
+            <value>stock</value>
+            <value eval="{}"/>
+            <value>picking_type_out</value>
+            <value eval="True"/>
+            <value eval="True"/>
+            <value>init</value>
+            <value model="stock.warehouse" eval="obj().env.ref('stock.warehouse0').out_type_id.id"/>
+        </function>
+
+        <!-- create the transit location for each company existing -->
+        <function model="res.company" name="create_transit_location">
+            <value model="res.company" eval="obj().search([('internal_transit_location_id', '=', False)]).ids"/>
+        </function>
     </data>
 </odoo>

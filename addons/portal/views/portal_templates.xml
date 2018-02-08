@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="frontend_layout" name="Main Frontend Layout">
+        <t t-call="web.layout">
+            <t t-set="head_website">
+                <script type="text/javascript">
+                    odoo.session_info = {
+                        is_superuser: <t t-esc="json.dumps(request.env.user._is_superuser())"/>,
+                        is_system: <t t-esc="json.dumps(request.env.user._is_system())"/>,
+                        is_website_user: <t t-esc="json.dumps(request.env.user._is_public())"/>,
+                        user_id: <t t-esc="json.dumps(request.env.user.id)" />,
+                        is_frontend: true,
+                    };
+                </script>
+
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_frontend" t-css="false"/>
+            </t>
+            <t t-set="head" t-value="head_website + (head or '')"/>
+
+            <div id="wrapwrap" t-att-class="pageName or ''">
+                <header>
+                    <div class="navbar navbar-default navbar-static-top">
+                        <div class="container">
+                            <div class="navbar-header">
+                                <a href="/" class="navbar-brand logo">
+                                    <span t-field="res_company.logo" t-options="{'widget': 'image'}" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                                </a>
+                            </div>
+                            <div class="collapse navbar-collapse navbar-top-collapse">
+                                <!-- Note: pull-right instead of navbar-right for two reasons: -->
+                                <!-- 1) We want menu to open to the right by default (except cases handled in JS) -->
+                                <!-- 2) navbar-right combined will navbar-static-top misaligns contained elements -->
+                                <ul class="nav navbar-nav pull-right" id="top_menu">
+                                    <li class="divider" t-ignore="true" t-if="not user_id._is_public()"/>
+                                    <li class="dropdown" t-ignore="true" t-if="not user_id._is_public()">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                            <b>
+                                                <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+                                                <span class="caret"></span>
+                                            </b>
+                                        </a>
+                                        <ul class="dropdown-menu js_usermenu" role="menu">
+                                            <li id="o_logout"><a t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+                <footer >
+                    <div id="footer">
+                    </div>
+                </footer>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_layout" name="Portal Layout">
+        <t t-call="portal.frontend_layout">
+            <div class="container mt16 o_portal">
+                <div class="oe_structure">
+                    <div t-if="not no_breadcrumbs" class="row">
+                        <div class="col-sm-12">
+                            <ol class="breadcrumb o_portal_submenu">
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li t-if="page_name == 'my_details'">Your Details</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="wrap" class='o_portal_wrap'>
+                <div class="container mb64">
+                    <t t-if="my_details">
+                        <div class="row">
+                            <div t-attf-class="col-md-9 col-lg-8">
+                                <t t-raw="0"/>
+                            </div>
+                            <div id="o_my_sidebar" class="col-md-3 col-lg-offset-1 o_my_sidebar">
+                                <div class="o_my_contact" t-if="sales_user">
+                                    <t t-call="portal.portal_contact"/>
+                                </div>
+                                <div class="o_portal_my_details">
+                                    <h3 class="page-header">Your Details <a href="/my/account" class="btn btn-default btn-xs">Change</a></h3>
+                                    <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address", "name"]}'/>
+                                </div>
+                                <div class="o_my_archives" t-if="archive_groups">
+                                    <t t-call="portal.portal_archive_groups"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-raw="0"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_show_sign_in" inherit_id="portal.frontend_layout" name="Show Sign In">
+        <xpath expr="//ul[@id='top_menu']" position="inside">
+            <li class="divider" groups="base.group_public"/>
+            <li groups="base.group_public">
+                <a t-attf-href="/web/login">
+                    <b>Sign in</b>
+                </a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home" name="My Portal">
+        <t t-call="portal.portal_layout">
+            <t t-set="my_details" t-value="True"/>
+            <div class="o_portal_my_home">
+                <div class="oe_structure"></div>
+                <h3 class="page-header">Your Documents</h3>
+                <ul class="o_portal_docs list-group">
+                </ul>
+            </div>
+            <div class="col-md-12 oe_structure"/>
+        </t>
+    </template>
+
+    <!--
+        The search bar is composed of 2 buttons : a "filter by" and a "sort by". Changing the 'sortby'
+        criteria will keep the number of page, query params, ... Changing the 'filterby' param will
+        redirect the user to the beginning of document list, keeping query parameters.
+
+        These 2 buttons can be prepended by a advanced search input, to activate it, search_input need
+        to be initialized at 'True' and the content of the t-call is the list of li elements searchable.
+
+        :param dict searchbar_sortings : containing the sort criteria like
+            {'date': {'label': _('Newest'), 'order': 'create_date desc'}}
+        :param string sortby : name of the sort criteria
+        :param dict searchbar_filters : containing the filter criteria like
+            {'open': {'label': _('In Progress'), 'domain': [('state', '=', 'open')]}}
+        :param string filterby : name of the filter criteria
+        :param default_url : the base url of the pages (like '/my/orders')
+        :param boolean o_portal_search_panel : set to True to active the input search
+        :param html $0 : content of the t-call, <li>a</li><li>b</li>
+    -->
+    <template id="portal_searchbar" name="Portal Search Bar">
+        <t t-if='searchbar_inputs'>
+            <div class='hidden-xs pull-right o_portal_search_panel'>
+                 <div class="input-group">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            <span id="search_label">Search</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li t-foreach='searchbar_inputs' t-as='input' t-att-class="search_in == searchbar_inputs[input]['input'] and 'active'">
+                                <a t-att-href="'#' + searchbar_inputs[input]['input']"><span t-raw="searchbar_inputs[input]['label']"/></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <input type="text" class="form-control o_portal_search_panel_fixed_width" t-att-value='search' name="search"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-default search-submit" type="button"><span class="fa fa-search"></span></button>
+                    </span>
+                </div>
+            </div>
+        </t>
+        <div t-if="searchbar_sortings" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_sortby" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-sort fa-lg" />
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_sortings[sortby].get('label', 'Newest')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_sortby">
+                <li t-foreach="searchbar_sortings" t-as="option" t-attf-class="#{sortby == option and 'active'}">
+                    <a t-att-href="request.httprequest.path + '?' + keep_query('*', sortby=option)">
+                        <span t-esc="searchbar_sortings[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div t-if="searchbar_filters" class="dropdown pull-right mr4">
+            <button id="portal_searchbar_filters" class="o_portal_search_panel_fixed_width btn btn-default" type="button" data-toggle="dropdown">
+                <span class="fa fa-filter fa-lg" />
+                <span class='hidden-xs hidden-sm hidden-md' t-esc="searchbar_filters[filterby].get('label', 'All')"/>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="portal_searchbar_filters">
+                <li t-foreach="searchbar_filters" t-as="option" t-att-class="filterby == option and 'active'">
+                    <a t-att-href="default_url + '?' + keep_query('*', filterby=option)">
+                        <span t-esc="searchbar_filters[option].get('label')"/>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </template>
+
+    <template id="portal_contact" name="Contact">
+        <h3 class="page-header"><t t-esc="title"/></h3>
+        <h5 t-esc="sales_user.name"/>
+        <p><a t-att-href="'mailto:'+sales_user.email" t-esc="sales_user.email"/></p>
+        <p t-esc="sales_user.phone"/>
+        <p t-esc="sales_user.city"/>
+    </template>
+
+    <template id="portal_archive_groups" name="Portal Archive Groups">
+        <h3 class="page-header">Archives</h3>
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="archive_groups" t-as="group">
+                <t t-if="group['date_begin'] == date">
+                    <li class="active">
+                        <a t-att-href="default_url" t-ignore="True"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    </li>
+                </t>
+                <t t-if="group['date_begin'] != date">
+                    <li>
+                        <a t-ignore="True" t-attf-href="#{default_url}?date_begin=#{group['date_begin']}&amp;date_end=#{group['date_end']}"><t t-esc="group['name']"/><span class="pull-right badge" t-esc="group['item_count']"/></a>
+                    </li>
+                </t>
+            </t>
+        </ul>
+    </template>
+
+    <template id="portal_my_details">
+        <t t-call="portal.portal_layout">
+            <t t-set="additional_title">Your Contact Details</t>
+            <h3>Your Details</h3>
+            <form action="/my/account" method="post">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="row o_portal_details">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                              <div t-if="error_message" class="alert alert-danger">
+                                  <t t-foreach="error_message" t-as="err"><t t-esc="err"/><br /></t>
+                              </div>
+                            </div>
+                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="name">Your Name</label>
+                                <input type="text" name="name" class="form-control" t-att-value="name or partner.name" />
+                            </div>
+                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="email">Email</label>
+                                <input type="email" name="email" class="form-control" t-att-value="email or partner.email" />
+                            </div>
+                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="phone">Phone</label>
+                                <input type="tel" name="phone" class="form-control" t-att-value="phone or partner.phone" />
+                            </div>
+
+                            <div class="clearfix" />
+                            <div t-attf-class="form-group #{error.get('company_name') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label label-optional" for="company_name">Company Name</label>
+                                <p t-if="partner.commercial_partner_id.is_company" class="form-control" t-esc="partner.commercial_company_name"/>
+                                <input t-else="" type="text" name="company_name" class="form-control" t-att-value="company_name or partner.company_name"/>
+                            </div>
+                            <div t-if="has_check_vat" t-attf-class="form-group #{error.get('vat') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label label-optional" for="vat">VAT Number</label>
+                                <input type="text" name="vat" class="form-control" t-att-value="vat or partner.vat" />
+                            </div>
+
+                            <div class="clearfix" />
+                            <div t-attf-class="form-group #{error.get('street') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="street">Street</label>
+                                <input type="text" name="street" class="form-control" t-att-value="street or partner.street"/>
+                            </div>
+                            <div t-attf-class="form-group #{error.get('city') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="city">City</label>
+                                <input type="text" name="city" class="form-control" t-att-value="city or partner.city" />
+                            </div>
+                            <div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="zipcode">Zip / Postal Code</label>
+                                <input type="text" name="zipcode" class="form-control" t-att-value="zipcode or partner.zip" />
+                            </div>
+                            <div t-attf-class="form-group #{error.get('country_id') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label" for="country_id">Country</label>
+                                <select name="country_id" class="form-control">
+                                    <option value="">Country...</option>
+                                    <t t-foreach="countries or []" t-as="country">
+                                        <option t-att-value="country.id" t-att-selected="country.id == partner.country_id.id">
+                                            <t t-esc="country.name" />
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div t-attf-class="form-group #{error.get('state_id') and 'has-error' or ''} col-lg-6">
+                                <label class="control-label label-optional" for="state_id">State / Province</label>
+                                <select name="state_id" class="form-control">
+                                    <option value="">select...</option>
+                                    <t t-foreach="states or []" t-as="state">
+                                        <option t-att-value="state.id" style="display:none;" t-att-data-country_id="state.country_id.id" t-att-selected="state.id == partner.state_id.id">
+                                            <t t-esc="state.name" />
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <input type="hidden" name="redirect" t-att-value="redirect"/>
+                        </div>
+                        <div class="clearfix">
+                            <button type="submit" class="btn btn-primary pull-right mb32 ">
+                                Confirm
+                                <span class="fa fa-long-arrow-right" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="record_pager" name="Portal Record Pager">
+        <t t-if='prev_record or next_record'>
+          <div class="ml8 record_pager btn-group btn-group-xs pull-right" role="group">
+            <a t-att-class="'btn btn-default %s' % ('disabled' if not prev_record else '')" t-att-href="prev_record or '#'" ><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+            <a t-att-class="'btn btn-default %s' % ('disabled' if not next_record else '')" t-att-href="next_record or '#'" ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+        </t>
+    </template>
+
+    <template id="pager" name="Pager">
+        <ul t-if="pager['page_count'] > 1" t-attf-class="#{ classname or '' } pagination" t-att-style="style or None">
+            <li t-att-class=" 'disabled' if pager['page']['num'] == 1 else None ">
+                <a t-att-href=" pager['page_previous']['url'] if pager['page']['num'] != 1 else None">Prev</a>
+            </li>
+            <t t-foreach="pager['pages']" t-as="page">
+                <li t-att-class=" 'active' if page['num'] == pager['page']['num'] else None "> <a t-att-href="page['url']" t-raw="page['num']"></a></li>
+            </t>
+            <li t-att-class=" 'disabled' if pager['page']['num'] == pager['page_count'] else None ">
+                <a t-att-href="pager['page_next']['url'] if pager['page']['num'] != pager['page_count'] else None">Next</a>
+            </li>
+        </ul>
+    </template>
+
+    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.frontend_layout">
+        <xpath expr="//li[@id='o_logout']" position="before">
+            <li><a href="/my/home" role="menuitem">My Account</a></li>
+        </xpath>
+    </template>
+
+    <!--
+        Generic chatter template for the frontend
+        This template provide the container of the chatter. The rest is done in js.
+        To use this template, you need to call it after setting the following variable in your template or in your controller:
+            :object browserecord : the mail_thread object
+            :message_per_page int (optional): number of message per chatter page
+            :token string (optional): if you want your chatter to be available for non-logged user,
+                     you can use a token to verify the identity of the user;
+                     the message will be posted with the identity of the partner_id of the object
+    -->
+    <template id="message_thread">
+        <div id="discussion" class="hidden-print o_portal_chatter"
+            t-att-data-token="token" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
+        </div>
+    </template>
+
+    <!--
+        Container signature template for frontend
+        :partner-name string: customer name that signs
+        :res-model string: model of the signed document
+        :res-id stringied int: id of the signed document
+        :call-url string: url to call once clicking on the sign button
+        :access-token string: access token for customer portal
+    -->
+
+    <template id="portal_signature" name="Ask Signature">
+        <div t-att-class="'o_portal_signature_form'"
+            t-att-data-partner-name="partner_name"
+            t-att-data-res-model="object._name"
+            t-att-data-res-id="object.id"
+            t-att-data-call-url="callUrl"
+            t-att-data-sign-label="signLabel"
+            t-att-data-access-token="accessToken"/>
+    </template>
+</odoo>

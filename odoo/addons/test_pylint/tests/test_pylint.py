@@ -8,13 +8,14 @@ except ImportError:
     pylint = None
 import subprocess
 from distutils.version import LooseVersion
-from os import devnull
+import os
 from os.path import join
 
 from odoo.tests.common import TransactionCase
 from odoo import tools
 from odoo.modules import get_modules, get_module_path
 
+HERE = os.path.dirname(os.path.realpath(__file__))
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +26,13 @@ class TestPyLint(TransactionCase):
         'E0601',  # using variable before assignment
         'W0123',  # eval used
         'W0101',  # unreachable code
+
+        'mixed-indentation',
+
+        # py3k checks
+        'print-statement',
+        'backtick',
+        'next-method-called',
 
         'misplaced-future',
         'relative-import',
@@ -40,6 +48,7 @@ class TestPyLint(TransactionCase):
         'old-ne-operator',
         'old-octal-operator',
         'parameter-unpacking',
+        'invalid-string-codec',
 
         'metaclass-assignment',
         'deprecated-module',
@@ -49,6 +58,8 @@ class TestPyLint(TransactionCase):
         'old-raise-syntax',
         'raising-string',
         'unpacking-in-except',
+
+        'no-comma-exception',
     ]
 
     BAD_FUNCTIONS = [
@@ -67,6 +78,10 @@ class TestPyLint(TransactionCase):
         'filter',
         'zip',
 
+        'basestring',
+        'unichr',
+        'unicode',
+
         'file',
         'reduce',
     ]
@@ -74,6 +89,8 @@ class TestPyLint(TransactionCase):
     BAD_MODULES = [
         'commands',
         'cPickle',
+        'csv',
+        'cStringIO',
         'md5',
         'urllib',
         'urllib2',
@@ -84,6 +101,7 @@ class TestPyLint(TransactionCase):
         'htmlentitydefs',
         'HTMLParser',
         'Queue',
+        'StringIO',
         'UserDict',
         'UserString',
         'UserList',
@@ -106,20 +124,29 @@ class TestPyLint(TransactionCase):
                 paths.append(module_path)
 
         options = [
+            '--rcfile=%s' % os.devnull,
             '--disable=all',
             '--enable=%s' % ','.join(self.ENABLED_CODES),
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
-            '--load-plugins=pylint.extensions.bad_builtin',
+            '--load-plugins=pylint.extensions.bad_builtin,_odoo_checkers',
             '--bad-functions=%s' % ','.join(self.BAD_FUNCTIONS),
             '--deprecated-modules=%s' % ','.join(self.BAD_MODULES)
         ]
 
+        pypath = HERE + os.pathsep + os.environ.get('PYTHONPATH', '')
+        env = dict(os.environ, PYTHONPATH=pypath)
         try:
-            process = subprocess.Popen(['pylint'] + options + paths, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            pylint_bin = tools.which('pylint')
+            process = subprocess.Popen(
+                [pylint_bin] + options + paths,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                env=env,
+            )
         except (OSError, IOError):
             self._skip_test('pylint executable not found in the path')
         else:
             out, err = process.communicate()
             if process.returncode:
-                self.fail("\n" + out + "\n" + err)
+                self.fail("pylint test failed:\n" + (b"\n" + out + b"\n" + err).decode('utf-8').strip())

@@ -1,4 +1,5 @@
 # coding: utf-8
+import base64
 import datetime
 import logging
 import time
@@ -14,7 +15,7 @@ from odoo import api, fields, models, _
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment_ogone.controllers.main import OgoneController
 from odoo.addons.payment_ogone.data import ogone
-from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT, pycompat
+from odoo.tools import float_round, DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools.float_utils import float_compare, float_repr
 from odoo.tools.safe_eval import safe_eval
 
@@ -141,7 +142,7 @@ class PaymentAcquirerOgone(models.Model):
                 ]
                 return key.upper() in keys
 
-        items = sorted((k.upper(), v) for k, v in pycompat.items(values))
+        items = sorted((k.upper(), v) for k, v in values.items())
         sign = ''.join('%s=%s%s' % (k, v, key) for k, v in items if v and filter_key(k))
         sign = sign.encode("utf-8")
         shasign = sha1(sign).hexdigest()
@@ -302,10 +303,11 @@ class PaymentTxOgone(models.Model):
                 })
                 vals.update(payment_token_id=pm.id)
             self.write(vals)
-            self.payment_token_id.verified = True
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             self.execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
-            if self.type == 'verification':
+            if self.type == 'validation':
                 self.s2s_do_refund()
 
             return True
@@ -376,15 +378,18 @@ class PaymentTxOgone(models.Model):
 
         direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
 
-        _logger.debug("Ogone data %s", pformat(data))
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+        _logger.info("ogone_s2s_do_transaction: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
         result = requests.post(direct_order_url, data=data).content
-        _logger.debug('Ogone response = %s', result)
 
         try:
             tree = objectify.fromstring(result)
+            _logger.info('ogone_s2s_do_transaction: Values received:\n%s', etree.tostring(tree, pretty_print=True, encoding='utf-8'))
         except etree.XMLSyntaxError:
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
+            _logger.info('ogone_s2s_do_transaction: Values received:\n%s', result)
             raise
 
         return self._ogone_s2s_validate_tree(tree)
@@ -414,15 +419,18 @@ class PaymentTxOgone(models.Model):
 
         direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % (self.acquirer_id.environment)
 
-        _logger.debug("Ogone data %s", pformat(data))
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+        _logger.info("ogone_s2s_do_refund: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
         result = requests.post(direct_order_url, data=data).content
-        _logger.debug('Ogone response = %s', result)
 
         try:
             tree = objectify.fromstring(result)
+            _logger.info('ogone_s2s_do_refund: Values received:\n%s', etree.tostring(tree, pretty_print=True, encoding='utf-8'))
         except etree.XMLSyntaxError:
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
+            _logger.info('ogone_s2s_do_refund: Values received:\n%s', result)
             raise
 
         return self._ogone_s2s_validate_tree(tree)
@@ -454,7 +462,8 @@ class PaymentTxOgone(models.Model):
                     'name': tree.get('CARDNO'),
                 })
                 self.write({'payment_token_id': pm.id})
-            self.payment_token_id.verified = True
+            if self.payment_token_id:
+                self.payment_token_id.verified = True
             self.execute_callback()
             return True
         elif status in self._ogone_cancel_tx_status:
@@ -463,11 +472,11 @@ class PaymentTxOgone(models.Model):
                 'acquirer_reference': tree.get('PAYID'),
             })
         elif status in self._ogone_pending_tx_status:
-            new_state = 'refunding' if self.type == 'validation' else 'pending'
+            new_state = 'refunding' if self.state == 'refunding' else 'pending'
             self.write({
                 'state': new_state,
                 'acquirer_reference': tree.get('PAYID'),
-                'html_3ds': str(tree.HTML_ANSWER).decode('base64')
+                'html_3ds': base64.b64decode(tree.HTML_ANSWER.decode('ascii')),
             })
         elif status in self._ogone_wait_tx_status and tries > 0:
             time.sleep(0.5)
@@ -501,15 +510,19 @@ class PaymentTxOgone(models.Model):
 
         query_direct_url = 'https://secure.ogone.com/ncol/%s/querydirect.asp' % (self.acquirer_id.environment)
 
-        _logger.debug("Ogone data %s", pformat(data))
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+
+        _logger.info("_ogone_s2s_get_tx_status: Sending values to URL %s, values:\n%s", query_direct_url, pformat(logged_data))
         result = requests.post(query_direct_url, data=data).content
-        _logger.debug('Ogone response = %s', result)
 
         try:
             tree = objectify.fromstring(result)
+            _logger.info('_ogone_s2s_get_tx_status: Values received:\n%s', etree.tostring(tree, pretty_print=True, encoding='utf-8'))
         except etree.XMLSyntaxError:
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
+            _logger.info('_ogone_s2s_get_tx_status: Values received:\n%s', result)
             raise
 
         return tree

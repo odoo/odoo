@@ -11,7 +11,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 var HEIGHT_OPEN = '400px';
-var HEIGHT_FOLDED = '28px';
+var HEIGHT_FOLDED = '34px';
 
 return Widget.extend({
     template: "mail.ChatWindow",
@@ -19,7 +19,7 @@ return Widget.extend({
         escape_pressed: '_onEscapePressed'
     },
     events: {
-        "click .o_chat_composer": "focus_input", // focus even if jquery's blockUI is enabled
+        'click .o_chat_composer': '_onComposerClick',
         "click .o_mail_thread": "_onChatWindowClicked",
         "keydown .o_chat_composer": "on_keydown",
         "keypress .o_chat_composer": "on_keypress",
@@ -43,6 +43,7 @@ return Widget.extend({
         this.status = this.options.status;
         this.unread_msgs = unread_msgs || 0;
         this.is_hidden = false;
+        this.isMobile = config.device.isMobile;
     },
     start: function () {
         this.$input = this.$('.o_composer_text_field');
@@ -61,6 +62,9 @@ return Widget.extend({
             this.$el.css('height', HEIGHT_FOLDED);
         } else if (this.options.autofocus) {
             this.focus_input();
+        }
+        if (!config.device.isMobile) {
+            this.$el.css('margin-right', $.position.scrollbarWidth());
         }
         var def = this.thread.replace(this.$('.o_chat_content'));
         return $.when(this._super(), def);
@@ -82,12 +86,13 @@ return Widget.extend({
             status: this.status,
             title: this.title,
             unread_counter: this.unread_msgs,
+            widget: this,
         }));
     },
     fold: function () {
         this.$el.animate({
             height: this.folded ? HEIGHT_FOLDED : HEIGHT_OPEN
-        });
+        }, 200);
     },
     toggle_fold: function (fold) {
         this.folded = _.isBoolean(fold) ? fold : !this.folded;
@@ -98,9 +103,10 @@ return Widget.extend({
         this.fold();
     },
     focus_input: function () {
-        if (!config.device.touch) {
-            this.$input.focus();
+        if (config.device.touch && config.device.size_class <= config.device.SIZES.SM) {
+            return;
         }
+        this.$input.focus();
     },
     do_show: function () {
         this.is_hidden = false;
@@ -134,7 +140,9 @@ return Widget.extend({
             };
             this.$input.val('');
             if (content) {
-                this.trigger('post_message', message, this.channel_id);
+                this.trigger('post_message', message, {
+                    channelID: this.channel_id,
+                });
             }
         }
     },
@@ -144,7 +152,7 @@ return Widget.extend({
         this.trigger("close_chat_session");
     },
     on_click_fold: function () {
-        if (config.device.size_class !== config.device.SIZES.XS) {
+        if (!config.device.isMobile) {
             this.toggle_fold();
             this.trigger("fold_channel", this.channel_id, this.folded);
         }
@@ -160,6 +168,19 @@ return Widget.extend({
         if (selectObj.anchorOffset === selectObj.focusOffset) {
             this.$input.focus();
         }
+    },
+    /**
+     * Called when the composer is clicked -> forces focus on input even if
+     * jquery's blockUI is enabled.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onComposerClick: function (ev) {
+        if ($(ev.target).closest('a, button').length) {
+            return;
+        }
+        this.focus_input();
     },
     /**
      * @private

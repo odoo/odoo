@@ -5,7 +5,6 @@ import re
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 STREET_FIELDS = ('street_name', 'street_number', 'street_number2')
 
@@ -29,9 +28,9 @@ class Partner(models.Model):
 
     street_name = fields.Char('Street Name', compute='_split_street',
                               inverse='_set_street', store=True)
-    street_number = fields.Char('House Number', compute='_split_street',
+    street_number = fields.Char('House', compute='_split_street', help="House Number",
                                 inverse='_set_street', store=True)
-    street_number2 = fields.Char('Door Number', compute='_split_street',
+    street_number2 = fields.Char('Door', compute='_split_street', help="Door Number",
                                  inverse='_set_street', store=True)
 
     def get_street_fields(self):
@@ -75,12 +74,7 @@ class Partner(models.Model):
 
             # add trailing chars in street_format
             street_value += street_format[previous_pos:]
-
-            # /!\ Note that we must use a sql query to bypass the orm as it would call _split_street()
-            # that would try to set the fields we just modified.
-            self._cr.execute('UPDATE res_partner SET street = %s WHERE ID = %s', (street_value, partner.id))
-            #invalidate the cache for the field we manually set
-            self.invalidate_cache(['street'], [partner.id])
+            partner.street = street_value
 
     @api.multi
     @api.depends('street')
@@ -134,8 +128,7 @@ class Partner(models.Model):
             else:
                 vals[field_name] = street_raw
             # assign the values to the fields
-            # /!\ Note that a write(vals) would cause a recursion since it would bypass the cache
-            for k, v in pycompat.items(vals):
+            for k, v in vals.items():
                 partner[k] = v
 
 

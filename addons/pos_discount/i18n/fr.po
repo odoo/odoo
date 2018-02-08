@@ -3,18 +3,18 @@
 # * pos_discount
 # 
 # Translators:
-# Xavier Belmere <Info@cartmeleon.com>, 2016
-# Hubert TETARD <htetard@apik-conseils.com>, 2016
-# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Xavier Belmere <Info@cartmeleon.com>, 2017
+# Félix Desjardins <felixinx@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Félix Desjardins <felixinx@gmail.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,19 +35,20 @@ msgid "Discount"
 msgstr "Remise"
 
 #. module: pos_discount
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+msgid "Discount %"
+msgstr "Remise %"
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_pc
 msgid "Discount Percentage"
 msgstr "Pourcentage de remise"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_discount_product_id
+#: model:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
 msgid "Discount Product"
 msgstr "Article de remise"
-
-#. module: pos_discount
-#: model:ir.ui.view,arch_db:pos_discount.view_pos_config_form
-msgid "Discounts"
-msgstr "Remises"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config_iface_discount
@@ -61,8 +62,8 @@ msgstr "Pourcentage de remise par défaut"
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config_discount_product_id
-msgid "The product used to model the discount"
-msgstr "L'article qui représente la remise"
+msgid "The product used to model the discount."
+msgstr "Le produit utilisé pour modéliser la réduction."
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config

@@ -1,6 +1,7 @@
 odoo.define('report.client_action', function (require) {
 'use strict';
 
+var config = require('web.config');
 var core = require('web.core');
 var ControlPanelMixin = require('web.ControlPanelMixin');
 var session = require('web.session');
@@ -93,7 +94,6 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
 
     _update_control_panel: function () {
         this.update_control_panel({
-            breadcrumbs: this.action_manager.get_breadcrumbs(),
             cp_content: {
                 $buttons: this.$buttons,
             },
@@ -108,7 +108,7 @@ var ReportAction = Widget.extend(ControlPanelMixin, {
     _update_control_panel_buttons: function () {
         this.$buttons.filter('div.o_report_edit_mode').toggle(this.in_edit_mode);
         this.$buttons.filter('div.o_report_no_edit_mode').toggle(! this.in_edit_mode);
-        this.$buttons.filter('div.o_edit_mode_available').toggle(core.debug && this.edit_mode_available && ! this.in_edit_mode);
+        this.$buttons.filter('div.o_edit_mode_available').toggle(config.debug && this.edit_mode_available && ! this.in_edit_mode);
     },
 
     /**

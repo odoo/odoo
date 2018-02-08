@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import logging
 
 from odoo import api, fields, models
 from odoo import tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -96,24 +95,30 @@ class Employee(models.Model):
     _name = "hr.employee"
     _description = "Employee"
     _order = 'name'
-    _inherit = ['mail.thread', 'resource.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'resource.mixin']
 
     _mail_post_access = 'read'
 
     @api.model
     def _default_image(self):
         image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     # resource and user
+    # required on the resource, make sure required="True" set in the view
     name = fields.Char(related='resource_id.name', store=True, oldname='name_related')
-    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id')
+    user_id = fields.Many2one('res.users', 'User', related='resource_id.user_id', store=True)
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True)
     # private partner
     address_home_id = fields.Many2one(
-        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.')
+        'res.partner', 'Private Address', help='Enter here the private address of the employee, not the one linked to your company.',
+        groups="hr.group_hr_user")
+    is_address_home_a_company = fields.Boolean(
+        'The employee adress has a company linked',
+        compute='_compute_is_address_home_a_company',
+    )
     country_id = fields.Many2one(
-        'res.country', 'Nationality (Country)')
+        'res.country', 'Nationality (Country)', groups="hr.group_hr_user")
     gender = fields.Selection([
         ('male', 'Male'),
         ('female', 'Female'),
@@ -135,9 +140,9 @@ class Employee(models.Model):
         domain="[('partner_id', '=', address_home_id)]",
         groups="hr.group_hr_user",
         help='Employee bank salary account')
-    permit_no = fields.Char('Work Permit No')
-    visa_no = fields.Char('Visa No')
-    visa_expire = fields.Date('Visa Expire Date')
+    permit_no = fields.Char('Work Permit No', groups="hr.group_hr_user")
+    visa_no = fields.Char('Visa No', groups="hr.group_hr_user")
+    visa_expire = fields.Date('Visa Expire Date', groups="hr.group_hr_user")
 
     # image: all image fields are base64 encoded and PIL-supported
     image = fields.Binary(
@@ -250,7 +255,7 @@ class Employee(models.Model):
         if auto_follow_fields is None:
             auto_follow_fields = ['user_id']
         user_field_lst = []
-        for name, field in pycompat.items(self._fields):
+        for name, field in self._fields.items():
             if name in auto_follow_fields and name in updated_fields and field.comodel_name == 'res.users':
                 user_field_lst.append(name)
         return user_field_lst
@@ -259,6 +264,16 @@ class Employee(models.Model):
     def _message_auto_subscribe_notify(self, partner_ids):
         # Do not notify user it has been marked as follower of its employee.
         return
+
+    @api.depends('address_home_id.parent_id')
+    def _compute_is_address_home_a_company(self):
+        """Checks that choosen address (res.partner) is not linked to a company.
+        """
+        for employee in self:
+            try:
+                employee.is_address_home_a_company = employee.address_home_id.parent_id.id is not False
+            except AccessError:
+                employee.is_address_home_a_company = False
 
 
 class Department(models.Model):
@@ -278,7 +293,7 @@ class Department(models.Model):
     member_ids = fields.One2many('hr.employee', 'department_id', string='Members', readonly=True)
     jobs_ids = fields.One2many('hr.job', 'department_id', string='Jobs')
     note = fields.Text('Note')
-    color = fields.Integer('Color Index', default=1)
+    color = fields.Integer('Color Index')
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):

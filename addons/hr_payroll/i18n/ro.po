@@ -1,25 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * hr_payroll
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
+# Sergiu Baltariu <s_baltariu@yahoo.com>, 2017
+# Laurentiu Archip <lauarchipstefan@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-05-31 14:27+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
-"Language: ro\n"
+"POT-Creation-Date: 2017-11-30 13:11+0000\n"
+"PO-Revision-Date: 2017-11-30 13:11+0000\n"
+"Last-Translator: Laurentiu Archip <lauarchipstefan@gmail.com>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:59
+#: code:addons/hr_payroll/models/hr_salary_rule.py:41
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -27,26 +31,20 @@ msgstr "%s (copie)"
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_state
 msgid ""
-"* When the payslip is created the status is 'Draft'.            \n"
-"* If the payslip is under verification, the status is "
-"'Waiting'.             \n"
-"* If the payslip is confirmed then status is set to 'Done'.            \n"
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
 "* When user cancel payslip the status is 'Rejected'."
 msgstr ""
-"* Atunci cand fluturasul de salariu este creat, starea este "
-"'Ciorna'.            \n"
-"* Daca fluturasul de salariu este in curs de verificare, starea este 'In "
-"asteptare'.            \n"
-"* Daca fluturasul de salariu este confirmat, atunci starea este setata pe "
-"'Efectuat'.            \n"
-"* Atunci cand utilizatorul anuleaza fluturasul de salariu, starea este "
-"'Respins'."
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Address</strong>"
-msgstr ""
+msgstr "<strong>Adresa</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -58,12 +56,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Bank Account</strong>"
-msgstr ""
+msgstr "<strong>Cont bancar</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_contributionregister
 msgid "<strong>Date From:</strong>"
-msgstr ""
+msgstr "<strong>Din data:</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -92,7 +90,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Email</strong>"
-msgstr ""
+msgstr "<strong>Email</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -104,7 +102,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "<strong>Name</strong>"
-msgstr ""
+msgstr "<strong>Nume</strong>"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
@@ -126,12 +124,12 @@ msgstr "<strong>Total</strong>"
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid ""
 "A contribution register is a third party involved in the salary\n"
-"                payment of the employees. It can be the social security, "
-"the\n"
-"                estate or anyone that collect or inject money on payslips."
+"            payment of the employees. It can be the social security, the\n"
+"            estate or anyone that collect or inject money on payslips."
 msgstr ""
 
 #. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Accounting"
 msgstr "Contabilitate"
@@ -150,7 +148,12 @@ msgstr "Activ(a)"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Add an internal note..."
-msgstr "Adaugați o notă internă..."
+msgstr "Adăugați o notă internă..."
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_contract_advantage_template_view_form
+msgid "Advantage Name"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.act_children_salary_rules
@@ -170,7 +173,7 @@ msgstr "Intotdeauna adevarat"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Amount"
-msgstr "Suma"
+msgstr "Valoare"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_select
@@ -201,9 +204,9 @@ msgstr ""
 "specifica conditia ca baza > 1000."
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
-msgid "Apply"
-msgstr "Aplicați"
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_be_hr_payroll
+msgid "Belgium Payroll"
+msgstr ""
 
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
@@ -221,7 +224,6 @@ msgid "Calculations"
 msgstr "Calcule"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
 msgid "Cancel"
 msgstr "Anulează"
@@ -232,8 +234,14 @@ msgid "Cancel Payslip"
 msgstr "Anulati Foaia de salariu"
 
 #. module: hr_payroll
+#: code:addons/hr_payroll/models/hr_payslip.py:98
+#, python-format
+msgid "Cannot cancel a payslip that is done."
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_category_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_9052
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_id_7804
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_rule_filter
 msgid "Category"
 msgstr "Categorie"
@@ -261,6 +269,11 @@ msgid "Children Definition"
 msgstr "Definitie conturi subordonate"
 
 #. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "Choose a Payroll Localization"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.actions.act_window,help:hr_payroll.action_contribution_register_form
 msgid "Click to add a new contribution register."
 msgstr ""
@@ -272,6 +285,7 @@ msgid "Close"
 msgstr "Închide"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_code
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_code
@@ -283,6 +297,12 @@ msgstr "Închide"
 #: model:ir.ui.view,arch_db:hr_payroll.report_payslipdetails
 msgid "Code"
 msgstr "Cod"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payroll_structure_view_kanban
+#: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_view_kanban
+msgid "Code:"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
@@ -323,18 +343,12 @@ msgstr "Conditie bazata pe"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
 msgid "Conditions"
-msgstr "Conditii"
+msgstr "Condiții"
 
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_configuration
 msgid "Configuration"
 msgstr "Configurare"
-
-#. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
-msgid "Configure Payroll"
-msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -348,6 +362,12 @@ msgstr "Confirmă"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_contract_id
 msgid "Contract"
 msgstr "Contract"
+
+#. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.hr_contract_advantage_template_action
+#: model:ir.ui.menu,name:hr_payroll.hr_contract_advantage_template_menu_action
+msgid "Contract Advantage Templates"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_contribution_register_form
@@ -376,13 +396,8 @@ msgid "Contribution Registers"
 msgstr "Registre contributie"
 
 #. module: hr_payroll
-#: model:ir.model.fields,help:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
-msgid "Create journal entries from payslips"
-msgstr "Creeaza inregistrari in registru din fluturasii de salariu"
-
-#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_uid
@@ -398,8 +413,8 @@ msgid "Created by"
 msgstr "Creat de"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_create_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_create_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_create_date
@@ -432,7 +447,17 @@ msgstr "Data de la"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_run_date_end
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_date_to
 msgid "Date To"
-msgstr "Data pana la"
+msgstr "Data până la"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_default_value
+msgid "Default value for this advantage"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract_schedule_pay
+msgid "Defines the frequency of the wage payment."
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_struct_id
@@ -444,9 +469,9 @@ msgid ""
 msgstr ""
 "Defineste regulile care trebuie sa fie aplicate pentru acest fluturas de "
 "salariu, in functie de contractul ales. Daca lasati necompletat campul "
-"contract, acest camp nu mai este obligatoriu si astfel regulile aplicate vor "
-"fi toate regulile configurate in structura tuturor contractelor angajatului "
-"valabile pentru perioada aleasa"
+"contract, acest camp nu mai este obligatoriu si astfel regulile aplicate vor"
+" fi toate regulile configurate in structura tuturor contractelor angajatului"
+" valabile pentru perioada aleasa"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_note
@@ -474,8 +499,8 @@ msgid "Details by Salary Rule Category"
 msgstr "Detalii dupa Categoria Regulii salariale"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_display_name
@@ -488,10 +513,9 @@ msgstr "Detalii dupa Categoria Regulii salariale"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_display_name
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_display_name
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: hr_payroll
 #: selection:hr.payslip,state:0
@@ -537,15 +561,14 @@ msgstr "Angajat"
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_contract
-#, fuzzy
 msgid "Employee Contract"
-msgstr "Functia angajatului"
+msgstr "Contract angajat"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_employee_grade_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_list_view
 msgid "Employee Function"
-msgstr "Functia angajatului"
+msgstr "Funcția angajatului"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
@@ -554,15 +577,21 @@ msgid "Employee Payslips"
 msgstr "Fluturasi de salariu angajat"
 
 #. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_hr_contract_advantage_template
+msgid "Employee's Advantage on Contract"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_employee_ids
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_filter
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_line_filter
 msgid "Employees"
-msgstr "Angajati"
+msgstr "Angajați"
 
 #. module: hr_payroll
-#: constraint:hr.payroll.structure:0
+#: code:addons/hr_payroll/models/hr_salary_rule.py:36
+#, python-format
 msgid "Error ! You cannot create a recursive Salary Structure."
 msgstr "Eroare! Nu puteți crea o Structură de Salarii recursivă"
 
@@ -578,13 +607,24 @@ msgstr "Partea terta implicata in plata salariului angajatilor."
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_amount_fix
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_amount_fix
 msgid "Fixed Amount"
-msgstr "Suma fixa"
+msgstr "Valoare fixă"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_amount_percentage
 msgid "For example, enter 50.0 to apply a percentage of 50%"
 msgstr "De exemplu, introduceti 50.0 pentru a aplica un procent de 50%"
+
+#. module: hr_payroll
+#: code:addons/hr_payroll/report/report_contribution_register.py:34
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_fr_hr_payroll
+msgid "French Payroll"
+msgstr "Stat de plata francez"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_form
@@ -615,8 +655,8 @@ msgid "Group By"
 msgstr "Grupează după"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_id
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_id
@@ -629,7 +669,6 @@ msgstr "Grupează după"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_id
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister_id
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip_id
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails_id
 msgid "ID"
 msgstr "ID"
@@ -654,6 +693,11 @@ msgstr ""
 "salariala fara a o sterge."
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_res_config_settings_module_l10n_in_hr_payroll
+msgid "Indian Payroll"
+msgstr "Stat de plata indian"
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_credit_note
 msgid "Indicates this payslip has a refund of another"
 msgstr "Indica faptul ca acest fluturas de salariu reprezinta o restituire"
@@ -672,41 +716,37 @@ msgid "Inputs"
 msgstr "Input-uri"
 
 #. module: hr_payroll
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
-msgid "Install your country's payroll"
-msgstr "Instaleaza salarizarea pentru tara dumneavoastra"
-
-#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_note
 msgid "Internal Note"
 msgstr "Nota interna"
 
 #. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_view_kanban
+msgid "Is a Blocking Reason?"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_quantity
 msgid ""
-"It is used in computation for percentage and fixed amount.For e.g. A rule "
+"It is used in computation for percentage and fixed amount. For e.g. A rule "
 "for Meal Voucher having fixed amount of 1€ per worked day can have its "
 "quantity defined in expression like worked_days.WORK100.number_of_days."
 msgstr ""
-"Este folosit la calculul procentajului si al sumei fixe. De ex. O regula "
-"pentru Tichetul de masa care are suma fixa de 1 € pe ziua lucratoare poate "
-"avea cantitatea definita intr-o expresie precum zile_lucrate.MUNCA100."
-"numarul_de_zile."
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_input_amount
 msgid ""
-"It is used in computation. For e.g. A rule for sales having 1% commission of "
-"basic salary for per product can defined in expression like result = inputs."
-"SALEURO.amount * contract.wage*0.01."
+"It is used in computation. For e.g. A rule for sales having 1% commission of"
+" basic salary for per product can defined in expression like result = "
+"inputs.SALEURO.amount * contract.wage*0.01."
 msgstr ""
-"Este utilizat la calcul. De ex. O regula pentru vanzari care are 1% comision "
-"din salariul de baza per produs poate fi definita in expresie ca rezultat = "
-"introduceri.SALEURO.suma * contract.salariu*0.01"
+"Este utilizat la calcul. De ex. O regula pentru vanzari care are 1% comision"
+" din salariul de baza per produs poate fi definita in expresie ca rezultat ="
+" introduceri.SALEURO.suma * contract.salariu*0.01"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees___last_update
@@ -719,14 +759,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_contributionregister___last_update
-#: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslip___last_update
 #: model:ir.model.fields,field_description:hr_payroll.field_report_hr_payroll_report_payslipdetails___last_update
 msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_uid
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_uid
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_uid
@@ -742,8 +781,8 @@ msgid "Last Updated by"
 msgstr "Ultima actualizare făcută de"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_write_date
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_employees_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_input_write_date
@@ -756,12 +795,7 @@ msgstr "Ultima actualizare făcută de"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_write_date
 #: model:ir.model.fields,field_description:hr_payroll.field_payslip_lines_contribution_register_write_date
 msgid "Last Updated on"
-msgstr "Ultima actualizare în"
-
-#. module: hr_payroll
-#: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_config_settings_module_hr_payroll_account
-msgid "Link your payroll to accounting system"
-msgstr "Conectati salarizarea cu sistemul contabil"
+msgstr "Ultima actualizare pe"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_category_parent_id
@@ -773,9 +807,24 @@ msgstr ""
 "scopul raportarii."
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_lower_bound
+msgid "Lower Bound"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_lower_bound
+msgid "Lower bound authorized by the employer for this advantage"
+msgstr ""
+
+#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_paid
 msgid "Made Payment Order ? "
-msgstr "Faceti Ordinul de plata? "
+msgstr "Faceți Ordinul de plată? "
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_manager
+msgid "Manager"
+msgstr "Manager"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_condition_range_max
@@ -800,6 +849,7 @@ msgid "Monthly"
 msgstr "Lunar"
 
 #. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contribution_register_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_name
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_name
@@ -813,7 +863,7 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:395
+#: code:addons/hr_payroll/models/hr_payslip.py:197
 #, python-format
 msgid "Normal Working Days paid at 100%"
 msgstr "Zile lucratoare obisnuite platite 100%"
@@ -826,12 +876,17 @@ msgstr "Note"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_days
 msgid "Number of Days"
-msgstr "Numărul de zile"
+msgstr "Număr de zile"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_worked_days_number_of_hours
 msgid "Number of Hours"
 msgstr "Numar de Ore"
+
+#. module: hr_payroll
+#: model:res.groups,name:hr_payroll.group_hr_payroll_user
+msgid "Officer"
+msgstr "Director"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -842,7 +897,7 @@ msgstr "Alte Intrari"
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payroll_structure_parent_id
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_salary_rule_category_parent_id
 msgid "Parent"
-msgstr "Principal"
+msgstr "Părinte"
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_parent_rule_id
@@ -871,7 +926,7 @@ msgid "PaySlip Batch"
 msgstr "Fluturas de salariu Lot"
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.payslip_details_report
+#: model:ir.actions.report,name:hr_payroll.payslip_details_report
 msgid "PaySlip Details"
 msgstr "Detalii Fluturas de salariu"
 
@@ -881,7 +936,7 @@ msgid "PaySlip Lines"
 msgstr "Linii fluturas de salariu"
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.action_contribution_register
+#: model:ir.actions.report,name:hr_payroll.action_contribution_register
 msgid "PaySlip Lines By Conribution Register"
 msgstr "Linii Fluturas de salariu dupa Registrul Contributiei"
 
@@ -903,9 +958,19 @@ msgstr "Numele Fluturasului de salariu"
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.open_payroll_modules
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_root
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
 msgid "Payroll"
 msgstr "Stat de plata"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "Payroll Entries"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "Payroll Rules"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_structure_filter
@@ -913,17 +978,23 @@ msgid "Payroll Structures"
 msgstr "Structuri Stat de plata"
 
 #. module: hr_payroll
-#: model:ir.actions.report.xml,name:hr_payroll.action_report_payslip
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "Payroll rules that apply to your country"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.actions.report,name:hr_payroll.action_report_payslip
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Payslip"
 msgstr "Fluturas de salariu"
 
 #. module: hr_payroll
-#: constraint:hr.payslip:0
+#: code:addons/hr_payroll/models/hr_payslip.py:84
+#, python-format
 msgid "Payslip 'Date From' must be before 'Date To'."
 msgstr ""
-"'Data de la' de pe fluturasul de salariu trebuie sa fie inainte de 'Data "
-"pana la'."
+"'Data de la' de pe fluturașul de salariu trebuie sa fie înainte de 'Data "
+"până la'."
 
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_payslip_run_id
@@ -975,9 +1046,8 @@ msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_run
-#, fuzzy
 msgid "Payslip Run"
-msgstr "Linie fluturas de salariu"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_hr_payslip_worked_days
@@ -1028,7 +1098,12 @@ msgstr "Procent bazat pe"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Period"
-msgstr "Perioada"
+msgstr "Perioadă"
+
+#. module: hr_payroll
+#: model:ir.ui.view,arch_db:hr_payroll.res_config_settings_view_form
+msgid "Post payroll slips in accounting"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_payslip_lines_contribution_register
@@ -1103,16 +1178,10 @@ msgstr "Referință"
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Refund"
-msgstr "Rambursare"
+msgstr "Storare"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:315
-#, python-format
-msgid "Refund Payslip"
-msgstr "Fluturas de salariu restituiri"
-
-#. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:306
+#: code:addons/hr_payroll/models/hr_payslip.py:104
 #, python-format
 msgid "Refund: "
 msgstr "Rambursare "
@@ -1130,7 +1199,7 @@ msgstr "Respins"
 #. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_payslip_line_salary_rule_id
 msgid "Rule"
-msgstr "Regula"
+msgstr "Regulă"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_salary_rule_category_form
@@ -1183,8 +1252,8 @@ msgid "Salary Rules"
 msgstr "Reguli salariale"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:640
-#: code:addons/hr_payroll/hr_payroll.py:699
+#: code:addons/hr_payroll/models/hr_payslip.py:396
+#: code:addons/hr_payroll/models/hr_payslip.py:446
 #, python-format
 msgid "Salary Slip of %s for %s"
 msgstr "Fluturas de salariu %s pentru %s"
@@ -1205,15 +1274,9 @@ msgid "Salary Structures"
 msgstr "Structuri salariu"
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payroll_structure_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_structure_tree
-msgid "Salary Structures Hierarchy"
-msgstr "Ierarhia Structurilor Salariale"
-
-#. module: hr_payroll
 #: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_schedule_pay
 msgid "Scheduled Pay"
-msgstr "Plata programata"
+msgstr "Plată programată"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_filter
@@ -1252,11 +1315,11 @@ msgstr "Secvență"
 #: model:ir.ui.view,arch_db:hr_payroll.hr_payslip_run_form
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Set to Draft"
-msgstr "Setati ca ciorna"
+msgstr "Setează ca ciornă"
 
 #. module: hr_payroll
+#: model:ir.actions.act_window,name:hr_payroll.action_hr_payroll_configuration
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_global_settings
-#: model:ir.ui.view,arch_db:hr_payroll.view_hr_payroll_configuration
 msgid "Settings"
 msgstr "Setări"
 
@@ -1321,9 +1384,9 @@ msgstr "Suma minima, aplicata pentru aceasta regula."
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_condition_range
 #: model:ir.model.fields,help:hr_payroll.field_hr_salary_rule_condition_range
 msgid ""
-"This will be used to compute the % fields values; in general it is on basic, "
-"but you can also use categories code fields in lowercase as a variable names "
-"(hra, ma, lta, etc.) and the variable basic."
+"This will be used to compute the % fields values; in general it is on basic,"
+" but you can also use categories code fields in lowercase as a variable "
+"names (hra, ma, lta, etc.) and the variable basic."
 msgstr ""
 "Acesta va fi folosit pentru a calcula valorile campurilor %s; in general "
 "este de baza, dar puteti de asemenea sa folositi campurile categorii de "
@@ -1333,8 +1396,8 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_by_employees
 msgid ""
-"This wizard will generate payslips for all selected employee(s) based on the "
-"dates and credit note specified on Payslips Run."
+"This wizard will generate payslips for all selected employee(s) based on the"
+" dates and credit note specified on Payslips Run."
 msgstr ""
 "Acest asistent va genera fluturasi de salariu pentru toti angajatii "
 "selectati pe baza datelor si a notelor de credit specificate in Executarea "
@@ -1352,6 +1415,16 @@ msgstr "Total"
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
 msgid "Total Working Days"
 msgstr "Total Zile lucratoare"
+
+#. module: hr_payroll
+#: model:ir.model.fields,field_description:hr_payroll.field_hr_contract_advantage_template_upper_bound
+msgid "Upper Bound"
+msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model.fields,help:hr_payroll.field_hr_contract_advantage_template_upper_bound
+msgid "Upper bound authorized by the employer for this advantage"
+msgstr ""
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_sequence
@@ -1373,7 +1446,7 @@ msgstr "În așteptare"
 #. module: hr_payroll
 #: selection:hr.contract,schedule_pay:0
 msgid "Weekly"
-msgstr "Saptamanal(a)"
+msgstr "Săptămânal"
 
 #. module: hr_payroll
 #: model:ir.ui.view,arch_db:hr_payroll.view_hr_payslip_form
@@ -1391,7 +1464,7 @@ msgid "Worked Days & Inputs"
 msgstr "Zile lucrate & Inregistrari"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:884
+#: code:addons/hr_payroll/models/hr_salary_rule.py:198
 #, python-format
 msgid "Wrong percentage base or quantity defined for salary rule %s (%s)."
 msgstr ""
@@ -1399,51 +1472,46 @@ msgstr ""
 "(%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:890
+#: code:addons/hr_payroll/models/hr_salary_rule.py:204
 #, python-format
 msgid "Wrong python code defined for salary rule %s (%s)."
 msgstr "Cod python gresit definit pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:913
+#: code:addons/hr_payroll/models/hr_salary_rule.py:227
 #, python-format
 msgid "Wrong python condition defined for salary rule %s (%s)."
 msgstr "Conditie python gresita definita pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:877
+#: code:addons/hr_payroll/models/hr_salary_rule.py:191
 #, python-format
 msgid "Wrong quantity defined for salary rule %s (%s)."
 msgstr "Cantitate gresita definita pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:907
+#: code:addons/hr_payroll/models/hr_salary_rule.py:221
 #, python-format
 msgid "Wrong range condition defined for salary rule %s (%s)."
 msgstr "Conditie gresita a limitei definita pentru regula salariala %s (%s)."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:333
+#: code:addons/hr_payroll/models/hr_payslip.py:128
 #, python-format
 msgid "You cannot delete a payslip which is not draft or cancelled!"
 msgstr ""
 "Nu puteti sterge un fluturas de salariu care nu este ciorna sau anulat!"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:35
+#: code:addons/hr_payroll/wizard/hr_payroll_payslips_by_employees.py:24
 #, python-format
 msgid "You must select employee(s) to generate payslip(s)."
 msgstr "Trebuie sa selectati angajatii pentru a genera fluturasii de salariu."
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:964
-#, fuzzy, python-format
+#: code:addons/hr_payroll/models/hr_payslip.py:517
+#, python-format
 msgid "You must set a contract to create a payslip line."
-msgstr "Trebuie sa selectati angajatii pentru a genera fluturasii de salariu."
-
-#. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_payroll_config_settings
-msgid "hr.payroll.config.settings"
 msgstr ""
 
 #. module: hr_payroll
@@ -1457,14 +1525,14 @@ msgid "report.hr_payroll.report_contributionregister"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslip
-msgid "report.hr_payroll.report_payslip"
-msgstr ""
-
-#. module: hr_payroll
 #: model:ir.model,name:hr_payroll.model_report_hr_payroll_report_payslipdetails
 msgid "report.hr_payroll.report_payslipdetails"
 msgstr ""
+
+#. module: hr_payroll
+#: model:ir.model,name:hr_payroll.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: hr_payroll
 #: model:ir.model.fields,help:hr_payroll.field_hr_payslip_line_amount_percentage_base

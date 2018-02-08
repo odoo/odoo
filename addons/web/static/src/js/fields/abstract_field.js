@@ -30,16 +30,28 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
+var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var AbstractField = Widget.extend({
+    cssLibs: [],
+    jsLibs: [],
     events: {
         'keydown': '_onKeydown',
     },
     custom_events: {
         navigation_move: '_onNavigationMove',
     },
+
+    /**
+    * An object representing fields to be fetched by the model eventhough not present in the view
+    * This object contains "field name" as key and an object as value.
+    * That value object must contain the key "type"
+    * see FieldBinaryImage for an example.
+    */
+    fieldDependencies: {},
+
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
@@ -56,6 +68,8 @@ var AbstractField = Widget.extend({
     specialData: false,
     /**
      * to override to indicate which field types are supported by the widget
+     *
+     * @type Array<String>
      */
     supportedFieldTypes: [],
 
@@ -173,6 +187,14 @@ var AbstractField = Widget.extend({
             return self._render();
         });
     },
+    /**
+     * Loads the libraries listed in this.jsLibs and this.cssLibs
+     *
+     * @override
+     */
+    willStart: function () {
+        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -185,7 +207,7 @@ var AbstractField = Widget.extend({
      * will have the cursor at the very end.
      *
      * @param {Object} [options]
-     * @param {boolean} [noselect=false] if false and the input
+     * @param {boolean} [options.noselect=false] if false and the input
      *   is of type text or textarea, the content will also be selected
      * @param {Event} [options.event] the event which fired this activation
      * @returns {boolean} true if the widget was activated, false if the
@@ -378,6 +400,8 @@ var AbstractField = Widget.extend({
      *   Please do not use this flag unless you really need it.  Our only use
      *   case is currently the pad widget, which does a _setValue in the
      *   renderEdit method.
+     * @param {boolean} [options.notifyChange=true] if false, the basic model
+     *   will not notify and not trigger the onchange, even though it was changed.
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
      * @returns {Deferred}
@@ -394,6 +418,7 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
+            this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
             return $.Deferred().reject();
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {
@@ -407,6 +432,7 @@ var AbstractField = Widget.extend({
             changes: changes,
             viewType: this.viewType,
             doNotSetDirty: options && options.doNotSetDirty,
+            notifyChange: !options || options.notifyChange !== false,
             onSuccess: def.resolve.bind(def),
             onFailure: def.reject.bind(def),
         });
@@ -444,7 +470,7 @@ var AbstractField = Widget.extend({
                 this.trigger_up('navigation_move', {direction: 'next_line'});
                 break;
             case $.ui.keyCode.ESCAPE:
-                this.trigger_up('navigation_move', {direction: 'cancel'});
+                this.trigger_up('navigation_move', {direction: 'cancel', originalEvent: ev});
                 break;
             case $.ui.keyCode.UP:
                 ev.stopPropagation();

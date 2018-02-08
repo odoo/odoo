@@ -7,6 +7,9 @@ var DomainSelector = require("web.DomainSelector");
 
 var _t = core._t;
 
+/**
+ * @class DomainSelectorDialog
+ */
 return Dialog.extend({
     init: function (parent, model, domain, options) {
         this.model = model;

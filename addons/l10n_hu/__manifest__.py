@@ -25,11 +25,12 @@ This module consists :
         'data/l10n_hu_chart_data.xml',
         'data/account.account.template.csv',
         'data/account.account.tag.csv',
+        'data/account.tax.group.csv',
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'data/account.fiscal.position.tax.template.csv',
         'data/res.bank.csv',
         'data/account_chart_template_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_configure_data.xml',
     ],
 }

@@ -8,6 +8,8 @@ from odoo.exceptions import ValidationError
 class Project(models.Model):
     _inherit = 'project.project'
 
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', domain=[('is_expense', '=', False)], readonly=True, help="Sale order line from which the project has been created. Used for tracability.")
+
     @api.multi
     def action_view_timesheet(self):
         self.ensure_one()
@@ -22,8 +24,8 @@ class Project(models.Model):
             'view_mode': 'tree,form',
             'view_type': 'form',
             'help': _("""
-                <p class="oe_view_nocontent_create">
-                    Click to record timesheets.
+                <p class="o_view_nocontent_smiling_face">
+                    Record timesheets
                 </p><p>
                     You can register and track your workings hours by project every
                     day. Every time spent on a project will become a cost and can be re-invoiced to
@@ -40,7 +42,7 @@ class Project(models.Model):
     @api.multi
     def action_view_timesheet_plan(self):
         return {
-            'name': _('Overview of %s') % self.name,
+            'name': _('Overview'),
             'type': 'ir.actions.client',
             'tag': 'timesheet.plan',
             'context': {
@@ -54,14 +56,48 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    procurement_id = fields.Many2one('procurement.order', 'Assign to Order', ondelete='set null', help="Procurement of the sale order line on which the timesheets should be assigned")
-    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Line', related='procurement_id.sale_line_id', store=True)
+    sale_line_id = fields.Many2one('sale.order.line', 'Sales Order Item', domain="[('is_service', '=', True), ('order_partner_id', '=', partner_id), ('is_expense', '=', False)]")
+
+    @api.multi
+    @api.constrains('sale_line_id')
+    def _check_sale_line_type(self):
+        for task in self:
+            if task.sale_line_id:
+                if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
+                    raise ValidationError(_("The Sales order line should be one selling a service, and no coming from expense."))
+
+    @api.model
+    def create(self, values):
+        # sub task has the same so line than their parent
+        if 'parent_id' in values:
+            values['sale_line_id'] = self.env['project.task'].browse(values['parent_id']).sudo().sale_line_id.id
+        return super(ProjectTask, self).create(values)
+
+    @api.multi
+    def write(self, values):
+        # sub task has the same so line than their parent
+        if 'parent_id' in values:
+            values['sale_line_id'] = self.env['project.task'].browse(values['parent_id']).sudo().sale_line_id.id
+
+        result = super(ProjectTask, self).write(values)
+        # reassign SO line on related timesheet lines
+        if 'sale_line_id' in values:
+            self.sudo().mapped('timesheet_ids').write({
+                'so_line': values['sale_line_id']
+            })
+        return result
 
     @api.multi
     def unlink(self):
         if any(task.sale_line_id for task in self):
             raise ValidationError(_('You cannot delete a task related to a Sales Order. You can only archive this task.'))
         return super(ProjectTask, self).unlink()
+
+    @api.multi
+    def _subtask_implied_fields(self):
+        fields_list = super(ProjectTask, self)._subtask_implied_fields()
+        fields_list += ['sale_line_id']
+        return fields_list
 
     @api.multi
     def action_view_so(self):
@@ -74,7 +110,8 @@ class ProjectTask(models.Model):
             "context": {"create": False, "show_sale": True},
         }
 
-    @api.onchange('parent_id')
-    def onchange_parent_id(self):
-        self.procurement_id = self.parent_id.procurement_id.id
-        self.sale_line_id = self.parent_id.sale_line_id.id
+    def rating_get_partner_id(self):
+        partner = self.partner_id or self.sale_line_id.order_id.partner_id
+        if partner:
+            return partner
+        return super(ProjectTask, self).rating_get_partner_id()

@@ -42,11 +42,11 @@ class AccountInvoiceReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     user_id = fields.Many2one('res.users', string='Salesperson', readonly=True)
     price_total = fields.Float(string='Total Without Tax', readonly=True)
-    user_currency_price_total = fields.Float(string="Total Without Tax", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_total = fields.Float(string="Total Without Tax in Currency", compute='_compute_amounts_in_user_currency', digits=0)
     price_average = fields.Float(string='Average Price', readonly=True, group_operator="avg")
-    user_currency_price_average = fields.Float(string="Average Price", compute='_compute_amounts_in_user_currency', digits=0)
+    user_currency_price_average = fields.Float(string="Average Price in Currency", compute='_compute_amounts_in_user_currency', digits=0)
     currency_rate = fields.Float(string='Currency Rate', readonly=True, group_operator="avg", groups="base.group_multi_currency")
-    nbr = fields.Integer(string='# of Lines', readonly=True)  # TDE FIXME master: rename into nbr_lines
+    nbr = fields.Integer(string='Line Count', readonly=True)  # TDE FIXME master: rename into nbr_lines
     type = fields.Selection([
         ('out_invoice', 'Customer Invoice'),
         ('in_invoice', 'Vendor Bill'),
@@ -110,7 +110,7 @@ class AccountInvoiceReport(models.Model):
                     ai.type, ai.state, pt.categ_id, ai.date_due, ai.account_id, ail.account_id AS account_line_id,
                     ai.partner_bank_id,
                     SUM ((invoice_type.sign * ail.quantity) / u.factor * u2.factor) AS product_qty,
-                    SUM(ail.price_subtotal_signed) AS price_total,
+                    SUM(ail.price_subtotal_signed * invoice_type.sign) AS price_total,
                     SUM(ABS(ail.price_subtotal_signed)) / CASE
                             WHEN SUM(ail.quantity / u.factor * u2.factor) <> 0::numeric
                                THEN SUM(ail.quantity / u.factor * u2.factor)
@@ -135,7 +135,7 @@ class AccountInvoiceReport(models.Model):
                 JOIN (
                     -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE
-                         WHEN ai.type::text = ANY (ARRAY['out_refund'::character varying::text, 'in_invoice'::character varying::text])
+                         WHEN ai.type::text = ANY (ARRAY['in_refund'::character varying::text, 'in_invoice'::character varying::text])
                             THEN -1
                             ELSE 1
                         END) AS sign

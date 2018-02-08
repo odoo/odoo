@@ -12,9 +12,10 @@ var qweb = core.qweb;
 
 var FormController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
-        open_one2many_record: '_onOpenOne2ManyRecord',
         bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
+        freeze_order: '_onFreezeOrder',
+        open_one2many_record: '_onOpenOne2ManyRecord',
         open_record: '_onOpenRecord',
         toggle_column_order: '_onToggleColumnOrder',
     }),
@@ -28,6 +29,7 @@ var FormController = BasicController.extend({
         this._super.apply(this, arguments);
 
         this.actionButtons = params.actionButtons;
+        this.disableAutofocus = params.disableAutofocus;
         this.footerToButtons = params.footerToButtons;
         this.defaultButtons = params.defaultButtons;
         this.hasSidebar = params.hasSidebar;
@@ -42,7 +44,9 @@ var FormController = BasicController.extend({
      * Calls autofocus on the renderer
      */
     autofocus: function () {
-        this.renderer.autofocus();
+        if (!this.disableAutofocus) {
+            this.renderer.autofocus();
+        }
     },
     /**
      * This method switches the form view in edit mode, with a new record.
@@ -145,7 +149,7 @@ var FormController = BasicController.extend({
      *   inserted
      **/
     renderSidebar: function ($node) {
-        if (!this.sidebar && this.hasSidebar) {
+        if (this.hasSidebar) {
             var otherItems = [];
             if (this.is_action_enabled('delete')) {
                 otherItems.push({
@@ -192,15 +196,18 @@ var FormController = BasicController.extend({
                 // need to make sure changed fields that should be translated
                 // are displayed with an alert
                 var fields = self.renderer.state.fields;
+                var data = self.renderer.state.data;
                 var alertFields = [];
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
-                    if (field.translate) {
+                    var fieldData = data[changedFields[k]];
+                    if (field.translate && fieldData) {
                         alertFields.push(field);
                     }
                 }
                 if (alertFields.length) {
-                    self.renderer.displayTranslationAlert(alertFields);
+                    self.renderer.alertFields = alertFields;
+                    self.renderer.displayTranslationAlert();
                 }
             }
             return changedFields;
@@ -217,7 +224,7 @@ var FormController = BasicController.extend({
      *
      * @private
      * @override method from field manager mixin
-     * @param {string} id
+     * @param {string} id - id of the previously changed record
      * @returns {Deferred}
      */
     _confirmSave: function (id) {
@@ -228,15 +235,21 @@ var FormController = BasicController.extend({
                 return this._setMode('readonly');
             }
         } else {
-            // a subrecord changed, so update the corresponding relational field
+            // A subrecord has changed, so update the corresponding relational field
             // i.e. the one whose value is a record with the given id or a list
             // having a record with the given id in its data
             var record = this.model.get(this.handle);
-            var fieldsChanged = _.findKey(record.data, function (d) {
-                return _.isObject(d) &&
-                    (d.id === id || _.findWhere(d.data, {id: id}));
-            });
-            return this.renderer.confirmChange(record, record.id, [fieldsChanged]);
+
+            // Callback function which returns true
+            // if a value recursively contains a record with the given id.
+            // This will be used to determine the list of fields to reload.
+            var containsChangedRecord = function (value) {
+                return _.isObject(value) &&
+                    (value.id === id || _.find(value.data, containsChangedRecord));
+            };
+
+            var changedFields = _.findKey(record.data, containsChangedRecord);
+            return this.renderer.confirmChange(record, record.id, [changedFields]);
         }
     },
     /**
@@ -267,7 +280,7 @@ var FormController = BasicController.extend({
     _onDeletedRecords: function () {
         var state = this.model.get(this.handle, {raw: true});
         if (!state.res_ids.length) {
-            this.do_action('history_back');
+            this.trigger_up('history_back');
         } else {
             this._super.apply(this, arguments);
         }
@@ -287,6 +300,17 @@ var FormController = BasicController.extend({
         this._super(state);
     },
     /**
+     * Calls unfreezeOrder when changing the mode.
+     *
+     * @override
+     */
+    _setMode: function (mode, recordID) {
+        if ((recordID || this.handle) === this.handle) {
+            this.model.unfreezeOrder(this.handle);
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
      * Updates the controller's title according to the new state
      *
      * @override
@@ -299,7 +323,7 @@ var FormController = BasicController.extend({
         this.set('title', title);
         this._updateButtons();
         this._updateSidebar();
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments).then(this.autofocus.bind(this));
     },
     /**
      * @private
@@ -356,20 +380,8 @@ var FormController = BasicController.extend({
 
         this._disableButtons();
 
-        var attrs = event.data.attrs;
-        if (attrs.confirm) {
-            var d = $.Deferred();
-            Dialog.confirm(this, attrs.confirm, { confirm_callback: function () {
-                self._callButtonAction(attrs, event.data.record);
-            }}).on("closed", null, function () {
-                d.resolve();
-            });
-            def = d.promise();
-        } else if (attrs.special === 'cancel') {
-            def = this._callButtonAction(attrs, event.data.record);
-        } else if (!attrs.special || attrs.special === 'save') {
-            // save the record but don't switch to readonly mode
-            def = this.saveRecord(this.handle, {
+        function saveAndExecuteAction () {
+            return self.saveRecord(self.handle, {
                 stayInEdit: true,
             }).then(function () {
                 // we need to reget the record to make sure we have changes made
@@ -378,6 +390,21 @@ var FormController = BasicController.extend({
                 var record = self.model.get(event.data.record.id);
                 return self._callButtonAction(attrs, record);
             });
+        }
+        var attrs = event.data.attrs;
+        if (attrs.confirm) {
+            var d = $.Deferred();
+            Dialog.confirm(this, attrs.confirm, {
+                confirm_callback: saveAndExecuteAction,
+            }).on("closed", null, function () {
+                d.resolve();
+            });
+            def = d.promise();
+        } else if (attrs.special === 'cancel') {
+            def = this._callButtonAction(attrs, event.data.record);
+        } else if (!attrs.special || attrs.special === 'save') {
+            // save the record but don't switch to readonly mode
+            def = saveAndExecuteAction();
         }
 
         def.always(this._enableButtons.bind(this));
@@ -430,6 +457,17 @@ var FormController = BasicController.extend({
         this._setMode('edit');
     },
     /**
+     * This method is called when someone tries to freeze the order, most likely
+     * in a x2many list view
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onFreezeOrder: function (event) {
+        event.stopPropagation();
+        this.model.freezeOrder(event.data.id);
+    },
+    /**
      * Opens a one2many record (potentially new) in a dialog. This handler is
      * o2m specific as in this case, the changes done on the related record
      * shouldn't be saved in DB when the user clicks on 'Save' in the dialog,
@@ -471,6 +509,7 @@ var FormController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onOpenRecord: function (event) {
+        event.stopPropagation();
         var self = this;
         var record = this.model.get(event.data.id, {raw: true});
         new dialogs.FormViewDialog(self, {
@@ -501,10 +540,13 @@ var FormController = BasicController.extend({
      * @param {OdooEvent} event
      */
     _onToggleColumnOrder: function (event) {
-        this.model.setSort(event.data.id, event.data.name);
-        var field = event.data.field;
-        var state = this.model.get(this.handle);
-        this.renderer.confirmChange(state, state.id, [field]);
+        event.stopPropagation();
+        var self = this;
+        this.model.setSort(event.data.id, event.data.name).then(function () {
+            var field = event.data.field;
+            var state = self.model.get(self.handle);
+            self.renderer.confirmChange(state, state.id, [field]);
+        });
     },
 });
 

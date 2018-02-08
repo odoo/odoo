@@ -5,14 +5,15 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
+# tdombos <tdombos@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: tdombos <tdombos@gmail.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/models/hr.py:75
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -73,6 +74,16 @@ msgid "Birth"
 msgstr "Született"
 
 #. module: hr
+#: model:hr.job,name:hr.job_ceo
+msgid "Chief Executive Officer"
+msgstr "Legfelsőbb igazgatási tisztségviselő "
+
+#. module: hr
+#: model:hr.job,name:hr.job_cto
+msgid "Chief Technical Officer"
+msgstr "Legfelsőbb műszaki tisztségviselő "
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
 msgid "Child Departments"
 msgstr "Alrészlegek"
@@ -81,11 +92,6 @@ msgstr "Alrészlegek"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
 msgstr "Állampolgárság & egyéb adatok"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_city
-msgid "City"
-msgstr "Város"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -110,11 +116,6 @@ msgid "Coach"
 msgstr "Tréner"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_code
-msgid "Code"
-msgstr "Kód"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
@@ -128,7 +129,6 @@ msgstr "Vállalatok"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -136,9 +136,29 @@ msgid "Company"
 msgstr "Vállalat"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
+msgid "Company Working Hours"
+msgstr ""
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+msgid "Complete Name"
+msgstr "Teljes név"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
 msgstr "Beállítások"
+
+#. module: hr
+#: model:hr.job,name:hr.job_consultant
+msgid "Consultant"
+msgstr "Tanácsadó"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolat"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -170,11 +190,6 @@ msgstr "Jelenlegi alkalmazottak száma"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
 msgstr "Születési idő"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
-msgid "Define the schedule of resource"
-msgstr "Az erőforrás ütemezésének a meghatározása."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
@@ -211,19 +226,9 @@ msgid "Divorced"
 msgstr "Elvált"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
-msgid "Efficiency Factor"
-msgstr "Hatékonysági tényező"
-
-#. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
 msgstr "Email álnevek"
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_thread
-msgid "Email Thread"
-msgstr "E-mail összafűzés"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -267,6 +272,7 @@ msgstr "Alkalmazott neve"
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_tree
 #: model:ir.ui.view,arch_db:hr.view_partner_tree2
@@ -284,21 +290,23 @@ msgid "Employees Tags"
 msgstr "Alkalmazottak címkéi"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:263
+#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr ""
+
+#. module: hr
+#: code:addons/hr/models/hr.py:303
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Hiba! Nem hozhat létre egymásba épülő osztályokat."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:167
+#: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr "Hiba! Nem készíthet visszatérő rangsorú alklamazott(ak) listát."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_event_count
-msgid "Events"
-msgstr "Rendezvények"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -310,6 +318,11 @@ msgstr "Várható új munkavállalók"
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr "Elvárt munkahelyek száma ehhez a munkához az új felvételiztetés után."
+
+#. module: hr
+#: model:hr.job,name:hr.job_developer
+msgid "Experienced Developer"
+msgstr "Gyakorlott fejlesztő"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -353,14 +366,14 @@ msgid "Hired Employees"
 msgstr "Felvett munkavállalók"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
-msgid "Home Address"
-msgstr "Otthoni cím"
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Emberi erőforrás HR"
+
+#. module: hr
+#: model:hr.job,name:hr.job_hrm
+msgid "Human Resources Manager"
+msgstr "Emberi Erőforrás Igazgató"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -409,6 +422,8 @@ msgstr "Munkaköri leírás"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
 msgstr "Állás pozíció"
 
@@ -429,12 +444,6 @@ msgstr ""
 "                Nyomon követheti, hány munkavállalója van egy állás \n"
 "                pozícióban és követheti a fejlődést a jövőbeni terveinek \n"
 "                megfelelően."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Title"
-msgstr "Beosztás"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
@@ -467,24 +476,9 @@ msgid "Last Updated on"
 msgstr "Utoljára frissítve "
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr "Utolsó figyelmeztetés olvasottnak jelölve az alap naptárban"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
-msgid "Latest Connection"
-msgstr "Legutoló csatlakozás"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
 msgstr "Toborzás elindítása"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_login
-msgid "Login"
-msgstr "Bejelentkezés"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -500,19 +494,19 @@ msgid "Manager"
 msgstr "Igazgató"
 
 #. module: hr
-#: model:res.groups,name:hr.group_hr_attendance
-msgid "Manual Attendance"
-msgstr "Kézi jelenlét"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
 msgid "Marital Status"
 msgstr "Családi állapot"
 
 #. module: hr
+#: model:hr.job,name:hr.job_marketing
+msgid "Marketing and Community Manager"
+msgstr "Marketing és Közösségi Igazgató"
+
+#. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "Házas"
+msgid "Married (or similar)"
+msgstr "Házas (vagy hasonló)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
@@ -539,11 +533,6 @@ msgstr "Tagok"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "Üzenetek"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Tovább <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
@@ -576,11 +565,6 @@ msgid "Number of employees currently occupying this job position."
 msgstr "Alakalmazottak száma akik jelenleg betöltik ezt az állás pozíciót."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_res_users_event_count
-msgid "Number of events the partner has participated."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
@@ -596,11 +580,8 @@ msgstr "A felvenni kívánt alkalmazottak száma"
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"                leaves, recruitments, etc."
 msgstr ""
-" Odoo rendszer osztályfelépítése az összes munkavállaló \n"
-"                dokumentumának osztályonkénti kezelésére szolgál: kiadások, \n"
-"                időbeosztások, eltávozások és szabadságolások, felvételiztetések, stb."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -623,19 +604,9 @@ msgid "Parent Department"
 msgstr "Főrészleg"
 
 #. module: hr
-#: model:ir.model,name:hr.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
 msgid "Passport No"
 msgstr "Útlevélszám"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Personal Information"
-msgstr "Személyes információk"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
@@ -648,9 +619,19 @@ msgid "Position"
 msgstr "Beosztás"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Private Address"
+msgstr "Lakcím"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Public Information"
-msgstr "Nyilvános adat"
+msgid "Private Information"
+msgstr "Személyes adatok"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "Toborzás"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -685,21 +666,6 @@ msgid "Requirements"
 msgstr "Követelmények"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
-msgid "Resource"
-msgstr "Erőforrás"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-msgid "Resource Name"
-msgstr "Erőforrás neve"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
-msgid "Resource Type"
-msgstr "Erőforrás típus"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
 msgid "SIN No"
 msgstr "TAJ szám"
@@ -710,6 +676,13 @@ msgid "SSN No"
 msgstr "Adóazonosító jele"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Set default calendar used to compute time allocation for leaves, timesheets,"
+" ..."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
@@ -718,9 +691,26 @@ msgstr ""
 "folyamat  még tart vagy sem."
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Beállítások"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
+msgid "Show Organizational Chart"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form."
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -786,19 +776,15 @@ msgid "Tags"
 msgstr "Címkék"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+msgid "The employee adress has a company linked"
+msgstr ""
+
+#. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr ""
 "Az állás nevének egyedinek kell lennie osztályonként a vállalkozásban!"
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_attendance
-msgid ""
-"The user will gain access to the human resources attendance menu, enabling "
-"him to manage his own attendance."
-msgstr ""
-"A felhasználó elérheti az emberi erőforrások jelenléti menüt,  lehetővé téve"
-" a saját jelenlétének szervezését."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -810,19 +796,14 @@ msgstr ""
 "méret 1024x1024px."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field is used to calculate the the expected duration of a work order at"
-" this work center. For example, if a work order takes one hour and the "
-"efficiency factor is 100%, then the expected duration will be one hour. If "
-"the efficiency factor is 200%, however the expected duration will be 30 "
-"minutes."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Összes előjegyzett alkalmazott"
+
+#. module: hr
+#: model:hr.job,name:hr.job_trainee
+msgid "Trainee"
+msgstr "Gyakornok"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -833,9 +814,12 @@ msgid "Unread Messages"
 msgstr "Olvasatlan üzenetek"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr "A rendszerbe történő bejelentkezésre szolgál"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"Use here the home address of the employee.\n"
+"                                            This private address is used in the expense report reimbursement document.\n"
+"                                            It should be different from the work address."
+msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -846,6 +830,21 @@ msgstr "Felhasználó"
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
 msgstr "Felhasználók"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
+msgstr "Üresedések"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+msgid "Visa Expire Date"
+msgstr "Vízum lejárati dátuma"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+msgid "Visa No"
+msgstr "Vízum száma"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -875,6 +874,11 @@ msgid "Work Email"
 msgstr "Munkahelyi e-mail"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr "Munkahelyi adatok"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
 msgid "Work Location"
 msgstr "Munka helyszín"
@@ -885,14 +889,24 @@ msgid "Work Mobile"
 msgstr "Munkahelyi mobil"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr ""
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr "Munkavállalási engedély"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+msgid "Work Permit No"
+msgstr "Munkavállalási engedély száma"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
 msgstr "Munkahelyi telefon"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
-msgid "Working Time"
-msgstr "Munkaidő"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -921,12 +935,6 @@ msgstr ""
 "fel a kapcsolatot a HR emberi erőforrás igazgatóval."
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "alias %s does not accept unknown employees"
-msgstr "alias %s nem fogadja el az ismeretlen alkalmazottakat"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "részleg"
@@ -942,10 +950,14 @@ msgid "e.g. Sales Manager"
 msgstr "pl. Értékesítési menedzsment"
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "skipping"
-msgstr "átugorja"
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
+msgstr "mail.alias.mixin"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user

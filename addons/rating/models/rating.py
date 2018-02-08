@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 import uuid
 
 from odoo import api, fields, models, tools, _
 
 from odoo.modules.module import get_resource_path
-from odoo.tools import pycompat
 
 RATING_LIMIT_SATISFIED = 7
 RATING_LIMIT_OK = 3
@@ -43,7 +42,7 @@ class Rating(models.Model):
     parent_res_id = fields.Integer('Parent Document', index=True)
     rated_partner_id = fields.Many2one('res.partner', string="Rated person", help="Owner of the rated resource")
     partner_id = fields.Many2one('res.partner', string='Customer', help="Author of the rating")
-    rating = fields.Float(string="Rating", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
+    rating = fields.Float(string="Rating Number", group_operator="avg", default=0, help="Rating value: 0=Unhappy, 10=Happy")
     rating_image = fields.Binary('Image', compute='_compute_rating_image')
     rating_text = fields.Selection([
         ('satisfied', 'Satisfied'),
@@ -70,7 +69,7 @@ class Rating(models.Model):
         for rating in self:
             try:
                 image_path = get_resource_path('rating', 'static/src/img', 'rating_%s.png' % (int(rating.rating),))
-                rating.rating_image = open(image_path, 'rb').read().encode('base64')
+                rating.rating_image = base64.b64encode(open(image_path, 'rb').read())
             except (IOError, OSError):
                 rating.rating_image = False
 
@@ -241,8 +240,8 @@ class RatingMixin(models.AbstractModel):
             if hasattr(self, 'message_post'):
                 feedback = tools.plaintext2html(feedback or '')
                 self.message_post(
-                    body="<img src='/rating/static/src/img/rating_%s.png' style='width:20px;height:20px;float:left;margin-right: 5px;'/>%s"
-                    % (rate, feedback),
+                    body="<img src='/rating/static/src/img/rating_%s.png' alt=':rating_%s' style='width:20px;height:20px;float:left;margin-right: 5px;'/>%s"
+                    % (rate, rate, feedback),
                     subtype=subtype or "mail.mt_comment",
                     author_id=rating.partner_id and rating.partner_id.id or None  # None will set the default author in mail_thread.py
                 )
@@ -275,7 +274,7 @@ class RatingMixin(models.AbstractModel):
         values.update((d['rating'], d['rating_count']) for d in data)
         # add other stats
         if add_stats:
-            rating_number = sum(pycompat.values(values))
+            rating_number = sum(values.values())
             result = {
                 'repartition': values,
                 'avg': sum(float(key * values[key]) for key in values) / rating_number if rating_number > 0 else 0,

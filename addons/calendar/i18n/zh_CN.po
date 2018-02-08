@@ -3,15 +3,22 @@
 # * calendar
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# 苏州远鼎 <tiexinliu@126.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# liAnGjiA <liangjia@qq.com>, 2017
+# Talway <9010446@qq.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# Martin Trigaux, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2016\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,7 +82,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -105,6 +112,73 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"<div summary=\"o_mail_template\" "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td><td "
+"valign=\"center\" align=\"right\" width=\"340\" style=\"padding:10px 10px "
+"10px 5px; font-size: 12px;\"><p><a "
+"href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-radius:3px\"></a><a "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"'' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-radius:3px\"></a><a "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-"
+"radius:3px\"></a></p></td></tr></tbody></table><table cellspacing=\"0\" "
+"cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"top\" style=\"width:600px; padding:10px 10px 10px 5px;\"><div><hr "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-"
+"height:0;margin:15px "
+"auto;padding:0\"></div></td></tr></tbody></table></div><div "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"style=\"padding:10px 10px 10px 5px;font-size: 14px;\"><p style=\"font-size: "
+"20px; text-align: center;\"><strong></strong></p><p><strong></strong><br "
+"/></p><table style=\"margin-top: 20px;\"><tr><td><div style=\"border-top-"
+"left-radius:3px;border-top-right-radius:3px;font-size:12px;border-"
+"collapse:separate;text-align:center;font-"
+"weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B"
+";padding-top: 4px;\"></div><div style=\"font-size:48px;min-height:auto;font-"
+"weight:bold;text-align:center;color: #5F5F5F;background-color: "
+"#F8F8F8;width: 130px;border:1px solid #875A7B;\"></div><div style='font-"
+"size:12px;text-align:center;font-weight:bold;color:#ffffff;background-"
+"color:#875A7B'></div><div style=\"border-collapse:separate;color: #5F5F5F"
+";text-align:center;width: 130px;font-size:12px;border-bottom-right-"
+"radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-"
+"radius:3px;\"></div></td><td "
+"width=\"20px;\"/><td><p></p><ul><li><ul><li><div style=\"display:inline-"
+"block; border-radius: 50%; width:10px; "
+"height:10px;background:${colors[attendee.state] or 'white'};\"></div><span "
+"style=\"margin-left:5px\"></span><span style=\"margin-"
+"left:5px\"></span></li></ul></li></ul></td></tr></table></td></tr></tbody></table></div><li><a"
+" target=\"_blank\" "
+"href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\"></a></li><li></li><li></li>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -146,7 +220,7 @@ msgid ""
 "                    ${object.event_id.user_id.partner_id.name} invited you for the ${object.event_id.name} meeting of ${object.event_id.user_id.company_id.name}.</p>\n"
 "                <table style=\"margin-top: 20px;\"><tr>\n"
 "                    <td>\n"
-"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;\">\n"
+"                        <div style=\"border-top-left-radius:3px;border-top-right-radius:3px;font-size:12px;border-collapse:separate;text-align:center;font-weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B;padding-top: 4px;border:1px solid #875A7B;\">\n"
 "                            ${object.event_id.get_interval('dayname', tz=object.partner_id.tz if not object.event_id.allday else None)}\n"
 "                        </div>\n"
 "                        <div style=\"font-size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F;background-color: #F8F8F8;width: 130px;border:1px solid #875A7B;\">\n"
@@ -161,7 +235,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -191,6 +265,73 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"<div summary=\"o_mail_template\" "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td><td "
+"valign=\"center\" align=\"right\" width=\"340\" style=\"padding:10px 10px "
+"10px 5px; font-size: 12px;\"><p><a "
+"href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-radius:3px\"></a><a "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"'' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-radius:3px\"></a><a "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-"
+"radius:3px\"></a></p></td></tr></tbody></table><table cellspacing=\"0\" "
+"cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"top\" style=\"width:600px; padding:10px 10px 10px 5px;\"><div><hr "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-"
+"height:0;margin:15px "
+"auto;padding:0\"></div></td></tr></tbody></table></div><div "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"style=\"padding:10px 10px 10px 5px;font-size: 14px;\"><p style=\"font-size: "
+"20px; text-align: center;\"><strong></strong></p><p><strong></strong><br "
+"/></p><table style=\"margin-top: 20px;\"><tr><td><div style=\"border-top-"
+"left-radius:3px;border-top-right-radius:3px;font-size:12px;border-"
+"collapse:separate;text-align:center;font-"
+"weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B"
+";padding-top: 4px;border:1px solid #875A7B;\"></div><div style=\"font-"
+"size:48px;min-height:auto;font-weight:bold;text-align:center;color: #5F5F5F"
+";background-color: #F8F8F8;width: 130px;border:1px solid "
+"#875A7B;\"></div><div style='font-size:12px;text-align:center;font-"
+"weight:bold;color:#ffffff;background-color:#875A7B'></div><div style"
+"=\"border-collapse:separate;color: #5F5F5F;text-align:center;width: 130px"
+";font-size:12px;border-bottom-right-radius:3px;font-weight:bold;border:1px "
+"solid #875A7B;border-bottom-left-radius:3px;\"></div></td><td "
+"width=\"20px;\"/><td><p></p><ul><li><ul><li><div style=\"display:inline-"
+"block; border-radius: 50%; width:10px; "
+"height:10px;background:${colors[attendee.state] or 'white'};\"></div><span "
+"style=\"margin-left:5px\"></span><span style=\"margin-"
+"left:5px\"></span></li></ul></li></ul></td></tr></table></td></tr></tbody></table></div><li><a"
+" target=\"_blank\" "
+"href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\"></a></li><li></li><li></li>"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -248,7 +389,7 @@ msgid ""
 "                        <ul>\n"
 "                        % if object.event_id.location:\n"
 "                            <li>Location: ${object.event_id.location}\n"
-"                            (<a href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
+"                            (<a target=\"_blank\" href=\"http://maps.google.com/maps?oi=map&q=${object.event_id.location}\">View Map</a>)\n"
 "                            </li>\n"
 "                        % endif\n"
 "                        % if object.event_id.description :\n"
@@ -278,13 +419,73 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:95
-#, python-format
-msgid " [Me]"
-msgstr " [我]"
+"<div summary=\"o_mail_template\" "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" alt=\"${user.company_id.name}\"></td><td "
+"valign=\"center\" align=\"right\" width=\"340\" style=\"padding:10px 10px "
+"10px 5px; font-size: 12px;\"><p><a "
+"href=\"/calendar/meeting/accept?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-radius:3px\"></a><a "
+"href=\"/calendar/meeting/decline?db=${'dbname' in ctx and ctx['dbname'] or "
+"'' }&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-radius:3px\"></a><a "
+"href=\"/calendar/meeting/view?db=${'dbname' in ctx and ctx['dbname'] or "
+"''}&amp;token=${object.access_token}&amp;action=${'action_id' in ctx and "
+"ctx['action_id'] or ''}&amp;id=${object.event_id.id}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-"
+"radius:3px\"></a></p></td></tr></tbody></table><table cellspacing=\"0\" "
+"cellpadding=\"0\" style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"top\" style=\"width:600px; padding:10px 10px 10px 5px;\"><div><hr "
+"width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium "
+"none;clear:both;display:block;font-size:0px;min-height:1px;line-"
+"height:0;margin:15px "
+"auto;padding:0\"></div></td></tr></tbody></table></div><div "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"style=\"padding:10px 10px 10px 5px;font-size: 14px;\"><p style=\"font-size: "
+"20px; text-align: center;\"><strong></strong></p><p><strong></strong><br "
+"/></p><table style=\"margin-top: 20px;\"><tr><td><div style=\"border-top-"
+"left-radius:3px;border-top-right-radius:3px;font-size:12px;border-"
+"collapse:separate;text-align:center;font-"
+"weight:bold;color:#ffffff;width:130px;min-height: 18px;background:#875A7B"
+";padding-top: 4px;\"></div><div style=\"font-size:48px;min-height:auto;font-"
+"weight:bold;text-align:center;color: #5F5F5F;background-color: "
+"#F8F8F8;width: 130px;border:1px solid #875A7B;\"></div><div style='font-"
+"size:12px;text-align:center;font-weight:bold;color:#ffffff;background-"
+"color:#875A7B'></div><div style=\"border-collapse:separate;color: #5F5F5F"
+";text-align:center;width: 130px;font-size:12px;border-bottom-right-"
+"radius:3px;font-weight:bold;border:1px solid #875A7B;border-bottom-left-"
+"radius:3px;\"></div></td><td "
+"width=\"20px;\"/><td><p></p><ul><li><ul><li><div style=\"display:inline-"
+"block; border-radius: 50%; width:10px; "
+"height:10px;background:${colors[attendee.state] or 'white'};\"></div><span "
+"style=\"margin-left:5px\"></span><span style=\"margin-"
+"left:5px\"></span></li></ul></li></ul></td></tr></table></td></tr></tbody></table></div><li><a"
+" target=\"_blank\" "
+"href=\"http://maps.google.com/maps?oi=map&amp;q=${object.event_id.location}\"></a></li><li></li><li></li>"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_is_highlighted
@@ -307,7 +508,7 @@ msgid "${object.event_id.name}: Date updated"
 msgstr "${object.event_id.name}: 更新日期"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:644
+#: code:addons/calendar/models/calendar.py:720
 #, python-format
 msgid ""
 "%s at %s To\n"
@@ -317,22 +518,57 @@ msgstr ""
 " %s at %s (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:642
+#: code:addons/calendar/models/calendar.py:711
 #, python-format
 msgid "%s at (%s To %s) (%s)"
 msgstr "%s at (%s To %s) (%s)"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:196
+#: code:addons/calendar/models/calendar.py:225
 #, python-format
 msgid "%s has accepted invitation"
 msgstr "%s接受了邀请"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:204
+#: code:addons/calendar/models/calendar.py:233
 #, python-format
 msgid "%s has declined invitation"
 msgstr "%s拒绝了邀请"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_5
+msgid "1 Day(s)"
+msgstr "1天"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_3
+msgid "1 Hour(s)"
+msgstr "1小时"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_1
+msgid "15 Minute(s)"
+msgstr "15分钟"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_4
+msgid "2 Hour(s)"
+msgstr "2小时"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_1
+msgid "3 Hour(s), by e-mail"
+msgstr "3小时发邮件"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_notif_2
+msgid "30 Minute(s)"
+msgstr "20分钟"
+
+#. module: calendar
+#: model:calendar.alarm,name:calendar.alarm_mail_2
+msgid "6 Hour(s), by e-mail"
+msgstr "6小时发邮件"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -358,11 +594,19 @@ msgid "Active"
 msgstr "有效"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:75
-#, python-format
-msgid "Add Favorite Calendar"
-msgstr "加到日历"
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_activity_ids
+msgid "Activities"
+msgstr "活动"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity
+msgid "Activity"
+msgstr "活动"
+
+#. module: calendar
+#: model:ir.model,name:calendar.model_mail_activity_type
+msgid "Activity Type"
+msgstr "活动类型"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_allday
@@ -370,7 +614,7 @@ msgid "All Day"
 msgstr "全天"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:639
+#: code:addons/calendar/models/calendar.py:707
 #, python-format
 msgid "AllDay , %s"
 msgstr "全天，%s"
@@ -409,7 +653,7 @@ msgid "Availability"
 msgstr "可用"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1481
+#: code:addons/calendar/models/calendar.py:1606
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #, python-format
@@ -441,11 +685,16 @@ msgid "Calendar Invitation"
 msgstr "日程邀请"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_mail_activity_calendar_event_id
+msgid "Calendar Meeting"
+msgstr "日历会议"
+
+#. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
 #: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
-msgstr ""
+msgstr "日历：活动提醒"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -458,11 +707,6 @@ msgid "Click to schedule a new meeting."
 msgstr "点击去计划一个新的会议"
 
 #. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_color_partner_id
-msgid "Color index of creator"
-msgstr "创建者的颜色指数"
-
-#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_common_name
 msgid "Common name"
 msgstr "通用名称"
@@ -473,6 +717,7 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: calendar
+#: model:ir.model,name:calendar.model_res_partner
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee_partner_id
 msgid "Contact"
 msgstr "联系"
@@ -556,11 +801,25 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:156
-#, python-format
-msgid "Do you really want to delete this filter from favorites ?"
-msgstr "你真的要从你的喜好中删除这个过滤器吗？"
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
+#: model:ir.ui.view,arch_db:calendar.view_calendar_event_form_popup
+msgid "Document"
+msgstr "单据"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_id
+msgid "Document ID"
+msgstr "文档ID"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model_id
+msgid "Document Model"
+msgstr "文档模型"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_res_model
+msgid "Document Model Name"
+msgstr "单据模型名称"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_duration
@@ -612,13 +871,13 @@ msgid "Ending at"
 msgstr "结束于"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:834
+#: code:addons/calendar/models/calendar.py:915
 #, python-format
 msgid "Ending date cannot be set before starting date."
 msgstr "结束日期不能设置为早于开始日期。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:832
+#: code:addons/calendar/models/calendar.py:913
 #, python-format
 msgid "Ending datetime cannot be set before starting datetime."
 msgstr "结束日期不能设置为早于开始日期。"
@@ -639,22 +898,21 @@ msgid "Event alarm"
 msgstr "活动警报"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1072
+#: code:addons/calendar/models/calendar.py:1164
 #, python-format
 msgid "Event recurrence interval cannot be negative."
 msgstr "事件重复间隔不能为负数"
 
 #. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/js/base_calendar.js:96
-#, python-format
-msgid "Everybody's calendars"
-msgstr "所有人的日历"
-
-#. module: calendar
 #: selection:calendar.event,privacy:0
 msgid "Everyone"
 msgstr "所有人"
+
+#. module: calendar
+#: code:addons/calendar/models/mail_activity.py:38
+#, python-format
+msgid "Feedback: "
+msgstr "反馈："
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -667,7 +925,7 @@ msgid "First"
 msgstr "第一个"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:874
+#: code:addons/calendar/models/calendar.py:955
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr "首先，必须确定邀请的日期"
@@ -704,7 +962,7 @@ msgid "Group By"
 msgstr "分组"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1428
+#: code:addons/calendar/models/calendar.py:1549
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr "目前不支持按日期分组，可以通过日历视图达到此目的。"
@@ -754,7 +1012,7 @@ msgstr "邀请详情"
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Invitation for"
-msgstr ""
+msgstr "邀请"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -801,6 +1059,7 @@ msgstr "最后更新时间"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_res_partner_calendar_last_notif_ack
+#: model:ir.model.fields,field_description:calendar.field_res_users_calendar_last_notif_ack
 msgid "Last notification marked as read from base Calendar"
 msgstr "最后的提醒已经标志为已读"
 
@@ -972,12 +1231,12 @@ msgid "Participant"
 msgstr "参与者"
 
 #. module: calendar
-#: model:ir.model,name:calendar.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
+#: model:ir.model.fields,help:calendar.field_calendar_event_partner_id
+msgid "Partner-related data of the user"
+msgstr "用户的业务伙伴相关数据"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1085
+#: code:addons/calendar/models/calendar.py:1177
 #, python-format
 msgid "Please select a proper day of the month."
 msgstr "请选择这个月合适的一天"
@@ -989,14 +1248,14 @@ msgid "Privacy"
 msgstr "隐私"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
+msgid "Recurrence"
+msgstr "重新提起"
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_end_type
 msgid "Recurrence Termination"
 msgstr "重复终止"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_event_rrule_type
-msgid "Recurrency"
-msgstr "周期"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_recurrency
@@ -1026,19 +1285,12 @@ msgstr "循环规则"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm_duration
 msgid "Remind Before"
-msgstr ""
+msgstr "提醒早于"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_alarm_ids
 msgid "Reminders"
 msgstr "提醒"
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/xml/base_calendar.xml:26
-#, python-format
-msgid "Remove this favorite from the list"
-msgstr "从清单中移除这个收藏"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_count
@@ -1066,10 +1318,16 @@ msgid "Repeat x times"
 msgstr "重复 N 次"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event_partner_id
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_user_id
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
 msgstr "负责人"
+
+#. module: calendar
+#: selection:calendar.alarm,type:0
+msgid "SMS Text Message"
+msgstr "短信"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_sa
@@ -1080,6 +1338,11 @@ msgstr "周六"
 #: selection:calendar.event,week_list:0
 msgid "Saturday"
 msgstr "周六"
+
+#. module: calendar
+#: model:ir.ui.view,arch_db:calendar.mail_activity_view_form_popup
+msgid "Schedule a meeting"
+msgstr "安排会议"
 
 #. module: calendar
 #: model:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1192,12 +1455,21 @@ msgid "The"
 msgstr "这"
 
 #. module: calendar
+#. openerp-web
+#: code:addons/calendar/static/src/js/mail_activity.js:42
+#, python-format
+msgid ""
+"The activity is linked to a meeting. Deleting it will remove the meeting as "
+"well. Do you want to proceed ?"
+msgstr ""
+
+#. module: calendar
 #: model:ir.actions.act_window,help:calendar.action_calendar_event
 msgid ""
 "The calendar is shared between employees and fully integrated with\n"
-"            other applications such as the employee holidays or the business\n"
+"            other applications such as the employee leaves or the business\n"
 "            opportunities."
-msgstr "日历允许员工之间共享，并可以与其它应用程序整合,  如：员工假期或商业机会。"
+msgstr ""
 
 #. module: calendar
 #: selection:calendar.event,byday:0
@@ -1297,7 +1569,7 @@ msgid "Yes I'm going."
 msgstr "我会去。"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:128
+#: code:addons/calendar/models/calendar.py:155
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr "你不能复制日程参与者"
@@ -1318,7 +1590,7 @@ msgid "e.g. Business Lunch"
 msgstr "例如:商务午餐"
 
 #. module: calendar
-#: code:addons/calendar/models/calendar.py:1070
+#: code:addons/calendar/models/calendar.py:1162
 #, python-format
 msgid "interval cannot be negative."
 msgstr "间隔不能是负数。"

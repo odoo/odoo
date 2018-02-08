@@ -9,6 +9,7 @@
         <div id="o_scroll">
             <div id="email_designer_themes">
                 <div data-name="basic"
+                     data-nowrap="1"
                      data-img="/mass_mailing/static/src/img/theme_imgs/basic_thumb"
                      data-images-info='{"logo": {"format": "png"}}'>
                     <t t-call="mass_mailing.theme_basic_template"/>
@@ -85,7 +86,7 @@
                     <td width="70%"  class="o_mail_logo_container o_mail_h_padding o_mail_v_padding">
                         &amp;nbsp;
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
-                             <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;" alt="Your Logo" />
+                             <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;" alt="Your Logo" />
                         </a>
                         &amp;nbsp;
                     </td>
@@ -123,7 +124,7 @@
                     <td width="20%"/>
                     <td valign="center" width="60%" class="text-center o_mail_v_padding">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
-                            <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;width:auto" alt="Your Logo" />
+                            <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;width:auto" alt="Your Logo" />
                         </a>
                     </td>
                     <td width="20%" style="text-align:right"/>
@@ -141,7 +142,7 @@
                     <tr>
                         <td width="100%" valign="top" class="o_mail_full_width_padding">
                             <a href="#">
-                                <img src="/web/image/mass_mailing.s_default_image_block_banner" class="center-block" alt="Your Banner Image" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_banner.jpg" class="center-block" alt="Your Banner Image" />
                             </a>
                         </td>
                     </tr>
@@ -354,7 +355,7 @@
                     <tr>
                         <td style="vertical-align:top;width:270px;" class="o_mail_col_mv">
                             <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_two_cols_1" class="center-block" alt="Your Picture" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_two_cols_1.jpg" class="center-block" alt="Your Picture" />
                                 <h4 class="text-center">Column title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     Write one paragraph describing your product,
@@ -369,7 +370,7 @@
 
                         <td style="vertical-align:top;width:270px;" class="o_mail_col_mv">
                             <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_two_cols_2" class="center-block" alt="Your Picture" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_two_cols_2.jpg" class="center-block" alt="Your Picture" />
                                 <h4 class="text-center">Column title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     Write one paragraph describing your product,
@@ -396,7 +397,7 @@
                     <tr>
                         <td style="vertical-align:top;width:180px;" class="o_mail_col_mv">
                             <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_three_cols_1" class="center-block" alt="Your Picture" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_1.jpg" class="center-block" alt="Your Picture" />
                                 <h4 class="text-center">Column Title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     A short description
@@ -409,7 +410,7 @@
 
                         <td style="vertical-align:top;width:180px;" class="o_mail_col_mv">
                             <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_three_cols_2" class="center-block" alt="Your Picture" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_2.jpg" class="center-block" alt="Your Picture" />
                                 <h4 class="text-center">Column Title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     A short description
@@ -422,7 +423,7 @@
 
                         <td style="vertical-align:top;width:180px;" class="o_mail_col_mv">
                             <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_three_cols_3" class="center-block" alt="Your Picture" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_3.jpg" class="center-block" alt="Your Picture" />
                                 <h4 class="text-center">Column Title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     A short description
@@ -446,7 +447,7 @@
                 <tbody>
                     <tr>
                         <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_col_mv o_mail_img_container o_mail_h_padding o_mail_v_padding">
-                            <img src="/web/image/mass_mailing.s_default_image_block_image_text" class="center-block" alt="Your Picture" />
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_image_text.jpg" class="center-block" alt="Your Picture" />
                         </td>
                         <td style="width:270px;vertical-align:middle;text-align:center;" class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
                             <h3>Omnichannel sales</h3>
@@ -476,7 +477,7 @@
                             </div>
                         </td>
                         <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_img_container o_mail_h_padding o_mail_v_padding">
-                            <img src="/web/image/mass_mailing.s_default_image_block_text_image" class="center-block" alt="Your Picture" />
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_text_image.jpg" class="center-block" alt="Your Picture" />
                         </td>
                     </tr>
                 </tbody>
@@ -492,7 +493,7 @@
                 <tbody>
                     <tr>
                         <td width="100%" align="center" style="text-align:center" class="">
-                            <img src="/web/image/mass_mailing.s_default_image_block_image" class="center-block" alt="Your Picture" />
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_image.jpg" class="center-block" alt="Your Picture" />
                         </td>
                     </tr>
                     <tr>
@@ -638,7 +639,7 @@
                         <p class="o_mail_no_margin">ALL DAY</p>
                     </td>
                     <td style="width:25%;min-height: 150px;" class="text-center bg-delta o_mail_col_mv">
-                        <img src="/web/image/mass_mailing.s_default_image_block_event" class="center-block" alt="Your Picture" />
+                        <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_event.jpg" class="center-block" alt="Your Picture" />
                     </td>
                     <td class="o_mail_h_padding o_mail_v_padding o_mail_col_mv" style="min-height: 150px;">
                         <div style="min-height: 111px">

@@ -148,11 +148,11 @@
                                             <field name="name"/>
                                         </div>
                                         <div t-if="record.type.raw_value == 'binary'">
-                                            <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                                            <a t-attf-href="/web/content/#{record.id.raw_value}?download=1">
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
                                                 <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                                                    <img t-attf-src="/web/image/#{record.id.raw_value}?download=1"/>
                                                 </div>
                                             </a>
                                         </div>
@@ -167,8 +167,8 @@
         <record id="base.action_attachment" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to attach a new document.
+              <p class="o_view_nocontent_smiling_face">
+                Attach a new document
               </p>
             </field>
         </record>

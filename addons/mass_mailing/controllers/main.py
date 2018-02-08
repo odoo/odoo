@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 import werkzeug
 
@@ -16,10 +17,10 @@ class MassMailController(http.Controller):
         if mailing.exists():
             res_id = res_id and int(res_id)
             res_ids = []
-            if mailing.mailing_model == 'mail.mass_mailing.contact':
+            if mailing.mailing_model_name == 'mail.mass_mailing.list':
                 contacts = request.env['mail.mass_mailing.contact'].sudo().search([
                     ('email', '=', email),
-                    ('list_id', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
+                    ('list_ids', 'in', [mailing_list.id for mailing_list in mailing.contact_list_ids])
                 ])
                 res_ids = contacts.ids
             else:
@@ -37,7 +38,7 @@ class MassMailController(http.Controller):
         request.env['mail.mail.statistics'].sudo().set_opened(mail_mail_ids=[mail_id])
         response = werkzeug.wrappers.Response()
         response.mimetype = 'image/gif'
-        response.data = 'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='.decode('base64')
+        response.data = base64.b64decode(b'R0lGODlhAQABAIAAANvf7wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==')
 
         return response
 

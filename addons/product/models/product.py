@@ -9,7 +9,7 @@ from odoo.osv import expression
 
 from odoo.addons import decimal_precision as dp
 
-from odoo.tools import pycompat
+from odoo.tools import float_compare, pycompat
 
 
 class ProductCategory(models.Model):
@@ -42,10 +42,13 @@ class ProductCategory(models.Model):
                 category.complete_name = category.name
 
     def _compute_product_count(self):
-        read_group_res = self.env['product.template'].read_group([('categ_id', 'in', self.ids)], ['categ_id'], ['categ_id'])
+        read_group_res = self.env['product.template'].read_group([('categ_id', 'child_of', self.ids)], ['categ_id'], ['categ_id'])
         group_data = dict((data['categ_id'][0], data['categ_id_count']) for data in read_group_res)
         for categ in self:
-            categ.product_count = group_data.get(categ.id, 0)
+            product_count = 0
+            for sub_categ_id in categ.search([('id', 'child_of', categ.id)]).ids:
+                product_count += group_data.get(sub_categ_id, 0)
+            categ.product_count = product_count
 
     @api.constrains('parent_id')
     def _check_category_recursion(self):
@@ -78,7 +81,7 @@ class ProductProduct(models.Model):
     _name = "product.product"
     _description = "Product"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'default_code, name, id'
 
     price = fields.Float(
@@ -127,12 +130,13 @@ class ProductProduct(models.Model):
         'Cost', company_dependent=True,
         digits=dp.get_precision('Product Price'),
         groups="base.group_user",
-        help="Cost used for standard stock valuation in accounting and used as a base price on purchase orders. "
-             "Expressed in the default unit of measure of the product.")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+               "Also used as a base price for pricelists. "
+               "Expressed in the default unit of measure of the product.")
     volume = fields.Float('Volume', help="The volume in m3.")
     weight = fields.Float(
         'Weight', digits=dp.get_precision('Stock Weight'),
-        help="The weight of the contents in Kg, not including any packaging, etc.")
+        help="Weight of the product, packaging not included. The unit of measure can be changed in the general settings")
 
     pricelist_item_ids = fields.Many2many(
         'product.pricelist.item', 'Pricelist Items', compute='_get_pricelist_items')
@@ -154,7 +158,7 @@ class ProductProduct(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, basestring):
+            if isinstance(pricelist_id_or_name, pycompat.string_types):
                 pricelist_name_search = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
                 if pricelist_name_search:
                     pricelist = self.env['product.pricelist'].browse([pricelist_name_search[0][0]])
@@ -260,6 +264,8 @@ class ProductProduct(models.Model):
 
     @api.one
     def _set_image_value(self, value):
+        if isinstance(value, pycompat.text_type):
+            value = value.encode('ascii')
         image = tools.image_resize_image_big(value)
         if self.product_tmpl_id.image:
             self.image_variant = image
@@ -280,7 +286,8 @@ class ProductProduct(models.Model):
             for value in product.attribute_value_ids:
                 if value.attribute_id in attributes:
                     raise ValidationError(_('Error! It is not allowed to choose more than one value for a given attribute.'))
-                attributes |= value.attribute_id
+                if value.attribute_id.create_variant:
+                    attributes |= value.attribute_id
         return True
 
     @api.onchange('uom_id', 'uom_po_id')
@@ -291,7 +298,9 @@ class ProductProduct(models.Model):
     @api.model
     def create(self, vals):
         product = super(ProductProduct, self.with_context(create_product_product=True)).create(vals)
-        product._set_standard_price(vals.get('standard_price', 0.0))
+        # When a unique variant is created from tmpl then the standard price is set by _set_standard_price
+        if not (self.env.context.get('create_from_tmpl') and len(product.product_tmpl_id.product_variant_ids) == 1):
+            product._set_standard_price(vals.get('standard_price') or 0.0)
         return product
 
     @api.multi
@@ -455,13 +464,18 @@ class ProductProduct(models.Model):
                 'res_id': self.product_tmpl_id.id,
                 'target': 'new'}
 
+    def _prepare_sellers(self, params):
+        return self.seller_ids
+
     @api.multi
-    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False):
+    def _select_seller(self, partner_id=False, quantity=0.0, date=None, uom_id=False, params=False):
         self.ensure_one()
         if date is None:
-            date = fields.Date.today()
+            date = fields.Date.context_today(self)
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
         res = self.env['product.supplierinfo']
-        for seller in self.seller_ids:
+        for seller in self._prepare_sellers(params):
             # Set quantity in UoM of seller
             quantity_uom_seller = quantity
             if quantity_uom_seller and uom_id and uom_id != seller.product_uom:
@@ -473,7 +487,7 @@ class ProductProduct(models.Model):
                 continue
             if partner_id and seller.name not in [partner_id, partner_id.parent_id]:
                 continue
-            if quantity_uom_seller < seller.min_qty:
+            if float_compare(quantity_uom_seller, seller.min_qty, precision_digits=precision) == -1:
                 continue
             if seller.product_id and seller.product_id != self:
                 continue
@@ -536,13 +550,15 @@ class ProductProduct(models.Model):
         history = self.env['product.price.history'].search([
             ('company_id', '=', company_id),
             ('product_id', 'in', self.ids),
-            ('datetime', '<=', date or fields.Datetime.now())], limit=1)
+            ('datetime', '<=', date or fields.Datetime.now())], order='datetime desc,id desc', limit=1)
         return history.cost or 0.0
 
-    def _need_procurement(self):
-        # When sale/product is installed alone, there is no need to create procurements. Only
-        # sale_stock and sale_service need procurements
-        return False
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductProduct, self).get_empty_list_help(help)
 
 
 class ProductPackaging(models.Model):
@@ -553,7 +569,7 @@ class ProductPackaging(models.Model):
     name = fields.Char('Package Type', required=True)
     sequence = fields.Integer('Sequence', default=1, help="The first in the sequence is the default one.")
     product_id = fields.Many2one('product.product', string='Product')
-    qty = fields.Float('Quantity per Package', help="The total number of products you can have per pallet or box.")
+    qty = fields.Float('Contained Quantity', help="The total number of products you can have per pallet or box.")
     barcode = fields.Char('Barcode', copy=False, help="Barcode used for packaging identification.")
 
 
@@ -595,10 +611,11 @@ class SupplierInfo(models.Model):
     date_end = fields.Date('End Date', help="End date for this vendor price")
     product_id = fields.Many2one(
         'product.product', 'Product Variant',
-        help="When this field is filled in, the vendor data will only apply to the variant.")
+        help="If not set, the vendor price will apply to all variants of this products.")
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',
         index=True, ondelete='cascade', oldname='product_id')
+    product_variant_count = fields.Integer('Variant Count', related='product_tmpl_id.product_variant_count')
     delay = fields.Integer(
         'Delivery Lead Time', default=1, required=True,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.")

@@ -50,7 +50,10 @@ class SaleOrder(models.Model):
     def _get_default_template(self):
         template = self.env.ref('website_quote.website_quote_template_default', raise_if_not_found=False)
         return template and template.active and template or False
-        
+
+    def _get_default_online_payment(self):
+        return 1 if self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') == 'pay' else 0
+
     template_id = fields.Many2one(
         'sale.quote.template', 'Quotation Template',
         readonly=True,
@@ -65,10 +68,11 @@ class SaleOrder(models.Model):
         'Amount Before Discount', compute='_compute_amount_undiscounted', digits=0)
     quote_viewed = fields.Boolean('Quotation Viewed')
     require_payment = fields.Selection([
-        (0, 'Not mandatory on website quote validation'),
-        (1, 'Immediate after website order validation'),
-        (2, 'Immediate after website order validation and save a token'),
-    ], 'Payment', default=0, help="Require immediate payment by the customer when validating the order from the website quote")
+        (0, 'Online Signature'),
+        (1, 'Online Payment')], default=_get_default_online_payment, string='Confirmation Mode',
+        help="Choose how you want to confirm an order to launch the delivery process. You can either "
+             "request a digital signature or an upfront payment. With a digital signature, you can "
+             "request the payment when issuing the invoice.")
 
     @api.multi
     def copy(self, default=None):
@@ -105,15 +109,20 @@ class SaleOrder(models.Model):
 
         order_lines = [(5, 0, 0)]
         for line in template.quote_line:
+            discount = 0
             if self.pricelist_id:
                 price = self.pricelist_id.with_context(uom=line.product_uom_id.id).get_product_price(line.product_id, 1, False)
+                if self.pricelist_id.discount_policy == 'without_discount' and line.price_unit:
+                    discount = (line.price_unit - price) / line.price_unit * 100
+                    price = line.price_unit
+
             else:
                 price = line.price_unit
 
             data = {
                 'name': line.name,
                 'price_unit': price,
-                'discount': line.discount,
+                'discount': 100 - ((100 - discount) * (100 - line.discount)/100),
                 'product_uom_qty': line.product_uom_qty,
                 'product_id': line.product_id.id,
                 'layout_category_id': line.layout_category_id,
@@ -189,16 +198,11 @@ class SaleOrder(models.Model):
             return '/quote/%s/%s?' % (self.id, self.access_token) + auth_param
         return super(SaleOrder, self).get_mail_url()
 
-    @api.multi
-    def _confirm_online_quote(self, transaction):
-        """ Payment callback: validate the order and write transaction details in chatter """
-        # create draft invoice if transaction is ok
-        if transaction and transaction.state == 'done':
-            transaction._confirm_so()
-            message = _('Order paid by %s. Transaction: %s. Amount: %s.') % (transaction.partner_id.name, transaction.acquirer_reference, transaction.amount)
-            self.message_post(body=message)
-            return True
-        return False
+    def get_portal_confirmation_action(self):
+        """ Template override default behavior of pay / sign chosen in sales settings """
+        if self.template_id:
+            return 'sign' if self.require_payment == 1 else 'pay'
+        return super(SaleOrder, self).get_portal_confirmation_action()
 
     @api.multi
     def action_confirm(self):
@@ -211,10 +215,7 @@ class SaleOrder(models.Model):
     @api.multi
     def _get_payment_type(self):
         self.ensure_one()
-        if self.require_payment == 2:
-            return 'form_save'
-        else:
-            return 'form'
+        return 'form_save' if self.require_payment else 'form'
 
 
 class SaleOrderOption(models.Model):
@@ -261,7 +262,8 @@ class SaleOrderOption(models.Model):
 
         order_line = order.order_line.filtered(lambda line: line.product_id == self.product_id)
         if order_line:
-            order_line[0].product_uom_qty += 1
+            order_line = order_line[0]
+            order_line.product_uom_qty += 1
         else:
             vals = {
                 'price_unit': self.price_unit,

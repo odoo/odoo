@@ -4,7 +4,6 @@
 import time
 
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 
 class ProductProduct(models.Model):
@@ -18,9 +17,9 @@ class ProductProduct(models.Model):
             ('open_paid', 'Open and Paid'),
             ('draft_open_paid', 'Draft, Open and Paid')
         ], string='Invoice State', readonly=True)
-    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Sale Unit Price',
         help="Avg. Price in Customer Invoices.")
-    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Purchase Unit Price',
         help="Avg. Price in Vendor Bills ")
     sale_num_invoiced = fields.Float(compute='_compute_product_margin_fields_values', string='# Invoiced in Sale',
         help="Sum of Quantity in Customer Invoices")
@@ -139,6 +138,6 @@ class ProductProduct(models.Model):
             res[val.id]['expected_margin'] = res[val.id]['sale_expected'] - res[val.id]['normal_cost']
             res[val.id]['total_margin_rate'] = res[val.id]['turnover'] and res[val.id]['total_margin'] * 100 / res[val.id]['turnover'] or 0.0
             res[val.id]['expected_margin_rate'] = res[val.id]['sale_expected'] and res[val.id]['expected_margin'] * 100 / res[val.id]['sale_expected'] or 0.0
-            for k, v in pycompat.items(res[val.id]):
+            for k, v in res[val.id].items():
                 setattr(val, k, v)
         return res

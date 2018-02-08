@@ -10,12 +10,13 @@ class HrOrgChartController(http.Controller):
     _managers_level = 2  # FP request
 
     def _prepare_employee_data(self, employee):
+        job = employee.sudo().job_id
         return dict(
             id=employee.id,
             name=employee.name,
             link='/mail/view?model=hr.employee&res_id=%s' % employee.id,
-            job_id=employee.job_id.id,
-            job_name=employee.job_id.name or '',
+            job_id=job.id,
+            job_name=job.name or '',
             direct_sub_count=len(employee.child_ids),
             indirect_sub_count=employee.child_all_count,
         )

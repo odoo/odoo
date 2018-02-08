@@ -12,12 +12,12 @@
                <field name="user_id"/>
                <field name="calendar_id"/>
                <field name="company_id" groups="base.group_multi_company"/>
-               <filter string="Inactive" domain="[('active','=',False)]"/>
+               <filter string="Inactive" name="inactive" domain="[('active','=',False)]"/>
                <group expand="0" string="Group By">
-                    <filter string="User" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Type" domain="[]" context="{'group_by':'resource_type'}"/>
-                    <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Working Period" domain="[]" context="{'group_by':'calendar_id'}"/>
+                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Type" name="type" domain="[]" context="{'group_by':'resource_type'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Working Period" name="working_period" domain="[]" context="{'group_by':'calendar_id'}"/>
                 </group>
            </search>
         </field>
@@ -91,9 +91,9 @@
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="calendar_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Resource" domain="[]" context="{'group_by':'resource_id'}"/>
-                    <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <filter string="Leave Month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave by Month"/>
+                    <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Leave Month" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave by Month"/>
                 </group>
            </search>
         </field>
@@ -208,7 +208,7 @@
                     <field name="dayofweek"/>
                     <label for="hour_from" string="Hours"/>
                     <div>
-                        <field name="hour_from" widget="float_time" class="oe_inline"/> - 
+                        <field name="hour_from" widget="float_time" class="oe_inline"/> -
                         <field name="hour_to" widget="float_time" class="oe_inline"/>
                     </div>
                 </group>
@@ -249,6 +249,7 @@
                     </h1>
                     <group>
                         <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="hours_per_day"/>
                     </group>
                     <notebook>
                         <page string="Working Hours">
@@ -260,6 +261,7 @@
                                     <field name="name"/>
                                     <field name="date_from"/>
                                     <field name="date_to"/>
+                                    <field name="tz"/>
                                 </tree>
                             </field>
                         </page>
@@ -288,7 +290,7 @@
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="view_resource_calendar_search"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
+          <p class="o_view_nocontent_smiling_face">
             Define working hours and time table that could be scheduled to your project members
           </p>
         </field>

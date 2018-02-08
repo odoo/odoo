@@ -21,8 +21,6 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 from psycopg2.pool import PoolError
 from werkzeug import urls
 
-from .tools import pycompat
-
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
 _logger = logging.getLogger(__name__)
@@ -43,13 +41,14 @@ def undecimalize(symb, cr):
         return None
     return float(symb)
 
-for name, typeoid in pycompat.items(types_mapping):
+for name, typeoid in types_mapping.items():
     psycopg2.extensions.register_type(psycopg2.extensions.new_type(typeoid, name, lambda x, cr: x))
 psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,), 'float', undecimalize))
 
 
 from . import tools
 from .tools.func import frame_codeinfo
+from .tools import pycompat
 
 from .tools import parse_version as pv
 if pv(psycopg2.__version__) < pv('2.7'):
@@ -60,8 +59,8 @@ if pv(psycopg2.__version__) < pv('2.7'):
             raise ValueError("A string literal cannot contain NUL (0x00) characters.")
         return QuotedString(adapted)
 
-    psycopg2.extensions.register_adapter(str, adapt_string)
-    psycopg2.extensions.register_adapter(unicode, adapt_string)
+    for type_ in pycompat.string_types:
+        psycopg2.extensions.register_adapter(type_, adapt_string)
 
 from datetime import timedelta
 import threading
@@ -269,7 +268,7 @@ class Cursor(object):
             sqllogs = {'from': self.sql_from_log, 'into': self.sql_into_log}
             sum = 0
             if sqllogs[type]:
-                sqllogitems = pycompat.items(sqllogs[type])
+                sqllogitems = sqllogs[type].items()
                 _logger.debug("SQL LOG %s:", type)
                 for r in sorted(sqllogitems, key=lambda k: k[1]):
                     delay = timedelta(microseconds=r[1][1])
@@ -606,7 +605,7 @@ class ConnectionPool(object):
                     cnx.close()
                 break
         else:
-            raise PoolError('This connection does not below to the pool')
+            raise PoolError('This connection does not belong to the pool')
 
     @locked
     def close_all(self, dsn=None):
@@ -669,7 +668,7 @@ def connection_info_for(db_or_uri):
         return db_name, {'dsn': db_or_uri}
 
     connection_info = {'database': db_or_uri}
-    for p in ('host', 'port', 'user', 'password'):
+    for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
         if cfg:
             connection_info[p] = cfg

@@ -11,6 +11,7 @@
          <field name="name">U.A.E Chart of Accounts - Standard</field>
          <field name="code_digits">6</field>
          <field name="bank_account_code_prefix">101</field>
+         <field name="cash_account_code_prefix">105</field>
          <field name="currency_id" ref="base.AED" />
          <field name="transfer_account_id" ref="transfer_account_id"/>
          <field name="complete_tax_set" eval="False"/>
@@ -1486,6 +1487,7 @@
          <field name="type_tax_use">sale</field>
          <field name="account_id" ref="uae_account_3785"/>
          <field name="refund_account_id" ref="uae_account_3785"/>
+         <field name="tax_group_id" ref="tax_group_15"/>
      </record>
 
      <record id="purchase_tax_template" model="account.tax.template">
@@ -1495,5 +1497,6 @@
          <field name="type_tax_use">purchase</field>
          <field name="account_id" ref="uae_account_3726"/>
          <field name="refund_account_id" ref="uae_account_3726"/>
+         <field name="tax_group_id" ref="tax_group_15"/>
      </record>
 </odoo>

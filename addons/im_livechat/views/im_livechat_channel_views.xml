@@ -7,8 +7,8 @@
             <field name="res_model">im_livechat.channel</field>
             <field name="view_mode">kanban,form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new website live chat channel.
+              <p class="o_view_nocontent_smiling_face">
+                Define a new website live chat channel
               </p><p>
                 You can create channels for each website on which you want
                 to integrate the website live chat widget, allowing your website
@@ -39,7 +39,7 @@
                                     <img t-att-src="kanban_image('im_livechat.channel', 'image_medium', record.id.raw_value)" class="img-responsive"/>
                                 </div>
                                 <div class="oe_kanban_details">
-                                    <strong><field name="name"/></strong>
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
                                     <div>
                                         <p>
                                             <i class="fa fa-user"></i>
@@ -110,7 +110,7 @@
                                                 <div class="oe_group_details" style="min-height: 40px">
                                                     <img t-att-src="kanban_image('res.users', 'image', record.id.raw_value)"
                                                         class="oe_avatar oe_kanban_avatar_smallbox" style="float:left; margin-right: 10px;"/>
-                                                    <h4><field name="name"/></h4>
+                                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                                 </div>
                                             </div>
                                         </t>
@@ -133,11 +133,11 @@
                         <p>
                             Copy and paste this code into your website, within the &lt;head&gt; tag:
                         </p>
-                        <field name="script_external" readonly="1" class="badge"/>
+                        <field name="script_external" readonly="1" widget="CopyClipboardText"/>
                         <p>
                             or copy this url and send it by email to your customers or suppliers:
                         </p>
-                        <field name="web_page" readonly="1" class="badge"/>
+                        <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
                         <p>For website built with Odoo CMS, please install the website_livechat module. Then go to Website Admin > Configuration > Settings and select the Website Live Chat Channel you want to add on your website.</p>
                     </div>
 
@@ -206,8 +206,8 @@
             <field name="view_id" ref="im_livechat_canned_response_view_tree"/>
             <field name="domain">[('shortcode_type','=','text')]</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new canned response.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new canned response
               </p><p>
                 Canned responses allow you to insert prewritten responses in
                 your messages by typing <i>:shortcut</i>. The shortcut is

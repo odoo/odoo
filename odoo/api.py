@@ -55,7 +55,7 @@ from weakref import WeakSet
 from decorator import decorator
 from werkzeug.local import Local, release_local
 
-from odoo.tools import frozendict, classproperty, pycompat
+from odoo.tools import frozendict, classproperty, StackMap
 
 _logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ class Params(object):
         params = []
         for arg in self.args:
             params.append(repr(arg))
-        for item in sorted(pycompat.items(self.kwargs)):
+        for item in sorted(self.kwargs.items()):
             params.append("%s=%r" % item)
         return ', '.join(params)
 
@@ -100,7 +100,7 @@ class Meta(type):
         # dummy parent class to catch overridden methods decorated with 'returns'
         parent = type.__new__(meta, name, bases, {})
 
-        for key, value in list(pycompat.items(attrs)):
+        for key, value in list(attrs.items()):
             if not key.startswith('__') and callable(value):
                 # make the method inherit from decorators
                 value = propagate(getattr(parent, key, None), value)
@@ -155,6 +155,14 @@ def constrains(*args):
         ``@constrains`` only supports simple field names, dotted names
         (fields of relational fields e.g. ``partner_id.customer``) are not
         supported and will be ignored
+
+        ``@constrains`` will be triggered only if the declared fields in the
+        decorated method are included in the ``create`` or ``write`` call.
+        It implies that fields not present in a view will not trigger a call
+        during a record creation. A override of ``create`` is necessary to make
+        sure a constraint will always be triggered (e.g. to test the absence of
+        value).
+
     """
     return attrsetter('_constrains', args)
 
@@ -684,9 +692,9 @@ def call_kw(model, name, args, kwargs):
 class Environment(Mapping):
     """ An environment wraps data for ORM records:
 
-         - :attr:`cr`, the current database cursor;
-         - :attr:`uid`, the current user id;
-         - :attr:`context`, the current context dictionary.
+        - :attr:`cr`, the current database cursor;
+        - :attr:`uid`, the current user id;
+        - :attr:`context`, the current context dictionary.
 
         It provides access to the registry by implementing a mapping from model
         names to new api models. It also holds a cache for records, and a data
@@ -732,8 +740,8 @@ class Environment(Mapping):
         self = object.__new__(cls)
         self.cr, self.uid, self.context = self.args = (cr, uid, frozendict(context))
         self.registry = Registry(cr.dbname)
-        self.cache = defaultdict(dict)              # {field: {id: value, ...}, ...}
-        self._protected = defaultdict(frozenset)    # {field: ids, ...}
+        self.cache = envs.cache
+        self._protected = StackMap()                # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
         envs.add(self)
@@ -828,39 +836,11 @@ class Environment(Mapping):
         """ Return whether we are in 'onchange' draft mode. """
         return self.all.mode == 'onchange'
 
-    def invalidate(self, spec):
-        """ Invalidate some fields for some records in the cache of all
-            environments.
-
-            :param spec: what to invalidate, a list of `(field, ids)` pair,
-                where ``field`` is a field object, and ``ids`` is a list of record
-                ids or ``None`` (to invalidate all records).
-        """
-        if not spec:
-            return
-        for env in list(self.all):
-            c = env.cache
-            for field, ids in spec:
-                if ids is None:
-                    if field in c:
-                        del c[field]
-                else:
-                    field_cache = c[field]
-                    for id in ids:
-                        field_cache.pop(id, None)
-
-    def invalidate_all(self):
-        """ Clear the cache of all environments. """
-        for env in list(self.all):
-            env.cache.clear()
-            env._protected.clear()
-            env.dirty.clear()
-
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
-        self.invalidate_all()
+        self.cache.invalidate()
         self.all.todo.clear()
 
     @contextmanager
@@ -881,14 +861,15 @@ class Environment(Mapping):
     @contextmanager
     def protecting(self, fields, records):
         """ Prevent the invalidation or recomputation of ``fields`` on ``records``. """
-        saved = {}
+        protected = self._protected
         try:
+            protected.pushmap()
             for field in fields:
-                ids = saved[field] = self._protected[field]
-                self._protected[field] = ids.union(records._ids)
+                ids = protected.get(field, frozenset())
+                protected[field] = ids.union(records._ids)
             yield
         finally:
-            self._protected.update(saved)
+            protected.popmap()
 
     def field_todo(self, field):
         """ Return a recordset with all records to recompute for ``field``. """
@@ -931,36 +912,6 @@ class Environment(Mapping):
         field = min(self.all.todo, key=self.registry.field_sequence)
         return field, self.all.todo[field][0]
 
-    def check_cache(self):
-        """ Check the cache consistency. """
-        from odoo.fields import SpecialValue
-
-        # make a full copy of the cache, and invalidate it
-        cache_dump = dict(
-            (field, dict(field_cache))
-            for field, field_cache in pycompat.items(self.cache)
-        )
-        self.invalidate_all()
-
-        # re-fetch the records, and compare with their former cache
-        invalids = []
-        for field, field_dump in pycompat.items(cache_dump):
-            records = self[field.model_name].browse(f for f in field_dump if f)
-            for record in records:
-                try:
-                    cached = field_dump[record.id]
-                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
-                    value = field.convert_to_record(cached, record)
-                    fetched = record[field.name]
-                    if fetched != value:
-                        info = {'cached': value, 'fetched': fetched}
-                        invalids.append((field, record, info))
-                except (AccessError, MissingError):
-                    pass
-
-        if invalids:
-            raise UserError('Invalid cache for fields\n' + pformat(invalids))
-
     @property
     def recompute(self):
         return self.all.recompute
@@ -979,6 +930,7 @@ class Environments(object):
     """ A common object for all environments in a request. """
     def __init__(self):
         self.envs = WeakSet()           # weak set of environments
+        self.cache = Cache()            # cache for all records
         self.todo = {}                  # recomputations {field: [records]}
         self.mode = False               # flag for draft/onchange
         self.recompute = True
@@ -990,6 +942,132 @@ class Environments(object):
     def __iter__(self):
         """ Iterate over environments. """
         return iter(self.envs)
+
+
+class Cache(object):
+    """ Implementation of the cache of records. """
+    def __init__(self):
+        # {field: {record_id: {key: value}}}
+        self._data = defaultdict(lambda: defaultdict(dict))
+
+    def contains(self, record, field):
+        """ Return whether ``record`` has a value for ``field``. """
+        key = field.cache_key(record)
+        return key in self._data[field].get(record.id, ())
+
+    def get(self, record, field):
+        """ Return the value of ``field`` for ``record``. """
+        key = field.cache_key(record)
+        value = self._data[field][record.id][key]
+        return value.get() if isinstance(value, SpecialValue) else value
+
+    def set(self, record, field, value):
+        """ Set the value of ``field`` for ``record``. """
+        key = field.cache_key(record)
+        self._data[field][record.id][key] = value
+
+    def remove(self, record, field):
+        """ Remove the value of ``field`` for ``record``. """
+        key = field.cache_key(record)
+        del self._data[field][record.id][key]
+
+    def contains_value(self, record, field):
+        """ Return whether ``record`` has a regular value for ``field``. """
+        key = field.cache_key(record)
+        value = self._data[field][record.id].get(key, SpecialValue(None))
+        return not isinstance(value, SpecialValue)
+
+    def get_value(self, record, field, default=None):
+        """ Return the regular value of ``field`` for ``record``. """
+        key = field.cache_key(record)
+        value = self._data[field][record.id].get(key, SpecialValue(None))
+        return default if isinstance(value, SpecialValue) else value
+
+    def set_special(self, record, field, getter):
+        """ Set the value of ``field`` for ``record`` to return ``getter()``. """
+        key = field.cache_key(record)
+        self._data[field][record.id][key] = SpecialValue(getter)
+
+    def set_failed(self, records, fields, exception):
+        """ Mark ``fields`` on ``records`` with the given exception. """
+        def getter():
+            raise exception
+        for field in fields:
+            for record in records:
+                self.set_special(record, field, getter)
+
+    def get_fields(self, record):
+        """ Return the fields with a value for ``record``. """
+        for name, field in record._fields.items():
+            key = field.cache_key(record)
+            if name != 'id' and key in self._data[field].get(record.id, ()):
+                yield field
+
+    def get_records(self, model, field):
+        """ Return the records of ``model`` that have a value for ``field``. """
+        key = field.cache_key(model)
+        # optimization: do not field.cache_key(record) for each record in cache
+        ids = [
+            record_id
+            for record_id, field_record_cache in self._data[field].items()
+            if key in field_record_cache
+        ]
+        return model.browse(ids)
+
+    def invalidate(self, spec=None):
+        """ Invalidate the cache, partially or totally depending on ``spec``. """
+        if spec is None:
+            self._data.clear()
+        elif spec:
+            data = self._data
+            for field, ids in spec:
+                if ids is None:
+                    data.pop(field, None)
+                else:
+                    field_cache = data[field]
+                    for id in ids:
+                        field_cache.pop(id, None)
+
+    def check(self, env):
+        """ Check the consistency of the cache for the given environment. """
+        # make a full copy of the cache, and invalidate it
+        dump = defaultdict(dict)
+        for field, field_cache in self._data.items():
+            browse = env[field.model_name].browse
+            for record_id, field_record_cache in field_cache.items():
+                if record_id:
+                    key = field.cache_key(browse(record_id))
+                    if key in field_record_cache:
+                        dump[field][record_id] = field_record_cache[key]
+
+        self.invalidate()
+
+        # re-fetch the records, and compare with their former cache
+        invalids = []
+        for field, field_dump in dump.items():
+            records = env[field.model_name].browse(field_dump)
+            for record in records:
+                try:
+                    cached = field_dump[record.id]
+                    cached = cached.get() if isinstance(cached, SpecialValue) else cached
+                    value = field.convert_to_record(cached, record)
+                    fetched = record[field.name]
+                    if fetched != value:
+                        info = {'cached': value, 'fetched': fetched}
+                        invalids.append((record, field, info))
+                except (AccessError, MissingError):
+                    pass
+
+        if invalids:
+            raise UserError('Invalid cache for fields\n' + pformat(invalids))
+
+
+class SpecialValue(object):
+    """ Wrapper for a function to get the cached value of a field. """
+    __slots__ = ['get']
+
+    def __init__(self, getter):
+        self.get = getter
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

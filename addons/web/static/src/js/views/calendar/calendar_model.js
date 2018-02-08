@@ -2,6 +2,7 @@ odoo.define('web.CalendarModel', function (require) {
 "use strict";
 
 var AbstractModel = require('web.AbstractModel');
+var Context = require('web.Context');
 var core = require('web.core');
 var fieldUtils = require('web.field_utils');
 var session = require('web.session');
@@ -38,39 +39,47 @@ return AbstractModel.extend({
         var start = event.start.clone();
         var end = event.end && event.end.clone();
 
-        if (!end || end.diff(start) < 0) {
-            end = start.clone().add(1, 'h');
+        // Detects allDay events (86400000 = 1 day in ms)
+        if (event.allDay || (end && end.diff(start) % 86400000 === 0)) {
+            event.allDay = true;
         }
 
-        if (event.allDay || end.diff(start) % 86400000 === 0) {
-            event.allDay = true;
+        // Set end date if not existing
+        if (!end || end.diff(start) < 0) { // undefined or invalid end date
+            if (event.allDay) {
+                end = start.clone();
+            } else {
+                // in week mode or day mode, convert allday event to event
+                end = start.clone().add(2, 'h');
+            }
+        } else if (event.allDay) {
+            // For an "allDay", FullCalendar gives the end day as the
+            // next day at midnight (instead of 23h59).
+            end.add(-1, 'days');
+        }
 
-            if (this.scale === 'month') {
+        // An "allDay" event without the "all_day" option is not considered
+        // as a 24h day. It's just a part of the day (by default: 7h-19h).
+        if (event.allDay) {
+            if (!this.mapping.all_day) {
                 if (event.r_start) {
                     start.hours(event.r_start.hours())
                          .minutes(event.r_start.minutes())
                          .seconds(event.r_start.seconds())
                          .utc();
-                    end.add(-1, 'days')
-                       .hours(event.r_end.hours())
+                    end.hours(event.r_end.hours())
                        .minutes(event.r_end.minutes())
                        .seconds(event.r_end.seconds())
                        .utc();
                 } else {
-                    start.utc();
-                    end.utc();
+                    // default hours in the user's timezone
+                    start.hours(7).add(-this.getSession().getTZOffset(start), 'minutes');
+                    end.hours(19).add(-this.getSession().getTZOffset(end), 'minutes');
                 }
-            } else if (this.mapping.all_day) {
-                start.startOf('day');
-                end.startOf('day').add(-1, 'days');
-            } else {
-                // default hours in the user's timezone
-                start.hours(7).add(-this.getSession().tzOffset, 'minutes');
-                end.hours(19).add(-this.getSession().tzOffset, 'minutes');
             }
         } else {
-            start.add(-this.getSession().tzOffset, 'minutes');
-            end.add(-this.getSession().tzOffset, 'minutes');
+            start.add(-this.getSession().getTZOffset(start), 'minutes');
+            end.add(-this.getSession().getTZOffset(end), 'minutes');
         }
 
         if (this.mapping.all_day) {
@@ -246,6 +255,8 @@ return AbstractModel.extend({
      */
     setDate: function (start, highlight) {
         this.data.start_date = this.data.end_date = this.data.target_date = this.data.highlight_date = start;
+        this.data.start_date.utc().add(this.getSession().getTZOffset(this.data.start_date), 'minutes');
+
         switch (this.data.scale) {
             case 'month':
                 this.data.start_date = this.data.start_date.clone().startOf('month').startOf('week');
@@ -290,11 +301,12 @@ return AbstractModel.extend({
                 data[k] = dateToServer(data[k]);
             }
         }
+        var context = new Context(this.data.context, {from_ui: true});
         return this._rpc({
             model: this.modelName,
             method: 'write',
             args: [[record.id], data],
-            context: this.data.context
+            context: context
         });
     },
 
@@ -312,6 +324,7 @@ return AbstractModel.extend({
         // List authorized values for every field
         // fields with an active 'all' filter are skipped
         var authorizedValues = {};
+        var avoidValues = {};
 
         _.each(this.data.filters, function (filter) {
             // Skip 'all' filters because they do not affect the domain
@@ -319,11 +332,20 @@ return AbstractModel.extend({
 
             // Loop over subfilters to complete authorizedValues
             _.each(filter.filters, function (f) {
-                if (!authorizedValues[filter.fieldName])
-                    authorizedValues[filter.fieldName] = [];
+                if (filter.write_model) {
+                    if (!authorizedValues[filter.fieldName])
+                        authorizedValues[filter.fieldName] = [];
 
-                if (f.active) {
-                    authorizedValues[filter.fieldName].push(f.value);
+                    if (f.active) {
+                        authorizedValues[filter.fieldName].push(f.value);
+                    }
+                } else {
+                    if (!avoidValues[filter.fieldName])
+                        avoidValues[filter.fieldName] = [];
+
+                    if (!f.active) {
+                        avoidValues[filter.fieldName].push(f.value);
+                    }
                 }
             });
         });
@@ -332,6 +354,9 @@ return AbstractModel.extend({
         var domain = [];
         for (var field in authorizedValues) {
             domain.push([field, 'in', authorizedValues[field]]);
+        }
+        for (var field in avoidValues) {
+            domain.push([field, 'not in', avoidValues[field]]);
         }
 
         return domain;
@@ -357,16 +382,23 @@ return AbstractModel.extend({
             allDayText: _t("All day"),
             views: {
                 week: {
-                    columnFormat: 'ddd ' + time.strftime_to_moment_format(_t.database.parameters.date_format),
-                    titleFormat: time.strftime_to_moment_format(_t.database.parameters.time_format),
+                    columnFormat: 'ddd ' + time.getLangDateFormat(),
+                    titleFormat: time.getLangTimeFormat(),
                 }
             },
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
+            firstDay: _t.database.parameters.week_start,
         };
     },
+    /**
+     * Return a domain from the date range
+     *
+     * @private
+     * @returns {Array}
+     */
     _getRangeDomain: function () {
         // Build OpenERP Domain to filter object by this.mapping.date_start field
         // between given start, end dates.
@@ -599,13 +631,16 @@ return AbstractModel.extend({
             date_stop = date_start.clone().add(date_delay,'hours');
         }
 
-        date_start.add(this.getSession().tzOffset, 'minutes');
-        date_stop.add(this.getSession().tzOffset, 'minutes');
+        if (!all_day) {
+            date_start.add(this.getSession().getTZOffset(date_start), 'minutes');
+            date_stop.add(this.getSession().getTZOffset(date_stop), 'minutes');
+        }
 
         if (this.mapping.all_day && evt[this.mapping.all_day]) {
             date_stop.add(1, 'days');
         }
-
+        var isAllDay = this.fields[this.mapping.date_start].type === 'date' ||
+                        this.mapping.all_day && evt[this.mapping.all_day] || false;
         var r = {
             'record': evt,
             'start': date_start,
@@ -613,7 +648,7 @@ return AbstractModel.extend({
             'r_start': date_start,
             'r_end': date_stop,
             'title': the_title,
-            'allDay': this.mapping.all_day && evt[this.mapping.all_day] || false,
+            'allDay': isAllDay,
             'id': evt.id,
             'attendees':attendees,
         };
@@ -622,6 +657,10 @@ return AbstractModel.extend({
             // r.start = date_start.format('YYYY-MM-DD');
             // r.end = date_stop.format('YYYY-MM-DD');
         } else if (this.data.scale === 'month' && this.fields[this.mapping.date_start].type !== 'date') {
+            // In month, FullCalendar gives the end day as the
+            // next day at midnight (instead of 23h59).
+            date_stop.add(1, 'days');
+
             // allow to resize in month mode
             r.reset_allday = r.allDay;
             r.allDay = true;

@@ -19,7 +19,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': self.warehouse_1.lot_stock_id.id,
             'product_id': self.product_1.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         # As done in common.py, there is already an inventory line existing
         self.assertEqual(len(inventory.line_ids), 1)
         self.assertEqual(inventory.line_ids.theoretical_qty, 50.0)
@@ -37,7 +37,7 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(inventory.move_ids.location_dest_id, self.env.ref('stock.location_inventory'))  # Inventory loss
         self.assertEqual(inventory.move_ids.state, 'done')
         quants = self.env['stock.quant']._gather(self.product_1, self.env.ref('stock.location_inventory'))
-        self.assertEqual(len(quants), 0)  # No quant created for inventory loss
+        self.assertEqual(len(quants), 1)  # One quant created for inventory loss
 
         # Check quantity of product in various locations: current, its parent, brother and other
         self.assertEqual(self.env['stock.quant']._gather(self.product_1, self.warehouse_1.lot_stock_id).quantity, 35.0)
@@ -67,14 +67,13 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(inventory.line_ids.product_id, self.product_1)
         self.assertEqual(inventory.line_ids.product_qty, 50.0)
 
-        # Check associated quants: 1 quant for the product and the quantity
+        # Check associated quants: 2 quants for the product and the quantity (1 in stock, 1 in inventory adjustment)
         quant = self.env['stock.quant'].search([('id', 'not in', self.existing_quants.ids)])
-        self.assertEqual(len(quant), 1)
+        self.assertEqual(len(quant), 2)
         # print quant.name, quant.product_id, quant.location_id
         # TDE TODO: expand this test
 
     def test_basic_move(self):
-        # TDE NOTE: replaces test/move.yml present until saas-10, including onchanges
         product = self.product_3.sudo(self.user_stock_manager)
         product.type = 'product'
         picking_out = self.env['stock.picking'].create({
@@ -99,20 +98,20 @@ class TestWarehouse(TestStockCommon):
         self.assertEqual(customer_move.location_dest_id, self.env.ref('stock.stock_location_customers'))
 
         # confirm move, check quantity on hand and virtually available, without location context
-        customer_move.action_confirm()
+        customer_move._action_confirm()
         self.assertEqual(product.qty_available, 0.0)
         self.assertEqual(product.virtual_available, -5.0)
 
         customer_move.quantity_done = 5
-        customer_move.action_done()
+        customer_move._action_done()
         self.assertEqual(product.qty_available, -5.0)
 
         # compensate negative quants by receiving products from supplier
         receive_move = self._create_move(product, self.env.ref('stock.stock_location_suppliers'), self.warehouse_1.lot_stock_id, product_uom_qty=15)
 
-        receive_move.action_confirm()
+        receive_move._action_confirm()
         receive_move.quantity_done = 15
-        receive_move.action_done()
+        receive_move._action_done()
 
         product._compute_quantities()
         self.assertEqual(product.qty_available, 10.0)
@@ -121,13 +120,13 @@ class TestWarehouse(TestStockCommon):
         # new move towards customer
         customer_move_2 = self._create_move(product, self.warehouse_1.lot_stock_id, self.env.ref('stock.stock_location_customers'), product_uom_qty=2)
 
-        customer_move_2.action_confirm()
+        customer_move_2._action_confirm()
         product._compute_quantities()
         self.assertEqual(product.qty_available, 10.0)
         self.assertEqual(product.virtual_available, 8.0)
 
         customer_move_2.quantity_done = 2.0
-        customer_move_2.action_done()
+        customer_move_2._action_done()
         product._compute_quantities()
         self.assertEqual(product.qty_available, 8.0)
 
@@ -199,7 +198,7 @@ class TestWarehouse(TestStockCommon):
         picking_out.action_confirm()
         picking_out.force_assign()
         picking_out.move_lines.quantity_done = 1
-        picking_out.do_transfer()
+        picking_out.action_done()
 
         # Make an inventory adjustment to set the quantity to 0
         inventory = self.env['stock.inventory'].create({
@@ -208,7 +207,7 @@ class TestWarehouse(TestStockCommon):
             'location_id': stock_location.id,
             'product_id': productA.id,
         })
-        inventory.prepare_inventory()
+        inventory.action_start()
         self.assertEqual(len(inventory.line_ids), 1, "Wrong inventory lines generated.")
         self.assertEqual(inventory.line_ids.theoretical_qty, -1, "Theoretical quantity should be -1.")
         inventory.line_ids.product_qty = 0  # Put the quantity back to 0
@@ -225,9 +224,9 @@ class TestWarehouse(TestStockCommon):
         quants = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quants), 0)
 
-        # There should be no quant in the inventory loss location
+        # There should be one quant in the inventory loss location
         quant = self.env['stock.quant'].search([('product_id', '=', productA.id), ('location_id', '=', location_loss.id)])
-        self.assertEqual(len(quant), 0)
+        self.assertEqual(len(quant), 1)
 
 
 class TestResupply(TestStockCommon):
@@ -250,22 +249,3 @@ class TestResupply(TestStockCommon):
             'product_max_qty': 100,
             'product_uom': self.uom_unit.id,
         })
-
-    def test_resupply_from_wh(self):
-        # TDE NOTE: replaces tests/test_resupply.py, present until saas-10
-        OrderScheduler = self.env['procurement.order']
-        OrderScheduler.run_scheduler()
-        # we generated 2 procurements for product A: one on small wh and the other one on the transit location
-        procs = OrderScheduler.search([('product_id', '=', self.product_1.id)])
-        self.assertEqual(len(procs), 2)
-
-        proc1 = procs.filtered(lambda order: order.warehouse_id == self.warehouse_2)
-        self.assertEqual(proc1.state, 'running')
-
-        proc2 = procs.filtered(lambda order: order.warehouse_id == self.warehouse_1)
-        self.assertEqual(proc2.location_id.usage, 'transit')
-        self.assertNotEqual(proc2.state, 'exception')
-
-        proc2.run()
-        self.assertEqual(proc2.state, 'running')
-        self.assertTrue(proc2.rule_id)

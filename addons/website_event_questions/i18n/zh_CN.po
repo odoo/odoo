@@ -6,13 +6,15 @@
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # fausthuang <faust_huang@hotmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# liAnGjiA <liangjia@qq.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: waveyeung <waveyeung@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,8 +24,13 @@ msgstr ""
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.registration_attendee_details_questions
-msgid "<strong>Common Questions</strong>"
-msgstr ""
+msgid "<strong>Questions</strong>"
+msgstr "<strong>问题</strong>"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_question_2
+msgid "Accommodation"
+msgstr "住所"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_name
@@ -48,6 +55,11 @@ msgstr "要求每个参加者"
 #: model:ir.model,name:website_event_questions.model_event_registration
 msgid "Attendee"
 msgstr "出席者"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_0_2
+msgid "Bronze"
+msgstr "青铜"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_create_uid
@@ -85,14 +97,29 @@ msgid "Event Answer"
 msgstr ""
 
 #. module: website_event_questions
+#: model:ir.model,name:website_event_questions.model_event_type
+msgid "Event Category"
+msgstr "活动类别"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer_event_registration_id
 msgid "Event Registration"
 msgstr "活动登记"
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_question_event_type_id
+msgid "Event Type"
+msgstr "活动类型"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_general_question_ids
 msgid "General Questions"
 msgstr "一般性问题"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_0_0
+msgid "Gold"
+msgstr "黄金"
 
 #. module: website_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
@@ -113,6 +140,16 @@ msgid ""
 "If True, this question will be asked for every attendee of a reservation. If"
 " not it will be asked only once and its value propagated to every attendees."
 msgstr "如果是真，这个问题将向每一位预订与会者问起。如果不是，将被要求只有一次，它的价值传播到每一个与会者。"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_2_1
+msgid "In Charge"
+msgstr "负责"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_question_0
+msgid "Kind of partner"
+msgstr "合作伙伴的分类"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer___last_update
@@ -137,6 +174,16 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_1_1
+msgid "No"
+msgstr "否"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_2_0
+msgid "Personal"
+msgstr "自己的"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_answer_question_id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_question_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_answer_simplified_form
@@ -146,7 +193,14 @@ msgid "Question"
 msgstr "疑问"
 
 #. module: website_event_questions
+#: code:addons/website_event_questions/models/event.py:78
+#, python-format
+msgid "Question should belong to either event category or event but not both"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_question_ids
+#: model:ir.model.fields,field_description:website_event_questions.field_event_type_question_ids
 #: model:ir.ui.menu,name:website_event_questions.menu_report_event_questions
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_form_inherit_question
 msgid "Questions"
@@ -161,6 +215,11 @@ msgid "Questions Analysis"
 msgstr "问题分析"
 
 #. module: website_event_questions
+#: model:ir.model.fields,field_description:website_event_questions.field_event_type_use_questions
+msgid "Questions to Attendees"
+msgstr ""
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_report_attendee_id
 #: model:ir.ui.view,arch_db:website_event_questions.view_event_question_report_search
 msgid "Registration"
@@ -173,6 +232,11 @@ msgid "Sequence"
 msgstr "序号"
 
 #. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_0_1
+msgid "Silver"
+msgstr "银色"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event_specific_question_ids
 msgid "Specific Questions"
 msgstr "特定问题"
@@ -181,6 +245,16 @@ msgstr "特定问题"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_title
 msgid "Title"
 msgstr "称谓"
+
+#. module: website_event_questions
+#: model:event.question,title:website_event_questions.event_question_1
+msgid "Veggie"
+msgstr "素食"
+
+#. module: website_event_questions
+#: model:event.answer,name:website_event_questions.event_suggestion_1_0
+msgid "Yes"
+msgstr "是"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_answer

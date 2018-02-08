@@ -1,7 +1,7 @@
 
 class assertion_report(object):
     """
-    Simple pair of success and failures counts (used to record YAML and XML
+    Simple pair of success and failures counts (used to record XML
     `assert` tags as well as unittest tests outcome (in this case, not
     individual `assert`)).
     """

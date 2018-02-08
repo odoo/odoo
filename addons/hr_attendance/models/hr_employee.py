@@ -24,8 +24,8 @@ class HrEmployee(models.Model):
     pin = fields.Char(string="PIN", default=_default_random_pin, help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).", copy=False)
 
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
-    last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id')
-    attendance_state = fields.Selection(string="Attendance", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
+    last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id', store=True)
+    attendance_state = fields.Selection(string="Attendance Status", compute='_compute_attendance_state', selection=[('checked_out', "Checked out"), ('checked_in', "Checked in")])
     manual_attendance = fields.Boolean(string='Manual Attendance', compute='_compute_manual_attendance', inverse='_inverse_manual_attendance',
                                        help='The employee will have access to the "My Attendances" menu to check in and out from his session')
 

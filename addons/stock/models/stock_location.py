@@ -3,6 +3,7 @@
 
 from datetime import datetime
 from dateutil import relativedelta
+from odoo.exceptions import UserError
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -44,7 +45,7 @@ class Location(models.Model):
              "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
              "\n* Procurement: Virtual location serving as temporary counterpart for procurement operations when the source (vendor or production) is not known yet. This location should be empty when the procurement scheduler has finished running."
              "\n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products"
-             "\n* Transit Location: Counterpart location that should be used in inter-companies or inter-warehouses operations")
+             "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, ondelete='cascade',
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
@@ -65,21 +66,25 @@ class Location(models.Model):
     removal_strategy_id = fields.Many2one('product.removal', 'Removal Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
     putaway_strategy_id = fields.Many2one('product.putaway', 'Put Away Strategy', help="Defines the default method used for suggesting the exact location (shelf) where to store the products. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.")
     barcode = fields.Char('Barcode', copy=False, oldname='loc_barcode')
+    quant_ids = fields.One2many('stock.quant', 'location_id')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
 
     @api.one
-    @api.depends('name', 'location_id')
+    @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
         """ Forms complete name of location from parent location to child location. """
-        name = self.name
-        current = self
-        while current.location_id:
-            current = current.location_id
-            name = '%s/%s' % (current.name, name)
-        self.complete_name = name
+        if self.location_id.complete_name:
+            self.complete_name = '%s/%s' % (self.location_id.complete_name, self.name)
+        else:
+            self.complete_name = self.name
 
-    @api.multi
+    def write(self, values):
+        if 'usage' in values and values['usage'] == 'view':
+            if self.mapped('quant_ids'):
+                raise UserError(_("This location's usage cannot be changed to view as it contains products."))
+        return super(Location, self).write(values)
+
     def name_get(self):
         ret_list = []
         for location in self:
@@ -87,6 +92,8 @@ class Location(models.Model):
             name = location.name
             while location.location_id and location.usage != 'view':
                 location = location.location_id
+                if not name:
+                    raise UserError(_('You have to set a name for this location.'))
                 name = location.name + "/" + name
             ret_list.append((orig_location.id, name))
         return ret_list
@@ -109,7 +116,6 @@ class Location(models.Model):
             current_location = current_location.location_id
         return putaway_location
 
-    @api.multi
     @api.returns('stock.warehouse', lambda value: value.id)
     def get_warehouse(self):
         """ Returns warehouse id of warehouse that contains location """
@@ -117,9 +123,9 @@ class Location(models.Model):
             ('view_location_id.parent_left', '<=', self.parent_left),
             ('view_location_id.parent_right', '>=', self.parent_left)], limit=1)
 
-    def should_impact_quants(self):
+    def should_bypass_reservation(self):
         self.ensure_one()
-        return False if self.usage in ('supplier', 'inventory', 'production', 'customer') else True
+        return self.usage in ('supplier', 'customer', 'inventory', 'production') or self.scrap_location
 
 
 class Route(models.Model):
@@ -149,7 +155,6 @@ class Route(models.Model):
     categ_ids = fields.Many2many('product.category', 'stock_location_route_categ', 'route_id', 'categ_id', 'Product Categories')
     warehouse_ids = fields.Many2many('stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id', 'Warehouses')
 
-    @api.multi
     def write(self, values):
         '''when a route is deactivated, deactivate also its pull and push rules'''
         res = super(Route, self).write(values)
@@ -158,7 +163,6 @@ class Route(models.Model):
             self.mapped('pull_ids').filtered(lambda rule: rule.active != values['active']).write({'active': values['active']})
         return res
 
-    @api.multi
     def view_product_ids(self):
         return {
             'name': _('Products'),
@@ -169,7 +173,6 @@ class Route(models.Model):
             'domain': [('route_ids', 'in', self.ids)],
         }
 
-    @api.multi
     def view_categ_ids(self):
         return {
             'name': _('Product Categories'),
@@ -189,7 +192,7 @@ class PushedFlow(models.Model):
     name = fields.Char('Operation Name', required=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
-        default=lambda self: self.env['res.company']._company_default_get('procurement.order'), index=True)
+        default=lambda self: self.env['res.company']._company_default_get('stock.location.path'), index=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
     location_from_id = fields.Many2one(
         'stock.location', 'Source Location', index=True, ondelete='cascade', required=True,
@@ -205,7 +208,7 @@ class PushedFlow(models.Model):
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',
         default='manual', index=True, required=True,
-        help="The 'Manual Operation' value will create a stock move after the current one."
+        help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     propagate = fields.Boolean('Propagate cancel and split', default=True, help='If checked, when the previous move is cancelled or split, the move generated by this move will too')
     active = fields.Boolean('Active', default=True)
@@ -228,7 +231,7 @@ class PushedFlow(models.Model):
             new_move_vals = self._prepare_move_copy_values(move, new_date)
             new_move = move.copy(new_move_vals)
             move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move.action_confirm()
+            new_move._action_confirm()
 
     def _prepare_move_copy_values(self, move_to_copy, new_date):
         new_move_vals = {
@@ -243,7 +246,6 @@ class PushedFlow(models.Model):
                 'propagate': self.propagate,
                 'push_rule_id': self.id,
                 'warehouse_id': self.warehouse_id.id,
-                'procurement_id': False,
             }
 
         return new_move_vals

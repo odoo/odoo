@@ -11,11 +11,12 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysBase
 
 class TestHolidaysFlow(TestHrHolidaysBase):
 
-    @mute_logger('odoo.addons.base.ir.ir_model', 'odoo.models')
+    @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_00_leave_request_flow(self):
         """ Testing leave request flow """
-        Holidays = self.env['hr.holidays']
-        HolidaysStatus = self.env['hr.holidays.status']
+        Requests = self.env['hr.leave']
+        Allocations = self.env['hr.leave.allocation']
+        HolidaysStatus = self.env['hr.leave.type']
 
         def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
             self.assertEqual(holiday_status.max_leaves, ml,
@@ -56,7 +57,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # --------------------------------------------------
 
         # Employee creates a leave request for another employee -> should crash
-        HolidaysEmployeeGroup = Holidays.sudo(self.user_employee_id)
+        HolidaysEmployeeGroup = Requests.sudo(self.user_employee_id)
         with self.assertRaises(ValidationError):
             HolidaysEmployeeGroup.create({
                 'name': 'Hol10',
@@ -66,7 +67,7 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'date_to': datetime.today(),
                 'number_of_days_temp': 1,
             })
-        Holidays.search([('name', '=', 'Hol10')]).unlink()
+        Requests.search([('name', '=', 'Hol10')]).unlink()
 
         # Employee creates a leave request in a no-limit category
         hol1_employee_group = HolidaysEmployeeGroup.create({
@@ -110,20 +111,19 @@ class TestHolidaysFlow(TestHrHolidaysBase):
                 'name': 'Hol22',
                 'employee_id': self.employee_emp_id,
                 'holiday_status_id': self.holidays_status_2.id,
-                'date_from': (datetime.today() + relativedelta(days=0)).strftime('%Y-%m-%d %H:%M'),
-                'date_to': (datetime.today() + relativedelta(days=1)),
+                'date_from': (datetime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M'),
+                'date_to': (datetime.today() + relativedelta(days=2)),
                 'number_of_days_temp': 1,
             })
 
         # Clean transaction
-        Holidays.search([('name', 'in', ['Hol21', 'Hol22'])]).unlink()
+        Requests.search([('name', 'in', ['Hol21', 'Hol22'])]).unlink()
 
         # HrUser allocates some leaves to the employee
-        aloc1_user_group = Holidays.sudo(self.user_hruser_id).create({
+        aloc1_user_group = Allocations.sudo(self.user_hruser_id).create({
             'name': 'Days for limited category',
             'employee_id': self.employee_emp_id,
             'holiday_status_id': self.holidays_status_2.id,
-            'type': 'add',
             'number_of_days_temp': 2,
         })
         # HrUser validates the first step
@@ -191,13 +191,12 @@ class TestHolidaysFlow(TestHrHolidaysBase):
         # cl can be of maximum 20 days for employee_root
         hol3_status = self.env.ref('hr_holidays.holiday_status_cl').with_context(employee_id=employee_id)
         # I assign the dates in the holiday request for 1 day
-        hol3 = Holidays.create({
+        hol3 = Requests.create({
             'name': 'Sick Leave',
             'holiday_status_id': hol3_status.id,
             'date_from': datetime.today().strftime('%Y-%m-10 10:00:00'),
             'date_to': datetime.today().strftime('%Y-%m-11 19:00:00'),
             'employee_id': employee_id,
-            'type': 'remove',
             'number_of_days_temp': 1
         })
         # I find a small mistake on my leave request to I click on "Refuse" button to correct a mistake.

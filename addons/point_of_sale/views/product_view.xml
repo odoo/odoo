@@ -30,16 +30,11 @@
         <field name="search_view_id" eval="False"/> <!-- Force empty -->
         <field name="view_id" ref="product.product_product_tree_view"/>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to add a new product.
+            <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
             </p><p>
                 You must define a product for everything you sell through
                 the point of sale interface.
-            </p><p>
-                Do not forget to set the price and the point of sale category
-                in which it should appear. If a product has no point of sale
-                category, you can not sell it through the point of sale
-                interface.
             </p>
         </field>
     </record>
@@ -81,10 +76,6 @@
         action="product_product_action"
         groups="product.group_product_variant"
         sequence="10"/>
-    <menuitem id="menu_product_pos_category"
-        action="point_of_sale.product_pos_category_action"
-        parent="point_of_sale.pos_config_menu_catalog"
-        sequence="15"/>
     <menuitem id="pos_config_menu_action_product_pricelist"
         parent="point_of_sale.pos_config_menu_catalog"
         action="product.product_pricelist_action2"

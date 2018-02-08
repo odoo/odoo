@@ -16,8 +16,7 @@
                 <div class="oe_button_box" name="button_box">
                     <button string="Current Stock"
                             class="oe_stat_button"
-                            icon="fa-building-o" name="%(location_open_quants)d" type="action"
-                            context="{'search_default_internal_loc': 1}"/>
+                            icon="fa-building-o" name="%(location_open_quants)d" type="action"/>
                     <button string="Products"
                             class="oe_stat_button"
                             icon="fa-filter" name="%(act_product_location_open)d" type="action"
@@ -119,8 +118,8 @@
         <field name="search_view_id" ref="view_location_search"/>
         <field name="context">{'search_default_in_location':1}</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a location.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new location
           </p><p>
             Define your locations to reflect your warehouse structure and
             organization. Odoo is able to manage physical locations
@@ -138,7 +137,7 @@
         </field>
     </record>
     <menuitem action="action_location_form" id="menu_action_location_form"
-        parent="menu_warehouse_config" sequence="2"/>
+        parent="menu_warehouse_config" sequence="2" groups="stock.group_stock_multi_locations"/>
 
 
         <record id="stock_location_path_filter" model="ir.ui.view">
@@ -297,13 +296,14 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="stock_location_route_tree" />
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to add a route.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new route
+              </p><p>
+                You can define here the main routes that run through
+                your warehouses and that define the flows of your products. These
+                routes can be assigned to a product, a product category or be fixed
+                on procurement or sales order.
               </p>
-                <p>You can define here the main routes that run through
-                    your warehouses and that define the flows of your products. These
-                    routes can be assigned to a product, a product category or be fixed
-                    on procurement or sales order. </p>
             </field>
         </record>
 

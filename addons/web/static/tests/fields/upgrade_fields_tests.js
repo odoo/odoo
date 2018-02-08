@@ -39,6 +39,28 @@ QUnit.module('upgrade_fields', {
         form.destroy();
     });
 
+    QUnit.test('widget upgrade_boolean in a form view', function (assert) {
+        assert.expect(3);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<div class="o_field"><field name="bar" widget="upgrade_boolean"/></div>' +
+                    '<div class="o_label"><label for="bar"/><div>Coucou</div></div>' +
+                '</form>',
+        });
+
+        assert.strictEqual(form.$('.o_field .label').length, 0,
+            "the upgrade label shouldn't be inside the field section");
+        assert.strictEqual(form.$('.o_label .label').length, 1,
+            "the upgrade label should be inside the label section");
+        assert.strictEqual(form.$('.o_label').text(), "Bar EnterpriseCoucou",
+            "the upgrade label should be inside the label section");
+        form.destroy();
+    });
+
 });
 });
 });

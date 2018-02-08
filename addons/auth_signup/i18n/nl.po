@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -148,6 +148,77 @@ msgid "${object.company_id.name} invitation to connect on Odoo"
 msgstr "${object.company_id.name} uitnodiging om te verbinden met Odoo"
 
 #. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
+msgid ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"        Your account has been successfully created!\n"
+"    </p>\n"
+"    <p>\n"
+"        Your login: ${object.email}\n"
+"        <br/>\n"
+"        Your password: ${ctx['password']}\n"
+"    </p>\n"
+"    <p>\n"
+"        To gain access to your account, you can use the following link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Go to My Account</a>\n"
+"    </div>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    Beste ${object.name},</p>\n"
+"    <p>\n"
+"        Uw account is succesvol aangemaakt.!\n"
+"    </p>\n"
+"    <p>\n"
+"        Uw login: ${object.email}\n"
+"        <br/>\n"
+"        Uw wachtwoord: ${ctx['password']}\n"
+"    </p>\n"
+"    <p>\n"
+"        Om toegang te krijgen tot uw account, kan u de volgende link gebruiken::\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Ga naar mijn account</a>\n"
+"    </div>\n"
+"    <p>Met vriendelijke groet,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Verstuurd door ${user.company_id.name} met <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
@@ -167,17 +238,12 @@ msgstr ""
 "verzonden:</strong>"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
-msgid "Allow external users to sign up"
-msgstr "Toestaan dat externe gebruikers inloggen"
+#: model:ir.ui.view,arch_db:auth_signup.signup
+msgid "Already have an account?"
+msgstr "Heeft u al een account?"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "Allow external users to sign up from Login page"
-msgstr ""
-
-#. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:61
+#: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
@@ -185,25 +251,24 @@ msgstr ""
 "wachtwoord."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:38
+#: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Er is al een gebruiker geregistreerd met dit e-mailadres."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:110
+#: code:addons/auth_signup/controllers/main.py:133
 #, python-format
 msgid "Authentication Failed."
 msgstr "Authenticatie mislukt."
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
-#: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
 msgstr "Terug naar login"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:135
+#: code:addons/auth_signup/models/res_users.py:137
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr ""
@@ -225,38 +290,73 @@ msgid "Confirmed"
 msgstr "Bevestigd"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:41
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Copy access rights from"
+msgstr "Kopieer gebruikersrechten van"
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
 msgstr "Het was niet mogelijk een nieuw account aan te maken."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:63
+#: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
 msgstr "Uw wachtwoord kon niet reset worden"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "Default Access Rights"
-msgstr ""
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
+msgid "Customer Account"
+msgstr "Klant account"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr "Standaard toegangsrechten"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.login
+msgid "Don't have an account?"
+msgstr "Heeft u geen account?"
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "Wachtwoord reset vanaf login pagina toestaan"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up (B2C)"
+msgstr "Gratis registratie (B2C)"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP routing"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "If unchecked, only invited users may sign up."
 msgstr "Indien uitgevinkt kunnen  alleen uitgenodigde gebruikers aanmelden"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:90
+#: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Invalid signup token"
 msgstr "Aanmeld toekenning ongeldig"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Let your customers log in to see their documents"
+msgstr "Laat klanten inloggen voor toegang tot hun documenten"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -264,9 +364,15 @@ msgid "Never Connected"
 msgstr "Nog nooit verbonden"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
+#: code:addons/auth_signup/controllers/main.py:73
+#, python-format
+msgid "No login provided."
+msgstr "Geen login gegeven"
+
+#. module: auth_signup
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation (B2B)"
+msgstr "Op uitnodiging (B2B)"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -274,9 +380,9 @@ msgid "Password"
 msgstr "Wachtwoord"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "Reset wachtwoord"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
@@ -284,12 +390,18 @@ msgid "Password reset"
 msgstr "Reset wachtwoord"
 
 #. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:121
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr "Wachtwoorden komen niet overeen, probeer het opnieuw."
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
 msgstr "Stel wachtwoord opnieuw in"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:108
+#: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Reset wachtwoord: Ongeldige gebruikersnaam en wachtwoord"
@@ -305,7 +417,6 @@ msgid "Send an Invitation Email"
 msgstr "Verstuur een uitnodigings e-mail"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
 msgstr "Aanmelden"
@@ -341,25 +452,39 @@ msgid "Signup URL"
 msgstr "URL voor aanmelden"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:88
+#, python-format
+msgid "Signup is not allowed for uninvited users"
+msgstr "Registratie is niet toegestaan voor gebruikers zonder uitnodiging"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_partner.py:146
+#, python-format
+msgid "Signup token '%s' is no longer valid"
+msgstr "Registratie token '%s' is niet meer geldig"
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_partner.py:142
+#, python-format
+msgid "Signup token '%s' is not valid"
+msgstr "Registratie token '%s' is niet geldig."
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Status"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr ""
 "Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelden"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr "De volledige URL om het document te kunnen raadplegen via de website."
-
-#. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "User Signup"
-msgstr ""
+#: code:addons/auth_signup/controllers/main.py:119
+#, python-format
+msgid "The form was not properly filled in."
+msgstr "Dit formulier is niet correct ingesteld."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -367,39 +492,9 @@ msgid "Users"
 msgstr "Gebruikers"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr "Zichtbaar in website"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr "Website relatie volledige omschrijving"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr "Website relatie korte omschrijving"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr "Website URL"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr "Website meta omschrijving"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Website meta trefwoorden"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr "Website meta titel"
+#: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
+msgid "Welcome to ${object.company_id.name}!"
+msgstr "Welkom tot ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -413,11 +508,11 @@ msgid "Your Name"
 msgstr "Uw naam"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "b.v. John Doe"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

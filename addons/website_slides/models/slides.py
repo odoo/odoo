@@ -3,6 +3,7 @@
 import requests
 from PIL import Image
 
+import base64
 import datetime
 import io
 import json
@@ -11,10 +12,10 @@ import re
 from werkzeug import urls
 
 from odoo import api, fields, models, SUPERUSER_ID, _
-from odoo.tools import image, pycompat
+from odoo.addons.http_routing.models.ir_http import slug
+from odoo.tools import image
 from odoo.tools.translate import html_translate
 from odoo.exceptions import Warning
-from odoo.addons.website.models.website import slug
 
 
 class Channel(models.Model):
@@ -101,7 +102,8 @@ class Channel(models.Model):
         string='Channel Groups', help="Groups allowed to see presentations in this channel")
     access_error_msg = fields.Html(
         'Error Message', help="Message to display when not accessible due to access rights",
-        default="<p>This channel is private and its content is restricted to some users.</p>", translate=html_translate, sanitize_attributes=False)
+        default=lambda s: _("<p>This channel is private and its content is restricted to some users.</p>"),
+        translate=html_translate, sanitize_attributes=False)
     upload_group_ids = fields.Many2many(
         'res.groups', 'rel_upload_groups', 'channel_id', 'group_id',
         string='Upload Groups', help="Groups allowed to upload presentations in this channel. If void, every user can upload.")
@@ -132,7 +134,7 @@ class Channel(models.Model):
         """
         op = operator == "=" and "inselect" or "not inselect"
         # don't use param named because orm will add other param (test_active, ...)
-        return [('id', op, (req, (self._uid)))]
+        return [('id', op, (req, (self._uid, )))]
 
     @api.one
     @api.depends('visibility', 'group_ids', 'upload_group_ids')
@@ -280,7 +282,7 @@ class Slide(models.Model):
     category_id = fields.Many2one('slide.category', string="Category", domain="[('channel_id', '=', channel_id)]")
     tag_ids = fields.Many2many('slide.tag', 'rel_slide_tag', 'slide_id', 'tag_id', string='Tags')
     download_security = fields.Selection(
-        [('none', 'No One'), ('user', 'Authentified Users Only'), ('public', 'Everyone')],
+        [('none', 'No One'), ('user', 'Authenticated Users Only'), ('public', 'Everyone')],
         string='Download Security',
         required=True, default='user')
     image = fields.Binary('Image', attachment=True)
@@ -291,8 +293,8 @@ class Slide(models.Model):
     def _get_image(self):
         for record in self:
             if record.image:
-                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=4)
-                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), thumbnail_ratio=6)
+                record.image_medium = image.crop_image(record.image, type='top', ratio=(4, 3), size=(500, 400))
+                record.image_thumb = image.crop_image(record.image, type='top', ratio=(4, 3), size=(200, 200))
             else:
                 record.image_medium = False
                 record.iamge_thumb = False
@@ -322,8 +324,8 @@ class Slide(models.Model):
             values = res['values']
             if not values.get('document_id'):
                 raise Warning(_('Please enter valid Youtube or Google Doc URL'))
-            for key, value in pycompat.items(values):
-                setattr(self, key, value)
+            for key, value in values.items():
+                self[key] = value
 
     # website
     date_published = fields.Datetime('Publish Date')
@@ -353,7 +355,7 @@ class Slide(models.Model):
                     record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
                 else:
                     # embed google doc video
-                    record.embed_code = '<embed src="https://video.google.com/get_player?ps=docs&partnerid=30&docid=%s" type="application/x-shockwave-flash"></embed>' % (record.document_id)
+                    record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
             else:
                 record.embed_code = False
 
@@ -384,7 +386,7 @@ class Slide(models.Model):
             values['date_published'] = datetime.datetime.now()
         if values.get('url') and not values.get('document_id'):
             doc_data = self._parse_document_url(values['url']).get('values', dict())
-            for key, value in pycompat.items(doc_data):
+            for key, value in doc_data.items():
                 values.setdefault(key, value)
         # Do not publish slide if user has not publisher rights
         if not self.user_has_groups('website.group_website_publisher'):
@@ -398,7 +400,7 @@ class Slide(models.Model):
     def write(self, values):
         if values.get('url') and values['url'] != self.url:
             doc_data = self._parse_document_url(values['url']).get('values', dict())
-            for key, value in pycompat.items(doc_data):
+            for key, value in doc_data.items():
                 values.setdefault(key, value)
         if values.get('channel_id'):
             custom_channels = self.env['slide.channel'].search([('custom_slide_id', '=', self.id), ('id', '!=', values.get('channel_id'))])
@@ -445,6 +447,7 @@ class Slide(models.Model):
                 'type': 'ir.actions.act_url',
                 'url': '%s' % self.website_url,
                 'target': 'self',
+                'target_type': 'public',
                 'res_id': self.id,
             }
         return super(Slide, self).get_access_action(access_uid)
@@ -498,13 +501,12 @@ class Slide(models.Model):
         try:
             response = requests.get(base_url, params=data)
             response.raise_for_status()
-            content = response.content
             if content_type == 'json':
-                result['values'] = json.loads(content)
+                result['values'] = response.json()
             elif content_type in ('image', 'pdf'):
-                result['values'] = content.encode('base64')
+                result['values'] = base64.b64encode(response.content)
             else:
-                result['values'] = content
+                result['values'] = response.content
         except requests.exceptions.HTTPError as e:
             result['error'] = e.response.content
         except requests.exceptions.ConnectionError as e:
@@ -556,6 +558,7 @@ class Slide(models.Model):
                 'name': snippet['title'],
                 'image': self._fetch_data(snippet['thumbnails']['high']['url'], {}, 'image')['values'],
                 'description': snippet['description'],
+                'mime_type': False,
             })
         return {'values': values}
 
@@ -565,7 +568,7 @@ class Slide(models.Model):
             # TDE FIXME: WTF ??
             slide_type = 'presentation'
             if vals.get('image'):
-                image = Image.open(io.BytesIO(vals['image'].decode('base64')))
+                image = Image.open(io.BytesIO(base64.b64decode(vals['image'])))
                 width, height = image.size
                 if height > width:
                     return 'document'

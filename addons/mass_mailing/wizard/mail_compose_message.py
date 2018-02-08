@@ -10,7 +10,7 @@ class MailComposeMessage(models.TransientModel):
 
     mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
     mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing', ondelete='cascade')
-    mass_mailing_name = fields.Char(string='Mass Mailing')
+    mass_mailing_name = fields.Char(string='Mass Mailing Name')
     mailing_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing List')
 
     @api.multi
@@ -23,7 +23,7 @@ class MailComposeMessage(models.TransientModel):
         # use only for allowed models in mass mailing
         if self.composition_mode == 'mass_mail' and \
                 (self.mass_mailing_name or self.mass_mailing_id) and \
-                self.model in [item[0] for item in self.env['mail.mass_mailing']._get_mailing_model()]:
+                self.env['ir.model'].sudo().search([('model', '=', self.model), ('is_mail_thread', '=', True)], limit=1):
             mass_mailing = self.mass_mailing_id
             if not mass_mailing:
                 reply_to_mode = 'email' if self.no_auto_thread else 'thread'
@@ -37,7 +37,7 @@ class MailComposeMessage(models.TransientModel):
                         'reply_to': reply_to,
                         'sent_date': fields.Datetime.now(),
                         'body_html': self.body,
-                        'mailing_model': self.model,
+                        'mailing_model_id': self.env['ir.model']._get(self.model).id,
                         'mailing_domain': self.active_domain,
                 })
 

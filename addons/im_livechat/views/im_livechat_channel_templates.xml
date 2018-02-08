@@ -8,9 +8,16 @@
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/js/copy_clipboard.js"></script>
+                <link rel="stylesheet" href="/im_livechat/static/src/less/copy_clipboard.less"/>
             </xpath>
         </template>
 
+        <template id="qunit_suite" name="im_livechat tests" inherit_id="web.qunit_suite">
+            <xpath expr="//script[contains(@src, '/web/static/tests/views/form_tests.js')]" position="after">
+                <script type="text/javascript" src="/im_livechat/static/tests/copy_clipboard_tests.js"></script>
+            </xpath>
+        </template>
 
         <!--
             Template rendering the external HTML support page
@@ -106,6 +113,7 @@
             <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
             <!-- jQuery -->
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+            <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
             <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
             <!-- Qweb2 lib -->
@@ -120,6 +128,7 @@
             <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/time.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/core/service_mixins.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/rpc.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/widget.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/registry.js"></script>
@@ -133,8 +142,10 @@
             <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
             <!-- Bus, Mail, Livechat -->
             <script type="text/javascript" src="/bus/static/src/js/bus.js"></script>
+            <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/chat_window.js"></script>
             <script type="text/javascript" src="/mail/static/src/js/thread.js"></script>
+            <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
             <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
             <t t-call="web.less_helpers"/>
             <link rel="stylesheet" href="/im_livechat/static/src/less/im_livechat_bootstrap.less"/>

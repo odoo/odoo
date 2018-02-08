@@ -2,7 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import unittest
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
+from odoo.tests import tagged
 
+
+@tagged('post_install', '-at_install')
 class TestLandedCosts(TestStockLandedCostsCommon):
 
     def setUp(self):
@@ -227,7 +230,9 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         # Confirm incoming shipment.
         self.picking_in.action_confirm()
         # Transfer incoming shipment
-        self.picking_in.do_transfer()
+        res_dict = self.picking_in.button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard.process()
         return self.picking_in
 
     def _process_outgoing_shipment(self):
@@ -237,7 +242,10 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         # Product assign to outgoing shipments
         self.picking_out.action_assign()
         # Transfer picking.
-        self.picking_out.do_transfer()
+
+        res_dict = self.picking_out.button_validate()
+        wizard = self.env[(res_dict.get('res_model'))].browse(res_dict.get('res_id'))
+        wizard.process()
 
     def _create_landed_costs(self, value, picking_in):
         return self.LandedCost.create(dict(

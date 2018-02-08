@@ -9,7 +9,13 @@
     'website': 'https://www.odoo.com/page/website-builder',
     'version': '1.0',
     'description': "",
-    'depends': ['web', 'web_editor', 'web_planner'],
+    'depends': [
+        'web',
+        'web_editor',
+        'http_routing',
+        'portal',
+        'social_media',
+    ],
     'installable': True,
     'data': [
         'data/website_data.xml',
@@ -19,10 +25,9 @@
         'views/website_navbar_templates.xml',
         'views/snippets.xml',
         'views/website_views.xml',
-        'views/website_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/ir_actions_views.xml',
         'wizard/base_language_install_views.xml',
-        'data/web_planner_data.xml',
     ],
     'demo': [
         'data/website_demo.xml',

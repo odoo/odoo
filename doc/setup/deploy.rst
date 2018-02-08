@@ -44,7 +44,7 @@ correctly.
 Configuration samples
 ---------------------
 
-* show only databases with names beginning with 'mycompany'
+* Show only databases with names beginning with 'mycompany'
 
 in ``/etc/odoo.conf`` set:
 
@@ -71,7 +71,8 @@ in ``/etc/odoo.conf`` set:
   Once it is correctly working and only matching a single database per hostname, it
   is strongly recommended to block access to the database manager screens,
   and to use the ``--no-database-list`` startup paramater to prevent listing
-  your databases. See also security_.
+  your databases, and to block access to the database management screens.
+  See also security_.
 
 
 PostgreSQL
@@ -86,18 +87,18 @@ machine, and is the default when no host is provided, but if you want Odoo and
 PostgreSQL to execute on different machines [#different-machines]_ it will
 need to `listen to network interfaces`_ [#remote-socket]_, either:
 
-* only accept loopback connections and `use an SSH tunnel`_ between the
+* Only accept loopback connections and `use an SSH tunnel`_ between the
   machine on which Odoo runs and the one on which PostgreSQL runs, then
   configure Odoo to connect to its end of the tunnel
-* accept connections to the machine on which Odoo is installed, possibly
+* Accept connections to the machine on which Odoo is installed, possibly
   over ssl (see `PostgreSQL connection settings`_ for details), then configure
   Odoo to connect over the network
 
 Configuration sample
 --------------------
 
-* allow tcp connection on localhost
-* allow tcp connection from 192.168.1.x network
+* Allow tcp connection on localhost
+* Allow tcp connection from 192.168.1.x network
 
 in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
 
@@ -133,11 +134,11 @@ create a new user (``odoo``) and set it as the database user.
   simply checked before performing database alterations. It should be set to
   a randomly generated value to ensure third parties can not use this
   interface.
-* all database operations use the :ref:`database options
+* All database operations use the :ref:`database options
   <reference/cmdline/server/database>`, including the database management
   screen. For the database management screen to work requires that the PostgreSQL user
   have ``createdb`` right.
-* users can always drop databases they own. For the database management screen
+* Users can always drop databases they own. For the database management screen
   to be completely non-functional, the PostgreSQL user needs to be created with
   ``no-createdb`` and the database must be owned by a different PostgreSQL user.
 
@@ -211,7 +212,7 @@ the client will not connect to it.
 
 Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
-the :option:`normal HTTP port <odoo-bin --xmlrpc-port>`
+the :option:`normal HTTP port <odoo-bin --http-port>`
 
 Configuration sample
 --------------------
@@ -247,10 +248,10 @@ authentication information in cleartext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
 
-* enable Odoo's :option:`proxy mode <odoo-bin --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
-* set up the SSL termination proxy (`Nginx termination example`_)
-* set up the proxying itself (`Nginx proxying example`_)
-* your SSL termination proxy should also automatically redirect non-secure
+* Enable Odoo's :option:`proxy mode <odoo-bin --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
+* Set up the SSL termination proxy (`Nginx termination example`_)
+* Set up the proxying itself (`Nginx proxying example`_)
+* Your SSL termination proxy should also automatically redirect non-secure
   connections to the secure port
 
 .. warning::
@@ -262,8 +263,8 @@ just about any SSL termination proxy, but requires the following setup:
 Configuration sample
 --------------------
 
-* redirect http requests to https
-* proxy requests to odoo
+* Redirect http requests to https
+* Proxy requests to odoo
 
 in ``/etc/odoo.conf`` set:
 
@@ -348,12 +349,12 @@ Cron Workers
 
 To run cron jobs for an Odoo deployment as a WSGI application requires
 
-* a classical Odoo (run via ``odoo-bin``)
-* connected to the database in which cron jobs have to be run (via
+* A classical Odoo (run via ``odoo-bin``)
+* Connected to the database in which cron jobs have to be run (via
   :option:`odoo-bin -d`)
-* which should not be exposed to the network. To ensure cron runners are not
+* Which should not be exposed to the network. To ensure cron runners are not
   network-accessible, it is possible to disable the built-in HTTP server
-  entirely with :option:`odoo-bin --no-xmlrpc` or setting ``xmlrpc = False``
+  entirely with :option:`odoo-bin --no-http` or setting ``http_enable = False``
   in the configuration file
 
 LiveChat
@@ -371,11 +372,11 @@ notifications.
 
 The solutions to support livechat/motifications in a WSGI application are:
 
-* deploy a threaded version of Odoo (instread of a process-based preforking
+* Deploy a threaded version of Odoo (instread of a process-based preforking
   one) and redirect only requests to URLs starting with ``/longpolling/`` to
   that Odoo, this is the simplest and the longpolling URL can double up as
   the cron instance.
-* deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
+* Deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
   with ``/longpolling/`` to
   :option:`the longpolling port <odoo-bin --longpolling-port>`.
 
@@ -423,10 +424,14 @@ security-related topics:
 - Use appropriate database filters ( :option:`--db-filter <odoo-bin --db-filter>`)
   to restrict the visibility of your databases according to the hostname.
   See :ref:`db_filter`.
+  You may also use :option:`-d <odoo-bin -d>` to provide your own (comma-separated)
+  list of available databases to filter from, instead of letting the system fetch
+  them all from the database backend.
 
-- Once your ``db_filter`` is configured and only matches a single database per hostname,
-  you should set ``list_db`` configuration option to ``False``, to prevent listing databases
-  entirely (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
+- Once your ``db_name`` and ``db_filter`` are configured and only match a single database
+  per hostname, you should set ``list_db`` configuration option to ``False``, to prevent
+  listing databases entirely, and to block access to the database management screens
+  (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
   command-line option)
 
 - Make sure the PostgreSQL user (:option:`--db_user <odoo-bin --db_user>`) is *not* a super-user,
@@ -469,10 +474,16 @@ Database Manager Security
 This setting is used on all database management screens (to create, delete,
 dump or restore databases).
 
-If the management screens must not be accessible, or must only be accessible
-from a selected set of machines, use the proxy server's features to block
-access to all routes starting with ``/web/database`` except (maybe)
-``/web/database/selector`` which displays the database-selection screen.
+If the management screens must not be accessible at all, you should set ``list_db``
+configuration option to ``False``, to block access to all the database selection and
+management screens. But be sure to setup an appropriate ``db_name`` parameter
+(and optionally, ``db_filter`` too) so that the system can determine the target database
+for each request, otherwise users will be blocked as they won't be allowed to choose the
+database themselves.
+
+If the management screens must only be accessible from a selected set of machines,
+use the proxy server's features to block access to all routes starting with ``/web/database``
+except (maybe) ``/web/database/selector`` which displays the database-selection screen.
 
 If the database-management screen should be left accessible, the
 ``admin_passwd`` setting must be changed from its ``admin`` default: this
@@ -482,7 +493,7 @@ It should be stored securely, and should be generated randomly e.g.
 
 .. code-block:: console
 
-    $ python -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
+    $ python3 -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
 
 which will generate a 32 characters pseudorandom printable string.
 
@@ -494,9 +505,8 @@ distinction is made according to the browser version in order to be
 up-to-date. Odoo is supported on the current browser version. The list 
 of the supported browsers by Odoo version is the following:
 
-- **Odoo 8:** IE9, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
 - **Odoo 9:** IE11, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
-- **Odoo 10:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+- **Odoo 10+:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
 
 .. [#different-machines]
     to have multiple Odoo installations use the same PostgreSQL database,
@@ -513,7 +523,7 @@ of the supported browsers by Odoo version is the following:
     "self-signed" certificates are easier to deploy on a controlled
     environment than over the internet.
 
-.. _regular expression: https://docs.python.org/2/library/re.html
+.. _regular expression: https://docs.python.org/3/library/re.html
 .. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
     http://nginx.com/resources/admin-guide/nginx-ssl-termination/

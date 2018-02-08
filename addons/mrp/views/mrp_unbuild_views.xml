@@ -43,13 +43,18 @@
             </field>
         </record>
 
-       <record model="ir.actions.act_window" id="action_mrp_unbuild_moves">
-            <field name="name">Stock Moves</field>
+       <record model="ir.actions.act_window" id="action_mrp_unbuild_move_line">
+            <field name="name">Product Moves</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">stock.move</field>
+            <field name="res_model">stock.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">['|', ('unbuild_id', '=', active_id), ('consume_unbuild_id', '=', active_id)]</field>
+            <field name="domain">['|', ('move_id.unbuild_id', '=', active_id), ('move_id.consume_unbuild_id', '=', active_id)]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_empty_folder">
+                There's no product move yet
+              </p>
+            </field>
         </record>
 
         <record id="mrp_unbuild_kanban_view" model="ir.ui.view">
@@ -66,13 +71,11 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div class="row">
-                                    <div class="col-xs-6">
-                                        <strong><span><field name="name"/></span></strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings mt4">
+                                        <strong class="o_kanban_record_title"><span><field name="name"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <strong><span class="pull-right text-right"><t t-esc="record.product_qty.value"/> <t t-esc="record.product_uom_id.value"/></span></strong>
-                                    </div>
+                                    <strong><t t-esc="record.product_qty.value"/> <small><t t-esc="record.product_uom_id.value"/></small></strong>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-8 text-muted">
@@ -97,13 +100,13 @@
             <field name="arch" type="xml">
                 <form string="Unbuild Orders">
                     <header>
-                        <button name="action_unbuild" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
+                        <button name="action_validate" string="Unbuild" type="object" states="draft" class="oe_highlight"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button" name="%(action_mrp_unbuild_moves)d"
-                                    string="Moves" type="action" icon="fa-arrows-v" states="done"/>
+                                    string="Product Moves" type="action" icon="fa-arrows-v" states="done"/>
                         </div>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Unbuild Order" nolabel="1"/></h1>
@@ -124,11 +127,11 @@
                                 </div>
                             </group>
                             <group>
-                                <field name="mo_id"/>
+                                <field name="mo_id" domain="[('state','=','done')]"/>
                                 <field name="location_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
                                 <field name="has_tracking" invisible="1"/>
-                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')]}" groups="stock.group_production_lot"/>
+                                <field name="lot_id" attrs="{'invisible': [('has_tracking', '=', 'none')], 'required': [('has_tracking', '!=', 'none')]}" groups="stock.group_production_lot"/>
                             </group>
                         </group>
                     </sheet>
@@ -165,10 +168,11 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click here to create a Unbuild Order. 
+          <p class="o_view_nocontent_smiling_face">
+            Create an unbuild order
           </p><p>
-            Unbuild Orders are used to break down a product you manufactured or purchased into its components, based on its Bill of Material.</p>
+            An unbuild order is used to break down a finished product into its components.
+          </p>
         </field>
     </record>
 

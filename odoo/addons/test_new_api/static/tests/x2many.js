@@ -246,11 +246,11 @@ odoo.define('web.test.x2many', function (require) {
         run: function () {}, // don't change texarea content
     }, { // remove
         content: "remove b",
-        trigger: '.tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact(bbb)) .o_list_record_delete',
+        trigger: '.tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact(bbb)) .o_list_record_remove',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody tr td:containsExact(aaa)',
     }, {
         content: "remove e",
-        trigger: 'tr:has(td:containsExact(e)) .o_list_record_delete',
+        trigger: 'tr:has(td:containsExact(e)) .o_list_record_remove',
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(bbb))))',
     }, { // save
         content: "save discussion",
@@ -258,7 +258,7 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(e))))',
     }, { // check saved data
         content: "check data 4",
-        trigger: '.o_content:not(:has(.tab-pane:eq(0) .o_field_widget tbody tr:has(.o_list_record_delete):eq(4)))',
+        trigger: '.o_content:not(:has(.tab-pane:eq(0) .o_field_widget tbody tr:has(.o_list_record_remove):eq(4)))',
         run: function () {}, // it's a check
     }, {
         content: "check data 5",
@@ -408,7 +408,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.ui-autocomplete a:first',
     }, { // remove record
         content: "delete the last item in the editable list",
-        trigger: '.o_list_view .o_data_row td.o_list_record_delete span:visible:last',
+        trigger: '.o_list_view .o_data_row td.o_list_record_remove i:visible:last',
     }, {
         content: "test one2many onchange after delete",
         trigger: '.o_content:not(:has(textarea[name="message_concat"]:propValueContains(Administrator:d)))',

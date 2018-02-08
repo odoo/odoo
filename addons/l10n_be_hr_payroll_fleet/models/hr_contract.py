@@ -11,8 +11,8 @@ class HrContract(models.Model):
         domain=lambda self: self._get_available_cars_domain(),
         default=lambda self: self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1),
         help="Employee's company car.")
-    car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car')
-    company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs')
+    car_atn = fields.Float(compute='_compute_car_atn_and_costs', string='ATN Company Car', store=True)
+    company_car_total_depreciated_cost = fields.Float(compute='_compute_car_atn_and_costs', store=True)
     available_cars_amount = fields.Integer(compute='_compute_available_cars_amount', string='Number of available cars')
     new_car = fields.Boolean('Request a new car')
     new_car_model_id = fields.Many2one('fleet.vehicle.model', string="Model", domain=lambda self: self._get_possible_model_domain())
@@ -36,7 +36,7 @@ class HrContract(models.Model):
     @api.depends('name')
     def _compute_max_unused_cars(self):
         params = self.env['ir.config_parameter'].sudo()
-        max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=3)
+        max_unused_cars = params.get_param('l10n_be_hr_payroll_fleet.max_unused_cars', default=1000)
         for contract in self:
             contract.max_unused_cars = int(max_unused_cars)
 
@@ -45,6 +45,13 @@ class HrContract(models.Model):
         super(HrContract, self)._onchange_employee_id()
         self.car_id = self.env['fleet.vehicle'].search([('driver_id', '=', self.employee_id.address_home_id.id)], limit=1)
         return {'domain': {'car_id': self._get_available_cars_domain()}}
+
+    @api.onchange('transport_mode')
+    def _onchange_transport_mode(self):
+        super(HrContract, self)._onchange_transport_mode()
+        if self.transport_mode != 'company_car':
+            self.car_id = False
+            self.new_car_model_id = False
 
     def _get_available_cars_domain(self):
         return ['|', ('driver_id', '=', False), ('driver_id', '=', self.employee_id.address_home_id.id)]

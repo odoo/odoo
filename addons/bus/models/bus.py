@@ -108,6 +108,7 @@ class ImBus(models.Model):
 class ImDispatch(object):
     def __init__(self):
         self.channels = {}
+        self.started = False
 
     def poll(self, dbname, channels, last, options=None, timeout=TIMEOUT):
         if options is None:
@@ -117,7 +118,8 @@ class ImDispatch(object):
         # it will handle a longpolling request
         if not odoo.evented:
             current = threading.current_thread()
-            current._Thread__daemonic = True
+            current._Thread__daemonic = True # PY2
+            current._daemonic = True         # PY3
             # rename the thread to avoid tests waiting for a longpolling
             current.setName("openerp.longpolling.request.%s" % current.ident)
 
@@ -127,8 +129,17 @@ class ImDispatch(object):
         with registry.cursor() as cr:
             env = api.Environment(cr, SUPERUSER_ID, {})
             notifications = env['bus.bus'].poll(channels, last, options)
+
+        # immediatly returns in peek mode
+        if options.get('peek'):
+            return dict(notifications=notifications, channels=channels)
+
         # or wait for future ones
         if not notifications:
+            if not self.started:
+                # Lazy start of events listener
+                self.start()
+
             event = self.Event()
             for channel in channels:
                 self.channels.setdefault(hashable(channel), []).append(event)
@@ -178,15 +189,16 @@ class ImDispatch(object):
             import gevent
             self.Event = gevent.event.Event
             gevent.spawn(self.run)
-        elif odoo.multi_process:
-            # disabled in prefork mode
-            return
         else:
             # threaded mode
             self.Event = threading.Event
             t = threading.Thread(name="%s.Bus" % __name__, target=self.run)
             t.daemon = True
             t.start()
+        self.started = True
         return self
 
-dispatch = ImDispatch().start()
+dispatch = None
+if not odoo.multi_process or odoo.evented:
+    # We only use the event dispatcher in threaded and gevent mode
+    dispatch = ImDispatch()

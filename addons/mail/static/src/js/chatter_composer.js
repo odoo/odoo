@@ -1,7 +1,6 @@
 odoo.define('mail.ChatterComposer', function (require) {
 "use strict";
 
-// var chat_manager = require('mail.chat_manager');
 var composer = require('mail.composer');
 var utils = require('mail.utils');
 
@@ -33,6 +32,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         this.events = _.extend(this.events, {
             'click .o_composer_button_full_composer': 'on_open_full_composer',
         });
+        this.notInline = true;
     },
 
     should_send: function () {
@@ -88,7 +88,7 @@ var ChatterComposer = composer.BasicComposer.extend({
 
     /**
      * Get the list of selected suggested partners
-     * @returns Array() : list of 'recipient' selected partners (may not be created in db)
+     * @returns {Array} list of 'recipient' selected partners (may not be created in db)
      **/
     get_checked_suggested_partners: function () {
         var self = this;
@@ -105,8 +105,8 @@ var ChatterComposer = composer.BasicComposer.extend({
     /**
      * Check the additional partners (not necessary registered partners), and open a popup form view
      * for the ones who informations is missing.
-     * @param Array : list of 'recipient' partners to complete informations or validate
-     * @returns Deferred resolved with the list of checked suggested partners (real partner)
+     * @param {Array} checked_suggested_partners list of 'recipient' partners to complete informations or validate
+     * @returns {Deferred} resolved with the list of checked suggested partners (real partner)
      **/
     check_suggested_partners: function (checked_suggested_partners) {
         var self = this;
@@ -149,12 +149,14 @@ var ChatterComposer = composer.BasicComposer.extend({
                     res_model: 'res.partner',
                     res_id: partner_id,
                     context: {
+                        active_model: self.model,
+                        active_id: self.context.default_res_id,
                         force_email: true,
                         ref: "compound_context",
                         default_name: parsed_email[0],
                         default_email: parsed_email[1],
                     },
-                    title: _t("Please complete partner's informations"),
+                    title: _t("Please complete customer's informations"),
                     disable_multiple_selection: true,
                 }).open();
                 dialog.on('closed', self, function () {
@@ -211,7 +213,7 @@ var ChatterComposer = composer.BasicComposer.extend({
         recipient_done.then(function (partner_ids) {
             var context = {
                 default_parent_id: self.id,
-                default_body: utils.get_text2html(self.$input.val()),
+                default_body: utils.get_text2html(self.$input.html()),
                 default_attachment_ids: _.pluck(self.get('attachment_ids'), 'id'),
                 default_partner_ids: partner_ids,
                 default_is_log: self.options.is_log,

@@ -33,21 +33,40 @@
     }
 
     .o_column_sortable {
+        position: relative;
         .user-select(none);  // Prevent unwanted selection while sorting
 
-        &.o-sort-up:after {
+        &::after {
+            margin-left: 6px;
+            position: absolute;
             font-family: FontAwesome;
-            margin-left: 5px;
             content: "\f0d7";
+            opacity: 0;
         }
-        &.o-sort-down:after {
-            font-family: FontAwesome;
-            margin-left: 5px;
-            content: "\f0d8";
+        &.o-sort-up {
+            cursor: n-resize;
+            &::after {
+                content: "\f0d7";
+            }
+        }
+        &.o-sort-down {
+            cursor: s-resize;
+            &::after {
+                content: "\f0d8";
+            }
+        }
+        &:hover::after {
+            opacity: 0.3;
+        }
+        &.o-sort-up, &.o-sort-down {
+            color: @headings-color;
+            &::after {
+                opacity: 1;
+            }
         }
     }
 
-    .o_list_record_selector, .o_list_record_delete, .o_handle_cell {
+    .o_list_record_selector, .o_list_record_remove, .o_handle_cell {
         width: 1px;  // to prevent the column to expand
     }
 
@@ -100,7 +119,9 @@
     }
 
     .o_data_cell.o_invisible_modifier {
-        display: initial!important;  // Override invisible to keep the cells aligned
+        // Override display: none to keep table cells aligned. Note: cannot use
+        // 'initial' as it will force them to 'inline', not 'table-cell'.
+        display: table-cell!important;
     }
 
     //--------------------------------------------------------------------------
@@ -108,7 +129,22 @@
     //--------------------------------------------------------------------------
     .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
         position: relative;
-        padding: 0;
+
+        // The in-edition elements will overflow other elements (the rows below,
+        // the content below the list view, ...). As those might be using
+        // position: relative, the in-edition elements have to define a z-index.
+        // Technically, creating a stacking context for a meaningful parent
+        // (maybe the .o_content) might be required for safety but we should
+        // consider this later if needed.
+        z-index: 1;
+
+        // The in-edition elements will overflow other elements (the rows below,
+        // the content below the list view, ...). As those might be using
+        // position: relative, the in-edition elements have to define a z-index.
+        // Technically, creating a stacking context for a meaningful parent
+        // (maybe the .o_content) might be required for safety but we should
+        // consider this later if needed.
+        z-index: 1;
 
         // Field widgets override
         > .o_field_widget {
@@ -119,11 +155,11 @@
                 white-space: nowrap;
             }
 
-            .o_field_widget, .badge { // Many2Many tags
-                display: block;
-                float: left;
-                white-space: normal;
-                max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
+            &.o_field_many2manytags > .badge {
+                &, > .o_badge_text {
+                    white-space: normal;
+                    max-width: 100%; // Fix a chrome bug where badge would not break on multiple lines
+                }
             }
         }
         > .o_field_translate {
@@ -131,7 +167,7 @@
             width: 16px; // to have some space on the right
         }
         .o_input {
-            padding: 4px; // bootstrap cell - 1px of border
+            padding: @table-condensed-cell-padding;
             background-color: white;
 
             .o_input {
@@ -144,15 +180,11 @@
         .o_field_monetary input {
             width: 0;
         }
-        .o_checkbox {
-            padding: 7px 0 0 5px;
-            background: transparent;
+        .o_field_boolean {
+            position: relative!important;
         }
         .o_field_widget {
             min-width: 0;
-        }
-        .o_with_button .o_input_dropdown {
-            width: 1%; // Hack so that the sibling button is not overlapped
         }
         .o_input_dropdown, .o_datepicker {
             > .o_input {

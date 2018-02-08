@@ -5,13 +5,16 @@
 # Translators:
 # Jeffery CHEN <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
+# 文 李 <leroyen913@cenniao.com>, 2017
+# Connie Xiao <connie.xiao@elico-corp.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2016\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,13 +23,20 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:240
+#. openerp-web
+#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
+#, python-format
+msgid " Import Template for Bank Statements"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d 已导入的交易将被忽略"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:240
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:241
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1个 已导入的交易将被忽略."
@@ -52,12 +62,17 @@ msgid "Accounts Allowed"
 msgstr "允许的科目"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
+msgid "Active"
+msgstr "有效"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
 msgid "Allow Cancelling Entries"
 msgstr "允许取消分录"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:242
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:243
 #, python-format
 msgid "Already imported items"
 msgstr "已导入的项目"
@@ -65,15 +80,15 @@ msgstr "已导入的项目"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_inbound
 msgid "At Least One Inbound"
-msgstr ""
+msgstr "至少一个入站"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_at_least_one_outbound
 msgid "At Least One Outbound"
-msgstr ""
+msgstr "至少一个出站"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:76
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:78
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_bank_id
 #, python-format
 msgid "Bank"
@@ -105,6 +120,11 @@ msgid "Bank Statement Line"
 msgstr "银行对账单明细"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
+msgid "Bank setup marked as done"
+msgstr "银行设置标记为完成"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_belongs_to_company
 msgid "Belong to the user's current company"
 msgstr "属于用户的当前公司"
@@ -116,7 +136,7 @@ msgid "Cancel"
 msgstr "取消"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:165
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
 #, python-format
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
@@ -127,8 +147,8 @@ msgstr "不能找到所需导入的账簿. 请手动选择账簿."
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
 msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
-" refunds made from this journal"
-msgstr "如果你不想在此日记账中共用发票和退款的序列号, 请选择这个方框."
+" credit notes made from this journal"
+msgstr "勾选此框，则此日记账下的会计发票或退款不使用同一个序列。"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_update_posted
@@ -143,6 +163,11 @@ msgid "Choose a file to import..."
 msgstr "选择需要导入的文件"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_color
+msgid "Color Index"
+msgstr "颜色索引"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_company_id
 msgid "Company"
 msgstr "公司"
@@ -153,7 +178,7 @@ msgid "Company related to this journal"
 msgstr "日记账相关的公司"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:106
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:108
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
@@ -175,6 +200,16 @@ msgid "Created on"
 msgstr "创建时间"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
+msgid "Credit Note Entry Sequence"
+msgstr "退款分录序列"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
+msgid "Credit Notes: Next Number"
+msgstr "退款：下一号码"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_currency_id
 msgid "Currency"
 msgstr "币种"
@@ -186,8 +221,8 @@ msgstr "借方方法"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence
-msgid "Dedicated Refund Sequence"
-msgstr "专用退款序列"
+msgid "Dedicated Credit Note Sequence"
+msgstr "退款专用序列"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_default_credit_account_id
@@ -294,7 +329,7 @@ msgid "Journal"
 msgstr "分类账"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:67
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:69
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -315,12 +350,12 @@ msgstr "只是点击 OK　来创建科目／日记账并且完成导入。如果
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard
 msgid "Kanban Dashboard"
-msgstr ""
+msgstr "看板仪表板"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_kanban_dashboard_graph
 msgid "Kanban Dashboard Graph"
-msgstr ""
+msgstr "看板仪表板图表"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import___last_update
@@ -348,21 +383,29 @@ msgstr "损失科目"
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_inbound_payment_method_ids
 msgid ""
-"Means of payment for collecting money. Odoo modules offer various payments "
-"handling facilities, but you can always use the 'Manual' payment method in "
-"order to manage payments outside of the software."
-msgstr "意味着用来收钱的付款。Odoo模块提供各种各样的付款处理工具，但是你也可以一直在系统外用手工的付款方法管理付款"
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_outbound_payment_method_ids
 msgid ""
-"Means of payment for sending money. Odoo modules offer various payments "
-"handling facilities, but you can always use the 'Manual' payment method in "
-"order to manage payments outside of the software."
-msgstr "意味着用来付钱的付款。Odoo模块提供各种各样的付款处理工具，但是你也可以一直在系统外用手工的付款方法管理付款"
+"Manual:Pay bill by cash or any other method outside of Odoo.\n"
+"Check:Pay bill by check and print it from Odoo.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. Enable this option from the settings."
+msgstr ""
+"手动：现金支付或使用系统外的方式支付。\n"
+"支票：使用支票支付并在系统打印。\n"
+"sepa转账：使用sepa付款并提交文件到银行，从设置中启用此功能。"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:136
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
+msgid "Next Number"
+msgstr "下一号码"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:138
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr "找不到与'%s'匹配的币种"
@@ -381,11 +424,6 @@ msgstr "付款方法"
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_profit_account_id
 msgid "Profit Account"
 msgstr "利润科目"
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
-msgid "Refund Entry Sequence"
-msgstr "退款分录序列"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_type
@@ -408,6 +446,11 @@ msgid "Sequence"
 msgstr "序号"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_active
+msgid "Set active to false to hide the Journal without removing it."
+msgstr "设置为无效，可以隐藏日记账而不用删除它。"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation_code
 msgid "Short Code"
 msgstr "简码"
@@ -418,6 +461,11 @@ msgid "Show journal on dashboard"
 msgstr "在仪表板显示日记账"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_account_setup_bank_data_done
+msgid "Technical field used in the special view for the setup bar step."
+msgstr "技术字段用于特殊视图的设置栏。"
+
+#. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
 "The account of the statement you are importing is not yet recorded in Odoo. "
@@ -426,14 +474,14 @@ msgid ""
 msgstr "要导入的报表中的账户还没有被记录在Odoo中。为了能够导入成功，你需要对这个账户创建一个银行日记账"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:151
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:153
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr "对账单中的科目(%s)和日记账(%s)中的不一样"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:161
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:163
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -451,6 +499,23 @@ msgid "The journal entries of this journal will be named using this prefix."
 msgstr "这个日记账中的日记账分录会被用这个前缀命名"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_number_next
+msgid "The next sequence number will be used for the next credit note."
+msgstr "下一号码将用于下一张退款单"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_number_next
+msgid "The next sequence number will be used for the next invoice."
+msgstr "下一号码将用于下一张发票"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
+msgid ""
+"This field contains the information related to the numbering of the credit "
+"note entries of this journal."
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_sequence_id
 msgid ""
 "This field contains the information related to the numbering of the journal "
@@ -458,20 +523,13 @@ msgid ""
 msgstr "这个字段包含和这个日记中日记账分录数量相关的信息"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation_refund_sequence_id
-msgid ""
-"This field contains the information related to the numbering of the refund "
-"entries of this journal."
-msgstr "这个字段包含和这个日记账的退款分录的数量相关的信息"
-
-#. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:111
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:113
 #, python-format
 msgid "This file doesn't contain any statement."
 msgstr "这个文件不包含任何对账单"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:119
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:121
 #, python-format
 msgid "This file doesn't contain any transaction."
 msgstr "这个文件不包含任何交易"
@@ -506,10 +564,18 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr "不管这个日记账是否显示在仪表板"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:232
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:233
 #, python-format
 msgid "You have already imported that file."
 msgstr "你已经导入文件"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
+#, python-format
+msgid ""
+"You have to set a Default Debit Account and a Default Credit Account for the"
+" journal: %s"
+msgstr "您必须为日志设置默认借记帐户和默认信用帐户：%s"
 
 #. module: account_bank_statement_import
 #: model:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view

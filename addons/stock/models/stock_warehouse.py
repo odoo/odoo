@@ -8,7 +8,7 @@ from dateutil import relativedelta
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, pycompat
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 import logging
 
@@ -99,7 +99,7 @@ class Warehouse(models.Model):
             'wh_output_stock_loc_id': {'name': _('Output'), 'active': delivery_steps != 'ship_only', 'usage': 'internal'},
             'wh_pack_stock_loc_id': {'name': _('Packing Zone'), 'active': delivery_steps == 'pick_pack_ship', 'usage': 'internal'},
         }
-        for field_name, values in pycompat.items(sub_locations):
+        for field_name, values in sub_locations.items():
             values['location_id'] = vals['view_location_id']
             if vals.get('company_id'):
                 values['company_id'] = vals.get('company_id')
@@ -118,7 +118,6 @@ class Warehouse(models.Model):
             self._update_partner_data(vals['partner_id'], vals.get('company_id'))
         return warehouse
 
-    @api.multi
     def write(self, vals):
         Route = self.env['stock.location.route']
         warehouses = self.with_context(active_test=False)  # TDE FIXME: check this
@@ -188,8 +187,8 @@ class Warehouse(models.Model):
 
         # choose the next available color for the operation types of this warehouse
         all_used_colors = [res['color'] for res in PickingType.search_read([('warehouse_id', '!=', False), ('color', '!=', False)], ['color'], order='color')]
-        available_colors = [zef for zef in [0, 3, 4, 5, 6, 7, 8, 1, 2] if zef not in all_used_colors]
-        color = available_colors and available_colors[0] or 1
+        available_colors = [zef for zef in range(0, 12) if zef not in all_used_colors]
+        color = available_colors[0] if available_colors else 0
 
         # suit for each warehouse: reception, internal, pick, pack, ship
         max_sequence = PickingType.search_read([('sequence', '!=', False)], ['sequence'], limit=1, order='sequence desc')
@@ -240,10 +239,10 @@ class Warehouse(models.Model):
             },
         }
         data = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in pycompat.items(data):
+        for field_name in data:
             data[field_name].update(create_data[field_name])
 
-        for picking_type, values in pycompat.items(data):
+        for picking_type, values in data.items():
             sequence = IrSequenceSudo.create(sequence_data[picking_type])
             values.update(warehouse_id=self.id, color=color, sequence_id=sequence.id)
             warehouse_data[picking_type] = PickingType.create(values).id
@@ -251,7 +250,6 @@ class Warehouse(models.Model):
         PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data['out_type_id']})
         return warehouse_data
 
-    @api.multi
     def create_routes(self):
         self.ensure_one()
         routes_data = self.get_routes_dict()
@@ -457,14 +455,15 @@ class Warehouse(models.Model):
                 self.Routing(warehouse.lot_stock_id, warehouse.wh_pack_stock_loc_id, warehouse.pick_type_id),
                 self.Routing(warehouse.wh_pack_stock_loc_id, warehouse.wh_output_stock_loc_id, warehouse.pack_type_id),
                 self.Routing(warehouse.wh_output_stock_loc_id, customer_loc, warehouse.out_type_id)],
+            'company_id': warehouse.company_id.id,
         }) for warehouse in self)
 
-    @api.multi
     def _get_reception_delivery_route_values(self, route_type):
         return {
             'name': self._format_routename(route_type=route_type),
             'product_categ_selectable': True,
             'product_selectable': False,
+            'company_id': self.company_id.id,
             'sequence': 10,
         }
 
@@ -485,7 +484,9 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'supplied_wh_id': self.id,
-            'supplier_wh_id': supplier_warehouse.id}
+            'supplier_wh_id': supplier_warehouse.id,
+            'company_id': self.company_id.id,
+        }
 
     def _get_crossdock_route_values(self):
         return {
@@ -494,12 +495,13 @@ class Warehouse(models.Model):
             'product_selectable': True,
             'product_categ_selectable': True,
             'active': self.delivery_steps != 'ship_only' and self.reception_steps != 'one_step',
-            'sequence': 20}
+            'company_id': self.company_id.id,
+            'sequence': 20,
+        }
 
     # Pull / Push tools
     # ------------------------------------------------------------
 
-    @api.multi
     def _get_push_pull_rules_values(self, route_values, values=None, push_values=None, pull_values=None, name_suffix=''):
         first_rule = True
         push_rules_list, pull_rules_list = [], []
@@ -510,7 +512,9 @@ class Warehouse(models.Model):
                 'location_dest_id': routing.dest_loc.id,
                 'auto': 'manual',
                 'picking_type_id': routing.picking_type.id,
-                'warehouse_id': self.id}
+                'warehouse_id': self.id,
+                'company_id': self.company_id.id,
+            }
             route_push_values.update(values or {})
             route_push_values.update(push_values or {})
             push_rules_list.append(route_push_values)
@@ -522,6 +526,7 @@ class Warehouse(models.Model):
                 'picking_type_id': routing.picking_type.id,
                 'procure_method': first_rule is True and 'make_to_stock' or 'make_to_order',
                 'warehouse_id': self.id,
+                'company_id': self.company_id.id,
                 'propagate': routing.picking_type != self.pick_type_id,
             }
             route_pull_values.update(values or {})
@@ -584,7 +589,6 @@ class Warehouse(models.Model):
             '&', ('route_id', 'in', routes.ids),
             ('location_src_id.usage', '=', 'transit')]).write({'location_id': new_location.id})
 
-    @api.multi
     def _update_routes(self):
         routes_data = self.get_routes_dict()
         # change the default source and destination location and (de)activate operation types
@@ -598,10 +602,9 @@ class Warehouse(models.Model):
     @api.one
     def _update_picking_type(self):
         picking_type_values = self._get_picking_type_values(self.reception_steps, self.delivery_steps, self.wh_pack_stock_loc_id)
-        for field_name, values in pycompat.items(picking_type_values):
-            getattr(self, field_name).write(values)
+        for field_name, values in picking_type_values.items():
+            self[field_name].write(values)
 
-    @api.multi
     def _update_name_and_code(self, new_name=False, new_code=False):
         if new_code:
             self.mapped('lot_stock_id').mapped('location_id').write({'name': new_code})
@@ -688,18 +691,15 @@ class Warehouse(models.Model):
             'int_type_id': {'name': self.name + _('Sequence internal'), 'prefix': self.code + '/INT/', 'padding': 5},
         }
 
-    @api.multi
     def _format_rulename(self, from_loc, dest_loc, suffix):
         return '%s: %s -> %s%s' % (self.code, from_loc.name, dest_loc.name, suffix)
 
-    @api.multi
     def _format_routename(self, name=None, route_type=None):
         if route_type:
             name = self._get_route_name(route_type)
         return '%s: %s' % (self.name, name)
 
     @api.returns('self')
-    @api.multi
     def _get_all_routes(self):
         # TDE FIXME: check overrides
         routes = self.mapped('route_ids') | self.mapped('mto_pull_id').mapped('route_id')
@@ -707,7 +707,6 @@ class Warehouse(models.Model):
         return routes
     get_all_routes_for_wh = _get_all_routes
 
-    @api.multi
     def action_view_all_routes(self):
         routes = self._get_all_routes()
         return {
@@ -769,7 +768,6 @@ class Orderpoint(models.Model):
         'Qty Multiple', digits=dp.get_precision('Product Unit of Measure'),
         default=1, required=True,
         help="The procurement quantity will be rounded up to this multiple.  If it is 0, the exact quantity will be used.")
-    procurement_ids = fields.One2many('procurement.order', 'orderpoint_id', 'Created Procurements')
     group_id = fields.Many2one(
         'procurement.group', 'Procurement Group', copy=False,
         help="Moves created through this orderpoint will be put in this procurement group. If none is given, the moves generated by procurement rules will be grouped into one big picking.")
@@ -786,6 +784,11 @@ class Orderpoint(models.Model):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
     ]
+
+    def _quantity_in_progress(self):
+        """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
+        (example: purchases created from orderpoints)"""
+        return dict(self.mapped(lambda x: (x.id, 0.0)))
 
     @api.constrains('product_id')
     def _check_product_uom(self):
@@ -806,32 +809,6 @@ class Orderpoint(models.Model):
             return {'domain':  {'product_uom': [('category_id', '=', self.product_id.uom_id.category_id.id)]}}
         return {'domain': {'product_uom': []}}
 
-    @api.multi
-    def subtract_procurements_from_orderpoints(self):
-        '''This function returns quantity of product that needs to be deducted from the orderpoint computed quantity because there's already a procurement created with aim to fulfill it.
-        '''
-        self._cr.execute("""SELECT orderpoint.id, procurement.id, procurement.product_uom, procurement.product_qty, template.uom_id, move.product_qty
-            FROM stock_warehouse_orderpoint orderpoint
-            JOIN procurement_order AS procurement ON procurement.orderpoint_id = orderpoint.id
-            JOIN product_product AS product ON product.id = procurement.product_id
-            JOIN product_template AS template ON template.id = product.product_tmpl_id
-            LEFT JOIN stock_move AS move ON move.procurement_id = procurement.id
-            WHERE procurement.state not in ('done', 'cancel')
-                AND (move.state IS NULL OR move.state != 'draft')
-                AND orderpoint.id IN %s
-            ORDER BY orderpoint.id, procurement.id
-        """, (tuple(self.ids),))
-        UoM = self.env["product.uom"]
-        procurements_done = set()
-        res = dict.fromkeys(self.ids, 0.0)
-        for orderpoint_id, procurement_id, product_uom_id, procurement_qty, template_uom_id, move_qty in self._cr.fetchall():
-            if procurement_id not in procurements_done:  # count procurement once, if multiple move in this orderpoint/procurement combo
-                procurements_done.add(procurement_id)
-                res[orderpoint_id] += UoM.browse(product_uom_id)._compute_quantity(procurement_qty, UoM.browse(template_uom_id), round=False)
-            if move_qty:
-                res[orderpoint_id] -= move_qty
-        return res
-
     def _get_date_planned(self, product_qty, start_date):
         days = self.lead_days or 0.0
         if self.lead_type == 'supplier':
@@ -841,20 +818,16 @@ class Orderpoint(models.Model):
                 date=fields.Date.to_string(start_date),
                 uom_id=self.product_uom).delay or 0.0
         date_planned = start_date + relativedelta.relativedelta(days=days)
-        return date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        return date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-    @api.multi
     def _prepare_procurement_values(self, product_qty, date=False, group=False):
+        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        comming from an orderpoint. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
         return {
-            'name': self.name,
             'date_planned': date or self._get_date_planned(product_qty, datetime.today()),
-            'product_id': self.product_id.id,
-            'product_qty': product_qty,
-            'company_id': self.company_id.id,
-            'product_uom': self.product_uom.id,
-            'location_id': self.location_id.id,
-            'origin': self.name,
-            'warehouse_id': self.warehouse_id.id,
-            'orderpoint_id': self.id,
-            'group_id': group or self.group_id.id,
+            'warehouse_id': self.warehouse_id,
+            'orderpoint_id': self,
+            'group_id': group or self.group_id,
         }

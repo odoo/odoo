@@ -3,24 +3,13 @@
 
 import logging
 import re
-import unicodedata
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from odoo.tools import ustr
+from odoo.tools import remove_accents
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
-
-
-# Inspired by http://stackoverflow.com/questions/517923
-def remove_accents(input_str):
-    """Suboptimal-but-better-than-nothing way to replace accented
-    latin letters by an ASCII equivalent. Will obviously change the
-    meaning of input_str and work only for some cases"""
-    input_str = ustr(input_str)
-    nkfd_form = unicodedata.normalize('NFKD', input_str)
-    return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
 
 class Alias(models.Model):
@@ -264,16 +253,27 @@ class AliasMixin(models.AbstractModel):
                          record._name, record.display_name, record.id)
 
     def _alias_check_contact(self, message, message_dict, alias):
+        """ Main mixin method that inheriting models may inherit in order
+        to implement a specifc behavior. """
+        return self._alias_check_contact_on_record(self, message, message_dict, alias)
+
+    def _alias_check_contact_on_record(self, record, message, message_dict, alias):
+        """ Generic method that takes a record not necessarily inheriting from
+        mail.alias.mixin. """
         author = self.env['res.partner'].browse(message_dict.get('author_id', False))
-        if alias.alias_contact == 'followers' and self.ids:
-            if not hasattr(self, "message_partner_ids") or not hasattr(self, "message_channel_ids"):
+        if alias.alias_contact == 'followers':
+            if not record.ids:
                 return {
-                    'error_mesage': _('incorrectly configured alias'),
+                    'error_message': _('incorrectly configured alias (unknown reference record)'),
                 }
-            accepted_partner_ids = self.message_partner_ids | self.message_channel_ids.mapped('channel_partner_ids')
+            if not hasattr(record, "message_partner_ids") or not hasattr(record, "message_channel_ids"):
+                return {
+                    'error_message': _('incorrectly configured alias'),
+                }
+            accepted_partner_ids = record.message_partner_ids | record.message_channel_ids.mapped('channel_partner_ids')
             if not author or author not in accepted_partner_ids:
                 return {
-                    'error_mesage': _('restricted to followers'),
+                    'error_message': _('restricted to followers'),
                 }
         elif alias.alias_contact == 'partners' and not author:
             return {

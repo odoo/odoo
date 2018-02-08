@@ -5,14 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,6 +146,44 @@ msgid "${object.company_id.name} invitation to connect on Odoo"
 msgstr "${object.company_id.name} meghívás az Odoo rendszer tartalmához"
 
 #. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
+msgid ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"        Your account has been successfully created!\n"
+"    </p>\n"
+"    <p>\n"
+"        Your login: ${object.email}\n"
+"        <br/>\n"
+"        Your password: ${ctx['password']}\n"
+"    </p>\n"
+"    <p>\n"
+"        To gain access to your account, you can use the following link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Go to My Account</a>\n"
+"    </div>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
 msgid ""
 "<strong>A password reset has been requested for this user. An email "
@@ -164,41 +202,35 @@ msgstr ""
 "linkkel:</strong>"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
-msgid "Allow external users to sign up"
-msgstr "Külső felhasználók bejelentkezésének engedélyezése"
-
-#. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "Allow external users to sign up from Login page"
+#: model:ir.ui.view,arch_db:auth_signup.signup
+msgid "Already have an account?"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:61
+#: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Egy e-mail lett kiküldve a jelszava visszaállításának biztosítására"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:38
+#: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "Ezzel az email címmel már regisztrált egy másik felhasználó."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:110
+#: code:addons/auth_signup/controllers/main.py:133
 #, python-format
 msgid "Authentication Failed."
 msgstr "Azonosítás nem sikerült"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
-#: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
 msgstr "Vissza a bejelentkezéshez"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:135
+#: code:addons/auth_signup/models/res_users.py:137
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "Nem küldhető e-mail: a %s felhasználónak nincs e-mail címe."
@@ -219,38 +251,73 @@ msgid "Confirmed"
 msgstr "Jóváhagyott"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:41
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolat"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Copy access rights from"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
 msgstr "Nem tudta létrehozni az új fiókot."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:63
+#: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
 msgstr "Nem lehetett visszaállítani a jelszaát"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
+msgid "Customer Account"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.login
+msgid "Don't have an account?"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "Jelszóváltoztató engedélyezése a belépési oldalról"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up (B2C)"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP útválasztás"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "If unchecked, only invited users may sign up."
 msgstr "Ha nincs bejelölve, csak meghívott felhasználók jelentkezhetnek be."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:90
+#: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Invalid signup token"
 msgstr "Érvénytelen regisztrációs token"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Let your customers log in to see their documents"
+msgstr ""
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -258,9 +325,15 @@ msgid "Never Connected"
 msgstr "Sohe nem kapcsolódott"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_res_partner
-msgid "Partner"
-msgstr "Partner"
+#: code:addons/auth_signup/controllers/main.py:73
+#, python-format
+msgid "No login provided."
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation (B2B)"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -268,7 +341,7 @@ msgid "Password"
 msgstr "Jelszó"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
 msgstr ""
 
@@ -278,12 +351,18 @@ msgid "Password reset"
 msgstr "Jelszó visszaállítás"
 
 #. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:121
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
 msgstr "Jelszó visszaállítása"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:108
+#: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "Jelszó visszaállító: hibás felhasználónév vagy jelszó"
@@ -299,7 +378,6 @@ msgid "Send an Invitation Email"
 msgstr "Egy meghívó email küldése"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
 msgstr "Regisztrál"
@@ -335,24 +413,37 @@ msgid "Signup URL"
 msgstr "Bejelentkezési URL elérési útvonal"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:88
+#, python-format
+msgid "Signup is not allowed for uninvited users"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_partner.py:146
+#, python-format
+msgid "Signup token '%s' is no longer valid"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_partner.py:142
+#, python-format
+msgid "Signup token '%s' is not valid"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "Állapot"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "Sablon felhasználó amit a új felhasznlók létrehozásához használ"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr ""
-"A teljes elérési út/URL  a dokumentum weboldalon keresztüli eléréséhez."
-
-#. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "User Signup"
+#: code:addons/auth_signup/controllers/main.py:119
+#, python-format
+msgid "The form was not properly filled in."
 msgstr ""
 
 #. module: auth_signup
@@ -361,39 +452,9 @@ msgid "Users"
 msgstr "Felhasználók"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr "Látható a weboldalon"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr "Honlap partnerek részletes leírása"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr "Honlap partnerek rövid leírása"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr "Honlap URL"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr "Honlap meta leírás"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "Honlap meta kulcsszavai"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr "Honlap meta cím"
+#: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
+msgid "Welcome to ${object.company_id.name}!"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -407,11 +468,11 @@ msgid "Your Name"
 msgstr "Az Ön neve"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "pl. Gipsz Jakab"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

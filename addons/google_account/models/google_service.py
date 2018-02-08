@@ -9,6 +9,7 @@ import requests
 from werkzeug import urls
 
 from odoo import api, fields, models, registry, _
+from odoo.exceptions import UserError
 from odoo.http import request
 
 
@@ -125,6 +126,9 @@ class GoogleService(models.TransientModel):
         client_id = get_param('google_%s_client_id' % (service,), default=False)
         client_secret = get_param('google_%s_client_secret' % (service,), default=False)
 
+        if not client_id or not client_secret:
+            raise UserError(_("The account for the Google service '%s' is not configured") % service)
+
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
             'refresh_token': refresh_token,
@@ -140,7 +144,7 @@ class GoogleService(models.TransientModel):
             if error.response.status_code == 400:  # invalid grant
                 with registry(request.session.db).cursor() as cur:
                     self.env(cur)['res.users'].browse(self.env.uid).write({'google_%s_rtoken' % service: False})
-            error_key = json.loads(error.response.json()).get("error", "nc")
+            error_key = error.response.json().get("error", "nc")
             _logger.exception("Bad google request : %s !", error_key)
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]") % error_key
             raise self.env['res.config.settings'].get_config_warning(error_msg)
@@ -177,13 +181,13 @@ class GoogleService(models.TransientModel):
                 ask_time = datetime.strptime(res.headers.get('date'), "%a, %d %b %Y %H:%M:%S %Z")
             except:
                 pass
-        except request.HTTPError as error:
+        except requests.HTTPError as error:
             if error.response.status_code in (204, 404):
-                status = error.code
+                status = error.response.status_code
                 response = ""
             else:
                 _logger.exception("Bad google request : %s !", error.response.content)
-                if error.code in (400, 401, 410):
+                if error.response.status_code in (400, 401, 410):
                     raise error
                 raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))
         return (status, response, ask_time)

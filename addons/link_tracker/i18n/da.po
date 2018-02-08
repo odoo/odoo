@@ -1,37 +1,46 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * link_tracker
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Per Rasmussen <perhgrasmussen@gmail.com>, 2017
+# Jonathan Stein <cgs@image.dk>, 2017
+# Sanne Kristensen <sanne@vkdata.dk>, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
+# Jesper Carstensen <jc@danodoo.dk>, 2017
+# Morten Schou <ms@msteknik.dk>, 2017
+# JonathanStein <jstein@image.dk>, 2017
+# lhmflexerp <lhm@flexerp.dk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-12-07 17:29+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Danish (http://www.transifex.com/odoo/odoo-9/language/da/)\n"
-"Language: da\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2017\n"
+"Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: da\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_click_ids
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Clicks"
-msgstr ""
+msgstr "Klik"
 
 #. module: link_tracker
 #: sql_constraint:link.tracker.code:0
 msgid "Code must be unique."
-msgstr ""
+msgstr "Koden skal være unik."
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_link_code_ids
 msgid "Codes"
-msgstr ""
+msgstr "Koder"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_country_id
@@ -41,7 +50,7 @@ msgstr "Land"
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_click_date
 msgid "Create Date"
-msgstr "Oprettelses dato"
+msgstr "Oprettelsesdato"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_create_uid
@@ -62,12 +71,12 @@ msgstr "Oprettet den"
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_display_name
 msgid "Display Name"
-msgstr "Vist navn"
+msgstr "Vis navn"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_favicon
 msgid "Favicon"
-msgstr ""
+msgstr "Favicon"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_icon_src
@@ -84,7 +93,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_id
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_id
 msgid "ID"
-msgstr "Id"
+msgstr "ID"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click_ip
@@ -122,27 +131,27 @@ msgstr "Link"
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker
 #: model:ir.ui.menu,name:link_tracker.menu_url_shortener_main
 msgid "Link Tracker"
-msgstr ""
+msgstr "Link Tracker"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_count
 msgid "Number of Clicks"
-msgstr ""
+msgstr "Antal klik"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_title
 msgid "Page Title"
-msgstr ""
+msgstr "Side titel"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_redirected_url
 msgid "Redirected URL"
-msgstr ""
+msgstr "Omdirigeret URL"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code_code
 msgid "Short URL Code"
-msgstr ""
+msgstr "Kort URL Kode"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code
@@ -167,13 +176,7 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_filter
 msgid "Tracked Link"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.actions.act_window,name:link_tracker.action_link_tracker_click
-#: model:ir.ui.menu,name:link_tracker.menu_url_shortener_links
-msgid "Tracked Links"
-msgstr ""
+msgstr "Sporet link"
 
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_short_url
@@ -183,10 +186,10 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.ui.view,arch_db:link_tracker.view_link_tracker_form
 msgid "Visit Page"
-msgstr ""
+msgstr "Besøg hjemmeside"
 
 #. module: link_tracker
-#: code:addons/link_tracker/models/link_tracker.py:139
+#: code:addons/link_tracker/models/link_tracker.py:141
 #, python-format
 msgid "Visit Webpage"
 msgstr ""
@@ -221,45 +224,19 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker
 msgid "link.tracker"
-msgstr ""
+msgstr "link.tracker"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_click
 msgid "link.tracker.click"
-msgstr ""
+msgstr "link.tracker.click"
 
 #. module: link_tracker
 #: model:ir.model,name:link_tracker.model_link_tracker_code
 msgid "link.tracker.code"
-msgstr ""
+msgstr "link.tracker.code"
 
 #. module: link_tracker
 #: model:ir.actions.act_window,name:link_tracker.action_link_tracker_stats
 msgid "link.tracker.form.graph.action"
-msgstr ""
-
-#~ msgid "Campaign"
-#~ msgstr "Kampagne"
-
-#~ msgid "Medium"
-#~ msgstr "Medium"
-
-#~ msgid "Source"
-#~ msgstr "Kilde"
-
-#~ msgid ""
-#~ "This is a name that helps you keep track of your different campaign "
-#~ "efforts Ex: Fall_Drive, Christmas_Special"
-#~ msgstr ""
-#~ "Dette er navnet som hjælper dig med at holde styr på forskellige "
-#~ "kampagner."
-
-#~ msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-#~ msgstr "Dette er leveringsmåden. F.eks. postkort, mail, brev"
-
-#~ msgid ""
-#~ "This is the source of the link Ex: Search Engine, another domain, or name "
-#~ "of email list"
-#~ msgstr ""
-#~ "Dette er kilden for linket, f.eks. søgemaskine, andet domæne eller navn "
-#~ "på mail liste."
+msgstr "link.tracker.form.graph.action"

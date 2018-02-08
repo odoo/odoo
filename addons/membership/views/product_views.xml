@@ -12,11 +12,11 @@
             <field name="arch" type="xml">
                 <search string="Membership Products">
                     <field name="name" string="Membership Product"/>
-                    <filter string="Inactive" domain="[('active','=',0)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active','=',0)]"/>
                     <field name="categ_id" operator="child_of"/>
                     <group  expand='0' string='Group by...'>
-                        <filter string='Category' domain="[]" context="{'group_by' : 'categ_id'}"/>
-                        <filter string='From Month' domain="[]" context="{'group_by' : 'membership_date_from'}"/>
+                        <filter string='Category' name="category" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                        <filter string='From Month' name="from_month" domain="[]" context="{'group_by' : 'membership_date_from'}"/>
                     </group>
                 </search>
             </field>
@@ -51,15 +51,13 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <div class="col-xs-6">
-                                        <strong><span><field name="name"/></span></strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><span class="mt4"><field name="name"/></span></strong>
                                     </div>
-                                    <div class="col-xs-6 pull-right text-right">
-                                        <strong><span class="badge"><i class="fa fa-money"/> <field name="list_price"/></span></strong>
-                                    </div>
+                                    <span class="badge"><i class="fa fa-money"/> <field name="list_price"/></span>
                                 </div>
-                                <div>
+                                <div class="o_kanban_record_body">
                                     <i class="fa fa-clock-o" aria-hidden="true"></i><strong> From: </strong><field name="membership_date_from"/><strong> To:</strong> <field name="membership_date_to"/>
                                 </div>
                             </div>

@@ -2,11 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 import random
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from odoo import api, models, fields, _
 from odoo.http import request
+from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +27,8 @@ class SaleOrder(models.Model):
         string="Can be directly marked as paid", store=True,
         help="""Checked if the sales order can directly be marked as paid, i.e. if the quotation
                 is sent or confirmed and if the payment acquire is of the type transfer or manual""")
+    is_abandoned_cart = fields.Boolean('Abandoned Cart', compute='_compute_abandoned_cart', search='_search_abandoned_cart')
+    cart_recovery_email_sent = fields.Boolean('Cart recovery email already sent')
 
     @api.depends('state', 'payment_tx_id', 'payment_tx_id.state',
                  'payment_acquirer_id', 'payment_acquirer_id.provider')
@@ -38,6 +42,30 @@ class SaleOrder(models.Model):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
+
+    @api.multi
+    @api.depends('team_id.team_type', 'date_order', 'order_line', 'state', 'partner_id')
+    def _compute_abandoned_cart(self):
+        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        for order in self:
+            domain = order.date_order <= abandoned_datetime and order.team_id.team_type == 'website' and order.state == 'draft' and order.partner_id.id != self.env.ref('base.public_partner').id and order.order_line
+            order.is_abandoned_cart = bool(domain)
+
+    def _search_abandoned_cart(self, operator, value):
+        abandoned_delay = float(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_abandoned_delay', '1.0'))
+        abandoned_datetime = fields.Datetime.to_string(datetime.utcnow() - relativedelta(hours=abandoned_delay))
+        abandoned_domain = expression.normalize_domain([
+            ('date_order', '<=', abandoned_datetime),
+            ('team_id.team_type', '=', 'website'),
+            ('state', '=', 'draft'),
+            ('partner_id.id', '!=', self.env.ref('base.public_partner').id),
+            ('order_line', '!=', False)
+        ])
+        # is_abandoned domain possibilities
+        if (operator not in expression.NEGATIVE_TERM_OPERATORS and value) or (operator in expression.NEGATIVE_TERM_OPERATORS and not value):
+            return abandoned_domain
+        return expression.distribute_not(abandoned_domain)  # negative domain
 
     @api.multi
     def _cart_find_product_line(self, product_id=None, line_id=None, **kwargs):
@@ -69,7 +97,7 @@ class SaleOrder(models.Model):
         if order.pricelist_id and order.partner_id:
             order_line = order._cart_find_product_line(product.id)
             if order_line:
-                pu = self.env['account.tax']._fix_tax_included_price(pu, product.taxes_id, order_line[0].tax_id)
+                pu = self.env['account.tax']._fix_tax_included_price_company(pu, product.taxes_id, order_line[0].tax_id, self.company_id)
 
         return {
             'product_id': product_id,
@@ -93,7 +121,7 @@ class SaleOrder(models.Model):
 
         # add untracked attributes in the name
         untracked_attributes = []
-        for k, v in pycompat.items(attributes):
+        for k, v in attributes.items():
             # attribute should be like 'attribute-48-1' where 48 is the product_id, 1 is the attribute_id and v is the attribute value
             attribute_value = self.env['product.attribute.value'].sudo().browse(int(v))
             if attribute_value and not attribute_value.attribute_id.create_variant:
@@ -111,6 +139,17 @@ class SaleOrder(models.Model):
         """ Add or set product quantity, add_qty can be negative """
         self.ensure_one()
         SaleOrderLineSudo = self.env['sale.order.line'].sudo()
+
+        try:
+            if add_qty:
+                add_qty = float(add_qty)
+        except ValueError:
+            add_qty = 1
+        try:
+            if set_qty:
+                set_qty = float(set_qty)
+        except ValueError:
+            set_qty = 0
         quantity = 0
         order_line = False
         if self.state != 'draft':
@@ -157,10 +196,11 @@ class SaleOrder(models.Model):
                     'pricelist': order.pricelist_id.id,
                 })
                 product = self.env['product.product'].with_context(product_context).browse(product_id)
-                values['price_unit'] = self.env['account.tax']._fix_tax_included_price(
+                values['price_unit'] = self.env['account.tax']._fix_tax_included_price_company(
                     order_line._get_display_price(product),
                     order_line.product_id.taxes_id,
-                    order_line.tax_id
+                    order_line.tax_id,
+                    self.company_id
                 )
 
             order_line.write(values)
@@ -174,6 +214,33 @@ class SaleOrder(models.Model):
             accessory_products -= order.website_order_line.mapped('product_id')
             return random.sample(accessory_products, len(accessory_products))
 
+    @api.multi
+    def action_recovery_email_send(self):
+        composer_form_view_id = self.env.ref('mail.email_compose_message_wizard_form').id
+        try:
+            default_template = self.env.ref('website_sale.mail_template_sale_cart_recovery', raise_if_not_found=False)
+            default_template_id = default_template.id if default_template else False
+            template_id = int(self.env['ir.config_parameter'].sudo().get_param('website_sale.cart_recovery_mail_template_id', default_template_id))
+        except:
+            template_id = False
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'view_id': composer_form_view_id,
+            'target': 'new',
+            'context': {
+                'default_composition_mode': 'mass_mail' if len(self) > 1 else 'comment',
+                'default_res_id': self.ids[0],
+                'default_model': 'sale.order',
+                'default_use_template': bool(template_id),
+                'default_template_id': template_id,
+                'website_sale_send_recovery_email': True,
+                'active_ids': self.ids,
+            },
+        }
+
     def action_mark_as_paid(self):
         """ Mark directly a sales order as paid if:
                 - State: Quotation Sent, or sales order
@@ -185,23 +252,7 @@ class SaleOrder(models.Model):
         if self.can_directly_mark_as_paid:
             self.action_confirm()
             if self.env['ir.config_parameter'].sudo().get_param('website_sale.automatic_invoice', default=False):
-                self.payment_tx_id._generate_and_pay_invoice(self.payment_tx_id, self.payment_acquirer_id.provider)
+                self.payment_tx_id._generate_and_pay_invoice()
             self.payment_tx_id.state = 'done'
         else:
             raise ValidationError(_("The quote should be sent and the payment acquirer type should be manual or wire transfer"))
-
-
-class ResCountry(models.Model):
-    _inherit = 'res.country'
-
-    def get_website_sale_countries(self, mode='billing'):
-        return self.sudo().search([])
-
-    def get_website_sale_states(self, mode='billing'):
-        return self.sudo().state_ids
-
-
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
-
-    last_website_so_id = fields.Many2one('sale.order', string='Last Online Sales Order')

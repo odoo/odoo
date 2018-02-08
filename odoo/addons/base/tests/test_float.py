@@ -92,6 +92,18 @@ class TestFloatPrecision(TransactionCase):
         try_round(1.8, '2', 0, method='UP')
         try_round(-1.8, '-2', 0, method='UP')
 
+        # Try some rounding value with rounding method DOWN instead of HALF-UP
+        # We use 2.425 because when normalizing 2.425 with precision_digits=3 it gives
+        # us 2424.9999999999995 as value, and if not handle correctly the rounding DOWN
+        # value will be incorrect (should be 2.425 and not 2.424)
+        try_round(2.425, '2.425', method='DOWN')
+        try_round(2.4249, '2.424', method='DOWN')
+        try_round(-2.425, '-2.425', method='DOWN')
+        try_round(-2.4249, '-2.424', method='DOWN')
+        try_round(-2.500, '-2.500', method='DOWN')
+        try_round(1.8, '1', 0, method='DOWN')
+        try_round(-1.8, '-1', 0, method='DOWN')
+
         # Extended float range test, inspired by Cloves Almeida's test on bug #882036.
         fractions = [.0, .015, .01499, .675, .67499, .4555, .4555, .45555]
         expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
@@ -135,8 +147,8 @@ class TestFloatPrecision(TransactionCase):
         try_compare(-657.4444, -657.445, 1)
 
         # Rounding to unusual rounding units (e.g. coin values)
-        def try_round(amount, expected, precision_rounding=None):
-            value = float_round(amount, precision_rounding=precision_rounding)
+        def try_round(amount, expected, precision_rounding=None, method='HALF-UP'):
+            value = float_round(amount, precision_rounding=precision_rounding, rounding_method=method)
             result = float_repr(value, precision_digits=2)
             self.assertEqual(result, expected, 'Rounding error: got %s, expected %s' % (result, expected))
 
@@ -145,6 +157,8 @@ class TestFloatPrecision(TransactionCase):
         try_round(457.3, '455.00', precision_rounding=5)
         try_round(457.5, '460.00', precision_rounding=5)
         try_round(457.1, '456.00', precision_rounding=3)
+        try_round(2.5, '2.50', precision_rounding=0.05, method='DOWN')
+        try_round(-2.5, '-2.50', precision_rounding=0.05, method='DOWN')
 
     def test_rounding_04(self):
         """ check that proper rounding is performed for float persistence """
@@ -160,9 +174,12 @@ class TestFloatPrecision(TransactionCase):
 
         # res.currency.rate uses 6 digits of precision by default
         try_roundtrip(2.6748955, 2.674896, '2000-01-01')
-        try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
         try_roundtrip(10000.999999, 10000.999999, '2000-01-03')
-        try_roundtrip(-10000.999999, -10000.999999, '2000-01-04')
+
+        #TODO re-enable those tests when tests are made on dedicated models
+        # (res.currency.rate don't accept negative value anymore)
+        #try_roundtrip(-2.6748955, -2.674896, '2000-01-02')
+        #try_roundtrip(-10000.999999, -10000.999999, '2000-01-04')
 
     def test_float_split_05(self):
         """ Test split method with 2 digits. """

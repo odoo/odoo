@@ -9,17 +9,17 @@ var QWeb = core.qweb;
 var _t = core._t;
 
 /**
-    A useful class to handle dialogs.
-
-    Attributes:
-    - $footer: A jQuery element targeting a dom part where buttons can be added. It always exists
-    during the lifecycle of the dialog.
-*/
+ * A useful class to handle dialogs.
+ * Attributes:
+ *
+ * ``$footer``
+ *   A jQuery element targeting a dom part where buttons can be added. It
+ *   always exists during the lifecycle of the dialog.
+ **/
 var Dialog = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/dialog.xml'],
 
     /**
-     * @constructor
      * @param {Widget} parent
      * @param {Object} [options]
      * @param {string} [options.title=Odoo]
@@ -165,12 +165,12 @@ var Dialog = Widget.extend({
         this.destroy();
     },
 
-    destroy: function (reason) {
+    destroy: function (arg) {
         // Need to trigger before real destroy but if 'closed' handler destroys
         // the widget again, we want to avoid infinite recursion
         if (!this.__closed) {
             this.__closed = true;
-            this.trigger("closed", reason);
+            this.trigger("closed", arg);
         }
 
         if (this.isDestroyed()) {
@@ -184,13 +184,12 @@ var Dialog = Widget.extend({
             this.$modal.remove();
         }
 
-        setTimeout(function () { // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
-            var modals = $('body > .modal').filter(':visible');
-            if (modals.length) {
-                modals.last().focus();
-                $('body').addClass('modal-open');
-            }
-        }, 0);
+        var modals = $('body > .modal').filter(':visible');
+        if (modals.length) {
+            modals.last().focus();
+            // Keep class modal-open (deleted by bootstrap hide fnct) on body to allow scrolling inside the modal
+            $('body').addClass('modal-open');
+        }
     }
 });
 
@@ -248,7 +247,7 @@ Dialog.confirm = function (owner, message, options) {
  */
 Dialog.safeConfirm = function (owner, message, options) {
     var $checkbox = dom.renderCheckbox({
-        text: options && options.securityMessage || _t("I am sure about this"),
+        text: options && options.securityMessage || _t("I am sure about this."),
     }).addClass('mb0');
     var $securityCheck = $('<div/>', {
         class: 'alert alert-' + (options && options.securityLevel || 'warning') + ' mt8 mb0',

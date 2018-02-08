@@ -5,14 +5,14 @@
 # Translators:
 # Martin Trigaux <mat@odoo.com>, 2016
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # Kovács Tibor <kovika@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Kovács Tibor <kovika@gmail.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -68,11 +68,6 @@ msgid "Catalog Price"
 msgstr "Katalógus ár"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership
-msgid "Check if the product is eligible for membership."
-msgstr "Vizsgálja meg, hogy a termék alkalmas-e a tagsághoz."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
 msgid "Created by"
 msgstr "Készítette"
@@ -81,21 +76,6 @@ msgstr "Készítette"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
 msgid "Created on"
 msgstr "Létrehozás dátuma"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
-msgid "Customer Taxes"
-msgstr "Vásárlói értékesítést terhelő adók"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
-msgid "Date from which membership becomes active."
-msgstr "Dátum ahonnan a tagság aktiválódik."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
-msgid "Date until which membership remains active."
-msgstr "Dátum ameddig a tagság aktív maradhat."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
@@ -139,11 +119,6 @@ msgid "Expected margin * 100 / Expected Sale"
 msgstr "Elvárt árrés * 100 / Elvárt árbevétel"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
-msgid "Expense Account"
-msgstr "Költség főkönyvi számla"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
 msgid "From"
 msgstr "Kezdő dátum"
@@ -157,11 +132,6 @@ msgstr "Általános információk"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
 msgstr "Azonosító ID"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
-msgid "Income Account"
-msgstr "Árbevétel főkönyvi számla"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
@@ -200,21 +170,6 @@ msgid "Margins"
 msgstr "Árrések"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
-msgid "Membership"
-msgstr "Tagság"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
-msgid "Membership End Date"
-msgstr "Tagság befejezés dátuma"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
-msgid "Membership Start Date"
-msgstr "Tagság kezdő dátum"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
 msgstr "Számított beszerzési érték"
@@ -245,11 +200,6 @@ msgstr "Kifizetve"
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Termék"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
-msgid "Product Email Template"
-msgstr "Termék e-mail sablon"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -334,24 +284,6 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "Összes mennyiség a beszállítói számlákban"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr ""
-"A rendszer az alapértelmezett helyett ezt a számlát fogja használni a "
-"költségek értékeinek a jelenlegi terméken."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr ""
-"A rendszer az alapértelmezett helyett ezt a számlát fogja használni az "
-"értékesítések értékeinek a jelenlegi terméken."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
 msgstr "Címzett"
@@ -364,6 +296,7 @@ msgstr "Összes költség"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "Összes árrés"
 
@@ -387,19 +320,3 @@ msgstr "Tényleges árbevétel"
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
 msgstr "Tényleges árbevétel - alapár"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
-msgid "Vendor Taxes"
-msgstr "Beszálító adói"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
-msgid ""
-"When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
-msgstr ""
-"Ha egy számla jóváhagyásra kerül, egy emailt kerül kiküldésre a vásárló "
-"részére ennek a sablonnak az alapján. Az ügyfél azokról a termékekről kap "
-"emailt, melyek egy email sablonhoz tartoznak."

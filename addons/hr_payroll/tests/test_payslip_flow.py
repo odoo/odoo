@@ -56,7 +56,7 @@ class TestPayslipFlow(TestPayslipBase):
         # I create record for generating the payslip for this Payslip run.
 
         payslip_employee = self.env['hr.payslip.employees'].create({
-            'employee_ids': [(4, self.richard_emp.ids)]
+            'employee_ids': [(4, self.richard_emp.id)]
         })
 
         # I generate the payslip by clicking on Generat button wizard.
@@ -70,13 +70,9 @@ class TestPayslipFlow(TestPayslipBase):
 
         # I print the payslip report
         data, data_format = self.env.ref('hr_payroll.action_report_payslip').render(richard_payslip.ids)
-        if config.get('test_report_directory'):
-            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslip.'+ data_format), 'wb+').write(data)
 
         # I print the payslip details report
         data, data_format = self.env.ref('hr_payroll.payslip_details_report').render(richard_payslip.ids)
-        if config.get('test_report_directory'):
-            open(os.path.join(config['test_report_directory'], 'hr_payroll-payslipdetails.'+ data_format), 'wb+').write(data)
 
         # I print the contribution register report
         context = {'model': 'hr.contribution.register', 'active_ids': [self.ref('hr_payroll.hr_houserent_register')]}

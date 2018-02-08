@@ -1,5 +1,59 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <odoo>
+
+    <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
+        <field name="name">Leaves</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave.report</field>
+        <field name="src_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id, 'search_default_group_type': 1,
+            'search_default_year': 1}</field>
+        <field name="domain">[('holiday_type','=','employee'), ('holiday_status_id.limit', '=', False), ('state','!=', 'refuse')]</field>
+        <field name="search_view_id" ref="view_hr_leave_allocation_filter"/>
+    </record>
+
+    <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
+        <field name="name">hr.employee.leave.tree</field>
+        <field name="model">hr.employee</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <tree string="Assign Leaves" editable="bottom">
+                <field name="name" string="Employee"/>
+                <field name="remaining_leaves" string="Remaining Legal Leaves"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_holidays_leaves_assign_legal" model="ir.actions.act_window">
+       <field name="name">Allocate Leaves for Employees</field>
+       <field name="type">ir.actions.act_window</field>
+       <field name="res_model">hr.employee</field>
+       <field name="view_type">form</field>
+       <field name="view_mode">tree,form</field>
+       <field name="view_id" ref="hr_holidays_leaves_assign_tree_view"/>
+       <field name="help" type="html">
+         <p>
+           You can assign remaining Legal Leaves for each employee, Odoo
+           will automatically create and validate allocation requests.
+         </p>
+       </field>
+   </record>
+
+   <record id="hr_employee_action_from_department" model="ir.actions.act_window">
+       <field name="name">Absent Employees</field>
+       <field name="res_model">hr.employee</field>
+       <field name="view_type">form</field>
+       <field name="view_mode">kanban,tree,form</field>
+       <field name="context">{
+           'search_default_is_absent_totay': 1,
+           'search_default_department_id': [active_id],
+           'default_department_id': active_id}
+       </field>
+       <field name="search_view_id" ref="hr.view_employee_filter"/>
+   </record>
+
     <!--Hr Department Inherit Kanban view-->
     <record id="hr_department_view_kanban" model="ir.ui.view">
         <field name="name">hr.department.kanban.inherit</field>
@@ -15,7 +69,7 @@
                     <field name="absence_of_today"/>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
                     <div t-if="record.leave_to_approve_count.raw_value > 0" class="row">
                         <div class="col-xs-9">
                             <a name="%(hr_holidays_action_request_from_department)d" type="action">
@@ -38,8 +92,8 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_primary_right')]" position="after">
-                    <div class="col-xs-12 o_kanban_primary_bottom">
+                <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="after">
+                    <div class="col-xs-12 o_kanban_primary_bottom bottom_block">
                         <div class="row">
                             <div class="col-xs-3">
                                 <a name="%(hr_employee_action_from_department)d" type="action" title="Absent Employee(s), Whose leaves request are either confirmed or validated on today">Absence</a>
@@ -51,7 +105,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_to_approve')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_to_approve')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(hr_holidays_action_request_from_department)d" type="action">
@@ -69,7 +123,7 @@
                     </div>
                 </xpath>
 
-                <xpath expr="//div[contains(@class, 'o_kanban_manage_reports')]" position="inside">
+                <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
                     <div class="row">
                         <div class="col-xs-12 text-left">
                             <a name="%(action_hr_holidays_leaves_analysis_filtered)d" type="action">

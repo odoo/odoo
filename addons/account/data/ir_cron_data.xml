@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Cron job for creating recurring vendor bills -->
+    <record id="recurrent_vendor_bills_cron" model="ir.cron">
+        <field name="name">Account: generate recurring vendor bills</field>
+        <field name="model_id" ref="account.model_account_invoice"/>
+        <field name="state">code</field>
+        <field name="active">False</field>
+        <field name="code">model._cron_generate_recurring_vendor_bill()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+    </record>
+</odoo>

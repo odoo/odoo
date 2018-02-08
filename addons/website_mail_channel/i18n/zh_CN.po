@@ -3,21 +3,20 @@
 # * website_mail_channel
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
-# Talway <9010446@qq.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
+# Talway <9010446@qq.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
+# Jeffery CHEN <jeffery9@gmail.com>, 2016
 # fausthuang <faust_huang@hotmail.com>, 2016
-# 菜小蛇 <lttlsnk@gmail.com>, 2016
 # Joray <13637815@qq.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # Bo Cao <cao.poobo@hotmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
 "Last-Translator: Bo Cao <cao.poobo@hotmail.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -57,7 +56,7 @@ msgstr "<span class=\"oe_snippet_thumbnail_title\">讨论组</span>"
 
 #. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:17
 #, python-format
 msgid "Add a Subscribe Button"
 msgstr "添加订阅按钮"
@@ -95,21 +94,11 @@ msgid "Change Discussion List"
 msgstr "变更讨论列表"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_description
-msgid "Description"
-msgstr "说明"
-
-#. module: website_mail_channel
 #. openerp-web
-#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:19
+#: code:addons/website_mail_channel/static/src/js/website_mail_channel.editor.js:18
 #, python-format
 msgid "Discussion List"
 msgstr "讨论列表"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_path
-msgid "Discussion Path"
-msgstr "讨论路径"
 
 #. module: website_mail_channel
 #: model:ir.model,name:website_mail_channel.model_mail_channel
@@ -144,11 +133,6 @@ msgid "Mailing-List"
 msgstr "邮件列表"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_description
-msgid "Message description: either the subject, or the beginning of the body"
-msgstr "消息说明：可以选择主题或正文的开始部分作为消息的描述。"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 msgid ""
 "Need to unsubscribe? It's right here! <span class=\"fa fa-2x fa-arrow-down "
@@ -177,11 +161,6 @@ msgid "Post to"
 msgstr "寄到"
 
 #. module: website_mail_channel
-#: model:ir.model.fields,field_description:website_mail_channel.field_mail_mail_website_published
-msgid "Published"
-msgstr "已发布"
-
-#. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message
 msgid "Reference"
 msgstr "参考"
@@ -198,22 +177,24 @@ msgid "Subscribe"
 msgstr "订阅"
 
 #. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid "The address"
+msgstr ""
+
+#. module: website_mail_channel
+#: code:addons/website_mail_channel/controllers/main.py:238
+#, python-format
+msgid ""
+"The address %s is already unsubscribed or was never subscribed to any "
+"mailing list"
+msgstr ""
+
+#. module: website_mail_channel
 #: code:addons/website_mail_channel/models/mail_mail.py:22
 #: model:ir.ui.view,arch_db:website_mail_channel.mail_channels
 #, python-format
 msgid "Unsubscribe"
 msgstr "退订"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_path
-msgid ""
-"Used to display messages in a paragraph-based chatter using a unique path;"
-msgstr "用于显示基于段落的讨论消息，使用统一路径；"
-
-#. module: website_mail_channel
-#: model:ir.model.fields,help:website_mail_channel.field_mail_mail_website_published
-msgid "Visible on the website as a comment"
-msgstr "作为可见于网站的评论"
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.confirmation_subscription
@@ -241,6 +222,15 @@ msgstr "附件"
 #: model:ir.ui.view,arch_db:website_mail_channel.messages_short
 msgid "by"
 msgstr "by"
+
+#. module: website_mail_channel
+#: model:ir.ui.view,arch_db:website_mail_channel.not_subscribed
+msgid ""
+"is already\n"
+"                    unsubscribed or was never subscribed to the mailing\n"
+"                    list, you may want to check that the address was\n"
+"                    correct."
+msgstr ""
 
 #. module: website_mail_channel
 #: model:ir.ui.view,arch_db:website_mail_channel.group_message

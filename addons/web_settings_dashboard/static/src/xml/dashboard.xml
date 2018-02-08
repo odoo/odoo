@@ -5,19 +5,18 @@
         <div class="container-fluid o_web_settings_dashboard">
             <div class="row">
                 <div class="o_web_settings_dashboard_enterprise"/>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
-                    <div class="text-center o_web_settings_dashboard_apps"></div>
-                    <div class="text-center o_web_settings_dashboard_translations"></div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
-                    <div class="text-center o_web_settings_dashboard_invitations"></div>
-                    <div class="text-center o_web_settings_dashboard_company"></div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
-                    <div class="text-center o_web_settings_dashboard_planner"></div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 o_web_settings_dashboard_col">
-                    <div class="text-center o_web_settings_dashboard_share"></div>
+                <div class="col-sm-12 o_web_settings_dashboard_container" >
+                   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 o_web_settings_dashboard_col">
+                        <div class="text-center o_web_settings_dashboard_apps"></div>
+                        <div class="text-center o_web_settings_dashboard_translations"></div>
+                    </div>
+                   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 o_web_settings_dashboard_col">
+                        <div class="text-center o_web_settings_dashboard_invitations"></div>
+                        <div class="text-center o_web_settings_dashboard_company"></div>
+                    </div>
+                   <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 o_web_settings_dashboard_col">
+                        <div class="text-center o_web_settings_dashboard_share"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,48 +82,6 @@
                     </t>
                 </small>
             </div>
-        </div>
-    </t>
-    <t t-name="DashboardPlanner">
-        <div class="text-center o_web_settings_dashboard_planner">
-            <i class="fa fa-check-square-o fa-4x text-muted"></i>
-            <div class="o_web_settings_dashboard_header">
-                <span class="o_web_settings_dashboard_planner_overall_progress"><t t-esc="widget.overall_progress"></t></span>%
-                Implementation
-            </div>
-            <div>
-                <small class="text-muted text-center o_web_settings_dashboard_compact_subtitle">
-                    Follow these implementation guides to get the most out of Odoo.
-                </small>
-            </div>
-            <hr/>
-            <t t-set="planners" t-value="widget.planners"/>
-            <t t-call="DashboardPlanner.PlannersList"/>
-            <hr/>
-            Need more help? <a target="_blank" href="https://www.odoo.com/documentation/user">Browse the documentation.</a>
-        </div>
-    </t>
-
-    <t t-name="DashboardPlanner.PlannersList">
-        <div class="row o_web_settings_dashboard_planners_list">
-            <t t-if="!planners.length">
-                <div>You need to install some apps first.</div>
-            </t>
-            <t t-if="planners.length" t-foreach="planners" t-as="p">
-                <div t-attf-class="col-xs-2 col-md-3 col-lg-2 o_web_settings_dashboard_planner_progress_text o_web_settings_dashboard_progress_#{p.progress}">
-                    <t t-esc="p.progress"/>%
-                </div>
-                <div t-attf-class="col-xs-10 col-md-9 col-lg-10 o_web_settings_dashboard_planner_progress_bar o_web_settings_dashboard_progress_#{p.progress}"
-                    t-att-data-menu-id="p.menu_id[0]">
-                    <div class="o_web_settings_dashboard_progress_title text-left">
-                        <t t-esc="p.menu_id[1]"></t> <i class="fa fa-arrow-right pull-right"/>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" t-attf-style="width:#{p.progress}%">
-                        </div>
-                    </div>
-                </div>
-            </t>
         </div>
     </t>
 

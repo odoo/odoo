@@ -1,30 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_slides
-#
+# 
 # Translators:
-# Bohdan Lisnenko, 2015-2016
-# Bohdan Lisnenko, 2016
-#, fuzzy
+# Bohdan Lisnenko <lem8r.ka11a@gmail.com>, 2017
+# ТАрас <tratatuta@i.ua>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Zoriana Zaiats <sorenabell@quintagroup.com>, 2017
+# Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-06 12:24+0000\n"
-"Last-Translator: Bohdan Lisnenko\n"
-"Language-Team: Ukrainian (http://www.transifex.com/odoo/odoo-9/language/"
-"uk/)\n"
-"Language: uk\n"
+"POT-Creation-Date: 2017-10-02 11:27+0000\n"
+"PO-Revision-Date: 2017-10-02 11:27+0000\n"
+"Last-Translator: Аліна Семенюк <alinasemeniuk1@gmail.com>, 2017\n"
+"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"#-#-#-#-#  uk.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: website_slides
 #: model:mail.template,body_html:website_slides.slide_template_shared
@@ -32,24 +28,15 @@ msgid ""
 "\n"
 "<p>Hello,</p>\n"
 "<p>\n"
-"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</"
-"strong> with you!\n"
+"    ${user.name} shared the ${object.slide_type} <strong>${object.name}</strong> with you!\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
-"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
-"color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
-"12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
-"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
-"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href="
-"\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -61,25 +48,15 @@ msgid ""
 "\n"
 "<p>Hello,</p>\n"
 "<p>\n"
-"    A new ${object.slide_type} <strong>${object.name}</strong> has been "
-"published on ${object.channel_id.name} at ${format_tz(object.write_date, "
-"tz=user.tz)}\n"
+"    A new ${object.slide_type} <strong>${object.name}</strong> has been published on ${object.channel_id.name} at ${format_tz(object.write_date, tz=user.tz)}\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
 "    <a href=\"${object.website_url}\">\n"
-"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide."
-"slide/${object.id}/image\" style=\"height:auto; width:150px; background-"
-"color: #cccccc; margin: 16px;\">\n"
+"        <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/image/slide.slide/${object.id}/image\" style=\"height:auto; width:150px; background-color: #cccccc; margin: 16px;\">\n"
 "    </a>\n"
 "</p>\n"
 "<p style=\"text-align: center; margin-top: 10px;\">\n"
-"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: "
-"12px; line-height: 18px; color: #FFFFFF; border-color:#a24689; text-"
-"decoration: none; display: inline-block; margin-bottom: 0px; font-weight: "
-"400; text-align: center; vertical-align: middle; cursor: pointer; white-"
-"space: nowrap; background-image: none; background-color: #a24689; border: "
-"1px solid #a24689; border-radius:3px\" class=\"o_default_snippet_text\" href="
-"\"${object.website_url}\">\n"
+"    <a style=\"-webkit-user-select: none; padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\" class=\"o_default_snippet_text\" href=\"${object.website_url}\">\n"
 "        View <strong>${object.name}</strong>\n"
 "    </a>\n"
 "</p>\n"
@@ -106,6 +83,13 @@ msgid "${user.name} shared a ${object.slide_type} with you!"
 msgstr "${user.name} поділився ${object.slide_type} з вами!"
 
 #. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
+msgid ""
+"(Un)archiving a channel automatically (un)archives its slides. Do you want "
+"to proceed?"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
 msgid ". Please try again with different keywords."
 msgstr ". Будь ласка спробуйте ще раз з іншими ключовими словами."
@@ -113,29 +97,29 @@ msgstr ". Будь ласка спробуйте ще раз з іншими к�
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
-"\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Email</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
-"\"#slide_email\"><i class=\"fa fa-envelope\"/> Ел. пошта</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_email\"><i class=\"fa fa-envelope\"/> Ел. пошта</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
-"\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Embed</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
-"\"#slide_embed\"><i class=\"fa fa-code\"/> Вбудовано</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_embed\"><i class=\"fa fa-code\"/> Вбудовано</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
-"\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Share</b>"
 msgstr ""
-"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-id="
-"\"#slide_share\"><i class=\"fa fa-share-alt\"/> Поділитися</b>"
+"<b class=\"oe_slide_js_embed_option_link\" data-slide-option-"
+"id=\"#slide_share\"><i class=\"fa fa-share-alt\"/> Поділитися</b>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -208,12 +192,10 @@ msgstr "<i class=\"fa fa-home\"/> Дім"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        The social sharing module will be "
-"unlocked when a moderator will allow your publication."
+"                                        The social sharing module will be unlocked when a moderator will allow your publication."
 msgstr ""
 "<i class=\"fa fa-info-circle\"/>\n"
-"                                        Модуль поширення у соц. мережах буде "
-"доступний коли модератор дозволить вам публікувати."
+"                                        Модуль поширення у соц. мережах буде доступний коли модератор дозволить вам публікувати."
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -244,70 +226,60 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> Сподобалось"
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-"
-"facebook-square\"/> Facebook"
+"                                                    <i class=\"fa fa-facebook-square\"/> Facebook"
 msgstr ""
 "<span class=\"badge\" id=\"facebook-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-"
-"facebook-square\"/> Фейсбук"
+"                                                    <i class=\"fa fa-facebook-square\"/> Фейсбук"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-"
-"plus-square\"/> Google+"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Google+"
 msgstr ""
 "<span class=\"badge\" id=\"google-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-google-"
-"plus-square\"/> Ґуґл+"
+"                                                    <i class=\"fa fa-google-plus-square\"/> Ґуґл+"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-"
-"linkedin-square\"/> LinkedIn"
+"                                                    <i class=\"fa fa-linkedin-square\"/> LinkedIn"
 msgstr ""
 "<span class=\"badge\" id=\"linkedin-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-"
-"linkedin-square\"/> ЛінкедІн"
+"                                                    <i class=\"fa fa-linkedin-square\"/> ЛінкедІн"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-"
-"alt\"/> Social Shares"
+"                                                    <i class=\"fa fa-share-alt\"/> Social Shares"
 msgstr ""
 "<span class=\"badge\" id=\"total-share\">0</span>\n"
-"                                                    <i class=\"fa fa-share-"
-"alt\"/> Поширення у соц. мережах"
+"                                                    <i class=\"fa fa-share-alt\"/> Поширення у соц. мережах"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-"
-"square\"/> Twitter"
+"                                                    <i class=\"fa fa-twitter-square\"/> Twitter"
 msgstr ""
 "<span class=\"badge\" id=\"twitter-badge\">0</span>\n"
-"                                                    <i class=\"fa fa-twitter-"
-"square\"/> Твітер"
+"                                                    <i class=\"fa fa-twitter-square\"/> Твітер"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "<span class=\"help-block\">Send presentation through email</span>"
-msgstr ""
-"<span class=\"help-block\">Відправити медіа по електронній пошті</span>"
+msgstr "<span class=\"help-block\">Відправити медіа по електронній пошті</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid ""
-"<span class=\"help-block\">Use permanent link to share in social media</span>"
+"<span class=\"help-block\">Use permanent link to share in social "
+"media</span>"
 msgstr ""
-"<span class=\"help-block\">Використовуйте постійне посилання для поширення у "
-"соц. мережах</span>"
+"<span class=\"help-block\">Використовуйте постійне посилання для поширення у"
+" соц. мережах</span>"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
@@ -325,9 +297,26 @@ msgid "A tag must be unique!"
 msgstr "Мітка повинна бути унікальною!"
 
 #. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "API Key"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Actions"
 msgstr "Дії"
+
+#. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_slide_channel_active
+#: model:ir.model.fields,field_description:website_slides.field_slide_slide_active
+msgid "Active"
+msgstr "Активно"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
+#: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
+msgid "Archived"
+msgstr "Заархівовано"
 
 #. module: website_slides
 #: selection:slide.slide,download_security:0
@@ -337,6 +326,11 @@ msgstr "Тільки для зареєстрованих користувачі�
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_5
 msgid "Awesome Timesheet by Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.tag,name:website_slides.tag1
+msgid "CMS"
 msgstr ""
 
 #. module: website_slides
@@ -359,7 +353,7 @@ msgstr "Категорії"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:251
+#: code:addons/website_slides/static/src/js/slides_upload.js:250
 #: code:addons/website_slides/static/src/xml/website_slides.xml:54
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_category_id
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -367,11 +361,12 @@ msgstr "Категорії"
 #: model:ir.ui.view,arch_db:website_slides.view_slides_category_tree
 #, python-format
 msgid "Category"
-msgstr "Category"
+msgstr "Категорія"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_channel_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_channel_id
+#: model:ir.ui.view,arch_db:website_slides.slide_channel_view_search
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_tree
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Channel"
@@ -389,9 +384,10 @@ msgstr "Налаштування каналу"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:171
+#: code:addons/website_slides/static/src/js/slides_upload.js:170
 #, python-format
-msgid "Channel contains the given title, please change before Save or Publish."
+msgid ""
+"Channel contains the given title, please change before Save or Publish."
 msgstr ""
 "Канал містить дану назву, будь ласка змініть її перед зберіганням або "
 "публікацією."
@@ -415,6 +411,11 @@ msgid "Channels"
 msgstr "Канали"
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_10
+msgid "Company Culture"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_datas
 msgid "Content"
 msgstr "Вміст"
@@ -427,39 +428,32 @@ msgid "Content Preview"
 msgstr "Попередній перегляд"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:289
-#, fuzzy, python-format
+#: code:addons/website_slides/controllers/main.py:255
+#, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available.\n"
 "Here is the received response: %s"
 msgstr ""
-"Неможливо отримати дані з посилання. Документ або права доступу не "
-"доступні.\n"
-"Ось відповідь: %serror"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:294
+#: code:addons/website_slides/models/slides.py:322
 #, python-format
 msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
-"Неможливо отримати дані з посилання. Документ або права доступу не "
-"доступні.\n"
+"Неможливо отримати дані з посилання. Документ або права доступу не доступні.\n"
 "Ось відповідь:\n"
 "%s"
 
 #. module: website_slides
-#: model:slide.slide,description:website_slides.slide_1
-msgid ""
-"Create a beautiful and professional eCommerce on your website with Odoo. \n"
-"\n"
-"Find out more at https://www.odoo.com/page/e-commerce"
+#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Create a Google Project and Get a Key"
 msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:220
+#: code:addons/website_slides/static/src/js/slides_upload.js:219
 #, python-format
 msgid "Create new tag '%s'"
 msgstr "Створити нову мітку '%s'"
@@ -504,16 +498,35 @@ msgstr "Опис"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:72
+#: code:addons/website_slides/static/src/xml/website_slides.xml:71
 #, python-format
 msgid "Discard"
 msgstr "Відмінити"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_6
+msgid "Discover how easy marketing your business can be with Odoo"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_0
+msgid ""
+"Discover how you can integrate MRP, PLM, Quality and Maintenance in a single application to maximize the efficiency of your manufacturing operations.\n"
+"\n"
+"Read more about the features at: https://www.odoo.com/page/manufacturing-features\n"
+"\n"
+"Discover Odoo MRP: https://www.odoo.com/page/manufacturing"
+msgstr ""
+
+#. module: website_slides
+#: model:slide.slide,description:website_slides.slide_1
+msgid "Discover the CRM sales people love https://www.odoo.com/page/crm"
+msgstr ""
+
+#. module: website_slides
 #: model:slide.slide,description:website_slides.slide_2
 msgid ""
-"Discover the all-in-one business management software solution that fits any "
-"business size and use case.\n"
+"Discover the all-in-one business management software solution that fits any business size and use case.\n"
 "\n"
 "Learn more at https://odoo.com"
 msgstr ""
@@ -562,13 +575,12 @@ msgstr "Документи"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.embed_slide
 msgid "Download"
-msgstr "Download"
+msgstr "Завантажити"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_5
 msgid ""
-"Download Awesome Timesheet by Odoo and discover how easy time tracking and "
-"employee management can be!\n"
+"Download Awesome Timesheet by Odoo and discover how easy time tracking and employee management can be!\n"
 "\n"
 "Chrome: http://bit.ly/2613LcY\n"
 "iOS: http://bit.ly/1ZUZsZD"
@@ -578,11 +590,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_download_security
 msgid "Download Security"
 msgstr "Безпека завантаження"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "Email Address"
-msgstr "Адреса ел. пошти"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_publish_template_id
@@ -657,16 +664,16 @@ msgstr "Плавила включення"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/controllers/main.py:299
-#: code:addons/website_slides/static/src/js/slides_upload.js:90
+#: code:addons/website_slides/controllers/main.py:263
+#: code:addons/website_slides/static/src/js/slides_upload.js:89
 #, python-format
-msgid "File is too big. File size cannot exceed 15MB"
-msgstr "Файл надто великий. Розмір не повинен перевищувати 15 МБ."
+msgid "File is too big. File size cannot exceed 25MB"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_can_see_full
 msgid "Full Access"
-msgstr "Доступ"
+msgstr "Повний доступ"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -674,9 +681,14 @@ msgid "General"
 msgstr "Загальне"
 
 #. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_website_config_settings_website_slide_google_app_key
+#: model:ir.model.fields,field_description:website_slides.field_res_config_settings_website_slide_google_app_key
 msgid "Google Doc Key"
 msgstr "Ключ Google Doc"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
+msgid "Google Drive API Key"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_graph
@@ -709,7 +721,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_tag_id
 msgid "ID"
-msgstr "ID"
+msgstr "ІД"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image
@@ -727,7 +739,7 @@ msgid "Infographics"
 msgstr "Інфографіки"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:321
+#: code:addons/website_slides/controllers/main.py:285
 #, python-format
 msgid ""
 "Internal server error, please try again later or contact administrator.\n"
@@ -736,7 +748,7 @@ msgstr ""
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:85
+#: code:addons/website_slides/static/src/js/slides_upload.js:84
 #, python-format
 msgid "Invalid file type. Please select pdf or image file"
 msgstr ""
@@ -774,15 +786,25 @@ msgid "Latest Published"
 msgstr "Найсвіжіша публікація"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_8
+msgid "Learn more at https://www.odoo.com/page/sales"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_likes
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Likes"
 msgstr "Сподобалось"
 
 #. module: website_slides
+#: model:slide.tag,name:website_slides.tag2
+msgid "Marketing"
+msgstr "Маркетинг"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_medium
 msgid "Medium"
-msgstr "Середній"
+msgstr "Засіб розповсюдження"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel_access_error_msg
@@ -814,7 +836,7 @@ msgstr "Найбільше голосів"
 #: model:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Name"
-msgstr "Name"
+msgstr "Назва"
 
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_published
@@ -853,11 +875,6 @@ msgid "No presentation published yet."
 msgstr "Жодної презентації поки що не опубліковано."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
-msgid "Not Published"
-msgstr "Не опубліковано"
-
-#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_nbr_documents
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_nbr_documents
 msgid "Number of Documents"
@@ -887,62 +904,39 @@ msgid "Odoo All-in-One Software Demonstration"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_1
+msgid "Odoo CRM"
+msgstr ""
+
+#. module: website_slides
 #: model:slide.category,name:website_slides.category_2
+#: model:slide.tag,name:website_slides.tag5
 msgid "Odoo Days"
 msgstr ""
 
 #. module: website_slides
+#: model:slide.slide,name:website_slides.slide_7
+msgid "Odoo Inventory"
+msgstr ""
+
+#. module: website_slides
 #: model:slide.slide,name:website_slides.slide_0
-msgid "Odoo Explained"
+msgid "Odoo MRP"
 msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_6
-msgid "Odoo Marketing - part 1: ATTRACT"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_7
-msgid "Odoo Marketing - part 1: ATTRACT_2"
+msgid "Odoo Marketing"
 msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_8
-msgid "Odoo Marketing - part 1: ATTRACT_3"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_10
-msgid "Odoo Roadmap & Strategy - Fabien Pinckaers"
+msgid "Odoo Sales"
 msgstr ""
 
 #. module: website_slides
 #: model:slide.slide,name:website_slides.slide_3
 msgid "Odoo Sign Demonstration"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,name:website_slides.slide_1
-msgid "Odoo Website & E-commerce Demonstration"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_6
-msgid ""
-"Odoo's fully-integrated marketing app will help you to attract, convert and "
-"close new leads. Check out our three-part video and discover more at www."
-"odoo.com"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_7
-#: model:slide.slide,description:website_slides.slide_8
-msgid ""
-"Odoo's fully-integrated marketing app will help you to attract, convert and "
-"close new leads. Check out our three-part video and discover more at www."
-"odoo.com\n"
-"\n"
-"Video made by Miroslava Ganzarcikova and Sophia Eribo."
 msgstr ""
 
 #. module: website_slides
@@ -974,38 +968,23 @@ msgstr "Будь ласка"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:55
+#: code:addons/website_slides/static/src/js/slides.js:56
 #, python-format
 msgid "Please <a href=\"/web?redirect=%s\">login</a> to vote this slide"
-msgstr ""
-"Будь ласка <a href=\"/web?redirect=%s\">увійдіть</a>, щоб проголосувати"
+msgstr "Будь ласка <a href=\"/web?redirect=%s\">увійдіть</a>, щоб проголосувати"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:297
-#: code:addons/website_slides/models/slides.py:518
+#: code:addons/website_slides/models/slides.py:325
+#: code:addons/website_slides/models/slides.py:545
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
 msgstr "Будь ласка введіть посилання на Youtube чи Google Doc"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:281
+#: code:addons/website_slides/controllers/main.py:247
 #, python-format
 msgid "Please enter valid youtube or google doc url"
 msgstr "Будь ласка введіть посилання на Youtube чи Google Doc"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "Post"
-msgstr "Допис"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid ""
-"Post comment with email address (confirmation of email is required in order "
-"to publish comment on website) or please"
-msgstr ""
-"Напишіть коментар вказавши ел. пошту (необхідно підтвердити адресу) або будь "
-"ласка,"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed_slide_id
@@ -1074,17 +1053,8 @@ msgstr "Результати для"
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
 msgid ""
-"Review your channel settings to promote your most viewed or recent published "
-"presentation"
-msgstr ""
-
-#. module: website_slides
-#: model:slide.slide,description:website_slides.slide_0
-msgid ""
-"Run your business with a comprehensive suite of business apps. Do it easily "
-"with Odoo! \n"
-"\n"
-"http://odoo.com/start"
+"Review your channel settings to promote your most viewed or recent published"
+" presentation"
 msgstr ""
 
 #. module: website_slides
@@ -1179,6 +1149,7 @@ msgstr "Рекламувати слайд"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_slide_ids
 #: model:ir.ui.menu,name:website_slides.menu_website_slides_root
 #: model:ir.ui.menu,name:website_slides.submenu_action_slides_slides
+#: model:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_tree
 msgid "Slides"
 msgstr "Слайди"
@@ -1196,8 +1167,7 @@ msgstr "Вибачте але нічого не знайдено по вашом
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_3
 msgid ""
-"Stop doing manual printing and scanning. Move to electronic signature with "
-"Odoo Sign!\n"
+"Stop doing manual printing and scanning. Move to electronic signature with Odoo Sign!\n"
 "\n"
 "Discover more at https://www.odoo.com/page/sign"
 msgstr ""
@@ -1209,7 +1179,7 @@ msgstr "Мітка"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:274
+#: code:addons/website_slides/static/src/js/slides_upload.js:273
 #: code:addons/website_slides/static/src/xml/website_slides.xml:48
 #: model:ir.actions.act_window,name:website_slides.action_slide_tag
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_tag_ids
@@ -1231,11 +1201,10 @@ msgstr "В"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide_slide_type
-#, fuzzy
 msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
-msgstr "Тип документу встановлюється автоматично в залежності від типу файлу"
+msgstr ""
 
 #. module: website_slides
 #: sql_constraint:slide.slide:0
@@ -1256,14 +1225,14 @@ msgstr ""
 "Канал є приватним і його вміст є обмеженим для певного кола користувачів."
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:285
+#: code:addons/website_slides/controllers/main.py:251
 #, python-format
 msgid ""
-"This video already exists in this channel <a target=\"_blank\" href=\"/"
-"slides/slide/%s\">click here to view it </a>"
+"This video already exists in this channel <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">click here to view it </a>"
 msgstr ""
-"Це відео уже є в цьому каналі <a target=\"_blank\" href=\"/slides/slide/%s"
-"\">натисніть тут, щоб переглянути його </a>"
+"Це відео уже є в цьому каналі <a target=\"_blank\" "
+"href=\"/slides/slide/%s\">натисніть тут, щоб переглянути його </a>"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_image_thumb
@@ -1283,7 +1252,7 @@ msgstr "Заголовок"
 #: model:ir.model.fields,field_description:website_slides.field_slide_category_total
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_total
 msgid "Total"
-msgstr "Всього"
+msgstr "Разом"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide_total_views
@@ -1302,10 +1271,10 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: website_slides
-#: code:addons/website_slides/controllers/main.py:140
+#: code:addons/website_slides/controllers/main.py:151
 #, python-format
 msgid "Uncategorized"
-msgstr "Категорії"
+msgstr "Без категорії"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.home
@@ -1313,10 +1282,15 @@ msgid "Uncategorized presentation"
 msgstr "Презентація без категорії"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:507
+#: code:addons/website_slides/models/slides.py:534
 #, python-format
 msgid "Unknown document"
 msgstr "Невідомий документ"
+
+#. module: website_slides
+#: model:ir.ui.view,arch_db:website_slides.slides_grid_view
+msgid "Unpublished"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_upload_group_ids
@@ -1369,12 +1343,6 @@ msgid "Videos"
 msgstr "Відео"
 
 #. module: website_slides
-#: code:addons/website_slides/models/slides.py:436
-#, fuzzy, python-format
-msgid "View Slide"
-msgstr "Слайди вебсайту"
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slides_grid_view
 msgid "Views"
@@ -1396,48 +1364,31 @@ msgid "Waiting for validation"
 msgstr "Очікує на підтвердження"
 
 #. module: website_slides
+#: model:slide.slide,description:website_slides.slide_7
+msgid ""
+"Warehouse management software for the 21st century.\n"
+"\n"
+"Discover Odoo Inventory: https://www.odoo.com/page/warehouse"
+msgstr ""
+
+#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "Website"
-msgstr "Веб-сайт"
-
-#. module: website_slides
-#: model:ir.model.fields,field_description:website_slides.field_slide_slide_website_message_ids
-msgid "Website Messages"
-msgstr "Повідомлення з веб-сайту"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.view_website_config_settings
-msgid "Website Slides"
-msgstr "Слайди вебсайту"
-
-#. module: website_slides
-#: model:ir.model.fields,help:website_slides.field_slide_slide_website_message_ids
-msgid "Website communication history"
-msgstr "Історія бесіди на веб-сайті"
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "Write a comment..."
-msgstr "Написати коментар..."
+msgstr "Вебсайт"
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides_upload.js:115
+#: code:addons/website_slides/static/src/js/slides_upload.js:114
 #, python-format
 msgid "You can not upload password protected file."
 msgstr "Ви не можете завантажувати файл, що захищено перолем."
 
 #. module: website_slides
 #. openerp-web
-#: code:addons/website_slides/static/src/js/slides.js:64
+#: code:addons/website_slides/static/src/js/slides.js:65
 #, python-format
 msgid "You have already voted for this slide"
 msgstr "Ви вже проголосували за слайд раніше."
-
-#. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "Your Name"
-msgstr "Ваше ім’я"
 
 #. module: website_slides
 #. openerp-web
@@ -1485,22 +1436,14 @@ msgid "is private."
 msgstr "є приватним."
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "вхід"
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "on"
-msgstr "о"
-
-#. module: website_slides
-#. openerp-web
-#: code:addons/website_slides/static/src/xml/website_slides.xml:70
-#, python-format
-msgid "or"
-msgstr "або"
+#: model:ir.model,name:website_slides.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slides_search
@@ -1513,340 +1456,11 @@ msgid "suggest_slide.name"
 msgstr ""
 
 #. module: website_slides
-#: model:ir.ui.view,arch_db:website_slides.slide_detail_view
-msgid "to post comment"
-msgstr "щоб опублікувати коментар"
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to send this"
 msgstr "щоб відправити це"
 
 #. module: website_slides
-#: model:ir.model,name:website_slides.model_website_config_settings
-msgid "website.config.settings"
-msgstr "website.config.settings"
-
-#. module: website_slides
 #: model:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "your-friend@domain.com"
 msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px; background-color:#ffffff\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center\" valign=\"center\">\n"
-#~ "            <a href=\"${user.company_id.website}\" style=\"text-"
-#~ "decoration:none\">\n"
-#~ "                <img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" "
-#~ "style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n"
-#~ "            </a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center; color: #ffffff; "
-#~ "background-color:#a24689;\" valign=\"center\">\n"
-#~ "            <h2 style=\"margin:0px;\">\n"
-#~ "                ${user.name} shared the ${object.slide_type} ${object."
-#~ "name} with you!\n"
-#~ "            </h2>\n"
-#~ "        </td>\n"
-#~ "    </tr><tr>\n"
-#~ "        <td style=\"width: 600px; vertical-align:top; text-align:center; "
-#~ "background-color:#FFFFF; color:#414141\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color: #a24689;\">\n"
-#~ "                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/"
-#~ "image/slide.slide/${object.id}/image\"\n"
-#~ "                    style=\"height:auto; width:500px; background-color: "
-#~ "#cccccc; margin: 16px;\">\n"
-#~ "            </a>\n"
-#~ "            <p style=\"font-size:24px; font-weight:bold\"><a href="
-#~ "\"${object.website_url}\">${object.name}</a></p>\n"
-#~ "            <p style=\"color: #ccc;\">Published on ${object.write_date}</"
-#~ "p>\n"
-#~ "            <p><a href=\"${object.website_url}\">Click here to open the "
-#~ "${object.slide_type}</a></p>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px "
-#~ "0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; "
-#~ "color: #ffffff; background-color:#8f8f8f;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; font-size:12px; text-align:center; "
-#~ "padding-top:10px; color:#a24689; padding-bottom:5px\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color:"
-#~ "#a24689\">View in browser</a> |\n"
-#~ "            <a href=\"/page/contactus\" style=\"color:#a24689\">Contact</"
-#~ "a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>"
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px; background-color:#ffffff\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center\" valign=\"center\">\n"
-#~ "            <a href=\"${user.company_id.website}\" style=\"text-"
-#~ "decoration:none\">\n"
-#~ "                <img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" "
-#~ "style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n"
-#~ "            </a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center; color: #ffffff; "
-#~ "background-color:#a24689;\" valign=\"center\">\n"
-#~ "            <h2 style=\"margin:0px;\">\n"
-#~ "                ${user.name} поділився ${object.slide_type} ${object."
-#~ "name} з вами!\n"
-#~ "            </h2>\n"
-#~ "        </td>\n"
-#~ "    </tr><tr>\n"
-#~ "        <td style=\"width: 600px; vertical-align:top; text-align:center; "
-#~ "background-color:#FFFFF; color:#414141\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color: #a24689;\">\n"
-#~ "                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/"
-#~ "image/slide.slide/${object.id}/image\"\n"
-#~ "                    style=\"height:auto; width:500px; background-color: "
-#~ "#cccccc; margin: 16px;\">\n"
-#~ "            </a>\n"
-#~ "            <p style=\"font-size:24px; font-weight:bold\"><a href="
-#~ "\"${object.website_url}\">${object.name}</a></p>\n"
-#~ "            <p style=\"color: #ccc;\">Дата публікації ${object.write_date}"
-#~ "</p>\n"
-#~ "            <p><a href=\"${object.website_url}\">Натисніть тут, щоб "
-#~ "відкрити ${object.slide_type}</a></p>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px "
-#~ "0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; "
-#~ "color: #ffffff; background-color:#8f8f8f;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; font-size:12px; text-align:center; "
-#~ "padding-top:10px; color:#a24689; padding-bottom:5px\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color:"
-#~ "#a24689\">Переглянути у браузері</a> |\n"
-#~ "            <a href=\"/page/contactus\" style=\"color:#a24689\">Контакти</"
-#~ "a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>"
-
-#~ msgid ""
-#~ "\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px; background-color:#ffffff\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center\" valign=\"center\">\n"
-#~ "            <a href=\"${user.company_id.website}\" style=\"text-"
-#~ "decoration:none\">\n"
-#~ "                <img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" "
-#~ "style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n"
-#~ "            </a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center; color: #ffffff; "
-#~ "background-color:#a24689;\" valign=\"center\">\n"
-#~ "            <h2 style=\"margin:0px;\">\n"
-#~ "                New ${object.slide_type} published on ${object.channel_id."
-#~ "name}\n"
-#~ "            </h2>\n"
-#~ "        </td>\n"
-#~ "    </tr><tr>\n"
-#~ "        <td style=\"width: 600px; vertical-align:top; text-align:center; "
-#~ "background-color:#FFFFF; color:#414141\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color: #a24689;\">\n"
-#~ "                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/"
-#~ "image/slide.slide/${object.id}/image\" style=\"height:auto; width:500px; "
-#~ "background-color: #cccccc; margin: 16px;\">\n"
-#~ "            </a>\n"
-#~ "            <p style=\"font-size:24px; font-weight:bold\"><a href="
-#~ "\"${object.website_url}\">${object.name}</a></p>\n"
-#~ "            <p style=\"color: #ccc;\">Published on ${object.write_date}</"
-#~ "p>\n"
-#~ "            <p><a href=\"${object.website_url}\">Click here to open the "
-#~ "${object.slide_type}</a></p>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px "
-#~ "0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; "
-#~ "color: #ffffff; background-color:#8f8f8f;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; font-size:12px; text-align:center; "
-#~ "padding-top:10px; color:#a24689; padding-bottom:5px\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color:"
-#~ "#a24689\">View in browser</a> |\n"
-#~ "            <a href=\"/page/contactus\" style=\"color:#a24689\">Contact</"
-#~ "a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>"
-#~ msgstr ""
-#~ "\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px; background-color:#ffffff\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center\" valign=\"center\">\n"
-#~ "            <a href=\"${user.company_id.website}\" style=\"text-"
-#~ "decoration:none\">\n"
-#~ "                <img alt=\"Odoo\" src=\"${ctx['base_url']}/logo.png\" "
-#~ "style=\"display:block; border:none; min-height:60px; margin:0 auto;\">\n"
-#~ "            </a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"width: 600px; margin: "
-#~ "10px 0px 0px 0px; vertical-align: top; padding: 0px; font-family:arial; "
-#~ "font-size:12px;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; text-align:center; color: #ffffff; "
-#~ "background-color:#a24689;\" valign=\"center\">\n"
-#~ "            <h2 style=\"margin:0px;\">\n"
-#~ "               Нова публікація ${object.slide_type} на каналі ${object."
-#~ "channel_id.name}\n"
-#~ "            </h2>\n"
-#~ "        </td>\n"
-#~ "    </tr><tr>\n"
-#~ "        <td style=\"width: 600px; vertical-align:top; text-align:center; "
-#~ "background-color:#FFFFF; color:#414141\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color: #a24689;\">\n"
-#~ "                <img alt=\"${object.name}\" src=\"${ctx['base_url']}/web/"
-#~ "image/slide.slide/${object.id}/image\" style=\"height:auto; width:500px; "
-#~ "background-color: #cccccc; margin: 16px;\">\n"
-#~ "            </a>\n"
-#~ "            <p style=\"font-size:24px; font-weight:bold\"><a href="
-#~ "\"${object.website_url}\">${object.name}</a></p>\n"
-#~ "            <p style=\"color: #ccc;\">Дата публікації ${object.write_date}"
-#~ "</p>\n"
-#~ "            <p><a href=\"${object.website_url}\">Натисніть тут, щоб "
-#~ "відкрити ${object.slide_type}</a></p>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>\n"
-#~ "<div style=\"padding:0px; margin:0px;\">\n"
-#~ "<table cellpadding=\"0\" cellspacing=\"0\" style=\"margin: 10px 0px 0px "
-#~ "0px; vertical-align: top;padding: 0px; font-family:arial; font-size:12px; "
-#~ "color: #ffffff; background-color:#8f8f8f;\">\n"
-#~ "    <tbody><tr>\n"
-#~ "        <td style=\"width: 600px; font-size:12px; text-align:center; "
-#~ "padding-top:10px; color:#a24689; padding-bottom:5px\">\n"
-#~ "            <a href=\"${object.website_url}\" style=\"color:"
-#~ "#a24689\">Переглянути у браузері</a> |\n"
-#~ "            <a href=\"/page/contactus\" style=\"color:#a24689\">Контакти</"
-#~ "a>\n"
-#~ "        </td>\n"
-#~ "    </tr></tbody>\n"
-#~ "</table>\n"
-#~ "</div>"
-
-#~ msgid "Action Needed"
-#~ msgstr "Необхідна дія"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Дата останнього повідомлення по запису."
-
-#~ msgid "Followers"
-#~ msgstr "Підписники"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Підписники (Канали)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Підписники (Партнери)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Якщо позначено, то повідомленя потребує вашої уваги"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr ""
-#~ "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
-
-#~ msgid "Is Follower"
-#~ msgstr "Стежить"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Дата останнього повідомлення"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Повідомлення та історія бесіди"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Кількість дій"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Кількість повідомлень, які потебують дії"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "The full URL to access the document through the website."
-#~ msgstr "URL-адреса повністю, для доступу до документації через сайт"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Непрочитані повідомлення"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Кількість непрочитаних повідомлень"
-
-#~ msgid "Visible in Website"
-#~ msgstr "Видимий на сайті"
-
-#~ msgid "Website URL"
-#~ msgstr "URL сайту"
-
-#~ msgid "Website meta description"
-#~ msgstr "Мета-опис сайту"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "Мета-ключі сайту"
-
-#~ msgid "Website meta title"
-#~ msgstr "Мета-заголовок сайту"

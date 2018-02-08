@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <record model="ir.ui.view" id="view_pos_config_form">
-            <field name="name">pos.config.form.view</field>
+        <record id="pos_config_view_form_inherit_pos_cache" model="ir.ui.view">
+            <field name="name">pos.config.form.inherit.pos.cache</field>
             <field name="model">pos.config</field>
-            <field name="inherit_id" ref="point_of_sale.view_pos_config_form" />
+            <field name="inherit_id" ref="point_of_sale.pos_config_view_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='currency_id']" position="after">
                     <field name='oldest_cache_time'/>

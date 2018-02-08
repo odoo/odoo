@@ -1,25 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * resource
-#
+# 
 # Translators:
-# larmar <martin.wilderoth@linserv.se>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Patrik Lermon <patrik.lermon@gmail.com>, 2017
+# Anders Wallenquist <anders.wallenquist@vertel.se>, 2017
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2017
+# Martin Wilderoth <martin.wilderoth@linserv.se>, 2017
+# Lord Cobol <mattias@invaliddesign.com>, 2017
+# Kim Asplund <kim.asplund@gmail.com>, 2017
+# Daniel Forslund <daniel.forslund@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-19 06:30+0000\n"
-"Last-Translator: larmar <martin.wilderoth@linserv.se>\n"
-"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
-"Language: sv\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Daniel Forslund <daniel.forslund@gmail.com>, 2017\n"
+"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
-#: code:addons/resource/resource.py:686
+#: code:addons/resource/models/resource.py:703
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
@@ -35,24 +42,29 @@ msgid "Closing Days"
 msgstr "Avslutande dagar"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_resource_code
-msgid "Code"
-msgstr "Kod"
+#: model:ir.model,name:resource.model_res_company
+msgid "Companies"
+msgstr "Bolag"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_hr_employee_company_id
+#: model:ir.model.fields,field_description:resource.field_mrp_workcenter_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_company_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin_company_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_company_id
+#: model:ir.model.fields,field_description:resource.field_resource_test_company_id
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Company"
-msgstr "Företag"
+msgstr "Bolag"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_uid
+#: model:ir.model.fields,field_description:resource.field_resource_test_create_uid
 msgid "Created by"
 msgstr "Skapad av"
 
@@ -61,6 +73,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_create_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_create_date
+#: model:ir.model.fields,field_description:resource.field_resource_test_create_date
 msgid "Created on"
 msgstr "Skapad den"
 
@@ -70,7 +83,18 @@ msgid "Day of Week"
 msgstr "Veckodag"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_res_users_resource_calendar_id
+msgid "Default Working Hours"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_hr_employee_resource_calendar_id
+#: model:ir.model.fields,help:resource.field_mrp_workcenter_resource_calendar_id
+#: model:ir.model.fields,help:resource.field_res_users_resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_mixin_resource_calendar_id
 #: model:ir.model.fields,help:resource.field_resource_resource_calendar_id
+#: model:ir.model.fields,help:resource.field_resource_test_resource_calendar_id
 msgid "Define the schedule of resource"
 msgstr "Definiera planeringen för en resurs"
 
@@ -80,21 +104,18 @@ msgid ""
 "Define working hours and time table that could be scheduled to your project "
 "members"
 msgstr ""
-"Definera arbetstid och schema som skall utgöra underlag för tidsplanering av "
-"dina projektdeltagare."
+"Definera arbetstid och schema som skall utgöra underlag för tidsplanering av"
+" dina projektdeltagare."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_display_name
+#: model:ir.model.fields,field_description:resource.field_resource_mixin_display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_display_name
+#: model:ir.model.fields,field_description:resource.field_resource_test_display_name
 msgid "Display Name"
-msgstr "Visa namn"
-
-#. module: resource
-#: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-msgid "Duration"
-msgstr "Varaktighet"
+msgstr "Visningsnamn"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_time_efficiency
@@ -108,7 +129,8 @@ msgid "End Date"
 msgstr "Slutdatum"
 
 #. module: resource
-#: constraint:resource.calendar.leaves:0
+#: code:addons/resource/models/resource.py:734
+#, python-format
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Fel! Lämna start-datum måste vara lägre sedan lämna slutdatum."
 
@@ -118,10 +140,28 @@ msgid "Friday"
 msgstr "Fredag"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:74
+#, python-format
+msgid "Friday Evening"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:73
+#, python-format
+msgid "Friday Morning"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_global_leave_ids
+#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Global Leaves"
+msgstr ""
+
+#. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Gruppera efter"
+msgstr "Gruppera på"
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -137,7 +177,9 @@ msgstr "Mänsklig"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_test_id
 msgid "ID"
 msgstr "ID"
 
@@ -168,7 +210,9 @@ msgstr "Inaktiv"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves___last_update
+#: model:ir.model.fields,field_description:resource.field_resource_mixin___last_update
 #: model:ir.model.fields,field_description:resource.field_resource_resource___last_update
+#: model:ir.model.fields,field_description:resource.field_resource_test___last_update
 msgid "Last Modified on"
 msgstr "Senast redigerad"
 
@@ -177,6 +221,7 @@ msgstr "Senast redigerad"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_uid
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_uid
+#: model:ir.model.fields,field_description:resource.field_resource_test_write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
 
@@ -185,6 +230,7 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_write_date
 #: model:ir.model.fields,field_description:resource.field_resource_resource_write_date
+#: model:ir.model.fields,field_description:resource.field_resource_test_write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad"
 
@@ -198,10 +244,11 @@ msgstr "Frånvarodetaljer"
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Leave Month"
-msgstr ""
+msgstr "Frånvaro Månad"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leave_ids
+#: model:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Leaves"
 msgstr "Frånvaro"
 
@@ -216,19 +263,31 @@ msgid "Monday"
 msgstr "Måndag"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:66
+#, python-format
+msgid "Monday Evening"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:65
+#, python-format
+msgid "Monday Morning"
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_name
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_name
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource_name
+#: model:ir.model.fields,field_description:resource.field_resource_test_name
 msgid "Name"
 msgstr "Namn"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_name
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_form
 #: model:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Reason"
-msgstr "Orsak"
+msgstr "Anledning"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_user_id
@@ -237,7 +296,11 @@ msgstr ""
 "Relaterat användarnamn för resursen vid administration av dess rättigheter"
 
 #. module: resource
+#: model:ir.model.fields,field_description:resource.field_hr_employee_resource_id
+#: model:ir.model.fields,field_description:resource.field_mrp_workcenter_resource_id
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin_resource_id
+#: model:ir.model.fields,field_description:resource.field_resource_test_resource_id
 #: model:ir.ui.menu,name:resource.menu_resource_config
 #: model:ir.ui.view,arch_db:resource.resource_resource_form
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar
@@ -258,9 +321,15 @@ msgstr "Resursdetaljer"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.actions.act_window,name:resource.resource_calendar_leaves_action_from_calendar
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
 msgstr "Resursavgångar"
+
+#. module: resource
+#: model:ir.model,name:resource.model_resource_mixin
+msgid "Resource Mixin"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_resource_resource_type
@@ -274,6 +343,8 @@ msgstr "Resursens kalender"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_resource_tree
+#: model:ir.actions.act_window,name:resource.resource_resource_action_from_calendar
+#: model:ir.model.fields,field_description:resource.field_res_users_resource_ids
 #: model:ir.ui.menu,name:resource.menu_resource_resource
 #: model:ir.ui.view,arch_db:resource.resource_resource_tree
 msgid "Resources"
@@ -286,13 +357,14 @@ msgstr "Resurser ur funktion"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+#: model:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
 msgid ""
 "Resources allow you to create and manage resources that should be involved "
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
-"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett "
-"specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
+"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett"
+" specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
 "arbetsbelastning utifrån en veckoarbetstid."
 
 #. module: resource
@@ -314,6 +386,13 @@ msgstr "Sök arbetsperiodsfrånvaro"
 #: model:ir.ui.view,arch_db:resource.view_resource_calendar_search
 msgid "Search Working Time"
 msgstr "Sök arbetstid"
+
+#. module: resource
+#: code:addons/resource/models/res_company.py:18
+#: code:addons/resource/models/res_company.py:23
+#, python-format
+msgid "Standard 40 hours/week"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_date_from
@@ -341,17 +420,25 @@ msgid "Sunday"
 msgstr "Söndag"
 
 #. module: resource
+#: model:ir.model,name:resource.model_resource_test
+msgid "Test Resource Model"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:689
+#, python-format
+msgid "The efficiency factor cannot be equal to 0."
+msgstr ""
+
+#. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource_time_efficiency
 msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficiency of "
-"200%, then his load will only be 50%."
+"This field is used to calculate the the expected duration of a work order at"
+" this work center. For example, if a work order takes one hour and the "
+"efficiency factor is 100%, then the expected duration will be one hour. If "
+"the efficiency factor is 200%, however the expected duration will be 30 "
+"minutes."
 msgstr ""
-"Detta fält visar effektiviteten av resursen för att utföra uppgifter. t.ex. "
-"resurs sattes på en etapp i 5 dagar med 5 uppgifter som tilldelats honom, "
-"kommer att visa en 100% beläggning för denna etapp som standard, men om vi "
-"lägger en verkningsgrad på 200%, då kommer hans beläggning endast vara 50%."
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -359,9 +446,50 @@ msgid "Thursday"
 msgstr "torsdag"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:72
+#, python-format
+msgid "Thursday Evening"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:71
+#, python-format
+msgid "Thursday Morning"
+msgstr ""
+
+#. module: resource
+#: sql_constraint:resource.resource:0
+msgid "Time efficiency must be strictly positive"
+msgstr ""
+
+#. module: resource
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_tz
+msgid "Timezone"
+msgstr "Tidson"
+
+#. module: resource
+#: model:ir.model.fields,help:resource.field_resource_calendar_leaves_tz
+msgid ""
+"Timezone used when encoding the leave. It is used to correctlylocalize leave"
+" hours when computing time intervals."
+msgstr ""
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Tuesday"
 msgstr "tisdag"
+
+#. module: resource
+#: code:addons/resource/models/resource.py:68
+#, python-format
+msgid "Tuesday Evening"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:67
+#, python-format
+msgid "Tuesday Morning"
+msgstr ""
 
 #. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
@@ -375,14 +503,36 @@ msgid "User"
 msgstr "Användare"
 
 #. module: resource
+#: model:ir.model,name:resource.model_res_users
+msgid "Users"
+msgstr "Användare"
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr "Onsdag"
 
 #. module: resource
+#: code:addons/resource/models/resource.py:70
+#, python-format
+msgid "Wednesday Evening"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/models/resource.py:69
+#, python-format
+msgid "Wednesday Morning"
+msgstr ""
+
+#. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance
 msgid "Work Detail"
 msgstr "Arbetsdetaljer"
+
+#. module: resource
+#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Work Resources"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_hour_from
@@ -395,12 +545,23 @@ msgid "Work to"
 msgstr "Arbeta till"
 
 #. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_manager
-msgid "Workgroup Manager"
-msgstr "Gruppchef"
+#: model:ir.model.fields,field_description:resource.field_hr_employee_resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_mrp_workcenter_resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_res_company_resource_calendar_ids
+#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_mixin_resource_calendar_id
+#: model:ir.model.fields,field_description:resource.field_resource_test_resource_calendar_id
+#: model:ir.ui.view,arch_db:resource.resource_calendar_form
+msgid "Working Hours"
+msgstr "Arbetstid"
 
 #. module: resource
-#: model:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+#: code:addons/resource/models/resource.py:60
+#, python-format
+msgid "Working Hours of %s"
+msgstr ""
+
+#. module: resource
 #: model:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Working Period"
 msgstr "Arbetsperiod"
@@ -408,7 +569,6 @@ msgstr "Arbetsperiod"
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance_ids
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves_calendar_id
 #: model:ir.model.fields,field_description:resource.field_resource_resource_calendar_id
 #: model:ir.ui.menu,name:resource.menu_resource_calendar
 #: model:ir.ui.view,arch_db:resource.resource_calendar_form

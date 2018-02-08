@@ -7,8 +7,7 @@ from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(TestPointOfSaleCommon):
 
     def test_register_open(self):
@@ -397,12 +396,13 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertFalse(self.pos_order_pos1.invoice_id, 'Invoice should not be attached to order.')
 
         # I generate an invoice from the order
-        self.invoice = self.pos_order_pos1.action_pos_order_invoice()
+        res = self.pos_order_pos1.action_pos_order_invoice()
+        self.assertIn('res_id', res, "No invoice created")
 
         # I test that the total of the attached invoice is correct
-        self.amount_total = self.pos_order_pos1.amount_total
+        invoice = self.env['account.invoice'].browse(res['res_id'])
         self.assertEqual(
-            float_compare(self.amount_total, 1752.75, precision_digits=2), 0, "Invoice not correct")
+            float_compare(invoice.amount_total, 1752.75, precision_digits=2), 0, "Invoice not correct")
 
         """In order to test the reports on Bank Statement defined in point_of_sale module, I create a bank statement line, confirm it and print the reports"""
 
@@ -480,6 +480,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,
@@ -513,6 +514,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,
@@ -546,6 +548,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
            'amount_total': untax + atax,
            'creation_date': fields.Datetime.now(),
            'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
            'lines': [[0,
              0,
              {'discount': 0,

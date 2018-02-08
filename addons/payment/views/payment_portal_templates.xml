@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="pay_methods" name="Payment Methods">
+        <t t-call="portal.frontend_layout">
+            <t t-set="additional_title">Payment Methods</t>
+            <div class="wrap">
+                <div class="container">
+                  <div class="row">
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb mt8">
+                                <li><a href="/my/home"><i class="fa fa-home"/></a></li>
+                                <li>Payment Methods</li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="clearfix">
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h3>Manage your Payment Methods</h3>
+                                <t t-call="payment.payment_tokens_list">
+                                    <t t-set="s2s_acquirers" t-value="acquirers"/>
+                                    <t t-set="mode" t-value="'manage'"/>
+                                    <t t-set="verify_validity" t-value="True"/>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- TDE FIXME: was customize_show=True -->
+    <template id="pay_meth_link" inherit_id="portal.portal_layout">
+        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
+            <t t-if="request.env['payment.acquirer'].search([('website_published', '=', True), ('registration_view_template_id', '!=', False), ('payment_flow', '=', 's2s')])">
+                <div class='manage_payment_method mt16'><a href="/my/payment_method">Manage your payment methods</a></div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="pay">
+        <t t-call="portal.frontend_layout">
+            <t t-set="additional_title">Payment</t>
+            <div class="wrap">
+                <div class="container o_website_payment">
+                    <h1>Payment</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="oe_structure"></div>
+                            <div>
+                                <div class="form-horizontal row o_website_payment_new_payment" t-att-data-acquirer_id="acquirer.id" t-att-data-currency_id="currency.id" t-att-data-reference="reference" t-att-data-amount="amount">
+                                    <div class="form-group">
+                                        <label for="form_reference" class="col-sm-3 control-label">Reference</label>
+                                        <div class="col-sm-9">
+                                            <span name="form_reference" class="form-control" t-esc="reference"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_amount" class="col-sm-3 control-label">Amount</label>
+                                        <div class="col-sm-9">
+                                            <span name="form_amount" class="form-control" t-esc="amount" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9 col-sm-offset-3 text-muted mt16" t-raw="acquirer.pre_msg"/>
+                                    <div class="col-sm-12 o_website_payment_form" t-raw="payment_form"/>
+                                    <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
+                                        <span t-field="acquirer.image_small" t-att-title="acquirer.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                        <span>Processed by <t t-esc="acquirer.name"/>.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_structure"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="confirm">
+        <t t-call="portal.frontend_layout">
+            <t t-set="additional_title">Payment</t>
+            <div class="wrap">
+                <div class="container o_website_payment">
+                    <h1>Payment</h1>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-horizontal">
+                                <div t-attf-class="alert alert-#{status}" t-raw="message"/>
+                                <div class="form-group">
+                                    <label for="form_partner_name" class="col-sm-3 control-label">From</label>
+                                    <div class="col-sm-9">
+                                        <span name="form_partner_name" class="form-control" t-esc="tx.partner_name"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form_reference" class="col-sm-3 control-label">Reference</label>
+                                    <div class="col-sm-9">
+                                        <span name="form_reference" class="form-control" t-esc="tx.reference"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="form_amount" class="col-sm-3 control-label">Amount</label>
+                                    <div class="col-sm-9">
+                                        <span name="form_amount" class="form-control" t-esc="tx.amount" t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <a t-attf-class="btn btn-#{status} pull-right" href="/my/home"><i class="fa fa-arrow-circle-right"/> Back to My Account</a>
+                                </div>
+                                <div class="col-sm-6 col-sm-offset-6 text-muted mt16">
+                                    <span t-field="tx.acquirer_id.image_small" t-att-title="tx.acquirer_id.name" t-options='{"widget": "image", "style":"max-width: 60px; display: inline-block"}'/>
+                                    <span>Processed by <t t-esc="tx.acquirer_id.name"/>.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="payment_confirmation_status">
+        <div t-if="payment_tx_id and payment_tx_id.state == 'done'" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.done_msg' t-raw="payment_tx_id.acquirer_id.done_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'pending'" class="alert alert-warning alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.pending_msg' t-raw="payment_tx_id.acquirer_id.pending_msg"/>
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'cancel'" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.cancel_msg' t-raw="payment_tx_id.acquirer_id.cancel_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'error'" class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            <span t-if='payment_tx_id.acquirer_id.error_msg' t-raw="payment_tx_id.acquirer_id.error_msg"/>
+        </div>
+        <div t-if="payment_tx_id and payment_tx_id.state == 'authorized'" class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&amp;times;</button>
+            Your payment has been authorized.
+            <span t-if='payment_tx_id.acquirer_id.post_msg' t-raw="payment_tx_id.acquirer_id.post_msg"/>
+        </div>
+    </template>
+
+    </data>
+</odoo>

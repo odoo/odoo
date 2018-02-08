@@ -5,6 +5,11 @@ from . import switcher
 from . import translator
 
 import sphinx.environment
+try:
+    from sphinx.environment.adapters import toctree
+except ImportError:
+    toctree = None
+
 import sphinx.builders.html
 from docutils import nodes
 def setup(app):
@@ -93,6 +98,14 @@ class monkey(object):
         old = getattr(self.obj, name)
         setattr(self.obj, name, lambda self_, *args, **kwargs: \
                 fn(old, self_, *args, **kwargs))
+if toctree:
+    # 1.6 and above use a new toctree adapter object for processing rather
+    # than functions on the BuildEnv & al
+    @monkey(toctree.TocTree)
+    def resolve(old_resolve, tree, docname, *args, **kwargs):
+        if docname == tree.env.config.master_doc:
+            return resolve_content_toctree(tree.env, docname, *args, **kwargs)
+        return old_resolve(tree, docname, *args, **kwargs)
 
 @monkey(sphinx.environment.BuildEnvironment)
 def resolve_toctree(old_resolve, self, docname, *args, **kwargs):

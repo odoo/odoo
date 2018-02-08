@@ -17,25 +17,27 @@ class FleetVehicle(models.Model):
         return state and state.id or False
 
     name = fields.Char(compute="_compute_vehicle_name", store=True)
-    active = fields.Boolean(default=True)
+    active = fields.Boolean('Active', default=True, track_visibility="onchange")
     company_id = fields.Many2one('res.company', 'Company')
     license_plate = fields.Char(required=True, help='License plate number of the vehicle (i = plate number for a car)')
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', copy=False)
-    driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle')
+    driver_id = fields.Many2one('res.partner', 'Driver', help='Driver of the vehicle', copy=False)
     model_id = fields.Many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle')
     log_fuel = fields.One2many('fleet.vehicle.log.fuel', 'vehicle_id', 'Fuel Logs')
     log_services = fields.One2many('fleet.vehicle.log.services', 'vehicle_id', 'Services Logs')
     log_contracts = fields.One2many('fleet.vehicle.log.contract', 'vehicle_id', 'Contracts')
     cost_count = fields.Integer(compute="_compute_count_all", string="Costs")
-    contract_count = fields.Integer(compute="_compute_count_all", string='Contracts')
+    contract_count = fields.Integer(compute="_compute_count_all", string='Contract Count')
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
-    fuel_logs_count = fields.Integer(compute="_compute_count_all", string='Fuel Logs')
+    fuel_logs_count = fields.Integer(compute="_compute_count_all", string='Fuel Log Count')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     acquisition_date = fields.Date('Immatriculation Date', required=False, help='Date when the vehicle has been immatriculated')
     color = fields.Char(help='Color of the vehicle')
-    state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, help='Current state of the vehicle', ondelete="set null")
+    state_id = fields.Many2one('fleet.vehicle.state', 'State', default=_get_default_state, 
+        help='Current state of the vehicle', ondelete="set null")
     location = fields.Char(help='Location of the vehicle (garage, ...)')
     seats = fields.Integer('Seats Number', help='Number of seats of the vehicle')
+    model_year = fields.Char('Model Year',help='Year of the model')
     doors = fields.Integer('Doors Number', help='Number of doors of the vehicle', default=5)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
@@ -103,7 +105,7 @@ class FleetVehicle(models.Model):
             record.odometer_count = Odometer.search_count([('vehicle_id', '=', record.id)])
             record.fuel_logs_count = LogFuel.search_count([('vehicle_id', '=', record.id)])
             record.service_count = LogService.search_count([('vehicle_id', '=', record.id)])
-            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id), ('state', '=', 'open')])
+            record.contract_count = LogContract.search_count([('vehicle_id', '=', record.id),('state','!=','closed')])
             record.cost_count = Cost.search_count([('vehicle_id', '=', record.id), ('parent_id', '=', False)])
 
     @api.depends('log_contracts')
@@ -114,7 +116,7 @@ class FleetVehicle(models.Model):
             total = 0
             name = ''
             for element in record.log_contracts:
-                if element.state in ('open', 'toclose') and element.expiration_date:
+                if element.state in ('open', 'expired') and element.expiration_date:
                     current_date_str = fields.Date.context_today(record)
                     due_time_str = element.expiration_date
                     current_date = fields.Date.from_string(current_date_str)
@@ -129,7 +131,7 @@ class FleetVehicle(models.Model):
                     if overdue or due_soon:
                         log_contract = self.env['fleet.vehicle.log.contract'].search([
                             ('vehicle_id', '=', record.id),
-                            ('state', 'in', ('open', 'toclose'))
+                            ('state', 'in', ('open', 'expired'))
                             ], limit=1, order='expiration_date asc')
                         if log_contract:
                             # we display only the name of the oldest overdue/due soon contract
@@ -157,7 +159,7 @@ class FleetVehicle(models.Model):
                         WHERE contract.expiration_date IS NOT NULL
                           AND contract.expiration_date > %s
                           AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'toclose')
+                          AND contract.state IN ('open', 'expired')
                         GROUP BY cost.vehicle_id""", (today, limit_date))
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))
@@ -177,7 +179,7 @@ class FleetVehicle(models.Model):
                         LEFT JOIN fleet_vehicle_log_contract contract ON contract.cost_id = cost.id
                         WHERE contract.expiration_date IS NOT NULL
                           AND contract.expiration_date < %s
-                          AND contract.state IN ('open', 'toclose')
+                          AND contract.state IN ('open', 'expired')
                         GROUP BY cost.vehicle_id ''', (today,))
         res_ids = [x[0] for x in self.env.cr.fetchall()]
         res.append(('id', search_operator, res_ids))
@@ -273,7 +275,7 @@ class FleetVehicleOdometer(models.Model):
                 name = record.date
             elif record.date:
                 name += ' / ' + record.date
-            self.name = name
+            record.name = name
 
     @api.onchange('vehicle_id')
     def _onchange_vehicle(self):
@@ -295,7 +297,7 @@ class FleetVehicleTag(models.Model):
     _name = 'fleet.vehicle.tag'
 
     name = fields.Char(required=True, translate=True)
-    color = fields.Integer('Color Index', default=10)
+    color = fields.Integer('Color Index')
 
     _sql_constraints = [('name_uniq', 'unique (name)', "Tag name already exists !")]
 
@@ -307,6 +309,5 @@ class FleetServiceType(models.Model):
     name = fields.Char(required=True, translate=True)
     category = fields.Selection([
         ('contract', 'Contract'),
-        ('service', 'Service'),
-        ('both', 'Both')
-        ], 'Category', required=True, help='Choose wheter the service refer to contracts, vehicle services or both')
+        ('service', 'Service')
+        ], 'Category', required=True, help='Choose whether the service refer to contracts, vehicle services or both')

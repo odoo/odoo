@@ -70,8 +70,8 @@
           <field name="department_id"/>
         </field>
         <group position="inside">
-          <filter string="Employee" domain="[]" context="{'group_by': 'employee_id'}"/>
-          <filter string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
+          <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+          <filter string="Department" name="department" domain="[]" context="{'group_by': 'department_id'}"/>
         </group>
       </field>
     </record>
@@ -101,8 +101,8 @@
             <xpath expr="//img[@t-att-title='record.owner_user_id.value']" position='replace'>
                 <img t-att-src="kanban_image('hr.employee', 'image_small', record.employee_id.raw_value)" t-att-title="record.employee_id.value" width="27" height="27" class="oe_kanban_avatar"/>
             </xpath>
-            <div t-if="!record.owner_user_id.raw_value" position='replace'/>
-            <div t-if="record.owner_user_id.raw_value" position='replace'>
+            <div t-if="record.serial_no.raw_value" position='after'>
+                <div t-if="!record.employee_id.raw_value">Unassigned</div>
                 <div t-if="record.employee_id.value"><field name="employee_id"/></div>
                 <div t-if="record.department_id.value"><field name="department_id"/>
             </div>

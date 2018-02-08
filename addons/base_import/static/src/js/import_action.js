@@ -124,8 +124,8 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 self.$('input[name=import_id]').val(id);
 
                 self.renderButtons();
+                self.renderImportLink();
                 var status = {
-                    breadcrumbs: self.action_manager.get_breadcrumbs(),
                     cp_content: {$buttons: self.$buttons},
                 };
                 self.update_control_panel(status);
@@ -137,6 +137,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 model: 'base_import.import',
                 method: 'create',
                 args: [{res_model: this.res_model}],
+                kwargs: {context: session.user_context},
             });
     },
     renderButtons: function() {
@@ -148,6 +149,12 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             e.preventDefault();
             self.exit();
         });
+    },
+    renderImportLink: function() {
+        if (this.res_model == 'res.partner') {
+            this.$(".import-link").prop({"text": _t(" Import Template for Customers"), "href": "/base_import/static/csv/res.partner.csv"});
+            this.$(".template-import").removeClass("hidden");
+        }
     },
     setup_encoding_picker: function () {
         this.$('input.oe_import_encoding').select2({
@@ -280,6 +287,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
                 model: 'base_import.import',
                 method: 'parse_preview',
                 args: [this.id, this.import_options()],
+                kwargs: {context: session.user_context},
             }).done(function (result) {
                 var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                 self[signal](result);
@@ -316,6 +324,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.$('.oe_import_float_decimal_separator').val(result.options.float_decimal_separator).change();
         if (result.debug === false){
             this.$('.oe_import_tracking').hide();
+            this.$('.oe_import_deferparentstore').hide();
         }
 
         var $fields = this.$('.oe_import_fields input');
@@ -454,10 +463,12 @@ var DataImport = Widget.extend(ControlPanelMixin, {
             return $(el).select2('val') || false;
         }).get();
         var tracking_disable = 'tracking_disable' in kwargs ? kwargs.tracking_disable : !this.$('#oe_import_tracking').prop('checked')
+        var defer_parent_store = 'defer_parent_store' in kwargs ? kwargs.defer_parent_store : !!this.$('#oe_import_deferparentstore').prop('checked')
         delete kwargs.tracking_disable;
+        delete kwargs.defer_parent_store;
         kwargs.context = _.extend(
             {}, this.parent_context,
-            {tracking_disable: tracking_disable}
+            {tracking_disable: tracking_disable, defer_parent_store_computation: defer_parent_store}
         );
         return this._rpc({
                 model: 'base_import.import',
@@ -495,10 +506,7 @@ var DataImport = Widget.extend(ControlPanelMixin, {
         this.exit();
     },
     exit: function () {
-        this.do_action({
-            type: 'ir.actions.client',
-            tag: 'history_back'
-        });
+        this.trigger_up('history_back');
     },
     onresults: function (event, from, to, message) {
         var no_messages = _.isEmpty(message);

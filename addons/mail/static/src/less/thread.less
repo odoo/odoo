@@ -11,7 +11,11 @@
     .o_thread_date_separator {
         margin-top: 15px;
         margin-bottom: 30px;
-        border-bottom: solid @gray-lighter 2px;
+        @media (max-width: @screen-xs-max) {
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        border-bottom: 1px solid @gray-lighter-darker;
         text-align: center;
 
         .o_thread_date {
@@ -43,6 +47,11 @@
         padding: 4px @odoo-horizontal-padding;
         margin-bottom: 0px;
 
+        &.o_mail_not_discussion {
+            background-color: @mail-thread-note;
+            border-bottom: 1px solid @gray-lighter-dark;
+        }
+
         .o_thread_message_sidebar {
             .o-flex(0, 0, @mail-thread-avatar-size);
             margin-right: 10px;
@@ -69,14 +78,12 @@
                 opacity: 0;
             }
         }
-        .o_thread_icons {
+        .o_thread_icon {
             cursor: pointer;
-            > .o_thread_icon {
-                opacity: 0;
-                &.fa-star {
-                    opacity: @mail-thread-icon-opacity;
-                    color: gold;
-                }
+            opacity: 0;
+            &.fa-star {
+                opacity: @mail-thread-icon-opacity;
+                color: gold;
             }
         }
 
@@ -84,7 +91,7 @@
             .o_thread_message_side_date {
                 opacity: @mail-thread-side-date-opacity;
             }
-            .o_thread_icons > * {
+            .o_thread_icon {
                 opacity: @mail-thread-icon-opacity;
                 &:hover {
                     opacity: 1;
@@ -101,10 +108,13 @@
             min-width: 0;
             max-width: 100%;
             word-wrap: break-word;
-
-            &.o_mail_note {
-                background-color: @gray-lighter;
+            > pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+                text-align: justify;
             }
+
+            
 
             .o_mail_subject {
                 font-style: italic;
@@ -131,7 +141,6 @@
             }
             img {
                 max-width: 100%;
-                height: auto;
             }
 
             .o_mail_body_long {
@@ -143,6 +152,10 @@
                 .text-muted();
                 .o_mail_mailto, .o_mail_mailto:hover {
                     .text-muted();
+                }
+
+                strong {
+                    color: @headings-color;
                 }
             }
 
@@ -208,9 +221,7 @@
 }
 
 .o_web_client.o_touch_device {
-    .o_thread_icons {
-        > .o_thread_icon {
-            opacity: @mail-thread-icon-opacity;
-        }
+    .o_mail_thread .o_thread_icon {
+        opacity: @mail-thread-icon-opacity;
     }
 }

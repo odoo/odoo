@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -48,13 +48,19 @@ msgid "!important; font-size: 8px; min-width: 18px\"&gt;"
 msgstr "!important; font-size: 8px; min-width: 18px\"&gt;"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:125
+#: code:addons/hr_holidays/models/hr_holidays.py:123
 #, python-format
 msgid "%g remaining out of %g"
 msgstr "%g overgebleven uit %g"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:336
+#: code:addons/hr_holidays/models/hr_holidays.py:341
+#, python-format
+msgid "%s : %.2f day(s)"
+msgstr "%s : %.2f dag(en)"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:343
 #, python-format
 msgid "%s on %s : %.2f day(s)"
 msgstr "%s on %s : %.2f dag(en)"
@@ -89,9 +95,25 @@ msgid "&lt;th class=\"text-center\" colspan="
 msgstr "&lt;th class=\"text-center\" colspan="
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
+msgid "<small class=\"text-muted\">from</small>"
+msgstr "<small class=\"text-muted\">van</small>"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
+msgid "<small class=\"text-muted\">to</small>"
+msgstr "<small class=\"text-muted\">naar</small>"
+
+#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "<strong>Departments and Employees</strong>"
 msgstr "<strong>Afdelingen en personeel</strong>"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:388
+#, python-format
+msgid "A leave cannot be duplicated."
+msgstr "Een verlof kan niet gedupliceerd worden."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_show_leaves
@@ -159,6 +181,7 @@ msgid "Allocate Leaves for Employees"
 msgstr "Wijs verloven voor werknemers toe"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_view_list_my_allocation
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
 msgid "Allocated Days"
@@ -184,6 +207,7 @@ msgstr "Verlof toewijzen"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_view_list_my_allocation
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
 msgid "Allocation Requests"
@@ -201,6 +225,12 @@ msgid "Allocation for %s"
 msgstr "Verloftoewijzing voor %s"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:345
+#, python-format
+msgid "Allocation of %s : %.2f day(s) To %s"
+msgstr "Toewijzing van %s : %.2f dag(en) aan %s"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department_allocation_to_approve_count
 msgid "Allocation to Approve"
 msgstr "Verloftoewijzing goedkeuren"
@@ -209,6 +239,11 @@ msgstr "Verloftoewijzing goedkeuren"
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Allocations"
 msgstr "Toewijzingen"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_allocation_approve
+msgid "Allocations to Approve"
+msgstr "Verloftoewijzingen goedkeuren"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_limit
@@ -232,7 +267,7 @@ msgid "Appraisal Analysis"
 msgstr "Beoordelingsanalyse"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:554
+#: code:addons/hr_holidays/models/hr_holidays.py:591
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #, python-format
 msgid "Approve"
@@ -257,21 +292,6 @@ msgid "Assign Leaves"
 msgstr "Verlof toewijzen"
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_resource_calendar_uom_id
-msgid ""
-"Average hours of work per day.\n"
-"                It is used in an employee leave request to compute the number of days consumed based on the resource calendar.\n"
-"                It can be used to handle various contract types, e.g.:\n"
-"                - 38 Hours/Week, 5 Days/Week: 1 Day = 7.6 Hours\n"
-"                - 45 Hours/Week, 5 Days/Week: 1 Day = 9.0 Hours"
-msgstr ""
-"Gemiddelde uren per werkdag.\n"
-"Het wordt gebruikt bij een verlofaanvraag om de hoeveelheid dagen te berekenen.\n"
-"Er kunnen verschillende contracttypes mee ingesteld worden, zoals:\n"
-"- 38 Uren per week, 5 Dagen per week: 1 Dag = 7.6 uren\n"
-"- 45 Uren per week, 5 Dagen per week: 1 Dag = 9.0 uren"
-
-#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
 msgstr "Zwart"
@@ -291,6 +311,11 @@ msgstr "Beide bevestigd en goedgekeurd"
 #: selection:hr.holidays.status,color_name:0
 msgid "Brown"
 msgstr "Bruin"
+
+#. module: hr_holidays
+#: selection:hr.holidays,holiday_type:0
+msgid "By Department"
+msgstr "Op afdeling"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
@@ -469,6 +494,7 @@ msgstr "Afdeling(en)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_name
+#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Description"
 msgstr "Omschrijving"
@@ -503,11 +529,6 @@ msgid "Employee Tag"
 msgstr "Werknemer label"
 
 #. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
-msgid "Employee's Leave"
-msgstr "Verlof personeelslid"
-
-#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_emp
 msgid "Employee(s)"
 msgstr "Werknemer(s)"
@@ -520,16 +541,22 @@ msgstr "Einddatum"
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid ""
-"Filters only on allocations and requests that belong to an holiday type that"
-" is 'active' (active field is True)"
+"Filters only on allocations and requests that belong to an leave type that "
+"is 'active' (active field is True)"
 msgstr ""
 "Filters alleen over de toewijzingen en aanvragen die behoren tot een type "
-"verlofsoort dat 'actief' is."
+"verlofsoort dat 'actief' is (actief veld is Waar)"
 
 #. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_first_approver_id
 msgid "First Approval"
 msgstr "Eerste goedkeuring"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:112
+#, python-format
+msgid "Form content is missing, this report cannot be printed."
+msgstr "Formulier inhoud ontbreekt, dit rapport kan niet afgedrukt worden."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_dept_date_from
@@ -574,11 +601,6 @@ msgstr "Personeel verlof samenvatting per afdeling"
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Leaves Summary Report By Employee"
 msgstr "Personeel verlof samenvatting per werknemer"
-
-#. module: hr_holidays
-#: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_uom_id
-msgid "Hours per Day"
-msgstr "Uren per dag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_id
@@ -658,12 +680,6 @@ msgid "Leave Detail"
 msgstr "Afwezigheiddetail"
 
 #. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.open_employee_leaves
-#: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
-msgid "Leave Details"
-msgstr "Verlofdetails"
-
-#. module: hr_holidays
 #: selection:hr.holidays,type:0
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves_holiday_id
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
@@ -704,7 +720,7 @@ msgid "Leave Types"
 msgstr "Verlofsoorten"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:434
+#: code:addons/hr_holidays/models/hr_holidays.py:450
 #, python-format
 msgid "Leave request must be confirmed (\"To Approve\") in order to approve it."
 msgstr ""
@@ -712,20 +728,20 @@ msgstr ""
 "kunnen keuren."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:449
+#: code:addons/hr_holidays/models/hr_holidays.py:485
 #, python-format
 msgid "Leave request must be confirmed in order to approve it."
 msgstr "Verlofaanvraag moet bevestigd worden om het goed te keuren."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:508
+#: code:addons/hr_holidays/models/hr_holidays.py:546
 #, python-format
 msgid "Leave request must be confirmed or validated in order to refuse it."
 msgstr ""
 "Verlofaanvraag moet bevestigd of goedgekeurd worden om het te weigeren."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:421
+#: code:addons/hr_holidays/models/hr_holidays.py:434
 #, python-format
 msgid ""
 "Leave request must be in Draft state (\"To Submit\") in order to confirm it."
@@ -734,7 +750,7 @@ msgstr ""
 "bevestigen."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:406
+#: code:addons/hr_holidays/models/hr_holidays.py:419
 #, python-format
 msgid ""
 "Leave request state must be \"Refused\" or \"To Approve\" in order to reset "
@@ -750,19 +766,12 @@ msgstr "Verloven goed te keuren"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_root
-#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 #: model:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Leaves"
 msgstr "Verlof"
-
-#. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_allocation_approve
-msgid "Leaves Allocation"
-msgstr "Toekenning verloven"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_leaves_taken
@@ -773,6 +782,7 @@ msgstr "Eerder opgenomen verlof"
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_analysis
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_analysis_filtered
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
 msgstr "Verlof analyse"
 
@@ -780,6 +790,12 @@ msgstr "Verlof analyse"
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Leaves Left"
 msgstr "Resterende verlofdagen"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.open_employee_leaves
+#: model:ir.ui.menu,name:hr_holidays.menu_open_employee_leave
+msgid "Leaves Overview"
+msgstr "Vakantie overzicht"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
@@ -790,7 +806,7 @@ msgstr "Verlofaanvraag"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
-#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
+#: model:ir.actions.report,name:hr_holidays.action_report_holidayssummary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 #: model:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_graph
@@ -801,8 +817,13 @@ msgid "Leaves Summary"
 msgstr "Verlof samenvatting"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
+msgid "Leaves Taken:"
+msgstr "Opgenomen verloven:"
+
+#. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
-#: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_dept
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_summary_dept
 msgid "Leaves by Department"
 msgstr "Verlof per afdeling"
@@ -819,7 +840,7 @@ msgid "Leaves of Your Team Member"
 msgstr "Verloven van uw teamlid"
 
 #. module: hr_holidays
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
+#: model:ir.ui.menu,name:hr_holidays.menu_open_department_leave_approve
 msgid "Leaves to Approve"
 msgstr "Verlofaanvragen goedkeuren"
 
@@ -856,7 +877,7 @@ msgstr "Verloven / Toewijzingen  : eerste goedkeuringen"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves 2017"
-msgstr ""
+msgstr "Wettelijke verloven 2017"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -904,10 +925,21 @@ msgid "Magenta"
 msgstr "Magenta"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
 msgid "Manager"
 msgstr "Beheerder"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_approvals
+msgid "Managers"
+msgstr "Managers"
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
+msgid "Max Leaves:"
+msgstr "Maximale verloven:"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_status_max_leaves
@@ -955,13 +987,9 @@ msgstr "Mijn afdelingsverloven"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Leaves"
 msgstr "Mijn verlof"
-
-#. module: hr_holidays
-#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
-msgid "My Requests"
-msgstr "Mijn aanvragen"
 
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -976,7 +1004,6 @@ msgstr "Nieuw"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_number_of_days
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
-#: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_simple
 msgid "Number of Days"
 msgstr "Aantal dagen"
@@ -985,6 +1012,12 @@ msgstr "Aantal dagen"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_leaves_count
 msgid "Number of Leaves"
 msgstr "Aantal verloven"
+
+#. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_number_of_days_temp
+msgid ""
+"Number of days of the leave request according to your working schedule."
+msgstr "Aantal dagen van de verlofaanvraag volgens uw werkschema."
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
@@ -1005,23 +1038,22 @@ msgstr ""
 msgid ""
 "Once you have recorded your leave request, it will be sent\n"
 "                to a manager for validation. Be sure to set the right leave\n"
-"                type (recuperation, legal holidays, sickness) and the exact\n"
+"                type (recuperation, legal leaves, sickness) and the exact\n"
 "                number of open days related to your leave."
 msgstr ""
 "Zodra u uw verlofaanvraag heeft ingevoerd, wordt deze verzonden\n"
 "naar een manager voor goedkeuring. Zorg ervoor dat u de juiste\n"
-"verlofsoort ingeeft (inhaalrust, wettelijke dagen, wettelijke feestdagen,\n"
-"ziekte) en het exacte aantal open dagen met betrekking tot uw verlof."
+"verlofsoort ingeeft (wettelijke dagen, ziekte) en het exacte aantal open dagen met betrekking tot uw verlof."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:451
+#: code:addons/hr_holidays/models/hr_holidays.py:487
 #, python-format
 msgid "Only an HR Manager can apply the second approval on leave requests."
 msgstr ""
 "Alleen een HR officier kan dubbele validatie op verlof aanvragen toepassen."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:404
+#: code:addons/hr_holidays/models/hr_holidays.py:417
 #, python-format
 msgid "Only an HR Manager or the concerned employee can reset to draft."
 msgstr ""
@@ -1029,17 +1061,22 @@ msgstr ""
 "concept."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:429
-#: code:addons/hr_holidays/models/hr_holidays.py:444
+#: code:addons/hr_holidays/models/hr_holidays.py:440
+#: code:addons/hr_holidays/models/hr_holidays.py:476
 #, python-format
 msgid "Only an HR Officer or Manager can approve leave requests."
 msgstr "Alleen een HR officier of manager kan de verlof goedkeuren."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:503
+#: code:addons/hr_holidays/models/hr_holidays.py:563
 #, python-format
 msgid "Only an HR Officer or Manager can refuse leave requests."
 msgstr "Alleen een HR functionaris of manager kan verlof weigeren.."
+
+#. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
+msgid "Options"
+msgstr "Opties"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_parent_id
@@ -1063,7 +1100,7 @@ msgid "Red"
 msgstr "Rood"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:557
+#: code:addons/hr_holidays/models/hr_holidays.py:594
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #, python-format
 msgid "Refuse"
@@ -1082,10 +1119,10 @@ msgstr ""
 "Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.hr_holidays_view_list_my_allocation
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_allocation_tree_customize
-#: model:ir.ui.view,arch_db:hr_holidays.view_holiday_employee
 #: model:ir.ui.view,arch_db:hr_holidays.view_holiday_simple
 msgid "Remaining Days"
 msgstr "Resterende dagen"
@@ -1153,11 +1190,6 @@ msgid "Reset to Draft"
 msgstr "Terugzetten naar concept"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_resource_calendar
-msgid "Resource Calendar"
-msgstr "Resource agenda"
-
-#. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Search Leave"
 msgstr "Verlof zoeken"
@@ -1169,9 +1201,21 @@ msgstr "Verlofsoort zoeken"
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
-#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_manager_id2
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_second_approver_id
 msgid "Second Approval"
 msgstr "Tweede goedkeuring"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:607
+#, python-format
+msgid "See Allocation"
+msgstr "Bekijk toekenning"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/models/hr_holidays.py:607
+#, python-format
+msgid "See Leave"
+msgstr "Bekijk verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee_holiday_type
@@ -1206,11 +1250,9 @@ msgstr "Som"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid ""
-"The employee or employee category of this request is missing. Please make "
-"sure that your user login is linked to an employee."
+"The employee, department or employee category of this request is missing. "
+"Please make sure that your user login is linked to an employee."
 msgstr ""
-"De werknemer of de werknemer categorie van het verzoek ontbreekt. Zorg "
-"ervoor dat de gebruikers inlognaam is gekoppeld aan een werknemer."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr.py:117
@@ -1234,7 +1276,7 @@ msgid "The number of days must be greater than 0."
 msgstr "Het aantal dagen moet groter zijn dan nul."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:258
+#: code:addons/hr_holidays/models/hr_holidays.py:260
 #, python-format
 msgid ""
 "The number of remaining leaves is not sufficient for this leave type.\n"
@@ -1251,25 +1293,25 @@ msgstr "De begindatum moet voor de einddatum liggen."
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_state
 msgid ""
-"The status is set to 'To Submit', when a holiday request is created.\n"
-"The status is 'To Approve', when holiday request is confirmed by user.\n"
-"The status is 'Refused', when holiday request is refused by manager.\n"
-"The status is 'Approved', when holiday request is approved by manager."
+"The status is set to 'To Submit', when a leave request is created.\n"
+"The status is 'To Approve', when leave request is confirmed by user.\n"
+"The status is 'Refused', when leave request is refused by manager.\n"
+"The status is 'Approved', when leave request is approved by manager."
 msgstr ""
-"De status is ingesteld op 'Indienen', wanneer een verlofaanvraag wordt gecreëerd.\n"
+"De status is ingesteld op 'Indienen', wanneer een verlofaanvraag wordt aangemaakt.\n"
 "De status is 'Goed te keuren', wanneer een verlofaanvraag wordt bevestigd door de gebruiker. \n"
 "De status wordt 'Afgewezen', wanneer een verlofaanvraag wordt afgewezen door de manager. \n"
 "De status wordt 'Goedgekeurd', wanneer een verlofaanvraag wordt goedgekeurd door de manager."
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_first_approver_id
 msgid "This area is automatically filled by the user who validate the leave"
 msgstr ""
 "Dit gedeelte wodrt automatisch ingevuld door de gebruiker die het verlof "
 "goedkeurd."
 
 #. module: hr_holidays
-#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_manager_id2
+#: model:ir.model.fields,help:hr_holidays.field_hr_holidays_second_approver_id
 msgid ""
 "This area is automaticly filled by the user who validate the leave with "
 "second level (If Leave type need second validation)"
@@ -1290,8 +1332,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_leaves_taken
 msgid ""
-"This value is given by the sum of all holidays requests with a negative "
-"value."
+"This value is given by the sum of all leaves requests with a negative value."
 msgstr ""
 "De waarde wordt bepaald door de som van alle verlofaanvragen met een "
 "negatieve waarde."
@@ -1299,8 +1340,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_holidays_status_max_leaves
 msgid ""
-"This value is given by the sum of all holidays requests with a positive "
-"value."
+"This value is given by the sum of all leaves requests with a positive value."
 msgstr ""
 "Deze waarde wordt bepaalt door de som van alle verlofaanvragen met een "
 "positieve waarde."
@@ -1379,6 +1419,11 @@ msgid "Validate"
 msgstr "Valideer"
 
 #. module: hr_holidays
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
+msgid "Validator"
+msgstr "Controleur"
+
+#. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Violet"
 msgstr "Lila"
@@ -1428,13 +1473,13 @@ msgstr ""
 "Odoo zal deze toewijzingen automatisch maken en goedkeuren. "
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:248
+#: code:addons/hr_holidays/models/hr_holidays.py:250
 #, python-format
 msgid "You can not have 2 leaves that overlaps on same day!"
 msgstr "U kunt geen twee verlofdagen hebben die overlappen!"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:374
+#: code:addons/hr_holidays/models/hr_holidays.py:383
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "U kunt geen verlof verwijderen welke zich in de %s status bevind."
@@ -1446,8 +1491,8 @@ msgid "You cannot reduce validated allocation requests"
 msgstr "Het is niet mogelijk om goedgekeurde aanvragen te verlagen"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/models/hr_holidays.py:355
-#: code:addons/hr_holidays/models/hr_holidays.py:366
+#: code:addons/hr_holidays/models/hr_holidays.py:364
+#: code:addons/hr_holidays/models/hr_holidays.py:375
 #, python-format
 msgid ""
 "You cannot set a leave request as '%s'. Contact a human resource manager."
@@ -1463,6 +1508,7 @@ msgstr "U dient tenminste één afdeling te selecteren en opnieuw te proberen."
 #. module: hr_holidays
 #: model:ir.ui.view,arch_db:hr_holidays.edit_holiday_new
 #: model:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
+#: model:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_kanban
 msgid "days"
 msgstr "dagen"
 

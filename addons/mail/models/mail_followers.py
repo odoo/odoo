@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import pycompat
 
 
 class Followers(models.Model):
@@ -19,12 +18,11 @@ class Followers(models.Model):
     _log_access = False
     _description = 'Document Followers'
 
-    res_model_id = fields.Many2one(
-        'ir.model', 'Related Document Model',
-        index=True, required=True, ondelete='cascade',
-        help='Model of the followed resource')
+    # Note. There is no integrity check on model names for performance reasons.
+    # However, followers of unlinked models are deleted by models themselves
+    # (see 'ir.model' inheritance).
     res_model = fields.Char(
-        'Related Document Model Name', index=True, readonly=True, related='res_model_id.model', store=True)
+        'Related Document Model Name', required=True, index=True)
     res_id = fields.Integer(
         'Related Document ID', index=True, help='Id of the followed resource')
     partner_id = fields.Many2one(
@@ -41,8 +39,7 @@ class Followers(models.Model):
         :param force: if True, delete existing followers before creating new one
                       using the subtypes given in the parameters
         """
-        res_model_id = self.env['ir.model']._get(res_model).id
-        force_mode = force or (all(data for data in pycompat.values(partner_data)) and all(data for data in pycompat.values(channel_data)))
+        force_mode = force or (all(partner_data.values()) and all(channel_data.values()))
         generic = []
         specific = {}
         existing = {}  # {res_id: follower_ids}
@@ -51,7 +48,7 @@ class Followers(models.Model):
 
         followers = self.sudo().search([
             '&',
-            '&', ('res_model_id', '=', res_model_id), ('res_id', 'in', res_ids),
+            '&', ('res_model', '=', res_model), ('res_id', 'in', res_ids),
             '|', ('partner_id', 'in', list(partner_data)), ('channel_id', 'in', list(channel_data))])
 
         if force_mode:
@@ -64,20 +61,18 @@ class Followers(models.Model):
                 if follower.channel_id:
                     c_exist.setdefault(follower.channel_id.id, list()).append(follower.res_id)
 
-        default_subtypes = self.env['mail.message.subtype'].search([
-            ('default', '=', True),
-            '|', ('res_model', '=', res_model), ('res_model', '=', False)])
-        external_default_subtypes = default_subtypes.filtered(lambda subtype: not subtype.internal)
+        default_subtypes, _internal_subtypes, external_subtypes = \
+            self.env['mail.message.subtype'].default_subtypes(res_model)
 
         if force_mode:
             employee_pids = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_data)), ('share', '=', False)]).mapped('partner_id').ids
-            for pid, data in pycompat.items(partner_data):
+            for pid, data in partner_data.items():
                 if not data:
                     if pid not in employee_pids:
-                        partner_data[pid] = external_default_subtypes.ids
+                        partner_data[pid] = external_subtypes.ids
                     else:
                         partner_data[pid] = default_subtypes.ids
-            for cid, data in pycompat.items(channel_data):
+            for cid, data in channel_data.items():
                 if not data:
                     channel_data[cid] = default_subtypes.ids
 
@@ -85,9 +80,9 @@ class Followers(models.Model):
         gen_new_pids = [pid for pid in partner_data if pid not in p_exist]
         gen_new_cids = [cid for cid in channel_data if cid not in c_exist]
         for pid in gen_new_pids:
-            generic.append([0, 0, {'res_model_id': res_model_id, 'partner_id': pid, 'subtype_ids': [(6, 0, partner_data.get(pid) or default_subtypes.ids)]}])
+            generic.append([0, 0, {'res_model': res_model, 'partner_id': pid, 'subtype_ids': [(6, 0, partner_data.get(pid) or default_subtypes.ids)]}])
         for cid in gen_new_cids:
-            generic.append([0, 0, {'res_model_id': res_model_id, 'channel_id': cid, 'subtype_ids': [(6, 0, channel_data.get(cid) or default_subtypes.ids)]}])
+            generic.append([0, 0, {'res_model': res_model, 'channel_id': cid, 'subtype_ids': [(6, 0, channel_data.get(cid) or default_subtypes.ids)]}])
 
         # create new followers, each document at a time because of existing followers to avoid erasing
         if not force_mode:
@@ -101,13 +96,13 @@ class Followers(models.Model):
                 # subscribe new followers
                 for new_pid in new_pids:
                     command.append((0, 0, {
-                        'res_model_id': res_model_id,
+                        'res_model': res_model,
                         'partner_id': new_pid,
                         'subtype_ids': [(6, 0, partner_data.get(new_pid) or default_subtypes.ids)],
                     }))
                 for new_cid in new_cids:
                     command.append((0, 0, {
-                        'res_model_id': res_model_id,
+                        'res_model': res_model,
                         'channel_id': new_cid,
                         'subtype_ids': [(6, 0, channel_data.get(new_cid) or default_subtypes.ids)],
                     }))

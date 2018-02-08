@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="open_payroll_modules" model="ir.actions.act_window">
+            <field name="name">Payroll</field>
+            <field name="res_model">ir.module.module</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_localization'), 'search_default_name': 'Payroll'}"/>
+            <field name="search_view_id" ref="base.view_module_filter"/>
+        </record>
+
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.hr.payroll</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="45"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Payroll" string="Payroll" data-key="hr_payroll" groups="hr_payroll.group_hr_payroll_manager">
+                    <field name="module_l10n_fr_hr_payroll" invisible="1"/>
+                    <field name="module_l10n_be_hr_payroll" invisible="1"/>
+                    <field name="module_l10n_in_hr_payroll" invisible="1"/>
+                    <h2 attrs="{'invisible': ['|', '|', ('module_l10n_fr_hr_payroll', '=', True), ('module_l10n_be_hr_payroll', '=', True), ('module_l10n_in_hr_payroll', '=', True)]}">Payroll</h2>
+                    <div class="row mt16 o_settings_container" id="hr_payroll_localization" attrs="{'invisible': ['|', '|', ('module_l10n_fr_hr_payroll', '=', True), ('module_l10n_be_hr_payroll', '=', True), ('module_l10n_in_hr_payroll', '=', True)]}">
+                        <div class="col-md-6 col-xs-12 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label string="Payroll Rules"/>
+                                <div class="text-muted">
+                                    Payroll rules that apply to your country
+                                </div>
+                                <div class="mt16" id="localization_text">
+                                    <button name="%(open_payroll_modules)d" icon="fa-arrow-right" type="action" string="Choose a Payroll Localization" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Accounting</h2>
+                    <div class="row mt16 o_settings_container" id="hr_payroll_accountant">
+                        <div class="col-md-6 col-xs-12 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="module_account_accountant" widget="upgrade_boolean"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_account_accountant" string="Payroll Entries"/>
+                                <div class="text-muted">
+                                    Post payroll slips in accounting
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_hr_payroll_configuration" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'hr_payroll'}</field>
+        </record>
+
+        <menuitem id="menu_hr_payroll_global_settings" name="Settings"
+            parent="menu_hr_payroll_configuration" sequence="0" action="action_hr_payroll_configuration" groups="base.group_system"/>
+</odoo>

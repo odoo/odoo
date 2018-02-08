@@ -34,9 +34,7 @@ Help your customers with this chat, and analyse their feedback.
         'data/mail_shortcode_demo.xml',
     ],
     'depends': ["mail", "rating"],
-    'qweb': [
-        'static/src/xml/im_livechat_backend.xml',
-    ],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
     'application': True,

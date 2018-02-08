@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.l10n.be.hr.payroll.fleet</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="90"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Fleet" string="Fleet" data-key="fleet" groups="fleet.fleet_group_manager">
+                        <h2>Fleet Management</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label string="New Car Request"/>
+                                    <div class="text-muted o_row">
+                                        <span>An employee cannot request a new car if there are more than </span>
+                                        <field name="max_unused_cars"/>
+                                        <span> existing vehicles availables.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="fleet_config_settings_action" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module' : 'fleet'}</field>
+        </record>
+
+        <menuitem id="fleet_config_settings_menu" name="Settings"
+            parent="fleet.fleet_configuration" sequence="0" action="fleet_config_settings_action"
+            groups="base.group_system"/>
+    </data>
+</odoo>

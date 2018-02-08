@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 {
     "name": "Vietnam - Accounting",
     'summary': "Vietnam Chart of Accounts for Odoo",
@@ -39,9 +40,11 @@ Credits
         "base_iban"
     ],
     "data": [
-        'data/account_tag_data.xml',
-        'data/l10n_vn_chart_data.xml',
-        'data/account_tax_data.xml',
-        'data/account_chart_template_data.yml',
-    ]
+         'data/account_tag_data.xml',
+         'data/l10n_vn_chart_data.xml',
+         'data/account_data.xml',
+         'data/account_tax_data.xml',
+         'data/account_chart_template_data.xml',
+    ],
+    'post_init_hook': '_preserve_tag_on_taxes',
 }

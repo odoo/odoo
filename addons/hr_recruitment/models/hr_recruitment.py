@@ -4,7 +4,6 @@
 from datetime import datetime
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
-from odoo.tools import pycompat
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -90,7 +89,6 @@ class Applicant(models.Model):
     _description = "Applicant"
     _order = "priority desc, id desc"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'utm.mixin']
-    _mail_mass_mailing = _('Applicants')
 
     def _default_stage_id(self):
         if self._context.get('default_job_id'):
@@ -123,7 +121,7 @@ class Applicant(models.Model):
     partner_id = fields.Many2one('res.partner', "Contact")
     create_date = fields.Datetime("Creation Date", readonly=True, index=True)
     write_date = fields.Datetime("Update Date", readonly=True)
-    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', track_visibility='onchange',
+    stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', track_visibility='onchange',
                                domain="['|', ('job_id', '=', False), ('job_id', '=', job_id)]",
                                copy=False, index=True,
                                group_expand='_read_group_stage_ids',
@@ -151,7 +149,7 @@ class Applicant(models.Model):
     reference = fields.Char("Referred By")
     day_open = fields.Float(compute='_compute_day', string="Days to Open")
     day_close = fields.Float(compute='_compute_day', string="Days to Close")
-    delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of Delay to close", store=True)
+    delay_close = fields.Float(compute="_compute_day", string='Delay to Close', readonly=True, group_operator="avg", help="Number of days to close", store=True)
     color = fields.Integer("Color Index", default=0)
     emp_id = fields.Many2one('hr.employee', string="Employee", track_visibility="onchange", help="Employee linked to the applicant.")
     user_email = fields.Char(related='user_id.email', type="char", string="User Email", readonly=True)
@@ -251,7 +249,7 @@ class Applicant(models.Model):
             self = self.with_context(default_department_id=vals.get('department_id'))
         if vals.get('job_id') or self._context.get('default_job_id'):
             job_id = vals.get('job_id') or self._context.get('default_job_id')
-            for key, value in pycompat.items(self._onchange_job_id_internal(job_id)['value']):
+            for key, value in self._onchange_job_id_internal(job_id)['value'].items():
                 if key not in vals:
                     vals[key] = value
         if vals.get('user_id'):
@@ -280,7 +278,7 @@ class Applicant(models.Model):
     def get_empty_list_help(self, help):
         return super(Applicant, self.with_context(empty_list_help_model='hr.job',
                                                   empty_list_help_id=self.env.context.get('default_job_id'),
-                                                  empty_list_help_document_name=_("job applicants"))).get_empty_list_help(help)
+                                                  empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
 
     @api.multi
     def action_get_created_employee(self):
@@ -338,10 +336,10 @@ class Applicant(models.Model):
         return super(Applicant, self)._track_subtype(init_values)
 
     @api.model
-    def message_get_reply_to(self, ids, default=None):
+    def _notify_get_reply_to(self, ids, default=None):
         """ Override to get the reply_to of the parent project. """
         applicants = self.sudo().browse(ids)
-        aliases = self.env['hr.job'].message_get_reply_to(applicants.mapped('job_id').ids, default=default)
+        aliases = self.env['hr.job']._notify_get_reply_to(applicants.mapped('job_id').ids, default=default)
         return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
 
     @api.multi
@@ -379,7 +377,7 @@ class Applicant(models.Model):
             defaults.update(custom_values)
         return super(Applicant, self).message_new(msg, custom_values=defaults)
 
-    def _message_post_after_hook(self, message):
+    def _message_post_after_hook(self, message, values, notif_layout):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -390,26 +388,39 @@ class Applicant(models.Model):
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
                     ('stage_id.fold', '=', False)]).write({'partner_id': new_partner.id})
-        return super(Applicant, self)._message_post_after_hook(message)
+        return super(Applicant, self)._message_post_after_hook(message, values, notif_layout)
 
     @api.multi
     def create_employee_from_applicant(self):
         """ Create an hr.employee from the hr.applicants """
         employee = False
         for applicant in self:
-            address_id = contact_name = False
+            contact_name = False
             if applicant.partner_id:
                 address_id = applicant.partner_id.address_get(['contact'])['contact']
                 contact_name = applicant.partner_id.name_get()[0][1]
+            else :
+                new_partner_id = self.env['res.partner'].create({
+                    'is_company': False,
+                    'name': applicant.partner_name,
+                    'email': applicant.email_from,
+                    'phone': applicant.partner_phone,
+                    'mobile': applicant.partner_mobile
+                })
+                address_id = new_partner_id.address_get(['contact'])['contact']
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
-                employee = self.env['hr.employee'].create({'name': applicant.partner_name or contact_name,
-                                               'job_id': applicant.job_id.id,
-                                               'address_home_id': address_id,
-                                               'department_id': applicant.department_id.id or False,
-                                               'address_id': applicant.company_id and applicant.company_id.partner_id and applicant.company_id.partner_id.id or False,
-                                               'work_email': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.email or False,
-                                               'work_phone': applicant.department_id and applicant.department_id.company_id and applicant.department_id.company_id.phone or False})
+                employee = self.env['hr.employee'].create({
+                    'name': applicant.partner_name or contact_name,
+                    'job_id': applicant.job_id.id,
+                    'address_home_id': address_id,
+                    'department_id': applicant.department_id.id or False,
+                    'address_id': applicant.company_id and applicant.company_id.partner_id
+                            and applicant.company_id.partner_id.id or False,
+                    'work_email': applicant.department_id and applicant.department_id.company_id
+                            and applicant.department_id.company_id.email or False,
+                    'work_phone': applicant.department_id and applicant.department_id.company_id
+                            and applicant.department_id.company_id.phone or False})
                 applicant.write({'emp_id': employee.id})
                 applicant.job_id.message_post(
                     body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
@@ -420,9 +431,7 @@ class Applicant(models.Model):
 
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
-        if employee:
-            dict_act_window['res_id'] = employee.id
-        dict_act_window['view_mode'] = 'form,tree'
+        dict_act_window['context'] = {'form_view_initial_mode': 'edit'}
         return dict_act_window
 
     @api.multi

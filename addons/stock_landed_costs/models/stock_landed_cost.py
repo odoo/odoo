@@ -7,18 +7,12 @@ from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.addons.stock_landed_costs.models import product
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
     landed_cost_value = fields.Float('Landed Cost')
-    total_value = fields.Float('Total Value', compute='_compute_total_value')
-    
-    def _compute_total_value(self):
-        for move in self:
-            move.total_value = move.value + move.landed_cost_value
 
 
 class LandedCost(models.Model):
@@ -97,13 +91,23 @@ class LandedCost(models.Model):
                 'ref': cost.name
             })
             for line in cost.valuation_adjustment_lines.filtered(lambda line: line.move_id):
-                cost_to_add = line.additional_landed_cost
-                line.move_id.landed_cost_value += cost_to_add
-                
-#                 for quant in line.move_id.quant_ids:
-#                     if quant.location_id.usage != 'internal':
-#                         qty_out += quant.qty
-                line._create_accounting_entries(move, 0) #TODO: qty_out like you would do with the different moves
+                # Prorate the value at what's still in stock
+                cost_to_add = (line.move_id.remaining_qty / line.move_id.product_qty) * line.additional_landed_cost
+
+                new_landed_cost_value = line.move_id.landed_cost_value + line.additional_landed_cost
+                line.move_id.write({
+                    'landed_cost_value': new_landed_cost_value,
+                    'remaining_value': line.move_id.remaining_value + cost_to_add,
+                    'price_unit': (line.move_id.value + new_landed_cost_value) / line.move_id.product_qty,
+                })
+                # `remaining_qty` is negative if the move is out and delivered proudcts that were not
+                # in stock.
+                qty_out = 0
+                if line.move_id._is_in():
+                    qty_out = line.move_id.product_qty - line.move_id.remaining_qty
+                elif line.move_id._is_out():
+                    qty_out = line.move_id.product_qty
+                line._create_accounting_entries(move, qty_out)
                 
             move.assert_balanced()
             cost.write({'state': 'done', 'account_move_id': move.id})
@@ -123,7 +127,7 @@ class LandedCost(models.Model):
             for val_line in landed_cost.valuation_adjustment_lines:
                 val_to_cost_lines[val_line.cost_line_id] += val_line.additional_landed_cost
             if any(tools.float_compare(cost_line.price_unit, val_amount, precision_digits=prec_digits) != 0
-                   for cost_line, val_amount in pycompat.items(val_to_cost_lines)):
+                   for cost_line, val_amount in val_to_cost_lines.items()):
                 return False
         return True
 
@@ -132,7 +136,7 @@ class LandedCost(models.Model):
 
         for move in self.mapped('picking_ids').mapped('move_lines'):
             # it doesn't make sense to make a landed cost for a product that isn't set as being valuated in real time at real cost
-            if move.product_id.valuation != 'real_time' or move.product_id.cost_method not in ('average', 'fifo'):
+            if move.product_id.valuation != 'real_time' or move.product_id.cost_method != 'fifo':
                 continue
             vals = {
                 'product_id': move.product_id.id,
@@ -167,9 +171,13 @@ class LandedCost(models.Model):
                     val_line_values.update({'cost_id': cost.id, 'cost_line_id': cost_line.id})
                     self.env['stock.valuation.adjustment.lines'].create(val_line_values)
                 total_qty += val_line_values.get('quantity', 0.0)
-                total_cost += val_line_values.get('former_cost', 0.0)
                 total_weight += val_line_values.get('weight', 0.0)
                 total_volume += val_line_values.get('volume', 0.0)
+
+                former_cost = val_line_values.get('former_cost', 0.0)
+                # round this because former_cost on the valuation lines is also rounded
+                total_cost += tools.float_round(former_cost, precision_digits=digits[1]) if digits else former_cost
+
                 total_line += 1
 
             for line in cost.cost_lines:
@@ -204,9 +212,8 @@ class LandedCost(models.Model):
                             towrite_dict[valuation.id] = value
                         else:
                             towrite_dict[valuation.id] += value
-        if towrite_dict:
-            for key, value in pycompat.items(towrite_dict):
-                AdjustementLines.browse(key).write({'additional_landed_cost': value})
+        for key, value in towrite_dict.items():
+            AdjustementLines.browse(key).write({'additional_landed_cost': value})
         return True
 
 

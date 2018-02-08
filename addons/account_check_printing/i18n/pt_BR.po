@@ -8,13 +8,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # falexandresilva <falexandresilva@gmail.com>, 2016
 # danimaribeiro <danimaribeiro@gmail.com>, 2016
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,14 +30,7 @@ msgid " : Check Number Sequence"
 msgstr ": Sequência Numérica de Cheque"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:37
-#: code:addons/account_check_printing/models/account_payment.py:74
-#, python-format
-msgid " and %s/100"
-msgstr " e %s/100"
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:83
+#: code:addons/account_check_printing/models/account_payment.py:69
 #, python-format
 msgid "A check memo cannot exceed 60 characters."
 msgstr "Um memorando de cheque não pode exceder 60 caracteres."
@@ -51,11 +45,6 @@ msgstr "Valor por extenso"
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
 msgstr "Cancelar"
-
-#. module: account_check_printing
-#: model:account.payment.method,name:account_check_printing.account_payment_method_check
-msgid "Check"
-msgstr "Cheque"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment_check_number
@@ -89,6 +78,11 @@ msgstr "Marque esta opção se seus cheques pré-impressos não são numerados."
 #: model:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
 msgid "Check to print"
 msgstr "Cheque para imprimir"
+
+#. module: account_check_printing
+#: model:account.payment.method,name:account_check_printing.account_payment_method_check
+msgid "Checks"
+msgstr "Verificar"
 
 #. module: account_check_printing
 #: model:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
@@ -132,7 +126,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:103
+#: code:addons/account_check_printing/models/account_payment.py:89
 #, python-format
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
@@ -169,6 +163,11 @@ msgid "Manual Numbering"
 msgstr "Numeração Manual"
 
 #. module: account_check_printing
+#: model:ir.ui.view,arch_db:account_check_printing.view_account_bank_journal_form_inherited_check_printing
+msgid "Manual Numbering of check"
+msgstr ""
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal_check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks_next_check_number
 msgid "Next Check Number"
@@ -191,7 +190,7 @@ msgid "Payments"
 msgstr "Pagamentos"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:100
+#: code:addons/account_check_printing/models/account_payment.py:86
 #, python-format
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
@@ -225,7 +224,7 @@ msgid "Print Checks"
 msgstr "Imprimir Cheque"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:113
+#: code:addons/account_check_printing/models/account_payment.py:99
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
@@ -273,7 +272,7 @@ msgstr ""
 " errada, você pode mudá-la na página de configuração de diário."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:136
+#: code:addons/account_check_printing/models/account_payment.py:121
 #, python-format
 msgid ""
 "There is no check layout configured.\n"
@@ -293,3 +292,8 @@ msgstr ""
 #: model:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Unmark Sent"
 msgstr "Desmarcar Enviados"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_wizard_multi_charts_accounts
+msgid "wizard.multi.charts.accounts"
+msgstr "wizard.multi.charts.accounts"

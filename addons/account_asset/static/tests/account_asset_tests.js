@@ -56,7 +56,7 @@ QUnit.module('account_asset', {
 });
 
 QUnit.test('basic rendering', function (assert) {
-    assert.expect(17);
+    assert.expect(18);
 
     var form = createView({
         View: FormView,
@@ -121,11 +121,15 @@ QUnit.test('basic rendering', function (assert) {
     assert.ok(!form.$('.o_deprec_lines_toggler_cell:nth(3) button').attr('disabled'),
         "fourth line toggle should not be disabled");
 
+    // check the visibility: the widget should always be visible, regardless its value
+    assert.strictEqual(form.$('.o_deprec_lines_toggler:visible').length, 4,
+        "all togglers should be visible");
+
     form.destroy();
 });
 
 QUnit.test('click events are correctly triggered', function (assert) {
-    assert.expect(3);
+    assert.expect(2);
 
     var form = createView({
         View: FormView,
@@ -146,8 +150,7 @@ QUnit.test('click events are correctly triggered', function (assert) {
         intercepts: {
             execute_action: function (event) {
                 var data = event.data;
-                assert.strictEqual(data.model, 'line', "should have correct model");
-                assert.deepEqual(data.res_ids, [4], "should have correct res_ids");
+                assert.strictEqual(data.env.model, 'line', "should have correct model");
                 assert.strictEqual(data.action_data.name, 'create_move',
                     "should call correct method");
             },

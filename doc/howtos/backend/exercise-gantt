@@ -34,7 +34,7 @@ diff --git a/openacademy/models.py b/openacademy/models.py
 diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.xml
 --- a/openacademy/views/openacademy.xml
 +++ b/openacademy/views/openacademy.xml
-@@ -145,11 +145,23 @@
+@@ -143,11 +143,23 @@
              </field>
          </record>
  
@@ -45,7 +45,7 @@ diff --git a/openacademy/views/openacademy.xml b/openacademy/views/openacademy.x
 +                <gantt string="Session Gantt" color="course_id"
 +                       date_start="start_date" date_delay="hours"
 +                       default_group_by='instructor_id'>
-+                    <field name="name"/>
++                    <!-- <field name="name"/> this is not required after Odoo 10.0 -->
 +                </gantt>
 +            </field>
 +        </record>

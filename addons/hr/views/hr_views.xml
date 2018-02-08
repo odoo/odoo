@@ -49,7 +49,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" placeholder="Employee's Name"/>
+                                <field name="name" placeholder="Employee's Name" required="True"/>
                             </h1>
                         </div>
                         <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="e.g. Part Time" groups="hr.group_hr_user"/>
@@ -70,7 +70,7 @@
                                         <field name="job_id"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
-                                        <field name="resource_calendar_id"/>
+                                        <field name="resource_calendar_id" required="1"/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -87,6 +87,13 @@
                                         <field name="address_home_id"
                                             context="{'show_address': 1}"
                                             options='{"always_reload": True, "highlight_first_line": True}'/>
+                                        <field name="is_address_home_a_company" invisible="1"/>
+                                        <div class="text-warning" groups="hr.group_hr_user"
+                                             attrs="{'invisible': [('is_address_home_a_company','=', False)]}">
+                                            Use here the home address of the employee.
+                                            This private address is used in the expense report reimbursement document.
+                                            It should be different from the work address.
+                                        </div>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
@@ -115,6 +122,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
                         <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
@@ -175,7 +183,6 @@
                 <templates>
                     <t t-name="kanban-box">
                     <div class="oe_kanban_global_click">
-                        <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         <div class="o_kanban_image">
                             <img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.raw_value)"/>
                             <div class="o_employee_summary_icons">
@@ -187,12 +194,17 @@
                             </div>
                         </div>
                         <div class="oe_kanban_details">
-                            <strong>
-                                <field name="name"/>
-                            </strong>
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <span t-if="record.job_id.raw_value" class="o_kanban_record_subtitle"><field name="job_id"/></span>
+                                </div>
+                            </div>
+                            <field name="category_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <ul>
                                 <li id="last_login"/>
-                                <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                 <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
                                 <li t-if="record.work_email.raw_value"><i class="fa fa-envelope"></i> <field name="work_email"/></li>
                                 <li t-if="record.work_phone.raw_value"><i class="fa fa-phone"></i> <field name="work_phone"/></li>
@@ -243,8 +255,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new employee.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
               </p><p>
                 With just a quick glance on the Odoo employee screen, you
                 can easily find all the information you need for each person;
@@ -279,22 +291,16 @@
             </field>
         </record>
 
+        <!-- TODO remove me in master -->
         <record id="hr_employee_action_subordinate_hierachy" model="ir.actions.act_window">
             <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
+            <field name="domain">['|', ('id','in',active_ids), ('parent_id', 'in', active_ids)]</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_partner_tree2"/>
-        </record>
-
-        <record id="hr_employee_action_subordinate_hierachy_mutli" model="ir.values">
-            <field name="name">Subordinate Hierarchy</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="value" eval="'ir.actions.act_window,' + str(ref('hr_employee_action_subordinate_hierachy'))"/>
-            <field name="key">action</field>
-            <field name="key2">client_action_multi</field>
-            <field name="model">hr.employee</field>
+            <field name="binding_model_id" ref="hr.model_hr_employee"/>
         </record>
 
         <!-- Employee Category -->
@@ -342,7 +348,7 @@
             <field name="arch" type="xml">
                 <form string="Job">
                     <header>
-                        <button name="set_recruit" string="Launch Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="set_recruit" string="Start Recruitment" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
                         <button name="set_open" string="Stop Recruitment" states="recruit" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
@@ -388,21 +394,48 @@
             </field>
         </record>
 
+        <record id="hr_job_view_kanban" model="ir.ui.view">
+            <field name="name">hr.job.kanban</field>
+            <field name="model">hr.job</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div>
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div>
+                                    <span><field name="department_id"/>&amp;nbsp;</span>
+                                </div>
+                                <div>
+                                    <span>Vacancies : <field name="expected_employees"/></span>
+                                    <span t-att-class="'pull-right label label-success' if record.state.raw_value == 'recruit' else 'pull-right label label-danger'">
+                                        <field name="state"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="view_job_filter" model="ir.ui.view">
             <field name="name">hr.job.search</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <filter domain="[('state','=','open')]" name="in_position" string="In Position"/>
                     <filter domain="[('state','=','recruit')]" string="In Recruitment" name="in_recruitment"/>
                     <field name="department_id"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
-                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -416,17 +449,10 @@
             <field name="search_view_id" ref="view_job_filter"/>
             <field name="context">{"search_default_Current":1}</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to define a new job position.
+              <p class="o_view_nocontent_smiling_face">
+                Ready to recruit more efficiently?
               </p><p>
-                Job Positions are used to define jobs and their requirements.
-                You can keep track of the number of employees you have per job
-                position and follow the evolution according to what you planned
-                for the future.
-              </p><p>
-                You can attach a survey to a job position. It will be used in
-                the recruitment process to evaluate the applicants for this job
-                position.
+                Let's create a job position.
               </p>
             </field>
         </record>
@@ -442,8 +468,8 @@
                 "default_department_id": active_id}
             </field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new employee.
+              <p class="o_view_nocontent_smiling_face">
+                Add a new employee
               </p><p>
                 With just a quick glance on the Odoo employee screen, you
                 can easily find all the information you need for each person;
@@ -518,8 +544,8 @@
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div>
-                                <div t-attf-class="o_kanban_card_header #{kanban_color(record.color.raw_value)}">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)}">
+                                <div t-attf-class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title">
                                         <div class="o_primary"><field name="name"/></div>
                                         <div class="o_secondary"><field name="company_id" groups="base.group_multi_company"/></div>
@@ -528,7 +554,7 @@
                                         <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" /></a>
                                     </div>
                                 </div>
-                                <div class="container o_kanban_card_content o_visible">
+                                <div class="container o_kanban_card_content">
                                     <div class="row">
                                         <div class="col-xs-6 o_kanban_primary_left">
                                             <button class="btn btn-primary" name="%(act_employee_from_department)d" type="action">Employees</button>
@@ -536,7 +562,7 @@
                                         <div class="col-xs-6 o_kanban_primary_right">
                                         </div>
                                     </div>
-                                </div><div class="container o_kanban_card_manage_pane o_invisible">
+                                </div><div class="container o_kanban_card_manage_pane">
                                     <div class="row">
                                         <div class="col-xs-4 o_kanban_card_manage_section o_kanban_manage_to_do">
                                             <div class="o_kanban_card_manage_title">
@@ -579,12 +605,12 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_department_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a department.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new department
               </p><p>
                 Odoo's department structure is used to manage all documents
                 related to employees by departments: expenses, timesheets,
-                leaves and holidays, recruitments, etc.
+                leaves, recruitments, etc.
               </p>
             </field>
         </record>

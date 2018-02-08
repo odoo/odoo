@@ -9,6 +9,7 @@ var FilterMenu = require('web.FilterMenu');
 var GroupByMenu = require('web.GroupByMenu');
 var pyeval = require('web.pyeval');
 var search_inputs = require('web.search_inputs');
+var utils = require('web.utils');
 var Widget = require('web.Widget');
 var _t = core._t;
 
@@ -265,7 +266,7 @@ var SearchView = Widget.extend({
      *
      * @param parent
      * @param dataset
-     * @param fields_view
+     * @param fvg
      * @param {Object} [options]
      * @param {Boolean} [options.hidden=false] hide the search view
      * @param {Boolean} [options.disable_custom_filters=false] do not load custom filters from ir.filters
@@ -274,16 +275,17 @@ var SearchView = Widget.extend({
         this._super.apply(this, arguments);
         this.options = options;
         this.dataset = dataset;
-        this.fields_view = fvg;
+        this.fields_view = this._processFieldsView(_.clone(fvg));
+
         this.fields = this.fields_view.fields;
         this.query = undefined;
         this.title = this.options.action && this.options.action.name;
-        this.action_id = this.options.action && this.options.action.id;
+        this.action = this.options.action || {};
         this.search_fields = [];
         this.filters = [];
         this.groupbys = [];
         var visibleSearchMenu = this.call('local_storage', 'getItem', 'visible_search_menu');
-        this.visible_filters = (visibleSearchMenu === 'true');
+        this.visible_filters = (visibleSearchMenu !== 'false');
         this.input_subviews = []; // for user input in searchbar
         this.search_defaults = this.options.search_defaults || {};
         this.headless = this.options.hidden &&  _.isEmpty(this.search_defaults);
@@ -297,7 +299,7 @@ var SearchView = Widget.extend({
         var self = this;
         var def;
         if (!this.options.disable_favorites) {
-            def = this.loadFilters(this.dataset, this.action_id).then(function (filters) {
+            def = this.loadFilters(this.dataset, this.action.id).then(function (filters) {
                 self.favorite_filters = filters;
             });
         }
@@ -328,7 +330,7 @@ var SearchView = Widget.extend({
                 menu_defs.push(this.groupby_menu.appendTo(this.$buttons));
             }
             if (!this.options.disable_favorites) {
-                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action_id, this.favorite_filters);
+                this.favorite_menu = new FavoriteMenu(this, this.query, this.dataset.model, this.action, this.favorite_filters);
                 menu_defs.push(this.favorite_menu.appendTo(this.$buttons));
             }
         }
@@ -339,7 +341,7 @@ var SearchView = Widget.extend({
     },
     set_default_filters: function () {
         var self = this,
-            default_custom_filter = this.$buttons && this.favorite_menu.get_default_filter();
+            default_custom_filter = this.$buttons && this.favorite_menu && this.favorite_menu.get_default_filter();
         if (!self.options.disable_custom_filters && default_custom_filter) {
             return this.favorite_menu.toggle_filter(default_custom_filter, true);
         }
@@ -499,8 +501,8 @@ var SearchView = Widget.extend({
                 .$el.focus();
     },
     /**
-     * @param {openerp.web.search.SearchQuery | undefined} Undefined if event is change
-     * @param {openerp.web.search.Facet}
+     * @param {openerp.web.search.SearchQuery | undefined} collection Undefined if event is change
+     * @param {openerp.web.search.Facet} model
      * @param {Object} [options]
      */
     renderFacets: function (collection, model, options) {
@@ -602,6 +604,26 @@ var SearchView = Widget.extend({
             }
             current_category = filter.category;
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Processes a fieldsView in place. In particular, parses its arch.
+     *
+     * @todo: this function is also defined in AbstractView ; this code
+     * duplication could be removed once the SearchView will be rewritten.
+     * @private
+     * @param {Object} fv
+     * @param {string} fv.arch
+     * @returns {Object} the processed fieldsView
+     */
+    _processFieldsView: function (fv) {
+        var doc = $.parseXML(fv.arch).documentElement;
+        fv.arch = utils.xml_to_json(doc, true);
+        return fv;
     },
 });
 

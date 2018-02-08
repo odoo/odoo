@@ -5,14 +5,14 @@
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,11 +58,6 @@ msgid "Another good day's work! See you soon!"
 msgstr "Ismét egy jó munkanap! Nemsokára találkozunk!"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "Alkalmazás"
-
-#. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
@@ -80,17 +75,13 @@ msgid "Attendance Analysis"
 msgstr "Részvételi elemzés"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
-msgid "Attendance Settings"
-msgstr "Megjelentek beállításai"
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "Jelenlétek"
 
@@ -98,11 +89,6 @@ msgstr "Jelenlétek"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
 msgstr "Jelvény ID azonosító"
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Cancel"
-msgstr "Mégse"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -126,7 +112,7 @@ msgstr ""
 "kijelentkezett ekkor %(datetime)s"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
@@ -134,7 +120,7 @@ msgstr ""
 "egyszerre."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -173,6 +159,11 @@ msgstr "Belépés"
 #, python-format
 msgid "Check out"
 msgstr "Kilépés"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.employee,attendance_state:0
@@ -222,7 +213,6 @@ msgstr "Vállalati logó"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Configuration"
 msgstr "Beállítások"
 
@@ -289,7 +279,8 @@ msgid "Employee Image"
 msgstr "Alkalmazott fényképe"
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr "Alkalmazott PIN kódja"
 
@@ -311,26 +302,9 @@ msgid "Employees"
 msgstr "Alkalmazottak"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
 msgstr "PIN használatának engedélyezése"
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
-msgstr "Alkalmazotti PIN azonosítás be- vagy kikapcsolása a belépéshez"
 
 #. module: hr_attendance
 #. openerp-web
@@ -502,6 +476,7 @@ msgstr "Menedzser"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "Kézi jelenlét"
 
@@ -579,7 +554,7 @@ msgid "Please return to the main menu."
 msgstr "Kérem térjen vissza a fő menühöz."
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
+#: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
 msgstr "Jelvény nyomtatás"
 
@@ -603,9 +578,24 @@ msgid "Select Employee"
 msgstr "Alkalmazott kiválasztása"
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
 msgid "Settings"
 msgstr "Beállítások"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed In"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed Out"
+msgstr ""
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -642,6 +632,15 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"A felhasználó elérheti az emberi erőforrások jelenléti menüt,  lehetővé téve"
+" a saját jelenlétének szervezését."
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
@@ -659,6 +658,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "Ma"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -705,18 +709,6 @@ msgid "You cannot duplicate an attendance."
 msgstr "Nem sokszorozhat meg egy jelenlétet."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:20
-#, python-format
-msgid "employee presence<br/>green: checked in<br/>red: checked out"
-msgstr "alkalmazott jelenléte<br/>zöld: belépett<br/>piros: kilépett"
-
-#. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_employee_attendance_ids
 msgid "list of attendances for the employee"
 msgstr "alkalmazott jelenléti ívei"
@@ -734,3 +726,8 @@ msgstr "ok"
 #, python-format
 msgid "or"
 msgstr "vagy"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

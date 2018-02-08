@@ -12,15 +12,39 @@
                     <field name="removal_date" />
                 </group>
                 <group>
-                	<field name="life_date" />
+                    <field name="life_date" />
                     <field name="alert_date" />
                 </group>
             </group>
         </xpath>
-        <xpath expr="//div[@class='oe_title']" position="inside">
+        <xpath expr="//div[hasclass('oe_title')]" position="inside">
             <field name="product_expiry_alert" invisible="1"/>
             <span class="label label-danger" attrs="{'invisible': [('product_expiry_alert', '=', False)]}">Expiration Alert</span>
-        </xpath> 
+        </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_expiry_simple" model="ir.ui.view">
+        <field name="name">stock.production.lot.inherit.form</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form_simple" />
+        <field name="arch" type="xml">
+        <xpath expr="//group[@name='main_group']" position="after">
+            <group string="Dates">
+                <group>
+                    <field name="use_date" />
+                    <field name="removal_date" />
+                </group>
+                <group>
+                    <field name="life_date" />
+                    <field name="alert_date" />
+                </group>
+            </group>
+        </xpath>
+        <xpath expr="//div[hasclass('oe_title')]" position="inside">
+            <field name="product_expiry_alert" invisible="1"/>
+            <span class="label label-danger" attrs="{'invisible': [('product_expiry_alert', '=', False)]}">Expiration Alert</span>
+        </xpath>
         </field>
     </record>
 
@@ -30,7 +54,7 @@
         <field name="inherit_id" ref="stock.search_product_lot_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='product_id']" position="after">
-                <filter string="Expiration alerts" domain="[('alert_date', '&lt;=', time.strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter string="Expiration alerts" name="expiration_alerts" domain="[('alert_date', '&lt;=', time.strftime('%Y-%m-%d %H:%M:%S'))]"/>
             </xpath>
         </field>
      </record>

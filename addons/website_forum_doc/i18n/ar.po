@@ -1,33 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_forum_doc
-#
+# 
 # Translators:
-# EnglishAlaa Gaddourah <chips-chaser@w.cn>, 2015
+# Shaima Safar <shaima.safar@open-inside.com>, 2017
+# hoxhe Aits <hoxhe0@gmail.com>, 2017
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Mustafa Rawi <mustafa@cubexco.com>, 2017
+# EnglishAlaa Gaddourah <chips-chaser@w.cn>, 2017
+# Ghaith Gammar <g.gammar@saharaifs.net>, 2017
+# Akram Alfusayal <akram_ma@hotmail.com>, 2017
+# amrnegm <amrnegm.01@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-05-15 20:50+0000\n"
-"Last-Translator: EnglishAlaa Gaddourah <chips-chaser@w.cn>\n"
-"Language-Team: Arabic (http://www.transifex.com/odoo/odoo-9/language/ar/)\n"
-"Language: ar\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: amrnegm <amrnegm.01@gmail.com>, 2017\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "&amp;times;"
-msgstr " & أوقات"
+msgstr "&amp;times;"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
 msgid "<span class=\"text-muted\">or</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">أو</span>"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_crm_after_sale
@@ -74,7 +81,7 @@ msgstr "الشكاوى"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_post_color
 msgid "Color Index"
-msgstr "اللون"
+msgstr "لون الرقم التسلسلى"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_create_uid
@@ -112,7 +119,7 @@ msgstr "وصف حلول العمل"
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_display_name
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_display_name
 msgid "Display Name"
-msgstr "اسم العرض"
+msgstr "الاسم المعروض"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_url,name:website_forum_doc.action_open_documentation
@@ -120,7 +127,7 @@ msgstr "اسم العرض"
 #: model:ir.ui.view,arch_db:website_forum_doc.header_footer_custom
 #: model:website.menu,name:website_forum_doc.menu_questions
 msgid "Documentation"
-msgstr "توثيق"
+msgstr "التوثيق"
 
 #. module: website_forum_doc
 #: model:ir.actions.act_window,name:website_forum_doc.action_forum_doc_post
@@ -161,7 +168,8 @@ msgid "Employee Contract"
 msgstr "عقود الموظف"
 
 #. module: website_forum_doc
-#: constraint:forum.documentation.toc:0
+#: code:addons/website_forum_doc/models/forum_documentation_toc.py:38
+#, python-format
 msgid "Error ! You cannot create recursive categories."
 msgstr "خطأ ! لا يمكن إنشاء فئات متداخلة."
 
@@ -178,12 +186,12 @@ msgstr ""
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_forum_id
 msgid "Forum"
-msgstr "منتدى"
+msgstr "المجتمع"
 
 #. module: website_forum_doc
 #: model:ir.model,name:website_forum_doc.model_forum_post
 msgid "Forum Post"
-msgstr ""
+msgstr "مشاركة المجتمع"
 
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_functional_doc
@@ -287,7 +295,7 @@ msgstr "مرحلة متأخرة"
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_post_ids
 msgid "Posts"
-msgstr "المقالات"
+msgstr "مشاركات"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -375,7 +383,7 @@ msgstr "بحث ..."
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_sequence
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_toc_sequence
 msgid "Sequence"
-msgstr "المسلسل"
+msgstr "التسلسل"
 
 #. module: website_forum_doc
 #: model:ir.model.fields,field_description:website_forum_doc.field_forum_documentation_stage_name
@@ -406,8 +414,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_forum_doc.documentation_post
 msgid ""
 "This documentation page has been extracted\n"
-"                                        from the Q&amp;A section where you "
-"can\n"
+"                                        from the Q&amp;A section where you can\n"
 "                                        discuss it and get feedback."
 msgstr ""
 
@@ -433,7 +440,7 @@ msgstr ""
 #. module: website_forum_doc
 #: model:forum.documentation.toc,name:website_forum_doc.toc_website
 msgid "Website"
-msgstr "الموقع"
+msgstr "الموقع الإلكتروني"
 
 #. module: website_forum_doc
 #: model:ir.ui.view,arch_db:website_forum_doc.promote_question
@@ -469,12 +476,3 @@ msgstr "مقالات"
 #: model:ir.ui.view,arch_db:website_forum_doc.forum_question_doc
 msgid "official documentation"
 msgstr "توثيق رسمي"
-
-#~ msgid "Website meta description"
-#~ msgstr "الوصف الدلالي في الموقع"
-
-#~ msgid "Website meta keywords"
-#~ msgstr "الكلمات الدلالية بالموقع"
-
-#~ msgid "Website meta title"
-#~ msgstr "العنوان الدلالي بالموقع"

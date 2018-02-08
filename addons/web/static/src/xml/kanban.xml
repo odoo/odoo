@@ -9,27 +9,23 @@
 </t>
 
 <t t-name="KanbanView.Group">
-    <div class="o_kanban_group" t-att-data-id="widget.id">
-        <div class="o_kanban_header" t-att-title="widget.data_records.length + ' records'" data-delay="500">
-            <span class="o_column_title"><t t-esc="widget.title"/></span>
-            <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
-            <span class="o_kanban_config dropdown">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
-                    <t t-if="widget.grouped_by_m2o">
-                        <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
-                        <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
-                    </t>
-                    <t t-if="widget.has_active_field">
-                        <li><a class="o_column_archive" href="#">Archive Records</a></li>
-                        <li><a class="o_column_unarchive" href="#">Restore Records</a></li>
-                    </t>
-                </ul>
-            </span>
-            <t t-if="widget.quick_create">
-                <span class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
-            </t>
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id">
+        <div class="o_kanban_header">
+            <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
+                <span class="o_column_title"><t t-esc="widget.title"/></span>
+                <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
+                <span class="o_kanban_config dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                        <t t-if="widget.grouped_by_m2o">
+                            <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
+                            <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                        </t>
+                    </ul>
+                </span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
+            </div>
         </div>
         <div t-if="widget.remaining > 0" class="o_kanban_load_more">
             <t t-call="KanbanView.LoadMore"/>
@@ -43,35 +39,42 @@
 
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
-        <div class="o_column_header">
-            <span class="o_kanban_add_column"><i class="fa fa-chevron-right"/></span>
-            <span class="o_kanban_title">Add new Column</span>
+        <div class="o_quick_create_folded">
+            <span class="o_kanban_add_column"><i class="fa fa-plus"/></span>
+            <span class="o_kanban_title">Add a new Column</span>
         </div>
-        <div class="o_kanban_quick_create">
-            <input type="text" placeholder="Add"/>
-            <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
-            <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
+        <div class="o_quick_create_unfolded">
+            <div class="o_kanban_header">
+                <div class="input-group">
+                    <input type="text" class="o_input" placeholder="Column title"/>
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-primary o_kanban_add" type="button">Add</button>
+                    </span>
+                </div>
+                <t t-if="widget.examples">
+                    <span class="btn-link o_kanban_examples">Examples</span>
+                </t>
+                <span class="o_discard_msg text-muted pull-right">Esc to discard</span>
+            </div>
+            <div class="o_kanban_muted_record"/>
+            <div class="o_kanban_muted_record"/>
+            <div class="o_kanban_muted_record"/>
         </div>
     </div>
 </t>
 
-<t t-name="KanbanView.QuickCreate">
-    <div class="o_kanban_quick_create">
-        <input type="text" placeholder="Add"/>
+<t t-name="KanbanView.RecordQuickCreate.buttons">
+    <div>
         <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-sm btn-default o_kanban_cancel">Discard</button>
+        <button class="btn btn-sm btn-primary o_kanban_edit">Edit</button>
+        <button class="btn btn-sm btn-default o_kanban_cancel ml8">Discard</button>
     </div>
 </t>
 
 <t t-name="KanbanColorPicker">
-    <li t-foreach="10" t-as="color">
+    <li t-foreach="12" t-as="color">
         <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
     </li>
-</t>
-<t t-name="KanbanView.nocontent">
-    <div class="oe_view_nocontent">
-        <t t-raw="content"/>
-    </div>
 </t>
 
 <t t-name="GraphCustomTooltip">
@@ -87,4 +90,72 @@
         </tbody>
     </table>
 </t>
+
+<t t-name="KanbanView.ColumnProgressBar">
+    <div class="o_kanban_counter">
+        <div class="o_kanban_counter_progress progress">
+            <t t-foreach="widget.colors" t-as="color">
+                <t t-set="count" t-value="widget.subgroupCounts and widget.subgroupCounts[color] or 0"/>
+                <div t-attf-class="progress-bar transition-off bg-#{color_value}-full#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' active progress-bar-striped' : ''}"
+                    t-att-data-filter="color"
+                    t-attf-data-original-title="#{count} #{color}"
+                    t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
+            </t>
+        </div>
+        <div class="o_kanban_counter_side"><b><t t-esc="widget.totalCounterValue || 0"/></b></div>
+    </div>
+</t>
+
+<!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
+<div t-name="KanbanView.ExamplesDialog" class="o_kanban_examples_dialog">
+    <div class="o_kanban_examples_dialog_nav">
+        <ul class="nav nav-pills nav-stacked">
+            <t t-foreach="examples" t-as="example">
+                <li t-att-class="example_index == 0 and 'active' or None">
+                    <a data-toggle="tab" t-attf-href="#example_#{example_index}"> <t t-esc="example.name"/> </a>
+                </li>
+            </t>
+        </ul>
+    </div>
+    <div class="o_kanban_examples_dialog_content">
+        <div class="tab-content">
+            <t t-foreach="examples" t-as="example">
+                <div t-attf-id="example_#{example_index}" t-attf-class="tab-pane fade #{example_index == 0 and 'active in' or ''}">
+                    <div t-if="example.description" class="o_kanban_examples_description">
+                        <t t-raw="example.description"/> <!-- description is supposed to be properly escaped -->
+                    </div>
+                    <div class="o_kanban_examples">
+                        <t t-foreach="example.columns" t-as="column">
+                            <div class="o_kanban_examples_group">
+                                <h6><b><t t-esc="column"/></b></h6>
+                                <t t-foreach="_.random(1,4)">
+                                    <t t-call="KanbanView.ExamplesDialog.RecordGhost"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+</div>
+<t t-name="KanbanView.ExamplesDialog.RecordGhost">
+    <div class="o_kanban_examples_ghost">
+        <div class="o_ghost_content"/>
+        <div class="o_ghost_content o_ghost_tag"/>
+        <img class="pull-right o_ghost_avatar" src="/base/static/img/avatar.png"/>
+    </div>
+</t>
+
+<!-- Mobile templates -->
+<t t-name="KanbanView.MobileTabs">
+    <div class="o_kanban_mobile_tabs">
+        <t t-foreach="data" t-as="group">
+            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
+                <span class="o_column_title"><t t-esc="group.value"/></span>
+            </div>
+        </t>
+    </div>
+</t>
+
 </template>

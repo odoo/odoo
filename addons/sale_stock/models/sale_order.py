@@ -29,14 +29,36 @@ class SaleOrder(models.Model):
         'stock.warehouse', string='Warehouse',
         required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         default=_default_warehouse_id)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Picking associated to this sale')
+    picking_ids = fields.One2many('stock.picking', 'sale_id', string='Pickings')
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
+    procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
 
     @api.multi
-    @api.depends('procurement_group_id')
+    def write(self, values):
+        if values.get('order_line') and self.state == 'sale':
+            for order in self:
+                pre_order_line_qty = {order_line: order_line.product_uom_qty for order_line in order.mapped('order_line')}
+        res = super(SaleOrder, self).write(values)
+        if values.get('order_line') and self.state == 'sale':
+            for order in self:
+                to_log = {}
+                for order_line in order.order_line:
+                    if pre_order_line_qty.get(order_line, False) and float_compare(order_line.product_uom_qty, pre_order_line_qty[order_line], order_line.product_uom.rounding) < 0:
+                        to_log[order_line] = (order_line.product_uom_qty, pre_order_line_qty[order_line])
+                if to_log:
+                    documents = self.env['stock.picking']._log_activity_get_documents(to_log, 'move_ids', 'UP')
+                    order._log_decrease_ordered_quantity(documents)
+        return res
+
+    @api.multi
+    def _action_confirm(self):
+        super(SaleOrder, self)._action_confirm()
+        for order in self:
+            order.order_line._action_launch_procurement_rule()
+
+    @api.depends('picking_ids')
     def _compute_picking_ids(self):
         for order in self:
-            order.picking_ids = self.env['stock.picking'].search([('group_id', '=', order.procurement_group_id.id)]) if order.procurement_group_id else []
             order.delivery_count = len(order.picking_ids)
 
     @api.onchange('warehouse_id')
@@ -63,7 +85,20 @@ class SaleOrder(models.Model):
 
     @api.multi
     def action_cancel(self):
-        self.order_line.mapped('procurement_ids').cancel()
+        documents = None
+        for sale_order in self:
+            if sale_order.state == 'sale':
+                sale_order_lines_quantities = {order_line: (order_line.product_uom_qty, 0) for order_line in sale_order.order_line}
+                documents = self.env['stock.picking']._log_activity_get_documents(sale_order_lines_quantities, 'move_ids', 'UP')
+        self.mapped('picking_ids').action_cancel()
+        if documents:
+            filtered_documents = {}
+            for (parent, responsible), rendering_context in documents.items():
+                if parent._name == 'stock.picking':
+                    if parent.state == 'cancel':
+                        continue
+                filtered_documents[(parent, responsible)] = rendering_context
+            self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super(SaleOrder, self).action_cancel()
 
     @api.multi
@@ -72,22 +107,87 @@ class SaleOrder(models.Model):
         invoice_vals['incoterms_id'] = self.incoterm.id or False
         return invoice_vals
 
-    def _prepare_procurement_group(self):
-        res = super(SaleOrder, self)._prepare_procurement_group()
-        res.update({'move_type': self.picking_policy, 'partner_id': self.partner_shipping_id.id, 'sale_order_id': self.id})
-        return res
-
     @api.model
     def _get_customer_lead(self, product_tmpl_id):
         super(SaleOrder, self)._get_customer_lead(product_tmpl_id)
         return product_tmpl_id.sale_delay
 
+    def _log_decrease_ordered_quantity(self, documents, cancel=False):
+
+        def _render_note_exception_quantity_so(rendering_context):
+            order_exceptions, visited_moves = rendering_context
+            visited_moves = list(visited_moves)
+            visited_moves = self.env[visited_moves[0]._name].concat(*visited_moves)
+            order_line_ids = self.env['sale.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
+            sale_order_ids = order_line_ids.mapped('order_id')
+            impacted_pickings = visited_moves.filtered(lambda m: m.state not in ('done', 'cancel')).mapped('picking_id')
+            values = {
+                'sale_order_ids': sale_order_ids,
+                'order_exceptions': order_exceptions.values(),
+                'impacted_pickings': impacted_pickings,
+                'cancel': cancel
+            }
+            return self.env.ref('sale_stock.exception_on_so').render(values=values)
+
+        self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
+
+
 
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
+    qty_delivered_method = fields.Selection(selection_add=[('stock_move', 'Stock Moves')])
     product_packaging = fields.Many2one('product.packaging', string='Package', default=False)
     route_id = fields.Many2one('stock.location.route', string='Route', domain=[('sale_selectable', '=', True)], ondelete='restrict')
+    move_ids = fields.One2many('stock.move', 'sale_line_id', string='Stock Moves')
+
+    @api.multi
+    @api.depends('product_id.type')
+    def _compute_qty_delivered_method(self):
+        """ Stock module compute delivered qty for product [('type', 'in', ['consu', 'product'])]
+            For SO line coming from expense, no picking should be generate: we don't manage stock for
+            thoses lines, even if the product is a stockable.
+        """
+        super(SaleOrderLine, self)._compute_qty_delivered_method()
+
+        for line in self:
+            if not line.is_expense and line.product_id.type in ['consu', 'product']:
+                line.qty_delivered_method = 'stock_move'
+
+    @api.multi
+    @api.depends('move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.product_uom')
+    def _compute_qty_delivered(self):
+        super(SaleOrderLine, self)._compute_qty_delivered()
+
+        for line in self:  # TODO: maybe one day, this should be done in SQL for performance sake
+            if line.qty_delivered_method == 'stock_move':
+                qty = 0.0
+                for move in line.move_ids.filtered(lambda r: r.state == 'done' and not r.scrapped):
+                    if move.location_dest_id.usage == "customer":
+                        if not move.origin_returned_move_id:
+                            qty += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                    elif move.location_dest_id.usage != "customer" and move.to_refund:
+                        qty -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
+                line.qty_delivered = qty
+
+    @api.model
+    def create(self, values):
+        line = super(SaleOrderLine, self).create(values)
+        if line.state == 'sale':
+            line._action_launch_procurement_rule()
+        return line
+
+    @api.multi
+    def write(self, values):
+        lines = False
+        if 'product_uom_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+            lines = self.filtered(
+                lambda r: r.state == 'sale' and not r.is_expense and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) == -1)
+        res = super(SaleOrderLine, self).write(values)
+        if lines:
+            lines._action_launch_procurement_rule()
+        return res
 
     @api.depends('order_id.state')
     def _compute_invoice_status(self):
@@ -101,18 +201,17 @@ class SaleOrderLine(models.Model):
                     and line.invoice_status == 'no'\
                     and line.product_id.type in ['consu', 'product']\
                     and line.product_id.invoice_policy == 'delivery'\
-                    and line.procurement_ids.mapped('move_ids')\
-                    and all(move.state in ['done', 'cancel'] for move in line.procurement_ids.mapped('move_ids')):
+                    and line.move_ids \
+                    and all(move.state in ['done', 'cancel'] for move in line.move_ids):
                 line.invoice_status = 'invoiced'
 
-    @api.multi
-    @api.depends('product_id')
-    def _compute_qty_delivered_updateable(self):
+    @api.depends('move_ids')
+    def _compute_product_updatable(self):
         for line in self:
-            if line.product_id.type not in ('consu', 'product'):
-                super(SaleOrderLine, line)._compute_qty_delivered_updateable()
+            if not line.move_ids.filtered(lambda m: m.state != 'cancel'):
+                super(SaleOrderLine, line)._compute_product_updatable()
             else:
-                line.qty_delivered_updateable = False
+                line.product_updatable = False
 
     @api.onchange('product_id')
     def _onchange_product_id_set_customer_lead(self):
@@ -145,9 +244,12 @@ class SaleOrderLine(models.Model):
                             (self.product_uom_qty, self.product_uom.name, product.virtual_available, product.uom_id.name, self.order_id.warehouse_id.name)
                     # We check if some products are available in other warehouses.
                     if float_compare(product.virtual_available, self.product_id.virtual_available, precision_digits=precision) == -1:
-                        message += _('\nThere are %s %s available accross all warehouses.') % \
+                        message += _('\nThere are %s %s available across all warehouses.\n\n') % \
                                 (self.product_id.virtual_available, product.uom_id.name)
-
+                        for warehouse in self.env['stock.warehouse'].search([]):
+                            quantity = self.product_id.with_context(warehouse=warehouse.id).virtual_available
+                            if quantity > 0:
+                                message += "%s: %s %s\n" % (warehouse.name, quantity, self.product_id.uom_id.name)
                     warning_mess = {
                         'title': _('Not enough inventory!'),
                         'message' : message
@@ -170,34 +272,72 @@ class SaleOrderLine(models.Model):
         return {}
 
     @api.multi
-    def _prepare_order_line_procurement(self, group_id=False):
-        vals = super(SaleOrderLine, self)._prepare_order_line_procurement(group_id=group_id)
+    def _prepare_procurement_values(self, group_id=False):
+        """ Prepare specific key for moves or other components that will be created from a procurement rule
+        comming from a sale order line. This method could be override in order to add other custom key that could
+        be used in move/po creation.
+        """
+        values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
+        self.ensure_one()
         date_planned = datetime.strptime(self.order_id.confirmation_date, DEFAULT_SERVER_DATETIME_FORMAT)\
             + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
-        vals.update({
-            'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-            'location_id': self.order_id.partner_shipping_id.property_stock_customer.id,
-            'route_ids': self.route_id and [(4, self.route_id.id)] or [],
-            'warehouse_id': self.order_id.warehouse_id and self.order_id.warehouse_id.id or False,
-            'partner_dest_id': self.order_id.partner_shipping_id.id,
+        values.update({
+            'company_id': self.order_id.company_id,
+            'group_id': group_id,
             'sale_line_id': self.id,
+            'date_planned': date_planned.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+            'route_ids': self.route_id,
+            'warehouse_id': self.order_id.warehouse_id or False,
+            'partner_dest_id': self.order_id.partner_shipping_id
         })
-        return vals
+        return values
 
     @api.multi
-    def _get_delivered_qty(self):
-        """Computes the delivered quantity on sales order lines, based on done stock moves related to its procurements
+    def _action_launch_procurement_rule(self):
         """
-        self.ensure_one()
-        super(SaleOrderLine, self)._get_delivered_qty()
-        qty = 0.0
-        for move in self.procurement_ids.mapped('move_ids').filtered(lambda r: r.state == 'done' and not r.scrapped):
-            if move.location_dest_id.usage == "customer":
-                if not move.origin_returned_move_id:
-                    qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-            elif move.location_dest_id.usage != "customer" and move.to_refund:
-                qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom)
-        return qty
+        Launch procurement group run method with required/custom fields genrated by a
+        sale order line. procurement group will launch '_run_move', '_run_buy' or '_run_manufacture'
+        depending on the sale order line product rule.
+        """
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        errors = []
+        for line in self:
+            if line.state != 'sale' or not line.product_id.type in ('consu','product'):
+                continue
+            qty = 0.0
+            for move in line.move_ids.filtered(lambda r: r.state != 'cancel'):
+                qty += move.product_qty
+            if float_compare(qty, line.product_uom_qty, precision_digits=precision) >= 0:
+                continue
+
+            group_id = line.order_id.procurement_group_id
+            if not group_id:
+                group_id = self.env['procurement.group'].create({
+                    'name': line.order_id.name, 'move_type': line.order_id.picking_policy,
+                    'sale_id': line.order_id.id,
+                    'partner_id': line.order_id.partner_shipping_id.id,
+                })
+                line.order_id.procurement_group_id = group_id
+            else:
+                # In case the procurement group is already created and the order was
+                # cancelled, we need to update certain values of the group.
+                updated_vals = {}
+                if group_id.partner_id != line.order_id.partner_shipping_id:
+                    updated_vals.update({'partner_id': line.order_id.partner_shipping_id.id})
+                if group_id.move_type != line.order_id.picking_policy:
+                    updated_vals.update({'move_type': line.order_id.picking_policy})
+                if updated_vals:
+                    group_id.write(updated_vals)
+
+            values = line._prepare_procurement_values(group_id=group_id)
+            product_qty = line.product_uom_qty - qty
+            try:
+                self.env['procurement.group'].run(line.product_id, product_qty, line.product_uom, line.order_id.partner_shipping_id.property_stock_customer, line.name, line.order_id.name, values)
+            except UserError as error:
+                errors.append(error.name)
+        if errors:
+            raise UserError('\n'.join(errors))
+        return True
 
     @api.multi
     def _check_package(self):
@@ -214,6 +354,7 @@ class SaleOrderLine(models.Model):
                 },
             }
         return {}
+
 
     def _check_routing(self):
         """ Verify the route of the product based on the warehouse
@@ -249,11 +390,6 @@ class SaleOrderLine(models.Model):
 
     def _update_line_quantity(self, values):
         if self.mapped('qty_delivered') and values['product_uom_qty'] < max(self.mapped('qty_delivered')):
-            raise UserError('You cannot decrease the ordered quantity below the delivered quantity.\n'
-                            'Create a return first.')
-        for line in self:
-            pickings = self.order_id.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
-            for picking in pickings:
-                picking.message_post("The quantity of %s has been updated from %d to %d in %s" %
-                                      (line.product_id.name, line.product_uom_qty, values['product_uom_qty'], self.order_id.name))
+            raise UserError(_('You cannot decrease the ordered quantity below the delivered quantity.\n'
+                              'Create a return first.'))
         super(SaleOrderLine, self)._update_line_quantity(values)

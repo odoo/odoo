@@ -73,12 +73,21 @@ var ScreenWidget = PosBaseWidget.extend({
     // - if there's a user with a matching barcode, put it as the active 'cashier', go to cashier mode, and return true
     // - else : do nothing and return false. You probably want to extend this to show and appropriate error popup... 
     barcode_cashier_action: function(code){
+        var self = this;
         var users = this.pos.users;
         for(var i = 0, len = users.length; i < len; i++){
             if(users[i].barcode === code.code){
-                this.pos.set_cashier(users[i]);
-                this.chrome.widget.username.renderElement();
-                return true;
+                if (users[i].id !== this.pos.get_cashier().id && users[i].pos_security_pin) {
+                    return this.gui.ask_password(users[i].pos_security_pin).then(function(){
+                        self.pos.set_cashier(users[i]);
+                        self.chrome.widget.username.renderElement();
+                        return true;
+                    });
+                } else {
+                    this.pos.set_cashier(users[i]);
+                    this.chrome.widget.username.renderElement();
+                    return true;
+                }
             }
         }
         this.barcode_error_action(code);
@@ -281,11 +290,21 @@ var ScaleScreenWidget = ScreenWidget.extend({
             return self.pos.proxy.scale_read().then(function(weight){
                 self.set_weight(weight.weight);
             });
-        },{duration:150, repeat: true});
+        },{duration:500, repeat: true});
 
     },
     get_product: function(){
         return this.gui.get_current_screen_param('product');
+    },
+    _get_active_pricelist: function(){
+        var current_order = this.pos.get_order();
+        var current_pricelist = this.pos.default_pricelist;
+
+        if (current_order) {
+            current_pricelist = current_order.pricelist;
+        }
+
+        return current_pricelist;
     },
     order_product: function(){
         this.pos.get_order().add_product(this.get_product(),{ quantity: this.weight });
@@ -296,7 +315,8 @@ var ScaleScreenWidget = ScreenWidget.extend({
     },
     get_product_price: function(){
         var product = this.get_product();
-        return (product ? product.price : 0) || 0;
+        var pricelist = this._get_active_pricelist();
+        return (product ? product.get_price(pricelist, this.weight) : 0) || 0;
     },
     get_product_uom: function(){
         var product = this.get_product();
@@ -816,6 +836,14 @@ var ProductListWidget = PosBaseWidget.extend({
 
         this.product_list = options.product_list || [];
         this.product_cache = new DomCache();
+
+        this.pos.get('orders').bind('add remove change', function () {
+            self.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
     },
     set_product_list: function(product_list){
         this.product_list = product_list;
@@ -829,20 +857,35 @@ var ProductListWidget = PosBaseWidget.extend({
         var target = $target[0];
         target.parentNode.replaceChild(this.el,target);
     },
+    calculate_cache_key: function(product, pricelist){
+        return product.id + ',' + pricelist.id;
+    },
+    _get_active_pricelist: function(){
+        var current_order = this.pos.get_order();
+        var current_pricelist = this.pos.default_pricelist;
 
+        if (current_order) {
+            current_pricelist = current_order.pricelist;
+        }
+
+        return current_pricelist;
+    },
     render_product: function(product){
-        var cached = this.product_cache.get_node(product.id);
+        var current_pricelist = this._get_active_pricelist();
+        var cache_key = this.calculate_cache_key(product, current_pricelist);
+        var cached = this.product_cache.get_node(cache_key);
         if(!cached){
             var image_url = this.get_product_image_url(product);
             var product_html = QWeb.render('Product',{ 
                     widget:  this, 
-                    product: product, 
+                    product: product,
+                    pricelist: current_pricelist,
                     image_url: this.get_product_image_url(product),
                 });
             var product_node = document.createElement('div');
             product_node.innerHTML = product_html;
             product_node = product_node.childNodes[1];
-            this.product_cache.cache_node(product.id,product_node);
+            this.product_cache.cache_node(cache_key,product_node);
             return product_node;
         }
         return cached;
@@ -979,6 +1022,9 @@ var ProductScreenWidget = ScreenWidget.extend({
             this.product_categories_widget.reset_category();
             this.numpad.state.reset();
         }
+        if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+            this.chrome.widget.keyboard.connect($(this.el.querySelector('.searchbox input')));
+        }
     },
 
     close: function(){
@@ -1053,10 +1099,10 @@ var ClientListScreenWidget = ScreenWidget.extend({
         this.$('.searchbox input').on('keypress',function(event){
             clearTimeout(search_timeout);
 
-            var query = this.value;
+            var searchbox = this;
 
             search_timeout = setTimeout(function(){
-                self.perform_search(query,event.which === 13);
+                self.perform_search(searchbox.value, event.which === 13);
             },70);
         });
 
@@ -1121,15 +1167,15 @@ var ClientListScreenWidget = ScreenWidget.extend({
         }
     },
     save_changes: function(){
-        var self = this;
         var order = this.pos.get_order();
         if( this.has_client_changed() ){
+            var default_fiscal_position_id = _.findWhere(this.pos.fiscal_positions, {'id': this.pos.config.default_fiscal_position_id[0]});
             if ( this.new_client ) {
-                order.fiscal_position = _.find(this.pos.fiscal_positions, function (fp) {
-                    return fp.id === self.new_client.property_account_position_id[0];
-                });
+                order.fiscal_position = _.findWhere(this.pos.fiscal_positions, {'id': this.new_client.property_account_position_id[0]});
+                order.set_pricelist(_.findWhere(this.pos.pricelists, {'id': this.new_client.property_product_pricelist[0]}) || this.pos.default_pricelist);
             } else {
-                order.fiscal_position = undefined;
+                order.fiscal_position = default_fiscal_position_id;
+                order.set_pricelist(this.pos.default_pricelist);
             }
 
             order.set_client(this.new_client);
@@ -1216,6 +1262,12 @@ var ClientListScreenWidget = ScreenWidget.extend({
 
         fields.id           = partner.id || false;
         fields.country_id   = fields.country_id || false;
+
+        if (fields.property_product_pricelist) {
+            fields.property_product_pricelist = parseInt(fields.property_product_pricelist, 10);
+        } else {
+            fields.property_product_pricelist = false;
+        }
 
         rpc.query({
                 model: 'res.partner',
@@ -1326,6 +1378,7 @@ var ClientListScreenWidget = ScreenWidget.extend({
     //             to maintain consistent scroll.
     display_client_details: function(visibility,partner,clickpos){
         var self = this;
+        var searchbox = this.$('.searchbox input');
         var contents = this.$('.client-details-contents');
         var parent   = this.$('.client-list').parent();
         var scroll   = parent.scrollTop();
@@ -1362,6 +1415,19 @@ var ClientListScreenWidget = ScreenWidget.extend({
             this.details_visible = true;
             this.toggle_save_button();
         } else if (visibility === 'edit') {
+            // Connect the keyboard to the edited field
+            if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+                contents.off('click', '.detail');
+                searchbox.off('click');
+                contents.on('click', '.detail', function(ev){
+                    self.chrome.widget.keyboard.connect(ev.target);
+                    self.chrome.widget.keyboard.show();
+                });
+                searchbox.on('click', function() {
+                    self.chrome.widget.keyboard.connect($(this));
+                });
+            }
+
             this.editing_client = true;
             contents.empty();
             contents.append($(QWeb.render('ClientDetailsEdit',{widget:this,partner:partner})));
@@ -1404,6 +1470,9 @@ var ClientListScreenWidget = ScreenWidget.extend({
     },
     close: function(){
         this._super();
+        if (this.pos.config.iface_vkeyboard && this.chrome.widget.keyboard) {
+            this.chrome.widget.keyboard.hide();
+        }
     },
 });
 gui.define_screen({name:'clientlist', widget: ClientListScreenWidget});
@@ -1839,11 +1908,18 @@ var PaymentScreenWidget = ScreenWidget.extend({
         this.reset_input();
         this.render_paymentlines();
         this.order_changes();
+        // that one comes from BarcodeEvents
+        $('body').keypress(this.keyboard_handler);
+        // that one comes from the pos, but we prefer to cover all the basis
+        $('body').keydown(this.keyboard_keydown_handler);
+        // legacy vanilla JS listeners
         window.document.body.addEventListener('keypress',this.keyboard_handler);
         window.document.body.addEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
     },
     hide: function(){
+        $('body').off('keypress', this.keyboard_handler);
+        $('body').off('keydown', this.keyboard_keydown_handler);
         window.document.body.removeEventListener('keypress',this.keyboard_handler);
         window.document.body.removeEventListener('keydown',this.keyboard_keydown_handler);
         this._super();
@@ -1954,6 +2030,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         }
 
         order.initialize_validation_date();
+        order.finalized = true;
 
         if (order.is_to_invoice()) {
             var invoiced = this.pos.push_and_invoice_order(order);
@@ -2041,7 +2118,16 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
             confirm: function (fiscal_position) {
                 var order = self.pos.get_order();
                 order.fiscal_position = fiscal_position;
+                // This will trigger the recomputation of taxes on order lines.
+                // It is necessary to manually do it for the sake of consistency
+                // with what happens when changing a customer. 
+                _.each(order.orderlines.models, function (line) {
+                    line.set_quantity(line.quantity);
+                });
                 order.trigger('change');
+            },
+            is_selected: function (fiscal_position) {
+                return fiscal_position === self.pos.get_order().fiscal_position;
             }
         });
     },
@@ -2056,9 +2142,8 @@ var set_fiscal_position_button = ActionButtonWidget.extend({
                 name = fiscal_position.display_name;
             }
         }
-
-        return name;
-    }
+         return name;
+    },
 });
 
 define_action_button({
@@ -2066,6 +2151,64 @@ define_action_button({
     'widget': set_fiscal_position_button,
     'condition': function(){
         return this.pos.fiscal_positions.length > 0;
+    },
+});
+
+var set_pricelist_button = ActionButtonWidget.extend({
+    template: 'SetPricelistButton',
+    init: function (parent, options) {
+        this._super(parent, options);
+
+        this.pos.get('orders').bind('add remove change', function () {
+            this.renderElement();
+        }, this);
+
+        this.pos.bind('change:selectedOrder', function () {
+            this.renderElement();
+        }, this);
+    },
+    button_click: function () {
+        var self = this;
+
+        var pricelists = _.map(self.pos.pricelists, function (pricelist) {
+            return {
+                label: pricelist.name,
+                item: pricelist
+            };
+        });
+
+        self.gui.show_popup('selection',{
+            title: _t('Select pricelist'),
+            list: pricelists,
+            confirm: function (pricelist) {
+                var order = self.pos.get_order();
+                order.set_pricelist(pricelist);
+            },
+            is_selected: function (pricelist) {
+                return pricelist.id === self.pos.get_order().pricelist.id;
+            }
+        });
+    },
+    get_current_pricelist_name: function () {
+        var name = _t('Pricelist');
+        var order = this.pos.get_order();
+
+        if (order) {
+            var pricelist = order.pricelist;
+
+            if (pricelist) {
+                name = pricelist.display_name;
+            }
+        }
+         return name;
+    },
+});
+
+define_action_button({
+    'name': 'set_pricelist',
+    'widget': set_pricelist_button,
+    'condition': function(){
+        return this.pos.pricelists.length > 1;
     },
 });
 
@@ -2085,7 +2228,7 @@ return {
     ProductCategoriesWidget: ProductCategoriesWidget,
     ScaleScreenWidget: ScaleScreenWidget,
     set_fiscal_position_button: set_fiscal_position_button,
+    set_pricelist_button: set_pricelist_button,
 };
 
 });
-

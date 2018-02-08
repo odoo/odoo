@@ -67,8 +67,8 @@ QUnit.test('dashboard basic rendering', function (assert) {
 
     assert.ok(form.renderer.$el.hasClass('o_dashboard'),
         "with a dashboard, the renderer should have the proper css class");
-    assert.strictEqual(form.$('.o_dashboard .oe_view_nocontent').length, 1,
-        "should have a no content helper");
+    assert.strictEqual(form.$('.o_dashboard .o_view_nocontent').length, 0,
+        "should not have a no content helper");
     assert.strictEqual(form.get('title'), "My Dashboard",
         "should have the correct title");
     form.destroy();
@@ -93,8 +93,8 @@ QUnit.test('display the no content helper', function (assert) {
         },
     });
 
-    assert.strictEqual(form.$('.o_dashboard .oe_view_nocontent p:contains(click to add a partner)').length, 1,
-        "should have a no content helper with action help");
+    assert.strictEqual(form.$('.o_dashboard .o_view_nocontent').length, 0,
+        "should not have a no content helper with action help");
     form.destroy();
 });
 
@@ -122,9 +122,6 @@ QUnit.test('basic functionality, with one sub action', function (assert) {
             }
             if (route === '/web/dataset/search_read') {
                 assert.deepEqual(args.domain, [['foo', '!=', 'False']], "the domain should be passed");
-            }
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
             }
             if (route === '/web/view/add_custom') {
                 assert.step('add custom');
@@ -207,9 +204,6 @@ QUnit.test('can sort a sub list', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -249,9 +243,6 @@ QUnit.test('can open a record', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -295,9 +286,6 @@ QUnit.test('can drag and drop a view', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -345,9 +333,6 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
                 '</board>' +
             '</form>',
         mockRPC: function (route) {
-            if (route === '/board/static/src/img/layout_1-1-1.png') {
-                return $.when();
-            }
             if (route === '/web/action/load') {
                 return $.when({
                     res_model: 'partner',
@@ -379,5 +364,95 @@ QUnit.test('twice the same action in a dashboard', function (assert) {
 
     form.destroy();
 });
+
+QUnit.test('non-existing action in a dashboard', function (assert) {
+    assert.expect(1);
+
+    var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action context="{}" view_mode="kanban" string="ABC" name="51" domain="[]"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        intercepts: {
+            load_views: function () {
+                throw new Error('load_views should not be called');
+            }
+        },
+        mockRPC: function (route) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return $.when();
+            }
+            if (route === '/web/action/load') {
+                // server answer if the action doesn't exist anymore
+                return $.when(false);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.strictEqual(form.$('.oe_action:contains(ABC)').length, 1,
+        "there should be a box for the non-existing action");
+
+    form.destroy();
+});
+
+QUnit.test('clicking on a kanban\'s button should trigger the action', function (assert) {
+    assert.expect(2);
+
+    var form = createView({
+        View: FormView,
+        model: 'board',
+        data: this.data,
+        arch: '<form string="My Dashboard">' +
+                '<board style="2-1">' +
+                    '<column>' +
+                        '<action name="149" string="Partner" view_mode="kanban" id="action_0_1"></action>' +
+                    '</column>' +
+                '</board>' +
+            '</form>',
+        archs: {
+            'partner,false,kanban':
+                '<kanban class="o_kanban_test"><templates><t t-name="kanban-box">' +
+                    '<div>' +
+                    '<field name="foo"/>' +
+                    '</div>' +
+                    '<div><button name="sitting_on_a_park_bench" type="object">Eying little girls with bad intent</button>' +
+                    '</div>' +
+                '</t></templates></kanban>',
+        },
+        intercepts: {
+            execute_action: function (event) {
+                var data = event.data;
+                assert.strictEqual(data.env.model, 'partner', "should have correct model");
+                assert.strictEqual(data.action_data.name, 'sitting_on_a_park_bench',
+                    "should call correct method");
+            }
+        },
+
+        mockRPC: function (route) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return $.when();
+            }
+            if (route === '/web/action/load') {
+                return $.when({res_model: 'partner', view_mode: 'kanban', views: [[false, 'kanban']]});
+            }
+            if (route === '/web/dataset/search_read') {
+                return $.when({records: [{foo: 'aqualung'}]});
+            }
+            return this._super.apply(this, arguments);
+        }
+    });
+
+    form.$('.o_kanban_test').find('button:first').click();
+
+    form.destroy();
+});
+
 
 });

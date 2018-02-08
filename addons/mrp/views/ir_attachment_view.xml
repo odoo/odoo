@@ -6,7 +6,7 @@
         <field name="model">mrp.document</field>
         <field name="arch" type="xml">
             <kanban>
-                <field name="id"/>
+                <field name="ir_attachment_id"/>
                 <field name="mimetype"/>
                 <field name="type"/>
                 <field name="datas_fname"/>
@@ -19,11 +19,11 @@
                                 <div class="oe_attachment">
                                     <div class="row">
                                         <div class="col-xs-4 o_kanban_primary_left" t-if="record.type.raw_value == 'binary'">
-                                            <a t-attf-href="/web/content/#{record.id.value}?download=1">
+                                            <a t-attf-href="/web/content/#{record.ir_attachment_id.raw_value}?download=1">
                                                 <t t-set="webimage" t-value="new RegExp('image.*(gif|jpeg|jpg|png)').test(record.mimetype.value)"/>
                                                 <div t-if="!webimage" class="o_image" t-att-data-mimetype="record.mimetype.value"/>
                                                 <div t-if="webimage" class="o_attachment_image">
-                                                    <img t-attf-src="/web/image/#{record.id.value}?download=1"/>
+                                                    <img t-attf-src="/web/image/#{record.ir_attachment_id.raw_value}?download=1"/>
                                                 </div>
                                             </a>
                                         </div>

@@ -10,8 +10,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.addons import decimal_precision as dp
 
-from odoo.tools import pycompat
-
 
 class LunchOrder(models.Model):
     """
@@ -26,10 +24,10 @@ class LunchOrder(models.Model):
         prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='id desc')
         # If we return return prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
-        return list(pycompat.values({
+        return list({
             (order.product_id, order.note): order.id
             for order in prev_order
-        }))
+        }.values())
 
     user_id = fields.Many2one('res.users', 'User', readonly=True,
                               states={'new': [('readonly', False)]},
@@ -88,10 +86,10 @@ class LunchOrder(models.Model):
         prev_order = self.env['lunch.order.line'].search([('user_id', '=', self.env.uid), ('product_id.active', '!=', False)], limit=20, order='date desc, id desc')
         # If we use prev_order.ids, we will have duplicates (identical orders).
         # Therefore, this following part removes duplicates based on product_id and note.
-        self.previous_order_ids = list(pycompat.values({
+        self.previous_order_ids = list({
             (order.product_id, order.note): order.id
             for order in prev_order
-        }))
+        }.values())
 
         if self.previous_order_ids:
             lunch_data = {}
@@ -233,7 +231,7 @@ class LunchProduct(models.Model):
     _description = 'lunch product'
 
     name = fields.Char('Product', required=True)
-    category_id = fields.Many2one('lunch.product.category', 'Category', required=True)
+    category_id = fields.Many2one('lunch.product.category', 'Product Category', required=True)
     description = fields.Text('Description')
     price = fields.Float('Price', digits=dp.get_precision('Account'))
     supplier = fields.Many2one('res.partner', 'Vendor')
@@ -245,7 +243,7 @@ class LunchProductCategory(models.Model):
     _name = 'lunch.product.category'
     _description = 'lunch product category'
 
-    name = fields.Char('Category', required=True)
+    name = fields.Char('Product Category', required=True)
 
 
 class LunchCashMove(models.Model):
@@ -278,7 +276,7 @@ class LunchAlert(models.Model):
     alert_type = fields.Selection([('specific', 'Specific Day'),
                                    ('week', 'Every Week'),
                                    ('days', 'Every Day')],
-                                  string='Recurrency', required=True, index=True, default='specific')
+                                  string='Recurrence', required=True, index=True, default='specific')
     specific_day = fields.Date('Day', default=fields.Date.context_today)
     monday = fields.Boolean('Monday')
     tuesday = fields.Boolean('Tuesday')

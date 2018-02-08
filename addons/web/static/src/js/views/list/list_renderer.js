@@ -47,16 +47,9 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        var self = this;
         this.hasHandle = false;
         this.handleField = 'sequence';
-        this.columns = _.reject(this.arch.children, function (c) {
-            if (c.attrs.widget === 'handle') {
-                self.hasHandle = true;
-                self.handleField = c.attrs.name;
-            }
-            return !!JSON.parse(c.attrs.modifiers || "{}").tree_invisible;
-        });
+        this._processColumns(params.columnInvisibleFields || {});
         this.rowDecorations = _.chain(this.arch.attrs)
             .pick(function (value, key) {
                 return DECORATIONS.indexOf(key) >= 0;
@@ -66,6 +59,19 @@ var ListRenderer = BasicRenderer.extend({
         this.hasSelectors = params.hasSelectors;
         this.selection = [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
+        this.editable = params.editable;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    updateState: function (state, params) {
+        this._processColumns(params.columnInvisibleFields || {});
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -94,9 +100,6 @@ var ListRenderer = BasicRenderer.extend({
             });
         } else {
             data = this.state.data;
-        }
-        if (data.length === 0) {
-            return;
         }
 
         _.each(this.columns, this._computeColumnAggregates.bind(this, data));
@@ -139,7 +142,7 @@ var ListRenderer = BasicRenderer.extend({
                 }
             });
             if (func === 'avg') {
-                aggregateValue = aggregateValue / count;
+                aggregateValue = count ? aggregateValue / count : aggregateValue;
             }
             column.aggregate = {
                 help: attrs[func],
@@ -159,6 +162,29 @@ var ListRenderer = BasicRenderer.extend({
     _getNumberOfCols: function () {
         var n = this.columns.length;
         return this.hasSelectors ? n+1 : n;
+    },
+    /**
+     * Removes the columns which should be invisible.
+     *
+     * @param  {Object} columnInvisibleFields contains the column invisible modifier values
+     */
+    _processColumns: function (columnInvisibleFields) {
+        var self = this;
+        self.hasHandle = false;
+        self.handleField = null;
+        this.columns = _.reject(this.arch.children, function (c) {
+            var reject = c.attrs.modifiers.column_invisible;
+            // If there is an evaluated domain for the field we override the node
+            // attribute to have the evaluated modifier value.
+            if (c.attrs.name in columnInvisibleFields) {
+                reject = columnInvisibleFields[c.attrs.name];
+            }
+            if (!reject && c.attrs.widget === 'handle') {
+                self.hasHandle = true;
+                self.handleField = c.attrs.name;
+            }
+            return reject;
+        });
     },
     /**
      * Render a list of <td>, with aggregates if available.  It can be displayed
@@ -222,7 +248,7 @@ var ListRenderer = BasicRenderer.extend({
         var tdClassName = 'o_data_cell';
         if (node.tag === 'button') {
             tdClassName += ' o_list_button';
-        } else {
+        } else if (node.tag === 'field') {
             var typeClass = FIELD_CLASSES[this.state.fields[node.attrs.name].type];
             if (typeClass) {
                 tdClassName += (' ' + typeClass);
@@ -235,7 +261,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // We register modifiers on the <td> element so that it gets the correct
         // modifiers classes (for styling)
-        var modifiers = this._registerModifiers(node, record, $td);
+        var modifiers = this._registerModifiers(node, record, $td, _.pick(options, 'mode'));
         // If the invisible modifiers is true, the <td> element is left empty.
         // Indeed, if the modifiers was to change the whole cell would be
         // rerendered anyway.
@@ -245,10 +271,13 @@ var ListRenderer = BasicRenderer.extend({
 
         if (node.tag === 'button') {
             return $td.append(this._renderButton(record, node));
+        } else if (node.tag === 'widget') {
+            return $td.append(this._renderWidget(record, node));
         }
         if (node.attrs.widget || (options && options.renderWidgets)) {
-            var widget = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
-            return $td.append(widget.$el);
+            var $el = this._renderFieldWidget(node, record, _.pick(options, 'mode'));
+            this._handleAttributes($el, node);
+            return $td.append($el);
         }
         var name = node.attrs.name;
         var field = this.state.fields[name];
@@ -258,6 +287,7 @@ var ListRenderer = BasicRenderer.extend({
             escape: true,
             isPassword: 'password' in node.attrs,
         });
+        this._handleAttributes($td, node);
         return $td.html(formattedValue);
     },
     /**
@@ -279,18 +309,30 @@ var ListRenderer = BasicRenderer.extend({
         } else {
             $button.text(node.attrs.string);
         }
-
+        this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
 
-        // TODO this should be moved to a handler
-        var self = this;
-        $button.on("click", function (e) {
-            e.stopPropagation();
-            self.trigger_up('button_clicked', {
-                attrs: node.attrs,
-                record: record,
+        if (record.res_id) {
+            // TODO this should be moved to a handler
+            var self = this;
+            $button.on("click", function (e) {
+                e.stopPropagation();
+                self.trigger_up('button_clicked', {
+                    attrs: node.attrs,
+                    record: record,
+                });
             });
-        });
+        } else {
+            if (node.attrs.options.warn) {
+                var self = this;
+                $button.on("click", function (e) {
+                    e.stopPropagation();
+                    self.do_warn(_t("Warning"), _t('Please click on the "save" button first'));
+                });
+            } else {
+                $button.prop('disabled', true);
+            }
+        }
 
         return $button;
     },
@@ -384,15 +426,15 @@ var ListRenderer = BasicRenderer.extend({
         var $th = $('<th>')
                     .addClass('o_group_name')
                     .text(name + ' (' + group.count + ')');
-        if (group.count > 0) {
-            var $arrow = $('<span>')
+        var $arrow = $('<span>')
                             .css('padding-left', (groupLevel * 20) + 'px')
                             .css('padding-right', '5px')
-                            .addClass('fa')
-                            .toggleClass('fa-caret-right', !group.isOpen)
-                            .toggleClass('fa-caret-down', group.isOpen);
-            $th.prepend($arrow);
+                            .addClass('fa');
+        if (group.count > 0) {
+            $arrow.toggleClass('fa-caret-right', !group.isOpen)
+                    .toggleClass('fa-caret-down', group.isOpen);
         }
+        $th.prepend($arrow);
         if (group.isOpen && !group.groupedBy.length && (group.count > group.data.length)) {
             var $pager = this._renderGroupPager(group);
             var $lastCell = $cells[$cells.length-1];
@@ -400,6 +442,8 @@ var ListRenderer = BasicRenderer.extend({
         }
         return $('<tr>')
                     .addClass('o_group_header')
+                    .toggleClass('o_group_open', group.isOpen)
+                    .toggleClass('o_group_has_content', group.count > 0)
                     .data('group', group)
                     .append($th)
                     .append($cells);
@@ -585,13 +629,15 @@ var ListRenderer = BasicRenderer.extend({
         _.invoke(this.pagers, 'destroy');
         this.pagers = [];
 
+        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
+        this.$el.toggleClass('o_view_nocontent_container', displayNoContentHelper);
         // display the no content helper if there is no data to display
-        if (!this._hasContent() && this.noContentHelp) {
-            this._renderNoContentHelper();
+        if (displayNoContentHelper) {
+            this.$el.html(this._renderNoContentHelper());
             return this._super();
         }
 
-        var $table = $('<table>').addClass('o_list_view table table-condensed table-striped');
+        var $table = $('<table>').addClass('o_list_view table table-condensed table-hover table-striped');
         this.$el
             .addClass('table-responsive')
             .append($table);
@@ -637,6 +683,17 @@ var ListRenderer = BasicRenderer.extend({
         });
     },
     /**
+     * Update the footer aggregate values.  This method should be called each
+     * time the state of some field is changed, to make sure their sum are kept
+     * in sync.
+     *
+     * @private
+     */
+    _updateFooter: function () {
+        this._computeAggregates();
+        this.$('tfoot').replaceWith(this._renderFooter(!!this.state.groupedBy.length));
+    },
+    /**
      * Whenever we change the state of the selected rows, we need to call this
      * method to keep the this.selection variable in sync, and also to recompute
      * the aggregates.
@@ -650,8 +707,7 @@ var ListRenderer = BasicRenderer.extend({
             return $(row).data('id');
         });
         this.trigger_up('selection_changed', { selection: this.selection });
-        this._computeAggregates();
-        this.$('tfoot').replaceWith(this._renderFooter(!!this.state.groupedBy.length));
+        this._updateFooter();
     },
 
     //--------------------------------------------------------------------------

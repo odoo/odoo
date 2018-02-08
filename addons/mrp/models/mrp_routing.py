@@ -22,7 +22,7 @@ class MrpRouting(models.Model):
         copy=True, oldname='workcenter_lines')
     location_id = fields.Many2one(
         'stock.location', 'Production Location',
-        help="Keep empty if you produce at the location where you find the raw materials."
+        help="Keep empty if you produce at the location where you find the raw materials. "
              "Set a location if you produce at a fixed location. This can be a partner location "
              "if you subcontract the manufacturing operations.")
     company_id = fields.Many2one(
@@ -49,8 +49,8 @@ class MrpRoutingWorkcenter(models.Model):
     routing_id = fields.Many2one(
         'mrp.routing', 'Parent Routing',
         index=True, ondelete='cascade', required=True,
-        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards"
-        "which alters the execution of the manufacturing order. ")
+        help="The routing contains all the Work Centers used and for how long. This will create work orders afterwards "
+        "which alters the execution of the manufacturing order.")
     note = fields.Text('Description')
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -69,7 +69,7 @@ class MrpRoutingWorkcenter(models.Model):
     batch = fields.Selection([
         ('no',  'Once all products are processed'),
         ('yes', 'Once a minimum number of products is processed')], string='Next Operation',
-        help="""Will determine if the next work order will be planned after the previous one or after the first Quantity To Process of the previous one.""",
+        help="Set 'no' to schedule the next work order after the previous one. Set 'yes' to produce after the quantity set in 'Quantity To Process' has been produced.",
         default='no', required=True)
     batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")

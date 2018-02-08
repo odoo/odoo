@@ -1,25 +1,9 @@
 // ------------------------------------------------------------------
-// Typography
-// ------------------------------------------------------------------
-a {
-    color: @odoo-brand-optional;
-    &:hover {
-        color: darken(@odoo-brand-optional, 10%);
-    }
-}
-
-// ------------------------------------------------------------------
 //  General
 // ------------------------------------------------------------------
 .o_web_client {
     position: relative; // normally useless but required by bootstrap-datepicker
     background-color: @odoo-webclient-background-color;
-}
-.o_text_overflow {
-    .o-text-overflow();
-}
-.o_hidden {
-    display: none!important;
 }
 
 // ------------------------------------------------------------------
@@ -97,8 +81,8 @@ div.o_boolean_toggle {
     height: 18px;
 
     > input {
-        display: none;
-    }
+            display: none;
+        }
 
     .slider {
         position: absolute;
@@ -126,7 +110,21 @@ div.o_boolean_toggle {
         background-color: @odoo-brand-optional;
 
         &:before {
-            .translate(14px; 0px); 
+            .translate(14px; 0px);
         }
     }
+}
+
+// Full bg colors (bootstrap extension)
+.bg-success-full {
+    background-color: @brand-success;
+}
+.bg-warning-full {
+    background-color: @brand-warning;
+}
+.bg-danger-full {
+    background-color: @brand-danger;
+}
+.bg-info-full {
+    background-color: @brand-info;
 }

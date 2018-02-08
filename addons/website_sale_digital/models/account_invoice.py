@@ -25,4 +25,4 @@ class AccountInvoiceLine(models.Model):
 
         # I only want product_ids, but search_read insists in giving me a list of
         # (product_id: <id>, name: <product code> <template_name> <attributes>)
-        return purchases.mapped('product_id').ids
+        return [line['product_id'][0] for line in purchases]

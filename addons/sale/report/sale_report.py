@@ -21,18 +21,20 @@ class SaleReport(models.Model):
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
     qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
-    partner_id = fields.Many2one('res.partner', 'Partner', readonly=True)
+    partner_id = fields.Many2one('res.partner', 'Customer', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
     price_total = fields.Float('Total', readonly=True)
     price_subtotal = fields.Float('Untaxed Total', readonly=True)
+    amount_to_invoice = fields.Float('Amount To Invoice', readonly=True)
+    amount_invoiced = fields.Float('Amount Invoiced', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product Template', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
     team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True, oldname='section_id')
-    country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
+    country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
@@ -56,6 +58,8 @@ class SaleReport(models.Model):
                     sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
                     sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
                     sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
+                    sum(l.price_reduce * l.qty_to_invoice / COALESCE(cr.rate, 1.0)) as amount_to_invoice,
+                    sum(l.price_reduce * l.qty_invoiced / COALESCE(cr.rate, 1.0)) as amount_invoiced,
                     count(*) as nbr,
                     s.name as name,
                     s.date_order as date,
@@ -67,7 +71,7 @@ class SaleReport(models.Model):
                     extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
                     t.categ_id as categ_id,
                     s.pricelist_id as pricelist_id,
-                    s.project_id as analytic_account_id,
+                    s.analytic_account_id as analytic_account_id,
                     s.team_id as team_id,
                     p.product_tmpl_id,
                     partner.country_id as country_id,
@@ -108,7 +112,7 @@ class SaleReport(models.Model):
                     s.state,
                     s.company_id,
                     s.pricelist_id,
-                    s.project_id,
+                    s.analytic_account_id,
                     s.team_id,
                     p.product_tmpl_id,
                     partner.country_id,

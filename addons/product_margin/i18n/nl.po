@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -69,11 +69,6 @@ msgid "Catalog Price"
 msgstr "Verkoopprijs"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership
-msgid "Check if the product is eligible for membership."
-msgstr "Controleer of het product in aanmerking komt voor het lidmaatschap."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_uid
 msgid "Created by"
 msgstr "Aangemaakt door"
@@ -82,21 +77,6 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_taxes_id
-msgid "Customer Taxes"
-msgstr "Verkoop belastingen"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_from
-msgid "Date from which membership becomes active."
-msgstr "Datum vanaf wanneer het lidmaatschap actief wordt."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_membership_date_to
-msgid "Date until which membership remains active."
-msgstr "Datum tot wanneer het lidmaatschap actief blijft."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_display_name
@@ -140,11 +120,6 @@ msgid "Expected margin * 100 / Expected Sale"
 msgstr "Verwachte marge * 100 / Verwachte verkoop"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_expense_id
-msgid "Expense Account"
-msgstr "Kostenrekening"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_from_date
 msgid "From"
 msgstr "Van"
@@ -158,11 +133,6 @@ msgstr "Algemene informatie"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_id
 msgid "ID"
 msgstr "ID"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_property_account_income_id
-msgid "Income Account"
-msgstr "Omzetrekening"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_invoice_state
@@ -201,21 +171,6 @@ msgid "Margins"
 msgstr "Marges"
 
 #. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership
-msgid "Membership"
-msgstr "Lidmaatschap"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_to
-msgid "Membership End Date"
-msgstr "Lidmaatschap einddatum"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_membership_date_from
-msgid "Membership Start Date"
-msgstr "Lidmaatschap startdatum"
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_normal_cost
 msgid "Normal Cost"
 msgstr "Normale kosten"
@@ -246,11 +201,6 @@ msgstr "Betaald"
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Product"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_email_template_id
-msgid "Product Email Template"
-msgstr "Product e-mailsjabloon"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -341,24 +291,6 @@ msgid "Sum of Quantity in Vendor Bills"
 msgstr "Totale hoeveelheid over leveranciersfacturen"
 
 #. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_expense_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"expenses for the current product."
-msgstr ""
-"Deze rekening wordt gebruikt voor facturen in plaats van de standaard "
-"rekening voor uitgaven van het huidige product."
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_property_account_income_id
-msgid ""
-"This account will be used for invoices instead of the default one to value "
-"sales for the current product."
-msgstr ""
-"Deze rekening zal gebruikt worden voor de facturen in plaats van de "
-"standaardrekening om de opbrengst van dit product te waarderen."
-
-#. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin_to_date
 msgid "To"
 msgstr "Aan"
@@ -371,6 +303,7 @@ msgstr "Totale kost"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product_total_margin
+#: model:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
 msgstr "Totale Marge"
 
@@ -394,19 +327,3 @@ msgstr "Omzet"
 #: model:ir.model.fields,help:product_margin.field_product_product_total_margin
 msgid "Turnover - Standard price"
 msgstr "Omzet - standaard prijs"
-
-#. module: product_margin
-#: model:ir.model.fields,field_description:product_margin.field_product_product_supplier_taxes_id
-msgid "Vendor Taxes"
-msgstr "Inkoop belastingen"
-
-#. module: product_margin
-#: model:ir.model.fields,help:product_margin.field_product_product_email_template_id
-msgid ""
-"When validating an invoice, an email will be sent to the customer based on "
-"this template. The customer will receive an email for each product linked to"
-" an email template."
-msgstr ""
-"Wanneer u een factuur valideert wordt er een e-mail verzonden naar de klant "
-"gebaseerd op het sjabloon. De klant ontvangt een e-mail voor elk product "
-"gelinkt aan een e-mailsjabloon."

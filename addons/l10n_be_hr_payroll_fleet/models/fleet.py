@@ -11,8 +11,8 @@ from odoo.fields import Datetime
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
 
-    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee")
-    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost',
+    co2_fee = fields.Float(compute='_compute_co2_fee', string="CO2 Fee", store=True)
+    total_depreciated_cost = fields.Float(compute='_compute_total_depreciated_cost', store=True,
         string="Total Cost (Depreciated)", help="This includes all the depreciated costs and the CO2 fee")
     total_cost = fields.Float(compute='_compute_total_cost', string="Total Cost", help="This include all the costs and the CO2 fee")
     fuel_type = fields.Selection(required=True, default='diesel')
@@ -57,11 +57,12 @@ class FleetVehicle(models.Model):
         for car in self:
             car.atn = car._get_car_atn(car.acquisition_date, car.car_value, car.fuel_type, car.co2)
 
-    @api.depends('model_id', 'license_plate', 'log_contracts', 'total_depreciated_cost', 'acquisition_date')
+    @api.depends('model_id', 'license_plate', 'log_contracts', 'acquisition_date',
+                 'co2_fee', 'log_contracts', 'log_contracts.state', 'log_contracts.recurring_cost_amount_depreciated')
     def _compute_vehicle_name(self):
         super(FleetVehicle, self)._compute_vehicle_name()
         for vehicle in self:
-            acquisition_date = self._get_acquisition_date()
+            acquisition_date = vehicle._get_acquisition_date()
             vehicle.name += u" \u2022 " + str(round(vehicle.total_depreciated_cost, 2)) + u" \u2022 " + acquisition_date
 
     def _get_acquisition_date(self):
@@ -69,7 +70,7 @@ class FleetVehicle(models.Model):
         return babel.dates.format_date(
             date=Datetime.from_string(self.acquisition_date),
             format='MMMM y',
-            locale=self._context.get('lang', 'en_US')
+            locale=self._context.get('lang') or 'en_US'
         )
 
     def _get_car_atn(self, acquisition_date, car_value, fuel_type, co2):
@@ -138,14 +139,14 @@ class FleetVehicleModel(models.Model):
             model.default_total_depreciated_cost = model.co2_fee + model.default_recurring_cost_amount_depreciated
 
     @api.multi
-    @api.depends('name', 'brand_id')
+    @api.depends('name', 'brand_id', 'default_total_depreciated_cost')
     def name_get(self):
         res = super(FleetVehicleModel, self).name_get()
         new_res = []
         for res_item in res:
             model = self.browse(res_item[0])
             if model.default_total_depreciated_cost != 0.0:
-                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(model.default_total_depreciated_cost)))
+                new_res.append((res_item[0], res_item[1] + u" \u2022 " + str(round(model.default_total_depreciated_cost, 2))))
             else:
                 new_res.append(res_item)
         return new_res

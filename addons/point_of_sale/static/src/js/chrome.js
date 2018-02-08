@@ -8,6 +8,7 @@ var models = require('point_of_sale.models');
 var core = require('web.core');
 var ajax = require('web.ajax');
 var CrashManager = require('web.CrashManager');
+var BarcodeEvents = require('barcodes.BarcodeEvents').BarcodeEvents;
 
 
 var _t = core._t;
@@ -572,7 +573,7 @@ var Chrome = PosBaseWidget.extend({
         this.started  = new $.Deferred(); // resolves when DOM is online
         this.ready    = new $.Deferred(); // resolves when the whole GUI has been loaded
 
-        this.pos = new models.PosModel(this.session,{chrome:this});
+        this.pos = new models.PosModel(this.getSession(), {chrome:this});
         this.gui = new gui.Gui({pos: this.pos, chrome: this});
         this.chrome = this; // So that chrome's childs have chrome set automatically
         this.pos.gui = this.gui;
@@ -606,10 +607,8 @@ var Chrome = PosBaseWidget.extend({
         $(window).off();
         $('html').off();
         $('body').off();
-        $(this.$el).parent().off();
-        $('document').off();
-        $('.oe_web_client').off();
-        $('.openerp_webclient_container').off();
+        // The above lines removed the bindings, but we really need them for the barcode
+        BarcodeEvents.start();
     },
 
     build_chrome: function() { 

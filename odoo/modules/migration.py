@@ -5,7 +5,6 @@
 
 from collections import defaultdict
 import glob
-import imp
 import logging
 import os
 from os.path import join as opj
@@ -13,8 +12,38 @@ from os.path import join as opj
 from odoo.modules.module import get_resource_path
 import odoo.release as release
 import odoo.tools as tools
-from odoo.tools import pycompat
 from odoo.tools.parse_version import parse_version
+from odoo.tools import pycompat
+
+if pycompat.PY2:
+    import imp
+    def load_script(path, module_name):
+        fp, fname = tools.file_open(path, pathinfo=True)
+        fp2 = None
+
+        if not isinstance(fp, file):    # pylint: disable=file-builtin
+            # imp.load_source need a real file object, so we create
+            # one from the file-like object we get from file_open
+            fp2 = os.tmpfile()
+            fp2.write(fp.read())
+            fp2.seek(0)
+
+        try:
+            return imp.load_source(module_name, fname, fp2 or fp)
+        finally:
+            if fp:
+                fp.close()
+            if fp2:
+                fp2.close()
+
+else:
+    import importlib.util
+    def load_script(path, module_name):
+        full_path = get_resource_path(*path.split(os.path.sep))
+        spec = importlib.util.spec_from_file_location(module_name, full_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module
 
 
 _logger = logging.getLogger(__name__)
@@ -90,8 +119,8 @@ class MigrationManager(object):
         def _get_migration_versions(pkg):
             versions = sorted({
                 ver
-                for lv in pycompat.values(self.migrations[pkg.name])
-                for ver, lf in pycompat.items(lv)
+                for lv in self.migrations[pkg.name].values()
+                for ver, lf in lv.items()
                 if lf
             }, key=lambda k: parse_version(convert_version(k)))
             return versions
@@ -133,32 +162,18 @@ class MigrationManager(object):
                     name, ext = os.path.splitext(os.path.basename(pyfile))
                     if ext.lower() != '.py':
                         continue
-                    mod = fp = fp2 = None
+                    mod = None
                     try:
-                        fp, fname = tools.file_open(pyfile, pathinfo=True)
-
-                        # FIXME: imp.load_source removed in P3, and so is the ``file`` object...
-                        if not isinstance(fp, file):# pylint: disable=file-builtin
-                            # imp.load_source need a real file object, so we create
-                            # one from the file-like object we get from file_open
-                            fp2 = os.tmpfile()
-                            fp2.write(fp.read())
-                            fp2.seek(0)
-                        try:
-                            mod = imp.load_source(name, fname, fp2 or fp)
-                            _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
-                            migrate = mod.migrate
-                        except ImportError:
-                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
-                            raise
-                        except AttributeError:
-                            _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                        else:
-                            migrate(self.cr, pkg.installed_version)
+                        mod = load_script(pyfile, name)
+                        _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % dict(strfmt, name=mod.__name__))
+                        migrate = mod.migrate
+                    except ImportError:
+                        _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % dict(strfmt, file=pyfile))
+                        raise
+                    except AttributeError:
+                        _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
+                    else:
+                        migrate(self.cr, pkg.installed_version)
                     finally:
-                        if fp:
-                            fp.close()
-                        if fp2:
-                            fp2.close()
                         if mod:
                             del mod

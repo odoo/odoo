@@ -45,7 +45,7 @@ tour.register('shop_buy_product', {
         },
         {
             content: "add one more iPod",
-            extra_trigger: '.my_cart_quantity:contains(2)',
+            extra_trigger: '#cart_products tr:contains("Headphones")',
             trigger: '#cart_products tr:contains("16 GB") a.js_add_cart_json:eq(1)',
         },
         {
@@ -71,12 +71,13 @@ tour.register('shop_buy_product', {
         },
         {
             content: "select payment",
-            trigger: '#payment_method label:contains("Wire Transfer") input',
+            trigger: '#payment_method label:contains("Wire Transfer")',
         },
         {
             content: "Pay Now",
-            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked',
-            trigger: '.o_payment_acquirer_button .btn[type="submit"]:visible',
+            //Either there are multiple payment methods, and one is checked, either there is only one, and therefore there are no radio inputs
+            extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+            trigger: 'button[id="o_payment_form_pay"]:visible',
         },
         {
             content: "finish",

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,10 +29,15 @@ msgstr "&nbsp;&nbsp;JÓVÁHAGYÁS KÓDJA:"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:186
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:180
 #, python-format
 msgid "128 bit CryptoAPI failed"
 msgstr "128 bit CryptoAPI sikertelen"
+
+#. module: pos_mercury
+#: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Buy a card reader"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -64,7 +70,7 @@ msgstr "JÓVÁHAGYÁS KÓDJA:"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:190
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:184
 #, python-format
 msgid "All Connections Failed"
 msgstr "Minden kapcsolat meghiúsult"
@@ -111,7 +117,7 @@ msgstr "Kártya olvasó"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:196
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:190
 #, python-format
 msgid "Clear Text Request Not Supported"
 msgstr "Tiszta szöveg igénylés nem támogatott"
@@ -123,21 +129,21 @@ msgstr "Kattintson a kártyaolvasó beálításához."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:164
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:158
 #, python-format
 msgid "Connect Canceled"
 msgstr "Kapcsolat megszakítva"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:161
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:155
 #, python-format
 msgid "Connection Lost"
 msgstr "Kapcsolat megszakadt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:185
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:179
 #, python-format
 msgid "Control failed to find branded serial (password lookup failed)"
 msgstr ""
@@ -146,10 +152,17 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:202
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:196
 #, python-format
 msgid "Could Not Encrypt Response- Call Provider"
 msgstr "Nem tudja az üzenetet kódolni - Hívja a szolgáltatót"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:351
+#, python-format
+msgid "Could not read card"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_create_uid
@@ -171,7 +184,7 @@ msgstr "Hitel kártya"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:178
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:172
 #, python-format
 msgid "Disconnecting Socket"
 msgstr "Csatlakozás szétkapcsol"
@@ -184,7 +197,7 @@ msgstr "Megjelenített név"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:180
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:174
 #, python-format
 msgid "Duplicate Serial Number Detected"
 msgstr "Sokszorozott széria számot talált"
@@ -198,21 +211,28 @@ msgstr "Elektronikus fizetés"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:167
 #, python-format
 msgid "Empty Command String"
 msgstr "Üres vezérlő érték"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:641
+#, python-format
+msgid "Error"
+msgstr "Hiba"
+
+#. module: pos_mercury
+#. openerp-web
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:192
 #, python-format
 msgid "Error Occurred While Decrypting Request"
 msgstr "Hiba történt a az igény titkosításának feloldása során"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:188
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:182
 #, python-format
 msgid "Failed to start Event Thread."
 msgstr "Meghiúsult az esemény szál elindítása"
@@ -230,42 +250,42 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:170
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:164
 #, python-format
 msgid "General Failure"
 msgstr "Általános hiba"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:155
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:149
 #, python-format
 msgid "Global API Not Initialized"
 msgstr "Globális API nem lett inicializálva"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:192
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:186
 #, python-format
 msgid "Global Response Length Error (Too Short)"
 msgstr "Globális válasz hossz hiba (Túl rövid)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:194
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:188
 #, python-format
 msgid "Global String Error"
 msgstr "Teljes érték hiba"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:262
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:256
 #, python-format
 msgid "Go to payment screen to use cards"
 msgstr "Menjen a fizetési képernyőre a kártya használatához"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:393
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:387
 #, python-format
 msgid "Handling transaction..."
 msgstr "Tranzakciót kezel..."
@@ -294,232 +314,232 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:184
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:178
 #, python-format
 msgid "In Process with server"
 msgstr "Szerveren, végrehajtás közben"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:165
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:159
 #, python-format
 msgid "Initialize Failed"
 msgstr "Alapadat megadás sikertelen"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:172
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:166
 #, python-format
 msgid "Insufficient Fields"
 msgstr "Nem elegendő mező"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:183
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:177
 #, python-format
 msgid "Internal Server Error – Call Provider"
 msgstr "Belső szerverhiba - Hívja aszolgáltatót"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:206
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:200
 #, python-format
 msgid "Invalid Account Number"
 msgstr "Érvénytelen számla szám"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:210
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
 #, python-format
 msgid "Invalid Authorization Amount"
 msgstr "Érvénytelen engedély szint"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:208
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:209
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:202
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:203
 #, python-format
 msgid "Invalid Authorization Code"
 msgstr "Érvénytelen engedély kód"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:225
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:219
 #, python-format
 msgid "Invalid Batch Item Count"
 msgstr "Érvénytelen tétel köteg szám"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:224
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:218
 #, python-format
 msgid "Invalid Batch Number"
 msgstr "Érvénytelen köteg szám"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:230
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:224
 #, python-format
 msgid "Invalid Card Type"
 msgstr "Érvénytelen kártya típus"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:211
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:205
 #, python-format
 msgid "Invalid Cash Back Amount"
 msgstr "Érvénytelen Készpénz váltópénz mennyiség"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:193
 #, python-format
 msgid "Invalid Check Digit"
 msgstr "Érvénytelen csekk számjegy"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:219
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:213
 #, python-format
 msgid "Invalid Check Type"
 msgstr "Érvénytelen csekk típus"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:165
 #, python-format
 msgid "Invalid Command Format"
 msgstr "Érvénytelen parancs formátum"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:218
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:212
 #, python-format
 msgid "Invalid Date of Birth"
 msgstr "Érvénytelen Születési idő"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:210
 #, python-format
 msgid "Invalid Derived Key Data"
 msgstr "Érvénytelen származtatott kulcs adat"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:227
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:221
 #, python-format
 msgid "Invalid Driver’s License"
 msgstr "Érvénytelen forgalmi engedély"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:207
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:201
 #, python-format
 msgid "Invalid Expiration Date"
 msgstr "Érvénytelen Lejárati idő"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:212
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:206
 #, python-format
 msgid "Invalid Gratuity Amount"
 msgstr "Érvénytelen pénzjutalom mennyiség"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:226
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:220
 #, python-format
 msgid "Invalid MICR Input Type"
 msgstr "Érvénytelen MICR Input típus"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:208
 #, python-format
 msgid "Invalid Magnetic Stripe Data"
 msgstr "Érvénytelen mágnescsík adat"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:205
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
 #, python-format
 msgid "Invalid Memo"
 msgstr "Érvénytelen feljegyzés"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:222
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
 #, python-format
 msgid "Invalid Merchant ID"
 msgstr "Érvénytelen kereskedelmi azonosító ID"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
 #, python-format
 msgid "Invalid Operator ID"
 msgstr "Érvénytelen Operátor ID azonosító"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:215
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:209
 #, python-format
 msgid "Invalid PIN Block Data"
 msgstr "Érvénytelen PIN blokk adat"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:229
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:223
 #, python-format
 msgid "Invalid Pass Data"
 msgstr "Érvénytelen igazolvány adat"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:213
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:207
 #, python-format
 msgid "Invalid Purchase Amount"
 msgstr "Érvénytelen Beszerzési mennyiség"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:220
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
 #, python-format
 msgid "Invalid Routing Number"
 msgstr "Érvénytelen eljárás szám"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:228
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:222
 #, python-format
 msgid "Invalid Sequence Number"
 msgstr "Érvénytelen sorrend szám"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:217
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:211
 #, python-format
 msgid "Invalid State Code"
 msgstr "Érvénytelen állapot kód"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:223
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:217
 #, python-format
 msgid "Invalid TStream Type"
 msgstr "Érvénytelen TStream típus"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:221
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:215
 #, python-format
 msgid "Invalid TranCode"
 msgstr "Érvénytelen TranzKód"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:203
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
 #, python-format
 msgid "Invalid Transaction Type"
 msgstr "Érvénytelen Tranzakció típus"
@@ -564,7 +584,7 @@ msgstr "Kereskedelmi azonosító ID"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:200
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:194
 #, python-format
 msgid "Merchant ID Missing"
 msgstr "Kereskedelmi azonosító ID elveszett"
@@ -582,8 +602,8 @@ msgstr "Mercury beállítások"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
-msgid "Mercury configuration"
-msgstr "Mercury beállítás"
+msgid "Mercury Credentials"
+msgstr ""
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
@@ -611,15 +631,27 @@ msgid "Name of this Mercury configuration"
 msgstr "Ennek a Mercury beállításnak a neve"
 
 #. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:33
+#, python-format
+msgid "No Mercury configuration associated with the journal."
+msgstr ""
+
+#. module: pos_mercury
+#: code:addons/pos_mercury/models/pos_mercury_transaction.py:21
+#, python-format
+msgid "No opened point of sale session for user %s found"
+msgstr ""
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:328
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
 msgstr "Nincs válasz a Mercury-tól (Mercury kiiktatva?)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:336
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:330
 #, python-format
 msgid "No response from server (connected to network?)"
 msgstr "Szerver nem válaszol (hálózati kapcsolat fennáll?)"
@@ -627,14 +659,14 @@ msgstr "Szerver nem válaszol (hálózati kapcsolat fennáll?)"
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:414
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:562
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:567
 #, python-format
 msgid "Odoo error while processing transaction."
 msgstr "Odoo hiba a tranzakciós művelet közben."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:639
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:642
 #, python-format
 msgid "One credit card swipe already pending."
 msgstr "Egy hitelkártya lehúzás már folyamatban van."
@@ -653,28 +685,28 @@ msgstr "Részlegesen jóváhagyott"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:181
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:175
 #, python-format
 msgid "Password Failed (Client / Server)"
 msgstr "Jelszó  sikertelen (Kliens / Szerver)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:176
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:170
 #, python-format
 msgid "Password Failed – Disconnecting"
 msgstr "Jelszó sikertelen - Szétkapcsolt"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:174
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:168
 #, python-format
 msgid "Password Verified"
 msgstr "Jelszó leellenőrzött"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:182
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:176
 #, python-format
 msgid "Password failed (Challenge / Response)"
 msgstr "Jelszó  sikertelen (Kihívás / Válasz)"
@@ -705,12 +737,12 @@ msgstr "Kérem állítsa be a Mercury termék fiókját."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
-msgid "Point of Sale"
-msgstr "Értékesítési pont"
+msgid "Point of Sale Orders"
+msgstr "Értékesítési pont rendelések"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:175
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:169
 #, python-format
 msgid "Queue Full"
 msgstr "Sorban állás megtelt"
@@ -722,63 +754,63 @@ msgstr "IgényeltadatbázisbejegyzésSzám"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:179
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:173
 #, python-format
 msgid "Refused ‘Max Connections’"
 msgstr "Visszautasított 'Max kapcsolódás'"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:540
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:539
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
 msgstr "Visszatérítés sikertelen, üres-értékesítést küld"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:576
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:581
 #, python-format
 msgid "Reversal succeeded"
 msgstr "Visszafordítás sikeres"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:543
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:542
 #, python-format
 msgid "Sending reversal..."
 msgstr "Visszafordítást küld..."
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:191
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:185
 #, python-format
 msgid "Server Login Failed"
 msgstr "Szerver belépés sikertelen"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:160
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:154
 #, python-format
 msgid "Socket Connection Failed"
 msgstr "Csatlakozási kísérlet sikertelen"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:159
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:153
 #, python-format
 msgid "Socket Creation Failed"
 msgstr "Csatlakozás létrehozása sikertelen"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:157
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:151
 #, python-format
 msgid "Socket Error sending request"
 msgstr "Csatlakozási hiba kiküldés igénylése"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:158
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:152
 #, python-format
 msgid "Socket already open or in use"
 msgstr "Csatlakozás már nyitott vagy használatban van"
@@ -790,14 +822,14 @@ msgstr "Lehúzott"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:177
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
 #, python-format
 msgid "System Going Offline"
 msgstr "Rendszer offline-ba megy át"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:162
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:156
 #, python-format
 msgid "TCP/IP Failed to Initialize"
 msgstr "TCP/IP inicializálása sikertelen"
@@ -811,7 +843,7 @@ msgstr "A KÁRTYATULAJDONOS SZERZŐDÉSÉHEZ"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:201
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
 #, python-format
 msgid "TStream Type Missing"
 msgstr "TStream típus hiányzik"
@@ -843,7 +875,7 @@ msgstr "A kártyatulajdonos neve"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:358
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:352
 #, python-format
 msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
@@ -854,56 +886,56 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:187
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:181
 #, python-format
 msgid "Threaded Auth Started Expect Response"
 msgstr "Felfűzött engedélyezés elindítás, kivétel a  válaszra"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:163
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:157
 #, python-format
 msgid "Time Out waiting for server response"
 msgstr "Időtúllépés a szerver válaszra várva"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:169
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:163
 #, python-format
 msgid "Timeout error"
 msgstr "Időtúllépési hiba"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:156
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:150
 #, python-format
 msgid "Timeout on Response"
 msgstr "Időtúllépés a válasznál"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:152
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:146
 #, python-format
 msgid "Transaction approved"
 msgstr "Tranzakció jóváhagyott"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:193
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:187
 #, python-format
 msgid "Unable to Parse Response from Global (Indistinguishable)"
 msgstr "Nem tudja iktatni a globális válaszokat (megkülönböztethetetlen)"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:166
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:160
 #, python-format
 msgid "Unknown Error"
 msgstr "Ismeretlen hiba"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:191
 #, python-format
 msgid "Unrecognized Request Format"
 msgstr "Ismeretlen kérés forma"
@@ -922,8 +954,13 @@ msgstr ""
 "                                kártya lehúzásával fizethet a kártyaleolvasón kersztül."
 
 #. module: pos_mercury
+#: model:ir.ui.view,arch_db:pos_mercury.pos_config_view_form_inherit_pos_mercury
+msgid "Vantiv Accounts"
+msgstr ""
+
+#. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:584
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:589
 #, python-format
 msgid "VoidSale succeeded"
 msgstr "Üres-értékesítés sikeres"
@@ -946,14 +983,14 @@ msgstr ""
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:189
 #, python-format
 msgid "Weak Encryption Request Not Supported"
 msgstr "Gyenge kódolási igény nem támogatott"
 
 #. module: pos_mercury
 #. openerp-web
-#: code:addons/pos_mercury/static/src/js/pos_mercury.js:189
+#: code:addons/pos_mercury/static/src/js/pos_mercury.js:183
 #, python-format
 msgid "XML Parse Error"
 msgstr "XML kifejezés hiba"

@@ -141,7 +141,7 @@ class TestORM(TransactionCase):
         partner_ids_by_year = defaultdict(list)
 
         partners = self.env['res.partner']
-        for name, date in pycompat.items(partners_data):
+        for name, date in partners_data.items():
             p = partners.create(dict(name=name, date=date))
             partner_ids.append(p.id)
             partner_ids_by_day[date].append(p.id)

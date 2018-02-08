@@ -26,6 +26,7 @@ class DeliveryCarrier(models.Model):
        <my_provider>_send_shipping
        <my_provider>_get_tracking_link
        <my_provider>_cancel_shipment
+       _<my_provider>_get_default_custom_package_code
        (they are documented hereunder)
     '''
 
@@ -73,7 +74,7 @@ class DeliveryCarrier(models.Model):
             'res_model': 'ir.module.module',
             'domain': [['name', 'ilike', 'delivery_']],
             'type': 'ir.actions.act_window',
-            'help': _('''<p class="oe_view_nocontent">
+            'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>'''),
         }
@@ -87,9 +88,9 @@ class DeliveryCarrier(models.Model):
             return False
         if self.state_ids and partner.state_id not in self.state_ids:
             return False
-        if self.zip_from and (partner.zip or '') < self.zip_from:
+        if self.zip_from and (partner.zip or '').upper() < self.zip_from.upper():
             return False
-        if self.zip_to and (partner.zip or '') > self.zip_to:
+        if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
             return False
         return True
 
@@ -122,7 +123,7 @@ class DeliveryCarrier(models.Model):
             res['price'] = res['price'] * (1.0 + (float(self.margin) / 100.0))
             # free when order is large enough
             if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
-                res['warning_message'] = _('Info:\nTotal amount of this order is above %.2f, free shipping!\n(actual cost: %.2f)') % (self.amount, res['price'])
+                res['warning_message'] = _('Info:\nThe shipping is free because the order amount exceeds %.2f.\n(The actual shipping cost is: %.2f)') % (self.amount, res['price'])
                 res['price'] = 0.0
             return res
 
@@ -182,6 +183,16 @@ class DeliveryCarrier(models.Model):
                               'line': 1})
             except psycopg2.Error:
                 pass
+
+    def _get_default_custom_package_code(self):
+        """ Some delivery carriers require a prefix to be sent in order to use custom
+        packages (ie not official ones). This optional method will return it as a string.
+        """
+        self.ensure_one()
+        if hasattr(self, '_%s_get_default_custom_package_code' % self.delivery_type):
+            return getattr(self, '_%s_get_default_custom_package_code' % self.delivery_type)()
+        else:
+            return False
 
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #

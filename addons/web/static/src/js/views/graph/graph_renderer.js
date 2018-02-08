@@ -20,7 +20,7 @@ var qweb = core.qweb;
 var CHART_TYPES = ['pie', 'bar', 'line'];
 
 // hide top legend when too many items for device size
-var MAX_LEGEND_LENGTH = 25 * (1 + config.device.size_class);
+var MAX_LEGEND_LENGTH = 25 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_svg_container",
@@ -34,7 +34,6 @@ return AbstractRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this.stacked = params.stacked;
-        this.$el.css({minWidth: '100px', minHeight: '100px'});
     },
     /**
      * @override
@@ -56,9 +55,12 @@ return AbstractRenderer.extend({
      * returning immediately, then wait a tiny interval before actually
      * displaying the data.
      *
+     * @override
+     * @private
      * @returns {Deferred} The _super deferred is actually resolved immediately
      */
     _render: function () {
+        this.$el.toggleClass('o_view_nocontent_container', !this.state.data.length);
         if (this.to_remove) {
             nv.utils.offWindowResize(this.to_remove);
         }
@@ -72,8 +74,7 @@ return AbstractRenderer.extend({
             this.$el.empty();
             this.$el.append(qweb.render('GraphView.error', {
                 title: _t("No data to display"),
-                description: _t("No data available for this chart. " +
-                    "Try to add some records, or make sure that " +
+                description: _t("Try to add some records, or make sure that " +
                     "there is no active filter in the search bar."),
             }));
         } else {
@@ -81,7 +82,7 @@ return AbstractRenderer.extend({
             setTimeout(function () {
                 self.$el.empty();
                 var chart = self['_render' + _.str.capitalize(self.state.mode) + 'Chart']();
-                if (chart) {
+                if (chart && chart.tooltip.chartContainer) {
                     self.to_remove = chart.update;
                     nv.utils.onWindowResize(chart.update);
                     chart.tooltip.chartContainer(self.el);
@@ -161,8 +162,8 @@ return AbstractRenderer.extend({
 
         var chart = nv.models.multiBarChart();
         chart.options({
-          margin: {left: 120, bottom: 60},
-          delay: 250,
+          margin: {left: 80, bottom: 100, top: 80, right: 0},
+          delay: 100,
           transition: 10,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,
@@ -310,7 +311,7 @@ return AbstractRenderer.extend({
 
         var chart = nv.models.lineChart();
         chart.options({
-          margin: {left: 120, bottom: 60},
+          margin: {left: 80, bottom: 100, top: 80, right: 0},
           useInteractiveGuideline: true,
           showLegend: _.size(data) <= MAX_LEGEND_LENGTH,
           showXAxis: true,

@@ -28,6 +28,7 @@ var CalendarController = AbstractController.extend({
         changeDate: '_onChangeDate',
         changeFilter: '_onChangeFilter',
         toggleFullWidth: '_onToggleFullWidth',
+        viewUpdated: '_onViewUpdated',
     }),
     /**
      * @override
@@ -39,6 +40,7 @@ var CalendarController = AbstractController.extend({
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.current_start = null;
+        this.displayName = params.displayName;
         this.quickAddPop = params.quickAddPop;
         this.disableQuickCreate = params.disableQuickCreate;
         this.eventOpenPopup = params.eventOpenPopup;
@@ -46,12 +48,13 @@ var CalendarController = AbstractController.extend({
         this.readonlyFormViewId = params.readonlyFormViewId;
         this.mapping = params.mapping;
         this.context = params.context;
+        // The quickCreating attribute ensures that we don't do several create
+        this.quickCreating = false;
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
 
     /**
      * Render the buttons according to the CalendarView.buttons template and
@@ -112,7 +115,7 @@ var CalendarController = AbstractController.extend({
      */
     _onChangeDate: function (event) {
         var modelData = this.model.get();
-        if (modelData.target_date.isSame(event.data.date)) {
+        if (modelData.target_date.format('YYYY-MM-DD') === event.data.date.format('YYYY-MM-DD')) {
             // When clicking on same date, toggle between the two views
             switch (modelData.scale) {
                 case 'month': this.model.setScale('week'); break;
@@ -151,18 +154,26 @@ var CalendarController = AbstractController.extend({
      */
     _onQuickCreate: function (event) {
         var self = this;
+        if (this.quickCreating) {
+            return;
+        }
+        this.quickCreating = true;
         this.model.createRecord(event)
-            .then(function (id) {
+            .then(function () {
                 self.quick.destroy();
                 self.quick = null;
-                self.reload(id);
-            }, function (error, errorEvent) {
+                self.reload();
+            })
+            .fail(function (error, errorEvent) {
                 // This will occurs if there are some more fields required
                 // Preventdefaulting the error event will prevent the traceback window
                 errorEvent.preventDefault();
                 event.data.options.disableQuickCreate = true;
                 event.data.data.on_save = self.quick.destroy.bind(self.quick);
                 self._onOpenCreate(event.data);
+            })
+            .always(function () {
+                self.quickCreating = false;
             });
     },
     /**
@@ -203,9 +214,10 @@ var CalendarController = AbstractController.extend({
 
         if(!options.disableQuickCreate && !event.data.disableQuickCreate && this.quickAddPop) {
             this.quick = new QuickCreate(this, true, options, data, event.data);
-            this.quick.on('added', this, this.reload.bind(this));
             this.quick.open();
-            this.quick.focus();
+            this.quick.opened(function () {
+                self.quick.focus();
+            });
             return;
         }
 
@@ -245,13 +257,20 @@ var CalendarController = AbstractController.extend({
         id = id && parseInt(id).toString() === id ? parseInt(id) : id;
 
         if (!this.eventOpenPopup) {
-            this.do_action({
-                type: 'ir.actions.act_window',
-                res_id: id,
-                res_model: this.modelName,
-                views: [[this.formViewId || false, 'form']],
-                target: 'current',
-                context: event.context || self.context,
+            this._rpc({
+                model: self.modelName,
+                method: 'get_formview_id',
+                //The event can be called by a view that can have another context than the default one.
+                args: [[id], event.context || self.context],
+            }).then(function (viewId) {
+                self.do_action({
+                    type:'ir.actions.act_window',
+                    res_id: id,
+                    res_model: self.modelName,
+                    views: [[viewId || false, 'form']],
+                    target: 'current',
+                    context: event.context || self.context,
+                });
             });
             return;
         }
@@ -316,6 +335,21 @@ var CalendarController = AbstractController.extend({
      */
     _onUpdateRecord: function (event) {
         this._updateRecord(event.data);
+    },
+    /**
+     * The internal state of the calendar (mode, period displayed) has changed,
+     * so update the control panel buttons and breadcrumbs accordingly.
+     *
+     * @param {OdooEvent} event
+     */
+    _onViewUpdated: function (event) {
+        this.mode = event.data.mode;
+        if (this.$buttons) {
+            this.$buttons.find('.active').removeClass('active');
+            this.$buttons.find('.o_calendar_button_' + this.mode).addClass('active');
+        }
+        var subtitle = (this.mode === 'week' ? _t('Week ') : '') + event.data.title;
+        this.set({title: this.displayName + ' (' + subtitle + ')'});
     },
 });
 

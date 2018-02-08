@@ -13,7 +13,7 @@
         'data/google_calendar_data.xml',
         'data/google_calendar_data.xml',
         'security/ir.model.access.csv',
-        'views/base_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/google_calendar_templates.xml',
     ],

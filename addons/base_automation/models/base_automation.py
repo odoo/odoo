@@ -12,7 +12,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID
 from odoo.modules.registry import Registry
-from odoo.tools import pycompat
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -264,7 +264,7 @@ class BaseAutomation(models.Model):
                 if res:
                     if 'value' in res:
                         res['value'].pop('id', None)
-                        self.update({key: val for key, val in pycompat.items(res['value']) if key in self._fields})
+                        self.update({key: val for key, val in res['value'].items() if key in self._fields})
                     if 'domain' in res:
                         result.setdefault('domain', {}).update(res['domain'])
                     if 'warning' in res:
@@ -282,7 +282,15 @@ class BaseAutomation(models.Model):
 
         # retrieve all actions, and patch their corresponding model
         for action_rule in self.with_context({}).search([]):
-            Model = self.env[action_rule.model_name]
+            Model = self.env.get(action_rule.model_name)
+
+            # Do not crash if the model of the base_action_rule was uninstalled
+            if Model is None:
+                _logger.warning("Action rule with ID %d depends on model %s" %
+                                (action_rule.id,
+                                 action_rule.model_name))
+                continue
+
             if action_rule.trigger == 'on_create':
                 patch(Model, 'create', make_create())
 
@@ -307,7 +315,7 @@ class BaseAutomation(models.Model):
         if action.trg_date_calendar_id and action.trg_date_range_type == 'day':
             return action.trg_date_calendar_id.plan_days(
                 action.trg_date_range,
-                day_date=fields.Datetime.from_string(record_dt),
+                fields.Datetime.from_string(record_dt),
                 compute_leaves=True,
             )
         else:
@@ -351,7 +359,7 @@ class BaseAutomation(models.Model):
                     except Exception:
                         _logger.error(traceback.format_exc())
 
-            action.write({'last_run': fields.Datetime.now()})
+            action.write({'last_run': now.strftime(DEFAULT_SERVER_DATETIME_FORMAT)})
 
             if automatic:
                 # auto-commit for batch processing

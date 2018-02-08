@@ -11,6 +11,7 @@ from odoo.tests import common
 from odoo.addons.web_editor.models.ir_qweb import html_to_text
 
 
+@common.tagged('standard', 'at_install')
 class TestHTMLToText(unittest.TestCase):
     def test_rawstring(self):
         self.assertEqual(
@@ -136,7 +137,7 @@ class TestConvertBack(common.TransactionCase):
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
         value_back = converter.from_html(model, record._fields[field], element)
 
-        if isinstance(expected, str):
+        if isinstance(expected, bytes):
             expected = expected.decode('utf-8')
         self.assertEqual(value_back, expected)
 

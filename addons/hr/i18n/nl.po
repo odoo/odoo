@@ -8,13 +8,14 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Eric Geens <ericgeens@yahoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
+# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:76
+#: code:addons/hr/models/hr.py:75
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -75,6 +76,16 @@ msgid "Birth"
 msgstr "Geboortedatum"
 
 #. module: hr
+#: model:hr.job,name:hr.job_ceo
+msgid "Chief Executive Officer"
+msgstr "Algemeen directeur"
+
+#. module: hr
+#: model:hr.job,name:hr.job_cto
+msgid "Chief Technical Officer"
+msgstr "Technische directeur"
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_child_ids
 msgid "Child Departments"
 msgstr "Sub-afdelingen"
@@ -83,11 +94,6 @@ msgstr "Sub-afdelingen"
 #: model:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Citizenship & Other Information"
 msgstr "Nationaliteit & andere informatie"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_city
-msgid "City"
-msgstr "Gemeente"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.act_employee_from_department
@@ -112,11 +118,6 @@ msgid "Coach"
 msgstr "Coach"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_code
-msgid "Code"
-msgstr "Code"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_category_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_color
@@ -130,7 +131,6 @@ msgstr "Bedrijven"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_company_id
-#: model:ir.model.fields,field_description:hr.field_hr_employee_company_id
 #: model:ir.model.fields,field_description:hr.field_hr_job_company_id
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_job_filter
@@ -138,9 +138,29 @@ msgid "Company"
 msgstr "Bedijf"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_resource_calendar_id
+msgid "Company Working Hours"
+msgstr "Werkuren bedrijf"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_department_complete_name
+msgid "Complete Name"
+msgstr "Volledige naam"
+
+#. module: hr
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Configuration"
 msgstr "Instellingen"
+
+#. module: hr
+#: model:hr.job,name:hr.job_consultant
+msgid "Consultant"
+msgstr "Consultant"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
@@ -172,11 +192,6 @@ msgstr "Huidig aantal werknemers"
 #: model:ir.model.fields,field_description:hr.field_hr_employee_birthday
 msgid "Date of Birth"
 msgstr "Geboortedatum"
-
-#. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_calendar_id
-msgid "Define the schedule of resource"
-msgstr "Definieert de planning van de resource"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_department_id
@@ -213,19 +228,9 @@ msgid "Divorced"
 msgstr "Gescheiden"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_time_efficiency
-msgid "Efficiency Factor"
-msgstr "Efficiëntie Factor"
-
-#. module: hr
 #: model:ir.model,name:hr.model_mail_alias
 msgid "Email Aliases"
 msgstr "E-mail Aliassen"
-
-#. module: hr
-#: model:ir.model,name:hr.model_mail_thread
-msgid "Email Thread"
-msgstr "E-mail discussie"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee
@@ -269,6 +274,7 @@ msgstr "Naam werknemer"
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:hr.view_employee_filter
 #: model:ir.ui.view,arch_db:hr.view_employee_tree
 #: model:ir.ui.view,arch_db:hr.view_partner_tree2
@@ -286,23 +292,27 @@ msgid "Employees Tags"
 msgstr "Werknemer labels"
 
 #. module: hr
-#: code:addons/hr/models/hr.py:263
+#: model:ir.model.fields,help:hr.field_hr_employee_address_home_id
+msgid ""
+"Enter here the private address of the employee, not the one linked to your "
+"company."
+msgstr ""
+"Geef het privéadres van de werknemer in, niet het adres gelinkt aan uw "
+"bedrijf."
+
+#. module: hr
+#: code:addons/hr/models/hr.py:303
 #, python-format
 msgid "Error! You cannot create recursive departments."
 msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
 
 #. module: hr
-#: code:addons/hr/models/hr.py:167
+#: code:addons/hr/models/hr.py:184
 #, python-format
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 "Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te "
 "maken."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_event_count
-msgid "Events"
-msgstr "Evenementen"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_no_of_recruitment
@@ -314,6 +324,11 @@ msgstr "Verwachte nieuwe medewerkers"
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr "Verwachte aantal werknemers voor deze functie na de nieuwe werving."
+
+#. module: hr
+#: model:hr.job,name:hr.job_developer
+msgid "Experienced Developer"
+msgstr "Ervaren ontwikkelaar"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -357,14 +372,14 @@ msgid "Hired Employees"
 msgstr "Aangenomen werknemers"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
-msgid "Home Address"
-msgstr "Privé-adres"
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
 msgid "Human Resources"
 msgstr "Personeelszaken"
+
+#. module: hr
+#: model:hr.job,name:hr.job_hrm
+msgid "Human Resources Manager"
+msgstr "Personeelsbeheer manager"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_id
@@ -413,6 +428,8 @@ msgstr "Functieomschrijving"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_job
+#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
+#: model:ir.model.fields,field_description:hr.field_hr_job_name
 msgid "Job Position"
 msgstr "Functie"
 
@@ -433,12 +450,6 @@ msgstr ""
 "U kunt het aantal werknemers bijhouden dat u heeft per job\n"
 "positie en zo de evolutie volgen volgens wat u gepland\n"
 "heeft voor de toekomst."
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_job_id
-#: model:ir.model.fields,field_description:hr.field_hr_job_name
-msgid "Job Title"
-msgstr "Functietitel"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department_jobs_ids
@@ -471,24 +482,9 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_res_users_calendar_last_notif_ack
-msgid "Last notification marked as read from base Calendar"
-msgstr "Laatste melding is gemarkeerd als gelezen vanaf agenda"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_last_login
-msgid "Latest Connection"
-msgstr "Laatste verbinding"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_hr_job_form
 msgid "Launch Recruitment"
 msgstr "Start recruitment"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_login
-msgid "Login"
-msgstr "Login"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -504,19 +500,19 @@ msgid "Manager"
 msgstr "Beheerder"
 
 #. module: hr
-#: model:res.groups,name:hr.group_hr_attendance
-msgid "Manual Attendance"
-msgstr "Handmatige aanwezigheid"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_marital
 msgid "Marital Status"
 msgstr "Burgerlijke staat"
 
 #. module: hr
+#: model:hr.job,name:hr.job_marketing
+msgid "Marketing and Community Manager"
+msgstr "Marketing en communicatie manager"
+
+#. module: hr
 #: selection:hr.employee,marital:0
-msgid "Married"
-msgstr "Gehuwd"
+msgid "Married (or similar)"
+msgstr "Getrouwd (of gelijkend)"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image_medium
@@ -543,11 +539,6 @@ msgstr "Leden"
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
 msgid "Messages"
 msgstr "Berichten"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "Meer <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_name
@@ -580,11 +571,6 @@ msgid "Number of employees currently occupying this job position."
 msgstr "Huidig aantal werknemers welke deze functie bekleden."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_res_users_event_count
-msgid "Number of events the partner has participated."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_no_of_hired_employee
 msgid ""
 "Number of hired employees for this job position during recruitment phase."
@@ -602,11 +588,11 @@ msgstr "Verwachte aantal te werven nieuwe werknemers."
 msgid ""
 "Odoo's department structure is used to manage all documents\n"
 "                related to employees by departments: expenses, timesheets,\n"
-"                leaves and holidays, recruitments, etc."
+"                leaves, recruitments, etc."
 msgstr ""
-"Odoo's departement structuur is gebruikt om alle documenten te beheren\n"
-"die gerelateerd zijn aan werknemers per departement: uitgaven, urenstaten,\n"
-"afwezigheden en vakanties, aanwervingen, enz."
+"Odoo's afdelingen structuur is gebruikt om alle documenten te beheren\n"
+"die gerelateerd zijn aan werknemers per afdeling: declaraties, urenstaten,\n"
+"verloven, vacatures, etc.."
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
@@ -629,19 +615,9 @@ msgid "Parent Department"
 msgstr "Hoofdafdeling"
 
 #. module: hr
-#: model:ir.model,name:hr.model_res_partner
-msgid "Partner"
-msgstr "Relatie"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_passport_id
 msgid "Passport No"
 msgstr "Paspoortnummer"
-
-#. module: hr
-#: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Personal Information"
-msgstr "Persoonlijke gegevens"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_image
@@ -654,9 +630,19 @@ msgid "Position"
 msgstr "Functie"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_address_home_id
+msgid "Private Address"
+msgstr "Privé adres"
+
+#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_employee_form
-msgid "Public Information"
-msgstr "Publieke informatie"
+msgid "Private Information"
+msgstr "Privé informatie"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "Recruitment"
+msgstr "Werving & Selectie"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -690,21 +676,6 @@ msgid "Requirements"
 msgstr "Vereisten"
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_id
-msgid "Resource"
-msgstr "Resource"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_name_related
-msgid "Resource Name"
-msgstr "Resourcenaam"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_resource_type
-msgid "Resource Type"
-msgstr "Soort resource"
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_sinid
 msgid "SIN No"
 msgstr "Verzekeringsnummer"
@@ -715,6 +686,15 @@ msgid "SSN No"
 msgstr "BSN nummer"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid ""
+"Set default calendar used to compute time allocation for leaves, timesheets,"
+" ..."
+msgstr ""
+"Stel een standaard kalender in die gebruikt wordt om tijdtoewijzingen te "
+"berekenen voor verlof, urenstaten, ..."
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job_state
 msgid ""
 "Set whether the recruitment process is open or closed for this job position."
@@ -722,9 +702,26 @@ msgstr ""
 "Stel in of het aanwervingsproces open of gesloten is voor deze job functie."
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.hr_config_settings_action
+#: model:ir.ui.menu,name:hr.hr_menu_configuration
 #: model:ir.ui.view,arch_db:hr.hr_department_view_kanban
 msgid "Settings"
 msgstr "Instellingen"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_config_settings_module_hr_org_chart
+msgid "Show Organizational Chart"
+msgstr "Laat organigram zien"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form"
+msgstr "Toon organisatie grafiek op werknemers formulier"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Show organizational chart on employee form."
+msgstr "Laat organigram zien op werknemersformulier."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -790,18 +787,14 @@ msgid "Tags"
 msgstr "Labels"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_is_address_home_a_company
+msgid "The employee adress has a company linked"
+msgstr "Aan het werknemer address is een bedrijf gekoppeld"
+
+#. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per department in company!"
 msgstr "De naam van de vacature moet uniek zijn per afdeling in het bedrijf!"
-
-#. module: hr
-#: model:res.groups,comment:hr.group_hr_attendance
-msgid ""
-"The user will gain access to the human resources attendance menu, enabling "
-"him to manage his own attendance."
-msgstr ""
-"De gebruiker krijgt toegang tot het HR aanwezigheid menu, dit geeft de "
-"mogelijkheid om eigen aanwezigheid aan te passen."
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee_image
@@ -813,19 +806,14 @@ msgstr ""
 "werknemer. Maximale grootte 1024x1024px."
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_time_efficiency
-msgid ""
-"This field is used to calculate the the expected duration of a work order at"
-" this work center. For example, if a work order takes one hour and the "
-"efficiency factor is 100%, then the expected duration will be one hour. If "
-"the efficiency factor is 200%, however the expected duration will be 30 "
-"minutes."
-msgstr ""
-
-#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job_expected_employees
 msgid "Total Forecasted Employees"
 msgstr "Totaal aantal verwachte werknemers"
+
+#. module: hr
+#: model:hr.job,name:hr.job_trainee
+msgid "Trainee"
+msgstr "Stagiair"
 
 #. module: hr
 #: model:ir.ui.view,arch_db:hr.hr_kanban_view_employees
@@ -836,9 +824,15 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_hr_employee_login
-msgid "Used to log into the system"
-msgstr "Gebruikt voor aanmelding aan het systeem"
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid ""
+"Use here the home address of the employee.\n"
+"                                            This private address is used in the expense report reimbursement document.\n"
+"                                            It should be different from the work address."
+msgstr ""
+"Gebruik hier het privé adres van de medewerker\n"
+"Het privé adres is gebruikt voor het declaratieformulier.\n"
+"Het zou anders moeten zijn dan het werk adres."
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_user_id
@@ -849,6 +843,21 @@ msgstr "Gebruiker"
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
 msgstr "Gebruikers"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.hr_job_view_kanban
+msgid "Vacancies :"
+msgstr "Vacatures :"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_expire
+msgid "Visa Expire Date"
+msgstr "Visa vervaldatum"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_visa_no
+msgid "Visa No"
+msgstr "Visa nr."
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -870,12 +879,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_address_id
 msgid "Work Address"
-msgstr ""
+msgstr "Werkadres"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_email
 msgid "Work Email"
 msgstr "E-mail werk"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Information"
+msgstr "Werk informatie"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_location
@@ -888,14 +902,24 @@ msgid "Work Mobile"
 msgstr "Mobiel nummer werk"
 
 #. module: hr
+#: model:ir.ui.view,arch_db:hr.res_config_settings_view_form
+msgid "Work Organization"
+msgstr "Werk organisatie"
+
+#. module: hr
+#: model:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Work Permit"
+msgstr "Werkvergunning"
+
+#. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee_permit_no
+msgid "Work Permit No"
+msgstr "Werkvergunning nr."
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_work_phone
 msgid "Work Phone"
 msgstr "Telefoon werk"
-
-#. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_employee_calendar_id
-msgid "Working Time"
-msgstr "Werktijd"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -925,12 +949,6 @@ msgstr ""
 "contract op met uw HR manager."
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "alias %s does not accept unknown employees"
-msgstr "alias %s accepteert geen onbekende medewerkers"
-
-#. module: hr
 #: model:ir.ui.view,arch_db:hr.view_department_form
 msgid "department"
 msgstr "afdeling"
@@ -946,10 +964,14 @@ msgid "e.g. Sales Manager"
 msgstr "Bijv. Verkoopmanager"
 
 #. module: hr
-#: code:addons/hr/models/mail_thread.py:41
-#, python-format
-msgid "skipping"
-msgstr "overslaan"
+#: model:ir.model,name:hr.model_mail_alias_mixin
+msgid "mail.alias.mixin"
+msgstr "mail.alias.mixin"
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user

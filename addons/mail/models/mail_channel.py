@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import base64
 from email.utils import formataddr
 
 import re
@@ -9,13 +9,13 @@ import uuid
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import ormcache, pycompat
+from odoo.tools import ormcache
 from odoo.tools.safe_eval import safe_eval
 
 
 class ChannelPartner(models.Model):
     _name = 'mail.channel.partner'
-    _description = 'Last Seen Many2many'
+    _description = 'Listeners of a Channel'
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
@@ -41,7 +41,7 @@ class Channel(models.Model):
 
     def _get_default_image(self):
         image_path = modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return tools.image_resize_image_big(base64.b64encode(open(image_path, 'rb').read()))
 
     @api.model
     def default_get(self, fields):
@@ -197,15 +197,13 @@ class Channel(models.Model):
         return groups
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
+    def _notify_specific_email_values(self, message):
         self.ensure_one()
-        res = super(Channel, self).message_get_email_values(notif_mail=notif_mail)
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers.update(safe_eval(res['headers']))
-            except Exception:
-                pass
+        res = super(Channel, self)._notify_specific_email_values(message)
+        try:
+            headers = safe_eval(res.get('headers', dict()))
+        except Exception:
+            headers = {}
         headers['Precedence'] = 'list'
         # avoid out-of-office replies from MS Exchange
         # http://blogs.technet.com/b/exchange/archive/2006/10/06/3395024.aspx
@@ -229,21 +227,21 @@ class Channel(models.Model):
         return super(Channel, self).message_receive_bounce(email, partner, mail_id=mail_id)
 
     @api.multi
-    def message_get_recipient_values(self, notif_message=None, recipient_ids=None):
+    def _notify_email_recipients(self, message, recipient_ids):
         # real mailing list: multiple recipients (hidden by X-Forge-To)
         if self.alias_domain and self.alias_name:
             return {
                 'email_to': ','.join(formataddr((partner.name, partner.email)) for partner in self.env['res.partner'].sudo().browse(recipient_ids)),
                 'recipient_ids': [],
             }
-        return super(Channel, self).message_get_recipient_values(notif_message=notif_message, recipient_ids=recipient_ids)
+        return super(Channel, self)._notify_email_recipients(message, recipient_ids)
 
     @api.multi
     @api.returns('self', lambda value: value.id)
-    def message_post(self, body='', subject=None, message_type='notification', subtype=None, parent_id=False, attachments=None, content_subtype='html', **kwargs):
+    def message_post(self, **kwargs):
         # auto pin 'direct_message' channel partner
         self.filtered(lambda channel: channel.channel_type == 'chat').mapped('channel_last_seen_partner_ids').write({'is_pinned': True})
-        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(body=body, subject=subject, message_type=message_type, subtype=subtype, parent_id=parent_id, attachments=attachments, content_subtype=content_subtype, **kwargs)
+        message = super(Channel, self.with_context(mail_create_nosubscribe=True)).message_post(**kwargs)
         return message
 
     def _alias_check_contact(self, message, message_dict, alias):
@@ -251,7 +249,7 @@ class Channel(models.Model):
             author = self.env['res.partner'].browse(message_dict.get('author_id', False))
             if not author or author not in self.channel_partner_ids:
                 return {
-                    'error_mesage': _('restricted to channel members'),
+                    'error_message': _('restricted to channel members'),
                 }
             return True
         return super(Channel, self)._alias_check_contact(message, message_dict, alias)
@@ -302,6 +300,8 @@ class Channel(models.Model):
             of the received message indicates on wich mail channel the message should be displayed.
             :param : mail.message to broadcast
         """
+        if not self:
+            return
         message.ensure_one()
         notifications = self._channel_message_notifications(message)
         self.env['bus.bus'].sendmany(notifications)
@@ -354,6 +354,13 @@ class Channel(models.Model):
                                           .channel_partner_ids
                                           .filtered(lambda p: p.id != self.env.user.partner_id.id)
                                           .read(['id', 'name', 'im_status']))
+
+            # add last message preview (only used in mobile)
+            if self._context.get('isMobile', False):
+                last_message = channel.channel_fetch_preview()
+                if last_message:
+                    info['last_message'] = last_message[0].get('last_message')
+
             # add user session state, if available and if user is logged
             if partner_channels.ids:
                 partner_channel = partner_channels.filtered(lambda c: channel.id == c.channel_id.id)
@@ -572,9 +579,9 @@ class Channel(models.Model):
             'email_send': False,
             'channel_partner_ids': [(4, self.env.user.partner_id.id)]
         })
-        channel_info = new_channel.channel_info('creation')[0]
         notification = _('<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (new_channel.id, new_channel.name,)
         new_channel.message_post(body=notification, message_type="notification", subtype="mail.mt_comment")
+        channel_info = new_channel.channel_info('creation')[0]
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), channel_info)
         return channel_info
 
@@ -619,7 +626,7 @@ class Channel(models.Model):
             channel = channels_preview[message['id']]
             del(channel['message_id'])
             channel['last_message'] = message
-        return list(pycompat.values(channels_preview))
+        return list(channels_preview.values())
 
     #------------------------------------------------------
     # Commands

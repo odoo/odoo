@@ -2,8 +2,8 @@
 ;(function(window) {
 if (typeof window.window != "undefined" && window.document)
     return;
-if (window.require && window.define)
-    return;
+
+var define = ace.define, require = ace.require;
 
 if (!window.console) {
     window.console = function() {

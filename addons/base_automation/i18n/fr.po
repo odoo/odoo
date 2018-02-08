@@ -3,9 +3,7 @@
 # * base_automation
 # 
 # Translators:
-# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2017
-# Florian Hatat <mininet@wanadoo.fr>, 2017
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
 # Martin Trigaux <mat@odoo.com>, 2017
@@ -13,21 +11,23 @@
 # Olivier Dony <odo@odoo.com>, 2017
 # Xavier Symons <xsy@openerp.com>, 2017
 # Lionel Sausin <ls@numerigraphe.com>, 2017
+# Florian Hatat <mininet@wanadoo.fr>, 2017
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # Agathe Mollé <molleagathe@gmail.com>, 2017
-# Clo <clo@odoo.com>, 2017
-# Frédéric LIETART <stuff@tifred.fr>, 2017
 # Fabien Pinckaers <fp@openerp.com>, 2017
-# Kévin R. <realrom@hotmail.fr>, 2017
-# Quentin THEURET <quentin@theuret.net>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2017
+# Quentin THEURET <odoo@kerpeo.com>, 2017
 # Melanie Bernard <mbe@odoo.com>, 2017
+# Sébastien Le Ray <sebastien-github@orniz.org>, 2017
+# Eloïse Stilmant <est@odoo.com>, 2017
+# leemannd <denis.leemann@camptocamp.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Melanie Bernard <mbe@odoo.com>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: leemannd <denis.leemann@camptocamp.com>, 2017\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,18 +36,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_website_published
-msgid ""
-"A code server action can be executed from the website, using a dedicated "
-"controller. The address is <base>/website/action/<website_path>. Set this "
-"field as True to allow users to run this action. If it is set to False the "
-"action cannot be run through the website."
-msgstr ""
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_help
 msgid "Action Description"
-msgstr ""
+msgstr "Description de l'action"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_name
@@ -57,7 +48,7 @@ msgstr "Nom de l'action"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_line_test
 msgid "Action Rule Line Test"
-msgstr ""
+msgstr "Test de ligne de règle d'action"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation_lead_test
@@ -73,11 +64,6 @@ msgstr "Action à effectuer"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_type
 msgid "Action Type"
 msgstr "Type d'action"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_menu_ir_values_id
-msgid "Action on Object"
-msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_active
@@ -96,9 +82,19 @@ msgid "Add Followers"
 msgstr "Ajouter des abonnés"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
+msgid "Apply on"
+msgstr "Appliqué sur"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
+msgid "Assigned to admin user"
+msgstr "Assigné à l'administrateur"
+
+#. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 msgid "Automated Action"
-msgstr ""
+msgstr "Action Automatisée"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
@@ -112,11 +108,6 @@ msgid "Automation"
 msgstr "Automatisation"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_published
-msgid "Available on the Website"
-msgstr "Disponible sur le site web"
-
-#. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
@@ -124,14 +115,40 @@ msgid "Base Action Rule: check and execute"
 msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_model_id
-msgid "Base Model"
-msgstr "Modèle de base"
+#: model:base.automation,name:base_automation.test_rule_recursive
+#: model:ir.actions.server,name:base_automation.test_rule_recursive_ir_actions_server
+msgid "Base Automation: test recursive rule"
+msgstr ""
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_model_id
-msgid "Base model on which the server action runs."
-msgstr "Modèle de base sur lequel l'action serveur s'exécute."
+#: model:base.automation,name:base_automation.test_rule_on_create
+#: model:ir.actions.server,name:base_automation.test_rule_on_create_ir_actions_server
+msgid "Base Automation: test rule on create"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_recompute
+#: model:ir.actions.server,name:base_automation.test_rule_on_recompute_ir_actions_server
+msgid "Base Automation: test rule on recompute"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_line
+#: model:ir.actions.server,name:base_automation.test_rule_on_line_ir_actions_server
+msgid "Base Automation: test rule on secondary model"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_ir_actions_server
+msgid "Base Automation: test rule on write"
+msgstr ""
+
+#. module: base_automation
+#: model:base.automation,name:base_automation.test_rule_on_write_check_context
+#: model:ir.actions.server,name:base_automation.test_rule_on_write_check_context_ir_actions_server
+msgid "Base Automation: test rule on write check context"
+msgstr ""
 
 #. module: base_automation
 #: selection:base.automation,trigger:0
@@ -149,9 +166,14 @@ msgid "Before Update Domain"
 msgstr "Domaine avant la mise-à-jour"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_pre_id
-msgid "Before Update Filter"
-msgstr "Filtre avant la mise à jour"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
+msgid "Binding Model"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_type
+msgid "Binding Type"
+msgstr ""
 
 #. module: base_automation
 #: selection:base.automation.lead.test,state:0
@@ -197,7 +219,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_crud_model_id
 msgid "Create/Write Target Model"
-msgstr ""
+msgstr "Créer/Enregistrer le modèle cible"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_create_uid
@@ -217,6 +239,11 @@ msgstr "Créé le"
 #: selection:base.automation,trg_date_range_type:0
 msgid "Days"
 msgstr "Jours"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_deadline
+msgid "Deadline"
+msgstr "Echéance"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_range
@@ -244,11 +271,6 @@ msgid "Display Name"
 msgstr "Nom affiché"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
-msgid "Domain"
-msgstr "Domaine"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_template_id
 msgid "Email Template"
 msgstr "Modèle de courriel"
@@ -257,11 +279,6 @@ msgstr "Modèle de courriel"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_xml_id
 msgid "External ID"
 msgstr "ID Externe"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_id
-msgid "Filter"
-msgstr "Filtrer"
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -276,13 +293,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_xml_id
-msgid "ID of the action if defined in a XML file"
-msgstr "Identifiant de l'action si elle est définie dans un fichier XML"
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_id
 msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
@@ -292,7 +303,6 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_domain
-#: model:ir.model.fields,help:base_automation.field_base_automation_filter_pre_id
 msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
@@ -304,11 +314,6 @@ msgstr ""
 #: selection:base.automation.lead.test,state:0
 msgid "In Progress"
 msgstr "En cours"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_menu_ir_values_id
-msgid "IrValues entry of the related more menu entry action"
-msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_customer
@@ -367,6 +372,7 @@ msgid "Minutes"
 msgstr "Minutes"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_model_id
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_model_name
 msgid "Model"
 msgstr "Modèle"
@@ -385,6 +391,11 @@ msgstr ""
 "Modèle pour la création / mise à jour d'un enregistrement. Renseigner ce "
 "champ uniquement pour spécifier un modèle différent de celui du modèle de "
 "base."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation_model_id
+msgid "Model on which the server action runs."
+msgstr ""
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -446,6 +457,11 @@ msgid "Pending"
 msgstr "En attente"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_priority
+msgid "Priority"
+msgstr "Priorité"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_link_field_id
 msgid ""
 "Provide the field used to link the newly created recordon the record on used"
@@ -483,9 +499,11 @@ msgid "Server Actions"
 msgstr "Actions-serveur"
 
 #. module: base_automation
-#: model:ir.ui.view,arch_db:base_automation.view_base_automation_form
-msgid "Set selection based on a search filter:"
-msgstr "Déterminez la sélection selon un filtre de recherche :"
+#: model:ir.model.fields,help:base_automation.field_base_automation_binding_model_id
+msgid ""
+"Setting a value makes this action available in the sidebar for the given "
+"model."
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_state
@@ -498,19 +516,14 @@ msgid "Subject"
 msgstr "Sujet"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_website_url
-msgid "The full URL to access the server action through the website."
-msgstr "L'URL complet pour accéder au serveur via le site web."
+#: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
+msgid "Trigger Condition"
+msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_trg_date_id
 msgid "Trigger Date"
 msgstr "Date de déclenchement"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_trigger
-msgid "Trigger condition"
-msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_state
@@ -553,16 +566,6 @@ msgstr "Utilisateur"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_fields_lines
 msgid "Value Mapping"
 msgstr "Correspondance des valeurs"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_path
-msgid "Website Path"
-msgstr "Chemin du site web"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_website_url
-msgid "Website Url"
-msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_trg_date_calendar_id

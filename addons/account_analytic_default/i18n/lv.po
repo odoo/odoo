@@ -1,33 +1,42 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_analytic_default
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 15:43+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Latvian (http://www.transifex.com/odoo/odoo-9/language/lv/)\n"
-"Language: lv\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
-"2);\n"
+"Language: lv\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);\n"
 
 #. module: account_analytic_default
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_product_rules_count
-#: model:ir.model.fields,field_description:account_analytic_default.field_product_template_rules_count
-msgid "# Analytic Rules"
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<i class=\"fa fa-calendar\"/> From"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Customer</strong>"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "<strong>Product</strong>"
 msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Accounts"
-msgstr "Konti"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_analytic_id
@@ -37,25 +46,23 @@ msgstr "Analītiskais Konts"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
-#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_tree
 msgid "Analytic Defaults"
-msgstr "Analītikas Noklusētie Iestatījumi"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Analītiskais Sadalījums"
+msgstr ""
 
 #. module: account_analytic_default
+#: model:ir.actions.act_window,name:account_analytic_default.action_product_default_list
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-#: model:ir.ui.view,arch_db:account_analytic_default.product_form_view_default_analytic_button
-#: model:ir.ui.view,arch_db:account_analytic_default.product_template_view_default_analytic_button
 msgid "Analytic Rules"
-msgstr "Noteikumi Analītiskajiem Aprēķiniem"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_company_id
@@ -66,7 +73,7 @@ msgstr "Uzņēmums"
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form
 msgid "Conditions"
-msgstr "Nosacījumi"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_uid
@@ -77,6 +84,11 @@ msgstr "Izveidoja"
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_create_date
 msgid "Created on"
 msgstr "Izveidots"
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.res_config_settings_view_form
+msgid "Default Analytic Values"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_date_stop
@@ -96,18 +108,13 @@ msgstr ""
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_stop
 msgid "End Date"
-msgstr "Beigu datums"
-
-#. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
-msgid "Entries"
-msgstr "Ieraksti"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,help:account_analytic_default.field_account_analytic_default_sequence
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "Tiek norādīta secība, kā tiks attēlots analītiskais sadalījums."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
@@ -146,16 +153,10 @@ msgid "Partner"
 msgstr "Partneris"
 
 #. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_product
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_product_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "Product"
 msgstr "Produkts"
-
-#. module: account_analytic_default
-#: model:ir.model,name:account_analytic_default.model_product_template
-msgid "Product Template"
-msgstr "Produkta Veidne"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
@@ -200,10 +201,15 @@ msgstr "Sērija"
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_date_start
 msgid "Start Date"
-msgstr "Sākuma datums"
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model.fields,field_description:account_analytic_default.field_account_analytic_default_user_id
 #: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_form_search
 msgid "User"
-msgstr "Lietotājs"
+msgstr ""
+
+#. module: account_analytic_default
+#: model:ir.ui.view,arch_db:account_analytic_default.view_account_analytic_default_kanban
+msgid "to"
+msgstr ""

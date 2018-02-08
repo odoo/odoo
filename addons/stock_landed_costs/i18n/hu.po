@@ -5,14 +5,14 @@
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Oregional <geza.nagy@oregional.hu>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:52+0000\n"
+"PO-Revision-Date: 2017-09-20 09:52+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,10 +21,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_landed_costs
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:328
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:332
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:349
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:353
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:357
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:374
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:378
 #, python-format
 msgid " already out"
 msgstr " már kint lévő"
@@ -114,7 +114,7 @@ msgid "Cost Lines"
 msgstr "Költség tételsorok"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:79
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:90
 #, python-format
 msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
@@ -174,6 +174,7 @@ msgid "Equal"
 msgstr "Egyenlő"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,help:stock_landed_costs.field_product_product_split_method
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template_split_method
 msgid ""
 "Equal : Cost will be equally divided.\n"
@@ -221,6 +222,12 @@ msgid "Information"
 msgstr "Információ"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_landed_cost_ok
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
+msgid "Is a Landed Cost"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_description
 msgid "Item Description"
 msgstr "Tétel leírás"
@@ -232,6 +239,7 @@ msgstr "Könyvelési tétel"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_cost_id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_landed_cost_value
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_cost_id
 msgid "Landed Cost"
 msgstr "Teljes költség ár (termék+szálítás+biztosítás+...)"
@@ -247,9 +255,14 @@ msgid "Landed Cost Type"
 msgstr "Teljes költség ár (termék+szálítás+biztosítás+...) típus"
 
 #. module: stock_landed_costs
+#: model:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+msgid "Landed Cost Types"
+msgstr ""
+
+#. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
-#: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_landed_cost_ok
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost
+#: model:ir.ui.view,arch_db:stock_landed_costs.view_product_landed_cost_form
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_tree
@@ -300,7 +313,7 @@ msgid "Name"
 msgstr "Név"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:77
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:88
 #, python-format
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
@@ -309,7 +322,7 @@ msgstr ""
 "újraszámíthatná a teljes költséget /termék+szállítás+biztosítás+.../"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:86
 #, python-format
 msgid "Only draft landed costs can be validated"
 msgstr "Kizárólag a teljes költség sablont leget jóváhagyni"
@@ -320,7 +333,7 @@ msgid "Pickings"
 msgstr "Kiválogatások"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:320
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:295
 #, python-format
 msgid "Please configure Stock Expense Account for product: %s."
 msgstr ""
@@ -359,6 +372,7 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_product_product_split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template_split_method
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines_split_method
 msgid "Split Method"
@@ -385,6 +399,7 @@ msgid "Stock Landed Cost Lines"
 msgstr "Raktárkészlet össz ár (termék+száll+bizt+...) tételsorok"
 
 #. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_stock_move
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines_move_id
 msgid "Stock Move"
 msgstr "Készletmozgás"
@@ -395,7 +410,7 @@ msgid "Stock Valuation Adjustment Lines"
 msgstr "Raktár készletezés beállító tételsorok"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:171
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:147
 #, python-format
 msgid ""
 "The selected picking does not contain any move that would be impacted by "
@@ -415,12 +430,17 @@ msgid "Total"
 msgstr "Összesen"
 
 #. module: stock_landed_costs
+#: model:ir.model.fields,field_description:stock_landed_costs.field_stock_move_total_value
+msgid "Total Value"
+msgstr "Összérték"
+
+#. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Validate"
 msgstr "Jóváhagyott"
 
 #. module: stock_landed_costs
-#: code:addons/stock_landed_costs/models/stock_landed_cost.py:69
+#: code:addons/stock_landed_costs/models/stock_landed_cost.py:80
 #, python-format
 msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "

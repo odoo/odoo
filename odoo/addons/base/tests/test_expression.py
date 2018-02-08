@@ -5,7 +5,7 @@ import psycopg2
 
 from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 from odoo.osv import expression
 
 
@@ -85,10 +85,10 @@ class TestExpression(TransactionCase):
             'b ab': [cids['B'], cids['AB']],
         }
         pids = {}
-        for name, cat_ids in pycompat.items(partners_config):
+        for name, cat_ids in partners_config.items():
             pids[name] = partners.create({'name': name, 'category_id': [(6, 0, cat_ids)]}).id
 
-        base_domain = [('id', 'in', list(pycompat.values(pids)))]
+        base_domain = [('id', 'in', list(pids.values()))]
 
         def test(op, value, expected):
             found_ids = partners.search(base_domain + [('category_id', op, value)]).ids
@@ -688,7 +688,7 @@ class TestAutoJoin(TransactionCase):
         self.assertIn('res_partner_bank', sql_query[0],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect main table")
 
-        expected = "%s::text like %s" % (unaccent('"res_partner_bank"."sanitized_acc_number"'), unaccent('%s'))
+        expected = "%s like %s" % (unaccent('"res_partner_bank"."sanitized_acc_number"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join off: ('bank_ids.sanitized_acc_number', 'like', '..') first query incorrect where condition")
 
@@ -728,7 +728,7 @@ class TestAutoJoin(TransactionCase):
         self.assertIn('"res_partner_bank" as "res_partner__bank_ids"', sql_query[0],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect join")
 
-        expected = "%s::text like %s" % (unaccent('"res_partner__bank_ids"."sanitized_acc_number"'), unaccent('%s'))
+        expected = "%s like %s" % (unaccent('"res_partner__bank_ids"."sanitized_acc_number"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('bank_ids.sanitized_acc_number', 'like', '..') query incorrect where condition")
         
@@ -811,7 +811,7 @@ class TestAutoJoin(TransactionCase):
         self.assertIn('"res_country"', sql_query[0],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect main table")
 
-        expected = "%s::text like %s" % (unaccent('"res_country"."code"'), unaccent('%s'))
+        expected = "%s like %s" % (unaccent('"res_country"."code"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
 
@@ -845,7 +845,7 @@ class TestAutoJoin(TransactionCase):
         self.assertIn('"res_country" as "res_country_state__country_id"', sql_query[0],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join")
 
-        expected = "%s::text like %s" % (unaccent('"res_country_state__country_id"."code"'), unaccent('%s'))
+        expected = "%s like %s" % (unaccent('"res_country_state__country_id"."code"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
         
@@ -879,7 +879,7 @@ class TestAutoJoin(TransactionCase):
         self.assertIn('"res_country" as "res_partner__state_id__country_id"', sql_query[0],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join")
 
-        expected = "%s::text like %s" % (unaccent('"res_partner__state_id__country_id"."code"'), unaccent('%s'))
+        expected = "%s like %s" % (unaccent('"res_partner__state_id__country_id"."code"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect where condition")
         
@@ -909,7 +909,7 @@ class TestAutoJoin(TransactionCase):
         # Test produced queries that domains effectively present
         sql_query = self.query_list[0].get_sql()
 
-        expected = "%s::text like %s" % (unaccent('"res_partner__child_ids__bank_ids"."sanitized_acc_number"'), unaccent('%s'))
+        expected = "%s like %s" % (unaccent('"res_partner__child_ids__bank_ids"."sanitized_acc_number"::text'), unaccent('%s'))
         self.assertIn(expected, sql_query[1],
             "_auto_join on one2many with domains incorrect result")
         # TDE TODO: check first domain has a correct table name

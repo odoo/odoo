@@ -1,3 +1,4 @@
+(function() {var define = ace.define, require = ace.require;
 define("ace/mode/python_highlight_rules", ["require", "exports", "module", "ace/lib/oop", "ace/mode/text_highlight_rules"], function(e, t, n) {
     "use strict";
     var r = e("../lib/oop"),
@@ -183,3 +184,4 @@ define("ace/mode/python_highlight_rules", ["require", "exports", "module", "ace/
             }, this.$id = "ace/mode/python"
         }.call(a.prototype), t.Mode = a
 });
+})();

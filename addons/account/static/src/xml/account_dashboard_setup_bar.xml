@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- This template defines the setup bar, at the top of account module's dashboard -->
+    <t t-name="account.AccountDashboardSetupBar">
+        <div class="o_account_dashboard_header hidden-xs o_form_view" t-if="values['show_setup_bar']">
+            <div class="o_form_statusbar">
+                <div class="o_statusbar_status" data-original-title="" title="" >
+                    <button name="setting_opening_move_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['initial_balance'] and 'o_action_done' or ''}">
+                        <i class="fa fa-check" t-if="values['initial_balance']"/>
+                        <b class="o_account_dashboard_index">5</b>
+                        Initial Balances
+                    </button>
+                    <button name="setting_chart_of_accounts_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['chart_of_accounts'] and 'o_action_done' or ''}" >
+                        <i class="fa fa-check" t-if="values['chart_of_accounts']"/>
+                        <b class="o_account_dashboard_index">4</b>
+                        Chart of Accounts
+                    </button>
+                    <button name="setting_init_fiscal_year_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['fiscal_year'] and 'o_action_done' or ''}">
+                        <i class="fa fa-check" t-if="values['fiscal_year']"/>
+                        <b class="o_account_dashboard_index">3</b>
+                        Fiscal Year
+                    </button>
+                    <button name="setting_init_bank_account_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['bank'] and 'o_action_done' or ''}">
+                        <i class="fa fa-check" t-if="values['bank']"/>
+                        <b class="o_account_dashboard_index">2</b>
+                        Bank Accounts
+                    </button>
+                    <button name="setting_init_company_action" type="company_object" t-attf-class="btn btn-sm o_arrow_button btn-default account_setup_dashboard_action #{values['company'] and 'o_action_done' or ''}">
+                        <i class="fa fa-check" t-if="values['company']"/>
+                        <b class="o_account_dashboard_index">1</b>
+                        Company Data
+                    </button>
+
+                    <h4 class="text-muted">Configuration Steps</h4>
+                </div>
+                <div class="pull-right" style="padding: 7px 0;">
+                    <button aria-hidden="true" data-dismiss="modal" type="company_object" name="setting_hide_setup_bar" class="account_setup_dashboard_action close">×</button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

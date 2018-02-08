@@ -33,7 +33,7 @@
             <field name="view_id" ref="view_budget_post_tree"/>
             <field name="search_view_id" ref="view_budget_post_search"/>
         </record>
-        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="account.account_management_menu" sequence="3"/>
+        <menuitem action="open_budget_post_form" id="menu_budget_post_form" parent="account.account_management_menu" sequence="5"/>
 
 
         <record model="ir.ui.view" id="view_budget_post_form">
@@ -97,7 +97,7 @@
                                 <field name="crossovered_budget_line" context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
                                     <tree string="Budget Lines">
                                         <field name="general_budget_id"/>
-                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" required="1"/>
                                         <field name="date_from"/>
                                         <field name="date_to"/>
                                         <field name="paid_date" groups="base.group_no_one"/>
@@ -111,7 +111,7 @@
                                             <group>
                                                 <field name="general_budget_id"/>
                                                 <field name="planned_amount" widget="monetary"/>
-                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" required="1"/>
                                             </group>
                                             <group>
                                                 <label for="date_from" string="Period"/>
@@ -199,8 +199,8 @@
                     <field name="name" filter_domain="[('name','ilike',self)]" string="Budget"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <filter string="Draft" domain="[('state','=','draft')]" help="Draft Budgets"/>
-                    <filter string="To Approve" domain="[('state','=','confirm')]" help="To Approve Budgets" />
+                    <filter string="Draft" name="draft" domain="[('state','=','draft')]" help="Draft Budgets"/>
+                    <filter string="To Approve" name="toapprove" domain="[('state','=','confirm')]" help="To Approve Budgets" />
                     <field name="state"/>
                 </search>
             </field>
@@ -214,8 +214,8 @@
             <field name="view_id" ref="crossovered_budget_view_tree"/>
             <field name="search_view_id" ref="view_crossovered_budget_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new budget.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new budget
               </p><p>
                 A budget is a forecast of your company's income and/or expenses
                 expected for a period in the future. A budget is defined on some
@@ -230,7 +230,7 @@
               </p>
             </field>
         </record>
-        <menuitem parent="account.menu_finance_entries"
+        <menuitem parent="account.menu_finance_entries_management"
             id="menu_act_crossovered_budget_view"
             name="Budgets"
             action="act_crossovered_budget_view" sequence="60" 

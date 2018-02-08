@@ -3,16 +3,17 @@
 # * barcodes
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -151,7 +152,7 @@ msgstr "信用卡"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:102
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:359
 #, python-format
 msgid "Discard"
 msgstr "放弃"
@@ -190,14 +191,21 @@ msgstr "编码"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:64
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:301
+#, python-format
+msgid "Error : Barcode command is undefined"
+msgstr "错误：条码命令未定义"
+
+#. module: barcodes
+#. openerp-web
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:63
 #, python-format
 msgid "Error : Document not editable"
 msgstr "错误：单据不可编辑"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:68
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:332
 #, python-format
 msgid "Error : No last scanned barcode"
 msgstr "错误 : 没有最近扫描到的条码"
@@ -285,7 +293,7 @@ msgstr "规则"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:88
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:352
 #, python-format
 msgid "Select"
 msgstr "选择"
@@ -297,7 +305,7 @@ msgstr "序号"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:87
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:351
 #, python-format
 msgid "Set quantity"
 msgstr "设置数量"
@@ -339,14 +347,14 @@ msgstr "这条规则只适用于特殊编码的条形编码"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:64
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:64
 #, python-format
 msgid "To modify this document, please first start edition."
 msgstr "要修改文档，请先开始编辑"
 
 #. module: barcodes
 #. openerp-web
-#: code:addons/barcodes/static/src/js/form_view_barcode_handler.js:68
+#: code:addons/barcodes/static/src/js/barcode_form_view.js:333
 #, python-format
 msgid "To set the quantity please scan a barcode first."
 msgstr "设置数量前请先扫描条码."

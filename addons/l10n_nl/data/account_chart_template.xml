@@ -8,10 +8,13 @@
            <field name="code">1060</field>
             <field name="reconcile" eval="True"/>
             <field name="user_type_id" ref="account.data_account_type_liquidity"/>
+            <field name="tag_ids" eval="[(6,0,[ref('account_tag_25')])]"/>
         </record>
 
         <record id="l10nnl_chart_template" model="account.chart.template">
             <field name="name">Nederlands Grootboekschema</field>
+            <field name="cash_account_code_prefix">101</field>
+            <field name="bank_account_code_prefix">103</field>
             <field name="code_digits">6</field>
             <field name="currency_id" ref="base.EUR"/>
             <field name="transfer_account_id" ref="transfer_account_id"/>

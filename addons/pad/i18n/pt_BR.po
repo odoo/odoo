@@ -8,10 +8,10 @@
 # Mateus Lopes <mateus1@gmail.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Mateus Lopes <mateus1@gmail.com>, 2016\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
 msgstr "Chave API"
 
@@ -36,31 +36,16 @@ msgid "Display Name"
 msgstr "Nome para Exibição"
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_base_config_settings_pad_key
 #: model:ir.model.fields,help:pad.field_res_company_pad_key
+#: model:ir.model.fields,help:pad.field_res_config_settings_pad_key
 msgid "Etherpad lite api key."
 msgstr "chave da api do Etherpad lite."
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_base_config_settings_pad_server
 #: model:ir.model.fields,help:pad.field_res_company_pad_server
+#: model:ir.model.fields,help:pad.field_res_config_settings_pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr "Servidor Etherpad lite. Exemplo: beta.primarypad.com"
-
-#. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/js/pad.js:27
-#, python-format
-msgid "Exit full screen"
-msgstr ""
-
-#. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/js/pad.js:27
-#: code:addons/pad/static/src/xml/pad.xml:14
-#, python-format
-msgid "Full screen"
-msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_id
@@ -73,12 +58,19 @@ msgid "Last Modified on"
 msgstr "Última Modificação em"
 
 #. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:147
+#, python-format
+msgid "Loading"
+msgstr "Carregando"
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company_pad_key
 msgid "Pad Api Key"
 msgstr "Chave da Api Pad"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_base_config_settings_pad_key
+#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_key
 msgid "Pad Api Key *"
 msgstr ""
 
@@ -88,12 +80,12 @@ msgid "Pad Server"
 msgstr "Servidor Pad"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_base_config_settings_pad_server
+#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_server
 msgid "Pad Server *"
 msgstr ""
 
 #. module: pad
-#: code:addons/pad/models/pad.py:57
+#: code:addons/pad/models/pad.py:58
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -112,31 +104,26 @@ msgid ""
 msgstr ""
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "Server"
 msgstr "Servidor"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:55
+#: code:addons/pad/static/src/js/pad.js:166
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr "Este Pad será inicializado na primeira edição"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:52
+#: code:addons/pad/static/src/js/pad.js:160
 #, python-format
 msgid "Unable to load pad"
 msgstr "Impossível carregar o pad"
 
 #. module: pad
-#: model:ir.model,name:pad.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: pad
-#: model:ir.ui.view,arch_db:pad.base_config_settings_view_form_inherit_pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr "ex. beta.primarypad.com"
 
@@ -144,3 +131,8 @@ msgstr "ex. beta.primarypad.com"
 #: model:ir.model,name:pad.model_pad_common
 msgid "pad.common"
 msgstr "pad.common"
+
+#. module: pad
+#: model:ir.model,name:pad.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

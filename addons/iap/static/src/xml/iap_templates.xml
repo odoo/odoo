@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+
+    <!-- LAYOUT TEMPLATES -->
+    <div t-name="iap.redirect_to_odoo_credit">
+        <t t-if="data.body">
+            <div t-raw="data.body"/>
+        </t>
+        <t t-if="!data.body">
+            <t t-if="data.message">
+                <span t-esc="data.message"/>
+            </t>
+            <t t-if="!data.message">
+                <span>Insufficient credit to perform this service.</span>
+            </t>
+        </t>
+    </div>
+
+    <t t-extend="DashboardApps">
+        <t t-jquery=".o_web_settings_dashboard_pills" t-operation="after">
+            <div class="text-center" style="display: inline-block">
+                <a t-att-href="widget.data.url" target="_blank">
+                <i class="fa fa-money fa-2x text-muted"/> In-App Purchases</a>
+            </div>
+        </t>
+    </t>
+
+</template>

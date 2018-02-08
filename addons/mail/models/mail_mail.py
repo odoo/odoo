@@ -12,8 +12,7 @@ from email.utils import formataddr
 
 from odoo import _, api, fields, models
 from odoo import tools
-from odoo.addons.base.ir.ir_mail_server import MailDeliveryException
-from odoo.tools import pycompat
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -62,8 +61,6 @@ class MailMail(models.Model):
         # notification field: if not set, set if mail comes from an existing mail.message
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        if not values.get('mail_message_id'):
-            self = self.with_context(message_create_from_mail_mail=True)
         return super(MailMail, self).create(values)
 
     @api.multi
@@ -169,7 +166,7 @@ class MailMail(models.Model):
           - else fallback on mail.email_to splitting """
         self.ensure_one()
         if partner:
-            email_to = [formataddr((partner.name, partner.email))]
+            email_to = [formataddr((partner.name or 'False', partner.email or 'False'))]
         else:
             email_to = tools.email_split_and_format(self.email_to)
         return email_to
@@ -205,7 +202,7 @@ class MailMail(models.Model):
             groups[mail.mail_server_id.id].append(mail.id)
         sys_params = self.env['ir.config_parameter'].sudo()
         batch_size = int(sys_params.get_param('mail.session.batch.size', 1000))
-        for server_id, record_ids in pycompat.items(groups):
+        for server_id, record_ids in groups.items():
             for mail_batch in tools.split_every(batch_size, record_ids):
                 yield server_id, mail_batch
 

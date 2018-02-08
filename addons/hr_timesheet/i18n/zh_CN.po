@@ -3,15 +3,20 @@
 # * hr_timesheet
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
+# zyx <zheng.yaxi@elico-corp.com>, 2017
+# Maie <m@maie.name>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# waveyeung <waveyeung@qq.com>, 2017
+# Xu Lei <xulei8@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2016\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: Xu Lei <xulei8@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,9 +30,19 @@ msgid "<span class=\"o_label\">Timesheets</span>"
 msgstr "<span class=\"o_label\">工时表</span>"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
+msgid "<span class=\"o_stat_text\">Timesheets</span>"
+msgstr "<span class=\"o_stat_text\">工时表</span>"
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "<span>Timesheet Entries</span>"
 msgstr "<span>工时表条目</span>"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
+msgid "<strong>Duration: </strong>"
+msgstr "<strong>时长：</strong>"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -35,16 +50,15 @@ msgid "<strong>Total</strong>"
 msgstr "<strong>总计</strong>"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_by_project
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Activities"
 msgstr "活动"
 
 #. module: hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
-msgid "Activity Analysis"
-msgstr "活动分析"
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_all
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_all
+msgid "All Timesheets"
+msgstr "所有工时表"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_allow_timesheets
@@ -53,9 +67,19 @@ msgid "Allow timesheets"
 msgstr "启动工时表"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_form
+msgid "Analytic Entry"
+msgstr "分析分录"
+
+#. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
 msgid "Analytic Line"
 msgstr "分析行"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Apple App Store"
+msgstr "苹果应用商店"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_delay
@@ -63,16 +87,31 @@ msgid "Avg. Plan.-Eff."
 msgstr "计划实际平均偏差"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_project_crossovered_budget_line
-msgid "Budget Lines"
-msgstr "预算明细"
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_project_timesheet_synchro
+msgid "Awesome Timesheet"
+msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model.fields,help:hr_timesheet.field_project_project_subtask_project_id
-#: model:ir.model.fields,help:hr_timesheet.field_project_task_subtask_project_id
-msgid ""
-"Choosing a sub-tasks project will both enable sub-tasks and set their "
-"default project (possibly the project itself)"
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Billing"
+msgstr "开单"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_activity_analysis
+msgid "By Employee"
+msgstr "员工"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_project
+msgid "By Project"
+msgstr "项目"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_report_timesheet_by_task
+msgid "By Task"
 msgstr ""
 
 #. module: hr_timesheet
@@ -84,6 +123,8 @@ msgstr ""
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
+#: model:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
+#: model:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "Click to record activities."
 msgstr "点击以记录活动"
 
@@ -102,7 +143,7 @@ msgstr "计算:花费的时间 + 剩余的时间"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
 msgid "Computed as: Time Spent + Sub-tasks Hours."
-msgstr ""
+msgstr "计算方式：花费时间 + 子任务时间"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
@@ -110,14 +151,15 @@ msgid "Computed using the sum of the task work done."
 msgstr "计算任务工作时间完成的合计"
 
 #. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_menu_configuration
+msgid "Configuration"
+msgstr "配置"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Date"
 msgstr "日期"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
-msgid "Define your Analytic Structure"
-msgstr "定义分析结构"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_delay_hours
@@ -130,17 +172,13 @@ msgid "Department"
 msgstr "部门"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Description"
 msgstr "说明"
 
 #. module: hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
-msgid "Detailed Activities"
-msgstr "行动详情"
-
-#. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+#: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Duration"
 msgstr "持续时间"
@@ -149,6 +187,22 @@ msgstr "持续时间"
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_effective
 msgid "Effective Hours"
 msgstr "实际时数"
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line_employee_id
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "Employee"
+msgstr "员工"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Google Chrome Store"
+msgstr "谷歌浏览器商店"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Google Play Store"
+msgstr "谷歌游戏商店"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -161,19 +215,22 @@ msgid "Hours Spent"
 msgstr "时间花费"
 
 #. module: hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
-msgid "My Timesheet"
-msgstr "我的工时单"
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_project_timesheet_holidays
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Leaves"
+msgstr "休假"
 
 #. module: hr_timesheet
-#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
-msgid "Officer"
-msgstr "主管"
+#: model:res.groups,name:hr_timesheet.group_timesheet_manager
+msgid "Manager"
+msgstr "管理员"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_parent_id
-msgid "Parent Task"
-msgstr "上级任务"
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
+#: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_mine
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "My Timesheets"
+msgstr "我的工时表"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_hours_planned
@@ -181,11 +238,7 @@ msgid "Planned Hours"
 msgstr "已计划的时数"
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-msgid "Product"
-msgstr "产品"
-
-#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_progress
 msgid "Progress"
 msgstr "进度"
@@ -219,32 +272,34 @@ msgid "Reporting"
 msgstr "报告"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Responsible"
 msgstr "负责人"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid ""
+"Sell services (e.g. project, maintenance), record time spent using "
+"Timesheets app and invoice them based on a fixed price (ordered quantity) or"
+" on the time spent (delivered quantity)"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Sell services and invoice time spent"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
+#: model:ir.ui.menu,name:hr_timesheet.hr_timesheet_config_settings_menu_action
+msgid "Settings"
+msgstr "设置"
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Spent Hours"
 msgstr "花费时数"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_project_subtask_project_id
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_subtask_project_id
-msgid "Sub-task Project"
-msgstr "子任务项目"
-
-#. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_subtask_count
-msgid "Sub-task count"
-msgstr "子任务数"
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_project_task_sub_task
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_child_ids
-#: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
-msgid "Sub-tasks"
-msgstr "子任务"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_children_hours
@@ -256,6 +311,11 @@ msgstr "子任务工时"
 msgid ""
 "Sum of the planned hours of all sub-tasks (when a sub-task is closed or its "
 "spent hours exceed its planned hours, spent hours are counted instead)"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Synchronize time spent with web/mobile app"
 msgstr ""
 
 #. module: hr_timesheet
@@ -272,11 +332,33 @@ msgid "Tasks by user and project"
 msgstr "项目和用户的任务"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "This Month"
+msgstr "本月"
+
+#. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
+msgid "This Week"
+msgstr "本周"
+
+#. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Time"
 msgstr "时间"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_tree
+msgid "Time (Hours)"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings_module_sale_timesheet
+msgid "Time Billing"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_time_tracking
+#: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet"
@@ -289,8 +371,13 @@ msgid "Timesheet Activities"
 msgstr "记工单活动"
 
 #. module: hr_timesheet
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Timesheet Apps"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
-#: model:ir.actions.report.xml,name:hr_timesheet.timesheet_report
+#: model:ir.actions.report,name:hr_timesheet.timesheet_report
 msgid "Timesheet Entries"
 msgstr "计工单明细"
 
@@ -305,10 +392,14 @@ msgid "Timesheet by Month"
 msgstr "计工单，按月"
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_from_employee
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_timesheet_ids
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_root
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr_timesheet.timesheet_view_calendar
 #: model:ir.ui.view,arch_db:hr_timesheet.view_project_kanban_inherited
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Timesheets"
@@ -331,19 +422,21 @@ msgid "Total time"
 msgstr "总时间"
 
 #. module: hr_timesheet
-#: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
-msgid "Users"
+#: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
+msgid "User"
 msgstr "用户"
 
 #. module: hr_timesheet
-#: model:ir.model.fields,field_description:hr_timesheet.field_project_task_progress
-msgid "Working Time Recorded"
-msgstr "工作时间已记录"
+#: model:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
+msgid "Validated leaves create timesheets automatically."
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
+#: model:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
+#: model:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid ""
 "You can register and track your workings hours by project every\n"
 "                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
@@ -351,18 +444,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/project_timesheet.py:67
-#, python-format
-msgid ""
-"You can't define a parent task if its project is not correctly configured. "
-"The sub-task's project of the parent task's project should be this task's "
-"project"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
-msgid ""
-"You should create an analytic account structure depending on your needs to "
-"analyse costs and revenues. In Odoo, analytic accounts are also used to "
-"track customer contracts."
-msgstr "您可以按需创建一个分析账户来分析您的成本和收入。在Odoo里，辅助核算项还可用于跟踪客户合同。"
+#: model:ir.model,name:hr_timesheet.model_res_config_settings
+msgid "res.config.settings"
+msgstr "设置-基础设置"

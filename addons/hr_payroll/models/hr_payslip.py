@@ -11,8 +11,6 @@ import babel
 from odoo import api, fields, models, tools, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import pycompat
-
 
 class HrPayslip(models.Model):
     _name = 'hr.payslip'
@@ -104,6 +102,7 @@ class HrPayslip(models.Model):
     def refund_sheet(self):
         for payslip in self:
             copied_payslip = payslip.copy({'credit_note': True, 'name': _('Refund: ') + payslip.name})
+            copied_payslip.compute_sheet()
             copied_payslip.action_payslip_done()
         formview_ref = self.env.ref('hr_payroll.view_hr_payslip_form', False)
         treeview_ref = self.env.ref('hr_payroll.view_hr_payslip_tree', False)
@@ -158,7 +157,7 @@ class HrPayslip(models.Model):
             # if we don't give the contract, then the rules to apply should be for all current contracts of the employee
             contract_ids = payslip.contract_id.ids or \
                 self.get_contract(payslip.employee_id, payslip.date_from, payslip.date_to)
-            lines = [(0, 0, line) for line in self.get_payslip_lines(contract_ids, payslip.id)]
+            lines = [(0, 0, line) for line in self._get_payslip_lines(contract_ids, payslip.id)]
             payslip.write({'line_ids': lines, 'number': number})
         return True
 
@@ -205,7 +204,7 @@ class HrPayslip(models.Model):
             }
 
             res.append(attendances)
-            res.extend(pycompat.values(leaves))
+            res.extend(leaves.values())
         return res
 
     @api.model
@@ -228,7 +227,7 @@ class HrPayslip(models.Model):
         return res
 
     @api.model
-    def get_payslip_lines(self, contract_ids, payslip_id):
+    def _get_payslip_lines(self, contract_ids, payslip_id):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
@@ -313,7 +312,10 @@ class HrPayslip(models.Model):
         baselocaldict = {'categories': categories, 'rules': rules, 'payslip': payslips, 'worked_days': worked_days, 'inputs': inputs}
         #get the ids of the structures on the contracts and their parent id as well
         contracts = self.env['hr.contract'].browse(contract_ids)
-        structure_ids = contracts.get_all_structures()
+        if len(contracts) == 1 and payslip.struct_id:
+            structure_ids = list(set(payslip.struct_id._get_parent_structure().ids))
+        else:
+            structure_ids = contracts.get_all_structures()
         #get the rules of the structure and thier children
         rule_ids = self.env['hr.payroll.structure'].browse(structure_ids).get_all_rules()
         #run the rules by sequence
@@ -329,9 +331,9 @@ class HrPayslip(models.Model):
                 localdict['result_qty'] = 1.0
                 localdict['result_rate'] = 100
                 #check if the rule can be applied
-                if rule.satisfy_condition(localdict) and rule.id not in blacklist:
+                if rule._satisfy_condition(localdict) and rule.id not in blacklist:
                     #compute the amount of the rule
-                    amount, qty, rate = rule.compute_rule(localdict)
+                    amount, qty, rate = rule._compute_rule(localdict)
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
@@ -369,7 +371,7 @@ class HrPayslip(models.Model):
                     #blacklist this rule and its children
                     blacklist += [id for id, seq in rule._recursive_search_of_rules()]
 
-        return [value for code, value in pycompat.items(result_dict)]
+        return list(result_dict.values())
 
     # YTI TODO To rename. This method is not really an onchange, as it is not in any view
     # employee_id and contract_id could be browse records
@@ -393,7 +395,7 @@ class HrPayslip(models.Model):
             return res
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
         employee = self.env['hr.employee'].browse(employee_id)
-        locale = self.env.context.get('lang', 'en_US')
+        locale = self.env.context.get('lang') or 'en_US'
         res['value'].update({
             'name': _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale))),
             'company_id': employee.company_id.id,
@@ -441,9 +443,10 @@ class HrPayslip(models.Model):
         employee = self.employee_id
         date_from = self.date_from
         date_to = self.date_to
+        contract_ids = []
 
         ttyme = datetime.fromtimestamp(time.mktime(time.strptime(date_from, "%Y-%m-%d")))
-        locale = self.env.context.get('lang', 'en_US')
+        locale = self.env.context.get('lang') or 'en_US'
         self.name = _('Salary Slip of %s for %s') % (employee.name, tools.ustr(babel.dates.format_date(date=ttyme, format='MMMM-y', locale=locale)))
         self.company_id = employee.company_id
 

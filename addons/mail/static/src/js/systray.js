@@ -1,13 +1,11 @@
 odoo.define('mail.systray', function (require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
-var framework = require('web.framework');
 var session = require('web.session');
 var SystrayMenu = require('web.SystrayMenu');
 var Widget = require('web.Widget');
-
-var chat_manager = require('mail.chat_manager');
 
 var QWeb = core.qweb;
 
@@ -27,20 +25,28 @@ var MessagingMenu = Widget.extend({
         "click .o_new_message": "on_click_new_message",
         "click .o_mail_channel_preview": "_onClickChannel",
     },
+    init: function () {
+        this._super.apply(this, arguments);
+        this.isMobile = config.device.isMobile; // used by the template
+    },
     start: function () {
         this.$filter_buttons = this.$('.o_filter_button');
         this.$channels_preview = this.$('.o_mail_navbar_dropdown_channels');
         this.filter = false;
-        chat_manager.bus.on("update_needaction", this, this.update_counter);
-        chat_manager.bus.on("update_channel_unread_counter", this, this.update_counter);
-        chat_manager.is_ready.then(this.update_counter.bind(this));
+        var chatBus = this.call('chat_manager', 'getChatBus');
+        chatBus.on("update_needaction", this, this.update_counter);
+        chatBus.on("update_channel_unread_counter", this, this.update_counter);
+        var chatReady = this.call('chat_manager', 'isReady');
+        chatReady.then(this.update_counter.bind(this));
         return this._super();
     },
     is_open: function () {
         return this.$el.hasClass('open');
     },
     update_counter: function () {
-        var counter =  chat_manager.get_needaction_counter() + chat_manager.get_unread_conversation_counter();
+        var needactionCounter = this.call('chat_manager', 'getNeedactionCounter');
+        var unreadConversationCounter = this.call('chat_manager', 'getUnreadConversationCounter');
+        var counter =  needactionCounter + unreadConversationCounter;
         this.$('.o_notification_counter').text(counter);
         this.$el.toggleClass('o_no_notification', !counter);
         if (this.is_open()) {
@@ -52,9 +58,10 @@ var MessagingMenu = Widget.extend({
 
         // Display spinner while waiting for channels preview
         this.$channels_preview.html(QWeb.render('Spinner'));
-
-        chat_manager.is_ready.then(function () {
-            var channels = _.filter(chat_manager.get_channels(), function (channel) {
+        var chatReady = this.call('chat_manager', 'isReady');
+        chatReady.then(function () {
+            var allChannels = self.call('chat_manager', 'getChannels');
+            var channels = _.filter(allChannels, function (channel) {
                 if (self.filter === 'chat') {
                     return channel.is_chat;
                 } else if (self.filter === 'channels') {
@@ -63,7 +70,7 @@ var MessagingMenu = Widget.extend({
                     return channel.type !== 'static';
                 }
             });
-            chat_manager.get_messages({channel_id: 'channel_inbox'}).then(function(result) {
+            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'}).then(function (result) {
                 var res = [];
                 _.each(result, function (message) {
                     message.unread_counter = 1;
@@ -78,28 +85,11 @@ var MessagingMenu = Widget.extend({
                 if (self.filter === 'channel_inbox' || !self.filter) {
                     channels = _.union(channels, res);
                 }
-                chat_manager.get_channels_preview(channels).then(self._render_channels_preview.bind(self));
+                self.call('chat_manager', 'getChannelsPreview', channels).then(self._render_channels_preview.bind(self));
             });
         });
     },
     _render_channels_preview: function (channels_preview) {
-        // Sort channels: 1. channels with unread messages, 2. chat, 3. by date of last msg
-        channels_preview.sort(function (c1, c2) {
-            return Math.min(1, c2.unread_counter) - Math.min(1, c1.unread_counter) ||
-                   c2.is_chat - c1.is_chat ||
-                   c2.last_message.date.diff(c1.last_message.date);
-        });
-
-        // Generate last message preview (inline message body and compute date to display)
-        _.each(channels_preview, function (channel) {
-            channel.last_message_preview = chat_manager.get_message_body_preview(channel.last_message.body);
-            if (channel.last_message.date.isSame(new Date(), 'd')) {  // today
-                channel.last_message_date = channel.last_message.date.format('LT');
-            } else {
-                channel.last_message_date = channel.last_message.date.format('lll');
-            }
-        });
-
         this.$channels_preview.html(QWeb.render('mail.chat.ChannelsPreview', {
             channels: channels_preview,
         }));
@@ -111,28 +101,28 @@ var MessagingMenu = Widget.extend({
     },
     on_click_filter_button: function (event) {
         event.stopPropagation();
-        this.$filter_buttons.removeClass('o_selected');
+        this.$filter_buttons.removeClass('active');
         var $target = $(event.currentTarget);
-        $target.addClass('o_selected');
+        $target.addClass('active');
         this.filter = $target.data('filter');
         this.update_channels_preview();
     },
     on_click_new_message: function () {
-        chat_manager.bus.trigger('open_chat');
+        this.call('chat_window_manager', 'openChat');
     },
 
     // Handlers
 
     /**
      * When a channel is clicked on, we want to open chat/channel window
-     * If channel is inbox then redirect to that record view
-     * If record not linked redirect to Inbox
+     *
      * @private
      * @param {MouseEvent} event
      */
     _onClickChannel: function (event) {
+        var self = this;
         var channelID = $(event.currentTarget).data('channel_id');
-        if (channelID == 'channel_inbox') {
+        if (channelID === 'channel_inbox') {
             var resID = $(event.currentTarget).data('res_id');
             var resModel = $(event.currentTarget).data('res_model');
             if (resModel && resID) {
@@ -143,13 +133,16 @@ var MessagingMenu = Widget.extend({
                     res_id: resID
                 });
             } else {
-                // if no model linked redirect to inbox
-                framework.redirect('mail/view?message_id=channel_inbox');
+                this.do_action('mail.mail_channel_action_client_chat', {clear_breadcrumbs: true})
+                    .then(function () {
+                        self.trigger_up('hide_home_menu'); // we cannot 'go back to previous page' otherwise
+                        core.bus.trigger('change_menu_section', self.call('chat_manager', 'getDiscussMenuID').bind(self));
+                    });
             }
         } else {
-            var channel = chat_manager.get_channel(channelID);
+            var channel = this.call('chat_manager', 'getChannel', channelID);
             if (channel) {
-                chat_manager.open_channel(channel);
+                self.call('chat_manager', 'openChannel', channel);
             }
         }
     },
@@ -162,12 +155,14 @@ var ActivityMenu = Widget.extend({
     template:'mail.chat.ActivityMenu',
     events: {
         "click": "_onActivityMenuClick",
-        "click .o_activity_filter_button, .o_mail_channel_preview": "_onActivityFilterClick",
+        "click .o_mail_channel_preview": "_onActivityFilterClick",
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
-        chat_manager.bus.on("activity_updated", this, this._updateCounter);
-        chat_manager.is_ready.then(this._updateCounter.bind(this));
+        var chatBus = this.call('chat_manager', 'getChatBus');
+        chatBus.on("activity_updated", this, this._updateCounter);
+        var chatReady = this.call('chat_manager', 'isReady');
+        chatReady.then(this._updateCounter.bind(this));
         this._updateActivityPreview();
         return this._super();
     },
@@ -178,15 +173,18 @@ var ActivityMenu = Widget.extend({
      * Make RPC and get current user's activity details
      * @private
      */
-    _getActivityData: function(){
+    _getActivityData: function () {
         var self = this;
 
         return self._rpc({
             model: 'res.users',
             method: 'activity_user_count',
+            kwargs: {
+                context: session.user_context,
+            },
         }).then(function (data) {
             self.activities = data;
-            self.activityCounter = _.reduce(data, function(total_count, p_data){ return total_count + p_data.total_count; }, 0);
+            self.activityCounter = _.reduce(data, function (total_count, p_data) { return total_count + p_data.total_count; }, 0);
             self.$('.o_notification_counter').text(self.activityCounter);
             self.$el.toggleClass('o_no_notification', !self.activityCounter);
         });
@@ -252,19 +250,19 @@ var ActivityMenu = Widget.extend({
      * @param {MouseEvent} event
      */
     _onActivityFilterClick: function (event) {
-        event.stopPropagation();
-        var $target = $(event.currentTarget);
+        // fetch the data from the button otherwise fetch the ones from the parent (.o_mail_channel_preview).
+        var data = _.extend({}, $(event.currentTarget).data(), $(event.target).data());
         var context = {};
-        if ($target.data('filter')=='my') {
+        if (data.filter === 'my') {
             context['search_default_activities_overdue'] = 1;
             context['search_default_activities_today'] = 1;
         } else {
-            context['search_default_activities_' + $target.data('filter')] = 1;
+            context['search_default_activities_' + data.filter] = 1;
         }
         this.do_action({
             type: 'ir.actions.act_window',
-            name: $target.data('model_name'),
-            res_model:  $target.data('res_model'),
+            name: data.model_name,
+            res_model:  data.res_model,
             views: [[false, 'kanban'], [false, 'form']],
             search_view_id: [false],
             domain: [['activity_user_id', '=', session.uid]],

@@ -35,7 +35,7 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
-        trigger: ".o_select_media_dialog .btn.o_save_button",
+        trigger: ".o_select_media_dialog .modal-footer > .btn-primary",
         extra_trigger: ".o_existing_attachment_cell.o_selected",
         content: _t("Click on <b>Save</b> to set the picture as cover."),
         position: "top",
@@ -63,13 +63,13 @@ odoo.define("website_blog.tour", function (require) {
         content: _t("Once you have reviewed the content on mobile, close the preview."),
         position: "right",
     }, {
-        trigger: "button.btn-danger.js_publish_btn",
+        trigger: ".js_publish_management .js_publish_btn",
         extra_trigger: "body:not(.editor_enable)",
         position: "bottom",
         content: _t("<b>Publish your blog post</b> to make it visible to your visitors."),
     }, {
-        trigger: "#customize-menu-button",
-        extra_trigger: "body:not(.editor_enable) .js_publish_management button.js_publish_btn.btn-success:visible",
+        trigger: "#customize-menu > a",
+        extra_trigger: ".js_publish_management .js_publish_btn .css_unpublish:visible",
         content: _t("<b>That's it, your blog post is published!</b> Discover more features through the <i>Customize</i> menu."),
         position: "bottom",
         width: 500,

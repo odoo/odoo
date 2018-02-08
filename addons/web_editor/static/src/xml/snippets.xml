@@ -1,29 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-
-    <!-- Snippet loader -->
-    <t t-name="web_editor.snippets_style">
-        <li class="navbar-form">
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Block style <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" id="oe_snippets_style" role="menu"></ul>
-            </div>
-        </li>
-    </t>
-
     <t t-name="web_editor.snippet_overlay">
         <div class="oe_overlay">
-            <div class="oe_handles">
-                <div class="oe_handle n readonly"/>
-                <div class="oe_handle e readonly"/>
-                <div class="oe_handle w readonly"/>
-                <div class="oe_handle s readonly"/>
-                <div class="oe_handle size readonly">
-                    <div class="oe_handle_button auto_size">Auto size</div>
-                    <div class="oe_handle_button size" title="Resize to force the height of this block">Fixed size</div>
-                </div>
+            <div class="o_handles">
+                <div class="o_handle n readonly"/>
+                <div class="o_handle e readonly"/>
+                <div class="o_handle w readonly"/>
+                <div class="o_handle s readonly"/>
             </div>
             <div class="oe_overlay_options" contentEditable="false">
                 <div class="btn-group">
@@ -38,10 +21,6 @@
                 </div>
             </div>
         </div>
-    </t>
-
-    <t t-name="web_editor.snippet_manipulator">
-        <div class='oe_snippet_manipulator'></div>
     </t>
 
     <!-- options -->

@@ -55,7 +55,7 @@
         <field name="parent_id" ref="hr_payroll.ALW"/>
     </record>
     <record id="hr_payroll_head_pp" model="hr.salary.rule.category">
-        <field name="name">Withholding Tax Grid 2017 (Precompte Professionnel Bareme 2017)</field>
+        <field name="name">Withholding Tax Grid 2018 (Precompte Professionnel Bareme 2018)</field>
         <field name="code">PP</field>
         <field name="parent_id" ref="hr_payroll.DED"/>
     </record>
@@ -91,7 +91,7 @@
         <field name="code">SALARY</field>
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = contract.wage * 1.08</field>
+        <field name="amount_python_compute">result = categories.BASIC * 1.08</field>
     </record>
     <record id="hr_payroll_rules_employee" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_salary"/> 
@@ -100,9 +100,11 @@
         <field name="condition_select">none</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-result = contract.wage + contract.mobile + contract.mobile_plus + contract.internet
-if contract.transport_mode == 'company_car':
-    result += contract.car_atn
+result = categories.BASIC
+if contract.internet:
+    result += 5.0
+if contract.mobile:
+    result += 12.0
         </field>
         <field name="sequence">20</field>
         <field name="appears_on_payslip" eval="False"/>
@@ -124,14 +126,14 @@ if contract.transport_mode == 'company_car':
         <field name="code">EmpBonus.1</field>
         <field name="sequence">42</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.BRUT &lt;= 2431.27</field> 
+        <field name="condition_python">result = categories.BRUT &lt;= 2510.47</field> 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 salary = categories.BRUT
-if salary &lt;= 1577.89:
-    result = 193.79
-elif salary &lt;= 2461.27:
-    result = 193.79 - (0.2194 * (salary - 1577.89))
+if salary &lt;= 1609.47:
+    result = 197.67
+elif salary &lt;= 2510.47:
+    result = 197.67 - (0.2194 * (salary - 1609.47))
         </field>
     </record>
     <record id="hr_salary_rule_employment_bonus_workers" model="hr.salary.rule">
@@ -140,14 +142,14 @@ elif salary &lt;= 2461.27:
         <field name="code">EmpBonus.2</field>
         <field name="sequence">42</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.BRUT + categories.ONSS &lt;= 2431.27</field> 
+        <field name="condition_python">result = categories.BRUT + categories.ONSS &lt;= 2510.47</field> 
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
 salary = categories.BRUT
-if salary &lt;= 1577.89:
-    result = 209.29
-elif salary &lt;= 2461.27:
-    result = 209.29 - (0.2369 * (salary - 1577.89))
+if salary &lt;= 1609.47:
+    result = 213.48
+elif salary &lt;= 2510.47:
+    result = 213.48 - (0.2369 * (salary - 1609.47))
         </field>
     </record>
     <record id="hr_payroll_rules_mis_ex_onss_1" model="hr.salary.rule">
@@ -158,17 +160,18 @@ elif salary &lt;= 2461.27:
         <field name="sequence">165</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
+        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital=='married' and employee.spouse_fiscal_status=='without income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-if contract.wage &gt;= 0.01 and contract.wage &lt;= 1095.09:
+wage = categories.BASIC
+if wage &gt;= 0.01 and wage &lt;= 1095.09:
     result = 0.0
-elif contract.wage &gt;= 1095.10 and contract.wage &lt;= 1945.38:
+elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
     result = 0.0
-elif contract.wage &gt;= 1945.39 and contract.wage &lt;= 2190.18:
-    result = -min((contract.wage - 1945.38) * 0.076, 18.60)
-elif contract.wage &gt;= 2190.19 and contract.wage &lt;= 6038.82:
-    result = -min(18.60 + (contract.wage - 2190.18) * 0.011, 60.94)
+elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
+    result = -min((wage - 1945.38) * 0.076, 18.60)
+elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
+    result = -min(18.60 + (wage - 2190.18) * 0.011, 60.94)
 else:
     result = -60.94
         </field>
@@ -184,14 +187,15 @@ else:
         <field name="condition_python">result = (((employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
-if contract.wage &gt;= 0.01 and contract.wage &lt;= 1095.09:
+wage = categories.BASIC
+if wage &gt;= 0.01 and wage &lt;= 1095.09:
     result = 0.0
-elif contract.wage &gt;= 1095.10 and contract.wage &lt;= 1945.38:
+elif wage &gt;= 1095.10 and wage &lt;= 1945.38:
     result = -9.30
-elif contract.wage &gt;= 1945.39 and contract.wage &lt;= 2190.18:
-    result = -min(max((contract.wage - 1945.38) * 0.076, 9.30), 18.60)
-elif contract.wage &gt;= 2190.19 and contract.wage &lt;= 6038.82:
-    result = -min(18.60 + (contract.wage - 2190.18) * 0.011, 51.64)
+elif wage &gt;= 1945.39 and wage &lt;= 2190.18:
+    result = -min(max((wage - 1945.38) * 0.076, 9.30), 18.60)
+elif wage &gt;= 2190.19 and wage &lt;= 6038.82:
+    result = -min(18.60 + (wage - 2190.18) * 0.011, 51.64)
 else:
     result = -51.64
         </field>
@@ -204,7 +208,7 @@ else:
         <field name="sequence">120</field>
         <field name="condition_select">python</field>
         <field name="appears_on_payslip" eval="False"/>
-        <field name="condition_python">result = (((employee.marital=='single') or (employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
+        <field name="condition_python">result = (((employee.marital in ['divorced', 'single', 'widower']) or (employee.marital=='married' and employee.spouse_fiscal_status=='with income')) and (employee.resident_bool!=True))</field>
     </record>
     <record id="hr_payroll_rules_baremeII" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_pp"/>
@@ -225,18 +229,6 @@ else:
         <field name="condition_select">python</field>
         <field name="condition_python">result = employee.resident_bool==True</field>
         <field name="appears_on_payslip" eval="False"/>
-    </record>
-    <record id="hr_salary_rule_pp_reduction_low_salary" model="hr.salary.rule">
-        <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
-        <field name="name">Withholding Tax Reduction for Low Salaries</field>
-        <field name="code">PPRed.0</field>
-        <field name="sequence">131</field>
-        <field name="condition_select">python</field>
-        <field name="condition_python">result = categories.GROSS &lt;= 2027.86 and categories.GROSS &gt; 565.02</field> 
-        <field name="amount_select">code</field>
-        <field name="amount_python_compute">
-result = 5.83
-        </field>
     </record>
     <record id="hr_salary_rule_pp_reduction_employees" model="hr.salary.rule">
         <field name="category_id" ref="hr_salary_rule_pp_reductions"/> 
@@ -314,7 +306,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Iso</field>
         <field name="sequence">144</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'single') and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital in ['divorced', 'single', 'widower']) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(25.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
@@ -327,7 +319,7 @@ elif salary &lt;= 2461.27:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.marital == 'widower' or (employee.marital in ['divorced', 'single', 'widower'] and employee.dependent_children)) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(35.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(36.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_disabled" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -338,7 +330,7 @@ elif salary &lt;= 2461.27:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.disabled) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(35.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(36.00, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_seniors" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -349,7 +341,7 @@ elif salary &lt;= 2461.27:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_seniors) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(71.0 * employee.dependent_seniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(73.0 * employee.dependent_seniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_juniors" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -360,7 +352,7 @@ elif salary &lt;= 2461.27:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.other_dependent_people and employee.dependent_juniors) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">result = min(35.0 * employee.dependent_juniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">result = min(36.0 * employee.dependent_juniors, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_salary_rule_reduction_insufficient_net" model="hr.salary.rule">
         <field name="category_id" ref='hr_salary_rule_category_family_reductions'/>
@@ -369,7 +361,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Spouse.Net</field>
         <field name="sequence">148</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_net_revenue &lt;= 221.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_fiscal_status=='with income' and employee.spouse_net_revenue &lt;= 225.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(110.50, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
@@ -380,7 +372,7 @@ elif salary &lt;= 2461.27:
         <field name="code">Red.Spouse.Oth.Net</field>
         <field name="sequence">149</field>
         <field name="condition_select">python</field>
-        <field name="condition_python">result = (employee.marital == 'married' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 440.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
+        <field name="condition_python">result = (employee.marital == 'married' and employee.spouse_fiscal_status=='with income' and not employee.spouse_net_revenue and employee.spouse_other_net_revenue &lt;= 450.0) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">result = min(220.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
@@ -393,13 +385,13 @@ elif salary &lt;= 2461.27:
         <field name="condition_select">python</field>
         <field name="condition_python">result = (employee.disabled_spouse_bool==True) and (categories.PP + categories.PPRed + categories.FamRed + categories.ChA &lt; 0.0)</field>
         <field name="amount_select">code</field>
-        <field name="amount_python_compute">min(35.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
+        <field name="amount_python_compute">min(36.0, - (categories.PP + categories.PPRed + categories.FamRed + categories.ChA))</field>
     </record>
     <record id="hr_payroll_rules_parent_company_car" model="hr.salary.rule">
         <field name="category_id" ref="hr_payroll_head_div_impos"/>
         <field name="name">ATN Company Car</field>
         <field name="code">ATN.CAR</field>
-        <field name="sequence">15</field>
+        <field name="sequence">70</field>
         <field name="condition_select">python</field>
         <field name="condition_python">
 result = bool(contract.transport_mode == 'company_car' and contract.car_atn)
@@ -555,7 +547,6 @@ result = -contract.car_atn
             ref('hr_payroll_rules_retained_net'),
             ref('hr_salary_rule_commission_on_target'),
             ref('hr_salary_rule_pp_reduction_employees'),
-            ref('hr_salary_rule_pp_reduction_low_salary'),
 
         ])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>    
@@ -619,7 +610,7 @@ result = -contract.car_atn
         <record id="hr_contract_advantage_template_commission_on_target" model="hr.contract.advantage.template">
             <field name="name">Commission on target</field>
             <field name="code">commission_on_target</field>
-            <field name="default_value">1000.0</field>
+            <field name="default_value">0.0</field>
         </record>
         <record id="hr_contract_advantage_template_fuel_card" model="hr.contract.advantage.template">
             <field name="name">Fuel card</field>
@@ -629,11 +620,11 @@ result = -contract.car_atn
             <field name="upper_bound">500.0</field>
         </record>
         <record id="hr_contract_advantage_template_holidays" model="hr.contract.advantage.template">
-            <field name="name">Holidays duration</field>
+            <field name="name">Leaves duration</field>
             <field name="code">holidays</field>
             <field name="default_value">20.0</field>
             <field name="lower_bound">0.0</field>
-            <field name="upper_bound">30.0</field>
+            <field name="upper_bound">35.0</field>
         </record>
         <record id="hr_contract_advantage_template_representation_fees" model="hr.contract.advantage.template">
             <field name="name">Representation fees</field>

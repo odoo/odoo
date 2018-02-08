@@ -1,91 +1,7 @@
 .o_kanban_view.o_kanban_dashboard.o_project_kanban {
-
-    .o_kanban_record {
-        .o-flex-display();
-        position: relative;
-    }
-
-    .o_project_kanban_main {
-        .o-flex(0, 0, auto);
-        padding: @odoo-horizontal-padding;
-        width: 70%; // for IE11 overflow issue
-
-        // give space for manage section at the bottom
-        margin-bottom: @odoo-horizontal-padding/2 + 19px;
-
-        .o_kanban_card_content {
-            font-size: 12px;
-            .o_primary {
-                font-size: larger;
-            }
-        }
-
-        .o_project_kanban_manage {
-            .o_left {
-                .o-position-absolute(@bottom: 0, @left: 0);
-                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
-            }
-            .o_right {
-                .o-position-absolute(@bottom: 0, @right: 30%);
-                padding: @odoo-horizontal-padding/2 @odoo-horizontal-padding;
-            }
-            .o_kanban_manage_toggle_button {
-                font-size: 18px;
-            }
-        }
-        .o_kanban_card_manage_pane .o_kanban_card_manage_title {
-            margin: 0;
-        }
-    }
-
-    .o_dashboard_star {
-            font-size: 16px;
-
-            &.fa-star-o {
-                color: @odoo-main-color-muted;
-                &:hover {
-                    color: gold;
-                }
-            }
-            &.fa-star {
-                color: gold;
-            }
-        }
-
     .o_project_kanban_boxes {
-        width: 30%;
-        .o-flex(0, 0, auto);
-
         .o-flex-display();
-        .o-flex-flow(column, nowrap);
-
-        > a:hover {
-            text-decoration: none;
-        }
-
-        .o_value {
-            font-size: x-large;
-            color: white;
-            display: block;
-        }
-        .o_label {
-            color: white;
-        }
-        .o_needaction{
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            color: white;
-            font-size: small;
-            opacity: 0.5;
-            &:hover{
-                opacity:1;
-            }
-            &::before {
-                content: "\f086";
-                font: normal normal normal 14px/1 FontAwesome;
-            }
-        }
+        .o-flex-flow(row, nowrap);
 
         .o_project_kanban_box {
             position: relative;
@@ -93,28 +9,61 @@
             padding: 0 0 0 0;
             .o-flex(1, 1, auto);
             .o-flex-display();
-            .o-flex-flow(column, nowrap);
+            .o-flex-flow(row, nowrap);
             .o-justify-content(center);
-        }
-        .o_project_kanban_box:nth-child(even) {
-            background-color: grey;
-        }
-        .o_project_kanban_box:nth-child(odd) {
-            background-color: @odoo-brand-optional;
+
+            &:first-child {
+                .o-justify-content(flex-start);
+            }
+            &:last-child {
+                .o-justify-content(flex-end);
+            }
+
+            .o_value {
+                font-weight: 800;
+            }
+
+            > a {
+                font-weight: 500;
+
+                &.o_needaction{
+                    font-size: small;
+                    font-weight: 400;
+                    margin-left: 4px;
+                    .o-hover-opacity(0.5, 1);
+
+                    &:before {
+                        content: "/ ";
+                    }
+
+                    &:after {
+                        content: "\f086";
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+                }
+            }
         }
     }
 }
 
-.o_kanban_task_cover_image {
-    .o-columns(200px, 4);
-    > img {
+.o_kanban_task_cover_container {
+    .o_kanban_task_cover_image {
+        display: inline-block;
+        position: relative;
+        height: 120px;
+        width: 120px;
+        margin: 10px;
         cursor: pointer;
-        margin-bottom: 1em;
-        border: 1px solid transparent;
-
+        outline: 2px solid transparent;
+        box-shadow: 0px 0px 1px 1px #ccc;
         &.o_selected {
-            border-color: @odoo-brand-secondary;
-            box-shadow: 0px 0px 2px 2px @odoo-brand-secondary;
+            outline-color: @odoo-brand-optional;
+        }
+        > img {
+            .o-position-absolute(@top: 0; @left: 0; @right: 0; @bottom: 0);
+            margin: auto;
+            max-height: 100%;
+            max-width: 100%;
         }
     }
 }

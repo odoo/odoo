@@ -6,6 +6,7 @@ from xml.etree import ElementTree as ET
 from collections import namedtuple
 
 from odoo import api, exceptions, fields, models, _
+from odoo.tools.pycompat import text_type
 
 INTRASTAT_XMLNS = 'http://www.onegate.eu/2010-01-01'
 
@@ -164,6 +165,7 @@ class XmlDeclaration(models.TransientModel):
         lines = self.env.cr.fetchall()
         invoicelines_ids = [rec[0] for rec in lines]
         invoicelines = self.env['account.invoice.line'].browse(invoicelines_ids)
+
         for inv_line in invoicelines:
 
             #Check type of transaction
@@ -189,6 +191,8 @@ class XmlDeclaration(models.TransientModel):
                 #comes from purchase
                 po_lines = self.env['purchase.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
                 if po_lines:
+                    if self._is_situation_triangular(company, po_line=po_lines):
+                        continue
                     location = self.env['stock.location'].browse(po_lines.order_id._get_destination_location())
                     region_id = self.env['stock.warehouse'].get_regionid_from_locationid(location)
                     if region_id:
@@ -197,6 +201,8 @@ class XmlDeclaration(models.TransientModel):
                 #comes from sales
                 so_lines = self.env['sale.order.line'].search([('invoice_lines', 'in', inv_line.id)], limit=1)
                 if so_lines:
+                    if self._is_situation_triangular(company, so_line=so_lines):
+                        continue
                     saleorder = so_lines.order_id
                     if saleorder and saleorder.warehouse_id and saleorder.warehouse_id.region_id:
                         exreg = IntrastatRegion.browse(saleorder.warehouse_id.region_id.id).code
@@ -264,18 +270,18 @@ class XmlDeclaration(models.TransientModel):
                 continue
             numlgn += 1
             item = ET.SubElement(datas, 'Item')
-            self._set_Dim(item, 'EXSEQCODE', unicode(numlgn))
-            self._set_Dim(item, 'EXTRF', unicode(linekey.EXTRF))
-            self._set_Dim(item, 'EXCNT', unicode(linekey.EXCNT))
-            self._set_Dim(item, 'EXTTA', unicode(linekey.EXTTA))
-            self._set_Dim(item, 'EXREG', unicode(linekey.EXREG))
-            self._set_Dim(item, 'EXTGO', unicode(linekey.EXGO))
+            self._set_Dim(item, 'EXSEQCODE', text_type(numlgn))
+            self._set_Dim(item, 'EXTRF', text_type(linekey.EXTRF))
+            self._set_Dim(item, 'EXCNT', text_type(linekey.EXCNT))
+            self._set_Dim(item, 'EXTTA', text_type(linekey.EXTTA))
+            self._set_Dim(item, 'EXREG', text_type(linekey.EXREG))
+            self._set_Dim(item, 'EXTGO', text_type(linekey.EXGO))
             if extendedmode:
-                self._set_Dim(item, 'EXTPC', unicode(linekey.EXTPC))
-                self._set_Dim(item, 'EXDELTRM', unicode(linekey.EXDELTRM))
-            self._set_Dim(item, 'EXTXVAL', unicode(round(amounts[0], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXWEIGHT', unicode(round(amounts[1], 0)).replace(".", ","))
-            self._set_Dim(item, 'EXUNITS', unicode(round(amounts[2], 0)).replace(".", ","))
+                self._set_Dim(item, 'EXTPC', text_type(linekey.EXTPC))
+                self._set_Dim(item, 'EXDELTRM', text_type(linekey.EXDELTRM))
+            self._set_Dim(item, 'EXTXVAL', text_type(round(amounts[0], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXWEIGHT', text_type(round(amounts[1], 0)).replace(".", ","))
+            self._set_Dim(item, 'EXUNITS', text_type(round(amounts[2], 0)).replace(".", ","))
 
         if numlgn == 0:
             #no datas
@@ -286,3 +292,24 @@ class XmlDeclaration(models.TransientModel):
         dim = ET.SubElement(item, 'Dim')
         dim.set('prop', prop)
         dim.text = value
+
+    def _is_situation_triangular(self, company, po_line=False, so_line=False):
+        # Ignoring what is purchased and sold by us with a dropshipping route
+        # outside of our country, or completely within it
+        # https://www.nbb.be/doc/dq/f_pdf_ex/intra2017fr.pdf (§ 4.x)
+        dropship_pick_type = self.env.ref('stock_dropshipping.picking_type_dropship', raise_if_not_found=False)
+        if not dropship_pick_type:
+            return False
+        stock_move_domain = [('picking_type_id', '=', dropship_pick_type.id)]
+
+        if po_line:
+            stock_move_domain.append(('purchase_line_id', '=', po_line.id))
+        if so_line:
+            stock_move_domain.append(('procurement_id.sale_line_id', '=', so_line.id))
+
+        stock_move = self.env['stock.move'].search(stock_move_domain, limit=1)
+        return stock_move and (
+            (stock_move.partner_id.country_id.code != company.country_id.code and
+                stock_move.picking_partner_id.country_id.code != company.country_id.code) or
+            (stock_move.partner_id.country_id.code == company.country_id.code and
+                stock_move.picking_partner_id.country_id.code == company.country_id.code))

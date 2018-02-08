@@ -27,7 +27,7 @@
                     <t t-call="website_rating.rating_stars_static">
                         <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
                     </t>
-                    <t t-call="website_mail.chatter_message_count"/>
+                    <t t-call="portal.chatter_message_count"/>
                 </div>
             </div>
             <div class="col-md-6" t-if="!_.isEmpty(widget.get('rating_card_values'))">
@@ -76,15 +76,15 @@
     </t>
 
     <!--
-        Inherited templates from website_mail to custom chatter with rating
+        Inherited templates from portal to custom chatter with rating
     -->
-    <t t-extend="website_mail.chatter_composer">
-        <t t-jquery=".o_website_mail_composer_form input[name='csrf_token']" t-operation="after">
+    <t t-extend="portal.chatter_composer">
+        <t t-jquery=".o_portal_chatter_composer_form input[name='csrf_token']" t-operation="after">
             <t t-call="website_rating.rating_star_input"/>
         </t>
     </t>
 
-    <t t-extend="website_mail.chatter_messages">
+    <t t-extend="portal.chatter_messages">
         <t t-jquery="t[t-raw='message.body']" t-operation="before">
             <t t-if="message['rating_value']">
                 <t t-call="website_rating.rating_stars_static">
@@ -94,13 +94,13 @@
         </t>
     </t>
 
-    <t t-extend="website_mail.chatter">
-        <t t-jquery="t[t-call='website_mail.chatter_message_count']" t-operation="replace">
+    <t t-extend="portal.chatter">
+        <t t-jquery="t[t-call='portal.chatter_message_count']" t-operation="replace">
             <t t-if="widget.options['display_rating']">
                 <t t-call="website_rating.rating_card"/>
             </t>
             <t t-if="!widget.options['display_rating']">
-                <t t-call="website_mail.chatter_message_count"/>
+                <t t-call="portal.chatter_message_count"/>
             </t>
         </t>
     </t>

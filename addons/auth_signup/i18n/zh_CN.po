@@ -3,15 +3,19 @@
 # * auth_signup
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: liAnGjiA <liangjia@qq.com>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,6 +53,27 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" "
+"alt=\"${user.company_id.name}\"></td></tr></tbody></table></div><div "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><p></p><p></p><p></p><div style=\"text-align: center; "
+"margin-top: 16px;\"><a href=\"${object.signup_url}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-"
+"radius:3px\"></a></div><p></p><p></p></div><div "
+"style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: "
+"#fff repeat top /100%;color:#777777\"><p style=\"font-size: 11px; margin-"
+"top: 10px;\"><strong><a href=\"www.odoo.com\" style=\"text-decoration:none; "
+"color: #875A7B;\"></a></strong></p></div>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -83,11 +108,91 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\"><table cellspacing=\"0\" cellpadding=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-"
+"size: 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; "
+"height: auto; width: 80px;\" "
+"alt=\"${user.company_id.name}\"></td></tr></tbody></table></div><div "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><p></p><p></p><p></p><div style=\"text-align: center; "
+"margin-top: 16px;\"><a href=\"${object.signup_url}\" style=\"padding: 5px "
+"10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-"
+"color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: "
+"0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: "
+"pointer; white-space: nowrap; background-image: none; background-color: "
+"#875A7B; border: 1px solid #875A7B; border-"
+"radius:3px\"></a></div><p></p></div><div "
+"style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: "
+"#fff repeat top /100%;color:#777777\"><p style=\"font-size: 11px; margin-"
+"top: 10px;\"><strong><a href=\"www.odoo.com\" style=\"text-decoration:none; "
+"color: #875A7B;\"></a></strong></p></div>"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on Odoo"
 msgstr "${object.company_id.name} 邀请链接到Odoo"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_user_signup_account_created
+msgid ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <table cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px;border-collapse:collapse;background:inherit;color:inherit\">\n"
+"        <tbody><tr>\n"
+"            <td valign=\"center\" width=\"200\" style=\"padding:10px 10px 10px 5px;font-size: 12px\">\n"
+"                <img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"            </td>\n"
+"        </tr></tbody>\n"
+"    </table>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top /100%;color:#777777\">\n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"        Your account has been successfully created!\n"
+"    </p>\n"
+"    <p>\n"
+"        Your login: ${object.email}\n"
+"        <br/>\n"
+"        Your password: ${ctx['password']}\n"
+"    </p>\n"
+"    <p>\n"
+"        To gain access to your account, you can use the following link:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; margin-top: 16px;\">\n"
+"        <a href=\"/web/login?${ctx['auth_login']}\" style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; white-space: nowrap; background-image: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px\">Go to My Account</a>\n"
+"    </div>\n"
+"    <p>Best regards,</p>\n"
+"</div>\n"
+"<div style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: #fff repeat top /100%;color:#777777\">\n"
+"    ${user.signature | safe}\n"
+"    <p style=\"font-size: 11px; margin-top: 10px;\">\n"
+"        <strong>Sent by ${user.company_id.name} using <a href=\"www.odoo.com\" style=\"text-decoration:none; color: #875A7B;\">Odoo</a></strong>\n"
+"    </p>\n"
+"</div>"
+msgstr ""
+"<div style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat "
+"top /100%;color:#777777\"><table cellpadding=\"0\" cellspacing=\"0\" "
+"style=\"width:600px;border-"
+"collapse:collapse;background:inherit;color:inherit\"><tbody><tr><td "
+"style=\"padding:10px 10px 10px 5px;font-size: 12px\" valign=\"center\" "
+"width=\"200\"><img alt=\"${user.company_id.name}\" src=\"/logo.png\" "
+"style=\"padding: 0px; margin: 0px; height: auto; width: "
+"80px;\"/></td></tr></tbody></table></div><div "
+"style=\"padding:0px;width:600px;margin:auto;background: #FFFFFF repeat top "
+"/100%;color:#777777\"><p/><p/><p><br/></p><p/><div style=\"text-align: "
+"center; margin-top: 16px;\"><a href=\"/web/login?${ctx['auth_login']}\" "
+"style=\"padding: 5px 10px; font-size: 12px; line-height: 18px; color: "
+"#FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block;"
+" margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: "
+"middle; cursor: pointer; white-space: nowrap; background-image: none; "
+"background-color: #875A7B; border: 1px solid #875A7B; border-"
+"radius:3px\"/></div><p/></div><div "
+"style=\"padding:0px;width:600px;margin:auto; margin-top: 10px; background: "
+"#fff repeat top /100%;color:#777777\"><p style=\"font-size: 11px; margin-"
+"top: 10px;\"><strong><a href=\"www.odoo.com\" style=\"text-decoration:none; "
+"color: #875A7B;\"/></strong></p></div>"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.res_users_form_view
@@ -104,41 +209,35 @@ msgid ""
 msgstr "<strong>包含以下订阅链接的邀请函发出：</strong>"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_uninvited
-msgid "Allow external users to sign up"
-msgstr "允许外部用户注册"
-
-#. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "Allow external users to sign up from Login page"
+#: model:ir.ui.view,arch_db:auth_signup.signup
+msgid "Already have an account?"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:61
+#: code:addons/auth_signup/controllers/main.py:78
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "一封包含验证证书以重置您的密码的电子邮件已经发送"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:38
+#: code:addons/auth_signup/controllers/main.py:52
 #, python-format
 msgid "Another user is already registered using this email address."
 msgstr "该邮件地址已经被其他注册了"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:110
+#: code:addons/auth_signup/controllers/main.py:133
 #, python-format
 msgid "Authentication Failed."
 msgstr "身份验证失败"
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.reset_password
-#: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Back to Login"
 msgstr "返回到登录页面"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:135
+#: code:addons/auth_signup/models/res_users.py:137
 #, python-format
 msgid "Cannot send email: user %s has no email address."
 msgstr "无法发送邮件：用户 %s 邮件地址为空。"
@@ -159,38 +258,73 @@ msgid "Confirmed"
 msgstr "已确认"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:41
+#: model:ir.model,name:auth_signup.model_res_partner
+msgid "Contact"
+msgstr "联系人"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Copy access rights from"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:55
 #, python-format
 msgid "Could not create a new account."
 msgstr "不能创建一个新账号"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:63
+#: code:addons/auth_signup/controllers/main.py:80
 #, python-format
 msgid "Could not reset your password"
 msgstr "无法重置密码"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "Default Access Rights"
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_uninvited
+msgid "Customer Account"
 msgstr ""
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_reset_password
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Default Access Rights"
+msgstr "默认访问权限"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.login
+msgid "Don't have an account?"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_reset_password
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
 msgstr "允许在登录页开启密码重置功能"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "Free sign up (B2C)"
+msgstr ""
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_ir_http
+msgid "HTTP routing"
+msgstr "HTTP 路由"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "If unchecked, only invited users may sign up."
 msgstr "如果不勾选，只有被邀请用户才能注册。"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:90
+#: code:addons/auth_signup/controllers/main.py:111
 #, python-format
 msgid "Invalid signup token"
 msgstr "无效的注册令牌"
+
+#. module: auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
+msgid "Let your customers log in to see their documents"
+msgstr "让你的客户登录查看他们的证件"
 
 #. module: auth_signup
 #: selection:res.users,state:0
@@ -198,9 +332,15 @@ msgid "Never Connected"
 msgstr "从未连接"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_res_partner
-msgid "Partner"
-msgstr "业务伙伴"
+#: code:addons/auth_signup/controllers/main.py:73
+#, python-format
+msgid "No login provided."
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.config.settings,auth_signup_uninvited:0
+msgid "On invitation (B2B)"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -208,7 +348,7 @@ msgid "Password"
 msgstr "密码"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
+#: model:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
 msgstr ""
 
@@ -218,12 +358,18 @@ msgid "Password reset"
 msgstr "密码重置"
 
 #. module: auth_signup
+#: code:addons/auth_signup/controllers/main.py:121
+#, python-format
+msgid "Passwords do not match; please retype them."
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
 msgstr "重置密码"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:108
+#: code:addons/auth_signup/models/res_users.py:110
 #, python-format
 msgid "Reset password: invalid username or email"
 msgstr "重置密码: 用户名或密码无效"
@@ -239,7 +385,6 @@ msgid "Send an Invitation Email"
 msgstr "发送邀请邮件"
 
 #. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.login
 #: model:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
 msgstr "注册"
@@ -275,23 +420,37 @@ msgid "Signup URL"
 msgstr "注册网址"
 
 #. module: auth_signup
+#: code:addons/auth_signup/models/res_users.py:88
+#, python-format
+msgid "Signup is not allowed for uninvited users"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_partner.py:146
+#, python-format
+msgid "Signup token '%s' is no longer valid"
+msgstr ""
+
+#. module: auth_signup
+#: code:addons/auth_signup/models/res_partner.py:142
+#, python-format
+msgid "Signup token '%s' is not valid"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users_state
 msgid "Status"
 msgstr "状态"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_base_config_settings_auth_signup_template_user_id
+#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings_auth_signup_template_user_id
 msgid "Template user for new users created through signup"
 msgstr "用作通过注册创建的新用户的模版"
 
 #. module: auth_signup
-#: model:ir.model.fields,help:auth_signup.field_res_users_website_url
-msgid "The full URL to access the document through the website."
-msgstr "通过网站访问单据的完整URL。"
-
-#. module: auth_signup
-#: model:ir.ui.view,arch_db:auth_signup.base_config_settings_view_form_inherit_auth_signup
-msgid "User Signup"
+#: code:addons/auth_signup/controllers/main.py:119
+#, python-format
+msgid "The form was not properly filled in."
 msgstr ""
 
 #. module: auth_signup
@@ -300,39 +459,9 @@ msgid "Users"
 msgstr "用户"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_published
-msgid "Visible in Website"
-msgstr "在网站可见"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_description
-msgid "Website Partner Full Description"
-msgstr "网站业务伙伴的详细说明"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_short_description
-msgid "Website Partner Short Description"
-msgstr "网站业务伙伴简介"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_url
-msgid "Website URL"
-msgstr "网站地址"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_description
-msgid "Website meta description"
-msgstr "网站meta说明"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_keywords
-msgid "Website meta keywords"
-msgstr "网站meta关键词"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_res_users_website_meta_title
-msgid "Website meta title"
-msgstr "网站meta标题"
+#: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
+msgid "Welcome to ${object.company_id.name}!"
+msgstr ""
 
 #. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
@@ -346,11 +475,11 @@ msgid "Your Name"
 msgstr "你的姓名"
 
 #. module: auth_signup
-#: model:ir.model,name:auth_signup.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_signup
 #: model:ir.ui.view,arch_db:auth_signup.fields
 msgid "e.g. John Doe"
 msgstr "例如:约翰"
+
+#. module: auth_signup
+#: model:ir.model,name:auth_signup.model_res_config_settings
+msgid "res.config.settings"
+msgstr "设置-基础设置"

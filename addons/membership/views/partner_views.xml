@@ -35,11 +35,11 @@
                     <filter name="all_non_members" domain="[('membership_state', 'in', ['none','canceled','old','waiting'])]" string="All non Members" help="None/Canceled/Old/Waiting"/>
                     <filter name="all_members" domain="[('membership_state', 'in', ['invoiced','paid','free'])]" string="All Members" help="Invoiced/Paid/Free"/>
                     <group expand="0" string="Group By" colspan="10" col="8">
-                        <filter string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
+                        <filter string="Salesperson" name="salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>
                         <filter string="Associate Member" name = "associate" domain="[]" context="{'group_by':'associate_member'}"/>
-                        <filter string=" Membership State" domain="[]" context="{'group_by':'membership_state'}"/>
-                        <filter string="Start Month" help="Starting Month Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
-                        <filter string="End Month" help="Ending Month Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
+                        <filter string=" Membership State" name="membership_state" domain="[]" context="{'group_by':'membership_state'}"/>
+                        <filter string="Start Month" name="start_month" help="Starting Month Of Membership" domain="[]" context="{'group_by':'membership_start'}"/>
+                        <filter string="End Month" name="end_month" help="Ending Month Of Membership" domain="[]" context="{'group_by':'membership_stop'}"/>
                     </group>
                 </search>
             </field>
@@ -51,11 +51,11 @@
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
             <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                  Click to add a new Member
+                <p class="o_view_nocontent_smiling_face">
+                  Add a new member
                 </p><p>
-                 Odoo helps you easily track all activities related to a member: 
-                 Current Membership Status, Discussions and History of Membership, etc.
+                  Odoo helps you easily track all activities related to a member: 
+                  Current Membership Status, Discussions and History of Membership, etc.
                 </p>
             </field>
         </record>

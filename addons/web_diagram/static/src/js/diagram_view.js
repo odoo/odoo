@@ -17,15 +17,17 @@ var DiagramView = BasicView.extend({
     icon: 'fa-code-fork',
     multi_record: false,
     searchable: false,
+    jsLibs: [[
+        '/web_diagram/static/lib/js/jquery.mousewheel.js',
+        '/web_diagram/static/lib/js/raphael.js',
+    ]],
     config: {
         Model: DiagramModel,
         Renderer: DiagramRenderer,
         Controller: DiagramController,
-        js_libs: [
-            '/web_diagram/static/lib/js/jquery.mousewheel.js',
-            '/web_diagram/static/lib/js/raphael.js',
-        ],
     },
+    viewType: 'diagram',
+
     /**
      * @override
      * @param {Object} viewInfo
@@ -34,7 +36,7 @@ var DiagramView = BasicView.extend({
     init: function (viewInfo, params) {
         this._super.apply(this, arguments);
         var self = this;
-        var arch = viewInfo.arch;
+        var arch = this.arch;
         // Compute additional data for diagram model
         function toTitleCase(str) {
             return str.replace(/\w\S*/g, function (txt) {
@@ -89,7 +91,7 @@ var DiagramView = BasicView.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
@@ -104,14 +106,13 @@ var DiagramView = BasicView.extend({
      * present, while we are loading Raphael.
      *
      * @override
-     * @private
-     * @returns {Deferred}
      */
-    _loadLibs: function () {
+    getController: function () {
         var oldDefine = window.define;
         delete window.define;
-        return this._super.apply(this, arguments).then(function () {
+        return this._super.apply(this, arguments).then(function (view) {
             window.define = oldDefine;
+            return view;
         });
     },
 });

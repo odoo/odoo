@@ -50,10 +50,10 @@
             <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="arch" type="xml">
                 <filter name="stage" position="after">
-                    <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">
-                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                    <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
@@ -110,10 +110,10 @@
             <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
             <field name="arch" type="xml">
                 <filter name="customer" position="after">
-                    <filter string="Assigned Partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
+                    <filter string="Assigned Partner" name="assigned_partner" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
                 <filter name="unassigned" position="after">
-                    <filter string="My Assigned Partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
+                    <filter string="My Assigned Partners" name="my_assigned_partners" domain="[('partner_assigned_id.user_id', '=', uid)]"/>
                 </filter>
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
@@ -122,23 +122,15 @@
         </record>
 
         <record id="action_assign_salesman_according_assigned_partner" model="ir.actions.server">
-            <field name="name">Crm Assignation: Assign salesman of assigned partner</field>
+            <field name="name">Assign salesman of assigned partner</field>
             <field name="model_id" ref="model_crm_lead"/>
+            <field name="binding_model_id" ref="model_crm_lead"/>
             <field name="state">code</field>
             <field name="code">
 if env.context.get('active_domain'):
     records = model.search(env.context['active_domain'])
 records.assign_salesman_of_assigned_partner()
             </field>
-        </record>
-
-        <record model="ir.values" id="ir_assign_salesman_according_assigned_partner">
-            <field name="model_id" ref="model_crm_lead" />
-            <field name="name">Assign salesman of assigned partner</field>
-            <field name="key2">client_action_multi</field>
-            <field eval="'ir.actions.server,%d'%action_assign_salesman_according_assigned_partner" name="value"/>
-            <field name="key">action</field>
-            <field name="model">crm.lead</field>
         </record>
 
 </odoo>

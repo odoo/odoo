@@ -4,9 +4,10 @@ odoo.define('website_sale.payment', function (require) {
 $(document).ready(function () {
     // If option is enable
     if ($("#checkbox_cgv").length) {
-      $("#checkbox_cgv").click(function() {
-        $("div.o_payment_acquirer_button").find('input, button').prop("disabled", !this.checked);
+      $("#checkbox_cgv").change(function() {
+        $("button#o_payment_form_pay").prop("disabled", !this.checked);
       });
+      $('#checkbox_cgv').trigger('change');
     }
 });
 

@@ -1,3 +1,13 @@
+odoo.define('web.dom_ready', function (require) {
+'use strict';
+
+var def = $.Deferred();
+$(def.resolve.bind(def));
+return def;
+});
+
+//==============================================================================
+
 odoo.define('web.dom', function (require) {
 "use strict";
 
@@ -105,10 +115,14 @@ return {
         }
     },
     /**
-     * jQuery find function behavior is:
+     * jQuery find function behavior is::
+     *
      *      $('A').find('A B') <=> $('A A B')
-     * The searches behavior to find options' DOM needs to be
+     *
+     * The searches behavior to find options' DOM needs to be::
+     *
      *      $('A').find('A B') <=> $('A B')
+     *
      * This is what this function does.
      *
      * @param {jQuery} $from - the jQuery element(s) from which to search
@@ -143,10 +157,22 @@ return {
         return $to_detach.detach();
     },
     /**
+     * Returns the selection range of an input or textarea
+     *
+     * @param {Object} node DOM item input or texteara
+     * @returns {Object} range
+     */
+    getSelectionRange: function (node) {
+        return {
+            start: node.selectionStart,
+            end: node.selectionEnd,
+        };
+    },
+    /**
      * Returns the distance between a DOM element and the top-left corner of the
      * window
      *
-     * @param {element} [e] the DOM element
+     * @param {Object} e DOM element (input or texteara)
      * @return {Object} the left and top distances in pixels
      */
     getPosition: function (e) {
@@ -244,6 +270,23 @@ return {
         }
         return $container;
     },
+    /**
+     * Sets the selection range of a given input or textarea
+     *
+     * @param {Object} node DOM element (input or textarea)
+     * @param {integer} range.start
+     * @param {integer} range.end
+     */
+    setSelectionRange: function (node, range) {
+        if (node.setSelectionRange){
+            node.setSelectionRange(range.start, range.end);
+        } else if (node.createTextRange){
+            node.createTextRange()
+                .collapse(true)
+                .moveEnd('character', range.start)
+                .moveStart('character', range.end)
+                .select();
+        }
+    },
 };
-
 });

@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_round
 
 
 class ReturnPickingLine(models.TransientModel):
@@ -12,6 +13,7 @@ class ReturnPickingLine(models.TransientModel):
 
     product_id = fields.Many2one('product.product', string="Product", required=True, domain="[('id', '=', product_id)]")
     quantity = fields.Float("Quantity", digits=dp.get_precision('Product Unit of Measure'), required=True)
+    uom_id = fields.Many2one('product.uom', string='Unit of Measure', related='move_id.product_uom')
     wizard_id = fields.Many2one('stock.return.picking', string="Wizard")
     move_id = fields.Many2one('stock.move', "Move")
 
@@ -27,12 +29,12 @@ class ReturnPicking(models.TransientModel):
     parent_location_id = fields.Many2one('stock.location')
     location_id = fields.Many2one(
         'stock.location', 'Return Location',
-        domain="['|', ('id', '=', original_location_id), '&', ('return_location', '=', True), ('id', 'child_of', parent_location_id)]")
+        domain="['|', ('id', '=', original_location_id), ('return_location', '=', True)]")
 
     @api.model
     def default_get(self, fields):
         if len(self.env.context.get('active_ids', list())) > 1:
-            raise UserError("You may only return one picking at a time!")
+            raise UserError(_("You may only return one picking at a time!"))
         res = super(ReturnPicking, self).default_get(fields)
 
         move_dest_exists = False
@@ -49,7 +51,8 @@ class ReturnPicking(models.TransientModel):
                     move_dest_exists = True
                 quantity = move.product_qty - sum(move.move_dest_ids.filtered(lambda m: m.state in ['partially_available', 'assigned', 'done']).\
                                                   mapped('move_line_ids').mapped('product_qty'))
-                product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id}))
+                quantity = float_round(quantity, precision_rounding=move.product_uom.rounding)
+                product_return_moves.append((0, 0, {'product_id': move.product_id.id, 'quantity': quantity, 'move_id': move.id, 'uom_id': move.product_id.uom_id.id}))
 
             if not product_return_moves:
                 raise UserError(_("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
@@ -72,6 +75,7 @@ class ReturnPicking(models.TransientModel):
         vals = {
             'product_id': return_line.product_id.id,
             'product_uom_qty': return_line.quantity,
+            'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
             'location_id': return_line.move_id.location_dest_id.id,
@@ -83,11 +87,10 @@ class ReturnPicking(models.TransientModel):
         }
         return vals
 
-    @api.multi
     def _create_returns(self):
         # TODO sle: the unreserve of the next moves could be less brutal
         for return_move in self.product_return_moves.mapped('move_id'):
-            return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')).do_unreserve()
+            return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
 
         # create new picking for returned products
         picking_type_id = self.picking_id.picking_type_id.return_picking_type_id.id or self.picking_id.picking_type_id.id
@@ -95,7 +98,7 @@ class ReturnPicking(models.TransientModel):
             'move_lines': [],
             'picking_type_id': picking_type_id,
             'state': 'draft',
-            'origin': self.picking_id.name,
+            'origin': _("Return of %s") % self.picking_id.name,
             'location_id': self.picking_id.location_dest_id.id,
             'location_dest_id': self.location_id.id})
         new_picking.message_post_with_view('mail.message_origin_link',
@@ -110,8 +113,19 @@ class ReturnPicking(models.TransientModel):
                 returned_lines += 1
                 vals = self._prepare_move_default_values(return_line, new_picking)
                 r = return_line.move_id.copy(vals)
-                r.write({'move_orig_ids': [(4, return_line.move_id.id, False)]})
+                vals = {}
 
+                # +--------------------------------------------------------------------------------------------------------+
+                # |       picking_pick     <--Move Orig--    picking_pack     --Move Dest-->   picking_ship
+                # |              | returned_move_ids              ↑                                  | returned_move_ids
+                # |              ↓                                | return_line.move_id              ↓
+                # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
+                # +--------------------------------------------------------------------------------------------------------+
+                move_orig_to_link = return_line.move_id.move_dest_ids.mapped('returned_move_ids')
+                move_dest_to_link = return_line.move_id.move_orig_ids.mapped('returned_move_ids')
+                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link | return_line.move_id]
+                vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
+                r.write(vals)
         if not returned_lines:
             raise UserError(_("Please specify at least one non-zero quantity."))
 
@@ -119,7 +133,6 @@ class ReturnPicking(models.TransientModel):
         new_picking.action_assign()
         return new_picking.id, picking_type_id
 
-    @api.multi
     def create_returns(self):
         for wizard in self:
             new_picking_id, pick_type_id = wizard._create_returns()

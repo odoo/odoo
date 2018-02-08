@@ -446,14 +446,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.$buttons.find('li[data-field=__count] a').click();
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -471,14 +471,14 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 1,
             "should have a table in DOM");
 
         pivot.update({domain: [['foo', '=', 12345]]});
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         assert.strictEqual(pivot.$('table').length, 0,
             "should not have a table in DOM");
@@ -497,7 +497,7 @@ QUnit.module('Views', {
             arch: '<pivot string="Partners"></pivot>',
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.destroy();
     });
@@ -515,13 +515,13 @@ QUnit.module('Views', {
             },
         });
 
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should have a no_content_helper");
         pivot.update({domain: [['foo', '=', 12345]]});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 1,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 1,
             "should still have a no_content_helper");
         pivot.update({domain: []});
-        assert.strictEqual(pivot.$('.oe_view_nocontent').length, 0,
+        assert.strictEqual(pivot.$('.o_view_nocontent').length, 0,
             "should not have a no_content_helper");
 
         // tries to open a field selection menu, to make sure it was not
@@ -825,6 +825,53 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('correctly uses pivot_ keys from the context (at reload)', function (assert) {
+        assert.expect(8);
+
+        this.data.partner.fields.amount = {string: "Amount", type: "float"};
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot>' +
+                        '<field name="date" interval="day" type="col"/>' +
+                        '<field name="amount" type="measure"/>' +
+                '</pivot>',
+        });
+
+        assert.strictEqual(pivot.$('tbody tr:first td.o_pivot_cell_value:last').text(), '0.00',
+            "the active measure should be amount");
+
+        var reloadParams = {
+            context: {
+                pivot_measures: ['foo'],
+                pivot_column_groupby: ['customer'],
+                pivot_row_groupby: ['product_id'],
+            },
+        };
+        pivot.reload(reloadParams);
+
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_opened').length, 1,
+            "column: should have one opened header");
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(First)').length, 1,
+            "column: should display one closed header with 'First'");
+        assert.strictEqual(pivot.$('thead .o_pivot_header_cell_closed:contains(Second)').length, 1,
+            "column: should display one closed header with 'Second'");
+
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_opened').length, 1,
+            "row: should have one opened header");
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xphone)').length, 1,
+            "row: should display one closed header with 'xphone'");
+        assert.strictEqual(pivot.$('tbody .o_pivot_header_cell_closed:contains(xpad)').length, 1,
+            "row: should display one closed header with 'xpad'");
+
+        assert.strictEqual(pivot.$('tbody tr:first td:nth(3)').text(), '32',
+            "selected measure should be foo, with total 32");
+
+        pivot.destroy();
+    });
+
     QUnit.test('correctly use group_by key from the context', function (assert) {
         assert.expect(7);
 
@@ -859,4 +906,33 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('pivot still handles __count__ measure', function (assert) {
+        // for retro-compatibility reasons, the pivot view still handles
+        // '__count__' measure.
+        assert.expect(2);
+
+        var pivot = createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: '<pivot></pivot>',
+            mockRPC: function (route, args) {
+                if (args.method === 'read_group') {
+                    assert.deepEqual(args.kwargs.fields, ['__count'],
+                        "should make a read_group with field __count");
+                }
+                return this._super(route, args);
+            },
+            viewOptions: {
+                context: {
+                    pivot_measures: ['__count__'],
+                },
+            },
+        });
+
+        var $countMeasure = pivot.$buttons.find('li[data-field=__count]');
+        assert.ok($countMeasure.hasClass('selected'), "The count measure should be activated");
+
+        pivot.destroy();
+    });
 });});

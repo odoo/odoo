@@ -1,30 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pos_cache
-#
+# 
 # Translators:
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
-# Wolfgang Taferner, 2016
-#, fuzzy
+# Henry Mineehen <info@mineehen.de>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Dejan Dinic <dejan.dinic@bluewin.ch>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2016-06-09 16:13+0000\n"
-"Last-Translator: Thorsten Vocks <thorsten.vocks@openbig.org>\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
-"Language: de\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"#-#-#-#-#  de.po (Odoo 9.0)  #-#-#-#-#\n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
 msgid "Cache"
 msgstr "Cache"
 
@@ -34,24 +37,19 @@ msgid "Cache compute user"
 msgstr "Benutzer im Cache-Speicher halten"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
-msgid "Cache ids"
-msgstr "Cache ids"
-
-#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_config_id
-msgid "Config id"
+msgid "Config"
 msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_display_name
@@ -62,6 +60,11 @@ msgstr "Anzeigename"
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_id
 msgid "ID"
 msgstr "ID"
+
+#. module: pos_cache
+#: model:ir.ui.view,arch_db:pos_cache.pos_config_view_form_inherit_pos_cache
+msgid "Invalidate cache"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache___last_update
@@ -80,10 +83,10 @@ msgstr "Zuletzt aktualisiert am"
 
 #. module: pos_cache
 #. openerp-web
-#: code:addons/pos_cache/static/src/js/pos_cache.js:36
+#: code:addons/pos_cache/static/src/js/pos_cache.js:39
 #, python-format
 msgid "Loading"
-msgstr "Wird geladen"
+msgstr "Ladevorgang"
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_config_oldest_cache_time
@@ -91,24 +94,26 @@ msgid "Oldest cache time"
 msgstr ""
 
 #. module: pos_cache
+#: model:ir.actions.server,name:pos_cache.refresh_pos_cache_cron_ir_actions_server
+#: model:ir.cron,cron_name:pos_cache.refresh_pos_cache_cron
+#: model:ir.cron,name:pos_cache.refresh_pos_cache_cron
+msgid "PoS: refresh cache"
+msgstr ""
+
+#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_domain
-msgid "Product domain"
+msgid "Product Domain"
 msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_fields
-msgid "Product fields"
-msgstr "Produktfelder"
-
-#. module: pos_cache
-#: model:ir.ui.view,arch_db:pos_cache.view_pos_config_form
-msgid "Recompute cache"
-msgstr "Cache neu berechnen"
+msgid "Product Fields"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_cache
 msgid "pos.cache"
-msgstr ""
+msgstr "pos.cache"
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_config

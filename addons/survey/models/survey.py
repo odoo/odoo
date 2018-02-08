@@ -7,16 +7,11 @@ import re
 import uuid
 from collections import Counter, OrderedDict
 from itertools import product
-
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import UserError, ValidationError
-
-from odoo.addons.website.models.website import slug
-
-from odoo.tools import pycompat
-
 email_validator = re.compile(r"[^@]+@[^@]+\.[^@]+")
 _logger = logging.getLogger(__name__)
 
@@ -26,7 +21,7 @@ def dict_keys_startswith(dictionary, string):
         .. note::
             This function uses dictionary comprehensions (Python >= 2.7)
     """
-    return {k: v for k, v in pycompat.items(dictionary) if k.startswith(string)}
+    return {k: v for k, v in dictionary.items() if k.startswith(string)}
 
 
 class SurveyStage(models.Model):
@@ -63,7 +58,7 @@ class Survey(models.Model):
     title = fields.Char('Title', required=True, translate=True)
     page_ids = fields.One2many('survey.page', 'survey_id', string='Pages', copy=True)
     stage_id = fields.Many2one('survey.stage', string="Stage", default=_default_stage,
-                               ondelete="set null", copy=False, group_expand='_read_group_stage_ids')
+                               ondelete="restrict", copy=False, group_expand='_read_group_stage_ids')
     auth_required = fields.Boolean('Login required', help="Users with a public link will be requested to login before taking part to the survey",
         oldname="authenticate")
     users_can_go_back = fields.Boolean('Users can go back', help="If checked, users can go back to previous pages.")
@@ -240,7 +235,7 @@ class Survey(models.Model):
                     answers[input_line.value_suggested.id]['count'] += 1
                 if input_line.answer_type == 'text' and (not(current_filters) or input_line.user_input_id.id in current_filters):
                     comments.append(input_line)
-            result_summary = {'answers': list(pycompat.values(answers)), 'comments': comments}
+            result_summary = {'answers': list(answers.values()), 'comments': comments}
 
         # Calculate and return statistics for matrix
         if question.type == 'matrix':
@@ -259,8 +254,8 @@ class Survey(models.Model):
                     comments.append(input_line)
             result_summary = {'answers': answers, 'rows': rows, 'result': res, 'comments': comments}
 
-        # Calculate and return statistics for free_text, textbox, datetime
-        if question.type in ['free_text', 'textbox', 'datetime']:
+        # Calculate and return statistics for free_text, textbox, date
+        if question.type in ['free_text', 'textbox', 'date']:
             result_summary = []
             for input_line in question.user_input_line_ids:
                 if not(current_filters) or input_line.user_input_id.id in current_filters:
@@ -443,7 +438,7 @@ class SurveyQuestion(models.Model):
             ('free_text', 'Multiple Lines Text Box'),
             ('textbox', 'Single Line Text Box'),
             ('numerical_box', 'Numerical Value'),
-            ('datetime', 'Date and Time'),
+            ('date', 'Date'),
             ('simple_choice', 'Multiple choice: only one answer'),
             ('multiple_choice', 'Multiple choice: multiple answers allowed'),
             ('matrix', 'Matrix')], string='Type of Question', default='free_text', required=True)
@@ -484,8 +479,8 @@ class SurveyQuestion(models.Model):
     validation_length_max = fields.Integer('Maximum Text Length')
     validation_min_float_value = fields.Float('Minimum value')
     validation_max_float_value = fields.Float('Maximum value')
-    validation_min_date = fields.Datetime('Minimum Date')
-    validation_max_date = fields.Datetime('Maximum Date')
+    validation_min_date = fields.Date('Minimum Date')
+    validation_max_date = fields.Date('Maximum Date')
     validation_error_msg = fields.Char('Validation Error message', oldname='validation_valid_err_msg',
                                         translate=True, default=lambda self: _("The answer you entered has an invalid format."))
 
@@ -578,28 +573,28 @@ class SurveyQuestion(models.Model):
         return errors
 
     @api.multi
-    def validate_datetime(self, post, answer_tag):
+    def validate_date(self, post, answer_tag):
         self.ensure_one()
         errors = {}
         answer = post[answer_tag].strip()
         # Empty answer to mandatory question
         if self.constr_mandatory and not answer:
             errors.update({answer_tag: self.constr_error_msg})
-        # Checks if user input is a datetime
+        # Checks if user input is a date
         if answer:
             try:
-                dateanswer = fields.Datetime.from_string(answer)
+                dateanswer = fields.Date.from_string(answer)
             except ValueError:
-                errors.update({answer_tag: _('This is not a date/time')})
+                errors.update({answer_tag: _('This is not a date')})
                 return errors
         # Answer validation (if properly defined)
         if answer and self.validation_required:
             # Answer is not in the right range
             try:
-                datetime_from_string = fields.Datetime.from_string
-                dateanswer = datetime_from_string(answer)
-                min_date = datetime_from_string(self.validation_min_date)
-                max_date = datetime_from_string(self.validation_max_date)
+                date_from_string = fields.Date.from_string
+                dateanswer = date_from_string(answer)
+                min_date = date_from_string(self.validation_min_date)
+                max_date = date_from_string(self.validation_max_date)
 
                 if min_date and max_date and not (min_date <= dateanswer <= max_date):
                     # If Minimum and Maximum Date are entered
@@ -610,7 +605,7 @@ class SurveyQuestion(models.Model):
                 elif max_date and not dateanswer <= max_date:
                     # If only Maximum Date is entered and not Define Minimum Date
                     errors.update({answer_tag: self.validation_error_msg})
-            except ValueError:  # check that it is a datetime has been done hereunder
+            except ValueError:  # check that it is a date has been done hereunder
                 pass
         return errors
 
@@ -640,7 +635,7 @@ class SurveyQuestion(models.Model):
             if self.comments_allowed:
                 comment_answer = answer_candidates.pop(("%s_%s" % (answer_tag, 'comment')), '').strip()
             # Preventing answers with blank value
-            if all(not answer.strip() for answer in pycompat.values(answer_candidates)) and answer_candidates:
+            if all(not answer.strip() for answer in answer_candidates.values()) and answer_candidates:
                 errors.update({answer_tag: self.constr_error_msg})
             # There is no answer neither comments (if comments count as answer)
             if not answer_candidates and self.comment_count_as_answer and (not comment_flag or not comment_answer):
@@ -689,7 +684,7 @@ class SurveyLabel(models.Model):
     def _check_question_not_empty(self):
         """Ensure that field question_id XOR field question_id_2 is not null"""
         if not bool(self.question_id) != bool(self.question_id_2):
-            raise ValidationError("A label must be attached to one and only one question")
+            raise ValidationError(_("A label must be attached to one and only one question"))
 
 
 class SurveyUserInput(models.Model):
@@ -798,7 +793,7 @@ class SurveyUserInputLine(models.Model):
         ('suggestion', 'Suggestion')], string='Answer Type')
     value_text = fields.Char('Text answer')
     value_number = fields.Float('Numerical answer')
-    value_date = fields.Datetime('Date answer')
+    value_date = fields.Date('Date answer')
     value_free_text = fields.Text('Free Text answer')
     value_suggested = fields.Many2one('survey.label', string="Suggested answer")
     value_suggested_row = fields.Many2one('survey.label', string="Row answer")
@@ -927,7 +922,7 @@ class SurveyUserInputLine(models.Model):
         return True
 
     @api.model
-    def save_line_datetime(self, user_input_id, question, post, answer_tag):
+    def save_line_date(self, user_input_id, question, post, answer_tag):
         vals = {
             'user_input_id': user_input_id,
             'question_id': question.id,

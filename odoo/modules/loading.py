@@ -20,7 +20,6 @@ import odoo.tools as tools
 
 from odoo import api, SUPERUSER_ID
 from odoo.modules.module import adapt_version, initialize_sys_path, load_openerp_module
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -45,12 +44,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
-            if tools.config.options['test_commit']:
-                cr.commit()
-            else:
-                cr.rollback()
-                # avoid keeping stale xml_id, etc. in cache
-                odoo.registry(cr.dbname).clear_caches()
+            cr.rollback()
+            # avoid keeping stale xml_id, etc. in cache
+            odoo.registry(cr.dbname).clear_caches()
 
 
     def _get_files_of_kind(kind):
@@ -66,7 +62,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 files.append(f)
                 if k.endswith('_xml') and not (k == 'init_xml' and not f.endswith('.xml')):
                     # init_xml, update_xml and demo_xml are deprecated except
-                    # for the case of init_xml with yaml, csv and sql files as
+                    # for the case of init_xml with csv and sql files as
                     # we can't specify noupdate for those file.
                     correct_key = 'demo' if k.count('demo') else 'data'
                     _logger.warning(
@@ -149,7 +145,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             module = env['ir.module.module'].browse(module_id)
 
             if perform_checks:
-                module.check()
+                module._check()
 
             if package.state=='to upgrade':
                 # upgrading the module information
@@ -165,9 +161,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             # Update translations for all installed languages
             overwrite = odoo.tools.config["overwrite_existing_translations"]
-            module.with_context(overwrite=overwrite).update_translations()
+            module.with_context(overwrite=overwrite)._update_translations()
 
-            registry._init_modules.add(package.name)
+            if package.name is not None:
+                registry._init_modules.add(package.name)
 
             if new_install:
                 post_init = package.info.get('post_init_hook')
@@ -185,6 +182,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     # Python tests
                     env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
                     report.record_result(odoo.modules.module.run_unit_tests(module_name, cr.dbname))
+                    # tests may have reset the environment
+                    env = api.Environment(cr, SUPERUSER_ID, {})
+                    module = env['ir.module.module'].browse(module_id)
 
             processed_modules.append(package.name)
 
@@ -199,7 +199,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 if hasattr(package, kind):
                     delattr(package, kind)
 
-        registry._init_modules.add(package.name)
+        if package.name is not None:
+            registry._init_modules.add(package.name)
         cr.commit()
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
@@ -263,7 +264,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new registry, just created in
         # odoo.modules.registry.Registry.new().
         registry = odoo.registry(cr.dbname)
-        env = api.Environment(cr, SUPERUSER_ID, {})
 
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -291,20 +291,20 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 2: Mark other modules to be loaded/updated
         if update_module:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             Module = env['ir.module.module']
-            if ('base' in tools.config['init']) or ('base' in tools.config['update']):
-                _logger.info('updating modules list')
-                Module.update_list()
+            _logger.info('updating modules list')
+            Module.update_list()
 
             _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
 
-            module_names = [k for k, v in pycompat.items(tools.config['init']) if v]
+            module_names = [k for k, v in tools.config['init'].items() if v]
             if module_names:
                 modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
                 if modules:
                     modules.button_install()
 
-            module_names = [k for k, v in pycompat.items(tools.config['update']) if v]
+            module_names = [k for k, v in tools.config['update'].items() if v]
             if module_names:
                 modules = Module.search([('state', '=', 'installed'), ('name', 'in', module_names)])
                 if modules:
@@ -349,6 +349,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 4: Finish and cleanup installations
         if processed_modules:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 if model in registry and not registry[model]._abstract and not registry[model]._transient:
@@ -384,6 +385,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr.execute("SELECT name, id FROM ir_module_module WHERE state=%s", ('to remove',))
             modules_to_remove = dict(cr.fetchall())
             if modules_to_remove:
+                env = api.Environment(cr, SUPERUSER_ID, {})
                 pkgs = reversed([p for p in graph if p.name in modules_to_remove])
                 for pkg in pkgs:
                     uninstall_hook = pkg.info.get('uninstall_hook')
@@ -392,7 +394,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                         getattr(py_module, uninstall_hook)(cr, registry)
 
                 Module = env['ir.module.module']
-                Module.browse(pycompat.values(modules_to_remove)).module_uninstall()
+                Module.browse(modules_to_remove.values()).module_uninstall()
                 # Recursive reload, should only happen once, because there should be no
                 # modules to remove next time
                 cr.commit()
@@ -402,6 +404,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 6: verify custom views on every model
         if update_module:
+            env = api.Environment(cr, SUPERUSER_ID, {})
             View = env['ir.ui.view']
             for model in registry:
                 try:
@@ -415,7 +418,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('Modules loaded.')
 
         # STEP 8: call _register_hook on every model
-        for model in pycompat.values(env):
+        env = api.Environment(cr, SUPERUSER_ID, {})
+        for model in env.values():
             model._register_hook()
 
         # STEP 9: save installed/updated modules for post-install tests
@@ -424,3 +428,24 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
     finally:
         cr.close()
+
+
+def reset_modules_state(db_name):
+    """
+    Resets modules flagged as "to x" to their original state
+    """
+    # Warning, this function was introduced in response to commit 763d714
+    # which locks cron jobs for dbs which have modules marked as 'to %'.
+    # The goal of this function is to be called ONLY when module
+    # installation/upgrade/uninstallation fails, which is the only known case
+    # for which modules can stay marked as 'to %' for an indefinite amount
+    # of time
+    db = odoo.sql_db.db_connect(db_name)
+    with db.cursor() as cr:
+        cr.execute(
+            "UPDATE ir_module_module SET state='installed' WHERE state IN ('to remove', 'to upgrade')"
+        )
+        cr.execute(
+            "UPDATE ir_module_module SET state='uninstalled' WHERE state='to install'"
+        )
+        _logger.warning("Transient module states were reset")

@@ -100,7 +100,7 @@
                                 <div class="row mb4">
                                     <div class="col-xs-8">
                                         <span>
-                                            <strong><t t-esc="record.description.value"/></strong>
+                                            <strong class="o_kanban_record_title"><t t-esc="record.description.value"/></strong>
                                         </span>
                                     </div>
                                     <div class="col-xs-4 text-right">
@@ -159,7 +159,9 @@
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
-            <p>
+            <p class="o_view_nocontent_empty_folder">
+                No previous order found
+            </p><p>
                 There is no previous order recorded. Click on "My Lunch" and then create a new lunch order.
             </p>
             </field>
@@ -187,7 +189,9 @@
             <field name="context">{"search_default_is_mine_group":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree_2"/>
             <field name="help" type="html">
-              <p>
+              <p class="o_view_nocontent_empty_folder">
+                No cash move yet
+              </p><p>
                 Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.
                 An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager.
               </p>
@@ -204,13 +208,14 @@
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
             <field name="help" type="html">
-              <p>
+              <p class="o_view_nocontent_empty_folder">
+                Nothing to order today
+              </p><p>
                 Here you can see today's orders grouped by vendors.
-              </p>
-              <p>
-                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
-                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
-                - Click on the <span class="fa fa-times-circle text-danger"/> to announce that the order isn't available
+              </p><p>
+                Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered.<br/>
+                Click on the <span class="fa fa-check text-success"/> to announce that the order is received.<br/>
+                Click on the <span class="fa fa-times-circle text-danger"/> to announce that the order isn't available.
               </p>
             </field>
         </record>
@@ -224,13 +229,14 @@
             <field name="search_view_id" ref="lunch_order_line_view_search"/>
             <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
             <field name="help" type="html">
-              <p>
+              <p class="o_view_nocontent_empty_folder">
+                No lunch order yet
+              </p><p>
                 Summary of all lunch orders, grouped by vendor and by date.
-              </p>
-              <p>
-                - Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered <br/>
-                - Click on the <span class="fa fa-check text-success"/> to announce that the order is received <br/>
-                - Click on the <span class="fa fa-times-circle text-danger"/> red X to announce that the order isn't available
+              </p><p>
+                Click on the <span class="fa fa-phone text-success"/> to announce that the order is ordered.<br/>
+                Click on the <span class="fa fa-check text-success"/> to announce that the order is received.<br/>
+                Click on the <span class="fa fa-times-circle text-danger"/> red X to announce that the order isn't available.
               </p>
             </field>
         </record>
@@ -245,10 +251,9 @@
             <field name="context">{"search_default_group_by_user":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a new payment.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new payment
+              </p><p>
                 A cashmove can either be an expense or a payment.<br/>
                 An expense is automatically created at the order receipt.<br/>
                 A payment represents the employee reimbursement to the company.
@@ -266,11 +271,10 @@
             <field name="context">{"search_default_is_payment":1}</field>
             <field name="view_id" ref="lunch_cashmove_view_tree"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a payment.
-            </p>
-              <p>
-                Here you can see the employees' payment. A payment is a cash move from the employee to the company.
+              <p class="o_view_nocontent_smiling_face">
+                Register a payment
+              </p><p>
+                Payments are used to register liquidity movements. You can process those payments by your own means or by using installed facilities.
               </p>
             </field>
         </record>
@@ -282,10 +286,9 @@
             <field name="res_model">lunch.product</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a product for lunch.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new product for lunch
+              </p><p>
                 A product is defined by its name, category, price and vendor.
               </p>
             </field>
@@ -298,10 +301,9 @@
             <field name="res_model">lunch.product.category</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a lunch category.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new lunch category
+              </p><p>
                 Here you can access all categories for the lunch products.
               </p>
             </field>
@@ -328,18 +330,16 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="search_view_id" ref="lunch_alert_view_search"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to create a lunch alert.
-            </p>
-              <p>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new lunch alert
+              </p><p>
                 Alerts are used to warn employee from possible issues concerning the lunch orders.
-                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.
-            </p>
-            <p>
-                Example: <br/>
-                - Recurency: Everyday<br/>
-                - Time interval: from 00h00 am to 11h59 pm<br/>
-                - Message: "You must order before 10h30 am"
+                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display.
+              </p><p>
+                Example:<br/>
+                Recurency: Everyday,<br/>
+                Time interval: from 00h00 am to 11h59 pm,<br/>
+                Message: "You must order before 10h30 am".
               </p>
             </field>
         </record>
@@ -379,15 +379,11 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <div class="col-xs-6">
-                                        <strong><field name="product_id"/></strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><field name="product_id"/></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right">
-                                            <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'confirmed': 'success', 'cancelled':'danger'}}"/>
-                                        </span>
-                                    </div>
+                                    <field name="state" widget="kanban_label_selection" options="{'classes': {'new': 'default', 'confirmed': 'success', 'cancelled':'danger'}}"/>
                                 </div>
                                 <div>
                                     <field name="note"/>
@@ -402,13 +398,13 @@
                                 </div>
                                 <div class="row mt4">
                                     <div class="col-xs-6">
-                                        <a class="btn btn-sm btn-success" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
+                                        <a class="btn btn-xs btn-success" name="order" string="Order" type="object" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}" groups="lunch.group_lunch_manager">
                                             <i class="fa fa-phone"/>
                                         </a>
-                                        <a class="btn btn-sm btn-info" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
+                                        <a class="btn btn-xs btn-info" name="confirm" string="Receive" type="object" attrs="{'invisible': [('state','!=','ordered')]}" groups="lunch.group_lunch_manager">
                                             <i class="fa fa-check"/>
                                         </a>
-                                        <a class="btn btn-sm btn-danger" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
+                                        <a class="btn btn-xs btn-danger" name="cancel" string="Cancel" type="object" attrs="{'invisible': [('state','=','cancelled')]}" groups="lunch.group_lunch_manager">
                                             <i class="fa fa-times"/>
                                         </a>
                                     </div>
@@ -473,7 +469,7 @@
                                 </div>
                             </div>
                         </group>
-                        
+
                         <div>
                             <field name='previous_order_widget' widget='previous_order' class='o_lunch_last_orders'/>
                         </div>
@@ -487,6 +483,13 @@
                                 <field name='supplier' invisible="1"/>
                                 <field name="state" invisible="1"/>
                             </tree>
+                            <form string='Lunch Order Form'>
+                                <group>
+                                    <field name='product_id'/>
+                                    <field name='note' />
+                                    <field name='price'/>
+                                </group>
+                            </form>
                         </field>
                         <group class='oe_subtotal_footer oe_right'>
                             <field name='total' widget='monetary' options="{'currency_field': 'currency_id'}"/>
@@ -524,15 +527,16 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <div class="col-xs-8">
-                                        <strong><t t-esc="record.name.value"/></strong>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><t t-esc="record.name.value"/></strong>
                                     </div>
-                                    <div class="col-xs-4">
-                                        <span class="badge pull-right">
-                                            Price: <t t-esc="record.price.value"/>
-                                        </span>
-                                    </div>
+                                    <span class="badge pull-right">
+                                        Price: <t t-esc="record.price.value"/>
+                                    </span>
+                                </div>
+                                <div>
+                                    <t t-esc="record.supplier.value"/>
                                 </div>
                                 <div>
                                     <t t-esc="record.description.value"/>
@@ -548,18 +552,9 @@
             <field name="name">Lunch: Archive/Restore products</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_lunch_product" />
+            <field name="binding_model_id" ref="model_lunch_product" />
             <field name="state">code</field>
             <field name="code">records.toggle_active()</field>
-        </record>
-
-        <record id="ir_values_lunch_archive_product" model="ir.values">
-            <field name="name">action_lunch_archive_product</field>
-            <field name="action_id" ref="action_server_lunch_archive_product" />
-            <field name="value" eval="'ir.actions.server,' + str(ref('action_server_lunch_archive_product'))"/>
-            <field name="key">action</field>
-            <field name="model_id" ref="model_lunch_product" />
-            <field name="model">lunch.product</field>
-            <field name="key2">client_action_multi</field>
         </record>
 
         <!-- Search for product -->
@@ -574,7 +569,7 @@
                     <field name="description"/>
                     <group expand="0" string="Group By">
                         <filter name="supplier" string="Vendor" context="{'group_by': 'supplier'}"/>
-                        <filter name="category" string="Category" context="{'group_by': 'category_id'}"/>
+                        <filter name="category" string="Product Category" context="{'group_by': 'category_id'}"/>
                         <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
                     </group>
                 </search>
@@ -639,8 +634,8 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div>
-                                    <strong><t t-esc="record.message.value"/></strong>
+                                <div class="o_kanban_record_top">
+                                    <strong class="o_kanban_record_title"><t t-esc="record.message.value"/></strong>
                                 </div>
                                 <div class="row mb4">
                                     <div class="col-xs-6">

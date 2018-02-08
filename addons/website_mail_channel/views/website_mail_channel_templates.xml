@@ -50,7 +50,7 @@
                     <div t-esc="group.description" class="text-muted"/>
                 </div>
                 <div class="col-md-2">
-                    <i class='fa fa-fw fa-user'/> <t t-esc="len(group.channel_partner_ids)"/> members<br />
+                    <i class='fa fa-fw fa-user'/> <t t-esc="group_data[group.id]['members_count']"/> members<br />
                     <i class='fa fa-fw fa-envelope-o'/> <t t-raw="group_data[group.id]['monthly_message_nbr']"/> messages / month
                 </div>
                 <div class="col-md-3">
@@ -332,6 +332,21 @@
             <div class="container">
                 <p>
                     Invalid or expired confirmation link.
+                </p>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="not_subscribed" name="Email address was not subscribed">
+    <t t-call="website.layout">
+        <div id="wrap" class="oe_structure oe_empty">
+            <div class="container">
+                <p>
+                    The address <t t-esc="partner_id.email"/> is already
+                    unsubscribed or was never subscribed to the mailing
+                    list, you may want to check that the address was
+                    correct.
                 </p>
             </div>
         </div>

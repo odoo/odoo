@@ -3,15 +3,15 @@
 # * website_event_sale
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# krnkris <krnkris@freemail.hu>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# krnkris <krnkris@freemail.hu>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: krnkris <krnkris@freemail.hu>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: krnkris <krnkris@freemail.hu>, 2017\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,19 +35,9 @@ msgid "<span>left</span>"
 msgstr "<span>bal</span>"
 
 #. module: website_event_sale
-#: model:ir.model.fields,field_description:website_event_sale.field_product_product_intrastat_id
-msgid "Intrastat code"
-msgstr "Intrastat kód"
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
 msgid "Only"
 msgstr "Kizárólag"
-
-#. module: website_event_sale
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "Order Now"
-msgstr "Rendelje most"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
@@ -55,7 +45,12 @@ msgid "Product"
 msgstr "Termék"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:61
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Quotation"
+msgstr "Árajánlat"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:56
 #, python-format
 msgid "Registration"
 msgstr "Regisztráció"
@@ -66,13 +61,7 @@ msgid "Remaining"
 msgstr "Hátralevő"
 
 #. module: website_event_sale
-#: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sales Order"
-msgstr "Vásárlói megrendelés"
-
-#. module: website_event_sale
 #: model:ir.ui.view,arch_db:website_event_sale.index
-#: model:ir.ui.view,arch_db:website_event_sale.registration_template
 msgid "Sold Out"
 msgstr "Eladva"
 

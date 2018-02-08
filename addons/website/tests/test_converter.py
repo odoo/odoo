@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import unittest
-from odoo.addons.website.models.website import slugify, unslug
+from odoo.addons.http_routing.models.ir_http import slugify, unslug
+from odoo.tests.common import tagged
 
-from odoo.tools import pycompat
 
-
+@tagged('standard', 'at_install')
 class TestUnslug(unittest.TestCase):
 
     def test_unslug(self):
@@ -25,10 +25,11 @@ class TestUnslug(unittest.TestCase):
             'foo1': (None, None),
         }
 
-        for slug, expected in pycompat.items(tests):
+        for slug, expected in tests.items():
             self.assertEqual(unslug(slug), expected)
 
 
+@tagged('standard', 'at_install')
 class TestTitleToSlug(unittest.TestCase):
     """
     Those tests should pass with or without python-slugify

@@ -1,6 +1,7 @@
 odoo.define('website_sale_comparison.comparison', function (require) {
 "use strict";
 
+require('web.dom_ready')
 var ajax = require('web.ajax');
 var core = require('web.core');
 var _t = core._t;

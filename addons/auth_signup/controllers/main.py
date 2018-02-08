@@ -8,7 +8,6 @@ from odoo.addons.auth_signup.models.res_users import SignupError
 from odoo.addons.web.controllers.main import ensure_db, Home
 from odoo.exceptions import UserError
 from odoo.http import request
-from odoo.tools import pycompat
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +24,7 @@ class AuthSignupHome(Home):
             return http.redirect_with_hash(request.params.get('redirect'))
         return response
 
-    @http.route('/web/signup', type='http', auth='public', website=True)
+    @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False)
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -47,7 +46,7 @@ class AuthSignupHome(Home):
                         ).send_mail(user_sudo.id, force_send=True)
                 return super(AuthSignupHome, self).web_login(*args, **kw)
             except UserError as e:
-                qcontext['error'] = str(e)
+                qcontext['error'] = e.name or e.value
             except (SignupError, AssertionError) as e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
@@ -55,9 +54,11 @@ class AuthSignupHome(Home):
                     _logger.error("%s", e)
                     qcontext['error'] = _("Could not create a new account.")
 
-        return request.render('auth_signup.signup', qcontext)
+        response = request.render('auth_signup.signup', qcontext)
+        response.headers['X-Frame-Options'] = 'DENY'
+        return response
 
-    @http.route('/web/reset_password', type='http', auth='public', website=True)
+    @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False)
     def web_auth_reset_password(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -92,7 +93,7 @@ class AuthSignupHome(Home):
 
         get_param = request.env['ir.config_parameter'].sudo().get_param
         return {
-            'signup_enabled': get_param('auth_signup.allow_uninvited') == 'True',
+            'signup_enabled': get_param('auth_signup.invitation_scope', 'b2b') == 'b2c',
             'reset_password_enabled': get_param('auth_signup.reset_password') == 'True',
         }
 
@@ -106,7 +107,7 @@ class AuthSignupHome(Home):
             try:
                 # retrieve the user info (name, login or email) corresponding to a signup token
                 token_infos = request.env['res.partner'].sudo().signup_retrieve_info(qcontext.get('token'))
-                for k, v in pycompat.items(token_infos):
+                for k, v in token_infos.items():
                     qcontext.setdefault(k, v)
             except:
                 qcontext['error'] = _("Invalid signup token")

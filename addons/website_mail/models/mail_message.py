@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, SUPERUSER_ID, _
+from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import html2plaintext
 from odoo.exceptions import AccessError
@@ -58,13 +58,6 @@ class MailMessage(models.Model):
         return super(MailMessage, self).check_access_rule(operation=operation)
 
     @api.multi
-    def website_message_format(self):
-        message_values = self.read([
-            'id', 'body', 'date', 'author_id', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
-            'model', 'res_id', 'record_name',  # document related
-            'website_published',
-        ])
-        message_tree = dict((m.id, m) for m in self.sudo())
-        self._message_read_dict_postprocess(message_values, message_tree)
-        return message_values
+    def _portal_message_format(self, fields_list):
+        fields_list += ['website_published']
+        return super(MailMessage, self)._portal_message_format(fields_list)

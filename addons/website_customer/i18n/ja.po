@@ -1,26 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * website_customer
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2015-10-22 12:05+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Manami Hashi <manami@roomsfor.hk>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "<span class=\"fa fa-1x fa-tags\"/> All"
-msgstr ""
+msgstr "<span class=\"fa fa-1x fa-tags\"/> すべて"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_active
@@ -28,15 +32,21 @@ msgid "Active"
 msgstr "有効"
 
 #. module: website_customer
-#: code:addons/website_customer/controllers/main.py:68
+#: code:addons/website_customer/controllers/main.py:80
 #, python-format
 msgid "All Countries"
-msgstr ""
+msgstr "すべての国"
+
+#. module: website_customer
+#: code:addons/website_customer/controllers/main.py:61
+#, python-format
+msgid "All Sectors of Activity"
+msgstr "全活動セクタ"
 
 #. module: website_customer
 #: model:ir.model.fields,help:website_customer.field_res_partner_tag_classname
 msgid "Bootstrap class to customize the color"
-msgstr ""
+msgstr "色をカスタマイズするためのブートストラップクラス"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_name
@@ -46,12 +56,17 @@ msgstr "カテゴリ名"
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_classname
 msgid "Class"
-msgstr ""
+msgstr "クラス"
 
 #. module: website_customer
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid "Click to create a new partner tag."
-msgstr ""
+msgstr "新しい取引先タグを作成するにはクリックしてください。"
+
+#. module: website_customer
+#: model:ir.model,name:website_customer.model_res_partner
+msgid "Contact"
+msgstr "連絡先"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_create_uid
@@ -76,7 +91,7 @@ msgstr "ID"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "Implemented By"
-msgstr ""
+msgstr "実装者"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag___last_update
@@ -97,38 +112,34 @@ msgstr "最終更新日"
 #: model:ir.actions.act_window,help:website_customer.action_partner_tag_form
 msgid ""
 "Manage the partner tags to better classify them on your website.\n"
-"                    You can add the filter by tag on your website in the "
-"\"Customize\" menu."
+"                    You can add the filter by tag on your website in the \"Customize\" menu."
 msgstr ""
+"取引先タグを管理して、ウェブサイトで、より適切に分類します。\n"
+"                    あなたは \"カスタマイズ\"メニューであなたのウェブサイトのタグでフィルタを追加することができます。"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "No result found"
-msgstr ""
+msgstr "結果が見つかりません"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.details
 #: model:ir.ui.view,arch_db:website_customer.footer_custom
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Our References"
-msgstr ""
-
-#. module: website_customer
-#: model:ir.model,name:website_customer.model_res_partner
-msgid "Partner"
-msgstr "取引先"
+msgstr "私たちの参考文献"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_form
 msgid "Partner Tag"
-msgstr ""
+msgstr "取引先タグ"
 
 #. module: website_customer
 #: model:ir.model,name:website_customer.model_res_partner_tag
 msgid ""
 "Partner Tags - These tags can be used on website to find customers by "
 "sector, or ... "
-msgstr ""
+msgstr "取引先タグ - これらのタグは、セクター別の顧客を見つけるためにウェブサイトで使用することができます..."
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_partner_ids
@@ -143,12 +154,17 @@ msgstr "参照"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country_list
 msgid "References by Country"
+msgstr "国別の参照事項"
+
+#. module: website_customer
+#: model:ir.ui.view,arch_db:website_customer.opt_industry_list
+msgid "References by Sectors of Activity"
 msgstr ""
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_tag_list
 msgid "References by Tag"
-msgstr ""
+msgstr "タグによる参照"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
@@ -158,7 +174,12 @@ msgstr "検索"
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.index
 msgid "Trusted by millions worldwide"
-msgstr ""
+msgstr "世界中の何百万人もの信頼"
+
+#. module: website_customer
+#: model:ir.model.fields,field_description:website_customer.field_res_partner_tag_website_published
+msgid "Visible in Website"
+msgstr "ウェブサイトに表示"
 
 #. module: website_customer
 #: model:ir.actions.act_window,name:website_customer.action_partner_tag_form
@@ -166,25 +187,20 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_customer.view_partner_tag_list
 #: model:ir.ui.view,arch_db:website_customer.view_partners_form_website
 msgid "Website Tags"
-msgstr ""
+msgstr "ウェブサイトのタグ"
 
 #. module: website_customer
 #: model:ir.model.fields,field_description:website_customer.field_res_partner_website_tag_ids
+#: model:ir.model.fields,field_description:website_customer.field_res_users_website_tag_ids
 msgid "Website tags"
-msgstr ""
+msgstr "ウェブサイトのタグ"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.opt_country
 msgid "World Map"
-msgstr ""
+msgstr "世界地図"
 
 #. module: website_customer
 #: model:ir.ui.view,arch_db:website_customer.implemented_by_block
 msgid "reference(s))"
-msgstr ""
-
-#~ msgid "Partner Tags"
-#~ msgstr "取引先タグ"
-
-#~ msgid "Tags"
-#~ msgstr "タグ"
+msgstr "参照(s))"

@@ -55,18 +55,18 @@ return AbstractModel.extend({
      *   to keep track of various entities.
      */
     load: function (params) {
-        this.initialGroupBys = params.groupBys;
+        var groupBys = params.context.graph_groupbys || params.groupBys;
+        this.initialGroupBys = groupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.chart = {
             data: [],
-            groupedBy: params.groupedBy.length ? params.groupedBy : params.groupBys,
-            measure: params.measure,
-            mode: params.mode,
+            groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
+            measure: params.context.graph_measure || params.measure,
+            mode: params.context.graph_mode || params.mode,
             domain: params.domain,
             context: params.context,
         };
-        this.defaultGroupedBy = params.groupedBy;
         return this._loadGraph();
     },
     /**
@@ -85,11 +85,17 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     reload: function (handle, params) {
+        if ('context' in params) {
+            this.chart.context = params.context;
+            this.chart.groupedBy = params.context.graph_groupbys || this.chart.groupedBy;
+            this.chart.measure = params.context.graph_measure || this.chart.measure;
+            this.chart.mode = params.context.graph_mode || this.chart.mode;
+        }
         if ('domain' in params) {
             this.chart.domain = params.domain;
         }
         if ('groupBy' in params) {
-            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
+            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;
@@ -114,7 +120,7 @@ return AbstractModel.extend({
      * @returns {Deferred}
      */
     _loadGraph: function () {
-        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
+        var groupedBy = this.chart.groupedBy;
         var fields = _.map(groupedBy, function (groupBy) {
             return groupBy.split(':')[0];
         });

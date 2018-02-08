@@ -46,12 +46,12 @@ def transfer_field_to_modifiers(field, modifiers):
     for attr in ('invisible', 'readonly', 'required'):
         state_exceptions[attr] = []
         default_values[attr] = bool(field.get(attr))
-    for state, modifs in pycompat.items(field.get("states",{})):
+    for state, modifs in field.get("states",{}).items():
         for modif in modifs:
             if default_values[modif[0]] != modif[1]:
                 state_exceptions[modif[0]].append(state)
 
-    for attr, default_value in pycompat.items(default_values):
+    for attr, default_value in default_values.items():
         if state_exceptions[attr]:
             modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])]
         else:
@@ -78,7 +78,7 @@ def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False
             if in_tree_view and a == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
-                modifiers['tree_invisible'] = v
+                modifiers['column_invisible'] = v
             elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
                 # Don't set the attribute to False if a dynamic value was
                 # provided (i.e. a domain from attrs or states).
@@ -106,14 +106,14 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
     :type node: lxml.etree._Element
     :param dict field: field descriptor corresponding to the provided node
     :param dict context: execution context used to evaluate node attributes
-    :param bool in_tree_view: triggers the ``tree_invisible`` code
+    :param bool in_tree_view: triggers the ``column_invisible`` code
                               path (separate from ``invisible``): in
                               tree view there are two levels of
                               invisibility, cell content (a column is
                               present but the cell itself is not
                               displayed) with ``invisible`` and column
                               invisibility (the whole column is
-                              hidden) with ``tree_invisible``.
+                              hidden) with ``column_invisible``.
     :returns: nothing
     """
     modifiers = {}
@@ -125,7 +125,7 @@ def setup_modifiers(node, field=None, context=None, in_tree_view=False):
 
 def test_modifiers(what, expected):
     modifiers = {}
-    if isinstance(what, basestring):
+    if isinstance(what, pycompat.string_types):
         node = etree.fromstring(what)
         transfer_node_to_modifiers(node, modifiers)
         simplify_modifiers(modifiers)

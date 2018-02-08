@@ -4,7 +4,6 @@
 import logging
 import threading
 
-from odoo.tools import pycompat
 from odoo.tools.misc import split_every
 
 from odoo import _, api, fields, models, registry, SUPERUSER_ID
@@ -19,7 +18,6 @@ class Partner(models.Model):
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread', 'mail.activity.mixin']
     _mail_flat_thread = False
-    _mail_mass_mailing = _('Customers')
 
     message_bounce = fields.Integer('Bounce', help="Counter of the number of bounced emails for this contact", default=0)
     opt_out = fields.Boolean(
@@ -56,7 +54,6 @@ class Partner(models.Model):
             website_url = 'http://%s' % user.company_id.website if not user.company_id.website.lower().startswith(('http:', 'https:')) else user.company_id.website
         else:
             website_url = False
-        company_name = user.company_id.name
 
         model_name = False
         if message.model:
@@ -65,7 +62,7 @@ class Partner(models.Model):
         record_name = message.record_name
 
         tracking = []
-        for tracking_value in message.tracking_value_ids:
+        for tracking_value in self.env['mail.tracking.value'].sudo().search([('mail_message_id', '=', message.id)]):
             tracking.append((tracking_value.field_desc,
                              tracking_value.get_old_display_value()[0],
                              tracking_value.get_new_display_value()[0]))
@@ -76,9 +73,16 @@ class Partner(models.Model):
         if message.res_id and message.model in self.env:
             record = self.env[message.model].browse(message.res_id)
 
+        company = user.company_id;
+        if record and hasattr(record, 'company_id'):
+            company = record.company_id;
+        company_name = company.name;
+
         return {
+            'message': message,
             'signature': signature,
             'website_url': website_url,
+            'company': company,
             'company_name': company_name,
             'model_name': model_name,
             'record': record,
@@ -95,8 +99,8 @@ class Partner(models.Model):
 
         # custom values
         custom_values = dict()
-        if message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_email_values'):
-            custom_values = self.env[message.model].browse(message.res_id).message_get_email_values(message)
+        if message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_specific_email_values'):
+            custom_values = self.env[message.model].browse(message.res_id)._notify_specific_email_values(message)
 
         mail_values = {
             'mail_message_id': message.id,
@@ -117,11 +121,11 @@ class Partner(models.Model):
             # cache so should not impact performances.
             mail_message_id = mail_values.get('mail_message_id')
             message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
-            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], 'message_get_recipient_values'):
+            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_email_recipients'):
                 tig = self.env[message.model].browse(message.res_id)
-                recipient_values = tig.message_get_recipient_values(notif_message=message, recipient_ids=email_chunk)
+                recipient_values = tig._notify_email_recipients(message, email_chunk)
             else:
-                recipient_values = self.env['mail.thread'].message_get_recipient_values(notif_message=None, recipient_ids=email_chunk)
+                recipient_values = self.env['mail.thread']._notify_email_recipients(message, email_chunk)
             create_values = {
                 'body_html': body,
                 'subject': subject,
@@ -144,7 +148,7 @@ class Partner(models.Model):
             })
 
     @api.multi
-    def _notify(self, message, force_send=False, send_after_commit=True, user_signature=True):
+    def _notify(self, message, layout=False, force_send=False, send_after_commit=True, user_signature=True):
         """ Method to send email linked to notified messages. The recipients are
         the recordset on which this method is called.
 
@@ -155,12 +159,12 @@ class Partner(models.Model):
         if not self.ids:
             return True
 
-        # existing custom notification email
-        base_template = None
-        if message.model and self._context.get('custom_layout', False):
-            base_template = self.env.ref(self._context['custom_layout'], raise_if_not_found=False)
-        if not base_template:
-            base_template = self.env.ref('mail.mail_template_data_notification_email_default')
+        template_xmlid = layout if layout else 'mail.message_notification_email'
+        try:
+            base_template = self.env.ref(template_xmlid, raise_if_not_found=True)
+        except ValueError:
+            _logger.warning('QWeb template %s not found when sending notification emails. Skipping.' % (template_xmlid))
+            return False
 
         base_template_ctx = self._notify_prepare_template_context(message)
         if not user_signature:
@@ -168,37 +172,23 @@ class Partner(models.Model):
         base_mail_values = self._notify_prepare_email_values(message)
 
         # classify recipients: actions / no action
-        if message.model and message.res_id and hasattr(self.env[message.model], '_message_notification_recipients'):
-            recipients = self.env[message.model].browse(message.res_id)._message_notification_recipients(message, self)
+        if message.model and message.res_id and hasattr(self.env[message.model], '_notify_classify_recipients'):
+            recipients = self.env[message.model].browse(message.res_id)._notify_classify_recipients(message, self)
         else:
-            recipients = self.env['mail.thread']._message_notification_recipients(message, self)
+            recipients = self.env['mail.thread']._notify_classify_recipients(message, self)
 
         emails = self.env['mail.mail']
         recipients_nbr, recipients_max = 0, 50
-        for email_type, recipient_template_values in pycompat.items(recipients):
-            if recipient_template_values['followers']:
+        for email_type, recipient_template_values in recipients.items():
+            if recipient_template_values['recipients']:
                 # generate notification email content
-                template_fol_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
-                template_fol_values['has_button_follow'] = False
-                template_fol = base_template.with_context(**template_fol_values)
-                # generate templates for followers and not followers
-                fol_values = template_fol.generate_email(message.id, fields=['body_html', 'subject'])
+                template_ctx = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_unfollow to none
+                fol_values = {
+                    'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
+                    'body': base_template.render(template_ctx, engine='ir.qweb'),
+                }
                 # send email
-                new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['followers'], **base_mail_values)
-                # update notifications
-                self._notify_udpate_notifications(new_emails)
-
-                emails |= new_emails
-                recipients_nbr += new_recipients_nbr
-            if recipient_template_values['not_followers']:
-                # generate notification email content
-                template_not_values = dict(base_template_ctx, **recipient_template_values)  # fixme: set button_follow to none
-                template_not_values['has_button_unfollow'] = False
-                template_not = base_template.with_context(**template_not_values)
-                # generate templates for followers and not followers
-                not_values = template_not.generate_email(message.id, fields=['body_html', 'subject'])
-                # send email
-                new_emails, new_recipients_nbr = self._notify_send(not_values['body'], not_values['subject'], recipient_template_values['not_followers'], **base_mail_values)
+                new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
                 # update notifications
                 self._notify_udpate_notifications(new_emails)
 

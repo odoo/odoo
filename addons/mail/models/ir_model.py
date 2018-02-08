@@ -3,6 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import pycompat
 
 
 class IrModel(models.Model):
@@ -13,6 +14,12 @@ class IrModel(models.Model):
         string="Mail Thread", oldname='mail_thread', default=False,
         help="Whether this model supports messages and notifications.",
     )
+
+    def unlink(self):
+        # Delete followers for models that will be unlinked.
+        query = "DELETE FROM mail_followers WHERE res_model IN %s"
+        self.env.cr.execute(query, [tuple(self.mapped('model'))])
+        return super(IrModel, self).unlink()
 
     @api.multi
     def write(self, vals):
@@ -41,9 +48,15 @@ class IrModel(models.Model):
         model_class = super(IrModel, self)._instanciate(model_data)
         if model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
             parents = model_class._inherit or []
-            parents = [parents] if isinstance(parents, basestring) else parents
+            parents = [parents] if isinstance(parents, pycompat.string_types) else parents
             model_class._inherit = parents + ['mail.thread']
         return model_class
+
+    def unlink(self):
+        # Delete followers for models that will be unlinked.
+        query = "DELETE FROM mail_followers WHERE res_model IN %s"
+        self.env.cr.execute(query, [tuple(self.mapped('model'))])
+        return super(IrModel, self).unlink()
 
 
 class IrModelField(models.Model):

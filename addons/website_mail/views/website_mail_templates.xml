@@ -25,21 +25,4 @@
         </xpath>
     </template>
 
-    <!--
-        Generic chatter template for the frontend
-        This template provide the container of the chatter. The rest is done in js.
-        To use this template, you need to call it after setting the following variable in your template or in your controller:
-            :object browserecord : the mail_thread object
-            :message_per_page int (optional): number of message per chatter page
-            :token string (optional): if you want your chatter to be available for non-logged user,
-                     you can use a token to verify the identity of the user;
-                     the message will be posted with the identity of the partner_id of the object
-            :token_field string (optional): name of the field that contains the token on the object (default to 'token')
-    -->
-    <template id="message_thread">
-        <div id="discussion" class="hidden-print o_website_mail_thread"
-            t-att-data-token="token" t-att-public-user="website.env.user == request.website.user_id" t-att-data-res_model="object._name" t-att-data-res_id="object.id" t-att-data-token_field="token_field" t-att-data-pager_step="message_per_page or 10" t-att-data-allow_composer="'0' if disable_composer else '1'">
-        </div>
-    </template>
-
 </odoo>

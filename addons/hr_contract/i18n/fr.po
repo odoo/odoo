@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
@@ -12,19 +12,35 @@
 # Cyrille de Lambert <cdelambert@teclib.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017
+# leemannd <denis.leemann@camptocamp.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# fr rev <e2ffr02@hotmail.com>, 2017
+# Clo <clo@odoo.com>, 2017
+# Fabien Pinckaers <fp@openerp.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Alexandre Fayolle <alexandre.fayolle@camptocamp.com>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span class=\"text-muted\">(If fixed-term contract)</span>"
+msgstr "<span class=\"text-muted\"/>"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "<span>/ month</span>"
+msgstr "<span/>"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_advantages
@@ -37,9 +53,9 @@ msgid "Advantages..."
 msgstr "Avantages..."
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
-msgid "Basic Salary of the employee"
-msgstr "Salaire de base de l'employé"
+#: selection:hr.contract,state:0
+msgid "Cancelled"
+msgstr "Annulé"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,help:hr_contract.action_hr_contract
@@ -47,9 +63,19 @@ msgid "Click here to create new contracts."
 msgstr "Cliquez ici pour créer un nouveau contrat."
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_vehicle
 msgid "Company Vehicle"
 msgstr "Véhicule de service"
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Details"
+msgstr "Détails du contrat"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_name
@@ -58,8 +84,13 @@ msgid "Contract Reference"
 msgstr "Référence du contrat"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Contract Terms"
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_type
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6101
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_id_6036
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_name
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_type_view_search
@@ -86,7 +117,7 @@ msgid "Contract expired"
 msgstr "Contra expiré"
 
 #. module: hr_contract
-#: code:addons/hr_contract/models/hr_contract.py:87
+#: code:addons/hr_contract/models/hr_contract.py:100
 #, python-format
 msgid "Contract start date must be less than contract end date."
 msgstr "La date de début du contrat doit être antérieure à la date de fin."
@@ -121,6 +152,11 @@ msgid "Created on"
 msgstr "Créé le"
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_currency_id
+msgid "Currency"
+msgstr "Devise"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_contract_id
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
@@ -133,6 +169,11 @@ msgid "Current Employee"
 msgstr "Employé courant"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Delete"
+msgstr "Supprimer"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_department_id
 msgid "Department"
 msgstr "Département"
@@ -141,12 +182,12 @@ msgstr "Département"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_type_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Duration"
-msgstr "Durée"
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
+msgid "Edit Contract"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -161,9 +202,34 @@ msgid "Employee Contract"
 msgstr "Contrat de l'employé"
 
 #. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_wage
+msgid "Employee's monthly gross wage."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_resource_calendar_id
+msgid "Employee's working schedule."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_date_end
 msgid "End Date"
 msgstr "Date de fin"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_end
+msgid "End date of the contract (if it's a fixed-term contract)."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_trial_date_end
+msgid "End date of the trial period (if there is one)."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
+msgid "End of Trial Period"
+msgstr ""
 
 #. module: hr_contract
 #: selection:hr.contract,state:0
@@ -182,17 +248,10 @@ msgid "Group By"
 msgstr "Regrouper par"
 
 #. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_close_ir_actions_server
-#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_close
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_close
-msgid "HR Contract: update to closed"
-msgstr ""
-
-#. module: hr_contract
-#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_to_pending_ir_actions_server
-#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_to_pending
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_to_pending
-msgid "HR Contract: update to pending"
+#: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
+#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
+#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
+msgid "HR Contract: update state"
 msgstr ""
 
 #. module: hr_contract
@@ -217,11 +276,6 @@ msgid "In kilometers"
 msgstr "En kilomètres"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Information"
-msgstr "Information"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_manager
 msgid "Is a Manager"
 msgstr "Est un responsable"
@@ -233,8 +287,8 @@ msgstr "Poste"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_job_id
-msgid "Job Title"
-msgstr "Titre du poste"
+msgid "Job Position"
+msgstr "Poste Occupé"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract___last_update
@@ -270,6 +324,11 @@ msgid "Medical Examination Date"
 msgstr "Date de l'examen médical"
 
 #. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid "Monthly Advantages in Cash"
+msgstr "Avantages mensuels en espèces"
+
+#. module: hr_contract
 #: selection:hr.contract,state:0
 msgid "New"
 msgstr "Nouveau"
@@ -297,8 +356,8 @@ msgstr "En cours"
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Salary and Advantages"
-msgstr "Salaire et avantages"
+msgid "Salary Information"
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -322,6 +381,16 @@ msgid "Start Date"
 msgstr "Date de début"
 
 #. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract_date_start
+msgid "Start date of the contract."
+msgstr ""
+
+#. module: hr_contract
+#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "State"
+msgstr "Statut"
+
+#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_state
 msgid "Status"
 msgstr "Statut"
@@ -339,21 +408,6 @@ msgid "To Renew"
 msgstr "À renouveller"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_end
-msgid "Trial End Date"
-msgstr "Date de fin de la période d'essai"
-
-#. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Trial Period Duration"
-msgstr "Durée de la période d'essai"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_trial_date_start
-msgid "Trial Start Date"
-msgstr "Date de début de la période d'essai"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_visa_expire
 msgid "Visa Expire Date"
 msgstr "Date d'expiration du visa"
@@ -369,16 +423,11 @@ msgid "Wage"
 msgstr "Salaire"
 
 #. module: hr_contract
-#: model:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
-msgid "Work Permit"
-msgstr "Permis de travail"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_permit_no
 msgid "Work Permit No"
 msgstr "N° de permis de travail"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_working_hours
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_resource_calendar_id
 msgid "Working Schedule"
 msgstr "Heures de travail"

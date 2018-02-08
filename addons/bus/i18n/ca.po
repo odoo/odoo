@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * bus
-#
+# 
 # Translators:
+# Quim - eccit <quim@eccit.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-01-24 21:39+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Catalan (http://www.transifex.com/odoo/odoo-9/language/ca/)\n"
-"Language: ca\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2017\n"
+"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: bus
 #: sql_constraint:bus.presence:0
 msgid "A user can only have one IM status."
-msgstr ""
+msgstr "Un usuari només pot tenir un estat de conversa."
 
 #. module: bus
 #: selection:bus.presence,status:0
@@ -30,12 +31,17 @@ msgstr ""
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_channel
 msgid "Channel"
-msgstr "Canal"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Contacte"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
 msgid "Create date"
-msgstr "Data de creació"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_uid
@@ -46,28 +52,13 @@ msgstr "Creat per"
 #: model:ir.model.fields,field_description:bus.field_bus_bus_display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
-msgstr "Mostra Nom"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr ""
+msgstr "Mostrar Nom"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
 #: model:ir.model.fields,field_description:bus.field_bus_presence_id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_status
@@ -80,7 +71,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:bus.field_bus_bus___last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence___last_update
 msgid "Last Modified on"
-msgstr "Darrera modificació feta el"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence_last_poll
@@ -95,32 +86,27 @@ msgstr ""
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_uid
 msgid "Last Updated by"
-msgstr "Actualitzat per última vegada per"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_write_date
 msgid "Last Updated on"
-msgstr "Actualitzat per última vegada el dia"
+msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_message
 msgid "Message"
-msgstr "Missatge"
+msgstr ""
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Offline"
-msgstr "Fora de línia"
+msgstr ""
 
 #. module: bus
 #: selection:bus.presence,status:0
 msgid "Online"
-msgstr "En Línia"
-
-#. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
@@ -137,6 +123,3 @@ msgstr "Usuaris"
 #: model:ir.model,name:bus.model_bus_bus
 msgid "bus.bus"
 msgstr ""
-
-#~ msgid "Created on"
-#~ msgstr "Creat el"

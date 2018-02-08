@@ -7,13 +7,14 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2016
+# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,6 +26,26 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "(Free)"
 msgstr "(Gratis)"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>End of Registration</b>"
+msgstr "<b> Einde van registratie </b>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Price</b>"
+msgstr "<b>Prijs</b>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Quantity</b>"
+msgstr "<b>Hoeveelheid</b>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<b>Ticket Type</b>"
+msgstr "<b>Soort ticket</b>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -41,14 +62,18 @@ msgstr ""
 "<i class=\"fa fa-clock-o\"/> Tot"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "<em>Configure and Launch Event Registration</em>"
-msgstr "<em>Instellen en lanceren van de evenement registratie</em>"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<i class=\"fa fa-clock-o\"/> From"
 msgstr "<i class=\"fa fa-clock-o\"/> Van"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"                    <em>Configure and Launch Event Registration</em>"
+msgstr ""
+"<i class=\"fa fa-plus-circle\"/>\n"
+"<em>Configureer en lanceer evenement registratie</em>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -65,6 +90,33 @@ msgstr "<small>Auteur</small>"
 #: model:ir.ui.view,arch_db:website_event.country_events
 msgid "<span class=\"oe_snippet_thumbnail_title\">Local Events</span>"
 msgstr "<span class=\"oe_snippet_thumbnail_title\">Lokale evenementen</span>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.ticket
+msgid ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                        Sold Out\n"
+"                    </span>"
+msgstr ""
+"<span itemprop=\"availability\" content=\"http://schema.org/SoldOut\">\n"
+"                         Uitverkocht\n"
+"                    </span>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid "<span itemprop=\"name\">Event Registration</span>"
+msgstr "<span itemprop=\"name\">Evenement registratie</span>"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Free\n"
+"                    </span>"
+msgstr ""
+"<span itemprop=\"price\" content=\"0\">\n"
+"                        Gratis\n"
+"                    </span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -102,6 +154,11 @@ msgid "<strong>Phone</strong> <span class=\"text-muted\">(Optional)</span>"
 msgstr "<strong>Telefoon</strong> <span class=\"text-muted\">(Optioneel)</span>"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.ticket
+msgid "<strong>Ticket Type:</strong>"
+msgstr "<strong>Ticket soort:</strong>"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Use this tag:</strong>"
 msgstr "<strong>Gebruik dit label:</strong>"
@@ -124,6 +181,11 @@ msgid "All Events"
 msgstr "Alle evenementen"
 
 #. module: website_event
+#: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+msgid "Ask questions to attendees when registering online"
+msgstr "Stel vragen aan deelnemers wanneer u zich online registreert"
+
+#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendee #%s"
 msgstr "Deelnemer #%s"
@@ -132,6 +194,15 @@ msgstr "Deelnemer #%s"
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Cancel Registration"
 msgstr "Inschrijving annuleren"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_type_view_form_inherit_website
+msgid ""
+"Check this option to have menus for your event on the\n"
+"                                website: registrations, schedule, map, ..."
+msgstr ""
+"Vink deze optie aan om menu's te hebben voor uw evenement op de\n"
+"website: registraties, planning, kaart, ..."
 
 #. module: website_event
 #. openerp-web
@@ -178,7 +249,7 @@ msgstr ""
 "Technische traing"
 
 #. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_show_menu
+#: model:ir.model.fields,help:website_event.field_event_event_website_menu
 msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
@@ -187,9 +258,14 @@ msgstr ""
 "evenement registratie."
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_show_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event_website_menu
 msgid "Dedicated Menu"
 msgstr "Speciaal menu"
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_type_website_menu
+msgid "Display a dedicated menu on Website"
+msgstr "Toon toegewijd menu op website"
 
 #. module: website_event
 #. openerp-web
@@ -204,12 +280,12 @@ msgid "E-mail"
 msgstr "E-mail"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.view_event_sale_form
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Edit Badges"
 msgstr "Wijzig badges"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
+#: model:ir.ui.view,arch_db:website_event.ticket
 msgid "End of Registration"
 msgstr "Einde van registratie"
 
@@ -217,6 +293,11 @@ msgstr "Einde van registratie"
 #: model:ir.model,name:website_event.model_event_event
 msgid "Event"
 msgstr "Gebeurtenis"
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_type
+msgid "Event Category"
+msgstr "Evenement categorie"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -237,11 +318,6 @@ msgstr "Evenement locatie"
 #: model:ir.model.fields,field_description:website_event.field_event_event_menu_id
 msgid "Event Menu"
 msgstr "Evenement menu"
-
-#. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Event Registration"
-msgstr "Evenementregistratie"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -301,12 +377,8 @@ msgstr ""
 "                            en neem deel aan het het gesprek."
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Free"
-msgstr "Vrij"
-
-#. module: website_event
 #: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:61
 #, python-format
 msgid "Introduction"
 msgstr "Introductie"
@@ -317,7 +389,8 @@ msgid "Is Participating"
 msgstr "Is deelnemer"
 
 #. module: website_event
-#: code:addons/website_event/models/event.py:55
+#: code:addons/website_event/models/event.py:54
+#: code:addons/website_event/models/event.py:62
 #, python-format
 msgid "Location"
 msgstr "Locatie"
@@ -334,8 +407,8 @@ msgstr "Naam"
 
 #. module: website_event
 #. openerp-web
-#: code:addons/website_event/controllers/main.py:182
-#: code:addons/website_event/static/src/js/website_event.editor.js:14
+#: code:addons/website_event/controllers/main.py:183
+#: code:addons/website_event/static/src/js/website_event.editor.js:29
 #: model:ir.ui.view,arch_db:website_event.content_new_event
 #, python-format
 msgid "New Event"
@@ -419,14 +492,19 @@ msgid "Photos of Past Events"
 msgstr "Foto's van vorige evenementen"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
+#: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Price"
 msgstr "Prijs"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
+#: model:ir.ui.view,arch_db:website_event.ticket
 msgid "Quantity"
 msgstr "Hoeveelheid"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+msgid "Questions"
+msgstr "Vragen"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
@@ -434,6 +512,7 @@ msgid "Reference"
 msgstr "Referentie"
 
 #. module: website_event
+#: code:addons/website_event/models/event.py:54
 #: code:addons/website_event/models/event.py:63
 #, python-format
 msgid "Register"
@@ -443,6 +522,11 @@ msgstr "Registreer"
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register Now"
 msgstr "Registreer nu"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Registration for this event is now closed"
+msgstr "Registratie voor dit evenement is gesloten."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -465,11 +549,6 @@ msgid "Social Stream"
 msgstr "Sociale stream"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Sold Out"
-msgstr "Uitverkocht"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
 msgstr "Sorry, het gevraagde evenement is niet meer beschikbaar."
@@ -487,11 +566,6 @@ msgid "This month"
 msgstr "Deze maand"
 
 #. module: website_event
-#: model:ir.ui.view,arch_db:website_event.registration_template
-msgid "Ticket Type"
-msgstr "Soort ticket"
-
-#. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket Type #"
 msgstr "Soort tickets #"
@@ -501,11 +575,6 @@ msgstr "Soort tickets #"
 #, python-format
 msgid "Today"
 msgstr "Vandaag"
-
-#. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_twitter_hashtag
-msgid "Twitter Hashtag"
-msgstr "Twitter Hashtag"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
@@ -534,14 +603,9 @@ msgid "Website Home"
 msgstr "Website Home"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event_website_message_ids
-msgid "Website Messages"
-msgstr "Website berichten"
-
-#. module: website_event
-#: model:ir.model.fields,help:website_event.field_event_event_website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+#: model:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
+msgid "Website Menu"
+msgstr "Website menu"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full

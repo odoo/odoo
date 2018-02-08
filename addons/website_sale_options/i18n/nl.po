@@ -3,22 +3,34 @@
 # * website_sale_options
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2016
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Julia van Orsouw <julia@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: website_sale_options
+#: model:product.attribute.value,name:website_sale_options.product_attribute_value_1
+msgid "1 year"
+msgstr "1 jaar"
+
+#. module: website_sale_options
+#: model:product.attribute.value,name:website_sale_options.product_attribute_value_2
+msgid "2 year"
+msgstr "2 jaar"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
@@ -33,7 +45,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid ""
 "<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Proceed "
-"to checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
+"to Checkout</span><span class=\"visible-xs-inline\">Checkout</span>"
 msgstr ""
 "<i class=\"fa fa-shopping-cart fa-fw\"/> <span class=\"hidden-xs\">Ga naar "
 "de kassa</span><span class=\"visible-xs-inline\">Kassa</span>"
@@ -42,25 +54,29 @@ msgstr ""
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "<small>Remove <span class=\"hidden-xs\"> from Cart</span></small>"
 msgstr ""
+"<small>Verwijderen <span class=\"hidden-xs\"> uit "
+"winkelmandje</span></small>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid ""
-"<span class=\"js_item\">1 Item</span><span class=\"js_items hidden\">5 "
-"Items</span><br/>"
-msgstr ""
-"<span class=\"js_item\">1 artikel</span><span class=\"js_items hidden\">5 "
-"artikels</span><br/>"
+msgid "<span class=\"js_item\">1 </span><span class=\"js_items hidden\">5 </span>"
+msgstr "<span class=\"js_item\">1 </span><span class=\"js_items hidden\">5 </span>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "<strong>Add<span class=\"hidden-xs\"> to Cart</span></strong>"
 msgstr ""
+"<strong>Toevoegen<span class=\"hidden-xs\"> aan winkelmandje</span></strong>"
 
 #. module: website_sale_options
 #: model:ir.ui.view,arch_db:website_sale_options.modal
-msgid "Add to cart"
-msgstr ""
+msgid "Add to Cart"
+msgstr "Voeg toe aan mandje"
+
+#. module: website_sale_options
+#: model:product.attribute,name:website_sale_options.product_attribute_1
+msgid "Duration"
+msgstr "Tijdsduur"
 
 #. module: website_sale_options
 #: model:ir.model.fields,field_description:website_sale_options.field_sale_order_line_linked_line_id
@@ -80,11 +96,13 @@ msgid "Option:"
 msgstr "Optie:"
 
 #. module: website_sale_options
+#: model:ir.model.fields,field_description:website_sale_options.field_product_product_optional_product_ids
 #: model:ir.model.fields,field_description:website_sale_options.field_product_template_optional_product_ids
 msgid "Optional Products"
 msgstr "Optionele producten"
 
 #. module: website_sale_options
+#: model:ir.model.fields,help:website_sale_options.field_product_product_optional_product_ids
 #: model:ir.model.fields,help:website_sale_options.field_product_template_optional_product_ids
 msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
@@ -126,8 +144,8 @@ msgstr "Hoeveelheid"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order
-msgid "Sales Order"
-msgstr "Verkooporder"
+msgid "Quotation"
+msgstr "Offerte"
 
 #. module: website_sale_options
 #: model:ir.model,name:website_sale_options.model_sale_order_line
@@ -138,3 +156,25 @@ msgstr "Verkooporderregel"
 #: model:ir.ui.view,arch_db:website_sale_options.modal
 msgid "Select Your Options:"
 msgstr "Selecteer uw opties:"
+
+#. module: website_sale_options
+#: model:product.product,name:website_sale_options.product_product_1
+#: model:product.product,name:website_sale_options.service_cost_01
+#: model:product.template,name:website_sale_options.product_product_1_product_template
+#: model:product.template,name:website_sale_options.service_cost_01_product_template
+msgid "Warranty"
+msgstr "Garantie"
+
+#. module: website_sale_options
+#: model:product.product,description_sale:website_sale_options.product_product_1
+#: model:product.product,description_sale:website_sale_options.service_cost_01
+#: model:product.template,description_sale:website_sale_options.product_product_1_product_template
+#: model:product.template,description_sale:website_sale_options.service_cost_01_product_template
+msgid ""
+"Warranty, issued to the purchaser of an article by its manufacturer, "
+"promising to repair or replace it if necessary within a specified period of "
+"time."
+msgstr ""
+"Garantie, afgegeven aan de koper van een artikel van de leverancier, met de "
+"garantie om te repareren of te vervangen als dat nodig is binnen een "
+"bepaalde tijdsperiode."

@@ -10,17 +10,18 @@ var _t = core._t;
 
 
 /**
- *  This widget is intended to display a warning near a label of a 'timezone' field
- *  indicating if the browser timezone is identical (or not) to the selected timezone.
- *  This widget depends on a field given with the param 'tz_offset_field', which contains
- *  the time difference between UTC time and local time, in minutes.
+ * This widget is intended to display a warning near a label of a 'timezone' field
+ * indicating if the browser timezone is identical (or not) to the selected timezone.
+ * This widget depends on a field given with the param 'tz_offset_field', which contains
+ * the time difference between UTC time and local time, in minutes.
  */
 var FieldTimezoneMismatch = FieldSelection.extend({
     /**
      * @override
      */
     start: function () {
-        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), 1000);
+        var interval = navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? 60000 : 1000;
+        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), interval);
         return this._super.apply(this, arguments);
     },
     /**
@@ -54,7 +55,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         }
         var offset = this.recordData.tz_offset.match(/([+-])([0-9]{2})([0-9]{2})/);
         offset = (offset[1] === '-' ? -1 : 1) * (parseInt(offset[2])*60 + parseInt(offset[3]));
-        var datetime = field_utils.format.datetime(moment.utc().add(offset, 'minutes'), {timezone: false});
+        var datetime = field_utils.format.datetime(moment.utc().add(offset, 'minutes'), this.field, {timezone: false});
         var content = this.$option.html().split(' ')[0];
         content += '    ('+ datetime + ')';
         this.$option.html(content);

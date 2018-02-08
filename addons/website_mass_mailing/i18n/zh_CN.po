@@ -10,13 +10,15 @@
 # fausthuang <faust_huang@hotmail.com>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Lijie Ma <tony@malijie.cc>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Gary Wei <Gary.wei@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: 老窦 北京 <2662059195@qq.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,17 +47,10 @@ msgstr "添加一个邮件列表订阅按钮"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:49
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
 msgstr "添加一个新闻订阅弹出"
-
-#. module: website_mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid ""
-"Allow the use of a pop-up snippet on website to encourage visitors to sign "
-"up on a mass mailing list"
-msgstr "允许网站弹出一个小对话框来鼓励网站访问者在批量电子邮件列表注册"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -74,10 +69,9 @@ msgid "Contact"
 msgstr "联系人"
 
 #. module: website_mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid ""
-"Do not add extra content on website pages to encourage visitors to sign up"
-msgstr "要鼓励网站访问者注册就不要在网站页面添加额外的内容"
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid "Encourage to subscribe to mailing lists with a popup"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
@@ -97,7 +91,7 @@ msgstr "邮件订阅"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:22
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
 #, python-format
 msgid "Newsletter"
 msgstr "时事通信"
@@ -124,8 +118,16 @@ msgid "Thanks for your subscription!"
 msgstr "感谢您的订阅!"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid ""
+"This adds a new Newsletter Popup snippet to drag & drop on on your website "
+"pages. It triggers a popup when visitors land on the page. This popup "
+"prompts them to enter their email address to join a mailing list."
+msgstr ""
+
+#. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:80
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
 #, python-format
 msgid "Type Here ..."
 msgstr "在这里输入..."
@@ -136,9 +138,9 @@ msgid "Use subscription pop up on the website"
 msgstr "在网站用弹出订阅"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
-msgid "Website Pop-up"
-msgstr "网站弹出"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings_group_website_popup_on_exit
+msgid "Website Popup"
+msgstr ""
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
@@ -156,24 +158,28 @@ msgid "You are not subscribed to any of our mailing list."
 msgstr "您没有订阅任何东西在我们的邮件列表中。"
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:154
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+msgid "You have been successfully <strong>unsubscribed</strong>!"
+msgstr "你已经成功取消订阅！"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
 #, python-format
 msgid "Your changes have been saved."
 msgstr "您的修改已经保存"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:157
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
 #, python-format
 msgid "Your changes have not been saved, try again later."
-msgstr ""
+msgstr "你所做的更改尚未保存，请稍后重试。"
 
 #. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mass_mailing_config_settings
-msgid "mass.mailing.config.settings"
-msgstr "mass.mailing.config.settings"
+#: model:ir.model,name:website_mass_mailing.model_res_config_settings
+msgid "res.config.settings"
+msgstr "设置-基础设置"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form

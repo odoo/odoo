@@ -9,10 +9,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-10-10 11:35+0000\n"
+"PO-Revision-Date: 2017-10-10 11:35+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -22,14 +22,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.base_config_settings_view_form_inherit_google_calendar
+#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
-
-#. module: google_calendar
-#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
-msgid "API Configuration"
-msgstr "API configuratie"
 
 #. module: google_calendar
 #: model:ir.ui.menu,name:google_calendar.menu_calendar_google_tech_config
@@ -38,14 +33,14 @@ msgstr "API gegevens"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:79
+#: code:addons/google_calendar/static/src/js/google_calendar.js:89
 #, python-format
 msgid "Accounts"
 msgstr "Kostenplaatsen"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:69
+#: code:addons/google_calendar/static/src/js/google_calendar.js:79
 #, python-format
 msgid ""
 "All events have been disconnected from your previous account. You can now "
@@ -56,7 +51,7 @@ msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:51
+#: code:addons/google_calendar/static/src/js/google_calendar.js:57
 #, python-format
 msgid ""
 "An administrator needs to configure Google Synchronization before you can "
@@ -67,7 +62,7 @@ msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:73
+#: code:addons/google_calendar/static/src/js/google_calendar.js:83
 #, python-format
 msgid ""
 "An error occured while disconnecting events from your previous account. "
@@ -93,29 +88,29 @@ msgid "Calendar ID"
 msgstr "Kalender ID"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.base_config_settings_view_form_inherit_google_calendar
+#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client ID"
 msgstr "Client ID"
 
 #. module: google_calendar
-#: model:ir.ui.view,arch_db:google_calendar.base_config_settings_view_form_inherit_google_calendar
+#: model:ir.ui.view,arch_db:google_calendar.res_config_settings_view_form
 msgid "Client Secret"
 msgstr "Client Secret"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_id
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_id
 msgid "Client_id"
 msgstr "Client_id"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_cal_client_secret
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_cal_client_secret
 msgid "Client_key"
 msgstr "Client_key"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:48
-#: code:addons/google_calendar/static/src/js/google_calendar.js:52
+#: code:addons/google_calendar/static/src/js/google_calendar.js:54
+#: code:addons/google_calendar/static/src/js/google_calendar.js:58
 #, python-format
 msgid "Configuration"
 msgstr "Instellingen"
@@ -127,7 +122,7 @@ msgstr "Schermnaam"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:60
+#: code:addons/google_calendar/static/src/js/google_calendar.js:66
 #, python-format
 msgid "Do you want to do this now?"
 msgstr "Wilt u dit nu doen?"
@@ -139,14 +134,14 @@ msgstr "Gebeurtenis"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:74
+#: code:addons/google_calendar/static/src/js/google_calendar.js:84
 #, python-format
 msgid "Event disconnection error"
 msgstr "Evenement ontkoppeling fout"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:70
+#: code:addons/google_calendar/static/src/js/google_calendar.js:80
 #, python-format
 msgid "Event disconnection success"
 msgstr "Evenement ontkoppeling succesvol"
@@ -161,7 +156,7 @@ msgstr "Google kalender gebeurtenis ID"
 #: model:ir.cron,cron_name:google_calendar.ir_cron_sync_all_cals
 #: model:ir.cron,name:google_calendar.ir_cron_sync_all_cals
 msgid "Google Calendar: synchronization"
-msgstr ""
+msgstr "Google Calendar: synchronisatie"
 
 #. module: google_calendar
 #: sql_constraint:calendar.attendee:0
@@ -187,7 +182,7 @@ msgstr "ID"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:59
+#: code:addons/google_calendar/static/src/js/google_calendar.js:65
 #, python-format
 msgid ""
 "In order to do this, you first need to disconnect all existing events from "
@@ -227,7 +222,7 @@ msgstr "Odoo update datum"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:40
+#: code:addons/google_calendar/static/src/js/google_calendar.js:46
 #, python-format
 msgid "Redirection"
 msgstr "Doorverwijzing"
@@ -238,15 +233,20 @@ msgid "Refresh Token"
 msgstr "Vernieuw token"
 
 #. module: google_calendar
+#: model:ir.actions.act_window,name:google_calendar.action_config_settings_google_calendar
+msgid "Settings"
+msgstr "Instellingen"
+
+#. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:90
+#: code:addons/google_calendar/static/src/js/google_calendar.js:117
 #, python-format
 msgid "Sync with <b>Google</b>"
 msgstr "Synchroniseer met <b>Google</b>"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:44
+#: code:addons/google_calendar/static/src/js/google_calendar.js:50
 #, python-format
 msgid ""
 "The Google Synchronization needs to be configured before you can use it, do "
@@ -257,7 +257,7 @@ msgstr ""
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:58
+#: code:addons/google_calendar/static/src/js/google_calendar.js:64
 #, python-format
 msgid ""
 "The account you are trying to synchronize (%s) is not the same as the last "
@@ -272,7 +272,7 @@ msgid "Token Validity"
 msgstr "Geldigheid token"
 
 #. module: google_calendar
-#: model:ir.model.fields,field_description:google_calendar.field_base_config_settings_server_uri
+#: model:ir.model.fields,field_description:google_calendar.field_res_config_settings_server_uri
 msgid "URI for tuto"
 msgstr "URI voor tuto"
 
@@ -288,24 +288,24 @@ msgstr "Gebruikers"
 
 #. module: google_calendar
 #. openerp-web
-#: code:addons/google_calendar/static/src/js/google_calendar.js:36
+#: code:addons/google_calendar/static/src/js/google_calendar.js:42
 #, python-format
 msgid "You will be redirected to Google to authorize access to your calendar!"
 msgstr ""
 "U wordt nu doorverwezen naar Google om toegang toe te staan tot uw kalender!"
 
 #. module: google_calendar
-#: code:addons/google_calendar/models/google_calendar.py:296
+#: code:addons/google_calendar/models/google_calendar.py:295
 #, python-format
 msgid "Your token is invalid or has been revoked !"
 msgstr "Uw token is ongeldig of ingetrokken!"
 
 #. module: google_calendar
-#: model:ir.model,name:google_calendar.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: google_calendar
 #: model:ir.model,name:google_calendar.model_google_calendar
 msgid "google.calendar"
 msgstr "google.calendar"
+
+#. module: google_calendar
+#: model:ir.model,name:google_calendar.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

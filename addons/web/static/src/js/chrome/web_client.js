@@ -2,7 +2,7 @@ odoo.define('web.WebClient', function (require) {
 "use strict";
 
 var AbstractWebClient = require('web.AbstractWebClient');
-var core = require('web.core');
+var config = require('web.config');
 var data_manager = require('web.data_manager');
 var framework = require('web.framework');
 var Menu = require('web.Menu');
@@ -16,15 +16,12 @@ return AbstractWebClient.extend({
         'click .oe_logo img': function(ev) {
             ev.preventDefault();
             return this.clear_uncommitted_changes().then(function() {
-                framework.redirect("/web" + (core.debug ? "?debug" : ""));
+                framework.redirect("/web" + (config.debug ? "?debug" : ""));
             });
         },
     },
     show_application: function() {
         var self = this;
-
-        // Allow to call `on_attach_callback` and `on_detach_callback` when needed
-        this.action_manager.is_in_DOM = true;
 
         this.toggle_bars(true);
         this.set_title();
@@ -83,7 +80,7 @@ return AbstractWebClient.extend({
                             action_buttons: true,
                             headless: true,
                         };
-                        self.action_manager.do_action(result).then(function () {
+                        self.action_manager.doAction(result).then(function () {
                             var form = self.action_manager.dialog_widget.views.form.controller;
                             form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
                             form.on('record_saved', self, function() {
@@ -110,7 +107,7 @@ return AbstractWebClient.extend({
                     .done(function(result) {
                         var data = result[0];
                         if(data.action_id) {
-                            self.action_manager.do_action(data.action_id[0]);
+                            self.action_manager.doAction(data.action_id[0]);
                             self.menu.open_action(data.action_id[0]);
                         } else {
                             var first_menu_id = self.menu.$el.find("a:first").data("menu");
@@ -140,11 +137,10 @@ return AbstractWebClient.extend({
                         self.menu.menu_click(state.menu_id);
                     });
                 } else {
-                    state._push_me = false;  // no need to push state back...
-                    self.action_manager.do_load_state(state, !!self._current_state).then(function () {
-                        var action = self.action_manager.get_inner_action();
+                    self.action_manager.loadState(state, !!self._current_state).then(function () {
+                        var action = self.action_manager.getCurrentAction();
                         if (action) {
-                            self.menu.open_action(action.action_descr.id);
+                            self.menu.open_action(action.id);
                         }
                     });
                 }
@@ -163,10 +159,10 @@ return AbstractWebClient.extend({
             .then(function (result) {
                 return self.action_mutex.exec(function() {
                     var completed = $.Deferred();
-                    $.when(self.action_manager.do_action(result, {
+                    self.action_manager.doAction(result, {
                         clear_breadcrumbs: true,
                         action_menu_id: self.menu.current_menu,
-                    })).fail(function() {
+                    }).fail(function() {
                         self.menu.open_menu(options.previous_menu_id);
                     }).always(function() {
                         completed.resolve();

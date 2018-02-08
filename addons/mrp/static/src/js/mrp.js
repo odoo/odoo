@@ -46,10 +46,11 @@ var FieldPdfViewer = FieldBinaryFile.extend({
             field: this.name,
             id: this.res_id,
         };
+        var page = this.recordData[this.name + '_page'] || 1;
         var queryString = $.param(queryObj);
         var url = encodeURIComponent('/web/image?' + queryString);
         var viewerURL = '/web/static/lib/pdfjs/web/viewer.html?file=';
-        return viewerURL + url;
+        return viewerURL + url + '#page=' + page;
     },
     /**
      * @private

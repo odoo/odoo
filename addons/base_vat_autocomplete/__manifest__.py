@@ -15,6 +15,7 @@ Auto-Complete Addresses based on VAT numbers
     'website': 'https://www.odoo.com/page/accounting',
     'data': [
         'views/res_partner_views.xml',
+        'views/res_company_view.xml',
     ],
     'auto_install': True
 }

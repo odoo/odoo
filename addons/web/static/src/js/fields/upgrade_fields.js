@@ -52,9 +52,9 @@ var AbstractFieldUpgrade = {
      *
      * @abstract
      * @private
-     * @param {JQuery} the 'Enterprise' label to insert
+     * @param {jQuery} $enterpriseLabel the 'Enterprise' label to insert
      */
-    _insertEnterpriseLabel: function ($enterprise_label) {},
+    _insertEnterpriseLabel: function ($enterpriseLabel) {},
     /**
      * Opens the Upgrade dialog.
      *
@@ -94,7 +94,7 @@ var AbstractFieldUpgrade = {
         this._super.apply(this, arguments);
         this._insertEnterpriseLabel($("<span>", {
             text: "Enterprise",
-            'class': "label label-primary oe_inline"
+            'class': "label label-primary oe_inline o_enterprise_label"
         }));
     },
     /**
@@ -112,7 +112,7 @@ var AbstractFieldUpgrade = {
 
     /**
      * @private
-     * @param {MouseEvent}
+     * @param {MouseEvent} event
      */
     _onInputClicked: function (event) {
         if ($(event.currentTarget).prop("checked")) {
@@ -127,6 +127,15 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClicked',
     }),
+    /**
+     * Re-renders the widget with the label
+     *
+     * @param {jQuery} $label
+     */
+    renderWithLabel: function ($label) {
+        this.$label = $label;
+        this._render();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -136,8 +145,9 @@ var UpgradeBoolean = FieldBoolean.extend(AbstractFieldUpgrade, {
      * @override
      * @private
      */
-    _insertEnterpriseLabel: function ($enterprise_label) {
-        this.$el.append('&nbsp;').append($enterprise_label);
+    _insertEnterpriseLabel: function ($enterpriseLabel) {
+        var $el = this.$label || this.$el;
+        $el.append('&nbsp;').append($enterpriseLabel);
     },
     /**
      * @override
@@ -170,8 +180,8 @@ var UpgradeRadio = FieldRadio.extend(AbstractFieldUpgrade, {
      * @override
      * @private
      */
-    _insertEnterpriseLabel: function ($enterprise_label) {
-        this.$('label').last().append('&nbsp;').append($enterprise_label);
+    _insertEnterpriseLabel: function ($enterpriseLabel) {
+        this.$('label').last().append('&nbsp;').append($enterpriseLabel);
     },
     /**
      * @override

@@ -1,58 +1,48 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_oauth
-#
+# 
 # Translators:
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2016
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2016
+# Martin Trigaux <mat@odoo.com>, 2017
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2017
+# zbik2607 <darek@krokus.com.pl>, 2017
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2017
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2017
+# Paweł Michoń <michon.pawel@wp.pl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2016-06-24 07:44+0000\n"
-"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>\n"
-"Language-Team: Polish (http://www.transifex.com/odoo/odoo-9/language/pl/)\n"
-"Language: pl\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Paweł Michoń <michon.pawel@wp.pl>, 2017\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"<br/>\n"
-"                                    - Create a new project<br/>\n"
-"                                    - Go to Api Access<br/>\n"
-"                                    - Create an oauth client_id<br/>\n"
-"                                    - Edit settings and set both Authorized "
-"Redirect URIs and Authorized JavaScript Origins to your hostname.<br/>\n"
-"                                    <br/>\n"
-"                                    Now copy paste the client_id here:"
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "<i class=\"fa fa-fw fa-arrow-right\"/>Tutorial"
 msgstr ""
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:98
+#: code:addons/auth_oauth/controllers/main.py:100
 #, python-format
 msgid "Access Denied"
 msgstr "Brak dostępu"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_payable_id
-msgid "Account Payable"
-msgstr "Konto zobowiązań"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_receivable_id
-msgid "Account Receivable"
-msgstr "Konto należności"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_enabled
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings_auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
 msgstr "Zezwalaj użytkownikom slogować się przez Google"
+
+#. module: auth_oauth
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Allow users to sign in with their Google account"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_enabled
@@ -63,11 +53,6 @@ msgstr "Dozwolone"
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_auth_endpoint
 msgid "Authentication URL"
 msgstr "URL uwierzytelniania"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_bank_account_count
-msgid "Bank"
-msgstr "Bank"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_body
@@ -81,20 +66,14 @@ msgstr "Klasa CSS"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_client_id
-#: model:ir.model.fields,field_description:auth_oauth.field_base_config_settings_auth_oauth_google_client_id
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings_auth_oauth_google_client_id
 msgid "Client ID"
 msgstr "Identyfikator klienta"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_ref_company_ids
-msgid "Companies that refers to partner"
-msgstr "Firmy odnośne do partnera"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_contract_ids
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_contracts_count
-msgid "Contracts"
-msgstr "Umowy"
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Client ID:"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_create_uid
@@ -107,45 +86,19 @@ msgid "Created on"
 msgstr "Utworzono"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_currency_id
-#, fuzzy
-msgid "Currency"
-msgstr "Id waluty"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_payment_term_id
-msgid "Customer Payment Term"
-msgstr "Warunki płatności dla klienta"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_data_endpoint
 msgid "Data URL"
 msgstr "Dane URL"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_trust
-msgid "Degree of trust you have in this debtor"
-msgstr ""
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_display_name
 msgid "Display Name"
-msgstr "Wyświetlana nazwa "
+msgstr "Nazwa wyświetlana"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_account_position_id
-msgid "Fiscal Position"
-msgstr "Obszar podatkowy"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid "Google APIs console"
-msgstr "Konsola Google APIs"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_has_unreconciled_entries
-msgid "Has unreconciled entries"
-msgstr "Posiada nieuzgodnione zapisy"
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
+msgid "Google Authentication"
+msgstr ""
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_id
@@ -153,46 +106,19 @@ msgid "ID"
 msgstr "ID"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_invoice_ids
-msgid "Invoices"
-msgstr "Faktury"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_issued_total
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_journal_item_count
-msgid "Journal Items"
-msgstr "Pozycje zapisów"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider___last_update
 msgid "Last Modified on"
-msgstr "Ostatnio modyfikowano"
+msgstr "Data ostatniej modyfikacji"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_uid
 msgid "Last Updated by"
-msgstr "Ostatnio modyfikowane przez"
+msgstr "Ostatnio aktualizowane przez"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_write_date
 msgid "Last Updated on"
-msgstr "Ostatnia zmiana"
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_last_time_entries_checked
-msgid ""
-"Last time the invoices & payments matching was performed for this partner. "
-"It is set either if there's not at least an unreconciled debit and an "
-"unreconciled credit or if you click the \"Done\" button."
-msgstr ""
-"Ostatnie uzgadnianie faktur i płatności  było przeprowadzane dla tego "
-"partnera. Ustawione oznacza, albo jest przynajmniej jeden nieuzgodniony "
-"zapisu Wn i Ma, albo kliknąłeś przycisk \"Wykonane\"."
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_last_time_entries_checked
-msgid "Latest Invoices & Payments Matching Date"
-msgstr "Data ostatniego uzgadniania faktur i płatności"
+msgstr "Ostatnia aktualizacja"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users_oauth_access_token
@@ -206,6 +132,7 @@ msgstr "Dostawca protokołu OAuth"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
 msgstr "Dostawcy protokołu OAuth"
 
@@ -235,11 +162,6 @@ msgid "Oauth Provider user_id"
 msgstr "Dostawca Oauth user_id"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit_limit
-msgid "Payable Limit"
-msgstr "Limit zobowiązań"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_name
 msgid "Provider name"
 msgstr "Nazwa dostawcy"
@@ -255,95 +177,20 @@ msgid "Scope"
 msgstr "Zakres"
 
 #. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:96
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
+msgid "Sequence"
+msgstr "Numeracja"
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings_server_uri_google
+msgid "Server uri"
+msgstr ""
+
+#. module: auth_oauth
+#: code:addons/auth_oauth/controllers/main.py:98
 #, python-format
 msgid "Sign up is not allowed on this database."
 msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_position_id
-msgid ""
-"The fiscal position will determine taxes and accounts used for the partner."
-msgstr "Obszar podatkowy ustala podatki i konta stosowane do tego partnera."
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_has_unreconciled_entries
-msgid ""
-"The partner has at least one unreconciled debit and credit since last time "
-"the invoices & payments matching was performed."
-msgstr ""
-"Partner posiada co najmniej jedną nieuzgodnioną pozycję Winien i Ma od "
-"ostatniego razu uzgadniania faktur i płatności."
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_payable_id
-msgid ""
-"This account will be used instead of the default one as the payable account "
-"for the current partner"
-msgstr ""
-"To konto będzie stosowane, zamiast domyślnego, jako konto zobowiązań dla "
-"tego partnera"
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_property_account_receivable_id
-msgid ""
-"This account will be used instead of the default one as the receivable "
-"account for the current partner"
-msgstr ""
-"To konto będzie stosowane zamiast domyślnego jako konto należności dla "
-"bieżącego partnera"
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid ""
-"This payment term will be used instead of the default one for purchase "
-"orders and vendor bills"
-msgstr ""
-"Te warunki płatności będą stosowane zamiast domyślnych w zamówieniach zakupu "
-"i fakturach od dostawców."
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_property_payment_term_id
-msgid ""
-"This payment term will be used instead of the default one for sale orders "
-"and customer invoices"
-msgstr ""
-"Te warunki płatności będą stosowane zamiast domyślnych do zamówień sprzedaży "
-"i faktur dla klientów."
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
-msgid ""
-"To setup the signin process with Google, first you have to perform the "
-"following steps:<br/>\n"
-"                                    <br/>\n"
-"                                    - Go to the"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_total_invoiced
-msgid "Total Invoiced"
-msgstr "Ogólna wartość faktury"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_debit
-msgid "Total Payable"
-msgstr "Suma zobowiązań"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_credit
-msgid "Total Receivable"
-msgstr "Suma należności"
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_credit
-msgid "Total amount this customer owes you."
-msgstr "Suma, którą klient jest winien"
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_debit
-msgid "Total amount you have to pay to this vendor."
-msgstr "Łączna kwota, którą musisz zapłacić temu dostawcy."
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
@@ -351,32 +198,12 @@ msgid "Users"
 msgstr "Użytkownicy"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_currency_id
-msgid "Utility field to express amount currency"
-msgstr "Pole używane do pokazywania waluty kwoty"
-
-#. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_validation_endpoint
 msgid "Validation URL"
 msgstr "URL walidacji"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_property_supplier_payment_term_id
-msgid "Vendor Payment Term"
-msgstr "Warunki płatności dla dostawców"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_res_users_website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_res_users_website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: auth_oauth
-#: code:addons/auth_oauth/controllers/main.py:100
+#: code:addons/auth_oauth/controllers/main.py:102
 #, python-format
 msgid ""
 "You do not have access to this database or your invitation has expired. "
@@ -386,17 +213,12 @@ msgstr ""
 
 #. module: auth_oauth
 #: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
-#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_list
+#: model:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
 msgstr ""
 
 #. module: auth_oauth
-#: model:ir.model,name:auth_oauth.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: auth_oauth
-#: model:ir.ui.view,arch_db:auth_oauth.view_general_configuration
+#: model:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "e.g. 1234-xyz.apps.googleusercontent.com"
 msgstr ""
 
@@ -406,6 +228,6 @@ msgid "ir.config_parameter"
 msgstr "ir.config_parameter"
 
 #. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider_sequence
-msgid "unknown"
-msgstr "nieznane"
+#: model:ir.model,name:auth_oauth.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
-
-from datetime import datetime, timedelta
 
 
 class StockQuant(TransactionCase):
@@ -131,7 +131,8 @@ class StockQuant(TransactionCase):
             'quantity': 5.0,
             'reserved_quantity': 0.0,
         })
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), -5.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, allow_negative=True), -5.0)
 
     def test_get_available_quantity_7(self):
         """ Quantity availability with only one tracked quant in a location.
@@ -153,7 +154,8 @@ class StockQuant(TransactionCase):
             'reserved_quantity': 20.0,
             'lot_id': lot1.id,
         })
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, lot_id=lot1), -10.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, lot_id=lot1), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, lot_id=lot1, allow_negative=True), -10.0)
 
     def test_get_available_quantity_8(self):
         """ Quantity availability with a consumable product.
@@ -273,6 +275,31 @@ class StockQuant(TransactionCase):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product2, stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product2, stock_sub_location), 1.0)
 
+    def test_increase_available_quantity_6(self):
+        """ Increasing the available quantity in a view location should be forbidden.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        location1 = self.env['stock.location'].create({
+            'name': 'viewloc1',
+            'usage': 'view',
+            'location_id': stock_location.id,
+        })
+        product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        with self.assertRaises(ValidationError):
+            self.env['stock.quant']._update_available_quantity(product1, location1, 1.0)
+
+    def test_increase_available_quantity_7(self):
+        """ Setting a location's usage as "view" should be forbidden if it already
+        contains quant.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+        self.assertTrue(len(stock_location.quant_ids.ids) > 0)
+        with self.assertRaises(UserError):
+            stock_location.usage = 'view'
+
     def test_decrease_available_quantity_1(self):
         """ Decrease the available quantity when no quants are already in a location.
         """
@@ -282,7 +309,8 @@ class StockQuant(TransactionCase):
             'type': 'product',
         })
         self.env['stock.quant']._update_available_quantity(product1, stock_location, -1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), -1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, stock_location, allow_negative=True), -1.0)
 
     def test_decrease_available_quantity_2(self):
         """ Decrease the available quantity when multiple quants are already in a location.

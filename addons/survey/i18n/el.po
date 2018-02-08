@@ -1,21 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * survey
-#
+# 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
+# Costas Pittalis <cpittalis@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-03-03 14:32+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: Costas Pittalis <cpittalis@gmail.com>, 2017\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: survey
@@ -25,9 +28,7 @@ msgid ""
 "                \n"
 "<p>Hello,</p>\n"
 "<p>We are conducting a survey, and your response would be appreciated.</p>\n"
-"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; "
-"background-color:#a24689; text-align:center; text-decoration:none; color:"
-"#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
+"<p><a style=\"margin-left: 85px; padding:5px 10px; border-radius: 3px; background-color:#875A7B; text-align:center; text-decoration:none; color:#F7FBFD;\" href=\"__URL__\">Please, click here to start survey</a></p>\n"
 "<p>Thanks for your participation!</p>\n"
 "                \n"
 "            "
@@ -39,7 +40,7 @@ msgid "#Questions"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:231
+#: code:addons/survey/models/survey.py:122
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
@@ -57,7 +58,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-2x\">123..</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x\">123..</i>"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_matrix
@@ -135,9 +136,9 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-default only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-primary only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-default only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-primary only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
@@ -163,24 +164,18 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result
 msgid ""
-"<span class=\"label label-primary only_left_radius filter-all\">All surveys</"
-"span><span class=\"label label-default only_right_radius filter-finished"
-"\">Finished surveys</span>"
+"<span class=\"label label-primary only_left_radius filter-all\">All "
+"surveys</span><span class=\"label label-default only_right_radius filter-"
+"finished\">Finished surveys</span>"
 msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.no_result
 msgid ""
 "<span>\n"
-"                            <i style=\"font-size:1.8em\" class=\"fa fa-users "
-"pull-right\"/>\n"
+"                            <i style=\"font-size:1.8em\" class=\"fa fa-users pull-right\"/>\n"
 "                        </span>\n"
 "                        Sorry, No one answered this survey yet"
-msgstr ""
-
-#. module: survey
-#: constraint:survey.label:0
-msgid "A label must be attached to one and only one question"
 msgstr ""
 
 #. module: survey
@@ -211,7 +206,8 @@ msgid "A process is defined for all enterprise flows"
 msgstr ""
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:806
+#, python-format
 msgid "A question cannot be unanswered and skipped"
 msgstr ""
 
@@ -227,20 +223,19 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_active
-#, fuzzy
 msgid "Active"
-msgstr "Ενεργός τομέας"
+msgstr "Ενεργή"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"Add list of email of recipients (will not converted in partner), separated "
-"by commas, semicolons or newline..."
+"Add a list of email of recipients (will not be converted into contacts). "
+"Separated by commas, semicolons or newline..."
 msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Add list of existing contacts..."
+msgid "Add existing contacts..."
 msgstr ""
 
 #. module: survey
@@ -287,9 +282,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_user_input_line_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_user_input_line_ids
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
+#: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Answers"
 msgstr "Απαντήσεις"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Archived"
+msgstr "Αρχειοθετημένα"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_1_1
@@ -300,6 +301,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_attachment_ids
 msgid "Attachments"
 msgstr "Συνημμένα"
+
+#. module: survey
+#: model:ir.model.fields,help:survey.field_survey_mail_compose_message_attachment_ids
+msgid ""
+"Attachments are linked to a document through model / res_id and to the "
+"message through this field."
+msgstr ""
+"Τα συνημμένα συνδέονται με ένα έγγραφο μέσω του model / res_id και στο "
+"μήνυμα μέσα από αυτό το πεδίο."
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.back
@@ -314,7 +324,7 @@ msgstr "CRM"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Cancel"
-msgstr "Ακύρωση"
+msgstr "Ακύρωση"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
@@ -327,16 +337,9 @@ msgid "Choose..."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:125
-#: code:addons/survey/wizard/survey_email_compose_message.py:34
+#: code:addons/survey/models/survey.py:110
 #, python-format
 msgid "Click here to start survey"
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:92
-#, python-format
-msgid "Click here to take survey"
 msgstr ""
 
 #. module: survey
@@ -354,12 +357,17 @@ msgstr "Κλείσιμο"
 #: model:ir.model.fields,field_description:survey.field_survey_stage_closed
 #: model:survey.stage,name:survey.stage_closed
 msgid "Closed"
-msgstr "Κλεισμένα"
+msgstr "Κλειστό"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_kanban
+msgid "Color"
+msgstr "Χρώμα"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_color
 msgid "Color Index"
-msgstr "Χρωματισμός Δείκτη"
+msgstr "Χρωματισμός Ευρετήριου"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.result_comments
@@ -396,7 +404,7 @@ msgstr "Σύνταξη Email"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_surveys_configuration
 msgid "Configuration"
-msgstr "Ρυθμίσεις"
+msgstr "Διαμόρφωση"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_7_2
@@ -410,7 +418,8 @@ msgstr ""
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
-msgid "Copy and paste the HTML code below to add this web link to any webpage."
+msgid ""
+"Copy and paste the HTML code below to add this web link to any webpage."
 msgstr ""
 
 #. module: survey
@@ -453,14 +462,10 @@ msgid "Creation Date"
 msgstr "Ημερομηνία Δημιουργίας"
 
 #. module: survey
+#: selection:survey.question,type:0
 #: selection:survey.user_input_line,answer_type:0
 msgid "Date"
 msgstr "Ημερομηνία"
-
-#. module: survey
-#: selection:survey.question,type:0
-msgid "Date and Time"
-msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_value_date
@@ -475,13 +480,13 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_deadline
 msgid "Deadline"
-msgstr "Χρονικό Όριο"
+msgstr "Προθεσμία"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_date_deadline
 msgid ""
-"Deadline to which the invitation to respond for this survey is valid. If the "
-"field is empty, the invitation is still valid."
+"Deadline to which the invitation to respond for this survey is valid. If the"
+" field is empty,        the invitation is still valid."
 msgstr ""
 
 #. module: survey
@@ -532,6 +537,11 @@ msgid "Disagree"
 msgstr ""
 
 #. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
+msgid "Display Mode"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_display_name
 #: model:ir.model.fields,field_description:survey.field_survey_page_display_name
@@ -544,7 +554,6 @@ msgid "Display Name"
 msgstr "Εμφάνιση Ονόματος"
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_question_display_mode
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Display mode"
 msgstr ""
@@ -567,7 +576,7 @@ msgstr ""
 #. module: survey
 #: model:survey.stage,name:survey.stage_draft
 msgid "Draft"
-msgstr "Πρόχειρο"
+msgstr "Προσχέδιο"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_email
@@ -606,7 +615,6 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_error_msg
-#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
 msgid "Error message"
 msgstr ""
 
@@ -623,7 +631,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_3
 msgid "Financial Management"
-msgstr ""
+msgstr "Οικονομική Διαχείριση"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_fold
@@ -651,7 +659,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Group By"
-msgstr "Ομαδοποίηση Ανά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: survey
 #: model:survey.question,question:survey.feedback_3_1
@@ -661,7 +669,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_6
 msgid "Human Resources"
-msgstr ""
+msgstr "Ανθρώπινοι Πόροι"
 
 #. module: survey
 #: model:survey.label,value:survey.choice_3_1_3
@@ -723,7 +731,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_token
@@ -737,11 +745,12 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_stage_closed
+#: model:ir.model.fields,help:survey.field_survey_survey_is_closed
 msgid "If closed, people won't be able to answer to surveys in this column."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:624
+#: code:addons/survey/models/survey.py:471
 #: model:survey.question,comments_message:survey.feedback_1_1
 #: model:survey.question,comments_message:survey.feedback_1_2
 #: model:survey.question,comments_message:survey.feedback_2_1
@@ -775,6 +784,12 @@ msgid "In progress"
 msgstr ""
 
 #. module: survey
+#: code:addons/survey/wizard/survey_email_compose_message.py:68
+#, python-format
+msgid "Incorrect Email Address: %s"
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_email
 msgid "Input must be an email"
 msgstr ""
@@ -782,6 +797,11 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_tree
 msgid "Invitations sent"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_is_closed
+msgid "Is closed"
 msgstr ""
 
 #. module: survey
@@ -840,7 +860,7 @@ msgstr "Ετικέτες"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input___last_update
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_write_uid
@@ -872,6 +892,11 @@ msgid "Last displayed page"
 msgstr ""
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Late Activities"
+msgstr "Καθυστερημένες Δραστηριότητες"
+
+#. module: survey
 #: selection:survey.user_input,type:0
 msgid "Link"
 msgstr "Σύνδεσμος"
@@ -886,6 +911,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.auth_required
 msgid "Login required"
 msgstr "Απαιτείται σύνδεση"
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_manager
+msgid "Manager"
+msgstr "Διευθυντής"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_constr_mandatory
@@ -979,14 +1009,19 @@ msgid "Multiple choices per row"
 msgstr ""
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "My Activities"
+msgstr "Οι Δραστηριότητες μου"
+
+#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_stage_name
 msgid "Name"
-msgstr "Όνομα"
+msgstr "Περιγραφή"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "New"
-msgstr "Νέο"
+msgstr "Νέα"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.page
@@ -1070,12 +1105,6 @@ msgid "One choice per row"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:78
-#, python-format
-msgid "One email at least is incorrect: %s"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Options"
@@ -1118,13 +1147,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_partner_id
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Partner"
-msgstr "Συνεργάτης"
+msgstr "Συναλλασόμενος"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_partner_survey_mail
-#: model:ir.actions.act_window,name:survey.action_partner_survey_mail_crm
 msgid "Partner Survey Mailing"
-msgstr ""
+msgstr "Αλληλογραφία Έρευνας Συνεργατών"
 
 #. module: survey
 #: model:survey.stage,name:survey.stage_permanent
@@ -1132,15 +1160,9 @@ msgid "Permanent"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:199
+#: code:addons/survey/wizard/survey_email_compose_message.py:164
 #, python-format
 msgid "Please enter at least one valid recipient."
-msgstr ""
-
-#. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:95
-#, python-format
-msgid "Please select a survey"
 msgstr ""
 
 #. module: survey
@@ -1166,7 +1188,7 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_5
 msgid "Project Management"
-msgstr "Διαχείριση Έργου"
+msgstr "Διαχείριση Έργων"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_mail_compose_message_public_url_html
@@ -1201,16 +1223,20 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.choice_1_2_2
 msgid "Purchases Management"
-msgstr ""
+msgstr "Διαχείριση Αγορών"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_label_question_id
-#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line_question_id
 #: model:ir.ui.view,arch_db:survey.survey_label_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 msgid "Question"
 msgstr "Ερώτηση"
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_label_question_id_2
+msgid "Question 2"
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_question
@@ -1239,7 +1265,7 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_quizz_mode
-msgid "Quiz mode"
+msgid "Quizz Mode"
 msgstr ""
 
 #. module: survey
@@ -1295,7 +1321,7 @@ msgstr "Διαχείριση Πωλήσεων"
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Save as a new template"
-msgstr "Αποθήκευση ως νέο πρότυπο"
+msgstr "Αποθήκευση ως ένα νέο πρότυπο"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
@@ -1353,6 +1379,11 @@ msgid "Send"
 msgstr "Αποστολή"
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_user_input_form
+msgid "Send Invitation Again"
+msgstr ""
+
+#. module: survey
 #: selection:survey.mail.compose.message,public:0
 msgid "Send by email the public web link to your audience."
 msgstr "Αποστολή με email τον δημόσιο σύνδεσμο στο ακροατήριό σας."
@@ -1365,15 +1396,10 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_user_input_form
-msgid "Sent Invitation Again"
-msgstr ""
-
-#. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_sequence
 #: model:ir.model.fields,field_description:survey.field_survey_stage_sequence
 msgid "Sequence"
-msgstr "Ιεράρχηση"
+msgstr "Ακολουθία"
 
 #. module: survey
 #: sql_constraint:survey.stage:0
@@ -1404,6 +1430,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:survey.field_survey_question_comments_allowed
 msgid "Show Comments Field"
 msgstr ""
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν από "
+"σήμερα"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1486,6 +1519,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_page_search
 #: model:ir.ui.view,arch_db:survey.survey_question_search
 #: model:ir.ui.view,arch_db:survey.survey_response_line_search
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 #: model:ir.ui.view,arch_db:survey.survey_tree
 #: model:ir.ui.view,arch_db:survey.survey_user_input_search
 msgid "Survey"
@@ -1524,7 +1558,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "Survey Title"
-msgstr ""
+msgstr "Τίτλος Έρευνας"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
@@ -1558,11 +1592,16 @@ msgid "Survey page"
 msgstr ""
 
 #. module: survey
+#: model:ir.actions.server,name:survey.survey_action_server_clean_test_answers
+msgid "Survey: Clean test answers"
+msgstr ""
+
+#. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
-msgstr ""
+msgstr "Έρευνες"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_kanban
@@ -1571,13 +1610,13 @@ msgid "Test"
 msgstr "Τεστ"
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.survey_form
-msgid "Test Survey"
+#: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
+msgid "Test Entry"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_user_input_test_entry
-msgid "Test entry"
+#: model:ir.ui.view,arch_db:survey.survey_form
+msgid "Test Survey"
 msgstr ""
 
 #. module: survey
@@ -1591,14 +1630,14 @@ msgid "Text answer"
 msgstr ""
 
 #. module: survey
-#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
-msgid "Thank you message"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "Thank you!"
 msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_survey_thank_you_message
+msgid "Thanks Message"
+msgstr "Ευχαριστήριο Μήνυμα"
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_3
@@ -1611,12 +1650,13 @@ msgid "The 'Usability/Extended View' group hides only optional fields"
 msgstr ""
 
 #. module: survey
-#: constraint:survey.user_input_line:0
+#: code:addons/survey/models/survey.py:819
+#, python-format
 msgid "The answer must be in the right type"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:622
+#: code:addons/survey/models/survey.py:485
 #: model:survey.question,validation_error_msg:survey.feedback_1_1
 #: model:survey.question,validation_error_msg:survey.feedback_1_2
 #: model:survey.question,validation_error_msg:survey.feedback_2_1
@@ -1635,11 +1675,11 @@ msgid "The answer you entered has an invalid format."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/wizard/survey_email_compose_message.py:174
+#: code:addons/survey/wizard/survey_email_compose_message.py:139
 #, python-format
 msgid ""
-"The content of the text don't contain '__URL__'.                     __URL__ "
-"is automaticaly converted into the special url of the survey."
+"The content of the text don't contain '__URL__'.                     __URL__"
+" is automaticaly converted into the special url of the survey."
 msgstr ""
 
 #. module: survey
@@ -1685,8 +1725,7 @@ msgstr ""
 #. module: survey
 #: model:survey.page,description:survey.feedback_2
 msgid ""
-"These questions relate to the ergonomy and ease of use of Odoo. Try to "
-"remind your firsts days on Odoo and\n"
+"These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and\n"
 "what have been your difficulties."
 msgstr ""
 
@@ -1706,19 +1745,22 @@ msgid "They help new users to understand Odoo"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:671 code:addons/survey/tests/test_survey.py:94
+#: code:addons/survey/models/survey.py:544
+#: code:addons/survey/tests/test_survey.py:86
 #, python-format
 msgid "This answer must be an email address"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:713 code:addons/survey/tests/test_survey.py:115
+#: code:addons/survey/models/survey.py:588
+#: code:addons/survey/tests/test_survey.py:107
 #, python-format
-msgid "This is not a date/time"
+msgid "This is not a date"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:690 code:addons/survey/tests/test_survey.py:105
+#: code:addons/survey/models/survey.py:565
+#: code:addons/survey/tests/test_survey.py:97
 #, python-format
 msgid "This is not a number"
 msgstr ""
@@ -1726,8 +1768,8 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_mail_compose_message_multi_email
 msgid ""
-"This list of emails of recipients will not converted in contacts. Emails "
-"separated by commas, semicolons or newline."
+"This list of emails of recipients will not be converted in contacts.        "
+"Emails must be separated by commas, semicolons or newline."
 msgstr ""
 
 #. module: survey
@@ -1736,7 +1778,7 @@ msgid "This message will be displayed when survey is completed"
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:621
+#: code:addons/survey/models/survey.py:489
 #: model:survey.question,constr_error_msg:survey.feedback_1_1
 #: model:survey.question,constr_error_msg:survey.feedback_1_2
 #: model:survey.question,constr_error_msg:survey.feedback_2_1
@@ -1772,7 +1814,7 @@ msgstr ""
 #. module: survey
 #: model:survey.survey,description:survey.feedback_form
 msgid "This survey should take less than five minutes."
-msgstr ""
+msgstr "Αυτή η έρευνα θα διαρκέσει λιγότερο από πέντε λεπτά."
 
 #. module: survey
 #: model:survey.label,value:survey.frow_2_5_2
@@ -1783,8 +1825,14 @@ msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey_title
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Title"
 msgstr "Τίτλος"
+
+#. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Today Activities"
+msgstr "Σημερινές Δραστηριότητες"
 
 #. module: survey
 #: model:survey.label,value:survey.fcol_2_1_4
@@ -1823,6 +1871,11 @@ msgid "Types of answers"
 msgstr ""
 
 #. module: survey
+#: model:ir.ui.view,arch_db:survey.survey_survey_view_search
+msgid "Upcoming Activities"
+msgstr ""
+
+#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid "Use template"
 msgstr "Χρήση προτύπου"
@@ -1830,8 +1883,13 @@ msgstr "Χρήση προτύπου"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question_description
 msgid ""
-"Use this field to add             additional explanations about your question"
+"Use this field to add         additional explanations about your question"
 msgstr ""
+
+#. module: survey
+#: model:res.groups,name:survey.group_survey_user
+msgid "User"
+msgstr "Χρήστης"
 
 #. module: survey
 #: model:survey.survey,title:survey.feedback_form
@@ -1859,7 +1917,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_form
 msgid "User can come back in the previous page"
-msgstr ""
+msgstr "Ο χρήστης μπορεί να επιστρέψει στην προηγούμενη σελίδα"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_user_input_line_form
@@ -1886,6 +1944,11 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_validation_required
 msgid "Validate entry"
+msgstr ""
+
+#. module: survey
+#: model:ir.model.fields,field_description:survey.field_survey_question_validation_error_msg
+msgid "Validation Error message"
 msgstr ""
 
 #. module: survey
@@ -1942,16 +2005,10 @@ msgid "Which modules are you using/testing?"
 msgstr ""
 
 #. module: survey
-#: model:ir.ui.view,arch_db:survey.datetime
-msgid "YYYY-MM-DD hh:mm:ss"
-msgstr ""
-
-#. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid ""
-"YYYY-MM-DD hh:mm:ss\n"
-"                                            <i class=\"fa fa-calendar fa-2x"
-"\"/>"
+"YYYY-MM-DD\n"
+"                                            <i class=\"fa fa-calendar fa-2x\"/>"
 msgstr ""
 
 #. module: survey
@@ -1980,20 +2037,20 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.survey_email_compose_message
 msgid ""
-"You can share your survey web public link and/or send private invitations to "
-"your audience. People can answer once per invitation, and whenever they want "
-"with the public web link (in this case, the \"Public in website\" setting "
-"must be enabled)."
+"You can share your survey web public link and/or send private invitations to"
+" your audience. People can answer once per invitation, and whenever they "
+"want with the public web link (in this case, the \"Login Required\" setting "
+"must be disabled)."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:424
+#: code:addons/survey/models/survey.py:316
 #, python-format
 msgid "You cannot send an invitation for a survey that has no questions."
 msgstr ""
 
 #. module: survey
-#: code:addons/survey/survey.py:429
+#: code:addons/survey/models/survey.py:319
 #, python-format
 msgid "You cannot send invitations for closed surveys."
 msgstr ""
@@ -2007,6 +2064,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.survey_question_form
 msgid "ans"
 msgstr ""
+
+#. module: survey
+#: model:ir.model,name:survey.model_ir_autovacuum
+msgid "ir.autovacuum"
+msgstr "ir.autovacuum"
 
 #. module: survey
 #: model:ir.ui.view,arch_db:survey.auth_required
@@ -2027,214 +2089,3 @@ msgstr ""
 #: model:ir.ui.view,arch_db:survey.sfinished
 msgid "review your answers"
 msgstr ""
-
-#. module: survey
-#. openerp-web
-#: code:addons/survey/static/src/js/tour_test_survey.js:10
-#, python-format
-msgid "try to create and fill survey"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid ""
-#~ "Answers do not go in the original document discussion thread. This has an "
-#~ "impact on the generated message-id."
-#~ msgstr ""
-#~ "Οι απαντήσεις δεν πηγαίνουν στο αρχικό νήμα συζήτησης. Αυτό έχει ως "
-#~ "επίπτωση την δημιουργία message-id."
-
-#~ msgid "Author"
-#~ msgstr "Δημιουργός"
-
-#~ msgid ""
-#~ "Author of the message. If not set, email_from may hold an email address "
-#~ "that did not match any partner."
-#~ msgstr ""
-#~ "Συγγραφέας του μηνύματος. Εάν δεν ρυθμιστεί, email από αυτές τις email "
-#~ "διευθύνσεις που δεν ταιριάζουν σε κανένα συνεργάτη."
-
-#~ msgid "Author's avatar"
-#~ msgstr "Avatar Συγγραφέα"
-
-#~ msgid "Automatically sanitized HTML contents"
-#~ msgstr "Αυτόματα απολυμαίνει HTML περιεχόμενα"
-
-#~ msgid "Channels"
-#~ msgstr "Κανάλια"
-
-#~ msgid "Child Messages"
-#~ msgstr "Θυγατρικά μηνύματα"
-
-#~ msgid "Composition mode"
-#~ msgstr "Λειτουργία σύνθεσης"
-
-#~ msgid "Contents"
-#~ msgstr "Περιεχόμενα"
-
-#~ msgid "Current user has a starred notification linked to this message"
-#~ msgstr ""
-#~ "Ο τρέχων χρήστης ένα μια ειδοποίηση με αστέρια συνδεμένη με αυτό το μήνυμα"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid ""
-#~ "Email address of the sender. This field is set when no matching partner "
-#~ "is found and replaces the author_id field in the chatter."
-#~ msgstr ""
-#~ "Η διεύθυνση ηλεκτρονικού ταχυδρομείου του αποστολέα. Αυτό το πεδίο είναι "
-#~ "ορίζεται όταν δεν ταυτοποιηθεί ο συνεργάτης και έχει αντικαθιστά το πεδίο "
-#~ "author_id στην συζήτηση."
-
-#~ msgid "Favorited By"
-#~ msgstr "Αγαπημένο από"
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "From"
-#~ msgstr "Από"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Initial thread message."
-#~ msgstr "Αρχικό μήνυμα"
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Log an Internal Note"
-#~ msgstr "Καταγραφή ενός εσωτερικού σημειώματος"
-
-#~ msgid "Message Record Name"
-#~ msgstr "Περιγραφή εγγραφής Μηνύματος"
-
-#~ msgid ""
-#~ "Message type: email for email message, notification for system message, "
-#~ "comment for other messages such as user replies"
-#~ msgstr ""
-#~ "Τύπος Μηνύματος: email για email μηνύματα, ειδοποίηση για μήνυμα "
-#~ "συστήματος, σχόλιο για άλλα μηνύματα όπως είναι οι απαντήσεις χρηστών"
-
-#~ msgid "Message unique identifier"
-#~ msgstr "Μοναδικός ταυτοποιητής μηνύματος"
-
-#~ msgid "Message-Id"
-#~ msgstr "Κωδικός Μηνύματος"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "Name get of the related document."
-#~ msgstr "Όνομα που πήρε από το σχετικό έγγραφο"
-
-#~ msgid "Need Action"
-#~ msgstr "Απαιτεί Ενέργεια"
-
-#~ msgid "No threading for answers"
-#~ msgstr "Χωρίς νήμα για απαντήσεις"
-
-#~ msgid "Notify followers"
-#~ msgstr "Ειδοποίηση ακολούθων"
-
-#~ msgid "Notify followers of the document (mass post only)"
-#~ msgstr ""
-#~ "Ειδοποίηση για τους ακολούθους του εγγράφου (μόνο μαζικές αποστολές)"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Outgoing mail server"
-#~ msgstr "Διακομιστής εξερχόμενης αλληλογραφίας"
-
-#~ msgid "Parent Message"
-#~ msgstr "Γονικό μήνυμα"
-
-#~ msgid "Related Document ID"
-#~ msgstr "Κωδικός σχετικού εγγράφου"
-
-#~ msgid "Related Document Model"
-#~ msgstr "Μοντέλο Σχετικού Εγγράφου"
-
-#~ msgid ""
-#~ "Reply email address. Setting the reply_to bypasses the automatic thread "
-#~ "creation."
-#~ msgstr ""
-#~ "Διεύθυνση απάντησης ηλεκτρονικού ταχυδρομείου. Ρύθμιση της reply_to "
-#~ "παρακάμπτει την αυτόματη δημιουργία νήματος."
-
-#~ msgid "Reply-To"
-#~ msgstr "Απάντηση στο"
-
-#~ msgid ""
-#~ "Small-sized image of this contact. It is automatically resized as a "
-#~ "64x64px image, with aspect ratio preserved. Use this field anywhere a "
-#~ "small image is required."
-#~ msgstr ""
-#~ "Μικρού μεγέθους εικόνα για αυτή την επαφή. Θα μετασχηματιστεί αυτόματα σε "
-#~ "64x64px εικόνα, με διατήρηση της αναλογίας διαστάσεων. Χρησιμοποιείστε "
-#~ "αυτό το πεδίο οπουδήπτε μια μικρή εικόνα απαιτείται."
-
-#~ msgid "Starred"
-#~ msgstr "Πρωταγωνίστησε"
-
-#~ msgid "Subject"
-#~ msgstr "Θέμα"
-
-#~ msgid "Subtype"
-#~ msgstr "Υποτύπος"
-
-#~ msgid "System notification"
-#~ msgstr "Ειδοποιήσεις Συστήματος"
-
-#~ msgid ""
-#~ "Tracked values are stored in a separate model. This field allow to "
-#~ "reconstructthe tracking and to generate statistics on the model."
-#~ msgstr ""
-#~ "Οι τιμές που παρακολουθούνται αποθηκεύονται σε ένα ξεχωριστό μοντέλο. Το "
-#~ "πεδίο αυτό επιτρέπει την παρακολούθηση ανακατασκευής και την παραγωγή "
-#~ "στατιστικών του μοντέλου."
-
-#~ msgid "Tracking values"
-#~ msgstr "Τιμές παρακολούθησης"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Αδιάβαστα Μηνύματα"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Use active domain"
-#~ msgstr "Χρήση ενεργού τομέα"
-
-#~ msgid "Whether the message is an internal note (comment mode only)"
-#~ msgstr ""
-#~ "Κατά πόσο το μήνυμα είναι ένα εσωτερικό σημείωμα (μόνο σε κατάσταση "
-#~ "σχολίου)"
-
-#~ msgid "on"
-#~ msgstr "στις"

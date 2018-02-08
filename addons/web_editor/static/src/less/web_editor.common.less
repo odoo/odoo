@@ -23,7 +23,9 @@ html, body {
 /* ----- GENERIC LAYOUTING HELPERS ---- */
 /* table */
 #wrapwrap, .o_editable {
-    table.table {
+    // Only style editor-made tables (shop/portal/... tables are not supposed to
+    // use table-bordered...)
+    table.table.table-bordered {
         table-layout: fixed;
         td {
             min-width: 20px;
@@ -145,12 +147,6 @@ span[data-oe-type="monetary"] {
 // Menus
 // TODO should not be here but used by web_studio so must stay here for now
 ul.oe_menu_editor {
-    .fa-home {
-        display: none;
-    }
-    > li:first-child > div > span > .fa-home {
-        display: block;
-    }
     .oe_menu_placeholder {
         outline: 1px dashed #4183C4;
     }
@@ -162,57 +158,75 @@ ul.oe_menu_editor {
     }
 }
 
-// Generate all margins for all sizes
-.o-margins-all(@factor: 1) {
-    // Unfortunately, the margins sizes are not
-    // mathematically related by a single function
-    .o-margins(128, @factor);
-    .o-margins(96, @factor);
-    .o-margins(92, @factor);
-    .o-margins(64, @factor);
-    .o-margins(48, @factor);
-    .o-margins(32, @factor);
-    .o-margins(24, @factor);
-    .o-margins(16, @factor);
-    .o-margins(8, @factor);
-    .o-margins(4, @factor);
-    .o-margins(0, @factor);
+// Generate all spacings for all sizes
+.o-spacing-all(@factor: 1) {
+    // Generate vertical margin/padding classes used by the editor
+    .o-generate-spacings(256/8);
+    .o-generate-spacings(@n, @i: 0) when (@i =< @n) {
+        .o-vspacing(@i * 8);
+        .o-generate-spacings(@n, @i + 1);
+    }
+    .o-vspacing(4, @factor);
+
+    // 92px vertical margin is kept for compatibility
+    .o-vmargins(92, @factor);
+
+    // Some horizontal margin classes defined for convenience
+    // (and compatibility)
+    .o-hmargins(0, @factor);
+    .o-hmargins(4, @factor);
+    .o-hmargins(8, @factor);
+    .o-hmargins(16, @factor);
+    .o-hmargins(32, @factor);
+    .o-hmargins(64, @factor);
 }
 
-// Generate all margins for one size, scalled by a
-// given factor (0 <= factor <= 1)
-.o-margins(@name, @factor: 1) {
-    .o-margins-define(@name, @factor * @name);
+// Generate all spacings for one size, scalled by a given factor
+// (0 <= factor <= 1)
+.o-vspacing(@name, @factor: 1) {
+    .o-vmargins(@name, @factor);
+    .o-vpaddings(@name, @factor);
+}
+.o-vmargins(@name, @factor: 1) {
+    .o-vmargins-define(@name, @factor * @name);
+}
+.o-vpaddings(@name, @factor: 1) {
+    .o-vpaddings-define(@name, @factor * @name);
+}
+.o-hspacing(@name, @factor: 1) {
+    .o-hmargins(@name, @factor);
+    .o-hpaddings(@name, @factor);
+}
+.o-hmargins(@name, @factor: 1) {
+    .o-hmargins-define(@name, @factor * @name);
+}
+.o-hpaddings(@name, @factor: 1) {
+    .o-hpaddings-define(@name, @factor * @name);
 }
 
-// Generate all margins for one size, given
-// the name of the margin and intended size
-.o-margins-define(@name, @size: @name) {
-    .mt@{name} {margin-top: ~"@{size}px"!important;}
-    .mb@{name} {margin-bottom: ~"@{size}px"!important;}
-    .ml@{name} {margin-left: ~"@{size}px"!important;}
-    .mr@{name} {margin-right: ~"@{size}px"!important;}
+// Generate all spacings for one size, given the name of the spacing and
+// intended size
+.o-vmargins-define(@name, @size: @name) {
+    .mt@{name} { margin-top: unit(@size, px)!important; }
+    .mb@{name} { margin-bottom: unit(@size, px)!important; }
+}
+.o-vpaddings-define(@name, @size: @name) {
+    .pt@{name} { padding-top: unit(@size, px)!important; }
+    .pb@{name} { padding-bottom: unit(@size, px)!important; }
+}
+.o-hmargins-define(@name, @size: @name) {
+    .ml@{name} { margin-left: unit(@size, px)!important; }
+    .mr@{name} { margin-right: unit(@size, px)!important; }
+}
+.o-hpaddings-define(@name, @size: @name) {
+    .pl@{name} { padding-left: unit(@size, px)!important; }
+    .pr@{name} { padding-right: unit(@size, px)!important; }
 }
 
 // Generate all margins
-.o-margins-all();
+.o-spacing-all();
 
-// Possibility to change the margins ratio for small screen sizes, e.g.:
-// @media (max-width: 768px) {
-//     .o-margins-all(0.75);
-// }
-// Possibility to only redefine single margins for small screen sizes, e.g.:
-// @media (max-width: 768px) {
-//     .o-margins(64, 0.50);
-//     .o-margins(48, 0.50);
-// }
-// Possibility to directly redefine the size of single margins instead of refering to a factor for small screen sizes, e.g.:
-// @media (max-width: 768px) {
-//     .o-margins-define(128, 48);
-//     .o-margins-define(96, 48);
-//     .o-margins-define(64, 48);
-// }
-
+// Underline
 a.o_underline {
     text-decoration: underline;
     &:hover {

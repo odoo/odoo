@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
+<odoo>
         <!-- India - Standard Accounting Chart -->
         <record id="standard_transfer_account_id" model="account.account.template">
             <field name="code">1206</field>
@@ -190,44 +189,23 @@
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         </record>
         <!-- Other current liabilities -->
-        <record model="account.account.template" id="c1142111">
-            <field name="name">Excise Duty Payable</field>
-            <field name="code">1142111</field>
+        <record model="account.account.template" id="c114210">
+            <field name="name">(schedule6)SGST Payable</field>
+            <field name="code">114210</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         </record>
-        <record model="account.account.template" id="c1142112">
-            <field name="name">Education Cess Payable On Excise Duty</field>
-            <field name="code">1142112</field>
+        <record model="account.account.template" id="c114211">
+            <field name="name">(schedule6)CGST Payable</field>
+            <field name="code">114211</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         </record>
-        <record model="account.account.template" id="c1142113">
-            <field name="name">Higher Education Cess Payable On Excise Duty</field>
-            <field name="code">1142113</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1142121">
-            <field name="name">Service Tax Payable</field>
-            <field name="code">1142121</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1142122">
-            <field name="name">Education Cess Payable On Service Tax</field>
-            <field name="code">1142122</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1142123">
-            <field name="name">Higher Education Cess Payable On Service Tax</field>
-            <field name="code">1142123</field>
+        <record model="account.account.template" id="c114212">
+            <field name="name">(schedule6)IGST Payable</field>
+            <field name="code">114212</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
@@ -235,20 +213,6 @@
         <record model="account.account.template" id="c114213">
             <field name="name">TDS Paybale</field>
             <field name="code">114213</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c114214">
-            <field name="name">Central Sales Tax Payable</field>
-            <field name="code">114214</field>
-            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c114215">
-            <field name="name">VAT Payable</field>
-            <field name="code">114215</field>
             <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
@@ -810,58 +774,23 @@
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         </record>
         <!-- Other current assets -->
-        <record model="account.account.template" id="c121610">
-            <field name="name">Sales Tax Receivable</field>
-            <field name="code">121610</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
         <record model="account.account.template" id="c121611">
-            <field name="name">VAT Receivable</field>
+            <field name="name">(schedule6)SGST Receivable</field>
             <field name="code">121611</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         </record>
-        <record model="account.account.template" id="c1216121">
-            <field name="name">Excise Duty Receivable</field>
-            <field name="code">1216121</field>
+        <record model="account.account.template" id="c121612">
+            <field name="name">(schedule6)CGST Receivable</field>
+            <field name="code">121612</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
         </record>
-        <record model="account.account.template" id="c1216122">
-            <field name="name">Education Cess Receivable On Excise Duty</field>
-            <field name="code">1216122</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1216123">
-            <field name="name">Higher Education Cess Receivable On Excise Duty</field>
-            <field name="code">1216123</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1216131">
-            <field name="name">Service Tax Receivable</field>
-            <field name="code">1216131</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1216132">
-            <field name="name">Education Cess Receivable On Service Tax</field>
-            <field name="code">1216132</field>
-            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
-            <field name="reconcile" eval="False"/>
-            <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
-        </record>
-        <record model="account.account.template" id="c1216133">
-            <field name="name">Higher Education Cess Receivable On Service Tax</field>
-            <field name="code">1216133</field>
+        <record model="account.account.template" id="c121613">
+            <field name="name">(schedule6)IGST Receivable</field>
+            <field name="code">121613</field>
             <field name="user_type_id" ref="account.data_account_type_current_assets"/>
             <field name="reconcile" eval="False"/>
             <field name="chart_template_id" ref="indian_chart_template_schedule6"/>
@@ -1429,5 +1358,4 @@
             <field name="expense_currency_exchange_account_id" ref="c2170"/>
         </record>
 
-   </data>
-</openerp>
+</odoo>

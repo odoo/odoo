@@ -4,32 +4,7 @@
     @sale-table-spacing: 10px;
 
     .o_kanban_record {
-        span {
-            display: inline-block;
-        }
-        min-height: 250px;
-        @media (min-width: @screen-sm-min) {
-            min-width: 450px;
-        }
-        .o_dashboard_star {
-            font-size: 12px;
-
-            &.fa-star-o {
-                color: @odoo-main-color-muted;
-                &:hover {
-                    color: gold;
-                }
-            }
-            &.fa-star {
-                color: gold;
-            }
-        }
-        .o_kanban_card_upper_content {
-            margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height + 85px;
-        }
         .o_sales_team_kanban_graph_section {
-            margin-bottom: @odoo-horizontal-padding*2 + @o-kanban-progressbar-height;
-            .o-position-absolute(@bottom: 0, @left: 0, @right: 0);
             .o_graph_linechart {
                 > svg {
                     height: 80px;
@@ -81,137 +56,14 @@
                 > svg {
                     height: 95px;
                     overflow: visible;
-                    g.nv-barsWrap {
-                        g.nv-group.nv-series-0 {
-                            g.nv-bar {
-                                fill: @odoo-brand-primary !important;
-                            }
-                        }
-                    }
-
-                    // lower the graph a bit as it's too high
-                    g.nvd3.nv-wrap {
-                        transform: translateY(10px);
-                    }
-                    // X axis
-                    g.nv-x.nv-axis .nv-axislabel{
-                        transform:translateY(-78px);
-                        font-weight: bold;
-                    }
-                    g.nv-y.nv-axis {
-                        transform: translateY(10px);
-                    }
                 }
             }
         }
-        .bottom_block {
-            height: @odoo-horizontal-padding*2 + 20px;
-        }
     }
 
-    .o_sales_dashboard {
-        margin: (0 - @o-kanban-record-margin) (@o-kanban-record-margin - @odoo-horizontal-padding) @o-kanban-record-margin;
-        .o-flex(1, 0, 100%);
-        padding: 10px (@odoo-horizontal-padding - @sale-table-spacing);
-
-        background-color: @dashboard-bg-color;
-        position: relative;
-
-        .o_welcome_message {
-            width: 100%;
-            .o-position-absolute(@left: 0, @top: 0);
-            .o-flex-display();
-            .o-justify-content(center);
-
-            .o_welcome_image {
-                padding: 20px;
-            }
-            .o_welcome_content > a {
-                color: white;
-                display: inline-block;
-            }
-        }
-
-        > .o_demo {
-            opacity: 0.07;
-        }
-
-        > div {
-            display: inline-block;
-            vertical-align: top;
-            @media (min-width: @screen-sm-min) {
-                width: 50%;
-            }
-
-            > table {
-                margin-bottom: 0;
-                table-layout: fixed;
-                border-spacing: @sale-table-spacing 0px;
-                border-collapse: separate;
-
-                > tbody > tr > td {
-                    vertical-align: middle;
-                    text-align: center;
-                    border-top: 1px solid @dashboard-bg-color;
-                    width: 25%;
-
-                    height: 33px;
-
-                    span {
-                        display: inline;
-                    }
-
-                    a:hover {
-                        text-decoration: none;
-                    }
-
-                    &.o_main {
-                        background-color: @odoo-brand-optional;
-                        &:hover {
-                            background-color: darken(@odoo-brand-optional, 10%);
-                        }
-                        a {
-                            color: white;
-                        }
-                    }
-                    &.o_warning {
-                        background-color: orange;
-                        &:hover {
-                            background-color: darken(orange, 10%);
-                        }
-                        a {
-                            color: white;
-                        }
-                    }
-                    &.o_secondary {
-                        background-color: @odoo-brand-lightsecondary;
-                        &:hover {
-                            background-color: darken(@odoo-brand-lightsecondary, 10%);
-                        }
-                        a {
-                            color: black;
-                        }
-                    }
-                    &.o_highlight, .o_highlight {
-                        font-size: 20px;
-                    }
-                    &.o_text {
-                        text-align: left;
-                    }
-                }
-
-            }
-        }
-    }
-
-    &.o_kanban_nocontent .o_sales_dashboard {
-        margin: 0;
-    }
-
-    &.o_kanban_grouped {
-        .o-flex-flow(row, wrap);
+    &.o_kanban_ungrouped {
         .o_kanban_record {
-            min-width: inherit;
+            width: 450px;
         }
     }
 }

@@ -211,7 +211,10 @@ var loadJS = (function () {
  * @param {HTMLFormElement} [options.form] the form to submit in order to fetch the file
  * @param {Function} [options.success] callback in case of download success
  * @param {Function} [options.error] callback in case of request error, provided with the error body
- * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
+ * @param {Function} [options.complete] called after both ``success`` and ``error`` callbacks have executed
+ * @returns {boolean} a false value means that a popup window was blocked. This
+ *   mean that we probably need to inform the user that something needs to be
+ *   changed to make it work.
  */
 function get_file(options) {
     // need to detect when the file is done downloading (not used
@@ -232,7 +235,12 @@ function get_file(options) {
         var url = options.session.url(options.url, params);
         if (options.complete) { options.complete(); }
 
-        return window.open(url);
+        var w = window.open(url);
+        if (!w || w.closed || typeof w.closed === 'undefined') {
+            // popup was blocked
+            return false;
+        }
+        return true;
     }
 
     var $form, $form_data = $('<div>');
@@ -309,6 +317,7 @@ function get_file(options) {
         }
     };
     timer = setTimeout(waitLoop, CHECK_INTERVAL);
+    return true;
 };
 
 function post (controller_url, data) {
@@ -415,30 +424,70 @@ var loadXML = (function () {
             if (loadingsData.length) {
                 // There is something to load, load it, resolve the associated
                 // deferred then start loading the next one
-                var loadingData = loadingsData.shift();
+                var loadingData = loadingsData[0];
                 loadingData.qweb.add_template(loadingData.url, function () {
+                    // Remove from array only now so that multiple calls to
+                    // loadXML with the same URL returns the right deferred
+                    loadingsData.shift();
                     loadingData.def.resolve();
                     _load();
                 });
             } else {
                 // There is nothing to load anymore, so resolve the
                 // "all the calls" deferred
-                allLoadingsDef.resolve();
                 isLoading = false;
+                allLoadingsDef.resolve();
             }
         }
     };
 })();
 
-return {
+
+/**
+ * Loads the given js and css libraries. Note that the ajax loadJS and loadCSS methods
+ * don't do anything if the given file is already loaded.
+ *
+ * @param {Object} libs
+ * @Param {Array | Array<Array>} [libs.jsLibs=[]] The list of JS files that we want to
+ *   load. The list may contain strings (the files to load), or lists of strings. The
+ *   first level is loaded sequentially, and files listed in inner lists are loaded in
+ *   parallel.
+ * @param {Array<string>} [libs.cssLibs=[]] A list of css files, to be loaded in
+ *   parallel
+ *
+ * @returns {Deferred}
+ */
+function loadLibs (libs) {
+    var defs = [];
+    _.each(libs.jsLibs || [], function (urls) {
+        defs.push($.when.apply($, defs).then(function () {
+            if (typeof(urls) === 'string') {
+                return ajax.loadJS(urls);
+            } else {
+                return $.when.apply($, _.map(urls, function (url) {
+                    return ajax.loadJS(url);
+                }));
+            }
+        }));
+    });
+    _.each(libs.cssLibs || [], function (url) {
+        defs.push(ajax.loadCSS(url));
+    });
+    return $.when.apply($, defs);
+}
+
+var ajax = {
     jsonRpc: jsonRpc,
     jsonpRpc: jsonpRpc,
     rpc: rpc,
     loadCSS: loadCSS,
     loadJS: loadJS,
     loadXML: loadXML,
+    loadLibs: loadLibs,
     get_file: get_file,
     post: post,
 };
+
+return ajax;
 
 });

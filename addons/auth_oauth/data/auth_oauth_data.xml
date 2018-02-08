@@ -16,7 +16,7 @@
             <field name="auth_endpoint">https://www.facebook.com/dialog/oauth</field>
             <field name="scope">public_profile,email</field>
             <field name="validation_endpoint">https://graph.facebook.com/me</field>
-            <field name="data_endpoint"></field>
+            <field name="data_endpoint">https://graph.facebook.com/me?fields=id,name,email</field>
             <field name="css_class">fa fa-facebook-square</field>
             <field name="body">Log in with facebook</field>
         </record>
@@ -29,5 +29,13 @@
             <field name="css_class">fa fa-google-plus-square</field>
             <field name="body">Log in with Google</field>
         </record>
+
+        <!-- Use database uuid as client_id for OpenERP oauth provider -->
+        <function model="auth.oauth.provider" name="write">
+            <value eval="[ref('auth_oauth.provider_openerp')]"/>
+            <value model="ir.config_parameter" eval="{
+                'client_id': obj().env['ir.config_parameter'].get_param('database.uuid'),
+            }"/>
+        </function>
     </data>
 </odoo>

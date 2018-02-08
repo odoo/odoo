@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
-from odoo.tools import pycompat
+from odoo.tools import float_utils
 
 class ResourceMixin(models.AbstractModel):
     _name = "resource.mixin"
@@ -20,7 +20,7 @@ class ResourceMixin(models.AbstractModel):
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Working Hours',
         default=lambda self: self.env['res.company']._company_default_get().resource_calendar_id,
-        index=True, related='resource_id.calendar_id')
+        index=True, related='resource_id.calendar_id', store=True)
 
     @api.model
     def create(self, values):
@@ -30,6 +30,16 @@ class ResourceMixin(models.AbstractModel):
             })
             values['resource_id'] = resource.id
         return super(ResourceMixin, self).create(values)
+
+    @api.multi
+    def copy_data(self, default=None):
+        if default is None:
+            default = {}
+        resource = self.resource_id.copy()
+        default['resource_id'] = resource.id
+        default['company_id'] = resource.company_id.id
+        default['resource_calendar_id'] = resource.calendar_id.id
+        return super(ResourceMixin, self).copy_data(default)
 
     def get_work_days_count(self, from_datetime, to_datetime, calendar=None):
         """ Return the number of work days for the resource, taking into account
@@ -47,7 +57,7 @@ class ResourceMixin(models.AbstractModel):
             theoric_hours = self.get_day_work_hours_count(day_intervals[0][0].date(), calendar=calendar)
             work_time = sum((interval[1] - interval[0] for interval in day_intervals), timedelta())
             total_work_time += work_time
-            days_count += pycompat.round((work_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
+            days_count += float_utils.round((work_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
         return {
             'days': days_count,
             'hours': total_work_time.total_seconds() / 3600,
@@ -70,7 +80,7 @@ class ResourceMixin(models.AbstractModel):
         for day_intervals in calendar._iter_leave_intervals(from_datetime, to_datetime, self.resource_id.id):
             theoric_hours = self.get_day_work_hours_count(day_intervals[0][0].date(), calendar=calendar)
             leave_time = sum((interval[1] - interval[0] for interval in day_intervals), timedelta())
-            days_count += pycompat.round((leave_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
+            days_count += float_utils.round((leave_time.total_seconds() / 3600 / theoric_hours) * 4) / 4
         return days_count
 
     def iter_leaves(self, from_datetime, to_datetime, calendar=None):

@@ -63,13 +63,13 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
-                                <div class="row">
+                                <div class="row o_kanban_record_title">
                                     <div class="col-xs-4 text-center"><strong>Template</strong></div>
                                     <div class="col-xs-4 text-center"><strong>Model</strong></div>
                                     <div class="col-xs-4 text-center"><strong>Active</strong></div>
                                 </div>
                                 <hr class="mb4 mt4"/>
-                                <div class="row">
+                                <div class="row o_kanban_record_subtitle">
                                     <div class="col-xs-4 text-center"><field name="name"/></div>
                                     <div class="col-xs-4 text-center"><field name="model_id"/></div>
                                     <div class="col-xs-4 text-center">
@@ -91,8 +91,8 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name='view_id' ref='view_google_drive_config_tree' />
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to add a new template.
+                <p class="o_view_nocontent_smiling_face">
+                    Add a new template
                 </p>
                 <p>
                     Link your own google drive templates to any record of Odoo. If you have really specific documents you want your collaborator fill in, e.g. Use a spreadsheet to control the quality of your product or review the delivery checklist for each order in a foreign country, ... Its very easy to manage them, link them to Odoo and use them to collaborate with your employees.

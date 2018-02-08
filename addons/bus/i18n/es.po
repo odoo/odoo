@@ -12,16 +12,14 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Antonio Trueba <atgayol@gmail.com>, 2016
 # Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2016
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
-# RGB Consulting <odoo@rgbconsulting.com>, 2017
-# Luis M. Triana <luis.triana@jarsa.com.mx>, 2017
+# Alejandro Santana <alejandrosantana@anubia.es>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Luis M. Triana <luis.triana@jarsa.com.mx>, 2017\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
+"Last-Translator: Alejandro Santana <alejandrosantana@anubia.es>, 2017\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,16 +43,9 @@ msgid "Channel"
 msgstr "Canal"
 
 #. module: bus
-#: model:ir.model.fields,help:bus.field_res_users_country_enforce_cities
-msgid ""
-"Check this box to ensure every address created in that country has a 'City' "
-"chosen in the list of the country's cities."
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_city_id
-msgid "Company"
-msgstr "Compañía"
+#: model:ir.model,name:bus.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_create_date
@@ -71,36 +62,6 @@ msgstr "Creado por"
 #: model:ir.model.fields,field_description:bus.field_bus_presence_display_name
 msgid "Display Name"
 msgstr "Nombre a mostrar"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_number2
-msgid "Door Number"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_country_enforce_cities
-msgid "Enforce Cities"
-msgstr ""
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_latitude
-msgid "Geo Latitude"
-msgstr "Geo latitud"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_partner_longitude
-msgid "Geo Longitude"
-msgstr "Geo longitud"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_date_localization
-msgid "Geolocation Date"
-msgstr "Fecha de Geolocalización"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_number
-msgid "House Number"
-msgstr ""
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus_id
@@ -157,16 +118,6 @@ msgid "Online"
 msgstr "En línea"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_partner
-msgid "Partner"
-msgstr "Empresa"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_res_users_street_name
-msgid "Street Name"
-msgstr ""
-
-#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
 msgstr "Usuario conectado"
@@ -176,6 +127,12 @@ msgstr "Usuario conectado"
 #: model:ir.model.fields,field_description:bus.field_bus_presence_user_id
 msgid "Users"
 msgstr "Usuarios"
+
+#. module: bus
+#: code:addons/bus/controllers/main.py:41
+#, python-format
+msgid "bus.Bus not available in test mode"
+msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus

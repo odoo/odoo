@@ -6,8 +6,6 @@ from odoo.exceptions import UserError
 
 from dateutil.relativedelta import relativedelta
 
-from odoo.tools import pycompat
-
 
 class FleetVehicleCost(models.Model):
     _name = 'fleet.vehicle.cost'
@@ -65,14 +63,15 @@ class FleetVehicleCost(models.Model):
             data['cost_subtype_id'] = contract.cost_subtype_id.id
             data['cost_type'] = contract.cost_type
         if 'odometer' in data and not data['odometer']:
-            # if received value for odometer is 0, then remove it from the data as it would result to the creation of a
+            # if received value for odometer is 0, then remove it from the
+            # data as it would result to the creation of a
             # odometer log with 0, which is to be avoided
-            del(data['odometer'])
+            del data['odometer']
         return super(FleetVehicleCost, self).create(data)
 
 
 class FleetVehicleLogContract(models.Model):
-
+    _inherit = ['mail.thread']
     _inherits = {'fleet.vehicle.cost': 'cost_id'}
     _name = 'fleet.vehicle.log.contract'
     _description = 'Contract information on a vehicle'
@@ -96,8 +95,10 @@ class FleetVehicleLogContract(models.Model):
 
     name = fields.Text(compute='_compute_contract_name', store=True)
     active = fields.Boolean(default=True)
-    start_date = fields.Date('Contract Start Date', default=fields.Date.context_today, help='Date when the coverage of the contract begins')
-    expiration_date = fields.Date('Contract Expiration Date', default=lambda self: self.compute_next_year_date(fields.Date.context_today(self)),
+    start_date = fields.Date('Contract Start Date', default=fields.Date.context_today, 
+        help='Date when the coverage of the contract begins')
+    expiration_date = fields.Date('Contract Expiration Date', default=lambda self:
+        self.compute_next_year_date(fields.Date.context_today(self)),
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
     insurer_id = fields.Many2one('res.partner', 'Vendor')
@@ -105,15 +106,19 @@ class FleetVehicleLogContract(models.Model):
         help='Person to which the contract is signed for')
     ins_ref = fields.Char('Contract Reference', size=64, copy=False)
     state = fields.Selection([
+        ('futur', 'Incoming'),
         ('open', 'In Progress'),
-        ('toclose', 'To Close'),
-        ('closed', 'Terminated')
-        ], 'Status', default='open', readonly=True, help='Choose wheter the contract is still valid or not',
-                              copy=False)
+        ('expired', 'Expired'),
+        ('diesoon', 'Expiring Soon'),
+        ('closed', 'Closed')
+        ], 'Status', default='open', readonly=True,
+        help='Choose whether the contract is still valid or not',
+        track_visibility="onchange",
+        copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
-    cost_generated = fields.Float('Recurring Cost Amount',
-        help="Costs paid at regular intervals, depending on the cost frequency."
-             "If the cost frequency is set to unique, the cost will be logged at the start date")
+    cost_generated = fields.Float('Recurring Cost Amount', 
+        help="Costs paid at regular intervals, depending on the cost frequency. "
+        "If the cost frequency is set to unique, the cost will be logged at the start date")
     cost_frequency = fields.Selection([
         ('no', 'No'),
         ('daily', 'Daily'),
@@ -128,7 +133,8 @@ class FleetVehicleLogContract(models.Model):
     # (1) to address fields from inherited table
     # (2) fields that aren't stored in database
     cost_amount = fields.Float(related='cost_id.amount', string='Amount', store=True)
-    odometer = fields.Float(string='Odometer at creation', help='Odometer measure of the vehicle at the moment of the contract creation')
+    odometer = fields.Float(string='Odometer at creation', 
+        help='Odometer measure of the vehicle at the moment of the contract creation')
 
     @api.depends('vehicle_id', 'cost_subtype_id', 'date')
     def _compute_contract_name(self):
@@ -148,7 +154,7 @@ class FleetVehicleLogContract(models.Model):
         otherwise return the number of days before the contract expires
         """
         for record in self:
-            if (record.expiration_date and (record.state == 'open' or record.state == 'toclose')):
+            if (record.expiration_date and (record.state == 'open' or record.state == 'expired')):
                 today = fields.Date.from_string(fields.Date.today())
                 renew_date = fields.Date.from_string(record.expiration_date)
                 diff_time = (renew_date - today).days
@@ -253,20 +259,29 @@ class FleetVehicleLogContract(models.Model):
     def scheduler_manage_contract_expiration(self):
         # This method is called by a cron task
         # It manages the state of a contract, possibly by posting a message on the vehicle concerned and updating its status
-        date_today = fields.Date.from_string(fields.Date.context_today(self))
-        limit_date = fields.Date.to_string(date_today + relativedelta(days=+15))
-        contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', limit_date)])
+        date_today = fields.Date.from_string(fields.Date.today())
+        in_fifteen_days = fields.Date.to_string(date_today + relativedelta(days=+15))
+        nearly_expired_contracts = self.search([('state', '=', 'open'), ('expiration_date', '<', in_fifteen_days)])
         res = {}
-        for contract in contracts:
+        for contract in nearly_expired_contracts:
             if contract.vehicle_id.id in res:
                 res[contract.vehicle_id.id] += 1
             else:
                 res[contract.vehicle_id.id] = 1
 
         Vehicle = self.env['fleet.vehicle']
-        for vehicle, value in pycompat.items(res):
-            Vehicle.browse(vehicle).message_post(body=_('%s contract(s) need(s) to be renewed and/or closed!') % value)
-        return contracts.write({'state': 'toclose'})
+        for vehicle, value in res.items():
+            Vehicle.browse(vehicle).message_post(body=_('%s contract(s) will expire soon and should be renewed and/or closed!') % value)
+        nearly_expired_contracts.write({'state': 'diesoon'})
+
+        expired_contracts = self.search([('state', '!=', 'expired'), ('expiration_date', '<',fields.Date.today() )])
+        expired_contracts.write({'state': 'expired'})
+
+        futur_contracts = self.search([('state', 'not in', ['futur', 'closed']), ('start_date', '>', fields.Date.today())])
+        futur_contracts.write({'state': 'futur'})
+
+        now_running_contracts = self.search([('state', '=', 'futur'), ('start_date', '<=', fields.Date.today())])
+        now_running_contracts.write({'state': 'open'})
 
     @api.model
     def run_scheduler(self):

@@ -11,13 +11,6 @@ class WebsiteBackend(http.Controller):
     def fetch_dashboard_data(self, date_from, date_to):
         has_group_system = request.env.user.has_group('base.group_system')
         has_group_designer = request.env.user.has_group('website.group_website_designer')
-        if has_group_system:
-            apps_data = dict((app['name'], app) for app in request.env['ir.module.module'].sudo().search_read(
-                ['|', ('name', 'ilike', 'website'), ('application', '=', True)],
-                ['id', 'sequence', 'name', 'shortdesc', 'state'],
-                order='sequence ASC'))
-        else:
-            apps_data = {}
         dashboard_data = {
             'groups': {
                 'system': has_group_system,
@@ -25,12 +18,11 @@ class WebsiteBackend(http.Controller):
             },
             'currency': request.env.user.company_id.currency_id.id,
             'dashboards': {
-                'apps_data': apps_data,
                 'visits': {},
             }
         }
         if has_group_designer:
-            config = request.env['website.config.settings'].sudo().create({})
+            config = request.env['res.config.settings'].sudo().create({})
             if config.has_google_analytics_dashboard:
                 dashboard_data['dashboards']['visits'] = dict(
                     ga_client_id=config.google_management_client_id or '',  # void string instead of stringified False
@@ -54,7 +46,7 @@ class WebsiteBackend(http.Controller):
                     'message': 'The Google Analytics Client ID or Key you entered seems incorrect.',
                 }
             }
-        request.env['website.config.settings'].create({
+        request.env['res.config.settings'].create({
             'has_google_analytics': True,
             'has_google_analytics_dashboard': True,
             'google_management_client_id': ga_client_id,

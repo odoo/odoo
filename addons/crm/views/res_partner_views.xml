@@ -23,8 +23,8 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create an opportunity related to this customer.
+              <p class="o_view_nocontent_smiling_face">
+                Create an new opportunity related to this customer
               </p><p>
                 Use opportunities to keep track of your sales pipeline, follow
                 up potential sales and better forecast your future revenues.
@@ -69,7 +69,7 @@
                     <field name="opportunity_count"/>
                     <field name="meeting_count"/>
                 </field>
-                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                <xpath expr="//div[hasclass('oe_kanban_partner_links')]" position="inside">
                     <span class="badge" t-if="record.opportunity_count.value>0"><i class="fa fa-fw fa-star"/><t t-esc="record.opportunity_count.value"/></span>
                     <span class="badge" t-if="record.meeting_count.value>0"><i class="fa fa-fw fa-calendar"/><t t-esc="record.meeting_count.value"/></span>
                 </xpath>

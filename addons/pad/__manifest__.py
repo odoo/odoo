@@ -16,7 +16,7 @@ pads (by default, http://etherpad.com/).
     'depends': ['web', 'base_setup'],
     'data': [
         'views/pad.xml',
-        'views/base_config_settings_views.xml',
+        'views/res_config_settings_views.xml',
     ],
     'demo': ['data/pad_demo.xml'],
     'web': True,

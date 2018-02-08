@@ -129,6 +129,12 @@
         </div>
     </t>
 
+    <t t-name="SetPricelistButton">
+        <div class='control-button o_pricelist_button'>
+            <i class='fa fa-th-list' /> <t t-esc='widget.get_current_pricelist_name()'/>
+        </div>
+    </t>
+
     <t t-name="ActionpadWidget">
         <div class="actionpad">
             <button t-attf-class='button set-customer #{ ( widget.pos.get_client() and widget.pos.get_client().name.length > 10) ? "decentered" : "" }' >
@@ -378,6 +384,17 @@
                         <span class='label'>Tax ID</span>
                         <input class='detail vat'           name='vat'     t-att-value='partner.vat || ""'></input>
                     </div>
+                    <div t-attf-class='client-detail #{widget.pos.pricelists.length &lt;= 1 ? "oe_hidden" : ""}'>
+                        <span class='label'>Pricelist</span>
+                        <select class='detail needsclick' name='property_product_pricelist'>
+                            <t t-foreach='widget.pos.pricelists' t-as='pricelist'>
+                                <option t-att-value='pricelist.id'
+                                        t-att-selected="partner.property_product_pricelist ? (pricelist.id === partner.property_product_pricelist[0] ? true : undefined) : undefined"> 
+                                    <t t-esc='pricelist.display_name'/>
+                                </option>
+                            </t>
+                        </select>
+                    </div>
                 </div>
             </div>
         </section>
@@ -438,6 +455,15 @@
                         </t>
                         <t t-if='!partner.vat'>
                             <span class='detail vat empty'>N/A</span>
+                        </t>
+                    </div>
+                    <div t-attf-class='client-detail #{widget.pos.pricelists.length &lt;= 1 ? "oe_hidden" : ""}'>
+                        <span class='label'>Pricelist</span>
+                        <t t-if='partner.property_product_pricelist'>
+                            <span class='detail property_product_pricelist'><t t-esc='partner.property_product_pricelist[1]'/></span>
+                        </t>
+                        <t t-if='!partner.property_product_pricelist'>
+                            <span class='detail property_product_pricelist empty'>N/A</span>
                         </t>
                     </div>
                 </div>
@@ -915,7 +941,7 @@
             <line t-foreach='payments' t-as='payment'>
                 <left><t t-esc='payment.name' /></left>
                 <right>
-                    <t t-esc='payment.total'/>
+                    <t t-esc='widget.format_currency_no_symbol(payment.total)'/>
                 </right>
             </line>
 
@@ -929,7 +955,7 @@
             <line t-foreach='taxes' t-as='taxe'>
                 <left><t t-esc='taxe.name' /></left>
                 <right>
-                    <t t-esc='taxe.total'/>
+                    <t t-esc='widget.format_currency_no_symbol(taxe.total)'/>
                 </right>
             </line>
 
@@ -940,7 +966,7 @@
             <line>
                 <left>Total:</left>
                 <right>
-                    <t t-esc='total_paid'/>
+                    <t t-esc='widget.format_currency_no_symbol(total_paid)'/>
                 </right>
             </line>
 
@@ -1110,7 +1136,7 @@
                 <p class="title"><t t-esc=" widget.options.title || 'Select' " /></p>
                 <div class='selection scrollable-y touch-scrollable'>
                     <t t-foreach="widget.list || []" t-as="item">
-                        <div class='selection-item' t-att-data-item-index='item_index'>
+                        <div t-attf-class="selection-item {{ widget.is_selected.call(widget, item.item) ? 'selected' : '' }}" t-att-data-item-index='item_index'>
                             <t t-esc='item.label'/>
                         </div>
                     </t>
@@ -1221,12 +1247,12 @@
                 <img t-att-src='image_url' /> 
                 <t t-if="!product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')"/>
+                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')"/>
                     </span>
                 </t>
                 <t t-if="product.to_weight">
                     <span class="price-tag">
-                        <t t-esc="widget.format_currency(product.price,'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
+                        <t t-esc="widget.format_currency(product.get_price(pricelist, 1),'Product Price')+'/'+widget.pos.units_by_id[product.uom_id[0]].name"/>
                     </span>
                 </t>
             </div>
@@ -1418,7 +1444,7 @@
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
             
-            <div class="pos-center-align"><t t-esc="moment().format('L LT')"/> <t t-esc="order.name"/></div>
+            <div class="pos-center-align"><t t-esc="order.formatted_validation_date"/> <t t-esc="order.name"/></div>
             <br />
             <t t-esc="widget.pos.company.name"/><br />
             <div class="receipt-phone">

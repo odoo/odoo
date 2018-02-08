@@ -1,974 +1,1200 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * hr_equipment
-#
+# * maintenance
+# 
 # Translators:
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2016
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2016
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2017
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2017
+# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2017
+# Manami Hashi <manami@roomsfor.hk>, 2017
+# Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:08+0000\n"
-"PO-Revision-Date: 2016-07-22 08:14+0000\n"
-"Last-Translator: 高木正勝 <masakatsu.takagi@pro-spire.co.jp>\n"
-"Language-Team: Japanese (http://www.transifex.com/odoo/odoo-9/language/ja/)\n"
-"Language: ja\n"
+"POT-Creation-Date: 2017-11-30 13:12+0000\n"
+"PO-Revision-Date: 2017-11-30 13:12+0000\n"
+"Last-Translator: Kohji Katayama <kohji.katayama@dreamyard.co.jp>, 2017\n"
+"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "<b>Category:</b>"
-msgstr ""
+msgstr "<b>カテゴリ:</b>"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "<b>Model Number:</b>"
-msgstr ""
+msgstr "<b>モデルナンバー:</b>"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "<b>Request to:</b>"
+msgstr "<b>リクエスト先:</b>"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+msgid "<b>Serial Number:</b>"
+msgstr "<b>シリアル番号:</b>"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "<span class=\"label label-warning pull-right\">Canceled</span>"
+msgstr "<span class=\"label label-warning pull-right\">キャンセルされました</span>"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "<span>Reporting</span>"
+msgstr "<span>レポーティング</span>"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "<span>View</span>"
+msgstr "<span>ビュー</span>"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
+msgid "<strong>Equipments:</strong>"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
-msgid "<b>Serial Number:</b>"
-msgstr "<b>シリアルナンバー：</b>"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.view_maintenance_equipment_category_kanban
+msgid "<strong>Maintenance:</strong>"
+msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_defaults
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_defaults
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
-msgstr ""
-"このエイリアスの新しいレコードを作成する時にデフォルト値を与えるためのPython"
-"辞書です。"
+msgstr "このエイリアスの新しいレコードを作成する時にデフォルト値を与えるためのPython辞書です。"
 
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer3
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer5
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer3
+#: model:maintenance.equipment,name:maintenance.equipment_computer5
 msgid "Acer Laptop"
-msgstr ""
+msgstr "Acer ラップトップ"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_active
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_active
 msgid "Active"
 msgstr "有効"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_id
 msgid "Alias"
 msgstr "エイリアス"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_contact
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_contact
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "エイリアス連絡先セキュリティ"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_alias_domain
-msgid "Alias Domain"
-msgstr "エイリアスドメイン"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_name
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "エイリアス名"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_domain
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_domain
 msgid "Alias domain"
 msgstr "エイリアスドメイン"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_model_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_model_id
 msgid "Aliased Model"
-msgstr "エイリアスするモデル"
+msgstr "エイリアス対象モデル"
 
-#. module: hr_equipment
-#: sql_constraint:hr.equipment:0
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "All"
+msgstr "全て"
+
+#. module: maintenance
+#: sql_constraint:maintenance.equipment:0
 msgid "Another asset already exists with this serial number!"
-msgstr ""
+msgstr "ほかの資産で既にこのシリアルナンバーが存在します！"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
-msgid "Apply"
-msgstr "適用"
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_archive
+msgid "Archive"
+msgstr "アーカイブ"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_equipment_id
-msgid "Asset"
-msgstr "資産"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Archived"
+msgstr "アーカイブ済"
 
-#. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment_category
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id_5764
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_equipment_category
 msgid "Asset Category"
 msgstr "資産分類"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_name
-msgid "Asset Name"
-msgstr "資産名"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
+msgid "Assign To User"
+msgstr "ユーザに割り当て"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_tree
-msgid "Assign To Employee"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Assigned"
 msgstr "割当済"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_assign_date
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_assign_date
 msgid "Assigned Date"
 msgstr "割当日"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_user_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Assigned to"
-msgstr "割当先"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_department_id
-msgid "Assigned to Department"
-msgstr "部門に割当"
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Assigned to Departments"
-msgstr "部門に割当"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_employee_id
-msgid "Assigned to Employee"
-msgstr "従業員に割当"
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Assigned to Employees"
-msgstr "従業員に割当"
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Assigned to Employees and Departments"
-msgstr "従業員と部門に割当"
-
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Available"
 msgstr "処理可能"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,kanban_state:0
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: selection:maintenance.request,kanban_state:0
 msgid "Blocked"
-msgstr "ブロック"
+msgstr "ブロック済"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Cancel"
 msgstr "取消"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_category_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_category_id
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Category"
-msgstr "分類"
+msgstr "カテゴリ"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_name
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_name
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
 msgid "Category Name"
 msgstr "カテゴリ名"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid "Click to add a new Engine."
 msgstr "クリックして新しいエンジンを追加する"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_category_action
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_category_action
 msgid "Click to add a new equipment category."
-msgstr "クリックして新しい分類を追加する"
+msgstr "クリックしてカテゴリを新規追加してください。"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid "Click to add a new equipment."
-msgstr "クリックして新しい設備を追加する"
+msgstr "クリックして備品を新規追加してください。"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_request_action
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_request_action_link
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
 msgid "Click to add a new maintenance request."
 msgstr "クリックして新しい整備依頼を作成する"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_stage_action
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
+#: model:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
 msgid "Click to add a stage in the maintenance request."
 msgstr "クリックして新しい設備依頼状況を作成する"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_close_date
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.maintenance_team_action_settings
+msgid "Click to add a team in the maintenance request."
+msgstr "クリックして新しい保守整備依頼を作成する"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_close_date
 msgid "Close Date"
-msgstr "締切り日"
+msgstr "完了日"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_color
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_color
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_color
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_color
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_color
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_color
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_color
 msgid "Color Index"
-msgstr "カラーインデックス"
+msgstr "カラーインデクス"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_note
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_note
 msgid "Comments"
 msgstr "コメント"
 
-#. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_computer
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_computer
 msgid "Computers"
 msgstr "コンピュータ"
 
-#. module: hr_equipment
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_configuration
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.menu_maintenance_configuration
 msgid "Configuration"
 msgstr "設定"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.action_hr_equipment_configuration
-msgid "Configure Equipments"
-msgstr "設備 設定"
+#. module: maintenance
+#: selection:maintenance.request,maintenance_type:0
+msgid "Corrective"
+msgstr "修正措置"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
-msgid "Configure Equipments Settings"
-msgstr "設備 設定"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_cost
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_cost
 msgid "Cost"
-msgstr "経費"
+msgstr "原価"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_create_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_create_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_create_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_create_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_create_uid
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Created By"
+msgstr "作成者"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_create_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_create_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_create_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_owner_user_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_create_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_create_uid
 msgid "Created by"
 msgstr "作成者"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_create_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_create_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_create_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_create_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_create_date
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_create_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_create_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_create_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_create_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_create_date
 msgid "Created on"
 msgstr "作成日"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_maintenance_open_count
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_open_count
 msgid "Current Maintenance"
+msgstr "現在保守整備中のもの"
+
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.menu_m_dashboard
+msgid "Dashboard"
+msgstr "ダッシュボード"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
+msgid "Date of the next preventive maintenance"
+msgstr "次の予防保守整備の日"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
+msgid "Date requested for the maintenance to happen"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_defaults
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_schedule_date
+msgid ""
+"Date the maintenance team plans the maintenance.  It should not differ much "
+"from the Request Date. "
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
+msgid "Date the maintenance was finished. "
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
+msgid "Days between each preventive maintenance"
+msgstr "各予防保守整備の間の日数"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_defaults
 msgid "Default Values"
 msgstr "デフォルト値"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Delete"
 msgstr "削除"
 
-#. module: hr_equipment
-#: selection:hr.equipment,equipment_assign_to:0
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_department_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_tree
-msgid "Department"
-msgstr "部門"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_description
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_description
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Description"
 msgstr "説明"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_display_name
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_display_name
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_display_name
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_display_name
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_display_name
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_display_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_display_name
 msgid "Display Name"
 msgstr "表示名"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Done"
+msgstr "完了"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_duration
+msgid "Duration"
+msgstr "日数"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_duration
+msgid "Duration in minutes and seconds."
+msgstr "期間を、分秒単位で"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Edit..."
 msgstr "編集"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Email Alias"
 msgstr "Eメールエイリアス"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_id
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_id
 msgid ""
 "Email alias for this equipment category. New emails will automatically "
 "create new maintenance request for this equipment category."
-msgstr ""
+msgstr "この保守整備カテゴリの電子メールエイリアス。新しい電子メールは自動的にこの設備テゴリの新しい保守整備依頼を作成します。"
 
-#. module: hr_equipment
-#: selection:hr.equipment,equipment_assign_to:0
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_employee_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_tree
-msgid "Employee"
-msgstr "従業員"
-
-#. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_count
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_equipment
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_equipment_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_equipment_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_equipment_ids
 msgid "Equipment"
-msgstr "設備"
+msgstr "備品"
 
-#. module: hr_equipment
-#: model:mail.message.subtype,description:hr_equipment.mt_mat_assign
-#: model:mail.message.subtype,name:hr_equipment.mt_cat_mat_assign
-#: model:mail.message.subtype,name:hr_equipment.mt_mat_assign
+#. module: maintenance
+#: model:mail.message.subtype,description:maintenance.mt_mat_assign
+#: model:mail.message.subtype,name:maintenance.mt_cat_mat_assign
+#: model:mail.message.subtype,name:maintenance.mt_mat_assign
 msgid "Equipment Assigned"
-msgstr ""
+msgstr "備品割当済"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_category_action
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_cat
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_category_action
+#: model:ir.ui.menu,name:maintenance.menu_maintenance_cat
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
 msgid "Equipment Categories"
-msgstr "分類"
+msgstr "備品カテゴリ"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id_3470
+msgid "Equipment Category"
+msgstr "設備分類"
+
+#. module: maintenance
+#: model:res.groups,name:maintenance.group_equipment_manager
+msgid "Equipment Manager"
+msgstr "機器マネジャー"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_name
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipment Name"
-msgstr "設備名"
+msgstr "備品名"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_action_from_category_form
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_equipment_ids
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_title
-#: model:ir.ui.menu,name:hr_equipment.menu_hr_equipment_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_action
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_action_from_category_form
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_equipment_ids
+#: model:ir.ui.menu,name:maintenance.menu_equipment_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Equipments"
-msgstr "設備"
+msgstr "備品"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_fold
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_fold
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_fold
 msgid "Folded in Maintenance Pipe"
-msgstr ""
+msgstr "保守整備パイプラインで折り畳む"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_fold
-msgid "Folded in Recruitment Pipe"
-msgstr ""
-
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_request_action
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_request_action_link
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_request_action_link
 msgid ""
 "Follow the process of the request and communicate with the collaborator."
-msgstr ""
+msgstr "依頼プロセスに従って協力者とコミュニケーションします。"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Future Activities"
+msgstr "将来の活動"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Group by..."
 msgstr "グル―プ化…"
 
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_printer1
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_printer1
 msgid "HP Inkjet printer"
 msgstr "HP インクジェットプリンター"
 
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer11
-#: model:hr.equipment,name:hr_equipment.hr_equipment_computer9
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_computer11
+#: model:maintenance.equipment,name:maintenance.equipment_computer9
 msgid "HP Laptop"
 msgstr "HP製ノートパソコン"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,priority:0
+#. module: maintenance
+#: selection:maintenance.request,priority:0
 msgid "High"
 msgstr "高"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_id
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_id
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_id
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_id
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_id
 msgid "ID"
 msgstr "ID"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid ""
-"ID of the parent record holding the alias (example: project holding the task "
-"creation alias)"
-msgstr ""
+"ID of the parent record holding the alias (example: project holding the task"
+" creation alias)"
+msgstr "エイリアスを保持する親レコードのID(例：プロジェクトは、タスク作成エイリアスを保持)"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,kanban_state:0
-#: model:hr.equipment.stage,name:hr_equipment.stage_1
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+#: selection:maintenance.request,kanban_state:0
+#: model:maintenance.stage,name:maintenance.stage_1
 msgid "In Progress"
 msgstr "進行中"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Internal Note ......."
 msgstr "内部注釈......"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_kanban_state
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_kanban_state
 msgid "Kanban State"
 msgstr "かんばん状態"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment___last_update
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category___last_update
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings___last_update
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request___last_update
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage___last_update
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment___last_update
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category___last_update
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request___last_update
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage___last_update
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team___last_update
 msgid "Last Modified on"
 msgstr "最終更新日"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_write_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_write_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_write_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_write_uid
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_write_uid
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_write_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_write_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_write_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_write_uid
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_write_uid
 msgid "Last Updated by"
 msgstr "最終更新者"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_write_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_write_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_write_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_write_date
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_write_date
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_write_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_write_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_write_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_write_date
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_write_date
 msgid "Last Updated on"
 msgstr "最終更新日"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_location
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Late Activities"
+msgstr "遅れた活動"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_location
 msgid "Location"
 msgstr "ロケーション"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,priority:0
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
+msgid "Losses Analysis"
+msgstr "ロス分析"
+
+#. module: maintenance
+#: selection:maintenance.request,priority:0
 msgid "Low"
 msgstr "低い"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_maintenance_count
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_maintenance_count
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_form
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_maintenance_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_maintenance_ids
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_count
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_ids
+#: model:ir.ui.menu,name:maintenance.menu_m_request
+#: model:ir.ui.menu,name:maintenance.menu_maintenance_title
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Maintenance"
 msgstr "整備"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.menu_m_request_calendar
+msgid "Maintenance Calendar"
+msgstr "保守整備カレンダー"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_duration
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "Maintenance Duration"
+msgstr "保守整備期間"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_maintenance_duration
+msgid "Maintenance Duration in hours."
+msgstr ""
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Maintenance Request"
 msgstr "整備依頼"
 
-#. module: hr_equipment
-#: model:mail.message.subtype,name:hr_equipment.mt_cat_req_created
+#. module: maintenance
+#: model:mail.message.subtype,name:maintenance.mt_cat_req_created
 msgid "Maintenance Request Created"
 msgstr "整備依頼を作成"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_stage_view_tree
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
 msgid "Maintenance Request Stage"
 msgstr "整備依頼の状況"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_stage_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_search
 msgid "Maintenance Request Stages"
 msgstr "整備依頼の状況"
 
-#. module: hr_equipment
-#: model:mail.message.subtype,description:hr_equipment.mt_req_created
+#. module: maintenance
+#: model:mail.message.subtype,description:maintenance.mt_req_created
 msgid "Maintenance Request created"
 msgstr "整備依頼を作成"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_request_action
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_request_action_from_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_request_action_link
-#: model:ir.model,name:hr_equipment.model_hr_equipment_request
-#: model:ir.ui.menu,name:hr_equipment.menu_m_request_form
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_cal
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_from_equipment
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action_link
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_todo_request_action_from_dashboard
+#: model:ir.actions.act_window,name:maintenance.maintenance_request_action_reports
+#: model:ir.model,name:maintenance.model_maintenance_request
+#: model:ir.ui.menu,name:maintenance.maintenance_request_reporting
+#: model:ir.ui.menu,name:maintenance.menu_m_request_form
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
 msgid "Maintenance Requests"
 msgstr "整備依頼"
 
-#. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment_stage
+#. module: maintenance
+#: model:ir.model,name:maintenance.model_maintenance_stage
 msgid "Maintenance Stage"
 msgstr "整備状況"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
-msgid "Maintenance Subject"
-msgstr "整備内容 ・ 件名"
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.menu_maintenance_stage_configuration
+msgid "Maintenance Stages"
+msgstr "保守整備状況"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_maintenance_ids
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_maintenance_ids
-msgid "Maintenance ids"
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_maintenance_team_id
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
+msgid "Maintenance Team"
+msgstr "保守整備チーム"
+
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.maintenance_dashboard_action
+#: model:ir.model,name:maintenance.model_maintenance_team
+#: model:ir.ui.menu,name:maintenance.menu_maintenance_teams
+msgid "Maintenance Teams"
+msgstr "保守整備チーム"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_type
+msgid "Maintenance Type"
+msgstr "保守整備種別"
+
+#. module: maintenance
+#: model:ir.actions.server,name:maintenance.maintenance_requests_cron_ir_actions_server
+#: model:ir.cron,cron_name:maintenance.maintenance_requests_cron
+#: model:ir.cron,name:maintenance.maintenance_requests_cron
+msgid "Maintenance: generate preventive maintenance requests"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_model
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_model
 msgid "Model"
 msgstr "モデル"
 
-#. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_monitor
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_monitor
 msgid "Monitors"
-msgstr ""
+msgstr "モニタ"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "My Activities"
+msgstr "自分の活動"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Equipments"
-msgstr "あなたの設備"
+msgstr "自分の備品"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "My Requests"
 msgstr "あなたの依頼"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_name
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_tree
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_name
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_name
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_tree
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Name"
 msgstr "名称"
 
-#. module: hr_equipment
-#: model:hr.equipment.stage,name:hr_equipment.stage_0
+#. module: maintenance
+#: model:maintenance.stage,name:maintenance.stage_0
 msgid "New Request"
 msgstr "新規依頼"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,priority:0
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "Next Preventive Maintenance"
+msgstr "次の予防保守"
+
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
+msgid "No maintenance request."
+msgstr ""
+
+#. module: maintenance
+#: selection:maintenance.request,priority:0
 msgid "Normal"
 msgstr "通常"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_note
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_note
 msgid "Note"
-msgstr "注記"
+msgstr "ノート"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_force_thread_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count
+msgid "Number of Requests"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_block
+msgid "Number of Requests Blocked"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_date
+msgid "Number of Requests Scheduled"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
+msgid "Number of Requests Unscheduled"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
+msgid "Number of Requests in High Priority"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_force_thread_id
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
-msgstr ""
-"すべての受信メッセージに添付されるスレッド(レコード)のオプションIDです。設定"
-"した場合は新しいレコードの作成を無効にします。"
+msgstr "すべての受信メッセージに添付されるスレッド(レコード)のオプションIDです。設定した場合は新しいレコードの作成を無効にします。"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_user_id
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
+msgid "Overall Equipment Effectiveness (OEE)"
+msgstr "設備総合効率(OEE)"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Overdue Activities"
+msgstr "過去期日の活動"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_user_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_owner_user_id
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_technician_user_id
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_tree
 msgid "Owner"
-msgstr "所有者"
+msgstr "オーナー"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_parent_model_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid "Parent Model"
 msgstr "親モデル"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_parent_thread_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "親レコードスレッドID"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_parent_model_id
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_parent_model_id
 msgid ""
-"Parent model holding the alias. The model holding the alias reference is not "
-"necessarily the model given by alias_model_id (example: project "
+"Parent model holding the alias. The model holding the alias reference is not"
+" necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"エイリアスを保持する親モデル。エイリアスの参照を保持しているモデルは、必ずしもalias_model_idによって与えられたモデルではありません(例：プロジェクト(parent_model)とタスク(model))"
 
-#. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_phone
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_phone
 msgid "Phones"
 msgstr "電話"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_contact
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_contact
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
 "- partners: only authenticated partners\n"
-"- followers: only followers of the related document or members of following "
-"channels\n"
+"- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"メールゲートウェイを使用したメッセージドキュメント投稿のポリシー\n"
+"- everyone: 誰にでも投稿可能\n"
+"- partners: 許可されたパートナーのみ\n"
+"- followers: 関連ドキュメントのフォロワーか、フォローしているチャンネルのメンバーのみ\n"
 
-#. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_printer
+#. module: maintenance
+#: selection:maintenance.request,maintenance_type:0
+msgid "Preventive"
+msgstr "予防"
+
+#. module: maintenance
+#: code:addons/maintenance/models/maintenance.py:227
+#, python-format
+msgid "Preventive Maintenance - %s"
+msgstr "予防保守整備 - %s"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "Preventive Maintenance Frequency"
+msgstr "予防保守頻度"
+
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_printer
 msgid "Printers"
 msgstr "プリンター"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_priority
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_priority
 msgid "Priority"
 msgstr "優先度"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_form
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Product Information"
 msgstr "製品情報"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,kanban_state:0
+#. module: maintenance
+#: selection:maintenance.request,kanban_state:0
 msgid "Ready for next stage"
 msgstr "次のステージに移動可"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_alias_force_thread_id
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
+msgid "Record Colour"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
 msgid "Record Thread ID"
 msgstr "レコードのスレッドID"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
-msgid "Repair Responsible"
-msgstr "修理責任者"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Reopen Request"
+msgstr "依頼を再度かける"
 
-#. module: hr_equipment
-#: model:hr.equipment.stage,name:hr_equipment.stage_3
+#. module: maintenance
+#: model:maintenance.stage,name:maintenance.stage_3
 msgid "Repaired"
 msgstr "修理済"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
+#. module: maintenance
+#: model:ir.ui.menu,name:maintenance.maintenance_reporting
+#: model:ir.ui.menu,name:maintenance.menu_m_reports
+msgid "Reporting"
+msgstr "レポーティング"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_request_ids
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Request"
 msgstr "リクエスト"
 
-#. module: hr_equipment
-#: model:mail.message.subtype,name:hr_equipment.mt_req_created
+#. module: maintenance
+#: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
-msgstr ""
+msgstr "依頼作成済"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_request_date
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_request_date
 msgid "Request Date"
 msgstr "問合せ日"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_done
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_done
 msgid "Request Done"
 msgstr "完了した依頼"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
-msgid "Requests Alias"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "Requested By"
+msgstr "依頼者"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+msgid "Requested by :"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
-msgid "Reset Request"
-msgstr "依頼リセット"
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_ids
+msgid "Requests"
+msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_category_user_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_technician_user_id
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Responsible"
-msgstr "担当"
+msgstr "担当者"
 
-#. module: hr_equipment
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor1
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor4
-#: model:hr.equipment,name:hr_equipment.hr_equipment_monitor6
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+msgid "Responsible :"
+msgstr ""
+
+#. module: maintenance
+#: model:maintenance.equipment,name:maintenance.equipment_monitor1
+#: model:maintenance.equipment,name:maintenance.equipment_monitor4
+#: model:maintenance.equipment,name:maintenance.equipment_monitor6
 msgid "Samsung Monitor 15\""
 msgstr "サムスン製 15インチモニター"
 
-#. module: hr_equipment
-#: model:hr.equipment.stage,name:hr_equipment.stage_4
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Scheduled"
+msgstr "予定日"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_schedule_date
+msgid "Scheduled Date"
+msgstr "予定日"
+
+#. module: maintenance
+#: model:maintenance.stage,name:maintenance.stage_4
 msgid "Scrap"
 msgstr "廃棄"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_scrap_date
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_scrap_date
 msgid "Scrap Date"
 msgstr "廃棄日"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_category_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_category_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Search"
 msgstr "検索"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
-msgid "Sender"
-msgstr "送信者"
-
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_stage_sequence
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_stage_sequence
 msgid "Sequence"
 msgstr "付番"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_serial_no
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_serial_no
 msgid "Serial Number"
 msgstr "シリアル番号"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_request_active
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_request_archive
 msgid ""
-"Set active to false to hide the maintenance request without deleting it."
+"Set archive to true to hide the maintenance request without deleting it."
+msgstr "保守要求を削除せずに非表示にするには、アーカイブをtrueに設定します。"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Settings"
+msgstr "管理設定"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Show all records which has next action date is before today"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_global_settings
-msgid "Settings"
-msgstr "設定"
-
-#. module: hr_equipment
-#: model:hr.equipment.category,name:hr_equipment.hr_equipment_software
+#. module: maintenance
+#: model:maintenance.equipment.category,name:maintenance.equipment_software
 msgid "Software"
 msgstr "ソフトウェア"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_stage_id
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_stage_id
 msgid "Stage"
-msgstr "段階"
+msgstr "ステージ"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,name:hr_equipment.hr_equipment_stage_action
-#: model:ir.ui.menu,name:hr_equipment.menu_equipment_stage_configuration
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.hr_equipment_stage_action
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "Stages"
 msgstr "ステージ"
 
-#. module: hr_equipment
-#: model:mail.message.subtype,name:hr_equipment.mt_req_status
+#. module: maintenance
+#: model:mail.message.subtype,name:maintenance.mt_req_status
 msgid "Status Changed"
-msgstr ""
+msgstr "ステータスが変更されました"
 
-#. module: hr_equipment
-#: model:mail.message.subtype,description:hr_equipment.mt_req_status
+#. module: maintenance
+#: model:mail.message.subtype,description:maintenance.mt_req_status
 msgid "Status changed"
 msgstr "ステータスが変更されました。"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_form
-msgid "Subject"
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_name
+msgid "Subjects"
 msgstr "件名"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_request_name
-msgid "Subjects"
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_team_id
+msgid "Team"
+msgstr "チーム"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_team_member_ids
+msgid "Team Members"
+msgstr "チームメンバ"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
+msgid "Team Name"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_user_id
+#. module: maintenance
+#: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
+msgid "Teams"
+msgstr "チーム"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_technician_user_id
 msgid "Technician"
 msgstr "担当技術者"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
-"email that does not reply to an existing record will cause the creation of a "
-"new record of this model (e.g. a Project Task)"
-msgstr ""
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Technicians"
+msgstr "担当技術者"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_name
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
+msgid ""
+"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
+" email that does not reply to an existing record will cause the creation of "
+"a new record of this model (e.g. a Project Task)"
+msgstr ""
+"このエイリアスに対応した(Odooドキュメント種別)モデル。既存のレコードに返信しない任意の受信メールは、このモデルの新しいレコード(例えば、プロジェクトタスク)の作成を引き起こします"
+
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_name
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
-msgstr ""
+msgstr "eメールのエイリアス.例えば<jobs@example.odoo.com>のメールを受け取りたい場合'jobs’を選択"
 
-#. module: hr_equipment
-#: model:ir.model.fields,help:hr_equipment.field_hr_equipment_category_alias_user_id
+#. module: maintenance
+#: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
 msgid ""
 "The owner of records created upon receiving emails on this alias. If this "
 "field is not set the system will attempt to find the right owner based on "
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"このエイリアスに電子メールを受信した時に作成されるレコードの所有者。この"
-"フィールドが設定されない場合、システムは送信者(From)アドレスに基づいた適切な"
-"所有者を見つけるか、見つからなければ管理者アカウントを使用します。"
+"このエイリアスに電子メールを受信した時に作成されるレコードのオーナー。このフィールドが設定されない場合、システムは送信者(From)アドレスに基づいた適切なオーナーを見つけるか、見つからなければ管理者アカウントを使用します。"
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action
+#. module: maintenance
+#: model:res.groups,comment:maintenance.group_equipment_manager
+msgid "The user will be able to manage equipments."
+msgstr "ユーザは機器を管理できるようになります。"
+
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_action
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment "
-"to\n"
-"                an employee or departement. You will manage allocations, "
-"issues\n"
+"                Create some laptop, printer or phone and link each equipment to\n"
+"                an employee or department. You will manage allocations, issues\n"
 "                and maintenance of equipment."
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.actions.act_window,help:hr_equipment.hr_equipment_action_from_category_form
+#. module: maintenance
+#: model:ir.actions.act_window,help:maintenance.hr_equipment_action_from_category_form
 msgid ""
 "This application helps you to track equipments used by employees.\n"
-"                Create some laptop, printer or phone and link each equipment "
-"to an employee or departement.\n"
-"                You will manage allocations, issues and maintenance of "
-"equipment."
+"                Create some laptop, printer or phone and link each equipment to an employee or department.\n"
+"                You will manage allocations, issues and maintenance of equipment."
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_config_settings_view_form
-msgid "Track Equipments"
-msgstr "設備を追跡する"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "To Do"
+msgstr "未処理"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_kanban
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "To do"
+msgstr "予定"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Today Activities"
+msgstr "本日の活動"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Top Priorities"
+msgstr "最優先"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Unassigned"
 msgstr "未割当"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Under Maintenance"
 msgstr "整備中"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_kanban
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Unread Messages"
 msgstr "未読メッセージ"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_config_settings_equipment_alias_prefix
-msgid "Use the following alias to report internal equipment issue"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
+msgid "Unscheduled"
 msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_equipment_assign_to
-msgid "Used By"
-msgstr "使用者"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
+msgid "Unscheduled Maintenance"
+msgstr "予定のない保守整備"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
-msgid "Users"
-msgstr "ユーザ"
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Upcoming Activities (7 days)"
+msgstr ""
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_id
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
+msgid "Upcoming Activities (All)"
+msgstr ""
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "Used in location"
+msgstr "使用場所"
+
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_partner_id
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Vendor"
 msgstr "仕入先"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_partner_ref
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_partner_ref
 msgid "Vendor Reference"
 msgstr "仕入先参照"
 
-#. module: hr_equipment
-#: selection:hr.equipment.request,priority:0
+#. module: maintenance
+#: selection:maintenance.request,priority:0
 msgid "Very Low"
 msgstr "非常に低い"
 
-#. module: hr_equipment
-#: model:ir.model.fields,field_description:hr_equipment.field_hr_equipment_warranty
+#. module: maintenance
+#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_warranty
 msgid "Warranty"
 msgstr "保証"
 
-#. module: hr_equipment
-#: code:addons/hr_equipment/models/hr_equipment.py:71
+#. module: maintenance
+#: code:addons/maintenance/models/maintenance.py:75
 #, python-format
 msgid ""
-"You cannot delete an equipment category containing equipments or maintenance "
-"requests."
-msgstr "設備や整備リクエストが残っている設備分類は消去することが出来ません。"
+"You cannot delete an equipment category containing equipments or maintenance"
+" requests."
+msgstr "備品や整備リクエストが残っている備品カテゴリは消去することが出来ません。"
 
-#. module: hr_equipment
-#: model:ir.model,name:hr_equipment.model_hr_equipment_config_settings
-msgid "hr.equipment.config.settings"
-msgstr ""
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "days"
+msgstr "日"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_tree
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+msgid "for"
+msgstr "for"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
+msgid "hours"
+msgstr "時間"
+
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_graph
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
-msgstr ""
+msgstr "保守整備依頼"
 
-#. module: hr_equipment
-#: model:ir.ui.view,arch_db:hr_equipment.hr_equipment_request_view_search
+#. module: maintenance
+#: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 msgid "maintenance Request Search"
-msgstr ""
-
-#~ msgid "Action Needed"
-#~ msgstr "必要なアクション"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "記録上の最後のメッセージが投稿された日"
-
-#~ msgid "Followers"
-#~ msgstr "フォロワー"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "フォロワー(チャンネル)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "フォロワー(取引先)"
-
-#~ msgid "Last Message Date"
-#~ msgstr "最終メッセージ日"
-
-#~ msgid "Messages"
-#~ msgstr "メッセージ"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "メッセージと通信履歴"
-
-#~ msgid "Number of Actions"
-#~ msgstr "アクションの数"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "未読メッセージの件数"
-
-#~ msgid "Open Equipments Menu"
-#~ msgstr "設備メニューを開く"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "未読メッセージカウンター"
-
-#~ msgid "Website Messages"
-#~ msgstr "ウェブサイトメッセージ"
-
-#~ msgid "Website communication history"
-#~ msgstr "ウェブサイトコミュニケーション履歴"
+msgstr "保守整備依頼の検索"

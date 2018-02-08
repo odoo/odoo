@@ -153,7 +153,7 @@ var Field = Input.extend( /** @lends instance.web.search.Field# */ {
             value_to_domain = function (facetValue) {
                 return Domain.prototype.stringToArray(
                     domain,
-                    {self: self.value_from(facetValue)}
+                    {self: self.value_from(facetValue), raw_value: facetValue.attributes.value}
                 );
             };
         } else {
@@ -232,7 +232,7 @@ var IntegerField = NumberField.extend(/** @lends instance.web.search.IntegerFiel
     error_message: _t("not a valid integer"),
     parse: function (value) {
         try {
-            return field_utils.parse.interger(value);
+            return field_utils.parse.integer(value);
         } catch (e) {
             return NaN;
         }
@@ -349,15 +349,14 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
         var t, v;
         try {
             t = (this.attrs && this.attrs.type === 'datetime') ? 'datetime' : 'date';
-            v = field_utils.parse[t](needle, {type: t});
+            v = field_utils.parse[t](needle, {type: t}, {timezone: true});
         } catch (e) {
             return $.when(null);
         }
 
         var m = moment(v, t === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD');
         if (!m.isValid()) { return $.when(null); }
-        var d = m.toDate();
-        var date_string = field_utils.format[this.attrs.type](d, {type: t.attrs.type});
+        var date_string = field_utils.format[t](m, {type: t});
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
                 field: '<em>' + _.escape(this.attrs.string) + '</em>',
@@ -367,7 +366,7 @@ var DateField = Field.extend(/** @lends instance.web.search.DateField# */{
             facet: {
                 category: this.attrs.string,
                 field: this,
-                values: [{label: date_string, value: d}]
+                values: [{label: date_string, value: m.toDate()}]
             }
         }]);
     }
@@ -541,7 +540,7 @@ var FilterGroup = Input.extend(/** @lends instance.web.search.FilterGroup# */{
      */
     search_change: function () {
         var self = this;
-        var $filters = this.$el.removeClass('selected');
+        var $filters = this.$el ? this.$el.removeClass('selected') : $();
         var facet = this.searchview.query.find(_.bind(this.match_facet, this));
         if (!facet) { return; }
         facet.values.each(function (v) {

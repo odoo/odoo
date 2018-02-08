@@ -1,22 +1,29 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * pad
-#
+# 
 # Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-08-25 10:20+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: Romanian (http://www.transifex.com/odoo/odoo-9/language/ro/)\n"
-"Language: ro\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
+msgid "API Key"
+msgstr "Cheie API"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -26,15 +33,17 @@ msgstr "Companii"
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common_display_name
 msgid "Display Name"
-msgstr "Afiseaza nume"
+msgstr "Nume afișat"
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company_pad_key
+#: model:ir.model.fields,help:pad.field_res_config_settings_pad_key
 msgid "Etherpad lite api key."
 msgstr "Cheie Etherpad lite api."
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company_pad_server
+#: model:ir.model.fields,help:pad.field_res_config_settings_pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
 msgstr "Server Etherpad lite. Exemplu: beta.primarypad.com"
 
@@ -49,9 +58,21 @@ msgid "Last Modified on"
 msgstr "Ultima modificare la"
 
 #. module: pad
+#. openerp-web
+#: code:addons/pad/static/src/js/pad.js:147
+#, python-format
+msgid "Loading"
+msgstr "Se încarcă"
+
+#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company_pad_key
 msgid "Pad Api Key"
 msgstr "Cheie Pad Api"
+
+#. module: pad
+#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_key
+msgid "Pad Api Key *"
+msgstr ""
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company_pad_server
@@ -59,7 +80,12 @@ msgid "Pad Server"
 msgstr "Server Pad"
 
 #. module: pad
-#: code:addons/pad/pad.py:53
+#: model:ir.model.fields,field_description:pad.field_res_config_settings_pad_server
+msgid "Pad Server *"
+msgstr ""
+
+#. module: pad
+#: code:addons/pad/models/pad.py:58
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -67,37 +93,35 @@ msgid ""
 msgstr ""
 
 #. module: pad
-#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
-msgid "Pads"
-msgstr "Pad-uri"
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:6
+#, python-format
+msgid ""
+"Please enter your Etherpad credentials through the menu 'Settings > General "
+"Settings'."
+msgstr ""
+
+#. module: pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
+msgid "Server"
+msgstr "Server"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:53
+#: code:addons/pad/static/src/js/pad.js:166
 #, python-format
 msgid "This pad will be initialized on first edit"
 msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:50
+#: code:addons/pad/static/src/js/pad.js:160
 #, python-format
 msgid "Unable to load pad"
 msgstr ""
 
 #. module: pad
-#. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:7
-#, python-format
-msgid ""
-"You must configure the etherpad through the menu Settings > Companies > "
-"Companies, in the configuration tab of your company."
-msgstr ""
-"Trebuie sa configurati etherpad in meniul Setari > Companii > Companii, in "
-"fila de configurare a companiei dumneavoastra."
-
-#. module: pad
-#: model:ir.ui.view,arch_db:pad.view_company_form_with_pad
+#: model:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
 msgstr "de exemplu beta.primarypad.com"
 
@@ -106,14 +130,7 @@ msgstr "de exemplu beta.primarypad.com"
 msgid "pad.common"
 msgstr "pad.common"
 
-#~ msgid "Created by"
-#~ msgstr "Creat de"
-
-#~ msgid "Created on"
-#~ msgstr "Creat în"
-
-#~ msgid "Last Updated by"
-#~ msgstr "Ultima actualizare făcută de"
-
-#~ msgid "Last Updated on"
-#~ msgstr "Ultima actualizare în"
+#. module: pad
+#: model:ir.model,name:pad.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

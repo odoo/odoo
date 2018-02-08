@@ -9,17 +9,17 @@
     // tooltip were sometimes overlapping unwanted elements (e.g. chat windows).
     //
     // The z-index of the ideal locations cannot be determined safely as they
-    // are different from one tip to another. So, in the appswitcher for
+    // are different from one tip to another. So, in the home menu for
     // example, the tooltips will act as root-level z-index 1051. As the chat
     // windows are root-level z-index 3, the tooltips will overlap in that case.
     //
     // Changing the opacity of the tooltip parents forces the creation of a
-    // stacking context; the appswitcher tooltips are thus now considered to be
-    // root-level z-index auto (or the default appswitcher one) and should so
-    // act like their parent (e.g. the appswitcher is below the chat windows so
+    // stacking context; the home menu tooltips are thus now considered to be
+    // root-level z-index auto (or the default home menu one) and should so
+    // act like their parent (e.g. the home menu is below the chat windows so
     // the inner tooltips will be too). The tips will be above all elements of
-    // the appswitcher as they still have a high z-index, but relative to the
-    // appswitcher (this is especially useful in the website where most tooltips
+    // the home menu as they still have a high z-index, but relative to the
+    // home menu (this is especially useful in the website where most tooltips
     // are placed in the body and need to be placed above elements with z-index
     // like the navbar).
     opacity: 0.999;

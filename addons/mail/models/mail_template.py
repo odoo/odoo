@@ -45,7 +45,7 @@ def format_tz(env, dt, tz=False, format=False):
         return format_datetime(ts, format or 'medium', locale=env.context.get("lang") or 'en_US')
 
     if format:
-        return ts.strftime(format)
+        return pycompat.text_type(ts.strftime(format))
     else:
         lang = env.context.get("lang")
         langs = env['res.lang']
@@ -54,9 +54,9 @@ def format_tz(env, dt, tz=False, format=False):
         format_date = langs.date_format or '%B-%d-%Y'
         format_time = langs.time_format or '%I-%M %p'
 
-        fdate = ts.strftime(format_date).decode('utf-8')
-        ftime = ts.strftime(format_time).decode('utf-8')
-        return "%s %s%s" % (fdate, ftime, (' (%s)' % tz) if tz else '')
+        fdate = pycompat.text_type(ts.strftime(format_date))
+        ftime = pycompat.text_type(ts.strftime(format_time))
+        return u"%s %s%s" % (fdate, ftime, (u' (%s)' % tz) if tz else u'')
 
 def format_amount(env, amount, currency):
     fmt = "%.{0}f".format(currency.decimal_places)
@@ -171,8 +171,6 @@ class MailTemplate(models.Model):
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
                                              "of the related document model")
-    ref_ir_value = fields.Many2one('ir.values', 'Sidebar Button', readonly=True, copy=False,
-                                   help="Sidebar button to open the sidebar action")
     attachment_ids = fields.Many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
                                       'attachment_id', 'Attachments',
                                       help="You may attach files to this template, to be added to all "
@@ -240,6 +238,37 @@ class MailTemplate(models.Model):
             self.null_value = False
 
     @api.multi
+    def write(self, vals):
+        # This override is for checking that the template is correct when
+        # saving it
+        if vals.get('body_html'):
+            # render_template can return empty results if the mako rendering
+            # crashes or if the body_html is empty, therefore we will only
+            # perform this check if the new body_html is non-empty
+            if vals.get('model_id'):
+                _model = self.env['ir.model'].sudo().browse(
+                    vals['model_id']).model
+            else:
+                _model = self.model
+
+            Model = self.env[_model]
+            if not Model._abstract:
+                # Get the latest record so as to not use older, potentially
+                # deprecated/obsolete records
+                res_ids = Model.search([], limit=1, order='id DESC').ids[:1]
+                if res_ids:
+                    render = self.render_template(
+                        vals['body_html'], _model, res_ids)
+
+                    if not any(render.values()):
+                        raise UserError(_(
+                            "Template rendering failed, this could mean that "
+                            "your template contains python syntax errors"
+                        ))
+
+        return super(MailTemplate, self).write(vals)
+
+    @api.multi
     def unlink(self):
         self.unlink_action()
         return super(MailTemplate, self).unlink()
@@ -255,40 +284,28 @@ class MailTemplate(models.Model):
         for template in self:
             if template.ref_ir_act_window:
                 template.ref_ir_act_window.sudo().unlink()
-            if template.ref_ir_value:
-                template.ref_ir_value.sudo().unlink()
         return True
 
     @api.multi
     def create_action(self):
         ActWindowSudo = self.env['ir.actions.act_window'].sudo()
-        IrValuesSudo = self.env['ir.values'].sudo()
         view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
-            src_obj = template.model_id.model
-
             button_name = _('Send Mail (%s)') % template.name
             action = ActWindowSudo.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'mail.compose.message',
-                'src_model': src_obj,
+                'src_model': template.model_id.model,
                 'view_type': 'form',
                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                 'view_mode': 'form,tree',
                 'view_id': view.id,
                 'target': 'new',
+                'binding_model_id': template.model_id.id,
             })
-            ir_value = IrValuesSudo.create({
-                'name': button_name,
-                'model': src_obj,
-                'key2': 'client_action_multi',
-                'value': "ir.actions.act_window,%s" % action.id})
-            template.write({
-                'ref_ir_act_window': action.id,
-                'ref_ir_value': ir_value.id,
-            })
+            template.write({'ref_ir_act_window': action.id})
 
         return True
 
@@ -306,15 +323,15 @@ class MailTemplate(models.Model):
         # form a tree
         root = lxml.html.fromstring(html)
         if not len(root) and root.text is None and root.tail is None:
-            html = '<div>%s</div>' % html
-            root = lxml.html.fromstring(html)
+            html = u'<div>%s</div>' % html
+            root = lxml.html.fromstring(html, encoding='unicode')
 
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         base = urls.url_parse(base_url)
 
         def _process_link(url):
             new_url = urls.url_parse(url)
-            if new_url.scheme and new_url.netloc:
+            if new_url.scheme and (new_url.netloc or new_url.scheme == 'mailto'):
                 return url
             return new_url.replace(scheme=base.scheme, netloc=base.netloc).to_url()
 
@@ -324,12 +341,12 @@ class MailTemplate(models.Model):
         for node in root.iter():
             if node.tag == 'a' and node.get('href'):
                 node.set('href', _process_link(node.get('href')))
-            elif node.tag == 'img' and not node.get('src', 'data').startswith('data'):
+            elif node.tag == 'img' and not node.get('src', 'data').startswith(u'data'):
                 node.set('src', _process_link(node.get('src')))
 
-        html = lxml.html.tostring(root, pretty_print=False, method='html')
+        html = lxml.html.tostring(root, pretty_print=False, method='html', encoding='unicode')
         # this is ugly, but lxml/etree tostring want to put everything in a 'div' that breaks the editor -> remove that
-        if html.startswith('<div>') and html.endswith('</div>'):
+        if html.startswith(u'<div>') and html.endswith(u'</div>'):
             html = html[5:-6]
         return html
 
@@ -379,7 +396,7 @@ class MailTemplate(models.Model):
             'user': self.env.user,
             'ctx': self._context,  # context kw would clash with mako internals
         }
-        for res_id, record in pycompat.items(res_to_rec):
+        for res_id, record in res_to_rec.items():
             variables['object'] = record
             try:
                 render_result = template.render(variables)
@@ -391,7 +408,7 @@ class MailTemplate(models.Model):
             results[res_id] = render_result
 
         if post_process:
-            for res_id, result in pycompat.items(results):
+            for res_id, result in results.items():
                 results[res_id] = self.render_post_process(result)
 
         return multi_mode and results or results[res_ids[0]]
@@ -412,7 +429,7 @@ class MailTemplate(models.Model):
         self.ensure_one()
 
         langs = self.render_template(self.lang, self.model, res_ids)
-        for res_id, lang in pycompat.items(langs):
+        for res_id, lang in langs.items():
             if lang:
                 template = self.with_context(lang=lang)
             else:
@@ -431,11 +448,11 @@ class MailTemplate(models.Model):
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
             default_recipients = self.env['mail.thread'].message_get_default_recipients(res_model=self.model, res_ids=res_ids)
-            for res_id, recipients in pycompat.items(default_recipients):
+            for res_id, recipients in default_recipients.items():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
 
-        for res_id, values in pycompat.items(results):
+        for res_id, values in results.items():
             partner_ids = values.get('partner_ids', list())
             if self._context.get('tpl_partners_only'):
                 mails = tools.email_split(values.pop('email_to', '')) + tools.email_split(values.pop('email_cc', ''))
@@ -474,11 +491,11 @@ class MailTemplate(models.Model):
 
         # templates: res_id -> template; template -> res_ids
         templates_to_res_ids = {}
-        for res_id, template in pycompat.items(res_ids_to_templates):
+        for res_id, template in res_ids_to_templates.items():
             templates_to_res_ids.setdefault(template, []).append(res_id)
 
         results = dict()
-        for template, template_res_ids in pycompat.items(templates_to_res_ids):
+        for template, template_res_ids in templates_to_res_ids.items():
             Template = self.env['mail.template']
             # generate fields value for all res_ids linked to the current template
             if template.lang:
@@ -488,7 +505,7 @@ class MailTemplate(models.Model):
                 generated_field_values = Template.render_template(
                     getattr(template, field), template.model, template_res_ids,
                     post_process=(field == 'body_html'))
-                for res_id, field_value in pycompat.items(generated_field_values):
+                for res_id, field_value in generated_field_values.items():
                     results.setdefault(res_id, dict())[field] = field_value
             # compute recipients
             if any(field in fields for field in ['email_to', 'partner_to', 'email_cc']):
@@ -571,6 +588,7 @@ class MailTemplate(models.Model):
                 'name': attachment[0],
                 'datas_fname': attachment[0],
                 'datas': attachment[1],
+                'type': 'binary',
                 'res_model': 'mail.message',
                 'res_id': mail.mail_message_id.id,
             }

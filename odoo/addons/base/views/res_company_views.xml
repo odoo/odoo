@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_company_form" model="ir.ui.view">
+            <field name="name">res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <form string="Company">
+                  <sheet>
+                    <field name="logo" widget="image"  class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <notebook colspan="4">
+                        <page string="General Information">
+                            <group>
+                                <group>
+                                    <field name="partner_id" readonly="1" required="0" groups="base.group_no_one"/>
+                                    <label for="street" string="Address"/>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True}'/>
+                                    </div>
+                                    <field name="report_header" placeholder="e.g. Global Business Solutions"/>
+                                </group>
+                                <group>
+                                    <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                    <field name="vat"/>
+                                    <field name="company_registry"/>
+                                    <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency"/>
+                                    <field name="parent_id"  groups="base.group_multi_company"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="report_footer" placeholder="e.g. Your Bank Accounts, one per line"/>
+                                </group>
+                                <group name="social_media"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_company_tree" model="ir.ui.view">
+            <field name="name">res.company.tree</field>
+            <field name="model">res.company</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Companies">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_res_company_kanban" model="ir.ui.view">
+            <field name="name">res.company.kanban</field>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="email"/>
+                    <field name="phone"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_global_click">
+                                <div class="text-center">
+                                    <i class="fa fa-building" aria-hidden="true"></i> <strong><field name="name"/></strong>
+                                </div>
+                                <hr class="mt4 mb4"/>
+                                <div class="row">
+                                    <div t-if="record.email.value" class="col-xs-6 text-center">
+                                        <strong>Email:</strong>
+                                    </div>
+                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                        <strong>Phone</strong>
+                                    </div>
+                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                        <field name="email"/>
+                                    </div>
+                                    <div t-if="record.phone.value" class="col-xs-6 text-center">
+                                        <field name="phone"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="company_normal_action_tree" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('id','=',active_id)]</field>
+        </record>
+        <record id="action_res_company_form" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new company
+              </p><p>
+                Create and manage the companies that will be managed by Odoo from here. Shops or subsidiaries can be created and maintained from here.
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_res_company_form" id="menu_action_res_company_form" parent="base.menu_users"/>
+
+        <record id="view_company_report_form" model="ir.ui.view">
+            <field name="name">res.company.report.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="mode">primary</field>
+            <field name="priority">1024</field>
+            <field name="arch" type="xml">
+                <field name="logo" position="before">
+                    <div class="row">
+                        <div class="alert alert-warning ml8 mr8" role="alert" attrs="{'invisible': [('logo','!=',False)]}">
+                            Update your company details and upload your logo to get a beautiful document.
+                        </div>
+                    </div>
+                </field>
+              <xpath expr="//h1" position="replace">
+                <h2>
+                    <field name="name"/>
+                </h2>
+              </xpath>
+                <field name="parent_id" groups="base.group_multi_company" position="replace" invisible="1"/>
+              <xpath expr="//sheet" position="inside">
+                    <hr />
+                    <div class="row mt16">
+                        <field style="margin-right: 40px;" name="external_report_layout" widget="image_selection" options="{
+                            'background': {
+                                'image_link': '/base/static/img/preview_background.png',
+                                'preview_link': '/base/static/pdf/preview_background.pdf'
+                            },
+                            'boxed': {
+                                'image_link': '/base/static/img/preview_boxed.png',
+                                'preview_link': '/base/static/pdf/preview_boxed.pdf'
+                            },
+                            'clean': {
+                                'image_link': '/base/static/img/preview_clean.png',
+                                'preview_link': '/base/static/pdf/preview_clean.pdf'
+                            },
+                            'standard': {
+                                'image_link': '/base/static/img/preview_standard.png',
+                                'preview_link': '/base/static/pdf/preview_standard.pdf'
+                            }
+                        }"/>
+                    </div>
+                    <footer>
+                        <button string="Save" type="object" class="oe_highlight" name="write"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </xpath>
+            </field>
+        </record>
+
+    <record id="view_company_report_form_with_print" model="ir.ui.view">
+            <field name="name">res.company.report.form.with.print</field>
+            <field name="model">res.company</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="base.view_company_report_form" />
+            <field name="priority">1024</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='write']" position="before" >
+                    <button string="Save and Print" type="object" class="oe_highlight" name="write_company_and_print_report"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

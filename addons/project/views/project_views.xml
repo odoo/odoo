@@ -28,10 +28,10 @@
                     <field name="user_id"/>
                     <field name="stage_id"/>
                     <filter string="My Tasks" name="my_tasks" domain="[('user_id','=',uid)]"/>
-                    <filter string="My Followed Tasks" domain="[('message_is_follower', '=', True)]" />
+                    <filter string="My Followed Tasks" name="my_followed_tasks" domain="[('message_is_follower', '=', True)]" />
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <separator/>
-                    <filter string="Starred" name="starred" domain="[('priority','=',1)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority','in',[1, 2])]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
@@ -47,14 +47,14 @@
                     <filter string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
+                    <separator/>
+                    <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" context="{'group_by':'name'}"/>
-                        <filter string="Assigned to" name="User" context="{'group_by':'user_id'}"/>
-                        <filter string="Stage" name="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator/>
-                        <filter string="Last Message" name="group_message_last_post" context="{'group_by':'message_last_post:week'}"/>
+                        <filter string="Task" name="task" context="{'group_by':'name'}"/>
+                        <filter string="Assigned to" name="user" context="{'group_by':'user_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by':'stage_id'}"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -71,11 +71,11 @@
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Here, you can create new tasks
-                </p>
-                <p>
-                    You can now manage your tasks in order to get things done efficiently. Track progress, discuss, attach documents, etc.
+                <p class="o_view_nocontent_smiling_face">
+                    Click <i>Create</i> to start a new task.
+                </p><p>
+                    To get things done, use activities and status on tasks.<br/>
+                    Chat in real time or by email to collaborate efficiently.
                 </p>
             </field>
         </record>
@@ -89,9 +89,7 @@
             {
                 'default_parent_id' : active_id,
                 'default_project_id' : project_id,
-                'default_name' : name + ':',
-                'default_partner_id' : partner_id,
-                'search_default_project_id': [project_id],
+                'default_name' : name + ': ',
             }
             </field>
             <field name="search_view_id" ref="project.view_task_search_form"/>
@@ -109,9 +107,12 @@
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-files-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
-                        <button class="oe_stat_button" type="action" attrs="{'invisible':[('use_tasks','=', False)]}"
+                        <button class="oe_stat_button" type="action" attrs="{'invisible': [('task_count', '=', 0)]}"
                             name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
                             <field string="Tasks" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
+                        </button>
+                        <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', '|', ('rating_status', '=', 'no'), ('percentage_satisfaction_task', '=', -1)]}" class="oe_stat_button oe_percent" icon="fa-smile-o" groups="project.group_project_rating">
+                            <field string="% On tasks" name="percentage_satisfaction_task" widget="statinfo"/>
                         </button>
                         <button name="toggle_active" type="object"
                                 confirm="(Un)archiving a project automatically (un)archives its tasks and issues. Do you want to proceed?"
@@ -126,21 +127,27 @@
                         </h1>
                         <div name="options_active" class="oe_edit_only">
                             <div>
-                                <field name="use_tasks" class="oe_inline"/>
-                                <label for="use_tasks" class="oe_inline" string="Tasks"/>
-                                <span attrs="{'invisible':[('use_tasks', '=', False)]}">as </span>
-                                <field name="label_tasks" class="oe_inline oe_input_align" attrs="{'invisible': [('use_tasks', '=', False)]}"/>
+                                <label for="label_tasks" class="oe_inline" string="Name of the tasks :"/>
+                                <field name="label_tasks" class="oe_inline oe_input_align"/>
                             </div>
                         </div>
                     </div>
                     <notebook>
-                        <page string="Settings">
+                        <page name="settings" string="Settings">
                             <group>
                                 <field name="user_id" string="Project Manager"
                                         attrs="{'readonly':[('active','=',False)]}"/>
-                                <field name="subtask_project_id" groups="project.group_subtask_project"/>
                                 <field name="privacy_visibility" widget="radio"/>
                                 <field name="partner_id" string="Customer"/>
+                                <label for="rating_status" groups="project.group_project_rating"/>
+                                <div groups="project.group_project_rating">
+                                    <field name="rating_status" widget="radio"/>
+                                    <p attrs="{'invisible': [('rating_status','not in',('periodic','stage'))]}" class="text-muted oe_edit_only">
+                                        Edit project's stages and set an email template on the stages on which you want to activate the rating.
+                                    </p>
+                                </div>
+                                <field name="rating_status_period"  class="oe_inline" attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}" groups="project.group_project_rating"/>
+                                <field name="portal_show_rating" attrs="{'invisible': [('rating_status','==','no')]}" groups="project.group_project_rating"/>
                             </group>
                             <group name="misc">
                                 <group string="Configuration" groups="base.group_no_one">
@@ -151,7 +158,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <page name="emails" string="Emails" attrs="{'invisible': [('alias_domain', '=', False)]}">
                             <group name="group_alias">
                                 <label for="alias_name" string="Email Alias"/>
                                 <div name="alias_def">
@@ -161,8 +168,6 @@
                                         <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                     </div>
                                 </div>
-                                <label for="alias_model" string="Incoming Emails create" class="oe_edit_only"/>
-                                <field name="alias_model" class="oe_inline oe_edit_only" nolabel="1"/>
                                 <field name="alias_contact" class="oe_inline oe_edit_only"
                                         string="Accept Emails From"/>
                             </group>
@@ -184,7 +189,7 @@
                     <field name="name" string="Project Name"/>
                     <filter string="My Favorites" name="my_projects" domain="[('favorite_user_ids', 'in', uid)]"/>
                     <separator/>
-                    <filter string="Followed by Me" domain="[('message_is_follower','=',True)]"/>
+                    <filter string="Followed by Me" name="followed_by_me" domain="[('message_is_follower','=',True)]"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                     <field name="user_id" string="Project Manager"/>
@@ -212,32 +217,57 @@
             </field>
         </record>
 
+        <record id="project_view_kanban" model="ir.ui.view">
+            <field name="name">project.project.kanban</field>
+            <field name="model">project.project</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="user_id" string="Project Manager"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_content oe_kanban_global_click o_kanban_get_form">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <strong><field name="name" string="Project Name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-8">
+                                        <field name="partner_id" string="Contact"/>
+                                    </div>
+                                    <div class="col-xs-4">
+                                        <div class="oe_kanban_bottom_right">
+                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <record id="project_project_view_form_simplified" model="ir.ui.view">
             <field name="name">project.project.view.form.simplified</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <form string="Project">
-                    <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="name" class="o_project_name oe_inline"
-                                    string="Project Name" placeholder="e.g. Office Party"/>
-                                <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
-                                <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </div>
-                                <field name="user_id" invisible="1"/>
-                            </group>
-                            <group name='options' invisible="1">
-                                <field name="use_tasks"/>
-                            </group>
+                            <field name="name" class="o_project_name oe_inline"
+                                string="Project Name" placeholder="e.g. Office Party"/>
+                            <field name="user_id" invisible="1"/>
+                            <label for="alias_name" string="Choose a Project Email" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                            <div name="alias_def" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
                         </group>
-                        <footer>
-                            <button string="Create" name="close_dialog" type="object" class="btn-primary"/>
-                            <button string="Discard" class="btn-default" special="cancel"/>
-                        </footer>
-
-                    </sheet>
+                    </group>
+                    <footer>
+                        <button string="Create" name="open_tasks" type="object" class="btn-primary o_open_tasks"/>
+                        <button string="Discard" class="btn-default" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -255,10 +285,9 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban" on_create="project.open_create_project">
+                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project">
                     <field name="name"/>
                     <field name="partner_id"/>
-                    <field name="use_tasks"/>
                     <field name="color"/>
                     <field name="task_count"/>
                     <field name="task_needaction_count"/>
@@ -267,11 +296,13 @@
                     <field name="alias_name"/>
                     <field name="alias_domain"/>
                     <field name="is_favorite"/>
+                    <field name="percentage_satisfaction_project"/>
+                    <field name="rating_status"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
                                 <div class="o_project_kanban_main">
-                                    <div class="o_kanban_card_content o_visible">
+                                    <div class="o_kanban_card_content">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
                                                 <span><t t-esc="record.name.value"/></span>
@@ -282,37 +313,47 @@
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
                                                 <span><i class="fa fa-envelope"></i> <t t-esc="record.alias_id.value"/></span>
                                             </div>
+                                            <div t-if="record.rating_status.raw_value != 'no'" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days. Get rating details from the More menu." groups="project.group_project_rating">
+                                                <b>
+                                                    <t t-if="record.percentage_satisfaction_project.value == -1">
+                                                        <i class="fa fa-smile-o"/> No rating yet
+                                                    </t>
+                                                    <t t-if="record.percentage_satisfaction_project.value != -1">
+                                                        <a name="action_view_all_rating" type="object" context="{'search_default_rating_last_30_days':1}">
+                                                            <i class="fa fa-smile-o"/> <t t-esc="record.percentage_satisfaction_project.value"/>%
+                                                        </a>
+                                                    </t>
+                                                </b>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="o_kanban_card_manage_pane o_invisible">
+                                    <div class="o_kanban_card_manage_pane" groups="project.group_project_manager">
                                         <div class="o_kanban_card_manage_section o_kanban_manage_reports">
-                                            <div groups="project.group_project_manager">
-                                                <a type="edit">Settings</a>
+                                            <div>
+                                                <a type="edit">Edit</a>
                                             </div>
-                                            <div attrs="{'invisible': [('use_tasks', '=', False)]}">
-                                                <a name="%(project.action_project_task_user_tree_filtered)d" type="action">Tasks</a>
+                                            <div t-if="record.rating_status.raw_value != 'no'">
+                                                <a name="action_view_all_rating" type="object">Customer Ratings</a>
                                             </div>
                                         </div>
-                                        <div t-if="widget.editable" class="o_project_kanban_colorpicker">
+                                        <div class="o_no_padding_kanban_colorpicker">
                                             <ul class="oe_kanban_colorpicker" data-field="color"/>
                                         </div>
                                     </div>
-                                    <div class="o_project_kanban_manage">
-                                        <a class="o_kanban_manage_toggle_button o_left" href="#"><i class="fa fa-ellipsis-v" /></a>
-                                        <a type="object" name="toggle_favorite" class="o_right"><i t-attf-class="oe_inline fa o_dashboard_star #{record.is_favorite.raw_value ? 'fa-star' : 'fa-star-o'}" title="Add/remove from favorite"/></a>
-                                    </div>
+                                    <a class="o_kanban_manage_toggle_button o_left" href="#" groups="project.group_project_manager"><i class="fa fa-ellipsis-v" /></a>
+                                    <span class="o_right"><field name="is_favorite" widget="boolean_favorite" nolabel="1" /></span>
                                 </div>
 
                                 <div class="o_project_kanban_boxes">
-                                    <div t-if="record.use_tasks.raw_value" class="o_project_kanban_box">
-                                        <a name="%(act_project_project_2_project_task_all)d" type="action">
+                                    <a class="o_project_kanban_box" name="%(act_project_project_2_project_task_all)d" type="action">
+                                        <div>
                                             <span class="o_value"><t t-esc="record.task_count.value"/></span>
                                             <span class="o_label"><t t-esc="record.label_tasks.value"/></span>
-                                        </a>
-                                        <a t-if="record.task_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_task_all)d" type="action" context="{'search_default_message_needaction': 1}">
-                                            <t t-esc="record.task_needaction_count.raw_value"/>
-                                        </a>
-                                    </div>
+                                            <a t-if="record.task_needaction_count.raw_value" class="o_needaction" name="%(act_project_project_2_project_task_all)d" type="action" context="{'search_default_message_needaction': 1}">
+                                                <t t-esc="record.task_needaction_count.raw_value"/>
+                                            </a>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </t>
@@ -324,9 +365,8 @@
         <record id="ir_actions_server_project_sample" model="ir.actions.server">
             <field name="name">Project: Activate Sample Project</field>
             <field name="model_id" ref="project.model_project_project"/>
-            <field name="code">
-action = model.activate_sample_project()
-            </field>
+            <field name="state">code</field>
+            <field name="code">action = model.activate_sample_project()</field>
         </record>
 
         <record id="open_view_project_all" model="ir.actions.act_window">
@@ -335,12 +375,14 @@ action = model.activate_sample_project()
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="view_project_kanban"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="target">main</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a new project.<br/>
-                    <i>Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.</i>
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new project
+                </p><p>
+                    Or <a type="action" name="%(project.ir_actions_server_project_sample)d">activate a sample project</a> to play with.
                 </p>
             </field>
         </record>
@@ -351,11 +393,14 @@ action = model.activate_sample_project()
             <field name="view_type">form</field>
             <field name="domain">[]</field>
             <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('project_view_kanban')})]"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Create a new project.
+                <p class="o_view_nocontent_empty_folder">
+                    Create a new project
                 </p><p>
                     Organize your activities (plan tasks, track issues, invoice timesheets) for internal, personal or customer projects.
                 </p>
@@ -370,16 +415,22 @@ action = model.activate_sample_project()
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks">
                     <header>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
+                            attrs="{'invisible' : [('user_id', '!=', False)]}"/>
+
                         <field name="stage_id" widget="statusbar" clickable="True"
                             options="{'fold_field': 'fold'}"/>
                     </header>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" icon="fa-tasks" type="object" name="action_open_parent_task" string="Parent Task" attrs="{'invisible' : [('parent_id', '=', False)]}" groups="project.group_subtask_project"/>
-                        <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
+                        <button id="subtask_stat_button" name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
                             attrs="{'invisible' : [('parent_id', '!=', False)]}"
-                            context="{'project_id': subtask_project_id, 'name': name, 'partner_id': partner_id}" groups="project.group_subtask_project">
+                            context="{'project_id': project_id, 'name': name, 'parent_id': id}" groups="project.group_subtask_project">
                             <field string="Sub-tasks" name="subtask_count" widget="statinfo"/>
+                        </button>
+                        <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
+                            <field name="rating_count" string="Rating" widget="statinfo"/>
                         </button>
                         <button name="toggle_active" type="object" groups="base.group_user"
                                 class="oe_stat_button" icon="fa-archive">
@@ -391,12 +442,12 @@ action = model.activate_sample_project()
                     <div class="oe_title">
                         <h1 class="o_row">
                             <field name="priority" widget="priority"/>
-                            <field name="name" placeholder="Task Title..."/>
+                            <field name="name" class="o_task_name" placeholder="Task Title..."/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="project_id" domain="[('active', '=', True)]" context="{'default_use_tasks':1}"/>
+                            <field name="project_id" domain="[('active', '=', True)]"/>
                             <field name="user_id"
                                 class="o_task_user_field"
                                 options='{"no_open": True}'/>
@@ -414,20 +465,29 @@ action = model.activate_sample_project()
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Extra Info">
+                        <page name="extra_info" string="Extra Info">
                             <group>
                                 <group>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="partner_id"/>
-                                    <field name="parent_id" groups="project.group_subtask_project"/>
+                                    <field name="partner_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="email_from" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="email_cc" groups="base.group_no_one"/>
+                                    <field name="parent_id" attrs="{'invisible' : [('subtask_count', '>', 0)]}" groups="project.group_subtask_project"/>
                                     <field name="child_ids" invisible="1" />
-                                    <field name="subtask_project_id" invisible="1" />
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="displayed_image_id" groups="base.group_no_one"/>
                                 </group>
                                 <group>
                                     <field name="date_assign" groups="base.group_no_one"/>
                                     <field name="date_last_stage_update" groups="base.group_no_one"/>
+                                </group>
+                                <group string="Working Time to Assign" attrs="{'invisible': [('working_hours_open', '=', 0.0)]}">
+                                    <field name="working_hours_open" string="Hours"/>
+                                    <field name="working_days_open" string="Days"/>
+                                </group>
+                                <group string="Working Time to Close" attrs="{'invisible': [('working_hours_close', '=', 0.0)]}">
+                                    <field name="working_hours_close" string="Hours"/>
+                                    <field name="working_days_close" string="Days"/>
                                 </group>
                             </group>
                         </page>
@@ -442,12 +502,26 @@ action = model.activate_sample_project()
             </field>
         </record>
 
+        <record id="quick_create_task_form" model="ir.ui.view">
+            <field name="name">project.task.form.quick_create</field>
+            <field name="model">project.task</field>
+            <field name="priority">1000</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="user_id" options="{'no_open': True}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
         <!-- Project Task Kanban View -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column o_kanban_project_tasks" on_create="quick_create" quick_create_view="project.quick_create_task_form" examples="project">
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
@@ -466,49 +540,63 @@ action = model.activate_sample_project()
                     <field name="legend_done"/>
                     <field name="activity_ids"/>
                     <field name="activity_state"/>
+                    <field name="rating_last_value"/>
+                    <field name="rating_ids"/>
+                    <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                     <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-
-                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
-                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
-                                    <span class="fa fa-bars fa-lg"/>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
-                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
-                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                </ul>
-                            </div>
                             <div class="oe_kanban_content">
-                                <div>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                </div>
-                                <div>
-                                    <strong><field name="name"/></strong>
-                                </div>
-                                <div class="text-muted">
-                                    <field name="project_id" invisible="context.get('default_project_id', False)"/>
-                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
-                                    <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
-                                </div>
-                                <div class="oe_kanban_bottom_left">
-                                    <field name="priority" widget="priority"/>
-                                    <t t-if="record.message_needaction_counter.raw_value">
-                                        <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                    </t>
-                                </div>
-                                <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
-                                    <div class="pull-left mr4">
-                                        <field name="activity_ids" widget="kanban_activity"/>
-                                        <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong><br/>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="project_id" invisible="context.get('default_project_id', False)"/>
+                                            <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                            <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
+                                            <t t-if="record.email_from.raw_value"><span><field name="email_from"/></span></t>
+                                        </small>
+                                    </div>
+                                    <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                            <span class="fa fa-ellipsis-v" aria-hidden="true"/>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                            <li t-if="widget.editable"><a type="set_cover">Set Cover Image</a></li>
+                                            <li t-if="widget.editable"><a type="edit">Edit Task</a></li>
+                                            <li t-if="widget.deletable"><a type="delete">Delete</a></li>
+                                            <li class="divider"></li>
+                                            <li class="dropdown-header">Record's Colour</li>
+                                            <li>
+                                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
-                            </div>
-                            <div t-if="record.displayed_image_id.value">
-                                <field name="displayed_image_id" widget="attachment_image"/>
+                                <div class="o_kanban_record_body">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <div t-if="record.displayed_image_id.value">
+                                        <field name="displayed_image_id" widget="attachment_image"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="priority" widget="priority"/>
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                        <b t-if="record.rating_ids.raw_value.length">
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-smile-o text-success" t-if="record.rating_last_value.value == 10" title="Latest Rating: Satisfied"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-meh-o text-warning" t-if="record.rating_last_value.value == 5" title="Latest Rating: Not Satisfied"/>
+                                            <span style="font-weight:bold;" class="fa fa-fw mt4 fa-frown-o text-danger" t-if="record.rating_last_value.value == 1" title="Latest Rating: Higly Dissatisfied"/>
+                                        </b>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    </div>
+                                </div>
                             </div>
                             <div class="oe_clear"></div>
                         </div>
@@ -589,10 +677,6 @@ action = model.activate_sample_project()
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//div[@name="project"]' position='inside'>
-                    <field name="use_tasks" groups="base.group_no_one"/>
-                    <label for="use_tasks" groups="base.group_no_one"/>
-                </xpath>
                 <xpath expr="//button[@name='toggle_active']" position="before">
                     <button class="oe_stat_button" type="object" name="projects_action"
                         icon="fa-puzzle-piece" attrs="{'invisible': [('project_count', '=', 0)]}">
@@ -609,8 +693,11 @@ action = model.activate_sample_project()
             <field name="context">{'search_default_my_tasks': 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
-                <p>
-                    Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new task
+                </p><p>
+                    Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br/>
+                    You can track progress, discuss on tasks, attach documents, etc.
                 </p>
             </field>
         </record>
@@ -626,7 +713,7 @@ action = model.activate_sample_project()
         </record>
 
         <record id="project_task_action_activity" model="ir.actions.act_window">
-            <field name="name">My Next Task Activities</field>
+            <field name="name">My Next Activities</field>
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban,calendar</field>
@@ -634,8 +721,8 @@ action = model.activate_sample_project()
             <field name="context">{'search_default_activities_my':1}</field>
             <field name="domain">[('activity_date_deadline', '!=', False)]</field>
             <field name="help" type="html">
-                <p>
-                    Currently there are not any activity scheduled.
+                <p class="o_view_nocontent_empty_folder">
+                    No scheduled activity at the moment
                 </p>
             </field>
         </record>
@@ -650,7 +737,7 @@ action = model.activate_sample_project()
         </record>
 
         <menuitem id="project_task_menu_activity"
-            name="Next Task Activities"
+            name="Next Activities"
             parent="project.menu_project_management"
             action="project_task_action_activity"
             sequence="25"/>
@@ -687,13 +774,6 @@ action = model.activate_sample_project()
             <field name="context">{'project_id':active_id}</field>
         </record>
 
-        <record id="ir_project_task_open" model="ir.values">
-            <field eval="'tree_but_open'" name="key2"/>
-            <field eval="'project.project'" name="model"/>
-            <field name="name">View project's tasks</field>
-            <field eval="'ir.actions.act_window,'+str(dblc_proj)" name="value"/>
-        </record>
-
         <!-- Task types -->
         <record id="task_type_search" model="ir.ui.view">
             <field name="name">project.task.type.search</field>
@@ -715,6 +795,8 @@ action = model.activate_sample_project()
                             <group>
                                 <field name="name"/>
                                 <field name="mail_template_id"/>
+                                <field name="rating_template_id" groups="project.group_project_rating"/>
+                                <field name="auto_validation_kanban_state" attrs="{'invisible': [('rating_template_id','=', False)]}" groups="project.group_project_rating"/>
                             </group>
                             <group>
                                 <field name="fold"/>
@@ -776,11 +858,8 @@ action = model.activate_sample_project()
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-xs-12">
                                         <strong><t t-esc="record.name.value"/></strong>
-                                    </div>
-                                    <div class="col-xs-6" title="Folded in Kanban">
-                                        <field name="fold" widget="boolean"/>
                                     </div>
                                 </div>
                                 <t t-if="record.description.value">
@@ -801,8 +880,8 @@ action = model.activate_sample_project()
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a stage in the task pipeline.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new stage in the task pipeline
               </p><p>
                 Define the steps that will be used in the project from the
                 creation of the task, up to the closing of the task or issue.
@@ -850,8 +929,8 @@ action = model.activate_sample_project()
             <field name="res_model">project.tags</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add a new tag.
+              <p class="o_view_nocontent_smiling_face">
+                Create a new tag
               </p>
             </field>
         </record>
@@ -867,5 +946,11 @@ action = model.activate_sample_project()
             action="project.action_project_task_user_tree"
             parent="menu_project_report"
             sequence="10"/>
+
+        <menuitem id="rating_rating_menu_project"
+            action="rating_rating_action_project_report"
+            parent="menu_project_report"
+            groups="project.group_project_rating"
+            sequence="40"/>
 
 </odoo>

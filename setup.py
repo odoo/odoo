@@ -86,7 +86,6 @@ def py2exe_options():
                         'mock',
                         'ofxparse',
                         'odoo',
-                        'openid',
                         'passlib',
                         'PIL',
                         'poplib',
@@ -109,7 +108,6 @@ def py2exe_options():
                         'xlsxwriter',
                         'xlwt',
                         'xml', 'xml.dom',
-                        'yaml',
                     ],
                     'excludes': ['Tkconstants', 'Tkinter', 'tcl'],
                 }
@@ -149,7 +147,6 @@ setup(
         'passlib',
         'pillow',  # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
         'psutil',  # windows binary code.google.com/p/psutil/downloads/list
-        'psycogreen',
         'psycopg2 >= 2.2',
         'pydot',
         'pyldap',  # optional
@@ -157,10 +154,8 @@ setup(
         'pypdf2',
         'pyserial',
         'python-dateutil',
-        'python-openid',
         'pytz',
         'pyusb >= 1.0.0b1',
-        'pyyaml',
         'qrcode',
         'reportlab',  # windows binary pypi.python.org/pypi/reportlab
         'requests',
@@ -171,6 +166,7 @@ setup(
         'xlsxwriter',
         'xlwt',
     ],
+    python_requires='>=3.5',
     extras_require={
         'SSL': ['pyopenssl'],
     },

@@ -5,8 +5,6 @@
 import operator
 import math
 
-from odoo.tools import pycompat
-
 
 class graph(object):
     def __init__(self, nodes, transitions, no_ancester=None):
@@ -97,7 +95,7 @@ class graph(object):
 
 
     def init_cutvalues(self):
-        """Initailize cut values of edges of the feasible tree.
+        """Initialize cut values of edges of the feasible tree.
         Edges with negative cut-values are removed from the tree to optimize rank assignment
         """
         self.cut_edges = {}
@@ -259,7 +257,7 @@ class graph(object):
         """The ranks are normalized by setting the least rank to zero.
         """
 
-        least_rank = min(x['x'] for x in pycompat.values(self.result.values))
+        least_rank = min(x['x'] for x in self.result.values())
 
         if least_rank!=0:
             for node in self.result:
@@ -308,7 +306,7 @@ class graph(object):
 
 
     def wmedian(self):
-        """Applies median heuristic to find optimzed order of the nodes with in their ranks
+        """Applies median heuristic to find optimized order of the nodes with in their ranks
         """
         for level in self.levels:
 
@@ -336,7 +334,7 @@ class graph(object):
         """
         adj_nodes = self.adj_position(node, adj_rank)
         l = len(adj_nodes)
-        m = l/2
+        m = l // 2
 
         if l==0:
             return -1.0
@@ -383,7 +381,7 @@ class graph(object):
         """Finds actual-order of the nodes with respect to maximum number of nodes in a rank in component
         """
         mid_pos = 0.0
-        max_level = max(len(x) for x in pycompat.values(self.levels.values))
+        max_level = max(len(x) for x in self.levels.values())
 
         for level in self.levels:
             if level:
@@ -393,16 +391,16 @@ class graph(object):
                 list.reverse()
 
                 if no%2==0:
-                    first_half = list[no/2:]
+                    first_half = list[no // 2:]
                     factor = -factor
                 else:
-                    first_half = list[no/2+1:]
+                    first_half = list[no // 2 + 1:]
                     if max_level==1:#for the case when horizontal graph is there
-                        self.result[list[no/2]]['y'] = mid_pos + (self.result[list[no/2]]['x']%2 * 0.5)
+                        self.result[list[no // 2]]['y'] = mid_pos + (self.result[list[no // 2]]['x']%2 * 0.5)
                     else:
-                        self.result[list[no/2]]['y'] = mid_pos + factor
+                        self.result[list[no // 2]]['y'] = mid_pos + factor
 
-                last_half = list[:no/2]
+                last_half = list[:no // 2]
 
                 i=1
                 for node in first_half:
@@ -425,8 +423,8 @@ class graph(object):
         no = len(l)
 
         rest = no%2
-        first_half = l[no/2+rest:]
-        last_half = l[:no/2]
+        first_half = l[no // 2 + rest:]
+        last_half = l[:no // 2]
 
         for i, child in enumerate(first_half):
             self.result[child]['y'] = mid_pos - (i+1 - (0 if rest else 0.5))
@@ -437,7 +435,7 @@ class graph(object):
                 last = self.tree_order(child, last)
 
         if rest:
-            mid_node = l[no/2]
+            mid_node = l[no // 2]
             self.result[mid_node]['y'] = mid_pos
 
             if self.transitions.get(mid_node, False):
@@ -474,7 +472,7 @@ class graph(object):
         """
 
         if self.Is_Cyclic:
-            max_level = max(len(x) for x in pycompat.values(self.levels.values))
+            max_level = max(len(x) for x in self.levels.values())
 
             if max_level%2:
                 self.result[self.start]['y'] = (max_level+1)/2 + self.max_order + (self.max_order and 1)
@@ -486,7 +484,7 @@ class graph(object):
         else:
             self.result[self.start]['y'] = 0
             self.tree_order(self.start, 0)
-            min_order = math.fabs(min(x['y'] for x in pycompat.values(self.result.values)))
+            min_order = math.fabs(min(x['y'] for x in self.result.values()))
 
             index = self.start_nodes.index(self.start)
             same = False
@@ -520,30 +518,30 @@ class graph(object):
 
 
                 no = len(roots)
-                first_half = roots[:no/2]
+                first_half = roots[:no // 2]
 
                 if no%2==0:
-                    last_half = roots[no/2:]
+                    last_half = roots[no // 2:]
                 else:
-                    last_half = roots[no/2+1:]
+                    last_half = roots[no // 2 + 1:]
 
-                factor = -math.floor(no/2)
+                factor = -math.floor(no // 2)
                 for start in first_half:
                     self.result[start]['y'] = base + factor
                     factor += 1
 
                 if no%2:
-                    self.result[roots[no/2]]['y'] = base + factor
+                    self.result[roots[no // 2]]['y'] = base + factor
                 factor +=1
 
                 for start in last_half:
                     self.result[start]['y'] = base + factor
                     factor += 1
 
-            self.max_order = max(x['y'] for x in pycompat.values(self.result.values))
+            self.max_order = max(x['y'] for x in self.result.values())
 
     def find_starts(self):
-        """Finds other start nodes of the graph in the case when graph is disconneted
+        """Finds other start nodes of the graph in the case when graph is disconnected
         """
         rem_nodes = []
         for node in self.nodes:
@@ -660,7 +658,7 @@ class graph(object):
 
                 for node in self.no_ancester:
                     for sec_node in self.transitions.get(node, []):
-                        if sec_node in pycompat.keys(self.partial_order):
+                        if sec_node in self.partial_order:
                             self.transitions[self.start_nodes[0]].append(node)
                             break
 
@@ -746,7 +744,7 @@ if __name__=='__main__':
     for node in nodes:
         node_res[node] = result[node]
 
-    for name,node in pycompat.items(node_res):
+    for name, node in node_res.items():
 
         draw.arc( (int(node['y']-radius), int(node['x']-radius),int(node['y']+radius), int(node['x']+radius) ), 0, 360, (128,128,128))
         draw.text( (int(node['y']),  int(node['x'])), str(name),  (128,128,128))

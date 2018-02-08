@@ -104,10 +104,9 @@ FormController.include({
     },
 
     /**
-     * We need to intercept switch_view event coming from sub views, because
-     * there is no view manager doing the job.  Also, we don't actually want to
-     * switch view in dashboard, we want to do a do_action (which will open the
-     * record in a different breadcrumb)
+     * We need to intercept switch_view event coming from sub views, because we
+     * don't actually want to switch view in dashboard, we want to do a
+     * do_action (which will open the record in a different breadcrumb).
      *
      * @private
      * @param {OdooEvent} event
@@ -126,6 +125,9 @@ FormController.include({
 });
 
 FormRenderer.include({
+    custom_events: _.extend({}, FormRenderer.prototype.custom_events, {
+        env_updated: '_onEnvUpdated',
+    }),
     events: _.extend({}, FormRenderer.prototype.events, {
         'click .oe_dashboard_column .oe_fold': '_onFoldClick',
         'click .oe_dashboard_link_change_layout': '_onChangeLayout',
@@ -188,13 +190,9 @@ FormRenderer.include({
                 var actionID = $(this).attr('data-id');
                 var newAttrs = _.clone(self.actionsDescr[actionID]);
 
-                if (newAttrs.domain) {
-                    newAttrs.domain = newAttrs.domain_string;
-                    delete(newAttrs.domain_string);
-                }
-                if (newAttrs.context) {
-                    newAttrs.context = newAttrs.context_string;
-                    delete(newAttrs.context_string);
+                /* prepare attributes as they should be saved */
+                if (newAttrs.modifiers) {
+                    newAttrs.modifiers = JSON.stringify(newAttrs.modifiers);
                 }
                 actions.push(newAttrs);
             });
@@ -225,10 +223,14 @@ FormRenderer.include({
                 params: {action_id: params.actionID}
             })
             .then(function (action) {
+                if (!action) {
+                    // the action does not exist anymore
+                    return $.when();
+                }
                 var view = _.find(action.views, function (descr) {
                     return descr[1] === params.viewType;
                 });
-                return self.loadViews(action.res_model, params.context, [view])
+                return self.loadViews(action.res_model, context, [view])
                            .then(function (viewsInfo) {
                     var viewInfo = viewsInfo[params.viewType];
                     var View = viewRegistry.get(params.viewType);
@@ -264,10 +266,8 @@ FormRenderer.include({
                 return element.tag === "action"? element: false;
             });
         });
-        if (!hasAction) {
-            return $('<div class="oe_view_nocontent">')
-                .append($('<div>').html(this.noContentHelp || " "));
-        }
+        this.$el.toggleClass('o_dashboard_nocontent', !hasAction);
+
         // We should start with three columns available
         node = $.extend(true, {}, node);
 
@@ -338,6 +338,16 @@ FormRenderer.include({
                 self.trigger_up('save_dashboard');
             },
         });
+    },
+    /**
+     * Stops the propagation of 'update_env' events triggered by the controllers
+     * instantiated by the dashboard.
+     *
+     * @override
+     * @private
+     */
+    _onEnvUpdated: function (event) {
+        event.stopPropagation();
     },
     /**
      * @private

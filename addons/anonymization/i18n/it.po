@@ -1,21 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * anonymization
-#
+# 
 # Translators:
+# Martin Trigaux <mat@odoo.com>, 2017
+# Paolo Valier <paolo.valier@hotmail.it>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-11-24 12:32+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Italian (http://www.transifex.com/odoo/odoo-9/language/it/)\n"
-"Language: it\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Paolo Valier <paolo.valier@hotmail.it>, 2017\n"
+"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: anonymization
+#: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
+msgid "<strong>Field</strong>"
+msgstr ""
+
+#. module: anonymization
+#: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
+msgid "<strong>Model</strong>"
+msgstr ""
+
+#. module: anonymization
+#: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_nonymization_kanban
+msgid "<strong>Status</strong>"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_history_tree
@@ -23,68 +40,64 @@ msgstr ""
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_tree
 msgid "Anonymization History"
-msgstr "Storico anonimizzazione"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymize_wizard
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Anonymize Database"
-msgstr "Anonimizza database"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_wizard
 msgid "Anonymize database"
-msgstr "Anonimizza database"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Anonymized"
-msgstr "Anonimizzato"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_form
 msgid "Anonymized Field"
-msgstr "Campo anonimo"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.actions.act_window,name:anonymization.action_ir_model_fields_anonymization_tree
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization_fields
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_tree
 msgid "Anonymized Fields"
-msgstr "Campi anonimi"
+msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:196
 #, python-format
 msgid "Anonymized value can not be empty."
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:284
+#: code:addons/anonymization/wizard/anonymize_wizard.py:71
 #, python-format
 msgid ""
-"Before executing the anonymization process, you should make a backup of your "
-"database."
+"Before executing the anonymization process, you should make a backup of your"
+" database."
 msgstr ""
-"Prima di eseguire il processo di anonimizzazione, bisognerebbe eseguire un "
-"backup del database."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:430
+#: code:addons/anonymization/wizard/anonymize_wizard.py:193
 #, python-format
 msgid ""
 "Cannot anonymize fields of these types: binary, many2many, many2one, "
 "one2many, reference."
 msgstr ""
-"Non è possibile rendere in forma anonima i campi di questi tipi: binary, "
-"many2many, many2one, one2many, reference."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Clear"
-msgstr "Pulisci"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_create_uid
@@ -105,22 +118,22 @@ msgstr "Creato il"
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Database Anonymization"
-msgstr "Anonimizzazione database"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.ui.menu,name:anonymization.menu_administration_anonymization
 msgid "Database anonymization"
-msgstr "Anonimizza database"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_date
 msgid "Date"
-msgstr "Data"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_direction
 msgid "Direction"
-msgstr "Direzione"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_display_name
@@ -133,51 +146,51 @@ msgstr "Visualizza Nome"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Done"
-msgstr "Completato"
+msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
-#: code:addons/anonymization/anonymization.py:434
+#: code:addons/anonymization/wizard/anonymize_wizard.py:141
+#: code:addons/anonymization/wizard/anonymize_wizard.py:263
 #, python-format
 msgid "Error !"
-msgstr "Errore !"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Exception occured"
-msgstr "Si è verificata un'eccezione"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_file_export
 msgid "Export"
-msgstr "Esporta"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_id
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_field_name
 msgid "Field"
-msgstr "Campo"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_field_name
 msgid "Field Name"
-msgstr "Nome campo"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_field_ids
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Fields"
-msgstr "Campi"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_name
 msgid "File Name"
-msgstr "Nome File"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_filepath
 msgid "File path"
-msgstr "Percorso file"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_id
@@ -193,14 +206,12 @@ msgid "Import"
 msgstr "Importa"
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:521
+#: code:addons/anonymization/wizard/anonymize_wizard.py:263
 #, python-format
 msgid ""
 "It is not possible to reverse the anonymization process without supplying "
 "the anonymization export file."
 msgstr ""
-"Non è possibile invertire il processo di anomizzazione senza fornire il file "
-"esportato reso in forma anonima."
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization___last_update
@@ -231,43 +242,49 @@ msgstr "Ultima modifica il"
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_msg
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymization_history_form
 msgid "Message"
-msgstr "Messaggio"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_model_name
 msgid "Model"
-msgstr "Modello"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "New"
-msgstr "Nuovo"
+msgstr ""
+
+#. module: anonymization
+#: code:addons/anonymization/wizard/anonymize_wizard.py:155
+#, python-format
+msgid "No fields are going to be anonymized."
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization,state:0
 msgid "Not Existing"
-msgstr "Non esiste"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_id
 msgid "Object"
-msgstr "Oggetto"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_model_name
 msgid "Object Name"
-msgstr "Nome Oggetto"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_query_type
 msgid "Query"
-msgstr "Query"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.ui.view,arch_db:anonymization.view_ir_model_fields_anonymize_wizard_form
 msgid "Reverse the Database Anonymization"
-msgstr "Ripristina il database anonimizzato"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_sequence
@@ -277,10 +294,11 @@ msgstr "Sequenza"
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,state:0
 msgid "Started"
-msgstr "Iniziato"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_history_state
+#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymize_wizard_state
 msgid "Status"
 msgstr "Stato"
@@ -293,58 +311,44 @@ msgstr "Riepilogo"
 #. module: anonymization
 #: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_migration_fix_target_version
 msgid "Target Version"
-msgstr "Versione di destinazione"
+msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:75
+#: code:addons/anonymization/models/anonymization.py:56
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to create, write or delete fields."
 msgstr ""
-"La trasformazione in forma anonima del database è attualmente in uno stato "
-"inutilizzabile. Alcuni campi sono stati resi anonimi, mentre altri campi non "
-"sono stati resi anonimi. Bisognrebbe provare a risolvere il problema prima "
-"di provare a creare, scrivere o cancellare i campi."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:342
+#: code:addons/anonymization/wizard/anonymize_wizard.py:122
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything else."
 msgstr ""
-"La trasformazione in forma anonima del database è attualmente in uno stato "
-"inutilizzabile. Alcuni campi sono stati resi anonimi, mentre altri campi non "
-"sono stati resi anonimi. Bisognrebbe provare a risolvere il problema prima "
-"di tentare di fare qualsiasi altra cosa."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:375
-#: code:addons/anonymization/anonymization.py:514
+#: code:addons/anonymization/wizard/anonymize_wizard.py:145
+#: code:addons/anonymization/wizard/anonymize_wizard.py:259
 #, python-format
 msgid ""
 "The database anonymization is currently in an unstable state. Some fields "
 "are anonymized, while some fields are not anonymized. You should try to "
 "solve this problem before trying to do anything."
 msgstr ""
-"La trasformazione in forma anonima del database è attualmente in uno stato "
-"instabile. Alcuni campi sono stati resi anonimi, mentre altri no. "
-"Bisognerebbe provare a risolvere il problema prima di tentare di fare "
-"qualsiasi cosa."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:373
+#: code:addons/anonymization/wizard/anonymize_wizard.py:143
 #, python-format
 msgid "The database is currently anonymized, you cannot anonymize it again."
 msgstr ""
-"Il database attualmente è stato reso anonimo, non si può renderlo anonimo di "
-"nuovo."
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:73
+#: code:addons/anonymization/models/anonymization.py:54
 #, python-format
 msgid ""
 "The database is currently anonymized, you cannot create, modify or delete "
@@ -352,7 +356,7 @@ msgid ""
 msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:512
+#: code:addons/anonymization/wizard/anonymize_wizard.py:257
 #, python-format
 msgid ""
 "The database is not currently anonymized, you cannot reverse the "
@@ -362,66 +366,56 @@ msgstr ""
 #. module: anonymization
 #: model:ir.model.fields,help:anonymization.field_ir_model_fields_anonymize_wizard_file_import
 msgid ""
-"This is the file created by the anonymization process. It should have the '."
-"pickle' extention."
+"This is the file created by the anonymization process. It should have the "
+"extension '.json' or '.pickle'."
 msgstr ""
-"Questo è il file creato dal processo di anonimizzazione. Dovrebbe avere "
-"l'estensione '.pickle'."
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymize.wizard,state:0
 msgid "Unstable"
-msgstr "Instabile"
+msgstr ""
 
 #. module: anonymization
-#: code:addons/anonymization/anonymization.py:49
 #: sql_constraint:ir.model.fields.anonymization:0
-#, python-format
 msgid "You cannot have two fields with the same name on the same object!"
 msgstr ""
-"Non è possibile avere due campi con lo stesso nome nello stesso oggetto!"
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "anonymized -> clear"
-msgstr "anonimizzato -> in chiaro"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.history,direction:0
 msgid "clear -> anonymized"
-msgstr "in chiaro -> anonimizzato"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization
 msgid "ir.model.fields.anonymization"
-msgstr "ir.model.fields.anonymization"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_history
 msgid "ir.model.fields.anonymization.history"
-msgstr "ir.model.fields.anonymization.history"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymization_migration_fix
 msgid "ir.model.fields.anonymization.migration.fix"
-msgstr "ir.model.fields.anonymization.migration.fix"
+msgstr ""
 
 #. module: anonymization
 #: model:ir.model,name:anonymization.model_ir_model_fields_anonymize_wizard
 msgid "ir.model.fields.anonymize.wizard"
-msgstr "ir.model.fields.anonymize.wizard"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "python"
-msgstr "python"
+msgstr ""
 
 #. module: anonymization
 #: selection:ir.model.fields.anonymization.migration.fix,query_type:0
 msgid "sql"
-msgstr "sql"
-
-#. module: anonymization
-#: model:ir.model.fields,field_description:anonymization.field_ir_model_fields_anonymization_state
-msgid "unknown"
-msgstr "Sconosciuto"
+msgstr ""

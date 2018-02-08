@@ -26,6 +26,7 @@ import werkzeug
 
 from . import pycompat
 from .misc import ustr
+from . import pycompat
 
 import odoo
 
@@ -95,6 +96,7 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'POP_BLOCK', 'POP_EXCEPT', # Seems to be a special-case of POP_BLOCK for P3
     'SETUP_LOOP', 'BREAK_LOOP', 'CONTINUE_LOOP',
     'MAKE_FUNCTION', 'CALL_FUNCTION',
+    'EXTENDED_ARG',  # P3.6 for long jump offsets.
     # P3: https://bugs.python.org/issue27213
     'CALL_FUNCTION_EX',
     # Already in P2 but apparently the first one is used more aggressively in P3
@@ -267,8 +269,9 @@ _BUILTINS = {
     'True': True,
     'False': False,
     'None': None,
+    'bytes': bytes,
     'str': str,
-    'unicode': unicode,
+    'unicode': pycompat.text_type,
     'bool': bool,
     'int': int,
     'float': float,

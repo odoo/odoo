@@ -11,10 +11,10 @@
 # Florian Hatat <mininet@wanadoo.fr>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
 "Last-Translator: Florian Hatat <mininet@wanadoo.fr>, 2016\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,13 @@ msgid "Payment Acquirer"
 msgstr "Intermédiaire de Paiement"
 
 #. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid ""
+"Payment Data Transfer allows you to receive notification of successful "
+"payments as they are made."
+msgstr ""
+
+#. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_transaction
 msgid "Payment Transaction"
 msgstr "Transaction"
@@ -64,12 +71,12 @@ msgid "Paypal Merchant ID"
 msgstr "Identifiant Paypal du vendeur"
 
 #. module: payment_paypal
-#: model:ir.ui.view,arch_db:payment_paypal.transaction_form_paypal
-msgid "Paypal TX Details"
-msgstr "Détails de la transaction Paypal"
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer_paypal_pdt_token
+msgid "Paypal PDT Token"
+msgstr ""
 
 #. module: payment_paypal
-#: code:addons/payment_paypal/models/payment.py:137
+#: code:addons/payment_paypal/models/payment.py:138
 #, python-format
 msgid "Paypal: received data with missing reference (%s) or txn_id (%s)"
 msgstr ""

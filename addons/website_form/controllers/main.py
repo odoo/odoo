@@ -10,10 +10,10 @@ from psycopg2 import IntegrityError
 
 from odoo import http
 from odoo.http import request
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
 from odoo.exceptions import ValidationError
-from odoo.addons.base.ir.ir_qweb.fields import nl2br
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 
 class WebsiteForm(http.Controller):
@@ -118,7 +118,7 @@ class WebsiteForm(http.Controller):
         error_fields = []
 
 
-        for field_name, field_value in pycompat.items(values):
+        for field_name, field_value in values.items():
             # If the value of the field if a file
             if hasattr(field_value, 'filename'):
                 # Undo file upload field name indexing
@@ -142,7 +142,7 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += "%s : %s\n" % (field_name.decode('utf-8'), field_value)
+                data['custom'] += u"%s : %s\n" % (field_name, field_value)
 
         # Add metadata if enabled
         environ = request.httprequest.headers.environ
@@ -164,7 +164,7 @@ class WebsiteForm(http.Controller):
         if hasattr(dest_model, "website_form_input_filter"):
             data['record'] = dest_model.website_form_input_filter(request, data['record'])
 
-        missing_required_fields = [label for label, field in pycompat.items(authorized_fields) if field['required'] and not label in data['record']]
+        missing_required_fields = [label for label, field in authorized_fields.items() if field['required'] and not label in data['record']]
         if any(error_fields):
             raise ValidationError(error_fields + missing_required_fields)
 
@@ -206,7 +206,7 @@ class WebsiteForm(http.Controller):
         for file in files:
             custom_field = file.field_name not in authorized_fields
             attachment_value = {
-                'name': file.field_name if custom_field else file.filename,
+                'name': file.filename,
                 'datas': base64.encodestring(file.read()),
                 'datas_fname': file.filename,
                 'res_model': model.model,

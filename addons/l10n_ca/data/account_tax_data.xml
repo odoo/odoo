@@ -89,6 +89,7 @@
         <field name="account_id" ref="chart2131_en"/>
         <field name="refund_account_id" ref="chart2131_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gst')])]"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="pst_bc_sale_en" model="account.tax.template">
@@ -101,6 +102,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart2132_en"/>
         <field name="refund_account_id" ref="chart2132_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_7"/>
     </record>
 
     <record id="gstpst_bc_sale_en" model="account.tax.template">
@@ -112,6 +114,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('pst_bc_sale_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstpst_bc_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- Manitoba PST -->
@@ -127,6 +130,7 @@
         <field name="include_base_amount" eval="False"/>
         <field name="account_id" ref="chart2131_en"/>
         <field name="refund_account_id" ref="chart2131_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="pst_mb_sale_en" model="account.tax.template">
@@ -139,6 +143,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart2132_en"/>
         <field name="refund_account_id" ref="chart2132_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_8"/>
     </record>
 
     <record id="gstpst_mb_sale_en" model="account.tax.template">
@@ -150,6 +155,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstpst_sale_mb_gst_en'), ref('pst_mb_sale_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstpst_mb_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- Quebec PST -->
@@ -164,6 +170,7 @@
         <field name="sequence">1</field>
         <field name="account_id" ref="chart2131_en"/>
         <field name="refund_account_id" ref="chart2131_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="qst_sale_en" model="account.tax.template">
@@ -176,6 +183,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart2132_en"/>
         <field name="refund_account_id" ref="chart2132_en"/>
+        <field name="tax_group_id" ref="tax_group_qst_9975"/>
     </record>
 
     <record id="gstqst_sale_en" model="account.tax.template">
@@ -187,6 +195,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstqst_sale_gst_en'), ref('qst_sale_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstqst_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- Saskatchewan PST -->
@@ -202,6 +211,7 @@
         <field name="include_base_amount" eval="False"/>
         <field name="account_id" ref="chart2131_en"/>
         <field name="refund_account_id" ref="chart2131_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="pst_sk_sale_en" model="account.tax.template">
@@ -214,6 +224,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart2132_en"/>
         <field name="refund_account_id" ref="chart2132_en"/>
+        <field name="tax_group_id" ref="tax_group_pst_5"/>
     </record>
 
     <record id="gstpst_sk_sale_en" model="account.tax.template">
@@ -225,6 +236,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstpst_sale_sk_gst_en'), ref('pst_sk_sale_en')])]"/>
         <field name="tag_ids" eval="[6,0,[ref('tag_gstpst_sk_sale')]]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- HST -->
@@ -239,6 +251,7 @@
         <field name="account_id" ref="chart21331_en"/>
         <field name="refund_account_id" ref="chart21331_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_hst13_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_hst_13"/>
     </record>
 
     <record id="hst14_sale_en" model="account.tax.template">
@@ -251,6 +264,7 @@
         <field name="account_id" ref="chart21332_en"/>
         <field name="refund_account_id" ref="chart21332_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_hst14_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_hst_14"/>
     </record>
 
     <record id="hst15_sale_en" model="account.tax.template">
@@ -263,6 +277,7 @@
         <field name="account_id" ref="chart21333_en"/>
         <field name="refund_account_id" ref="chart21333_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_hst15_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_hst_15"/>
     </record>
 
     <!-- GST -->
@@ -277,6 +292,7 @@
         <field name="account_id" ref="chart2131_en"/>
         <field name="refund_account_id" ref="chart2131_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gst_sale')])]"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <!-- PURCHASE TAXES -->
@@ -294,6 +310,7 @@
         <field name="include_base_amount" eval="False"/>
         <field name="account_id" ref="chart1181_en"/>
         <field name="refund_account_id" ref="chart1181_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="pst_bc_purc_en" model="account.tax.template">
@@ -306,6 +323,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart1182_en"/>
         <field name="refund_account_id" ref="chart1182_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_7"/>
     </record>
 
     <record id="gstpst_bc_purc_en" model="account.tax.template">
@@ -317,6 +335,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstpst_purc_bc_gst_en'), ref('pst_bc_purc_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstpst_bc_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- Manitoba PST -->
@@ -332,6 +351,7 @@
         <field name="include_base_amount" eval="False"/>
         <field name="account_id" ref="chart1181_en"/>
         <field name="refund_account_id" ref="chart1181_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="pst_mb_purc_en" model="account.tax.template">
@@ -344,6 +364,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart1182_en"/>
         <field name="refund_account_id" ref="chart1182_en"/>
+        <field name="tax_group_id" ref="tax_group_pst_8"/>
     </record>
 
     <record id="gstpst_mb_purc_en" model="account.tax.template">
@@ -355,6 +376,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstpst_purc_mb_gst_en'), ref('pst_mb_purc_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstpst_mb_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- Quebec PST -->
@@ -369,6 +391,7 @@
         <field name="sequence">1</field>
         <field name="account_id" ref="chart1181_en"/>
         <field name="refund_account_id" ref="chart1181_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="qst_purc_en" model="account.tax.template">
@@ -381,6 +404,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart1182_en"/>
         <field name="refund_account_id" ref="chart1182_en"/>
+        <field name="tax_group_id" ref="tax_group_qst_9975"/>
     </record>
 
     <record id="gstqst_purc_en" model="account.tax.template">
@@ -392,6 +416,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstqst_purc_gst_en'), ref('qst_purc_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstqst_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- Saskatchewan PST -->
@@ -407,6 +432,7 @@
         <field name="include_base_amount" eval="False"/>
         <field name="account_id" ref="chart1181_en"/>
         <field name="refund_account_id" ref="chart1181_en"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     <record id="pst_sk_purc_en" model="account.tax.template">
@@ -419,6 +445,7 @@
         <field name="sequence">2</field>
         <field name="account_id" ref="chart1182_en"/>
         <field name="refund_account_id" ref="chart1182_en"/>
+        <field name="tax_group_id" ref="tax_group_pst_5"/>
     </record>
 
     <record id="gstpst_sk_purc_en" model="account.tax.template">
@@ -430,6 +457,7 @@
         <field name="amount_type">group</field>
         <field name="children_tax_ids" eval="[(6,0,[ref('gstpst_purc_sk_gst_en'), ref('pst_sk_purc_en')])]"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gstpst_sk_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_fix"/>
     </record>
 
     <!-- HST -->
@@ -444,6 +472,7 @@
         <field name="account_id" ref="chart11831_en"/>
         <field name="refund_account_id" ref="chart11831_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_hst13_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_hst_13"/>
     </record>
 
     <record id="hst14_purc_en" model="account.tax.template">
@@ -456,6 +485,7 @@
         <field name="account_id" ref="chart11832_en"/>
         <field name="refund_account_id" ref="chart11832_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_hst14_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_hst_14"/>
     </record>
 
     <record id="hst15_purc_en" model="account.tax.template">
@@ -468,6 +498,7 @@
         <field name="account_id" ref="chart11833_en"/>
         <field name="refund_account_id" ref="chart11833_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_hst15_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_hst_15"/>
     </record>
 
     <!-- GST -->
@@ -482,6 +513,7 @@
         <field name="account_id" ref="chart1181_en"/>
         <field name="refund_account_id" ref="chart1181_en"/>
         <field name="tag_ids" eval="[(6,0,[ref('tag_gst_purc')])]"/>
+        <field name="tax_group_id" ref="tax_group_gst_5"/>
     </record>
 
     </data>

@@ -57,7 +57,7 @@
                                 <h4 class="media-heading">
                                     <a itemprop="url" t-att-class="event.state == 'done' and 'text-success'" t-attf-href="/event/#{ slug(event) }/#{(not event.menu_id) and 'register' or ''}"><span itemprop="name" t-field="event.name"> </span></a>
                                     <small t-if="event.is_participating" class="label label-info">Participating</small>
-                                    <small t-if="not event.is_online" class="label label-info">Online</small>
+                                    <small t-if="event.is_online" class="label label-info">Online</small>
                                     <small t-if="not event.website_published" class="label label-danger">unpublished</small>
                                 </h4>
                                 <div>
@@ -202,6 +202,11 @@
     </xpath>
 </template>
 
+<template id="event_edit_options" inherit_id="website.user_navbar" name="Edit Event Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.event'" t-set="action" t-value="'event.action_event_view'" />
+    </xpath>
+</template>
 <template id="layout">
     <t t-call="website.layout">
       <div id="wrap" class="js_event o_website_event">
@@ -226,13 +231,6 @@
                         </t>
                     </ol>
                 </div>
-                <div class="col-sm-5" groups="event.group_event_manager">
-                    <t t-call="website.publish_management">
-                      <t t-set="object" t-value="event"/>
-                      <t t-set="publish_edit" t-value="True"/>
-                      <t t-set="action" t-value="'event.action_event_view'"/>
-                    </t>
-                </div>
             </div>
         </div>
         <t t-raw="0"/>
@@ -243,6 +241,7 @@
 
 <template id="template_location">
     <t t-call="website_event.layout">
+        <div class="oe_structure"/>
         <section class="container">
             <h1 class="text-center">Event Location</h1>
         </section>
@@ -251,6 +250,7 @@
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile"]
             }'/>
+        <div class="oe_structure"/>
     </t>
 </template>
 
@@ -311,7 +311,8 @@
 <template id="event_description_full">
     <t t-call="website_event.event_details">
         <div class="col-md-8">
-            <t t-call="website_event.registration_template"/>
+            <div t-if="event.state == 'done' or not registrable" class="alert alert-info">Registration for this event is now closed</div>
+            <t t-if="event.state != 'done' and registrable" t-call="website_event.registration_template"/>
             <div class="clearfix"/>
             <hr/>
             <div itemprop="description" t-field="event.description"></div>
@@ -533,7 +534,7 @@
 <template id="registration_attendee_details" name="Registration Attendee Details">
     <div id="modal_attendees_registration" class="modal fade" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg">
-            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post">
+            <form id="attendee_registration" t-attf-action="/event/#{slug(event)}/registration/confirm" method="post" class="js_website_submit_form">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                 <div class="modal-content">
                     <div class="modal-header">
@@ -721,8 +722,8 @@
 
 <!-- User Navbar -->
 <template id="content_new_event" inherit_id="website.user_navbar">
-    <xpath expr="//div[@id='o_website_add_page_modal']//ul" position="inside">
-        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"></i><p>New Event</p></a></li>
+    <xpath expr="//div[@id='o_new_content_menu_choices']//ul" position="inside">
+        <li groups="event.group_event_manager"><a href="#" data-action="new_event"><i class="fa fa-glass"/><p>New Event</p></a></li>
     </xpath>
 </template>
 </odoo>

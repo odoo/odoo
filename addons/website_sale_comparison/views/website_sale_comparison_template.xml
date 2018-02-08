@@ -9,7 +9,7 @@
     </template>
 
     <template id="add_to_compare" inherit_id="website_sale.products_item" active="True" customize_show="True" name="Comparison List" priority="22">
-        <xpath expr="//div[@class='product_price']" position="inside">
+        <xpath expr="//div[hasclass('product_price')]" position="inside">
             <a class="hidden-xs btn btn-default btn-xs o_add_compare" title="Compare" t-att-data-product-product-id="product.product_variant_ids[0].id" data-action="o_comparelist"><span class="fa fa-exchange"></span></a>
         </xpath>
     </template>
@@ -69,7 +69,7 @@
                 <div class="oe_structure"/>
                 <div class="container oe_website_sale">
                     <section class="container">
-                        <h3>Comparator</h3>
+                        <h3>Compare Products</h3>
                         <table class="table table-bordered table-hover text-center mt16 table-comparator" id="o_comparelist_table">
                             <thead>
                                 <td class='td-top-left'></td>

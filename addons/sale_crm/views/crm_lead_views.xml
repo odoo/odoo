@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <!-- Top menu item -->
-        <!--
-            This menu item's purpose is to rename it into 'Sales' in the 
-            case that CRM was installed after Sales
-        -->
-        <record id="sales_team.menu_base_partner" model="ir.ui.menu">
-            <field name="name">Sales</field>
-            <field name="active" eval="True"/>
-        </record>
-
-
         <record id="crm_case_form_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.oppor.inherited.crm</field>
             <field name="model">crm.lead</field>
@@ -49,7 +38,7 @@
 
         <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
         <record id="crm.crm_lead_opportunities" model="ir.actions.act_window">
-            <field name="context">{'default_type': 'opportunity', 'default_user_id': uid, 'needaction_menu_ref': 'sale.menu_sale_quotations'}</field>
+            <field name="context">{'default_type': 'opportunity', 'default_user_id': uid}</field>
         </record>
 
         <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">

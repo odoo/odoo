@@ -1,17 +1,20 @@
 odoo.define('web_tour.Tip', function(require) {
 "use strict";
 
+var config = require('web.config');
 var core = require('web.core');
 var Widget = require('web.Widget');
 
 var Tip = Widget.extend({
     template: "Tip",
     events: {
+        click: '_onTipClicked',
         mouseenter: "_to_info_mode",
         mouseleave: "_to_bubble_mode",
     },
     /**
-     * @param {info} [Object] description of the tip, containing the following keys:
+     * @param {Widget} parent
+     * @param {Object} [info] description of the tip, containing the following keys:
      *  - content [String] the html content of the tip
      *  - event_handlers [Object] description of optional event handlers to bind to the tip:
      *    - event [String] the event name
@@ -40,7 +43,7 @@ var Tip = Widget.extend({
         };
     },
     /**
-     * @param {$anchor} [JQuery] the node on which the tip should be placed
+     * @param {jQuery} $anchor the node on which the tip should be placed
      */
     attach_to: function ($anchor) {
         this.$anchor = $anchor;
@@ -258,6 +261,21 @@ var Tip = Widget.extend({
             height: this.init_height,
             margin: 0,
         });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * On touch devices, closes the tip when clicked.
+     *
+     * @private
+     */
+    _onTipClicked: function () {
+        if (config.device.touch && this.tip_opened) {
+            this._to_bubble_mode();
+        }
     },
 });
 

@@ -12,7 +12,7 @@ from . import test_ir_http
 from . import test_ir_filters
 from . import test_ir_sequence
 from . import test_ir_sequence_date_range
-from . import test_ir_values
+from . import test_ir_default
 from . import test_mail
 from . import test_menu
 from . import test_mimetypes
@@ -20,7 +20,6 @@ from . import test_misc
 from . import test_orm
 from . import test_ormcache
 from . import test_osv
-from . import test_phase
 from . import test_qweb
 from . import test_res_config
 from . import test_res_lang
@@ -33,3 +32,4 @@ from . import test_views
 from . import test_xmlrpc
 from . import test_res_partner_bank
 from . import test_reports
+from . import test_tests_tags

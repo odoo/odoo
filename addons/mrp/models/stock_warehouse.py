@@ -58,7 +58,7 @@ class StockWarehouse(models.Model):
             wh_stock_loc = warehouse.lot_stock_id
             seq = seq_obj.search([('code', '=', 'mrp.production')], limit=1)
             other_pick_type = picking_type_obj.search([('warehouse_id', '=', warehouse.id)], order = 'sequence desc', limit=1)
-            color = other_pick_type and other_pick_type.color or 1
+            color = other_pick_type.color if other_pick_type else 0
             max_sequence = other_pick_type and other_pick_type.sequence or 0
             manu_type = picking_type_obj.create({
                 'name': _('Manufacturing'),

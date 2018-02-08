@@ -3,15 +3,19 @@
 # * lunch
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
+# Martin Trigaux, 2017
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2018
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: 苏州远鼎 <tiexinliu@126.com>, 2016\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +30,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> red X to announce that the order isn't available"
 msgstr ""
+"<span class=\"fa fa-phone text-success\"></span><br><span class=\"fa fa-"
+"check text-success\"></span><br><span class=\"fa fa-times-circle text-"
+"danger\"></span>"
 
 #. module: lunch
 #: model:ir.actions.act_window,help:lunch.lunch_order_line_action_by_supplier
@@ -34,6 +41,9 @@ msgid ""
 "                - Click on the <span class=\"fa fa-check text-success\"></span> to announce that the order is received <br>\n"
 "                - Click on the <span class=\"fa fa-times-circle text-danger\"></span> to announce that the order isn't available"
 msgstr ""
+"<span class=\"fa fa-phone text-success\"></span><br><span class=\"fa fa-"
+"check text-success\"></span><br><span class=\"fa fa-times-circle text-"
+"danger\"></span>"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_order_view_form
@@ -75,7 +85,7 @@ msgid "Add"
 msgstr "添加"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:290
+#: code:addons/lunch/models/lunch.py:294
 #, python-format
 msgid "Alert"
 msgstr "警告"
@@ -91,8 +101,8 @@ msgstr "警告"
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
-msgstr "提醒功能用来提醒员工与定餐相关的事情。创建一个午餐提醒你必须定义他的周期，时间间隔和显示的信息。"
+"                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
+msgstr ""
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_amount
@@ -113,12 +123,17 @@ msgstr "已归档"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
 msgid "Balance Visible"
-msgstr ""
+msgstr "余额可见"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
 msgid "Between"
 msgstr "介于"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_alert_kanban
+msgid "Between:"
+msgstr "介于:"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -153,6 +168,7 @@ msgid ""
 msgstr "能主动(支付)或被动(订单或者支付如果用户想要拿回他的钱)"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Cancel"
@@ -405,7 +421,7 @@ msgstr "我不觉得我很富有"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1690
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1786
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "ID"
@@ -465,14 +481,14 @@ msgid "Lunch Alert"
 msgstr "午餐提醒"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:261
+#: code:addons/lunch/models/lunch.py:265
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "午餐费的现金划转"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:64
-#: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
+#: code:addons/lunch/models/lunch.py:66
+#: model:ir.actions.report,name:lunch.action_report_lunch_order
 #: model:ir.model,name:lunch.model_lunch_order
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #, python-format
@@ -569,19 +585,19 @@ msgid "Note"
 msgstr "笔记"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:221
+#: code:addons/lunch/models/lunch.py:225
 #, python-format
 msgid "Only your lunch manager cancels the orders."
 msgstr "只有午餐经理可以取消订单。"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:190
+#: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager processes the orders."
 msgstr "只有午餐经理可以处理订单。"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:210
+#: code:addons/lunch/models/lunch.py:214
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
 msgstr "只有午餐经理可以把订单设置为已接收。"
@@ -589,6 +605,7 @@ msgstr "只有午餐经理可以把订单设置为已接收。"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_order_id
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #: selection:lunch.cashmove,state:0
@@ -655,6 +672,11 @@ msgid "Price"
 msgstr "价格"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_product_kanban
+msgid "Price:"
+msgstr "价格:"
+
+#. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_product_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_product_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_name
@@ -707,6 +729,7 @@ msgid "Products Tree"
 msgstr "产品树形"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Receive"
 msgstr "收货"
@@ -719,8 +742,8 @@ msgstr "已接收"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
-msgid "Recurrency"
-msgstr "周期"
+msgid "Recurrence"
+msgstr "重新提起"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
@@ -792,7 +815,7 @@ msgid "The company this user is currently working for."
 msgstr "该用户当前工作的公司"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:126
+#: code:addons/lunch/models/lunch.py:129
 #, python-format
 msgid "The date of your order is in the past."
 msgstr "你的订单日期是过去的时间"

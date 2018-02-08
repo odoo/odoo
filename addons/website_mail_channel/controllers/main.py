@@ -6,9 +6,10 @@ import werkzeug
 from datetime import datetime
 from dateutil import relativedelta
 
-from odoo import http, fields, tools
+from odoo import http, fields, tools, _
 from odoo.http import request
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
+
 
 class MailGroup(http.Controller):
     _thread_per_page = 20
@@ -48,7 +49,10 @@ class MailGroup(http.Controller):
             [], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
-        group_data = dict((group.id, {'monthly_message_nbr': message_data.get(group.id, 0)}) for group in groups)
+        group_data = dict(
+            (group.id, {'monthly_message_nbr': message_data.get(group.id, 0),
+                        'members_count': len(group.channel_partner_ids)})
+            for group in groups.sudo())
         return request.render('website_mail_channel.mail_channels', {'groups': groups, 'group_data': group_data})
 
     @http.route(["/groups/is_member"], type='json', auth="public", website=True)
@@ -115,10 +119,9 @@ class MailGroup(http.Controller):
             channel.sudo()._send_confirmation_email(partner_ids, unsubscribe)
             return "email"
 
-
     @http.route([
-        "/groups/<model('mail.channel'):group>",
-        "/groups/<model('mail.channel'):group>/page/<int:page>"
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>''',
+        '''/groups/<model('mail.channel'):group>/page/<int:page>'''
     ], type='http', auth="public", website=True)
     def thread_headers(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
@@ -153,7 +156,7 @@ class MailGroup(http.Controller):
         return request.render('website_mail_channel.group_messages', values)
 
     @http.route([
-        '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>''',
     ], type='http', auth="public", website=True)
     def thread_discussion(self, group, message, mode='thread', date_begin=None, date_end=None, **post):
         if group.channel_type != 'channel':
@@ -180,7 +183,7 @@ class MailGroup(http.Controller):
         return request.render('website_mail_channel.group_message', values)
 
     @http.route(
-        '''/groups/<model('mail.channel'):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
+        '''/groups/<model('mail.channel', "[('channel_type', '=', 'channel')]"):group>/<model('mail.message', "[('model','=','mail.channel'), ('res_id','=',group[0])]"):message>/get_replies''',
         type='json', auth="public", methods=['POST'], website=True)
     def render_messages(self, group, message, **post):
         if group.channel_type != 'channel':
@@ -228,8 +231,20 @@ class MailGroup(http.Controller):
     def confirm_unsubscribe(self, channel, partner_id, token, **kw):
         subscriber = request.env['mail.channel.partner'].search([('channel_id', '=', channel.id), ('partner_id', '=', partner_id)])
         if not subscriber:
-            # not registered, maybe already unsubsribed
-            return request.render('website_mail_channel.invalid_token_subscription')
+            partner = request.env['res.partner'].browse(partner_id).sudo().exists()
+            # FIXME: remove try/except in master
+            try:
+                response = request.render(
+                    'website_mail_channel.not_subscribed',
+                    {'partner_id': partner})
+                # make sure the rendering (and thus error if template is
+                # missing) happens inside the try block
+                response.flatten()
+                return response
+            except ValueError:
+                return _("The address %s is already unsubscribed or was never subscribed to any mailing list") % (
+                    partner.email
+                )
 
         subscriber_token = channel._generate_action_token(partner_id, action='unsubscribe')
         if token != subscriber_token:

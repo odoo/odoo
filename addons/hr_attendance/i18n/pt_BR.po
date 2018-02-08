@@ -7,15 +7,16 @@
 # Martin Trigaux <mat@odoo.com>, 2016
 # Clemilton Clementino <clemylton@hotmail.com>, 2016
 # Mateus Lopes <mateus1@gmail.com>, 2016
-# Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
+# Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatic4@gmail.com>, 2017
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2017
+# Silmar <pinheirosilmar@gmail.com>, 2017
 # falexandresilva <falexandresilva@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
+"POT-Creation-Date: 2017-12-13 14:36+0000\n"
+"PO-Revision-Date: 2017-12-13 14:36+0000\n"
 "Last-Translator: falexandresilva <falexandresilva@gmail.com>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -62,11 +63,6 @@ msgid "Another good day's work! See you soon!"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Apply"
-msgstr "Aplicar"
-
-#. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_attendance_ids
@@ -84,17 +80,13 @@ msgid "Attendance Analysis"
 msgstr "Análise do Atendimento"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
-msgid "Attendance Settings"
-msgstr ""
-
-#. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_action_employee
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_kiosk_mode
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_root
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_view_attendances
 #: model:ir.ui.view,arch_db:hr_attendance.hr_department_view_kanban
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Attendances"
 msgstr "Presenças"
 
@@ -102,11 +94,6 @@ msgstr "Presenças"
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_barcode
 msgid "Badge ID"
 msgstr ""
-
-#. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
-msgid "Cancel"
-msgstr "Cancelar"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:85
@@ -126,13 +113,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:111
+#: code:addons/hr_attendance/models/hr_employee.py:108
 #, python-format
 msgid "Cannot perform check in or check out on multiple employees."
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/models/hr_employee.py:125
+#: code:addons/hr_attendance/models/hr_employee.py:122
 #, python-format
 msgid ""
 "Cannot perform check out on %(empl_name)s, could not find corresponding "
@@ -167,6 +154,11 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:49
 #, python-format
 msgid "Check out"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Check-In/Out"
 msgstr ""
 
 #. module: hr_attendance
@@ -217,7 +209,6 @@ msgstr ""
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
 msgid "Configuration"
 msgstr "Configuração"
 
@@ -280,7 +271,8 @@ msgid "Employee Image"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_base_config_settings_group_attendance_use_pin
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings_group_attendance_use_pin
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Employee PIN"
 msgstr ""
 
@@ -302,25 +294,8 @@ msgid "Employees"
 msgstr "Funcionários"
 
 #. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid ""
-"Employees do not need to enter their PIN to check in manually in the \"Kiosk"
-" Mode\"."
-msgstr ""
-
-#. module: hr_attendance
-#: selection:base.config.settings,group_attendance_use_pin:0
-msgid "Employees must enter their PIN to check in manually in the \"Kiosk Mode\"."
-msgstr ""
-
-#. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_use_pin
 msgid "Enable PIN use"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model.fields,help:hr_attendance.field_base_config_settings_group_attendance_use_pin
-msgid "Enable or disable employee PIN identification at check in"
 msgstr ""
 
 #. module: hr_attendance
@@ -493,6 +468,7 @@ msgstr "Gerente"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_manual_attendance
+#: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
 msgstr "Frequência Manual"
 
@@ -570,7 +546,7 @@ msgid "Please return to the main menu."
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.actions.report.xml,name:hr_attendance.hr_employee_print_badge
+#: model:ir.actions.report,name:hr_attendance.hr_employee_print_badge
 msgid "Print Badge"
 msgstr ""
 
@@ -594,9 +570,24 @@ msgid "Select Employee"
 msgstr ""
 
 #. module: hr_attendance
-#: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_config
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
 msgid "Settings"
 msgstr "Configurações"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed In"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.view_employee_filter_inherit_hr_attendance
+msgid "Signed Out"
+msgstr ""
 
 #. module: hr_attendance
 #: sql_constraint:hr.employee:0
@@ -631,6 +622,15 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: model:res.groups,comment:hr_attendance.group_hr_attendance
+msgid ""
+"The user will gain access to the human resources attendance menu, enabling "
+"him to manage his own attendance."
+msgstr ""
+"O usuário terá acesso ao menu de atendimento de recursos humanos, permitindo"
+" que ele gerencie seu próprio atendimento."
+
+#. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
 msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
@@ -646,6 +646,11 @@ msgstr ""
 #: model:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Today"
 msgstr "Hoje"
+
+#. module: hr_attendance
+#: model:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Use PIN codes to check in in Kiosk Mode"
+msgstr ""
 
 #. module: hr_attendance
 #. openerp-web
@@ -670,7 +675,7 @@ msgstr "Bem Vindo"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:11
 #, python-format
 msgid "Welcome to"
-msgstr ""
+msgstr "Bem vindo ao"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_worked_hours
@@ -687,18 +692,6 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:105
 #, python-format
 msgid "You cannot duplicate an attendance."
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_base_config_settings
-msgid "base.config.settings"
-msgstr "base.config.settings"
-
-#. module: hr_attendance
-#. openerp-web
-#: code:addons/hr_attendance/static/src/js/presence_widgets.js:20
-#, python-format
-msgid "employee presence<br/>green: checked in<br/>red: checked out"
 msgstr ""
 
 #. module: hr_attendance
@@ -719,3 +712,8 @@ msgstr "ok"
 #, python-format
 msgid "or"
 msgstr "ou"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

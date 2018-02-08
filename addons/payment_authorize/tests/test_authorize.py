@@ -3,19 +3,17 @@
 import hashlib
 import hmac
 import time
-import unittest
-from lxml import objectify
 from werkzeug import urls
+from lxml import objectify
 
 import odoo
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_authorize.controllers.main import AuthorizeController
-from odoo.tools import mute_logger, pycompat
+from odoo.tools import mute_logger
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class AuthorizeCommon(PaymentAcquirerCommon):
 
     def setUp(self):
@@ -28,8 +26,7 @@ class AuthorizeCommon(PaymentAcquirerCommon):
         # self.authorize.auto_confirm = 'confirm_so'
 
 
-@odoo.tests.common.at_install(True)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class AuthorizeForm(AuthorizeCommon):
 
     def _authorize_generate_hashing(self, values):
@@ -39,7 +36,7 @@ class AuthorizeForm(AuthorizeCommon):
             values['x_fp_timestamp'],
             values['x_amount'],
         ]) + '^'
-        return hmac.new(str(values['x_trans_key']), data, hashlib.md5).hexdigest()
+        return hmac.new(values['x_trans_key'].encode('utf-8'), data.encode('utf-8'), hashlib.md5).hexdigest()
 
     def test_10_Authorize_form_render(self):
         self.assertEqual(self.authorize.environment, 'test', 'test without test environment')
@@ -89,13 +86,16 @@ class AuthorizeForm(AuthorizeCommon):
         res = self.authorize.render('SO004', 320.0, self.currency_usd.id, values=self.buyer_values)
         # check form result
         tree = objectify.fromstring(res)
-        self.assertEqual(tree.get('action'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong form POST url')
+
+        data_set = tree.xpath("//input[@name='data_set']")
+        self.assertEqual(len(data_set), 1, 'Authorize: Found %d "data_set" input instead of 1' % len(data_set))
+        self.assertEqual(data_set[0].get('data-action-url'), 'https://test.authorize.net/gateway/transact.dll', 'Authorize: wrong data-action-url POST url')
         for el in tree.iterfind('input'):
-            values = list(pycompat.values(el.attrib))
-            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state']:
+            values = list(el.attrib.values())
+            if values[1] in ['submit', 'x_fp_hash', 'return_url', 'x_state', 'x_ship_to_state', 'data_set']:
                 continue
             self.assertEqual(
-                unicode(values[2], "utf-8"),
+                values[2],
                 form_values[values[1]],
                 'Authorize: wrong value for input %s: received %s instead of %s' % (values[1], values[2], form_values[values[1]])
             )
@@ -178,7 +178,9 @@ class AuthorizeForm(AuthorizeCommon):
         # check state
         self.assertEqual(tx.state, 'error', 'Authorize: erroneous validation did not put tx into error state')
 
-    @unittest.skip("Authorize s2s test disabled: We do not want to overload Authorize.net with runbot's requests")
+
+@odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
+class AuthorizeForm(AuthorizeCommon):
     def test_30_authorize_s2s(self):
         # be sure not to do stupid thing
         authorize = self.authorize
@@ -209,7 +211,7 @@ class AuthorizeForm(AuthorizeCommon):
             'acquirer_id': authorize.id,
             'type': 'server2server',
             'currency_id': self.currency_usd.id,
-            'reference': 'test_ref_%s' % odoo.fields.Date.today(),
+            'reference': 'test_ref_%s' % int(time.time()),
             'payment_token_id': payment_token.id,
             'partner_id': self.buyer_id,
 
@@ -251,3 +253,20 @@ class AuthorizeForm(AuthorizeCommon):
         self.assertEqual(transaction.state, 'authorized')
         transaction.action_void()
         self.assertEqual(transaction.state, 'cancel')
+
+        # try charging an unexisting profile
+        ghost_payment_token = payment_token.copy()
+        ghost_payment_token.authorize_profile = '99999999999'
+        # create normal s2s transaction
+        transaction = self.env['payment.transaction'].create({
+            'amount': 500,
+            'acquirer_id': authorize.id,
+            'type': 'server2server',
+            'currency_id': self.currency_usd.id,
+            'reference': 'test_ref_%s' % int(time.time()),
+            'payment_token_id': ghost_payment_token.id,
+            'partner_id': self.buyer_id,
+
+        })
+        transaction.authorize_s2s_do_transaction()
+        self.assertEqual(transaction.state, 'error')

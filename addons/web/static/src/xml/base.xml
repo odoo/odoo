@@ -35,15 +35,15 @@
         </li>
         <li t-if="widget.attrs.context || widget.field.context" data-item="context">
             <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.attrs.context || widget.field.context"/>
+            <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
         </li>
         <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
             <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.attrs.domain || widget.field.domain"/>
+            <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
-        <li t-if="widget.attrs.modifiers and widget.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="widget.attrs.modifiers"/>
+            <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
             <span class="oe_tooltip_technical_title">Change default:</span>
@@ -90,9 +90,9 @@
             <span class="oe_tooltip_technical_title">Context:</span>
             <t t-esc="node.attrs.context || widget.field.context"/>
         </li>
-        <li t-if="node.attrs.modifiers and node.attrs.modifiers != '{}'" data-item="modifiers">
+        <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="node.attrs.modifiers"/>
+            <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
         </li>
         <li t-if="node.attrs.special" data-item="special">
             <span class="oe_tooltip_technical_title">Special:</span>
@@ -177,8 +177,6 @@
     </div>
 </form>
 
-<div t-name="ActionManager" class="o_content"/>
-
 <t t-name="ControlPanel">
     <div class="o_control_panel">
         <ol class="breadcrumb"/>
@@ -201,9 +199,9 @@
     </div>
 </t>
 
-<t t-name="ViewManager.switch-buttons">
+<t t-name="ControlPanel.SwitchButtons">
     <t t-foreach="views" t-as="view">
-        <button type="button" t-att-accesskey="view.accesskey"
+        <button type="button" t-att-accesskey="view.accessKey"
             t-attf-class="btn btn-icon fa fa-lg #{view.icon} o_cp_switch_#{view.type}"
             t-att-aria-label="view.type"
             t-att-data-view-type="view.type" t-att-title="view.label"/>
@@ -214,13 +212,13 @@
     <li class="o_debug_manager">
         <a href="#" title="Open Developer Tools" class="dropdown-toggle" data-toggle="dropdown">
             <span class="fa fa-bug"/>
-            <b class="caret"/>
         </a>
         <ul class="dropdown-menu o_debug_dropdown" role="menu"/>
     </li>
 </t>
 <t t-name="WebClient.DebugManager.Global">
     <li><a href="#" data-action="perform_js_tests">Run JS Tests</a></li>
+    <li><a href="#" data-action="perform_js_mobile_tests">Run JS Mobile Tests</a></li>
     <li><a href="#" data-action="select_view">Open View</a></li>
     <t t-if="manager._events">
         <li class="divider"/>
@@ -229,6 +227,7 @@
     </t>
     <li class="divider o_debug_leave_section"/>
     <li><a href="#" data-action="split_assets">Activate Assets Debugging</a></li>
+    <li><a href="#" data-action="regenerateAssets">Regenerate Assets Bundles</a></li>
     <li><a href="#" data-action="leave_debug_mode">Leave the Developer Tools</a></li>
 </t>
 <t t-name="WebClient.DebugManager.Action">
@@ -258,14 +257,25 @@
         <li class="divider"/>
         <t t-if="view.type === 'form'">
             <li><a href="#" data-action="set_defaults">Set Defaults</a></li>
-            <t t-if="view.controller.getSelectedIds().length === 1">
+            <t t-if="controller.getSelectedIds().length === 1">
                 <li><a href="#" data-action="get_metadata">View Metadata</a></li>
             </t>
         </t>
         <li><a href="#" data-action="fvg">Fields View Get</a></li>
         <t t-if="can_edit">
-            <li><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.type)"/>View</a></li>
-            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="searchview.fields_view.view_id">Edit SearchView</a></li>
+            <li>
+              <a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="view.fieldsView.view_id">
+                <t t-if="view.type == 'form'">Edit Form view</t>
+                <t t-elif="view.type == 'list'">Edit List view</t>
+                <t t-elif="view.type == 'kanban'">Edit Kanban view</t>
+                <t t-elif="view.type == 'graph'">Edit Graph view</t>
+                <t t-elif="view.type == 'gantt'">Edit Gantt view</t>
+                <t t-elif="view.type == 'pivot'">Edit Pivot view</t>
+                <t t-elif="view.type == 'calendar'">Edit Calendar view</t>
+                <t t-else="1">Edit view, type: <t t-esc="_.str.capitalize(view.type)"/></t>
+              </a>
+            </li>
+            <li t-if="searchview and searchview.$el.is(':visible')"><a href="#" data-action="edit" data-model="ir.ui.view" t-att-data-id="action.searchFieldsView.view_id">Edit SearchView</a></li>
         </t>
     </t>
 </t>
@@ -335,12 +345,12 @@
                         <t t-if="item.create_uid and item.create_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Created by : </b><br/>
-                            <t t-raw="item.create_uid[1] + ' ' + item.create_date"/>
+                            <t t-raw="item.create_uid[1]"/>  <t t-esc="item.create_date_string" />
                         </t>
                         <t t-if="item.create_uid and item.write_uid and item.create_uid[0] != item.write_uid[0]" t-set="item.title">
                             <t t-raw="item.title"/><br/>
                             <b>Modified by : </b><br/>
-                            <t t-raw="item.write_uid[1] + ' ' + item.write_date"/>
+                            <t t-raw="item.write_uid[1]"/>  <t t-esc="item.write_date_string"/>
                         </t>
                     </t>
                     <a t-att-title="item.title or None" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url">
@@ -364,41 +374,6 @@
     </t>
 </t>
 
-<div t-name="ListView" class="table-responsive">
-    <table class="o_list_view table table-condensed table-striped">
-        <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
-        <thead>
-            <tr t-if="options.header">
-                <t t-foreach="columns" t-as="column">
-                    <th t-if="column.meta">
-                        <t t-esc="column.string"/>
-                    </th>
-                </t>
-                <th t-if="options.selectable" class="o_list_record_selector" width="1">
-                    <div class="o_checkbox">
-                        <input type="checkbox"/><span/>
-                    </div>
-                </th>
-                <t t-foreach="columns" t-as="column">
-                    <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
-                        t-attf-class="#{((options.sortable and column.sortable and column.tag !== 'button') ? 'o_column_sortable' : '')}"
-                            t-att-width="column.width()">
-                        <t t-if="column.tag !== 'button'"><t t-raw="column.heading()"/></t>
-                    </th>
-                </t>
-                <th t-if="options.deletable" class="o_list_record_delete"/>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td t-if="options.selectable"/>
-                <td t-foreach="aggregate_columns" t-as="column" t-att-data-field="column.id" t-att-title="column.label">
-                </td>
-                <td t-if="options.deletable" class="o_list_record_delete"/>
-            </tr>
-        </tfoot>
-    </table>
-</div>
 <t t-name="ListView.buttons">
     <div class="o_list_buttons">
         <t t-if="widget.is_action_enabled('create')">
@@ -448,7 +423,7 @@
                 </label>
             </td>
             <td class="oe_form_required">
-                <select id="formview_default_fields">
+                <select id="formview_default_fields" class="o_input">
                     <option value=""/>
                     <option t-foreach="args.fields" t-as="field"
                             t-att-value="field.name">
@@ -465,7 +440,7 @@
                 </label>
             </td>
             <td>
-                <select id="formview_default_conditions">
+                <select id="formview_default_conditions" class="o_input">
                     <option value=""/>
                     <option t-foreach="args.conditions" t-as="cond"
                             t-att-value="cond.name + '=' + cond.value">
@@ -493,52 +468,6 @@
         </tr>
     </table>
 </form>
-
-<t t-name="FormRenderingForm">
-    <div t-attf-class="#{classnames}">
-    </div>
-</t>
-<t t-name="FormRenderingSheet">
-    <div class="o_form_sheet_bg">
-        <div t-attf-class="o_form_sheet #{classnames}"/>
-    </div>
-</t>
-<div t-name="FormRenderingOuterGroup" class="o_group">
-    <t t-if="string" t-call="FormRenderingSeparator"/>
-</div>
-<table t-name="FormRenderingInnerGroup" class="o_group o_inner_group">
-    <t t-if="string">
-        <tr><td><t t-call="FormRenderingSeparator"/></td></tr>
-    </t>
-</table>
-<t t-name="FormRenderingNotebook">
-    <div class="o_notebook">
-        <ul t-attf-class="nav nav-tabs #{classnames}" role="tablist">
-            <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a role="tab" t-attf-href="##{page.id}" t-att-accesskey="page.accesskey" data-toggle="tab" disable_anchor="true">
-                    <t t-esc="page.string"/>
-                </a>
-            </li>
-        </ul>
-        <div class="tab-content">
-            <div role="tabpanel" t-foreach="pages" t-as="page" t-attf-class="tab-pane #{classnames}" t-att-id="id">
-                <t t-raw="page.contents"/>
-            </div>
-        </div>
-    </div>
-</t>
-<t t-name="FormRenderingSeparator">
-    <div t-attf-class="o_horizontal_separator">
-        <t t-esc="string"/>
-    </div>
-</t>
-<t t-name="FormRenderingLabel">
-    <label t-att-for="_for"
-        t-attf-class="#{classnames} o_form_label #{help ? 'o_form_label_help ' : ''}">
-        <t t-esc="string"/>
-    </label>
-</t>
-
 <t t-name="GraphView.buttons">
     <div class="btn-group btn-group-sm" role="group">
         <button class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
@@ -558,8 +487,8 @@
         <button class="btn btn-default fa fa-pie-chart o_graph_button" title="Pie Chart" data-mode="pie"/>
     </div>
 </t>
-<div t-name="GraphView.error" class="oe_view_nocontent" >
-    <p><strong><t t-esc="title"/></strong></p>
+<div t-name="GraphView.error" class="o_view_nocontent" >
+    <p class="o_view_nocontent_empty_folder"><t t-esc="title"/></p>
     <p><t t-esc="description"/></p>
 </div>
 
@@ -610,18 +539,17 @@
         </t>
     </ul>
 </t>
-<div t-name="PivotView.nodata" class="oe_view_nocontent" >
-    <p><strong>No data to display.</strong></p>
-    <p>
-        No data available for this pivot table.  Try to add some records, or make sure
-        that there is at least one measure and no active filter in the search bar.
-    </p>
+<div t-name="PivotView.nodata" class="o_view_nocontent_container" >
+    <div class="o_view_nocontent">
+        <p class="o_view_nocontent_empty_folder">
+            No data to display
+        </p><p>
+            Try to add some records, or make sure
+            that there is at least one measure and no active filter in the search bar.
+        </p>
+    </div>
 </div>
 
-<t t-name="Widget">
-    Unhandled widget
-    <t t-js="dict">console.warn('Unhandled widget', dict.widget);</t>
-</t>
 <t t-name="FormSelection">
     <div class="btn-group o_selection">
         <a href="#" data-toggle="dropdown"><span class="o_status"/></a>
@@ -860,7 +788,7 @@
 </t>
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
-        <select class="o_input o_field_widget">
+        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' hidden' or '')">
             <option/>
             <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
         </select>
@@ -868,24 +796,34 @@
 </t>
 <t t-name="FieldMany2ManyTag">
     <t t-foreach="elements" t-as="el">
-        <span t-attf-class="badge dropdown o_tag_color_#{el[colorField] || 10}" t-att-data-color="el[colorField] || 10" t-att-data-index="el_index" t-att-data-id="el.id">
-            <span class="o_badge_text"><t t-raw="el.display_name"/></span>
+        <t t-set="color" t-value="el[colorField] || 0"/>
+        <span t-attf-class="badge dropdown o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id">
+            <span class="o_badge_text"><t t-esc="el.display_name"/></span>
             <span t-if="!readonly" class="fa fa-times o_delete"/>
         </span>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag.colorpicker">
-    <ul class="o_colorpicker dropdown-menu" role="menu">
-        <li t-foreach="10" t-as="color">
-            <span t-att-data-id="tag_id" t-att-data-color="color" t-attf-class="o_tag_color_#{color}"/>
-        </li>
-        <li>
-            <span t-att-data-id="tag_id" t-att-data-color="10" class="o_tag_color_10"/>
-        </li>
-        <li>
-            Not shown in kanban
-        </li>
-    </ul>
+    <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
+        <ul>
+            <li t-foreach="11" t-as="color">
+                <a href="#"
+                   t-att-data-id="tag_id"
+                   t-att-data-color="color+1"
+                   t-attf-class="o_tag_color_#{color+1}"/>
+            </li>
+            <li> <!-- checkbox for tag color 0 -->
+                <div class="o_hide_in_kanban"
+                     t-att-data-id="tag_id"
+                     t-att-data-color="0">
+                    <div class="o_checkbox">
+                        <input type="checkbox"/>
+                        <span/>
+                    </div> Hide in Kanban
+                </div>
+            </li>
+        </ul>
+    </div>
 </t>
 <t t-name="ProgressBar">
     <div class="o_progressbar">
@@ -945,8 +883,8 @@
         t-att-src='url'
         t-att-border="widget.readonly ? 0 : 1"
         t-att-name="widget.name"
-        t-att-width="widget.node.attrs.img_width || widget.node.attrs.width"
-        t-att-height="widget.node.attrs.img_height || widget.node.attrs.height"/>
+        t-att-width="widget.nodeOptions.size ? widget.nodeOptions.size[0] : widget.attrs.img_width || widget.attrs.width"
+        t-att-height="widget.nodeOptions.size ? widget.nodeOptions.size[1] : widget.attrs.img_height || widget.attrs.height"/>
 </t>
 <t t-name="FieldBinaryFile">
     <a t-if="widget.mode === 'readonly'" href="javascript:void(0)" class="o_form_uri"/>
@@ -1333,7 +1271,7 @@
 </t>
 
 <t t-name="notification-box">
-    <div t-attf-class="o_notification_box alert alert-dismissible alert-{{type}}" role="alert">
+    <div t-attf-class="o_notification_box mb0 alert alert-dismissible alert-{{type}}" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true" class="fa fa-times"></span>
         </button>
@@ -1341,29 +1279,33 @@
 </t>
 
 <t t-name="translation-alert">
-    <t t-foreach="fields" t-as="field">
-        <div>
-            You have updated <strong><t t-esc="field.string"/></strong> (<t t-esc="lang"/>).
-            <a class="oe_field_translate" t-att-name="field.name" href="#">Update translations</a>
-        </div>
-    </t>
+    <div>
+        Please update translations of :
+        <t t-foreach="fields" t-as="field">
+            <strong><a class="oe_field_translate" t-att-name="field.name" href="#"><t t-esc="field.string"/><t t-if="!field_last">, </t></a></strong>
+        </t>
+    </div>
 </t>
 
 <t t-name="UserMenu">
     <li class="o_user_menu">
         <a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" href="#">
             <img class="img-circle oe_topbar_avatar" t-att-src="_s + '/web/static/src/img/user_menu_avatar.png'"/>
-            <span class="oe_topbar_name"/> <span class="caret"></span>
+            <span class="oe_topbar_name"/>
         </a>
         <ul class="dropdown-menu" role="menu">
-            <li><a href="#" data-menu="documentation">Documentation</a></li>
-            <li><a href="#" data-menu="support">Support</a></li>
-            <li class="divider"/>
-            <li><a href="#" data-menu="settings">Preferences</a></li>
-            <li><a href="#" data-menu="account">My Odoo.com account</a></li>
-            <li><a href="#" data-menu="logout">Log out</a></li>
+            <t t-call="UserMenu.Actions"/>
         </ul>
     </li>
+</t>
+
+<t t-name="UserMenu.Actions">
+    <li><a href="#" data-menu="documentation">Documentation</a></li>
+    <li><a href="#" data-menu="support">Support</a></li>
+    <li class="divider"/>
+    <li><a href="#" data-menu="settings">Preferences</a></li>
+    <li><a href="#" data-menu="account">My Odoo.com account</a></li>
+    <li><a href="#" data-menu="logout">Log out</a></li>
 </t>
 
 <t t-name="SwitchCompanyMenu">
@@ -1391,6 +1333,21 @@
         <div class="col-xs-6">
             <img class="img-responsive" t-att-src='_s + "/web/static/src/img/enterprise_upgrade.jpg"' draggable="false"/>
         </div>
+    </div>
+</t>
+
+<t t-name="BaseSetting.Tabs">
+    <t t-foreach="tabItems" t-as="tab">
+        <div class="tab" t-attf-data-key="#{tab.key}">
+            <div class="icon hidden-xs" t-attf-style="background : url('#{imgurl}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-esc="tab.string"/></span>
+        </div>
+    </t>
+</t>
+
+<t t-name="BaseSetting.SearchHeader">
+    <div class="settingSearchHeader o_hidden">
+        <img class="icon" t-att-src="imgurl"></img>
+        <span class="appName"><t t-esc="string"/></span>
     </div>
 </t>
 

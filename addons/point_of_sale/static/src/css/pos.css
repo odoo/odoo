@@ -2285,7 +2285,7 @@ td {
     width: auto;
     line-height: 50px;
     margin-top: -1px;
-    border-top: solid 3px #6EC89B;
+    border-top: solid 3px rgba(60,60,60,0.1);
     
 }
 .pos .popup.popup-selection .selection-item {
@@ -2295,8 +2295,11 @@ td {
     text-align: left;
     padding: 0px 16px;
 }
-.pos .popup.popup-selection .selection-item:nth-child(even) {
+.pos .popup.popup-selection .selection-item:nth-child(odd) {
     background: rgb(247,247,247);
+}
+.pos .popup.popup-selection .selection-item.selected {
+    background: #6EC89B;
 }
 .pos .popup.popup-number {
     width: 300px;

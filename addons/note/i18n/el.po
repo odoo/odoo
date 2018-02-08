@@ -1,28 +1,32 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * note
-#
+# 
 # Translators:
-# Goutoudis Kostas <goutoudis@gmail.com>, 2015-2016
+# Kostas Goutoudis <goutoudis@gmail.com>, 2017
+# Αλέξανδρος Καπετάνιος <alexandros@gnugr.org>, 2017
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# George Tarasidis <george_tarasidis@yahoo.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:06+0000\n"
-"PO-Revision-Date: 2016-01-02 22:27+0000\n"
-"Last-Translator: Goutoudis Kostas <goutoudis@gmail.com>\n"
-"Language-Team: Greek (http://www.transifex.com/odoo/odoo-9/language/el/)\n"
-"Language: el\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
+"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2017\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_open
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "Ενεργό"
+msgstr "Ενεργή"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
@@ -35,6 +39,11 @@ msgid "By sticky note Category"
 msgstr "Ανά Κατηγορία αυτοκόλλητης σημείωσης"
 
 #. module: note
+#: model:ir.actions.act_window,help:note.note_tag_action
+msgid "Click to add a new tag."
+msgstr "Κάντε κλικ για να προσθέσετε μια νέα ετικέτα."
+
+#. module: note
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid "Click to add a personal note."
 msgstr "Κάντε κλικ εδώ για να προσθέσετε μία νέα σημείωση."
@@ -43,12 +52,12 @@ msgstr "Κάντε κλικ εδώ για να προσθέσετε μία νέ�
 #: model:ir.model.fields,field_description:note.field_note_note_color
 #: model:ir.model.fields,field_description:note.field_note_tag_color
 msgid "Color Index"
-msgstr "Χρωματισμός Δείκτη"
+msgstr "Χρωματισμός Ευρετήριου"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
-msgstr "Ρυθμίσεις"
+msgstr "Διαμόρφωση"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_create_uid
@@ -88,22 +97,27 @@ msgstr "Φάκελος από προεπιλογή"
 
 #. module: note
 #: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "Μελλοντικές Δραστηριότητες"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Ομαδοποίηση Ανά"
+msgstr "Ομαδοποίηση κατά"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_id
 #: model:ir.model.fields,field_description:note.field_note_stage_id
 #: model:ir.model.fields,field_description:note.field_note_tag_id
 msgid "ID"
-msgstr "ID"
+msgstr "Κωδικός"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note___last_update
 #: model:ir.model.fields,field_description:note.field_note_stage___last_update
 #: model:ir.model.fields,field_description:note.field_note_tag___last_update
 msgid "Last Modified on"
-msgstr "Τελευταία αλλαγή στις"
+msgstr "Τελευταία τροποποίηση στις"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_write_uid
@@ -120,21 +134,25 @@ msgid "Last Updated on"
 msgstr "Τελευταία Ενημέρωση στις"
 
 #. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "Καθυστερημένες Δραστηριότητες"
+
+#. module: note
 #: model:note.stage,name:note.demo_note_stage_03
 #: model:note.stage,name:note.note_stage_03
 msgid "Later"
 msgstr "Αργότερα"
 
 #. module: note
-#: model:note.stage,name:note.note_stage_00
-msgid "New"
-msgstr "Νέο"
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr "Οι Δραστηριότητες μου"
 
 #. module: note
-#: code:addons/note/note.py:165
-#, python-format
-msgid "New Note"
-msgstr "Νέα Σημείωση"
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
+msgstr "Νέα"
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -179,14 +197,21 @@ msgstr "Ιδιοκτήτης"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_user_id
-msgid "Owner of the note stage."
-msgstr "Ιδιοκτήτης κατάστασης σημείωσης,"
+msgid "Owner of the note stage"
+msgstr "Ιδιοκτήτης κατάστασης σημείωσης"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_sequence
 #: model:ir.model.fields,field_description:note.field_note_stage_sequence
 msgid "Sequence"
-msgstr "Ιεράρχηση"
+msgstr "Ακολουθία"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Εμφάνιση όλων των εγγραφών όπου η ημερομηνία επόμενης δράσης είναι πριν από "
+"σήμερα"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note_stage_id
@@ -232,22 +257,30 @@ msgid "Tag name already exists !"
 msgstr "Το όνομα ετικέτας υπάρχει ήδη !"
 
 #. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
 #: model:ir.model.fields,field_description:note.field_note_note_tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model:ir.ui.view,arch_db:note.note_tag_view_form
+#: model:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
 msgstr "Ετικέτες"
 
 #. module: note
-#: model:note.stage,name:note.demo_note_stage_04
 #: model:note.stage,name:note.note_stage_02
 msgid "This Week"
-msgstr "Αυτή την εβδομάδα"
+msgstr "Της Εβδομάδας"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_01
 #: model:note.stage,name:note.note_stage_01
 msgid "Today"
 msgstr "Σήμερα"
+
+#. module: note
+#: model:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Σημερινές Δραστηριότητες"
 
 #. module: note
 #: model:note.stage,name:note.demo_note_stage_02
@@ -258,19 +291,17 @@ msgstr "Αύριο"
 #: model:ir.actions.act_window,help:note.action_note_note
 msgid ""
 "Use notes to organize personal tasks or notes. All\n"
-"            notes are private; no one else will be able to see them. "
-"However\n"
-"            you can share some notes with other people by inviting "
-"followers\n"
+"            notes are private; no one else will be able to see them. However\n"
+"            you can share some notes with other people by inviting followers\n"
 "            on the note. (Useful for meeting minutes, especially if\n"
 "            you activate the pad feature for collaborative writings)."
 msgstr ""
 "Χρησιμοποιήστε τις σημειώσεις για να οργανώσετε τις προσωπικές εργασίες ή "
-"σημειώσεις. Όλες οι σημειώσεις είναι ιδιωτικές, κανείς άλλος δεν θα είναι σε "
-"θέση να τις δει. Ωστόσο, μπορείτε να μοιραστείτε κάποιες σημειώσεις με "
+"σημειώσεις. Όλες οι σημειώσεις είναι ιδιωτικές, κανείς άλλος δεν θα είναι σε"
+" θέση να τις δει. Ωστόσο, μπορείτε να μοιραστείτε κάποιες σημειώσεις με "
 "άλλους ανθρώπους καλώντας τους ακολούθους για τη σημείωση. (Χρήσιμο για "
-"ολιγόλεπτες συναντήσεις, ειδικά αν έχετε ενεργοποιήσει τη λειτουργία pad για "
-"συνεργατικά κείμενα)."
+"ολιγόλεπτες συναντήσεις, ειδικά αν έχετε ενεργοποιήσει τη λειτουργία pad για"
+" συνεργατικά κείμενα)."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage_sequence
@@ -288,53 +319,5 @@ msgid ""
 "You can customize how you process your notes/tasks by adding,\n"
 "            removing or modifying columns."
 msgstr ""
-"Μπορείτε να προσαρμόσετε τον τρόπο που επεξεργάζεστε τις σημειώσεις/εργασίες "
-"σας με την προσθήκη, αφαίρεση ή τροποποίηση στηλών."
-
-#~ msgid "Action Needed"
-#~ msgstr "Απαιτείται ενέργεια"
-
-#~ msgid "Date of the last message posted on the record."
-#~ msgstr "Ημερομηνία του τελευταίου μηνύματος "
-
-#~ msgid "Followers"
-#~ msgstr "Ακόλουθοι"
-
-#~ msgid "Followers (Channels)"
-#~ msgstr "Ακόλουθοι (Κανάλια)"
-
-#~ msgid "Followers (Partners)"
-#~ msgstr "Ακόλουθοι (Συνεργάτες)"
-
-#~ msgid "If checked new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας"
-
-#~ msgid "If checked, new messages require your attention."
-#~ msgstr "Εάν επιλεγεί τα νέα μηνύματα χρειάζονται την προσοχή σας."
-
-#~ msgid "Is Follower"
-#~ msgstr "Είναι Ακόλουθος"
-
-#~ msgid "Last Message Date"
-#~ msgstr "Τελευταία ημερομηνία μηνύματος"
-
-#~ msgid "Messages"
-#~ msgstr "Μηνύματα"
-
-#~ msgid "Messages and communication history"
-#~ msgstr "Μηνύματα και ιστορικό επικοινωνίας"
-
-#~ msgid "Number of Actions"
-#~ msgstr "Αριθμός ενεργειών"
-
-#~ msgid "Number of messages which requires an action"
-#~ msgstr "Πλήθος μηνυμάτων που απαιτούν ενέργεια"
-
-#~ msgid "Number of unread messages"
-#~ msgstr "Πλήθος μη αναγνωσμένων μηνυμάτων"
-
-#~ msgid "Unread Messages"
-#~ msgstr "Αδιάβαστα Μηνύματα"
-
-#~ msgid "Unread Messages Counter"
-#~ msgstr "Μετρητής μη αναγνωσμένων μηνυμάτων"
+"Μπορείτε να προσαρμόσετε τον τρόπο που επεξεργάζεστε τις σημειώσεις/εργασίες"
+" σας με την προσθήκη, αφαίρεση ή τροποποίηση στηλών."

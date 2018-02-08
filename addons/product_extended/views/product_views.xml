@@ -23,6 +23,7 @@
             <field name="model">product.product</field>
             <field name="priority">4</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
             <field name="arch" type="xml">
                <div name="standard_price_uom" position="after">
                     <button name="compute_price"

@@ -26,7 +26,7 @@ class AccountInvoice(models.Model):
     l10n_ch_isr_valid = fields.Boolean(compute='_compute_l10n_ch_isr_valid', help='Boolean value. True iff all the data required to generate the ISR are present')
 
     l10n_ch_isr_sent = fields.Boolean(defaut=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
-    l10n_ch_currency_name = fields.Char(related='currency_id.name', help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
+    l10n_ch_currency_name = fields.Char(related='currency_id.name', string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
 
     @api.depends('partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
     def _compute_l10n_ch_isr_postal(self):
@@ -59,10 +59,11 @@ class AccountInvoice(models.Model):
         """ The ISR reference number is 27 characters long. The first 12 of them
         contain the postal account number of this ISR's issuer, removing the zeros
         at the beginning and filling the empty places with zeros on the right if it is
-        too short. The 15 other characters contain an internal reference identifying
+        too short. The next 14 characters contain an internal reference identifying
         the invoice. For this, we use the invoice sequence number, removing each
         of its non-digit characters, and pad the unused spaces on the left of
-        this number with zeros.
+        this number with zeros. The last character of the ISR number is the result
+        of a recursive modulo 10 on its first 26 characters.
         """
         def _space_isr_number(isr_number):
             to_treat = isr_number
@@ -81,9 +82,9 @@ class AccountInvoice(models.Model):
                 invoice_ref = re.sub('[^\d]', '', record.number)
                 #We only keep the last digits of the sequence number if it is too long
                 invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
-                internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH)
+                internal_ref = invoice_ref.zfill(l10n_ch_ISR_NUMBER_LENGTH - l10n_ch_ISR_NUMBER_ISSUER_LENGTH - 1) # -1 for mod10r check character
 
-                record.l10n_ch_isr_number = invoice_issuer_ref + internal_ref
+                record.l10n_ch_isr_number = mod10r(invoice_issuer_ref + internal_ref)
                 record.l10n_ch_isr_number_spaced = _space_isr_number(record.l10n_ch_isr_number)
 
     @api.depends('currency_id.name', 'amount_total', 'partner_bank_id.bank_id', 'number', 'partner_bank_id.l10n_ch_postal', 'partner_bank_id.bank_id.l10n_ch_postal_eur', 'partner_bank_id.bank_id.l10n_ch_postal_chf')
@@ -166,3 +167,10 @@ class AccountInvoice(models.Model):
             rslt['context']['l10n_ch_mark_isr_as_sent'] = True
 
         return rslt
+
+    @api.multi
+    @api.returns('self', lambda value: value.id)
+    def message_post(self, **kwargs):
+        if self.env.context.get('l10n_ch_mark_isr_as_sent'):
+            self.filtered(lambda inv: not inv.l10n_ch_isr_sent).write({'l10n_ch_isr_sent': True})
+        return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)

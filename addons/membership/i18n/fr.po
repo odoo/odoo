@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Richard Mathot <rim@odoo.com>, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
@@ -14,16 +14,17 @@
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Clo <clo@odoo.com>, 2016
 # Lucas Deliege <lud@odoo.com>, 2016
-# Friderici Claude <claude@friderici.org>, 2016
+# Friderici Claude, 2016
 # Melanie Bernard <mbe@odoo.com>, 2016
-# Quentin THEURET <quentin@theuret.net>, 2017
+# Quentin THEURET <odoo@kerpeo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,18 @@ msgid "# Waiting"
 msgstr "Nb. en attente"
 
 #. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<i class=\"fa fa-clock-o\" aria-hidden=\"true\"/><strong> From: </strong>"
+msgstr "<i aria-hidden=\"true\" class=\"fa fa-clock-o\"/><strong/>"
+
+#. module: membership
+#: model:ir.ui.view,arch_db:membership.membership_products_kanban
+msgid "<strong> To:</strong>"
+msgstr "<strong/>"
+
+#. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_associate_member
+#: model:ir.model.fields,help:membership.field_res_users_associate_member
 msgid ""
 "A member with whom you want to associate your membership. It will consider "
 "the membership state of the associated member."
@@ -83,6 +95,7 @@ msgstr "Montant pour l'adhésion"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_associate_member_id
 #: model:ir.model.fields,field_description:membership.field_res_partner_associate_member
+#: model:ir.model.fields,field_description:membership.field_res_users_associate_member
 #: model:ir.ui.view,arch_db:membership.view_res_partner_member_filter
 msgid "Associate Member"
 msgstr "Membre associé"
@@ -104,6 +117,7 @@ msgstr "Annuler"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_cancel
+#: model:ir.model.fields,field_description:membership.field_res_users_membership_cancel
 msgid "Cancel Membership Date"
 msgstr "Date d'annulation de l'adhésion"
 
@@ -125,6 +139,7 @@ msgid "Category"
 msgstr "Catégorie"
 
 #. module: membership
+#: model:ir.model.fields,help:membership.field_product_product_membership
 #: model:ir.model.fields,help:membership.field_product_template_membership
 msgid "Check if the product is eligible for membership."
 msgstr "Cochez si l'article est éligible pour l'adhésion"
@@ -145,6 +160,11 @@ msgstr "Société"
 #: model:ir.ui.menu,name:membership.menu_marketing_config_association
 msgid "Configuration"
 msgstr "Configuration"
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: membership
 #: model:ir.ui.view,arch_db:membership.view_partner_tree
@@ -171,6 +191,7 @@ msgstr "État actuel de l'adhésion"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_state
+#: model:ir.model.fields,field_description:membership.field_res_users_membership_state
 msgid "Current Membership Status"
 msgstr "État actuel de l'adhésion"
 
@@ -180,8 +201,10 @@ msgid "Customers"
 msgstr "Clients"
 
 #. module: membership
+#: model:ir.model.fields,help:membership.field_product_product_membership_date_from
 #: model:ir.model.fields,help:membership.field_product_template_membership_date_from
 #: model:ir.model.fields,help:membership.field_res_partner_membership_start
+#: model:ir.model.fields,help:membership.field_res_users_membership_start
 msgid "Date from which membership becomes active."
 msgstr "Date à partir de laquelle l'adhésion devient active."
 
@@ -192,12 +215,15 @@ msgstr "Date à laquelle l'adhésion du membre a été effective."
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_cancel
+#: model:ir.model.fields,help:membership.field_res_users_membership_cancel
 msgid "Date on which membership has been cancelled"
 msgstr "Date à laquelle l'adhésion a été annulée"
 
 #. module: membership
+#: model:ir.model.fields,help:membership.field_product_product_membership_date_to
 #: model:ir.model.fields,help:membership.field_product_template_membership_date_to
 #: model:ir.model.fields,help:membership.field_res_partner_membership_stop
+#: model:ir.model.fields,help:membership.field_res_users_membership_stop
 msgid "Date until which membership remains active."
 msgstr "Date jusqu'à laquelle l'adhésion reste active."
 
@@ -206,7 +232,7 @@ msgstr "Date jusqu'à laquelle l'adhésion reste active."
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_display_name
 #: model:ir.model.fields,field_description:membership.field_report_membership_display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom affiché"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_report_membership_tot_earned
@@ -257,6 +283,7 @@ msgstr "Prévisions"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_free_member
+#: model:ir.model.fields,field_description:membership.field_res_users_free_member
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
@@ -327,6 +354,7 @@ msgstr "Facturé/Payé/Gratuit"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_state
+#: model:ir.model.fields,help:membership.field_res_users_membership_state
 msgid ""
 "It indicates the membership state.\n"
 "-Non Member: A partner who has not applied for any membership.\n"
@@ -413,8 +441,10 @@ msgstr "Analyse des membres"
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_membership_invoice_product_id
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_membership_id
+#: model:ir.model.fields,field_description:membership.field_product_product_membership
 #: model:ir.model.fields,field_description:membership.field_product_template_membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_member_lines
+#: model:ir.model.fields,field_description:membership.field_res_users_member_lines
 #: model:ir.ui.view,arch_db:membership.view_partner_form
 #: model:ir.ui.view,arch_db:membership.view_report_membership_graph1
 #: model:ir.ui.view,arch_db:membership.view_report_membership_pivot
@@ -424,6 +454,7 @@ msgstr "Adhésion"
 
 #. module: membership
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_amount
+#: model:ir.model.fields,field_description:membership.field_res_users_membership_amount
 msgid "Membership Amount"
 msgstr "Montant de l'adhésion"
 
@@ -438,8 +469,10 @@ msgid "Membership Duration"
 msgstr "Durée d'adhésion"
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_product_membership_date_to
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_to
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_stop
+#: model:ir.model.fields,field_description:membership.field_res_users_membership_stop
 msgid "Membership End Date"
 msgstr "Date de fin d'adhésion"
 
@@ -475,8 +508,10 @@ msgid "Membership Products"
 msgstr "Articles d'adhésion"
 
 #. module: membership
+#: model:ir.model.fields,field_description:membership.field_product_product_membership_date_from
 #: model:ir.model.fields,field_description:membership.field_product_template_membership_date_from
 #: model:ir.model.fields,field_description:membership.field_res_partner_membership_start
+#: model:ir.model.fields,field_description:membership.field_res_users_membership_start
 msgid "Membership Start Date"
 msgstr "Date de début d'adhésion"
 
@@ -549,7 +584,6 @@ msgid "Paid Member"
 msgstr "Membre payant"
 
 #. module: membership
-#: model:ir.model,name:membership.model_res_partner
 #: model:ir.model.fields,field_description:membership.field_membership_membership_line_partner
 msgid "Partner"
 msgstr "Partenaire"
@@ -600,6 +634,7 @@ msgstr "Vendeur"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_free_member
+#: model:ir.model.fields,help:membership.field_res_users_free_member
 msgid "Select if you want to give free membership."
 msgstr "Sélectionner si vous voulez donner une adhésion gratuite."
 
@@ -625,6 +660,7 @@ msgstr "Taxes"
 
 #. module: membership
 #: model:ir.model.fields,help:membership.field_res_partner_membership_amount
+#: model:ir.model.fields,help:membership.field_res_users_membership_amount
 msgid "The price negotiated by the partner"
 msgstr "Prix négocié par le partenaire"
 

@@ -4,14 +4,14 @@
 # 
 # Translators:
 # krnkris <krnkris@freemail.hu>, 2016
-# Oregional <geza.nagy@oregional.hu>, 2016
+# gezza <geza.nagy@oregional.hu>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-29 10:26+0000\n"
-"PO-Revision-Date: 2015-09-29 10:26+0000\n"
+"POT-Creation-Date: 2017-12-13 14:37+0000\n"
+"PO-Revision-Date: 2017-12-13 14:37+0000\n"
 "Last-Translator: Martin Trigaux <mat@odoo.com>, 2016\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -22,6 +22,7 @@ msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_cache
+#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
 msgid "Cache"
 msgstr "Tároló"
 
@@ -31,14 +32,9 @@ msgid "Cache compute user"
 msgstr "Felhasználó számláló tároló"
 
 #. module: pos_cache
-#: model:ir.model.fields,field_description:pos_cache.field_pos_config_cache_ids
-msgid "Cache ids"
-msgstr "Tároló id azonosítók"
-
-#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_config_id
-msgid "Config id"
-msgstr "Konfigurációs id azonosító"
+msgid "Config"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_create_uid
@@ -61,6 +57,11 @@ msgid "ID"
 msgstr "Azonosító ID"
 
 #. module: pos_cache
+#: model:ir.ui.view,arch_db:pos_cache.pos_config_view_form_inherit_pos_cache
+msgid "Invalidate cache"
+msgstr ""
+
+#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache___last_update
 msgid "Last Modified on"
 msgstr "Utoljára frissítve ekkor"
@@ -77,7 +78,7 @@ msgstr "Utoljára frissítve "
 
 #. module: pos_cache
 #. openerp-web
-#: code:addons/pos_cache/static/src/js/pos_cache.js:36
+#: code:addons/pos_cache/static/src/js/pos_cache.js:39
 #, python-format
 msgid "Loading"
 msgstr "Betöltés"
@@ -88,19 +89,21 @@ msgid "Oldest cache time"
 msgstr "Legrégebbi tároló művelet ideje"
 
 #. module: pos_cache
+#: model:ir.actions.server,name:pos_cache.refresh_pos_cache_cron_ir_actions_server
+#: model:ir.cron,cron_name:pos_cache.refresh_pos_cache_cron
+#: model:ir.cron,name:pos_cache.refresh_pos_cache_cron
+msgid "PoS: refresh cache"
+msgstr ""
+
+#. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_domain
-msgid "Product domain"
-msgstr "Termék domén"
+msgid "Product Domain"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model.fields,field_description:pos_cache.field_pos_cache_product_fields
-msgid "Product fields"
-msgstr "Termék mezők"
-
-#. module: pos_cache
-#: model:ir.ui.view,arch_db:pos_cache.view_pos_config_form
-msgid "Recompute cache"
-msgstr "Tároló újraszámítás"
+msgid "Product Fields"
+msgstr ""
 
 #. module: pos_cache
 #: model:ir.model,name:pos_cache.model_pos_cache

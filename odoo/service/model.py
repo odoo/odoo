@@ -10,7 +10,6 @@ import time
 import odoo
 from odoo.exceptions import UserError, ValidationError, QWebException
 from odoo.models import check_method_name
-from odoo.tools import pycompat
 from odoo.tools.translate import translate
 from odoo.tools.translate import _
 
@@ -68,10 +67,6 @@ def check(f):
                     except Exception:
                         pass
 
-            uid = 1
-            if args and isinstance(args[0], pycompat.integer_types):
-                uid = args[0]
-
             lang = ctx and ctx.get('lang')
             if not (lang or hasattr(src, '__call__')):
                 return src
@@ -119,9 +114,9 @@ def check(f):
                 time.sleep(wait_time)
             except IntegrityError as inst:
                 registry = odoo.registry(dbname)
-                for key in pycompat.keys(registry._sql_error):
-                    if key in inst[0]:
-                        raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst[0])
+                for key in registry._sql_error.keys():
+                    if key in inst.pgerror:
+                        raise ValidationError(tr(registry._sql_error[key], 'sql_constraint') or inst.pgerror)
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     _logger.debug("IntegrityError", exc_info=True)

@@ -9,6 +9,7 @@ class MrpDocument(models.Model):
     and basic versioning.
     """
     _name = 'mrp.document'
+    _description = "Production Document"
     _inherits = {
         'ir.attachment': 'ir_attachment_id',
     }

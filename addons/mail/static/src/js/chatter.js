@@ -2,7 +2,6 @@ odoo.define('mail.Chatter', function (require) {
 "use strict";
 
 var Activity = require('mail.Activity');
-var chat_mixin = require('mail.chat_mixin');
 var ChatterComposer = require('mail.ChatterComposer');
 var Followers = require('mail.Followers');
 var ThreadField = require('mail.ThreadField');
@@ -22,7 +21,7 @@ var QWeb = core.qweb;
 // with each other.
 // It synchronizes the rendering of those widgets (as they may be asynchronous), to limitate
 // the flickering when switching between records
-var Chatter = Widget.extend(chat_mixin, {
+var Chatter = Widget.extend({
     template: 'mail.Chatter',
     custom_events: {
         reload_mail_fields: '_onReloadMailFields',
@@ -34,7 +33,15 @@ var Chatter = Widget.extend(chat_mixin, {
     },
     supportedFieldTypes: ['one2many'],
 
-    // inherited
+    /**
+     * @override
+     * @param {widget} parent
+     * @param {Object} record
+     * @param {Object} mailFields
+     * @param {boolean} [mailFields.mail_activity]
+     * @param {boolean} [mailFields.mail_followers]
+     * @param {boolean} [mailFields.mail_thread]
+     */
     init: function (parent, record, mailFields, options) {
         this._super.apply(this, arguments);
         this._setState(record);
@@ -44,7 +51,7 @@ var Chatter = Widget.extend(chat_mixin, {
         // mention: get the prefetched partners and use them as mention suggestions
         // if there is a follower widget, the followers will be added to the
         // suggestions as well once fetched
-        this.mentionPartnerSuggestions = this._getMentionPartnerSuggestions();
+        this.mentionPartnerSuggestions = this.call('chat_manager', 'getMentionPartnerSuggestions');
         this.mentionSuggestions = this.mentionPartnerSuggestions;
 
         this.fields = {};
@@ -61,6 +68,9 @@ var Chatter = Widget.extend(chat_mixin, {
             this.postRefresh = nodeOptions.post_refresh || 'never';
         }
     },
+    /**
+     * @override
+     */
     start: function () {
         this.$topbar = this.$('.o_chatter_topbar');
 
@@ -69,6 +79,7 @@ var Chatter = Widget.extend(chat_mixin, {
             new_message_btn: !!this.fields.thread,
             log_note_btn: this.hasLogButton,
             schedule_activity_btn: !!this.fields.activity,
+            isMobile: config.device.isMobile,
         }));
 
         // start and append the widgets
@@ -79,7 +90,15 @@ var Chatter = Widget.extend(chat_mixin, {
         return this._super.apply(this, arguments);
     },
 
-    // public
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @param {Object} record
+     * @param {integer} [record.res_id=undefined]
+     * @param {Object[]} [fieldNames=undefined]
+     */
     update: function (record, fieldNames) {
         var self = this;
 
@@ -119,19 +138,40 @@ var Chatter = Widget.extend(chat_mixin, {
         });
     },
 
-    // private
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {boolean} force
+     */
     _closeComposer: function (force) {
         if (this.composer && (this.composer.is_empty() || force)) {
+            this.$el.removeClass('o_chatter_composer_active');
+            this.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
             this.composer.do_hide();
             this.composer.clear_composer();
-            this._muteNewMessageButton(false);
         }
     },
-    _muteNewMessageButton: function (mute) {
-        this.$('.o_chatter_button_new_message')
-            .toggleClass('btn-primary', !mute)
-            .toggleClass('btn-default', mute);
+    /**
+     * @private
+     */
+    _disableChatter: function () {
+        this.$('.btn').prop('disabled', true); // disable buttons
     },
+    /**
+     * @private
+     */
+    _enableChatter: function () {
+        this.$('.btn').prop('disabled', false); // enable buttons
+    },
+    /**
+     * @private
+     * @param {Object} options
+     * @param {Object[]} [options.suggested_partners=[]]
+     * @param {boolean} [options.is_log]
+     */
     _openComposer: function (options) {
         var self = this;
         var old_composer = this.composer;
@@ -144,7 +184,7 @@ var Chatter = Widget.extend(chat_mixin, {
             input_baseline: 14,
             is_log: options && options.is_log,
             record_name: this.record_name,
-            default_body: old_composer && old_composer.$input && old_composer.$input.val(),
+            default_body: old_composer && old_composer.$input && old_composer.$input.html(),
             default_mention_selections: old_composer && old_composer.mention_get_listener_selections(),
         });
         this.composer.on('input_focused', this, function () {
@@ -168,9 +208,18 @@ var Chatter = Widget.extend(chat_mixin, {
             });
             self.composer.on('need_refresh', self, self.trigger_up.bind(self, 'reload'));
             self.composer.on('close_composer', null, self._closeComposer.bind(self, true));
+
+            self.$el.addClass('o_chatter_composer_active');
+            self.$('.o_chatter_button_new_message, .o_chatter_button_log_note').removeClass('o_active');
+            self.$('.o_chatter_button_new_message').toggleClass('o_active', !self.composer.options.is_log);
+            self.$('.o_chatter_button_log_note').toggleClass('o_active', self.composer.options.is_log);
         });
-        this._muteNewMessageButton(true);
     },
+    /**
+     * @private
+     * @param {Deferred} def
+     * @returns {Deferred}
+     */
     _render: function (def) {
         // the rendering of the chatter is aynchronous: relational data of its fields needs to be
         // fetched (in some case, it might be synchronous as they hold an internal cache).
@@ -195,9 +244,24 @@ var Chatter = Widget.extend(chat_mixin, {
             if (self.fields.thread) {
                 self.fields.thread.$el.appendTo(self.$el);
             }
-        }).always($spinner.remove.bind($spinner));
+        }).always(function () {
+            // disable widgets in create mode, otherwise enable
+            self.isCreateMode ? self._disableChatter() : self._enableChatter();
+            $spinner.remove;
+        });
     },
+    /**
+     * @private
+     * @param {Object} record
+     * @param {integer} [record.res_id]
+     * @param {string} [record.model]
+     * @param {string} record.data.display_name
+     */
     _setState: function (record) {
+
+        this.wasCreateMode = !!this.isCreateMode;
+        this.isCreateMode = !record.res_id;
+
         if (!this.record || this.record.res_id !== record.res_id) {
             this.context = {
                 default_res_id: record.res_id || false,
@@ -210,6 +274,9 @@ var Chatter = Widget.extend(chat_mixin, {
         this.record = record;
         this.record_name = record.data.display_name;
     },
+    /**
+     * @private
+     */
     _updateMentionSuggestions: function () {
         if (!this.fields.followers) {
             return;
@@ -242,7 +309,13 @@ var Chatter = Widget.extend(chat_mixin, {
         });
     },
 
-    // handlers
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
     _onOpenComposerMessage: function () {
         var self = this;
         if (!this.suggested_partners_def) {
@@ -257,7 +330,7 @@ var Chatter = Widget.extend(chat_mixin, {
                     var suggested_partners = [];
                     var thread_recipients = result[self.context.default_res_id];
                     _.each(thread_recipients, function (recipient) {
-                        var parsed_email = utils.parse_email(recipient[1]);
+                        var parsed_email = recipient[1] && utils.parse_email(recipient[1]);
                         suggested_partners.push({
                             checked: true,
                             partner_id: recipient[0],
@@ -274,9 +347,21 @@ var Chatter = Widget.extend(chat_mixin, {
             self._openComposer({ is_log: false, suggested_partners: suggested_partners });
         });
     },
+    /**
+     * @private
+     */
     _onOpenComposerNote: function () {
         this._openComposer({is_log: true});
     },
+    /**
+     * @private
+     * @param {OdooEvent} event
+     * @param {string} event.name
+     * @param {Object} event.data
+     * @param {boolean} [event.data.activity]
+     * @param {boolean} [event.data.followers]
+     * @param {boolean} [event.data.thread]
+     */
     _onReloadMailFields: function (event) {
         var fieldNames = [];
         if (this.fields.activity && event.data.activity) {
@@ -288,8 +373,14 @@ var Chatter = Widget.extend(chat_mixin, {
         if (this.fields.thread && event.data.thread) {
             fieldNames.push(this.fields.thread.name);
         }
-        this.trigger_up('reload', {fieldNames: fieldNames});
+        this.trigger_up('reload', {
+            fieldNames: fieldNames,
+            keepChanges: true,
+        });
     },
+    /**
+     * @private
+     */
     _onScheduleActivity: function () {
         this.fields.activity.scheduleActivity(false);
     },

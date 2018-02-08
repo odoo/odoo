@@ -195,8 +195,8 @@
             <field name="context">{"search_default_week":1}</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to record activities.
+              <p class="o_view_nocontent_smiling_face">
+                Record a new activity
               </p><p>
                 You can register and track your workings hours by project every
                 day. Every time spent on a project will become a cost and can be re-invoiced to
@@ -243,7 +243,12 @@
             <field name="res_model">account.analytic.line</field>
             <field name="search_view_id" ref="hr_timesheet_line_search"/>
             <field name="domain">[('project_id', '!=', False)]</field>
-            <field name="context">{'search_default_week':1, 'search_default_groupby_employee':1}</field>
+            <field name="context">{
+                'search_default_week':1,
+                'search_default_groupby_employee':1,
+                'search_default_groupby_project':1,
+                'search_default_groupby_task':1
+            }</field>
         </record>
 
         <record id="timesheet_action_view_all_tree" model="ir.actions.act_window.view">
@@ -271,9 +276,6 @@
             name="All Timesheets"
             parent="menu_hr_time_tracking"
             action="timesheet_action_all"/>
-
-        <menuitem id="menu_hr_working_hours" parent="menu_hr_time_tracking" action="act_hr_timesheet_line"
-            name="Detailed Activities"/>
 
     </data>
 </odoo>

@@ -6,14 +6,18 @@ odoo.define('web.KanbanRecord', function (require) {
  * a Kanban view.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var Domain = require('web.Domain');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var Widget = require('web.Widget');
+var widgetRegistry = require('web.widget_registry');
 
 var _t = core._t;
 var QWeb = core.qweb;
+
+var NB_KANBAN_RECORD_COLORS = 12;
 
 var KanbanRecord = Widget.extend({
     events: {
@@ -33,7 +37,6 @@ var KanbanRecord = Widget.extend({
         this.options = options;
         this.editable = options.editable;
         this.deletable = options.deletable;
-        this.draggable = options.draggable;
         this.read_only_mode = options.read_only_mode;
         this.qweb = options.qweb;
         this.subWidgets = {};
@@ -96,7 +99,7 @@ var KanbanRecord = Widget.extend({
      * Generates the color classname from a given variable
      *
      * @private
-     * @param {number || string} variable
+     * @param {number | string} variable
      * @return {string} the classname
      */
     _getColorClassname: function (variable) {
@@ -107,19 +110,19 @@ var KanbanRecord = Widget.extend({
      * Computes a color id between 0 and 10 from a given value
      *
      * @private
-     * @param {number || string} variable
+     * @param {number | string} variable
      * @returns {integer} the color id
      */
     _getColorID: function (variable) {
-        if (typeof(variable) === 'number') {
-            return Math.round(variable) % 10;
+        if (typeof variable === 'number') {
+            return Math.round(variable) % NB_KANBAN_RECORD_COLORS;
         }
-        if (typeof(variable) === 'string') {
+        if (typeof variable === 'string') {
             var index = 0;
-            for (var i=0; i<variable.length; i++) {
+            for (var i = 0 ; i < variable.length ; i++) {
                 index += variable.charCodeAt(i);
             }
-            return index % 10;
+            return index % NB_KANBAN_RECORD_COLORS;
         }
         return 0;
     },
@@ -190,7 +193,7 @@ var KanbanRecord = Widget.extend({
                     if (Widget) {
                         widget = self._processWidget($field, field_name, Widget);
                         self.subWidgets[field_name] = widget;
-                    } else if (core.debug) {
+                    } else if (config.debug) {
                         // the widget is not implemented
                         $field.replaceWith($('<span>', {
                             text: _.str.sprintf(_t('[No widget %s]'), field_widget),
@@ -260,11 +263,26 @@ var KanbanRecord = Widget.extend({
         this._setFieldDisplay(widget.$el, field_name);
         return widget;
     },
+    _processWidgets: function () {
+        var self = this;
+        this.$("widget").each(function () {
+            var $field = $(this);
+            var Widget = widgetRegistry.get($field.attr('name'));
+            var widget = new Widget(self, self.state);
+
+            var def = widget._widgetRenderAndInsert(function () {});
+            if (def.state() === 'pending') {
+                self.defs.push(def);
+            }
+            widget.$el.addClass('o_widget');
+            $field.replaceWith(widget.$el);
+        });
+    },
     /**
      * Renders the record
      */
     _render: function () {
-        this.replaceElement(this.qweb.render('kanban-box', this.qweb_context));
+        this._replaceElement(this.qweb.render('kanban-box', this.qweb_context));
         this.$el.addClass('o_kanban_record');
         this.$el.data('record', this);
         if (this.$el.hasClass('oe_kanban_global_click') ||
@@ -272,6 +290,7 @@ var KanbanRecord = Widget.extend({
             this.$el.on('click', this._onGlobalClick.bind(this));
         }
         this._processFields();
+        this._processWidgets();
         this._setupColor();
         this._setupColorPicker();
         this._attachTooltip();
@@ -493,8 +512,7 @@ var KanbanRecord = Widget.extend({
      */
     _onManageTogglerClicked: function (event) {
         event.preventDefault();
-        this.$('.o_kanban_card_content').toggleClass('o_visible o_invisible');
-        this.$('.o_kanban_card_manage_pane').toggleClass('o_visible o_invisible');
+        this.$el.toggleClass('o_dropdown_open');
         var colorClass = this._getColorClassname(this.recordData.color || 0);
         this.$('.o_kanban_manage_button_section').toggleClass(colorClass);
     },

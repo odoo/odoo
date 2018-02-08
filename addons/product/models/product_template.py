@@ -13,7 +13,7 @@ from odoo.tools import pycompat
 
 class ProductTemplate(models.Model):
     _name = "product.template"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Product Template"
     _order = "name"
 
@@ -56,7 +56,7 @@ class ProductTemplate(models.Model):
              'the e-commerce such as e-books, music, pictures,... The "Digital Product" module has to be installed.')
     rental = fields.Boolean('Can be Rent')
     categ_id = fields.Many2one(
-        'product.category', 'Internal Category',
+        'product.category', 'Product Category',
         change_default=True, default=_get_default_category_id,
         required=True, help="Select category for the current product")
 
@@ -78,7 +78,9 @@ class ProductTemplate(models.Model):
         'Cost', compute='_compute_standard_price',
         inverse='_set_standard_price', search='_search_standard_price',
         digits=dp.get_precision('Product Price'), groups="base.group_user",
-        help="Cost of the product, in the default unit of measure of the product.")
+        help = "Cost used for stock valuation in standard price and as a first price to set in average/fifo. "
+               "Also used as a base price for pricelists. "
+               "Expressed in the default unit of measure of the product. ")
 
     volume = fields.Float(
         'Volume', compute='_compute_volume', inverse='_set_volume',
@@ -87,6 +89,8 @@ class ProductTemplate(models.Model):
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
+    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
+    weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
 
     sale_ok = fields.Boolean(
         'Can be Sold', default=True,
@@ -110,6 +114,7 @@ class ProductTemplate(models.Model):
         'product.packaging', string="Product Packages", compute="_compute_packaging_ids", inverse="_set_packaging_ids",
         help="Gives the different ways to package the same product.")
     seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id', 'Vendors')
+    variant_seller_ids = fields.One2many('product.supplierinfo', 'product_tmpl_id')
 
     active = fields.Boolean('Active', default=True, help="If unchecked, it will allow you to hide the product without removing it.")
     color = fields.Integer('Color Index')
@@ -169,8 +174,10 @@ class ProductTemplate(models.Model):
             quantity = self._context.get('quantity', 1.0)
 
             # Support context pricelists specified as display_name or ID for compatibility
-            if isinstance(pricelist_id_or_name, basestring):
-                pricelist = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+            if isinstance(pricelist_id_or_name, pycompat.string_types):
+                pricelist_data = self.env['product.pricelist'].name_search(pricelist_id_or_name, operator='=', limit=1)
+                if pricelist_data:
+                    pricelist = self.env['product.pricelist'].browse(pricelist_data[0][0])
             elif isinstance(pricelist_id_or_name, pycompat.integer_types):
                 pricelist = self.env['product.pricelist'].browse(pricelist_id_or_name)
 
@@ -229,6 +236,25 @@ class ProductTemplate(models.Model):
         for template in (self - unique_variants):
             template.weight = 0.0
 
+    @api.model
+    def _get_weight_uom_id_from_ir_config_parameter(self):
+        """ Get the unit of measure to interpret the `weight` field. By default, we considerer
+        that weights are expressed in kilograms. Users can configure to express them in pounds
+        by adding an ir.config_parameter record with "product.product_weight_in_lbs" as key
+        and "1" as value.
+        """
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        product_weight_in_lbs_param = get_param('product.weight_in_lbs')
+        if product_weight_in_lbs_param == '1':
+            return self.env.ref('product.product_uom_lb')
+        else:
+            return self.env.ref('product.product_uom_kgm')
+
+    def _compute_weight_uom_id(self):
+        weight_uom_id = self._get_weight_uom_id_from_ir_config_parameter()
+        for product_template in self:
+            product_template.weight_uom_id = weight_uom_id
+
     @api.one
     def _set_weight(self):
         if len(self.product_variant_ids) == 1:
@@ -281,7 +307,7 @@ class ProductTemplate(models.Model):
         tools.image_resize_images(vals)
         template = super(ProductTemplate, self).create(vals)
         if "create_product_product" not in self._context:
-            template.create_variant_ids()
+            template.with_context(create_from_tmpl=True).create_variant_ids()
 
         # This is needed to set given values to first variant after creation
         related_vals = {}
@@ -414,9 +440,9 @@ class ProductTemplate(models.Model):
             variants_to_activate = self.env['product.product']
             variants_to_unlink = self.env['product.product']
             for product_id in tmpl_id.product_variant_ids:
-                if not product_id.active and product_id.attribute_value_ids in variant_matrix:
+                if not product_id.active and product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) in variant_matrix:
                     variants_to_activate |= product_id
-                elif product_id.attribute_value_ids not in variant_matrix:
+                elif product_id.attribute_value_ids.filtered(lambda r: r.attribute_id.create_variant) not in variant_matrix:
                     variants_to_unlink |= product_id
             if variants_to_activate:
                 variants_to_activate.write({'active': True})
@@ -438,3 +464,10 @@ class ProductTemplate(models.Model):
                     variant.write({'active': False})
                     pass
         return True
+
+    @api.model
+    def get_empty_list_help(self, help):
+        self = self.with_context(
+            empty_list_help_document_name=_("product"),
+        )
+        return super(ProductTemplate, self).get_empty_list_help(help)

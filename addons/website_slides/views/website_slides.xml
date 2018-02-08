@@ -4,7 +4,7 @@
 
 <!-- add link to the standard footer -->
 <template id="slide_footer" inherit_id="website.footer_default" name="Footer Slides Link">
-    <xpath expr="//div[@id='info']//ul[@class='list-unstyled']" position="inside">
+    <xpath expr="//div[@id='info']//ul[hasclass('list-unstyled')]" position="inside">
         <li>
             <a href="/slides">Presentations</a>
         </li>
@@ -109,11 +109,6 @@
                         <!-- Public user has not right to create/write on slide -->
                         <t t-if="channel.can_upload and not is_public_user">
                             <a class="btn btn-primary oe_slide_js_upload" title="Upload Presentation" t-attf-channel_id="#{channel.id}">
-                                <i class="fa fa-cloud-upload"></i> Upload
-                            </a>
-                        </t>
-                        <t t-if="channel.can_upload and is_public_user">
-                            <a class="btn btn-primary" title="Upload Presentation" t-attf-href="/web/login?redirect=/slides/#{slug(channel)}">
                                 <i class="fa fa-cloud-upload"></i> Upload
                             </a>
                         </t>
@@ -368,6 +363,11 @@
 </template>
 
 <!-- Slide: main template: detailed view -->
+<template id="slide_edit_options" inherit_id="website.user_navbar" name="Edit Slide Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'slide.slide'" t-set="action" t-value="'website_slides.action_slides_slides'" />
+    </xpath>
+</template>
 <template id="slide_detail_view" name="Slide Detailed View">
     <t t-set="head">
         <t t-if="not private">
@@ -409,13 +409,6 @@
                                     <div class="col-md-8" t-if="slide.tag_ids">
                                         <t t-foreach="slide.tag_ids" t-as="slide_tag">
                                             <a t-attf-href="/slides/#{slug(slide.channel_id)}/tag/#{slug(slide_tag)}"  t-attf-class="label label-default ml4 mb4 pull-right #{tag and tag.id == slide_tag.id and 'label-primary' ''}" t-field="slide_tag.name"/>
-                                        </t>
-                                    </div>
-                                    <div class="pull-right">
-                                        <t t-call="website.publish_management">
-                                            <t t-set="object" t-value="slide"/>
-                                            <t t-set="publish_edit" t-value="True"/>
-                                            <t t-set="action" t-value="'website_slides.action_slides_slides'"/>
                                         </t>
                                     </div>
                                 </div>
@@ -543,7 +536,7 @@
                                     </h4>
                                 </div>
                                 <div t-att-class="comments and 'tab-pane fade active in' or 'tab-pane fade'" id="discuss">
-                                    <t t-call="website_mail.message_thread">
+                                    <t t-call="portal.message_thread">
                                         <t t-set="object" t-value="slide"/>
                                     </t>
                                 </div>
@@ -569,7 +562,7 @@
                                                 </li>
                                                 <li class="list-group-item" t-if="not slide.document_id">
                                                     <span class="badge"><t t-esc="slide.embed_views"/></span>
-                                                    <i class="fa fa-code"></i> Embeded Views
+                                                    <i class="fa fa-code"></i> Embedded Views
                                                 </li>
                                             </ul>
                                         </div>

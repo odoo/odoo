@@ -8,13 +8,13 @@ odoo.define('website_rating.thread', function(require) {
     var qweb = core.qweb;
     var _t = core._t;
 
-    var WebsiteMailThread = require('website_mail.thread').WebsiteMailThread;
+    var PortalChatter = require('portal.chatter').PortalChatter;
 
     /**
      * Extends Frontend Chatter to handle rating
      */
-    WebsiteMailThread.include({
-        events: _.extend({}, WebsiteMailThread.prototype.events, {
+    PortalChatter.include({
+        events: _.extend({}, PortalChatter.prototype.events, {
             "mousemove .stars i" : "_onMoveStar",
             "mouseleave .stars i" : "_onMoveOutStar",
             "click .stars" : "_onClickStar",
@@ -87,7 +87,7 @@ odoo.define('website_rating.thread', function(require) {
         /**
          * Update the messages format
          *
-         * @param {Array<Object>}
+         * @param {Array<Object>} messages
          * @returns {Array}
          */
         preprocessMessages: function(messages){
@@ -102,17 +102,20 @@ odoo.define('website_rating.thread', function(require) {
         },
         /**
          * Round the given value with a precision of 0.5.
-         * Example :    1.2 --> 1.0
-         *              1.7 --> 1.5
-         *              1.9 --> 2.0
-         * @param Float
-         * @returns Float
+         *
+         * Examples:
+         * - 1.2 --> 1.0
+         * - 1.7 --> 1.5
+         * - 1.9 --> 2.0
+         *
+         * @param {Number} value
+         * @returns Number
          **/
         round_to_half: function(value) {
             var converted = parseFloat(value); // Make sure we have a number
             var decimal = (converted - parseInt(converted, 10));
             decimal = Math.round(decimal * 10);
-            if(decimal == 5){
+            if(decimal === 5){
                 return (parseInt(converted, 10)+0.5);
             }
             if((decimal < 3) || (decimal > 7)){

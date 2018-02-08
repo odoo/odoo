@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-MISC_HTML_SOURCE = """
+MISC_HTML_SOURCE = u"""
 <font size="2" style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">test1</font>
 <div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; font-style: normal; ">
 <b>test2</b></div><div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; ">
@@ -19,7 +19,7 @@ test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></fo
 <a href="javascript:alert('malicious code')">test link</a>
 """
 
-EDI_LIKE_HTML_SOURCE = """<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
+EDI_LIKE_HTML_SOURCE = u"""<div style="font-family: 'Lucida Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; ">
     <p>Hello ${object.partner_id.name},</p>
     <p>A new invoice is available for you: </p>
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
@@ -63,7 +63,7 @@ EDI_LIKE_HTML_SOURCE = """<div style="font-family: 'Lucida Grande', Ubuntu, Aria
 
 # QUOTES
 
-QUOTE_BLOCKQUOTE = """<html>
+QUOTE_BLOCKQUOTE = u"""<html>
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   </head>
@@ -103,14 +103,14 @@ web: <a class="moz-txt-link-freetext" href="https://opener.am">https://opener.am
   </body>
 </html>"""
 
-QUOTE_BLOCKQUOTE_IN = ["""<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""]
-QUOTE_BLOCKQUOTE_OUT = ["""-- 
+QUOTE_BLOCKQUOTE_IN = [u"""<blockquote cite="mid:CAEJSRZvWvud8c6Qp=wfNG6O1+wK3i_jb33qVrF7XyrgPNjnyUA@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""]
+QUOTE_BLOCKQUOTE_OUT = [u"""-- 
 Opener B.V. - Business solutions driven by open source collaboration
 
 Stefan Rijnhart - Consultant/developer"""]
 
 
-QUOTE_THUNDERBIRD_HTML = """<html>
+QUOTE_THUNDERBIRD_HTML = u"""<html>
   <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   </head>
@@ -137,13 +137,13 @@ Raoul Poilvache
 </html>"""
 
 
-QUOTE_THUNDERBIRD_HTML_IN = ["""<blockquote cite="mid:CAP76m_WWFH2KVrbjOxbaozvkmbzZYLWJnQ0n0sy9XpGaCWRf1g@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""]
-QUOTE_THUNDERBIRD_HTML_OUT = ["""<pre class="moz-signature" cols="72"><span data-o-mail-quote="1">-- 
+QUOTE_THUNDERBIRD_HTML_IN = [u"""<blockquote cite="mid:CAP76m_WWFH2KVrbjOxbaozvkmbzZYLWJnQ0n0sy9XpGaCWRf1g@mail.gmail.com" type="cite" data-o-mail-quote-node="1" data-o-mail-quote="1">"""]
+QUOTE_THUNDERBIRD_HTML_OUT = [u"""<pre class="moz-signature" cols="72"><span data-o-mail-quote="1">-- 
 Raoul Poilvache
 </span></pre>"""]
 
 
-QUOTE_HOTMAIL_HTML = """
+QUOTE_HOTMAIL_HTML = u"""
 <html>
 <head>
 <style><!--
@@ -170,12 +170,12 @@ To: tartelette@example.com grosbedon@example.com<br><br>
 </div>-- <br><div class="ecxgmail_signature">
 Raoul Poilvache</div>
 </div></div></div></body></html>"""
-QUOTE_HOTMAIL_HTML_IN = ["""I don't like that.<br><br>"""]
+QUOTE_HOTMAIL_HTML_IN = [u"""I don't like that.<br><br>"""]
 QUOTE_HOTMAIL_HTML_OUT = [
-    """<hr id="stopSpelling" data-o-mail-quote="1">""",
-    """<div dir="ltr" data-o-mail-quote="1"><b data-o-mail-quote="1"><i data-o-mail-quote="1">Test reply. The suite.</i></b>"""]
+    u"""<hr id="stopSpelling" data-o-mail-quote="1">""",
+    u"""<div dir="ltr" data-o-mail-quote="1"><b data-o-mail-quote="1"><i data-o-mail-quote="1">Test reply. The suite.</i></b>"""]
 
-QUOTE_THUNDERBIRD_1 = """<div>On 11/08/2012 05:29 PM,
+QUOTE_THUNDERBIRD_1 = u"""<div>On 11/08/2012 05:29 PM,
       <a href="mailto:dummy@example.com">dummy@example.com</a> wrote:<br></div>
     <blockquote>
       <div>I contact you about our meeting for tomorrow. Here is the
@@ -203,15 +203,15 @@ Raoul Grosbedonn&#233;e
 </pre>"""
 
 QUOTE_THUNDERBIRD_1_IN = [
-    '<a href="mailto:dummy@example.com">dummy@example.com</a> ',
-    '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">',
-    'Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.']
-QUOTE_THUNDERBIRD_1_OUT = ["""-- 
+    u'<a href="mailto:dummy@example.com">dummy@example.com</a> ',
+    u'<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">',
+    u'Ok for me. I am replying directly below your mail, using Thunderbird, with a signature.']
+QUOTE_THUNDERBIRD_1_OUT = [u"""-- 
 Raoul Grosbedonnée
 """]
 
 
-TEXT_1 = """I contact you about our meeting tomorrow. Here is the schedule I propose:
+TEXT_1 = u"""I contact you about our meeting tomorrow. Here is the schedule I propose:
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
@@ -219,16 +219,16 @@ Is everything ok for you ?
 --
 MySignature"""
 
-TEXT_1_IN = ["""I contact you about our meeting tomorrow. Here is the schedule I propose:
+TEXT_1_IN = [u"""I contact you about our meeting tomorrow. Here is the schedule I propose:
 9 AM: brainstorming about our new amazing business app
 9.45 AM: summary
 10 AM: meeting with Ignasse to present our app
 Is everything ok for you ?"""]
-TEXT_1_OUT = ["""
+TEXT_1_OUT = [u"""
 --
 MySignature"""]
 
-TEXT_2 = """Salut Raoul!
+TEXT_2 = u"""Salut Raoul!
 Le 28 oct. 2012 à 00:02, Raoul Grosbedon a écrit :
 
 > I contact you about our meeting tomorrow. Here is the schedule I propose: (quote)
@@ -253,8 +253,8 @@ Bert TARTOPOILS
 bert.tartopoils@miam.miam
 """
 
-TEXT_2_IN = ["Salut Raoul!", "Of course. This seems viable."]
-TEXT_2_OUT = ["""
+TEXT_2_IN = [u"Salut Raoul!", "Of course. This seems viable."]
+TEXT_2_OUT = [u"""
 > I contact you about our meeting tomorrow. Here is the schedule I propose: (quote)""",
 """
 > 2012/10/27 Bert Tartopoils :
@@ -272,17 +272,17 @@ TEXT_2_OUT = ["""
 
 # MISC
 
-GMAIL_1 = """Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
+GMAIL_1 = u"""Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
 <li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you ?</div>
 <div><p>-- <br>Administrator</p></div>
 
 <div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
 </blockquote></div><br></div>"""
 
-GMAIL_1_IN = ['Ok for me. I am replying directly in gmail, without signature.', '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">']
+GMAIL_1_IN = [u'Ok for me. I am replying directly in gmail, without signature.', '<blockquote data-o-mail-quote-node="1" data-o-mail-quote="1">']
 GMAIL_1_OUT = []
 
-HOTMAIL_1 = """<div>
+HOTMAIL_1 = u"""<div>
     <div dir="ltr"><br>
         I have an amazing company, i'm learning OpenERP, it is a small company yet, but plannig to grow up quickly.
         <br><br>Kindest regards,<br>xxx<br>
@@ -309,19 +309,19 @@ HOTMAIL_1 = """<div>
         </div>
     </div>
 </div>"""
-HOTMAIL_1_IN = ["""<div dir="ltr"><br>
+HOTMAIL_1_IN = [u"""<div dir="ltr"><br>
         I have an amazing company, i'm learning OpenERP, it is a small company yet, but plannig to grow up quickly.
         <br><br>Kindest regards,<br>xxx<br>"""]
 HOTMAIL_1_OUT = [
-    """<hr id="stopSpelling" data-o-mail-quote="1">""",
-    """<pre data-o-mail-quote="1">
+    u"""<hr id="stopSpelling" data-o-mail-quote="1">""",
+    u"""<pre data-o-mail-quote="1">
                 <a href="http://openerp.com" target="_blank" data-o-mail-quote="1">http://openerp.com</a>
                 Belgium: +32.81.81.37.00
                 U.S.: +1 (650) 307-6736
                 India: +91 (79) 40 500 100
             </pre>"""]
 
-MSOFFICE_1 = """
+MSOFFICE_1 = u"""
 <div>
 <div class="WordSection1">
         <p class="MsoNormal">
@@ -423,8 +423,8 @@ MSOFFICE_1 = """
     </div>
 </div>"""
 
-MSOFFICE_1_IN = ['Our requirements are simple. Just looking to replace some spreadsheets for tracking quotes and possibly using the timecard module.']
-MSOFFICE_1_OUT = ['I noticed you recently downloaded OpenERP.', 'Uou mentioned you wish to use OpenERP in your own company.', 'Belgium: +32.81.81.37.00']
+MSOFFICE_1_IN = [u'Our requirements are simple. Just looking to replace some spreadsheets for tracking quotes and possibly using the timecard module.']
+MSOFFICE_1_OUT = [u'I noticed you recently downloaded OpenERP.', 'Uou mentioned you wish to use OpenERP in your own company.', 'Belgium: +32.81.81.37.00']
 
 
 # ------------------------------------------------------------
@@ -432,7 +432,7 @@ MSOFFICE_1_OUT = ['I noticed you recently downloaded OpenERP.', 'Uou mentioned y
 # ------------------------------------------------------------
 
 # bug: read more not apparent, strange message in read more span
-BUG1 = """<pre>Hi Migration Team,
+BUG1 = u"""<pre>Hi Migration Team,
 
 Paragraph 1, blah blah blah blah blah blah blah blah blah blah blah blah 
 blah blah blah blah blah blah blah blah blah blah blah blah blah blah 
@@ -472,10 +472,10 @@ Tel: +32.81.81.37.00
 Web: http://www.openerp.com</pre>"""
 
 BUG_1_IN = [
-    'Hi Migration Team',
-    'Paragraph 1'
+    u'Hi Migration Team',
+    u'Paragraph 1'
 ]
-BUG_1_OUT = ["""
+BUG_1_OUT = [u"""
 -- 
 Olivier Laurent
 Migration Manager
@@ -486,7 +486,7 @@ Tel: +32.81.81.37.00
 Web: http://www.openerp.com"""]
 
 
-REMOVE_CLASS = """
+REMOVE_CLASS = u"""
 <div style="FONT-SIZE: 12pt; FONT-FAMILY: 'Times New Roman'; COLOR: #000000">
     <div>Hello</div>
     <div>I have just installed Odoo 9 and I've got the following error:</div>
@@ -510,9 +510,9 @@ REMOVE_CLASS = """
 </div>
 """
 REMOVE_CLASS_IN = [
-    '<div style="font-size: 12pt; font-family: \'Times New Roman\'; color: #000000">',
-    'An error occured in a modal and I will send you back the html to try opening one on your end']
+    u'<div style="font-size: 12pt; font-family: \'Times New Roman\'; color: #000000">',
+    u'An error occured in a modal and I will send you back the html to try opening one on your end']
 REMOVE_CLASS_OUT = [
-    '<div class="modal-backdrop in">',
-    '<div class="modal-content openerp">',
-    '<div class="modal-header">']
+    u'<div class="modal-backdrop in">',
+    u'<div class="modal-content openerp">',
+    u'<div class="modal-header">']

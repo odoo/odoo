@@ -3,20 +3,25 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo import tools
+from odoo.modules.module import get_module_resource
 
 
 class TestPurchase(TestStockCommon):
 
-    def _create_make_procurement(self, product, product_qty):
-        MakeProcurement = self.env['make.procurement']
+    def _create_make_procurement(self, product, product_qty, date_planned=False):
+        ProcurementGroup = self.env['procurement.group']
         order_values = {
-            'product_id': product.id,
-            'qty': product_qty,
-            'uom_id': self.uom_unit.id,
-            'warehouse_id': self.warehouse_1.id,
-            'date_planned': fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10))  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+            'warehouse_id': self.warehouse_1,
+            'date_planned': date_planned or fields.Datetime.to_string(fields.datetime.now() + timedelta(days=10)),  # 10 days added to current date of procurement to get future schedule date and order date of purchase order.
+            'group_id': self.env['procurement.group'],
         }
-        return MakeProcurement.create(order_values)
+        return ProcurementGroup.run(product, product_qty, self.uom_unit, self.warehouse_1.lot_stock_id, product.name, '/', order_values)
+
+    def _load(self, module, *args):
+        tools.convert_file(self.cr, 'purchase',
+                           get_module_resource(module, *args),
+                           {}, 'init', False, 'test', self.registry._assertion_report)
 
     @classmethod
     def setUpClass(cls):
@@ -36,3 +41,11 @@ class TestPurchase(TestStockCommon):
             'type': 'product',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 2})]})
+
+        cls.res_users_purchase_user = cls.env['res.users'].create({
+            'company_id': cls.env.ref('base.main_company').id,
+            'name': "Purchase User",
+            'login': "pu",
+            'email': "purchaseuser@yourcompany.com",
+            'groups_id': [(6, 0, [cls.env.ref('purchase.group_purchase_user').id])],
+            })

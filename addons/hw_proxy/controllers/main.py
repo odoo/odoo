@@ -5,6 +5,7 @@ from __future__ import print_function
 import logging
 import subprocess
 import time
+import subprocess
 from threading import Lock
 
 
@@ -17,13 +18,13 @@ _logger = logging.getLogger(__name__)
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
 BANNED_DEVICES = {
-	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
-	"1d6b:0002",	# Linux Foundation 2.0 root hub
-	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
+    "0424:9514",    # Standard Microsystem Corp. Builtin Ethernet module
+    "1d6b:0002",    # Linux Foundation 2.0 root hub
+    "0424:ec00",    # Standard Microsystem Corp. Other Builtin Ethernet module
 }
 
 
-# drivers modules must add to drivers an object with a get_status() method 
+# drivers modules must add to drivers an object with a get_status() method
 # so that 'status' can return the status of all active drivers
 drivers = {}
 
@@ -108,7 +109,7 @@ class Proxy(http.Controller):
             if not (device_id in BANNED_DEVICES):
                 resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
                 count += 1
-        
+
         if count == 0:
             resp += "<div class='device'>No USB Device Found</div>"
 
@@ -126,7 +127,7 @@ class Proxy(http.Controller):
             """ % subprocess.check_output('lsusb -v', shell=True)
 
         return request.make_response(resp,{
-            'Cache-Control': 'no-cache', 
+            'Cache-Control': 'no-cache',
             'Content-Type': 'text/html; charset=utf-8',
             'Access-Control-Allow-Origin':  '*',
             'Access-Control-Allow-Methods': 'GET',
@@ -167,7 +168,7 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/payment_request', type='json', auth='none', cors='*')
     def payment_request(self, price):
         """
-        The PoS will activate the method payment 
+        The PoS will activate the method payment
         """
         print("payment_request: price:%s" % price)
         return 'ok'
@@ -175,7 +176,7 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/payment_status', type='json', auth='none', cors='*')
     def payment_status(self):
         print("payment_status")
-        return { 'status':'waiting' } 
+        return { 'status':'waiting' }
 
     @http.route('/hw_proxy/payment_cancel', type='json', auth='none', cors='*')
     def payment_cancel(self):

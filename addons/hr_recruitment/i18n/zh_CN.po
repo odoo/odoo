@@ -3,19 +3,23 @@
 # * hr_recruitment
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
-# Bo Cao <cao.poobo@hotmail.com>, 2017
+# Bo Cao, 2017
 # liAnGjiA <liangjia@qq.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # liulixia <liu.lixia@elico-corp.com>, 2017
+# 卓忆科技 <zhanghao@jointd.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
+# fausthuang, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: liulixia <liu.lixia@elico-corp.com>, 2017\n"
+"POT-Creation-Date: 2017-11-16 08:08+0000\n"
+"PO-Revision-Date: 2017-11-16 08:08+0000\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,24 +31,468 @@ msgstr ""
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
 msgid ""
 "\n"
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"<p>Thank you for your enquiry.<br />\n"
-"Unfortunately, your profile does not match with our needs</p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Job Description</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px; border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Thank you for your interest in joining the\n"
+"                        <b>${object.company_id.name}</b> team.  We wanted to\n"
+"                        let you know that, although your resume is competitive,\n"
+"                        our hiring team reviewed your application and <b>did not\n"
+"                        select it for further consideration</b>.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Please note that recruiting is hard, and we can do\n"
+"                        mistake. Do not hesitate to reply to this email if you\n"
+"                        think we did a mistake, or if you want more information\n"
+"                        about our decision.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We will, however, keep your resume on record and get in\n"
+"                        touch with you about future opportunities that may be a\n"
+"                        better fit for your skills and experience.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We wish you all the best in your job search and hope we\n"
+"                        will have the chance to consider you for another role\n"
+"                        in the future.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Regards,\n"
+"                    </p>\n"
+"\n"
+"                    <p style=\"color:grey;\">-- <br/>\n"
+"                    % if object.user_id:\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        Phone: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        The HR Team\n"
+"                    % endif\n"
+"                    </p>\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Sent by ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">our others jobs</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"          </div>\n"
+"        "
 msgstr ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\"><table "
+"style=\"width:600px;margin:10px auto;\"><tbody><tr><td><a href=\"/\"><img "
+"alt=\"${object.company_id.name}\" src=\"/logo\" style=\"vertical-"
+"align:baseline;max-width:100px;\"/></a></td><td style=\"text-align:right"
+";vertical-align:middle;\"><a href=\"${object.job_id.website_url}\" style"
+"=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-"
+"size:16px;\"/></td></tr></tbody></table><table "
+"style=\"width:600px;margin:0px auto;background-color:white;padding:8px; "
+"border:1px solid #e1e1e1;\"><tr><td style=\"font-size:16px; font-"
+"weight:300;\"><p lilt=\"split=1\" style=\"font-size:16px;\"/><p "
+"lilt=\"split=0\" style=\"font-size:16px;\"/><p lilt=\"split=1\" style"
+"=\"font-size:16px;\"/><p lilt=\"split=1\" style=\"font-size:16px;\"/><p "
+"style=\"font-size:16px;\"/><p style=\"font-size:16px;\"><b/></p><p "
+"style=\"color:grey;\"><br/><strong/><br/><br/><br/></p><b/></td></tr></table><p"
+" lilt=\"split=0\" style=\"font-size:16px;\"/><p style=\"font-"
+"size:16px;\"/><p lilt=\"split=0\" style=\"font-size:16px;\"/><td style"
+"=\"padding-top:10px;font-size: 12px;\"><div/><table "
+"style=\"width:600px;margin:0px auto;text-align:center;\"><tbody><tr><div><a "
+"href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\"/></div></tr></tbody></table></td></div>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
 msgid ""
 "\n"
-"<p>Dear ${object.partner_name or 'applicant'},</p>\n"
-"<p>Thank you for your enquiry.<br />\n"
-"Your resume got our interest. I will contact you as soon as possible to plan\n"
-"next steps of the recruitment process.</p>\n"
-"<p>If you have any questions, please let us know.</p>\n"
-"<p>Best regards,</p>"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Job Description</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <div style=\"text-align: center\">\n"
+"                        <h2>Congratulations!</h2>\n"
+"                        <div style=\"color:grey;\">Your resume has been positively reviewed.</div>\n"
+"                        <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/>\n"
+"                    </div>\n"
+"\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We just reviewed your resume, and it caught our\n"
+"                        attention. As we think you might be great for the\n"
+"                        position, your application has been short listed for a\n"
+"                        call or an interview.\n"
+"                    </p>\n"
+"\n"
+"                    % if object.user_id:\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        You will soon be contacted by:\n"
+"                    </p>\n"
+"                    <table style=\"width:100%; border:0px solid white;\">\n"
+"                    <tr>\n"
+"                        <td width=\"75\">\n"
+"                            <img src=\"/web/image/res.users/${object.user_id.id}/image_small\" alt=\"Avatar\" style=\"vertical-align:baseline;max-width:64px;\" />\n"
+"                        </td><td style=\"font-size:15px;\">\n"
+"                            <strong>${object.user_id.name}</strong><br/>\n"
+"                            <span>Email: ${object.user_id.email or ''}</span><br/>\n"
+"                            <span>Phone: ${object.user_id.phone or ''}</span>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    </table>\n"
+"                    % endif\n"
+"                    <p style=\"font-size:16px;margin:24px 0;\">\n"
+"                        See you soon,\n"
+"                    </p><p style=\"font-size:16px;color: grey;\">\n"
+"                        -- <br/>\n"
+"                        Odoo HR Team\n"
+"                    </p>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We usually <strong>answer applications within 3 days</strong>.\n"
+"                        The next step is either a call or a meeting in our offices.\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        Feel free to <strong>contact us if you want a faster\n"
+"                        feedback</strong> or if you don't get news from us\n"
+"                        quickly enough (just reply to this email).\n"
+"                    </p>\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Want to learn about us?</strong></h3>\n"
+"                    <ol>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\">Founders' story</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.slideshare.net/openobject/the-odoo-culture\">The Odoo Culture</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/page/about-us\">About us</a></li>\n"
+"                    </ol>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    % set location = ''\n"
+"                    % if object.job_id.address_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\"><strong>${object.job_id.address_id.name}</strong></p>\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street}</p>\n"
+"                        % set location = object.job_id.address_id.street\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street2:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street2}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                    % endif\n"
+"                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                    % if object.job_id.address_id.city:\n"
+"                        ${object.job_id.address_id.city},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.state_id.name:\n"
+"                        ${object.job_id.address_id.state_id.name},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.zip:\n"
+"                        ${object.job_id.address_id.zip}\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                    % endif\n"
+"                    </p>\n"
+"                    % if object.job_id.address_id.country_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.country_id.name}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                    % endif\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"\n"
+"            % if object.job_id.address_id:\n"
+"            <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"                <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                    <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                </a>\n"
+"            </div>\n"
+"            % endif\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Sent by ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"\n"
+"          </div>\n"
+"        "
 msgstr ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\"><table "
+"style=\"width:600px;margin:10px auto;\"><tbody><tr><td><a href=\"/\"><img "
+"alt=\"${object.company_id.name}\" src=\"/logo\" style=\"vertical-"
+"align:baseline;max-width:100px;\"/></a></td><td style=\"text-align:right"
+";vertical-align:middle;\"><a href=\"${object.job_id.website_url}\" style"
+"=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-"
+"size:16px;\"/></td></tr></tbody></table><table "
+"style=\"width:600px;margin:0px auto;background-"
+"color:white;padding:8px;border:1px solid #e1e1e1;\"><tr><td style=\"font-"
+"size:16px; font-weight:300;\"><div style=\"text-align: center\"><h2/><div "
+"style=\"color:grey;\"/><img alt=\"Congratulations!\" "
+"src=\"/hr_recruitment/static/src/img/congratulations.png\" "
+"style=\"width:175px;margin:20px 0;\"/></div><p style=\"font-size:16px;\"/><p"
+" style=\"font-size:16px;\"/><table style=\"width:100%; border:0px solid "
+"white;\"><tr><td width=\"75\"><img alt=\"Avatar\" "
+"src=\"/web/image/res.users/${object.user_id.id}/image_small\" style"
+"=\"vertical-align:baseline;max-width:64px;\"/></td><td style=\"font-"
+"size:15px;\"><strong/><br/><span/><br/><span/></td></tr></table><p style"
+"=\"font-size:16px;margin:24px 0;\"/><p style=\"font-size:16px;color: "
+"grey;\"><br/></p><hr style=\"margin: 30px 0\"/><h3 "
+"style=\"color:#9A6C8E;\"><strong/></h3><p style=\"font-"
+"size:16px;\"><strong/></p><p style=\"font-size:16px;\"><strong/></p><hr "
+"style=\"margin: 30px 0\"/><h3 "
+"style=\"color:#9A6C8E;\"><strong/></h3><ol><li><a "
+"href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\" "
+"style=\"color:#1CC5A9\"/></li><li><a href=\"https://www.odoo.com/page/about-"
+"us\" style=\"color:#1CC5A9\"/></li></ol><hr style=\"margin: 30px 0\"/><p "
+"style=\"margin:0px 0px 0px 0px;\"><strong/></p><p style=\"margin:0px 0px 0px"
+" 0px;\"/><p style=\"margin:0px 0px 0px 0px;\"/><p style=\"margin:0px 0px 0px"
+" 0px;\"/><p style=\"margin:0px 0px 0px 0px;\"/></td></tr></table><div "
+"style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-"
+"right:1px solid #dddddd;border-bottom:1px solid #dddddd;\"><a "
+"href=\"https://maps.google.com/maps?q=${location}\" target=\"new\"><img "
+"src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\""
+" style=\"vertical-align:bottom;\"/></a></div><table "
+"style=\"width:600px;margin:0px auto;text-align:center;\"><tbody><tr><td "
+"style=\"padding-top:10px;font-size: 12px;\"><div/><div><a href=\"/jobs\" "
+"style=\"text-"
+"decoration:none;color:#717188;\"/></div></td></tr></tbody></table></div><li><a"
+" href=\"https://www.slideshare.net/openobject/the-odoo-culture\" "
+"style=\"color:#1CC5A9\"/></li>"
+
+#. module: hr_recruitment
+#: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
+msgid ""
+"\n"
+"          <div style=\"background-color:#F3F5F6;color:#515166;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"            <table style=\"width:600px;margin:10px auto;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td>\n"
+"                            <a href=\"/\">\n"
+"                                <img src=\"/logo\" alt=\"${object.company_id.name}\" style=\"vertical-align:baseline;max-width:100px;\" />\n"
+"                            </a>\n"
+"                        </td>\n"
+"                        <td style=\"text-align:right;vertical-align:middle;\">\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                                <a href=\"${object.job_id.website_url}\" style=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-decoration: none; color: #fff; border-radius: 5px; font-size:16px;\">Job Description</a>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"            <table style=\"width:600px;margin:0px auto;background-color:white;padding:8px;border:1px solid #e1e1e1;\">\n"
+"            <tr>\n"
+"                <td style=\"font-size:16px; font-weight:300;\">\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        Hi,\n"
+"                    </p><p style=\"font-size:16px;\">\n"
+"                        We confirm we successfully received your application to the job\n"
+"\n"
+"                        \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\"\n"
+"                        at <strong>${object.company_id.name}</strong>.\n"
+"                    </p>\n"
+"                    <p style=\"font-size:16px;\">\n"
+"                        We will come back to you shortly.\n"
+"                    </p>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"                    % if object.user_id:\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Your Contact:</strong></h3>\n"
+"                    <table style=\"width:100%; border:0px solid white;\">\n"
+"                    <tr>\n"
+"                        <td width=\"75\">\n"
+"                            <img src=\"/web/image/res.users/${object.user_id.id}/image_small\" alt=\"Avatar\" style=\"vertical-align:baseline;max-width:64px;\" />\n"
+"                        </td><td style=\"font-size:15px;\">\n"
+"                            <strong>${object.user_id.name}</strong><br/>\n"
+"                            <span>Email: ${object.user_id.email or ''}</span><br/>\n"
+"                            <span>Phone: ${object.user_id.phone or ''}</span>\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                    </table>\n"
+"                    % endif\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>What is the next step?</strong></h3>\n"
+"                    <p>We usually <strong>answer applications within 3 days.</strong></p>\n"
+"                    <p>\n"
+"                        Feel free to <strong>contact us if you want a faster\n"
+"                        feedback</strong> or if you don't get news from us\n"
+"                        quickly enough (just reply to this email).\n"
+"                    </p>\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Want to learn more?</strong></h3>\n"
+"                    <ol>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\">Founders' story</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.slideshare.net/openobject/the-odoo-culture\">The Odoo Culture</a></li>\n"
+"                        <li><a style=\"color:#1CC5A9\" href=\"https://www.odoo.com/page/about-us\">About us</a></li>\n"
+"                    </ol>\n"
+"\n"
+"                    <hr style=\"margin: 30px 0\"/>\n"
+"\n"
+"                    % set location = ''\n"
+"                    % if object.job_id.address_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\"><strong>${object.job_id.address_id.name}</strong></p>\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street}</p>\n"
+"                        % set location = object.job_id.address_id.street\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.street2:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.street2}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                    % endif\n"
+"                    <p style=\"margin:0px 0px 0px 0px;\">\n"
+"                    % if object.job_id.address_id.city:\n"
+"                        ${object.job_id.address_id.city},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.state_id.name:\n"
+"                        ${object.job_id.address_id.state_id.name},\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                    % endif\n"
+"                    % if object.job_id.address_id.zip:\n"
+"                        ${object.job_id.address_id.zip}\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                    % endif\n"
+"                    </p>\n"
+"                    % if object.job_id.address_id.country_id.name:\n"
+"                        <p style=\"margin:0px 0px 0px 0px;\">${object.job_id.address_id.country_id.name}</p>\n"
+"                        % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                    % endif\n"
+"\n"
+"                </td>\n"
+"            </tr>\n"
+"            </table>\n"
+"\n"
+"            % if object.job_id.address_id:\n"
+"            <div style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-right:1px solid #dddddd;border-bottom:1px solid #dddddd;\">\n"
+"                <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                    <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                </a>\n"
+"            </div>\n"
+"            % endif\n"
+"            <table style=\"width:600px;margin:0px auto;text-align:center;\">\n"
+"                <tbody>\n"
+"                    <tr>\n"
+"                        <td style=\"padding-top:10px;font-size: 12px;\">\n"
+"                            <div>Sent by ${object.company_id.name}</div>\n"
+"                            % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                            <div>\n"
+"                                Discover <a href=\"/jobs\" style=\"text-decoration:none;color:#717188;\">all our jobs</a>.\n"
+"                            </div>\n"
+"                            % endif\n"
+"                        </td>\n"
+"                    </tr>\n"
+"                </tbody>\n"
+"            </table>\n"
+"\n"
+"\n"
+"          </div>\n"
+"        "
+msgstr ""
+"<div style=\"background-color:#F3F5F6;color:#515166;font-"
+"family:Arial,Helvetica,sans-serif;font-size:14px;\"><table "
+"style=\"width:600px;margin:10px auto;\"><tbody><tr><td><a href=\"/\"><img "
+"alt=\"${object.company_id.name}\" src=\"/logo\" style=\"vertical-"
+"align:baseline;max-width:100px;\"/></a></td><td style=\"text-align:right"
+";vertical-align:middle;\"><a href=\"${object.job_id.website_url}\" style"
+"=\"background-color: #1abc9c; padding: 12px; font-weight: 12px; text-"
+"decoration: none; color: #fff; border-radius: 5px; font-"
+"size:16px;\"/></td></tr></tbody></table><table "
+"style=\"width:600px;margin:0px auto;background-"
+"color:white;padding:8px;border:1px solid #e1e1e1;\"><tr><td style=\"font-"
+"size:16px; font-weight:300;\"><p style=\"font-size:16px;\"/><p style=\"font-"
+"size:16px;\"><a href=\"${object.job_id.website_url or ''}\" "
+"style=\"color:#9A6C8E;\"><strong/></a><strong/></p><p style=\"font-"
+"size:16px;\"/><hr style=\"margin: 30px 0\"/><h3 "
+"style=\"color:#9A6C8E;\"><strong/></h3><table style=\"width:100%; border:0px"
+" solid white;\"><tr><td width=\"75\"><img alt=\"Avatar\" "
+"src=\"/web/image/res.users/${object.user_id.id}/image_small\" style"
+"=\"vertical-align:baseline;max-width:64px;\"/></td><td style=\"font-"
+"size:15px;\"><strong/><br/><span/><br/><span/></td></tr></table><hr "
+"style=\"margin: 30px 0\"/><h3 "
+"style=\"color:#9A6C8E;\"><strong/></h3><p><strong/></p><p><strong/></p><hr "
+"style=\"margin: 30px 0\"/><h3 "
+"style=\"color:#9A6C8E;\"><strong/></h3><ol><li><a "
+"href=\"https://www.odoo.com/blog/odoo-news-5/post/the-odoo-story-56\" "
+"style=\"color:#1CC5A9\"/></li><li><a href=\"https://www.odoo.com/page/about-"
+"us\" style=\"color:#1CC5A9\"/></li></ol><hr style=\"margin: 30px 0\"/><p "
+"style=\"margin:0px 0px 0px 0px;\"><strong/></p><p style=\"margin:0px 0px 0px"
+" 0px;\"/><p style=\"margin:0px 0px 0px 0px;\"/><p style=\"margin:0px 0px 0px"
+" 0px;\"/><p style=\"margin:0px 0px 0px 0px;\"/></td></tr></table><div "
+"style=\"width:598px;margin:0px auto;border-left:1px solid #dddddd;border-"
+"right:1px solid #dddddd;border-bottom:1px solid #dddddd;\"><a "
+"href=\"https://maps.google.com/maps?q=${location}\" target=\"new\"><img "
+"src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&size=598x200&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\""
+" style=\"vertical-align:bottom;\"/></a></div><table "
+"style=\"width:600px;margin:0px auto;text-align:center;\"><tbody><tr><td "
+"style=\"padding-top:10px;font-size: 12px;\"><div/><div><a href=\"/jobs\" "
+"style=\"text-"
+"decoration:none;color:#717188;\"/></div></td></tr></tbody></table></div><li><a"
+" href=\"https://www.slideshare.net/openobject/the-odoo-culture\" "
+"style=\"color:#1CC5A9\"/></li>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_employee
@@ -58,7 +506,7 @@ msgid ""
 "%endif\n"
 ".</p>\n"
 "<p>Please welcome him/her and help him/her finding his/her marks.</p>"
-msgstr ""
+msgstr "<p/><p><strong/></p><p/>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -86,6 +534,11 @@ msgid "<span class=\"o_stat_text\">Trackers</span>"
 msgstr "<span class=\"o_stat_text\">跟踪器</span>"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
+msgid "<span>Folded in Recruitment Pipe: </span>"
+msgstr "<span/>"
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>New</span>"
 msgstr "<span>新</span>"
@@ -93,7 +546,7 @@ msgstr "<span>新</span>"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>报表</span>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -109,7 +562,6 @@ msgstr "当创建别名的新记录时，一个Python字典被提供作为默认
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_active
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_active
 msgid "Active"
 msgstr "有效"
 
@@ -120,7 +572,7 @@ msgstr "有效"
 msgid ""
 "Add columns to define the <b>interview stages</b>.<br/><i>e.g. New &gt; "
 "Qualified &gt; First Interview &gt; Recruited</i>"
-msgstr ""
+msgstr "<b/><br/><i/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_address_id
@@ -160,7 +612,7 @@ msgstr "别名的模型"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr ""
+msgstr "全部申请"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -195,10 +647,8 @@ msgid "Applicant's Name"
 msgstr "申请人姓名"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:92
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
-#, python-format
 msgid "Applicants"
 msgstr "申请人"
 
@@ -230,16 +680,6 @@ msgid "Application Summary"
 msgstr "申请摘要"
 
 #. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
-msgid "Application approved"
-msgstr "申请通过"
-
-#. module: hr_recruitment
-#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
-msgid "Application refused"
-msgstr "申请被拒绝"
-
-#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Application(s)"
 msgstr "申请(s)"
@@ -258,19 +698,11 @@ msgstr "求职申请"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_job_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_job_id
 msgid "Applied Job"
 msgstr "申请的职位"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_hr_appraisal
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Appraisals"
-msgstr "评价"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_priority
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_priority
 msgid "Appreciation"
 msgstr "评价"
 
@@ -291,24 +723,14 @@ msgid "Attachments"
 msgstr "附件"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
+msgid "Automated Email"
+msgstr "自动发邮件"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_availability
 msgid "Availability"
 msgstr "可用"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_delay_close
-msgid "Avg. Delay to Close"
-msgstr "平均耗用天数"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp_avg
-msgid "Avg. Expected Salary"
-msgstr "平均.期望月薪"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_prop_avg
-msgid "Avg. Proposed Salary"
-msgstr "平均.建议薪水"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
@@ -316,24 +738,19 @@ msgid "Bachelor Degree"
 msgstr "本科"
 
 #. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_departmnet
+#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_department
 msgid "By Department"
 msgstr "部门"
 
 #. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_job
+#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_job
 msgid "By Job"
 msgstr "工作"
 
 #. module: hr_recruitment
-#: model:ir.filters,name:hr_recruitment.filter_recruitment_report_recruiter
+#: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
 msgid "By Recruiter"
 msgstr "被招聘人"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Cancel"
-msgstr "取消"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_graph_view_job
@@ -369,7 +786,6 @@ msgstr "点击来创建一个新的标签"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_closed
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_closed
 msgid "Closed"
 msgstr "已关闭"
 
@@ -382,8 +798,7 @@ msgstr "颜色索引"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_company_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_company_id
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Company"
 msgstr "公司"
 
@@ -391,16 +806,6 @@ msgstr "公司"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
 msgid "Configuration"
 msgstr "配置"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Configure HR Recruitment"
-msgstr "设置人事招聘"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
-msgid "Configure Recruitment"
-msgstr "设置招聘"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:350
@@ -426,14 +831,24 @@ msgid "Contract"
 msgstr "合约"
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
+msgid "Contract Proposal"
+msgstr "合同建议"
+
+#. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
+msgid "Contract Signed"
+msgstr "合同已签署"
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Create"
 msgstr "创建"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_create
-msgid "Create Date"
-msgstr "创建日期"
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
+msgid "Create & Edit"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
@@ -460,7 +875,6 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_create_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_uid
@@ -469,7 +883,6 @@ msgstr "创建人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_create_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_create_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_create_date
@@ -483,7 +896,7 @@ msgid "Creation Date"
 msgstr "创建日期"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Creation Week"
 msgstr "创建周"
 
@@ -528,7 +941,6 @@ msgstr "这里定义招聘过程中的各个阶段，例如：资格通话，第
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_type_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_type_id
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_form
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_degree_tree
@@ -547,14 +959,18 @@ msgid "Degrees"
 msgstr "学历"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_delay_close
+msgid "Delay to Close"
+msgstr "延迟关闭"
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Delete"
 msgstr "刪除"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_department_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_department_id
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Department"
 msgstr "部门"
 
@@ -582,9 +998,7 @@ msgstr "舍弃"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_display_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_display_name
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_display_name
 msgid "Display Name"
@@ -626,6 +1040,11 @@ msgid "Email Alias"
 msgstr "Email别名"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Email alias"
+msgstr "邮箱别名"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_alias_id
 msgid ""
 "Email alias for this job position. New emails will automatically create new "
@@ -662,7 +1081,6 @@ msgstr "活动"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
 msgid "Excellent"
 msgstr "杰出"
 
@@ -682,7 +1100,7 @@ msgid "Expected Salary Extra"
 msgstr "期望薪资"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Extended Filters"
 msgstr "扩展筛选"
 
@@ -697,9 +1115,19 @@ msgid "Feedback of interviews..."
 msgstr "面试反馈..."
 
 #. module: hr_recruitment
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "初次面试"
+
+#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_fold
 msgid "Folded in Recruitment Pipe"
 msgstr "在招聘管道收起"
+
+#. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Future Activities"
+msgstr "未来活动"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -713,7 +1141,6 @@ msgstr "定义一个序列按顺序显示列表中的各阶段。"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "好"
 
@@ -723,8 +1150,8 @@ msgid "Graduate"
 msgstr "毕业生"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Group By"
 msgstr "分组"
 
@@ -734,6 +1161,11 @@ msgid "HR Department"
 msgstr "HR 部门"
 
 #. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_hr_responsible_id
+msgid "HR Responsible"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Hired Employees"
 msgstr "已雇用员工"
@@ -741,9 +1173,7 @@ msgstr "已雇用员工"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_id
 msgid "ID"
@@ -771,16 +1201,28 @@ msgid ""
 msgstr "如果“有效”字段设为false，它对信息进行隐藏但不删除它。"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_hr_recruitment_survey
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+msgid "Initial Qualification"
+msgstr "初步评价"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_hr_recruitment_survey
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Interview Forms"
 msgstr ""
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/models/hr_job.py:94
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_form_view_job
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+#, python-format
 msgid "Job"
 msgstr "工作"
+
+#. module: hr_recruitment
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
+msgid "Job Application Confirmation: ${object.job_id.name | safe}"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
@@ -831,7 +1273,7 @@ msgid "Job Positions"
 msgstr "工作岗位"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Job Posting"
 msgstr ""
 
@@ -841,7 +1283,7 @@ msgid "Job Specific"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Jobs"
 msgstr "工作"
 
@@ -858,9 +1300,7 @@ msgstr "招聘来源"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category___last_update
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree___last_update
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source___last_update
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage___last_update
 msgid "Last Modified on"
@@ -868,13 +1308,11 @@ msgstr "最后修改日"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_last_stage_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_last_stage_id
 msgid "Last Stage"
 msgstr "最终阶段"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_date_last_stage_update
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_date_last_stage_update
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Last Stage Update"
 msgstr "最后阶段更新"
@@ -882,7 +1320,6 @@ msgstr "最后阶段更新"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_uid
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_uid
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_uid
@@ -891,7 +1328,6 @@ msgstr "最后更新人"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category_write_date
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_write_date
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_write_date
@@ -899,12 +1335,17 @@ msgid "Last Updated on"
 msgstr "最后更新时间"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
+msgid "Late Activities"
+msgstr "逾期活动"
+
+#. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tour.js:16
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
-msgstr ""
+msgstr "<b/>"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -917,24 +1358,9 @@ msgid "Master Degree"
 msgstr "硕士"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_medium_id
-msgid "Medium"
-msgstr "普通"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_mobile
 msgid "Mobile"
 msgstr "手机"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
-msgid "Mobile:"
-msgstr "手机"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
-msgid "More <i class=\"fa fa-caret-down\"/>"
-msgstr "更多 <i class=\"fa fa-caret-down\"/>"
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
@@ -957,7 +1383,7 @@ msgid "Name"
 msgstr "名称"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "New"
 msgstr "新的"
 
@@ -983,7 +1409,7 @@ msgid "New Applications"
 msgstr "新的申请"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:400
+#: code:addons/hr_recruitment/models/hr_recruitment.py:426
 #, python-format
 msgid "New Employee %s Hired"
 msgstr "被雇佣的新员工%s"
@@ -1027,7 +1453,6 @@ msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
 msgid "Normal"
 msgstr "一般"
 
@@ -1037,9 +1462,9 @@ msgid "Number of Attachments"
 msgstr "附件数量"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_delay_close
-msgid "Number of Days to close the project issue"
-msgstr "剩余天数"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_delay_close
+msgid "Number of days to close"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -1056,6 +1481,11 @@ msgid ""
 msgstr "Odoo帮助您在招聘过程跟踪申请人及跟进所有操作：会议，采访等。"
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+msgid "Offer"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer"
 msgstr "主管"
@@ -1064,7 +1494,7 @@ msgstr "主管"
 #: model:ir.actions.act_window,help:hr_recruitment.action_hr_job
 msgid ""
 "Once a job position is created, you can track related applications\n"
-"                  and manage the recruitment process."
+"              and manage the recruitment process."
 msgstr ""
 
 #. module: hr_recruitment
@@ -1076,13 +1506,13 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Ongoing"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_website_hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings_module_website_hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Online Posting"
 msgstr ""
 
@@ -1093,16 +1523,6 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr "所有的进来的邮件都将附上一条线索（记录）选配的ID，即使它们不曾回复过它。如果设置了，这个将完全阻止新记录的创建。"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Organise appraisals for your employees"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-msgid "Overdue Activities"
-msgstr "逾期活动"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_alias_user_id
@@ -1130,9 +1550,9 @@ msgstr ""
 " task (model))"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_partner_id
-msgid "Partner"
-msgstr "业务伙伴"
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job_hr_responsible_id
+msgid "Person responsible of validating the employee's contracts."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_partner_phone
@@ -1168,13 +1588,8 @@ msgid "Proposed Salary Extra"
 msgstr "薪酬标准"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Recommended Apps"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1184,6 +1599,7 @@ msgstr "记录线索ID"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_root
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Recruitment"
 msgstr "招聘"
@@ -1194,12 +1610,12 @@ msgid "Recruitment / Applicants Stages"
 msgstr "招聘 / 申请阶段"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_all
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_department
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_report_filtered_job
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_graph
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_pivot
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_analysis
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_graph
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_pivot
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Recruitment Analysis"
 msgstr "招聘分析"
 
@@ -1209,7 +1625,7 @@ msgid "Recruitment Done"
 msgstr "招聘结束"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Recruitment Process"
 msgstr "招聘流程"
 
@@ -1224,11 +1640,6 @@ msgid "Recruitments"
 msgstr "招聘"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
-msgid "Recruitments Statistics"
-msgstr "招聘统计"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_reference
 msgid "Referred By"
 msgstr "引荐于"
@@ -1239,7 +1650,7 @@ msgid "Refuse"
 msgstr "拒绝"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "Refused"
 msgstr "已拒绝"
 
@@ -1250,8 +1661,8 @@ msgstr "重新打开申请"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.report_hr_recruitment
-msgid "Reporting"
-msgstr "报告"
+msgid "Reports"
+msgstr "报表"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_requirements
@@ -1261,8 +1672,8 @@ msgstr "要求"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Responsible"
 msgstr "负责人"
 
@@ -1271,11 +1682,6 @@ msgstr "负责人"
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job02
 msgid "Resumes and Letters"
 msgstr "简历和求职信"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_exp
-msgid "Salary Expected"
-msgstr "薪酬期望"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_expected
@@ -1288,11 +1694,6 @@ msgid "Salary Expected by Applicant, extra advantages"
 msgstr "应聘者的期望薪酬"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_salary_prop
-msgid "Salary Proposed"
-msgstr "提议薪酬"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed
 msgid "Salary Proposed by the Organisation"
 msgstr "该组织的提议薪酬"
@@ -1301,16 +1702,6 @@ msgstr "该组织的提议薪酬"
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant_salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "公司推荐的薪酬标准"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Save"
-msgstr "保存"
-
-#. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Save this page and come back here to set up the feature."
-msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -1328,9 +1719,9 @@ msgid "Search Applicants"
 msgstr "搜索申请人"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "Send, sign and approve documents online"
-msgstr ""
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "第二次面试"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree_sequence
@@ -1339,6 +1730,7 @@ msgid "Sequence"
 msgstr "序号"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_global_settings
 #: model:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Settings"
@@ -1347,10 +1739,9 @@ msgstr "设置"
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "显示在今天之前的下一个行动日期的所有记录"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_source_id
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source_source_id
 msgid "Source"
 msgstr "来源"
@@ -1373,21 +1764,15 @@ msgid "Sources of Applicants"
 msgstr "应聘者来源"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
-msgid "Specific Email Address"
-msgstr "指定的电子邮件"
-
-#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage_job_id
 msgid "Specific job that uses this stage. Other jobs will not use this stage."
 msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_stage_id
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_stage_id
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Stage"
 msgstr "阶段"
 
@@ -1515,21 +1900,9 @@ msgid "These people will receive email."
 msgstr "这些人将收到电子邮件。"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 msgid "This Year"
 msgstr "本年度"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_medium_id
-msgid "This is the method of delivery. Ex: Postcard, Email, or Banner Ad"
-msgstr "这是交付方式。例如： 明信片、 电子邮件、 或横幅广告"
-
-#. module: hr_recruitment
-#: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_report_source_id
-msgid ""
-"This is the source of the link Ex: Search Engine, another domain, or name of"
-" email list"
-msgstr "这是链接的来源，例如：搜索引擎，其他网域，或者邮件列表名称"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_applicant_resumes
@@ -1562,8 +1935,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
+#: model:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
 #: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-#: model:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_report_search
 msgid "Unassigned"
 msgstr "未分派"
 
@@ -1575,22 +1948,17 @@ msgid "Unread Messages"
 msgstr "未读消息"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.view_crm_case_jobs_filter
-msgid "Upcoming Activities (7 days)"
-msgstr ""
-
-#. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_write_date
 msgid "Update Date"
 msgstr "更新日期"
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use interview forms during recruitment process"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
+#: model:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Use interview forms tailored to each job position during the recruitment "
 "process. Select the form to use in the job position detail form. This relies"
@@ -1598,21 +1966,11 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage_template_id
-msgid "Use template"
-msgstr "使用模版"
-
-#. module: hr_recruitment
 #. openerp-web
 #: code:addons/hr_recruitment/static/src/js/tour.js:25
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_report_user_id
-msgid "User"
-msgstr "用户"
+msgstr "<b/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_user_email
@@ -1621,7 +1979,6 @@ msgstr "用户Email"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
 msgid "Very Good"
 msgstr "非常好"
 
@@ -1630,7 +1987,7 @@ msgstr "非常好"
 #: code:addons/hr_recruitment/static/src/js/tour.js:11
 #, python-format
 msgid "Want to <b>start recruiting</b> like a pro? <i>Start here.</i>"
-msgstr ""
+msgstr "<b/><i/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_email_cc
@@ -1651,10 +2008,20 @@ msgid ""
 msgstr "随着Odoo员工的屏幕上只是一个快速浏览，你可以很容易地找到你所需要的每个人的信息;联系人数据，工作岗位，可用性等。"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:404
+#: code:addons/hr_recruitment/models/hr_recruitment.py:430
 #, python-format
 msgid "You must define an Applied Job and a Contact Name for this applicant."
 msgstr "你必须指定应聘者应聘的岗位和姓名"
+
+#. module: hr_recruitment
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_interest
+msgid "Your Application: ${object.job_id.name | safe}"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
+msgid "Your Job Application: ${object.job_id.name | safe}"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1662,18 +2029,12 @@ msgid "e.g. Sales Manager"
 msgstr "例如：销售经理"
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_config_settings_module_website_sign
-#: model:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_config_settings_view_form
-msgid "eSign"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_config_settings
-msgid "hr.recruitment.config.settings"
-msgstr "hr.recruitment.config.settings"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/models/hr_recruitment.py:280
+#: code:addons/hr_recruitment/models/hr_recruitment.py:281
 #, python-format
 msgid "job applicants"
 msgstr "应聘者"
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_res_config_settings
+msgid "res.config.settings"
+msgstr "设置-基础设置"

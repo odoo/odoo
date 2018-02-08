@@ -10,10 +10,10 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2016
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
+"POT-Creation-Date: 2017-10-02 11:26+0000\n"
+"PO-Revision-Date: 2017-10-02 11:26+0000\n"
 "Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2016\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +85,7 @@ msgid "Add"
 msgstr "Toevoegen"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:290
+#: code:addons/lunch/models/lunch.py:294
 #, python-format
 msgid "Alert"
 msgstr "Waarschuwing"
@@ -101,7 +101,7 @@ msgstr "Waarschuwingen"
 #: model:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid ""
 "Alerts are used to warn employee from possible issues concerning the lunch orders.\n"
-"                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display."
+"                To create a lunch alert you have to define its recurrence, the time interval during which the alert should be executed and the message to display."
 msgstr ""
 "Waarschuwingen worden gebruikt om personeelsleden op de hoogte te houden van eventuele\n"
 "problemen met hun lunch order. Om een waarschuwing in te stellen moet u de herhaling, het\n"
@@ -126,12 +126,17 @@ msgstr "Gearchiveerd"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_balance_visible
 msgid "Balance Visible"
-msgstr ""
+msgstr "Saldo zichtbaar"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_start_hour
 msgid "Between"
 msgstr "Tussen"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_alert_kanban
+msgid "Between:"
+msgstr "Tussen:"
 
 #. module: lunch
 #: model:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search_2
@@ -168,6 +173,7 @@ msgstr ""
 " teruggave wil)"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model:ir.ui.view,arch_db:lunch.view_lunch_order_line_lucky
 msgid "Cancel"
@@ -187,7 +193,7 @@ msgstr "Kas mutatie"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_cash_move_balance
 msgid "Cash Move Balance"
-msgstr ""
+msgstr "Balans kasmutatie"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id
@@ -423,7 +429,7 @@ msgstr "Ik voel me niet rijk"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_id
-#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1690
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category_id_1786
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_id
 msgid "ID"
 msgstr "ID"
@@ -483,14 +489,14 @@ msgid "Lunch Alert"
 msgstr "Lunch waarschuwing"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:261
+#: code:addons/lunch/models/lunch.py:265
 #, python-format
 msgid "Lunch Cashmove"
 msgstr "Lunch kasmutatie"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:64
-#: model:ir.actions.report.xml,name:lunch.action_report_lunch_order
+#: code:addons/lunch/models/lunch.py:66
+#: model:ir.actions.report,name:lunch.action_report_lunch_order
 #: model:ir.model,name:lunch.model_lunch_order
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #, python-format
@@ -500,22 +506,22 @@ msgstr "Lunchorder"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.action_server_lunch_archive_product
 msgid "Lunch: Archive/Restore products"
-msgstr ""
+msgstr "Lunch: Archiveer/herstel producten"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "Lunch: annuleer maaltijden"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_order
 msgid "Lunch: Order meals"
-msgstr ""
+msgstr "Lunch: bestel maaltijden"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_line_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "Lunch: ontvang maaltijden"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_admin
@@ -587,19 +593,19 @@ msgid "Note"
 msgstr "Notitie"
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:221
+#: code:addons/lunch/models/lunch.py:225
 #, python-format
 msgid "Only your lunch manager cancels the orders."
 msgstr "Alleen uw lunch manager annuleert de orders."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:190
+#: code:addons/lunch/models/lunch.py:194
 #, python-format
 msgid "Only your lunch manager processes the orders."
 msgstr "Alleen uw lunch manager verwerkt de orders."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:210
+#: code:addons/lunch/models/lunch.py:214
 #, python-format
 msgid "Only your lunch manager sets the orders as received."
 msgstr "Alleen uw lunch manager zet de orders op ontvangen."
@@ -607,6 +613,7 @@ msgstr "Alleen uw lunch manager zet de orders op ontvangen."
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_order_id
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_order_id
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 #: model:ir.ui.view,arch_db:lunch.report_lunch_order
 #: selection:lunch.cashmove,state:0
@@ -653,12 +660,12 @@ msgstr "Betaling"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_ids
 msgid "Previous Order"
-msgstr ""
+msgstr "Vorige order"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_previous_order_widget
 msgid "Previous Order Widget"
-msgstr ""
+msgstr "Vorige order widget"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
@@ -671,6 +678,11 @@ msgstr "Vorige Orders"
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Price"
 msgstr "Prijs"
+
+#. module: lunch
+#: model:ir.ui.view,arch_db:lunch.view_lunch_product_kanban
+msgid "Price:"
+msgstr "Prijs:"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order_line_lucky_product_id
@@ -725,6 +737,7 @@ msgid "Products Tree"
 msgstr "Productenlijst"
 
 #. module: lunch
+#: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_kanban
 #: model:ir.ui.view,arch_db:lunch.lunch_order_line_view_tree
 msgid "Receive"
 msgstr "Ontvangen"
@@ -737,7 +750,7 @@ msgstr "Ontvangen"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert_alert_type
-msgid "Recurrency"
+msgid "Recurrence"
 msgstr "Herhaling"
 
 #. module: lunch
@@ -812,7 +825,7 @@ msgid "The company this user is currently working for."
 msgstr "Het bedrijf waar deze gebruiker momenteel voor werkt."
 
 #. module: lunch
-#: code:addons/lunch/models/lunch.py:126
+#: code:addons/lunch/models/lunch.py:129
 #, python-format
 msgid "The date of your order is in the past."
 msgstr "De datum van uw order is al gepasseerd."

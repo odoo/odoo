@@ -4,10 +4,12 @@
 import functools
 import unittest
 
-from odoo.tools import frozendict
+from odoo.tests.common import tagged
+from odoo.tools import frozendict, pycompat
 from odoo.tools.func import compose
 
 
+@tagged('standard', 'at_install')
 class TestCompose(unittest.TestCase):
     def test_basic(self):
         str_add = compose(str, lambda a, b: a + b)
@@ -16,13 +18,14 @@ class TestCompose(unittest.TestCase):
     def test_decorator(self):
         """ ensure compose() can be partially applied as a decorator
         """
-        @functools.partial(compose, unicode)
+        @functools.partial(compose, pycompat.text_type)
         def mul(a, b):
             return a * b
 
         self.assertEqual(mul(5, 42), u"210")
 
 
+@tagged('standard', 'at_install')
 class TestFrozendict(unittest.TestCase):
     def test_frozendict_immutable(self):
         """ Ensure that a frozendict is immutable. """

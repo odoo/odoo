@@ -34,7 +34,7 @@
             <field name="name">Workload</field>
             <field name="model_id">report.project.task.user</field>
             <field name="user_id" eval="False"/>
-            <field name="context">{'group_by': ['project_id'], 'measures': ['total_hours','planned_hours','remaining_hours']}</field>
+            <field name="context">{'group_by': ['project_id'], 'measures': ['planned_hours','remaining_hours']}</field>
         </record>
         <record id="filter_task_report_responsible" model="ir.filters">
             <field name="name">By Responsible</field>
@@ -71,12 +71,12 @@
                     </group>
                     <group expand="1" string="Group By">
                         <filter string="Project" name="project" context="{'group_by':'project_id'}"/>
-                        <filter string="Task" context="{'group_by':'name'}"/>
+                        <filter string="Task" name="task" context="{'group_by':'name'}"/>
                         <filter string="Assigned to" name="User" context="{'group_by':'user_id'}"/>
                         <filter string="Stage" name="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator/>
-                        <filter string="Assignation Month" context="{'group_by':'date_start:month'}" help="Creation Date"/>
+                        <filter string="Assignation Month" name="assignation_month" context="{'group_by':'date_start:month'}" help="Creation Date"/>
                     </group>
                 </search>
             </field>
@@ -89,22 +89,6 @@
             <field name="view_mode">graph,pivot</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
-        </record>
-
-       <record id="action_project_task_user_tree_filtered" model="ir.actions.act_window">
-            <field name="name">Tasks Analysis</field>
-            <field name="res_model">report.project.task.user</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,pivot</field>
-            <field name="search_view_id" ref="view_task_project_user_search"/>
-            <field name="context">{
-                'group_by_no_leaf':1,
-                'group_by':[],
-                'search_default_project_id': [active_id],
-                'default_project_id': active_id,
-            }
-            </field>
             <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 

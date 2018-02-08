@@ -179,7 +179,7 @@ var DataExport = Dialog.extend({
             var self = this;
             this.exports.create({
                 name: value,
-                resource: this.dataset.model,
+                resource: this.record.model,
                 export_fields: _.map(fields, function (field) {
                     return [0, 0, {name: field}];
                 }),

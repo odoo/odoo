@@ -1,21 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_import_module
-#
+# 
 # Translators:
-# Ralf Hilgenstock <rh@dialoge.info>, 2015
+# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Anja Funk <anja.funk@afimage.de>, 2017
+# Martin Trigaux <mat@odoo.com>, 2017
+# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# darenkster <inactive+darenkster@transifex.com>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Renzo Meister <info@jamotion.ch>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-19 15:20+0000\n"
-"Last-Translator: Ralf Hilgenstock <rh@dialoge.info>\n"
-"Language-Team: German (http://www.transifex.com/odoo/odoo-9/language/de/)\n"
-"Language: de\n"
+"POT-Creation-Date: 2017-10-24 09:00+0000\n"
+"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"Last-Translator: Renzo Meister <info@jamotion.ch>, 2017\n"
+"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_import_module
@@ -29,28 +38,34 @@ msgid "Close"
 msgstr "Schließen"
 
 #. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:31
+#, python-format
+msgid "Could not select database '%s'"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_uid
 msgid "Created by"
-msgstr "Angelegt von"
+msgstr "Erstellt von"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_create_date
 msgid "Created on"
-msgstr "Angelegt am"
+msgstr "Erstellt am"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_display_name
 msgid "Display Name"
-msgstr "Angezeigter Name"
+msgstr "Anzeigename"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:94
+#: code:addons/base_import_module/models/ir_module.py:112
 #, python-format
 msgid "File '%s' exceed maximum allowed file size"
 msgstr "Die Datei '%s' überschreitet die maximal erlaubte Dateigröße"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:86
+#: code:addons/base_import_module/models/ir_module.py:104
 #, python-format
 msgid "File is not a zip file!"
 msgstr "Das ist keine ZIP-Datei"
@@ -62,7 +77,8 @@ msgstr "Erzwinge init"
 
 #. module: base_import_module
 #: model:ir.model.fields,help:base_import_module.field_base_import_module_force
-msgid "Force init mode even if installed. (will update `noupdate='1'` records)"
+msgid ""
+"Force init mode even if installed. (will update `noupdate='1'` records)"
 msgstr ""
 "Erzwinge init Modus, auch wenn bereits installiert (Aktualisierung von "
 "`noupdate='1'` Daten)"
@@ -78,17 +94,17 @@ msgid "Import App"
 msgstr "App importieren"
 
 #. module: base_import_module
+#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
+msgid "Import Message"
+msgstr ""
+
+#. module: base_import_module
 #: model:ir.actions.act_window,name:base_import_module.action_view_base_module_import
 #: model:ir.model,name:base_import_module.model_base_import_module
 #: model:ir.ui.menu,name:base_import_module.menu_view_base_module_import
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
 msgid "Import Module"
 msgstr "Importiere Modul"
-
-#. module: base_import_module
-#: model:ir.model.fields,field_description:base_import_module.field_base_import_module_import_message
-msgid "Import message"
-msgstr "Mitteilung importieren"
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -118,12 +134,24 @@ msgstr "Zuletzt aktualisiert am"
 #. module: base_import_module
 #: model:ir.model,name:base_import_module.model_ir_module_module
 msgid "Module"
-msgstr "Module"
+msgstr "Modul"
 
 #. module: base_import_module
 #: model:ir.model.fields,field_description:base_import_module.field_base_import_module_module_file
 msgid "Module .ZIP file"
 msgstr "Modul .ZIP Datei"
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:102
+#, python-format
+msgid "No file sent."
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/controllers/main.py:25
+#, python-format
+msgid "Only administrators can upload a module"
+msgstr ""
 
 #. module: base_import_module
 #: model:ir.ui.view,arch_db:base_import_module.view_base_module_import
@@ -141,7 +169,14 @@ msgid "Status"
 msgstr "Status"
 
 #. module: base_import_module
-#: code:addons/base_import_module/models/ir_module.py:33
+#: code:addons/base_import_module/models/ir_module.py:40
+#: code:addons/base_import_module/models/ir_module.py:47
+#, python-format
+msgid "Studio customizations require Studio"
+msgstr ""
+
+#. module: base_import_module
+#: code:addons/base_import_module/models/ir_module.py:42
 #, python-format
 msgid "Unmet module dependencies: %s"
 msgstr "Es gibt abhängige Module: %s"
@@ -149,9 +184,14 @@ msgstr "Es gibt abhängige Module: %s"
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "done"
-msgstr "fertig"
+msgstr "abgeschlossen"
 
 #. module: base_import_module
 #: selection:base.import.module,state:0
 msgid "init"
 msgstr "init"
+
+#. module: base_import_module
+#: model:ir.model,name:base_import_module.model_ir_ui_view
+msgid "ir.ui.view"
+msgstr "ir.ui.view"

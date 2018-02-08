@@ -14,6 +14,32 @@
             </tree>
         </field>
     </record>
+
+    <record id="hr_payroll_structure_view_kanban" model="ir.ui.view">
+        <field name="name">hr.payroll.structure.kanban</field>
+        <field name="model">hr.payroll.structure</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <span>Code: <field name="code"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="view_hr_payroll_structure_tree" model="ir.ui.view">
         <field name="name">hr.payroll.structure.tree</field>
         <field name="model">hr.payroll.structure</field>
@@ -69,24 +95,11 @@
         <field name="name">Salary Structures</field>
         <field name="res_model">hr.payroll.structure</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="view_hr_payroll_structure_list_view"/>
+        <field name="view_mode">tree,kanban,form</field>
     </record>
     <menuitem
         id="menu_hr_payroll_structure_view"
         action="action_view_hr_payroll_structure_list_form"
-        parent="menu_hr_payroll_configuration"
-        sequence="2"
-    />
-    <record id="action_view_hr_payroll_structure_tree" model="ir.actions.act_window">
-        <field name="name">Salary Structures Hierarchy</field>
-        <field name="res_model">hr.payroll.structure</field>
-        <field name="view_type">tree</field>
-        <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_hr_payroll_structure_tree"/>
-    </record>
-    <menuitem
-        id="menu_hr_payroll_structure_tree"
-        action="action_view_hr_payroll_structure_tree"
         parent="menu_hr_payroll_configuration"
         sequence="2"
     />
@@ -184,6 +197,25 @@
             </tree>
         </field>
     </record>
+    <record id="hr_contribution_register_view_kanban" model="ir.ui.view">
+        <field name="name">hr.contribution.register.kanban</field>
+        <field name="model">hr.contribution.register</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     <record id="hr_contribution_register_filter" model="ir.ui.view">
         <field name="name">hr.contribution.register.search</field>
         <field name="model">hr.contribution.register</field>
@@ -201,6 +233,7 @@
             <form string="Contribution">
                 <group>
                     <field name="name"/>
+                    <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" class="oe_inline"/>
                 </group>
                 <newline/>
@@ -214,16 +247,16 @@
         <field name="name">Contribution Registers</field>
         <field name="res_model">hr.contribution.register</field>
         <field name="view_type">form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a new contribution register.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new contribution register
           </p><p>
             A contribution register is a third party involved in the salary
             payment of the employees. It can be the social security, the
             estate or anyone that collect or inject money on payslips.
           </p>
         </field>
-        <field name="view_id" ref="hr_contribution_register_tree"/>
     </record>
     <menuitem
         id="menu_action_hr_contribution_register_form"
@@ -245,6 +278,34 @@
                 <field name="sequence" invisible="1"/>
                 <field name="register_id"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="hr_salary_rule_view_kanban" model="ir.ui.view">
+        <field name="name">hr.salary.rule.kanban</field>
+        <field name="model">hr.salary.rule</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_content oe_kanban_global_click">
+                            <div class="row">
+                                <div class="col-xs-8">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="col-xs-4">
+                                    <span class="pull-right"><field name="category_id"/></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <span>Code: <field name="code"/></span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -339,7 +400,7 @@
         <field name="name">Salary Rules</field>
         <field name="res_model">hr.salary.rule</field>
         <field name="view_type">form</field>
-        <field name="view_id" ref="hr_salary_rule_list"/>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('parent_rule_id','=',False)]</field>
         <field name="search_view_id" ref="view_hr_rule_filter"/>
     </record>

@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * base_vat
-#
+# 
 # Translators:
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2017
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2017
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2017
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-09-07 16:40+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Finnish (http://www.transifex.com/odoo/odoo-9/language/fi/)\n"
-"Language: fi\n"
+"POT-Creation-Date: 2017-09-20 09:53+0000\n"
+"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2017\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: fi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_vat
@@ -23,49 +27,55 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: base_vat
-#: model:ir.model.fields,help:base_vat.field_res_company_vat_check_vies
-msgid ""
-"If checked, Partners VAT numbers will be fully validated against EU's VIES "
-"service rather than via a simple format validation (checksum)."
-msgstr ""
-"Jos valittuna, niin kumppanin alv-numero varmistetaan EU:n VIES-"
-"järjestelmästä. Muutoin tehdään pelkkä numeron tarkistussumman lasekenta. "
-"Tarkista aina erikseen alv-numeron ja kumppanin nimen yhteenkuuluvuus."
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
-msgid "Partner"
-msgstr "Kumppani"
+msgid "Contact"
+msgstr "Kontakti"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:128
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid ""
+"If this checkbox is ticked, you will not be able to save a contact if its "
+"VAT number cannot be verified by the European VIES service."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/models/res_partner.py:134
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
-"ALV numero [%s] kumppanille [%s] ei ilmeisesti ole voimassa.\n"
+"ALV-numero [%s] kumppanille [%s] ei ilmeisesti ole oikein.\n"
 "Huom! Odotettu muotoilu on %s"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:127
+#: code:addons/base_vat/models/res_partner.py:133
 #, python-format
 msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
-"ALV numero [%s] kumppanille [%s] ei läpäissyt ALV-numeron "
-"oikeellisuustarkistusta tai ei ole vaaditun  muotoilun %s mukainen."
-
-#. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
-msgid "VIES VAT Check"
-msgstr "VIES ALV tarkistus"
+"ALV-numero [%s] kumppanille [%s] ei läpäissyt ALV-numeron VIES-tarkistusta "
+"tai ei ole vaaditun  muotoilun %s mukainen."
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "e.g. BE0477472701"
-msgstr "e.g. FI25782977"
+#: model:ir.ui.view,arch_db:base_vat.view_partner_short_form
+msgid "VAT"
+msgstr "ALV"
 
-#~ msgid "Importing VAT Number [%s] is not valid !"
-#~ msgstr "Tuonnin ALV numero [%s] ei kelpaa!"
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
+#: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
+msgid "Verify VAT Numbers"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
+msgid "Verify VAT numbers using the European VIES service"
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"

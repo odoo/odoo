@@ -75,7 +75,7 @@
                 <field name="partner_ids"/>
                 <field name="location"/>
                 <field name="state" invisible="True"/>
-                <field name="duration"/>
+                <field name="duration" widget="float_time"/>
                 <field name="message_needaction" invisible="1"/>
             </tree>
         </field>
@@ -88,6 +88,9 @@
         <field name="arch" type="xml">
             <form string="Meetings">
                 <sheet>
+                    <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                    <field name="res_model" invisible="1" />
+                    <field name="res_id" invisible="1" />
                     <field name="state" invisible="1"/>
                     <field name="is_attendee" invisible="1"/>
                     <field name="attendee_status" invisible="1"/>
@@ -119,10 +122,10 @@
                                     <field name="stop" attrs="{'invisible': True}"/>
                                     <field name="id" attrs="{'invisible': True}"/>
 
-                                    <field name="start_date" string="Starting at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
-                                    <field name="stop_date" string="Ending at" attrs="{'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
 
-                                    <field name="start_datetime" string="Starting at" attrs="{'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                    <field name="start_datetime" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)], 'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
                                     <field name="stop_datetime" invisible="1"/>
                                     <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
                                     <div attrs="{'invisible': [('allday','=',True)]}">
@@ -233,6 +236,9 @@
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <form string="Meetings">
+                <button string="Document" class="oe_stat_button pull-right" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                <field name="res_model" invisible="1" />
+                <field name="res_id" invisible="1" />
                 <field name="state" invisible="1"/>
                 <field name="is_attendee" invisible="1"/>
                 <field name="attendee_status" invisible="1"/>
@@ -286,14 +292,14 @@
                 <field name="user_id"/>
                 <field name="show_as"/>
                 <field name="privacy" string="Privacy"/>
-                <filter string="My Events" domain="[('user_id','=',uid)]" help="My Events"/>
+                <filter string="My Events" name="myevents" domain="[('user_id','=',uid)]" help="My Events"/>
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Availability" domain="[]" context="{'group_by':'show_as'}"/>
-                    <filter string="Privacy" domain="[]" context="{'group_by':'privacy'}"/>
+                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Availability" name="availability" domain="[]" context="{'group_by':'show_as'}"/>
+                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by':'privacy'}"/>
                 </group>
             </search>
         </field>
@@ -306,11 +312,11 @@
         <field name="view_id" ref="view_calendar_event_calendar"/>
         <field name="search_view_id" ref="view_calendar_event_search"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to schedule a new meeting.
+          <p class="o_view_nocontent_smiling_face">
+            Schedule a new meeting
           </p><p>
             The calendar is shared between employees and fully integrated with
-            other applications such as the employee holidays or the business
+            other applications such as the employee leaves or the business
             opportunities.
           </p>
         </field>

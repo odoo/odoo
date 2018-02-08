@@ -5,8 +5,10 @@ from datetime import datetime
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.account.tests.account_test_classes import AccountingTestCase
+from odoo.tests import tagged
 
 
+@tagged('post_install', '-at_install')
 class TestPurchaseOrder(AccountingTestCase):
 
     def setUp(self):
@@ -126,7 +128,7 @@ class TestPurchaseOrder(AccountingTestCase):
 
         # Check quantity received
         received_qty = sum(pol.qty_received for pol in self.po.order_line)
-        self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incomming shipment' % received_qty)
+        self.assertEqual(received_qty, 10.0, 'Purchase: Received quantity should be 10.0 instead of %s after validating incoming shipment' % received_qty)
 
         # Create return picking
         StockReturnPicking = self.env['stock.return.picking']

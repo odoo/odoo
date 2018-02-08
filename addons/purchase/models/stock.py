@@ -16,10 +16,10 @@ class StockPicking(models.Model):
         res = super(StockPicking, self)._create_backorder(backorder_moves)
         for picking in self:
             if picking.picking_type_id.code == 'incoming':
-                backorder = self.search([('backorder_id', '=', picking.id)])
-                backorder.message_post_with_view('mail.message_origin_link',
-                    values={'self': backorder, 'origin': backorder.purchase_id},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                for backorder in self.search([('backorder_id', '=', picking.id)]):
+                    backorder.message_post_with_view('mail.message_origin_link',
+                        values={'self': backorder, 'origin': backorder.purchase_id},
+                        subtype_id=self.env.ref('mail.mt_note').id)
         return res
 
 
@@ -28,12 +28,27 @@ class StockMove(models.Model):
 
     purchase_line_id = fields.Many2one('purchase.order.line',
         'Purchase Order Line', ondelete='set null', index=True, readonly=True, copy=False)
+    created_purchase_line_id = fields.Many2one('purchase.order.line',
+        'Created Purchase Order Line', ondelete='set null', readonly=True, copy=False)
+
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('purchase_line_id')
+        return distinct_fields
+
+    @api.model
+    def _prepare_merge_move_sort_method(self, move):
+        move.ensure_one()
+        keys_sorted = super(StockMove, self)._prepare_merge_move_sort_method(move)
+        keys_sorted.append(move.purchase_line_id.id)
+        return keys_sorted
 
     @api.multi
     def _get_price_unit(self):
         """ Returns the unit price for the move"""
         self.ensure_one()
-        if self.purchase_line_id:
+        if self.purchase_line_id and self.product_id.id == self.purchase_line_id.product_id.id:
             line = self.purchase_line_id
             order = line.order_id
             price_unit = line.price_unit
@@ -55,6 +70,25 @@ class StockMove(models.Model):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
+
+    def _action_done(self):
+        res = super(StockMove, self)._action_done()
+        self.mapped('purchase_line_id').sudo()._update_received_qty()
+        return res
+
+    def write(self, vals):
+        res = super(StockMove, self).write(vals)
+        if 'product_uom_qty' in vals:
+            self.filtered(lambda m: m.state == 'done' and m.purchase_line_id).mapped(
+                'purchase_line_id').sudo()._update_received_qty()
+        return res
+
+    def _get_upstream_documents_and_responsibles(self, visited):
+        if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel'):
+            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
+        else:
+            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -137,3 +171,13 @@ class ReturnPicking(models.TransientModel):
         vals = super(ReturnPicking, self)._prepare_move_default_values(return_line, new_picking)
         vals['purchase_line_id'] = return_line.move_id.purchase_line_id.id
         return vals
+
+
+class Orderpoint(models.Model):
+    _inherit = "stock.warehouse.orderpoint"
+
+    def _quantity_in_progress(self):
+        res = super(Orderpoint, self)._quantity_in_progress()
+        for poline in self.env['purchase.order.line'].search([('state','in',('draft','sent','to approve')),('orderpoint_id','in',self.ids)]):
+            res[poline.orderpoint_id.id] += poline.product_uom._compute_quantity(poline.product_qty, poline.orderpoint_id.product_uom, round=False)
+        return res

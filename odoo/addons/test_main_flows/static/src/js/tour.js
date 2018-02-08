@@ -10,13 +10,13 @@ tour.register('main_flow_tour', {
     test: true,
     url: "/web",
 }, [tour.STEPS.MENU_MORE, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
 }, {
 // Add Stockable product
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Catalog')",
+    trigger: ".o_menu_sections a:contains('Products')",
     extra_trigger: '.o_main_navbar',
     content: _t("Let\'s create products."),
     position: "bottom",
@@ -28,7 +28,7 @@ tour.register('main_flow_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
     content: _t('Let\'s create your first product.'),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
@@ -68,7 +68,7 @@ tour.register('main_flow_tour', {
 }, {
     trigger: ".o_list_button_add",
     content: _t("Let's create a new bill of material"),
-    position: "right",
+    position: "bottom",
 }, {
 // Add first component
     trigger: ".o_field_x2many_list_row_add > a",
@@ -130,7 +130,7 @@ tour.register('main_flow_tour', {
 }, {
 // Add second component
     trigger: ".o_field_x2many_list_row_add > a",
-    in_modal: false,
+    extra_trigger: "body:not(.modal-open)",
     content: _t("Click here to add some lines."),
     position: "bottom",
 }, {
@@ -195,7 +195,7 @@ tour.register('main_flow_tour', {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_view',
     content: _t('Let\'s create your second product.'),
-    position: 'right',
+    position: 'bottom',
 }, {
     trigger: 'input[name=name]',
     extra_trigger: '.o_form_sheet',
@@ -208,15 +208,15 @@ tour.register('main_flow_tour', {
     position: 'left',
     run: 'text "service"',
 }, {
-    trigger: '.o_notebook a:contains("Invoicing")',
-    content: _t('Go to invoicing tab'),
+    trigger: '.o_notebook a:contains("Sales")',
+    content: _t('Go to sales tab'),
     position: 'bottom',
 }, {
-    trigger: '.o_field_widget[name=invoice_policy] .o_radio_input[data-value="delivery"]',
-    content: _t('Change invoicing policy'),
+    trigger: '.o_field_widget[name=service_policy] .o_radio_input[data-value="delivered_timesheet"]',
+    content: _t('Change service policy'),
     position: 'left',
 }, {
-    trigger: '.o_field_widget[name=track_service] input[data-value="task"]',
+    trigger: '.o_field_widget[name=service_tracking] input[data-value="task_global_project"]',
     content: _t('Change track service'),
     position: 'left',
 }, {
@@ -236,48 +236,42 @@ tour.register('main_flow_tour', {
 // Create an opportunity
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
-    content: _t('Organize your sales activities with the <b>Sales app</b>.'),
+    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"], .oe_menu_toggler[data-menu-xmlid="crm.crm_menu_root"]',
+    content: _t('Organize your sales activities with the <b>CRM app</b>.'),
     position: 'bottom',
-}, {
-    trigger: ".o_sales_dashboard .o_dashboard_action[name='crm.action_your_pipeline']:last, .oe_secondary_submenu .oe_menu_text:contains('My Pipeline'):first",
-    content: _t("Let\'s have a look at your opportunities pipeline."),
-    position: "bottom"
 }, {
     trigger: ".o-kanban-button-new",
     extra_trigger: '.o_opportunity_kanban',
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
-    position: "right"
+    position: "bottom"
 }, {
-    trigger: ".modal-body input:first",
-    content: _t("Enter the opportunity title."),
+    trigger: ".o_kanban_quick_create input:first",
+    content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
     run: "text the_flow.opportunity",
 }, {
-    trigger: ".o_field_widget[name=partner_id] input",
+    trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] input",
     content: _t("Write the name of your customer to create one on the fly, or select an existing one."),
     position: "left",
     run: "text the_flow.customer",
 }, {
     trigger: ".ui-menu-item > a:contains('the_flow.customer')",
-    in_modal: false,
     auto: true,
 }, {
-    trigger: ".modal-footer .btn-primary",
-    extra_trigger: ".o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
-    content: _t("Create"),
-    position: "bottom",
+    trigger: ".o_kanban_quick_create .o_kanban_add",
+    extra_trigger: ".o_kanban_quick_create .o_field_widget[name=partner_id] > .o_external_button", // Wait name_create
+    content: _t("Click here to <b>add your opportunity</b>."),
+    position: "right",
 }, {
-    trigger: ".o_kanban_group:first-child .o_kanban_record:last-child",
+    trigger: ".o_kanban_group:first .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
     position: "right",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
-    trigger: ".o_kanban_record:has(span:contains('the_flow.opportunity'))",
-    extra_trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))", // FIXME: this is required due to an issue in tour_manager (see [*])
+    trigger: ".o_kanban_group:eq(2) > .o_kanban_record:has(span:contains('the_flow.opportunity'))",
     content: _t("Click on an opportunity to zoom to it."),
     position: "bottom",
 }, {
@@ -363,7 +357,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app > div:contains("Inventory"), .oe_menu_toggler:contains("Inventory")',
@@ -371,11 +365,11 @@ tour.register('main_flow_tour', {
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Inventory Control')",
-    content: _t("Go to Inventory Control"),
+    trigger: ".o_menu_sections a:contains('Master Data')",
+    content: _t("Go to Master Data"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Reordering Rules')), .oe_secondary_submenu .oe_menu_text:contains('Reordering Rules'):first",
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
     position: "bottom"
 }, {
@@ -407,12 +401,12 @@ tour.register('main_flow_tour', {
 }, {
 // Run the schedulers
     edition: "enterprise",
-    trigger: ".o_menu_sections a:contains('Schedulers')",
-    content: _t("Go to Schedulers"),
+    trigger: ".o_menu_sections a:contains('Operations')",
+    content: _t("Go to Run Schedulers"),
     position: "bottom"
-}, {
-    trigger: ".o_menu_sections a:has(span:contains('Run Schedulers')), .oe_secondary_submenu .oe_menu_text:contains('Run Schedulers'):first",
-    content: _t("Run the schedulers"),
+},{
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_procurement_compute'], .oe_secondary_submenu a[data-menu-xmlid='stock.menu_procurement_compute']",
+    content: _t("Click on schedulers"),
     position: "bottom"
 }, {
     trigger: ".modal-footer .btn-primary",
@@ -423,7 +417,7 @@ tour.register('main_flow_tour', {
 //Go to purchase:
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app > div:contains("Purchases"), .oe_menu_toggler:contains("Purchases")',
@@ -484,7 +478,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     trigger: '.o_app > div:contains("Manufacturing"), .oe_menu_toggler:contains("Manufacturing")',
@@ -513,19 +507,19 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
-    trigger: '.o_app[data-menu-xmlid="sales_team.menu_base_partner"], .oe_menu_toggler[data-menu-xmlid="sales_team.menu_base_partner"]',
+    trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"], .oe_menu_toggler[data-menu-xmlid="sale.sale_menu_root"]',
     content: _t('Organize your sales activities with the <b>Sales app</b>.'),
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: ".o_menu_sections a[data-menu-xmlid='sales_team.menu_sales']",
+    trigger: ".o_menu_sections a[data-menu-xmlid='sale.sale_order_menu']",
     content: _t("Go to Sales menu"),
     position: "bottom"
 }, {
-    trigger: ".o_menu_sections a:has(span:contains('Sales Orders')), .oe_secondary_submenu .oe_menu_text:contains('Sales Orders'):first",
+    trigger: ".o_menu_sections a[data-menu-xmlid='sale.menu_sale_order'], .oe_secondary_submenu a[data-menu-xmlid='sale.menu_sale_order']",
     content: _t("Go to the sales orders"),
     position: "bottom"
 }, {
@@ -606,7 +600,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: '.o_menu_toggle',
-    content: _t('Go back to the app switcher'),
+    content: _t('Go back to the home menu'),
     position: 'bottom',
 }, {
     edition: "enterprise",
@@ -650,6 +644,7 @@ tour.register('main_flow_tour', {
 }, {
     edition: "enterprise",
     trigger: ".ui-menu-item > a:contains('the_flow.customer')",
+    in_modal: false,
     auto: true,
 }, {
     edition: "enterprise",

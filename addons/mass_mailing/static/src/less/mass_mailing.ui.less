@@ -1,11 +1,22 @@
+.o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+    // cancel padding of form_sheet
+    margin-top: -@odoo-sheet-cancel-tpadding;
+    margin-left: -@odoo-sheet-cancel-hpadding;
+    margin-right: -@odoo-sheet-cancel-hpadding;
+    margin-bottom: -@odoo-sheet-cancel-bpadding;
+}
+
 .o_mail_theme_selector {
     > a {
         .o-position-absolute(0, 0, auto, 0);
-        height: 34px;
+        height: @odoo-navbar-height;
         line-height: 31px;
         border-radius: 0;
         background-color: @o-we-color-darker;
         color: @o-we-color-text-normal;
+        .o-flex-display();
+        .o-justify-content(center);
+        .o-align-items(center);
 
         &:hover, &:focus, &:active {
             color: @o-we-color-text-light;
@@ -143,5 +154,11 @@ body.o_force_mail_theme_choice {
                 }
             }
         }
+    }
+}
+
+#web_editor_inside_iframe {
+    #wrapwrap > main #editable_area {
+        padding: 24px;
     }
 }

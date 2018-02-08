@@ -7,13 +7,14 @@
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2016
 # Martin Trigaux <mat@odoo.com>, 2016
 # Cas Vissers <casvissers@brahoo.nl>, 2017
+# Julia van Orsouw <julia@odooexperts.nl>, 2017
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:50+0000\n"
-"PO-Revision-Date: 2017-02-15 09:50+0000\n"
-"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2017\n"
+"POT-Creation-Date: 2017-09-20 09:54+0000\n"
+"PO-Revision-Date: 2017-09-20 09:54+0000\n"
+"Last-Translator: Julia van Orsouw <julia@odooexperts.nl>, 2017\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,19 +45,10 @@ msgstr "Voeg een inschrijvingsknop voor nieuwsbrieven toe"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:49
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:53
 #, python-format
 msgid "Add a Newsletter Subscribe Popup"
 msgstr "Voeg een nieuwsbrief popup toe"
-
-#. module: website_mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid ""
-"Allow the use of a pop-up snippet on website to encourage visitors to sign "
-"up on a mass mailing list"
-msgstr ""
-"Sta het gebruik van pop-up snippets op de website toe om bezoekers aan te "
-"moedigen om zich in te schrijven voor de bulkmailing lijst."
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.newsletter_subscribe_options
@@ -75,12 +67,9 @@ msgid "Contact"
 msgstr "Contact"
 
 #. module: website_mass_mailing
-#: selection:mass.mailing.config.settings,group_website_popup_on_exit:0
-msgid ""
-"Do not add extra content on website pages to encourage visitors to sign up"
-msgstr ""
-"Voeg geen extra inhoud toe op website pagina's om bezoekers aan te moedigen "
-"zich in te schrijven"
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid "Encourage to subscribe to mailing lists with a popup"
+msgstr "Moedig aan om in te schrijven op de mailing lijst met een pop-up"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_popup
@@ -100,7 +89,7 @@ msgstr "Mailing inschrijvers"
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:22
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:21
 #, python-format
 msgid "Newsletter"
 msgstr "Nieuwsbrief"
@@ -127,8 +116,20 @@ msgid "Thanks for your subscription!"
 msgstr "Bedankt voor uw aanmelding!"
 
 #. module: website_mass_mailing
+#: model:ir.ui.view,arch_db:website_mass_mailing.res_config_settings_view_form
+msgid ""
+"This adds a new Newsletter Popup snippet to drag & drop on on your website "
+"pages. It triggers a popup when visitors land on the page. This popup "
+"prompts them to enter their email address to join a mailing list."
+msgstr ""
+"Dit voegt een nieuwe kranten pop-up snippet toe aan de drag & drop op uw "
+"webpagina's. Het triggert een pop-up zodra bezoekers op de pagina komen. De "
+"pop-up vraagt hen een e-mailadres in te vullen om lid te worden van een "
+"mailing lijst."
+
+#. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:80
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.editor.js:83
 #, python-format
 msgid "Type Here ..."
 msgstr "Type hier..."
@@ -139,9 +140,9 @@ msgid "Use subscription pop up on the website"
 msgstr "Gebruik abonnering pop-up op de website"
 
 #. module: website_mass_mailing
-#: model:ir.model.fields,field_description:website_mass_mailing.field_mass_mailing_config_settings_group_website_popup_on_exit
-msgid "Website Pop-up"
-msgstr "Website Pop-up"
+#: model:ir.model.fields,field_description:website_mass_mailing.field_res_config_settings_group_website_popup_on_exit
+msgid "Website Popup"
+msgstr "Website popup"
 
 #. module: website_mass_mailing
 #: model:ir.model.fields,field_description:website_mass_mailing.field_mail_mass_mailing_list_popup_content
@@ -159,24 +160,28 @@ msgid "You are not subscribed to any of our mailing list."
 msgstr "U bent niet ingeschreven voor een van onze nieusbrieven."
 
 #. module: website_mass_mailing
-#. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:154
 #: model:ir.ui.view,arch_db:website_mass_mailing.unsubscribed
+msgid "You have been successfully <strong>unsubscribed</strong>!"
+msgstr "U bent succesvol <strong>uitgeschreven</strong>!"
+
+#. module: website_mass_mailing
+#. openerp-web
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:168
 #, python-format
 msgid "Your changes have been saved."
 msgstr "Uw wijzigingen zijn opgeslagen."
 
 #. module: website_mass_mailing
 #. openerp-web
-#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:157
+#: code:addons/website_mass_mailing/static/src/js/website_mass_mailing.js:171
 #, python-format
 msgid "Your changes have not been saved, try again later."
 msgstr "Uw wijzigingen zijn niet opgeslagen, probeer het later nogmaals."
 
 #. module: website_mass_mailing
-#: model:ir.model,name:website_mass_mailing.model_mass_mailing_config_settings
-msgid "mass.mailing.config.settings"
-msgstr "mass.mailing.config.settings"
+#: model:ir.model,name:website_mass_mailing.model_res_config_settings
+msgid "res.config.settings"
+msgstr "res.config.settings"
 
 #. module: website_mass_mailing
 #: model:ir.ui.view,arch_db:website_mass_mailing.s_newsletter_subscribe_form

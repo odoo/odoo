@@ -15,13 +15,13 @@ var _lt = core._lt;
 // are only used if user entered them manually or if got from demo data
 var operator_mapping = {
     "=": "=",
-    "!=": _lt("not"),
+    "!=": _lt("is not ="),
     ">": ">",
     "<": "<",
     ">=": ">=",
     "<=": "<=",
     "ilike": _lt("contains"),
-    "not ilike": _lt("not contains"),
+    "not ilike": _lt("does not contain"),
     "in": _lt("in"),
     "not in": _lt("not in"),
 
@@ -51,7 +51,6 @@ var DomainNode = Widget.extend({
         "mouseleave button": "_onButtonLeft",
     },
     /**
-     * @constructor
      * A DomainNode needs a model and domain to work. It can also receive a set
      * of options.
      *
@@ -180,7 +179,16 @@ var DomainTree = DomainNode.extend({
      */
     init: function (parent, model, domain, options) {
         this._super.apply(this, arguments);
-        this._initialize(Domain.prototype.stringToArray(domain));
+        try {
+            domain = Domain.prototype.stringToArray(domain);
+        } catch (err) {
+            // TODO: domain could contain `parent` for example, which is
+            // currently not handled by the DomainSelector
+            this.invalidDomain = true;
+            this.children = [];
+            return;
+        }
+        this._initialize(domain);
     },
     /**
      * @see DomainNode.start
@@ -427,11 +435,12 @@ var DomainTree = DomainNode.extend({
  * DomainTree specialization to use to have a fully working widget.
  *
  * Known limitations:
- *     - Some operators like "child_of", "parent_of", "like", "not like",
- *       "=like", "=ilike" will come only if you use them from demo data or
- *       debug input.
- *     - Some kind of domain can not be build right now
- *       e.g ("country_id", "in", [1,2,3]) but you can insert from debug input.
+ *
+ * - Some operators like "child_of", "parent_of", "like", "not like",
+ *   "=like", "=ilike" will come only if you use them from demo data or
+ *   debug input.
+ * - Some kind of domain can not be build right now
+ *   e.g ("country_id", "in", [1,2,3]) but you can insert from debug input.
  */
 var DomainSelector = DomainTree.extend({
     template: "DomainSelector",
@@ -442,6 +451,16 @@ var DomainSelector = DomainTree.extend({
     custom_events: _.extend({}, DomainTree.prototype.custom_events, {
         domain_changed: "_onDomainChange",
     }),
+
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            if (self.invalidDomain) {
+                var msg = _t("This domain is not supported.");
+                self.$el.html(msg);
+            }
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -636,7 +655,7 @@ var DomainLeaf = DomainNode.extend({
                 // Set list of values according to field type
                 this.selectionChoices = null;
                 if (selectedField.type === "boolean") {
-                    this.selectionChoices = [["1", "set (true)"], ["0", "not set (false)"]];
+                    this.selectionChoices = [["1", _t("set (true)")], ["0", _t("not set (false)")]];
                 } else if (selectedField.type === "selection") {
                     this.selectionChoices = selectedField.selection;
                 }
@@ -805,7 +824,7 @@ var DomainLeaf = DomainNode.extend({
             if (_.isBoolean(this.value)) {
                 this.value = "";
             } else if (_.isObject(this.value) && !_.isArray(this.value)) { // Can be object if parsed to x2x representation
-                this.value = this.value.id || "";
+                this.value = this.value.id || value || "";
             }
         }
 

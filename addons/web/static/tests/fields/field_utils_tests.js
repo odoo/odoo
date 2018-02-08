@@ -4,6 +4,7 @@ odoo.define('web.field_utils_tests', function (require) {
 var core = require('web.core');
 var session = require('web.session');
 var fieldUtils = require('web.field_utils');
+var testUtils = require('web.test_utils');
 
 QUnit.module('fields', {}, function () {
 
@@ -59,8 +60,33 @@ QUnit.test("format_datetime", function (assert) {
 
     var date_string = "2009-05-04 12:34:23";
     var date = fieldUtils.parse.datetime(date_string, {}, {timezone: false});
-    var str = fieldUtils.format.datetime(date, {timezone: false});
+    var str = fieldUtils.format.datetime(date, {}, {timezone: false});
     assert.strictEqual(str, moment(date).format("MM/DD/YYYY HH:mm:ss"));
+});
+
+QUnit.test("format_datetime (with different timezone offset)", function (assert) {
+    assert.expect(2);
+
+    // mock the date format to avoid issues due to localisation
+    var dateFormat = core._t.database.parameters.date_format;
+    core._t.database.parameters.date_format = '%m/%d/%Y';
+    session.getTZOffset = function (date) {
+        // simulate daylight saving time
+        var startDate = new Date(2017, 2, 26);
+        var endDate   = new Date(2017, 9, 29);
+        if (startDate < date && date < endDate) {
+            return 120; // UTC+2
+        } else {
+            return 60; // UTC+1
+        }
+    };
+
+    var str = fieldUtils.format.datetime(moment.utc('2017-01-01T10:00:00Z'));
+    assert.strictEqual(str, '01/01/2017 11:00:00');
+    str = fieldUtils.format.datetime(moment.utc('2017-06-01T10:00:00Z'));
+    assert.strictEqual(str, '06/01/2017 12:00:00');
+
+    core._t.database.parameters.date_format = dateFormat;
 });
 
 QUnit.test("format_many2one", function (assert) {
@@ -101,8 +127,25 @@ QUnit.test('format one2many', function(assert) {
     assert.strictEqual(fieldUtils.format.one2many({data: [1, 2]}), '2 records');
 });
 
+QUnit.test('format binary', function (assert) {
+    assert.expect(1);
+
+    // base64 estimated size (bytes) = value.length / 1.37 (http://en.wikipedia.org/wiki/Base64#MIME)
+    // Here: 4 / 1.37 = 2.91970800 => 2.92 (rounded 2 decimals by utils.human_size)
+    assert.strictEqual(fieldUtils.format.binary('Cg=='), '2.92 Bytes');
+
+});
+
 QUnit.test('parse float', function(assert) {
-    assert.expect(7);
+    assert.expect(10);
+
+    var originalParameters = _.clone(core._t.database.parameters);
+
+    _.extend(core._t.database.parameters, {
+        grouping: [3, 0],
+        decimal_point: '.',
+        thousands_sep: ','
+    });
 
     assert.strictEqual(fieldUtils.parse.float(""), 0);
     assert.strictEqual(fieldUtils.parse.float("0"), 0);
@@ -110,16 +153,64 @@ QUnit.test('parse float', function(assert) {
     assert.strictEqual(fieldUtils.parse.float("-100.00"), -100);
     assert.strictEqual(fieldUtils.parse.float("1,000.00"), 1000);
     assert.strictEqual(fieldUtils.parse.float("1,000,000.00"), 1000000);
+    assert.strictEqual(fieldUtils.parse.float('1,234.567'), 1234.567);
+    assert.throws(function () {
+        fieldUtils.parse.float("1.000.000");
+    }, "Throw an exception if it's not a valid number");
 
-    var originalParameters = $.extend(true, {}, core._t.database.parameters);
     _.extend(core._t.database.parameters, {
         grouping: [3, 0],
         decimal_point: ',',
         thousands_sep: '.'
     });
-    assert.strictEqual(fieldUtils.parse.float('1.234,567'), 1234.567);
 
-    core._t.database.parameters = originalParameters;
+    assert.strictEqual(fieldUtils.parse.float('1.234,567'), 1234.567);
+    assert.throws(function () {
+        fieldUtils.parse.float("1,000,000");
+    }, "Throw an exception if it's not a valid number");
+
+    _.extend(core._t.database.parameters, originalParameters);
+});
+
+QUnit.test('parse integer', function(assert) {
+    assert.expect(11);
+
+    var originalParameters = _.clone(core._t.database.parameters);
+
+    _.extend(core._t.database.parameters, {
+        grouping: [3, 0],
+        decimal_point: '.',
+        thousands_sep: ','
+    });
+
+    assert.strictEqual(fieldUtils.parse.integer(""), 0);
+    assert.strictEqual(fieldUtils.parse.integer("0"), 0);
+    assert.strictEqual(fieldUtils.parse.integer("100"), 100);
+    assert.strictEqual(fieldUtils.parse.integer("-100"), -100);
+    assert.strictEqual(fieldUtils.parse.integer("1,000"), 1000);
+    assert.strictEqual(fieldUtils.parse.integer("1,000,000"), 1000000);
+    assert.throws(function () {
+        fieldUtils.parse.integer("1.000.000");
+    }, "Throw an exception if it's not a valid number");
+    assert.throws(function () {
+        fieldUtils.parse.integer("1,234.567");
+    }, "Throw an exception if the number is a float");
+
+    _.extend(core._t.database.parameters, {
+        grouping: [3, 0],
+        decimal_point: ',',
+        thousands_sep: '.'
+    });
+
+    assert.strictEqual(fieldUtils.parse.integer("1.000.000"), 1000000);
+    assert.throws(function () {
+        fieldUtils.parse.integer("1,000,000");
+    }, "Throw an exception if it's not a valid number");
+    assert.throws(function () {
+        fieldUtils.parse.integer("1.234,567");
+    }, "Throw an exception if the number is a float");
+
+    _.extend(core._t.database.parameters, originalParameters);
 });
 
 QUnit.test('parse monetary', function(assert) {

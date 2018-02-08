@@ -8,7 +8,7 @@ import psycopg2
 import pytz
 
 from odoo import api, fields, models, tools, _
-from odoo.tools import float_is_zero, pycompat
+from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.addons import decimal_precision as dp
@@ -41,7 +41,8 @@ class PosOrder(models.Model):
             'pos_reference': ui_order['name'],
             'partner_id':   ui_order['partner_id'] or False,
             'date_order':   ui_order['creation_date'],
-            'fiscal_position_id': ui_order['fiscal_position_id']
+            'fiscal_position_id': ui_order['fiscal_position_id'],
+            'pricelist_id': ui_order['pricelist_id'],
         }
 
     def _payment_fields(self, ui_paymentline):
@@ -222,7 +223,7 @@ class PosOrder(models.Model):
         # We convert a new id object back to a dictionary to write to
         # bridge between old and new api
         inv_line = invoice_line._convert_to_write({name: invoice_line[name] for name in invoice_line._cache})
-        inv_line.update(price_unit=line.price_unit, discount=line.discount)
+        inv_line.update(price_unit=line.price_unit, discount=line.discount, name=inv_name)
         return InvoiceLine.sudo().create(inv_line)
 
     def _create_account_move_line(self, session=None, move=None):
@@ -333,7 +334,7 @@ class PosOrder(models.Model):
 
             # round tax lines per order
             if rounding_method == 'round_globally':
-                for group_key, group_value in pycompat.items(grouped_data):
+                for group_key, group_value in grouped_data.items():
                     if group_key[0] == 'tax':
                         for line in group_value:
                             line['credit'] = cur.round(line['credit'])
@@ -351,7 +352,7 @@ class PosOrder(models.Model):
             order.write({'state': 'done', 'account_move': move.id})
 
         all_lines = []
-        for group_key, group_data in pycompat.items(grouped_data):
+        for group_key, group_data in grouped_data.items():
             for value in group_data:
                 all_lines.append((0, 0, value),)
         if move:  # In case no order was changed
@@ -363,15 +364,22 @@ class PosOrder(models.Model):
         for order in self:
             aml = order.statement_ids.mapped('journal_entry_ids') | order.account_move.line_ids | order.invoice_id.move_id.line_ids
             aml = aml.filtered(lambda r: not r.reconciled and r.account_id.internal_type == 'receivable' and r.partner_id == order.partner_id.commercial_partner_id)
+
+            # Reconcile returns first
+            # to avoid mixing up the credit of a payment and the credit of a return
+            # in the receivable account
+            aml_returns = aml.filtered(lambda l: (l.journal_id.type == 'sale' and l.credit) or (l.journal_id.type != 'sale' and l.debit))
             try:
-                aml.reconcile()
+                aml_returns.reconcile()
+                (aml - aml_returns).reconcile()
             except Exception:
                 # There might be unexpected situations where the automatic reconciliation won't
                 # work. We don't want the user to be blocked because of this, since the automatic
                 # reconciliation is introduced for convenience, not for mandatory accounting
                 # reasons.
-                _logger.error('Reconciliation did not work for order %s', order.name)
-                continue
+                # It may be interesting to have the Traceback logged anyway
+                # for debugging and support purposes
+                _logger.exception('Reconciliation did not work for order %s', order.name)
 
     def _default_session(self):
         return self.env['pos.session'].search([('state', '=', 'opened'), ('user_id', '=', self.env.uid)], limit=1)
@@ -649,7 +657,7 @@ class PosOrder(models.Model):
                     return_picking = Picking.create(return_vals)
                     return_picking.message_post(body=message)
 
-            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_digits=l.product_id.uom_id.rounding)):
+            for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
                     'name': line.name,
                     'product_uom': line.product_id.uom_id.id,
@@ -672,9 +680,9 @@ class PosOrder(models.Model):
 
             # when the pos.config has no picking_type_id set only the moves will be created
             if moves and not return_picking and not order_picking:
-                moves.action_assign()
+                moves._action_assign()
                 moves.filtered(lambda m: m.state in ['confirmed', 'waiting']).force_assign()
-                moves.filtered(lambda m: m.product_id.tracking == 'none').action_done()
+                moves.filtered(lambda m: m.product_id.tracking == 'none')._action_done()
 
         return True
 
@@ -863,14 +871,14 @@ class PosOrderLine(models.Model):
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade')
     create_date = fields.Datetime(string='Creation Date', readonly=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
-    tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes')
+    tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
     pack_lot_ids = fields.One2many('pos.pack.operation.lot', 'pos_order_line_id', string='Lot/serial Number')
 
     @api.model
     def create(self, values):
         if values.get('order_id') and not values.get('name'):
             # set name based on the sequence specified on the config
-            config_id = self.env['pos.order'].browse(values['order_id']).session_id.config_id.id
+            config_id = self.order_id.browse(values['order_id']).session_id.config_id.id
             # HACK: sequence created in the same transaction as the config
             # cf TODO master is pos.config create
             # remove me saas-15
@@ -915,8 +923,8 @@ class PosOrderLine(models.Model):
             self._onchange_qty()
             self.tax_ids = self.product_id.taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
             fpos = self.order_id.fiscal_position_id
-            tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids, line.product_id, line.order_id.partner_id) if fpos else self.tax_ids
-            self.price_unit = self.env['account.tax']._fix_tax_included_price(price, self.product_id.taxes_id, tax_ids_after_fiscal_position)
+            tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids, self.product_id, self.order_id.partner_id) if fpos else self.tax_ids
+            self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.product_id.taxes_id, tax_ids_after_fiscal_position, self.company_id)
 
     @api.onchange('qty', 'discount', 'price_unit', 'tax_ids')
     def _onchange_qty(self):
@@ -1010,7 +1018,10 @@ class ReportSaleDetails(models.AbstractModel):
                     for tax in line_taxes['taxes']:
                         taxes.setdefault(tax['id'], {'name': tax['name'], 'tax_amount':0.0, 'base_amount':0.0})
                         taxes[tax['id']]['tax_amount'] += tax['amount']
-                        taxes[tax['id']]['base_amount'] += line.price_subtotal
+                        taxes[tax['id']]['base_amount'] += tax['base']
+                else:
+                    taxes.setdefault(0, {'name': _('No Taxes'), 'tax_amount':0.0, 'base_amount':0.0})
+                    taxes[0]['base_amount'] += line.price_subtotal_incl
 
         st_line_ids = self.env["account.bank.statement.line"].search([('pos_statement_id', 'in', orders.ids)]).ids
         if st_line_ids:
@@ -1029,10 +1040,11 @@ class ReportSaleDetails(models.AbstractModel):
             payments = []
 
         return {
+            'currency_precision': user_currency.decimal_places,
             'total_paid': user_currency.round(total),
             'payments': payments,
             'company_name': self.env.user.company_id.name,
-            'taxes': list(pycompat.values(taxes)),
+            'taxes': list(taxes.values()),
             'products': sorted([{
                 'product_id': product.id,
                 'product_name': product.name,
@@ -1041,7 +1053,7 @@ class ReportSaleDetails(models.AbstractModel):
                 'price_unit': price_unit,
                 'discount': discount,
                 'uom': product.uom_id.name
-            } for (product, price_unit, discount), qty in pycompat.items(products_sold)], key=lambda l: l['product_name'])
+            } for (product, price_unit, discount), qty in products_sold.items()], key=lambda l: l['product_name'])
         }
 
     @api.multi

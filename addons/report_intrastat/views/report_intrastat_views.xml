@@ -67,7 +67,7 @@
         </record>
 
         <menuitem action="action_report_intrastat_code_tree" id="menu_report_intrastat_code" 
-                parent="sales_team.menu_config_address_book" sequence="2" groups="base.group_no_one"/>
+                parent="account.account_account_menu" sequence="10" groups="account.group_account_manager"/>
 
 
         <record id="view_report_intrastat_tree" model="ir.ui.view">
@@ -93,7 +93,7 @@
             <field name="name">report.intrastat.kanban</field>
             <field name="model">report.intrastat</field>
             <field name="arch" type="xml">
-               <kanban class="o_kanban_mobile">
+               <kanban class="o_kanban_mobile" create="false">
                    <field name="name" />
                     <field name="month"/>
                     <field name="code"/>
@@ -107,23 +107,12 @@
                                 <div class="text-center">
                                    <strong><span><field name="ref"/></span></strong>
                                 </div>
-                                <div class="row">
-                                    <div class="col-xs-4 text-center text-success"><strong>Year</strong></div>
-                                    <div class="col-xs-4 text-center text-danger"><strong>Month</strong></div>
-                                    <div class="col-xs-4 text-center"><strong>Country Code</strong></div>
-                                    <div class="col-xs-4 text-center text-success"><field name="name"/></div>
-                                    <div class="col-xs-4 text-center text-danger"><field name="month"/></div>
-                                    <div class="col-xs-4 text-center"><field name="code"/></div>
-                                </div>
                                 <hr class="mt4 mb4"/>
                                 <div class="row">
                                     <div class="col-xs-4 text-center">
                                         <field name="value" widget="monetary"/>
                                     </div>
-                                    <div class="col-xs-4 text-center">
-                                        <field name="supply_units"/>
-                                    </div>
-                                    <div class="col-xs-4 text-center">
+                                    <div class="col-xs-offset-4 text-center">
                                         <field name="type"/>
                                     </div>
                                 </div>
@@ -157,5 +146,5 @@
         </record>
 
         <menuitem action="action_report_intrastat_tree_all" id="menu_report_intrastat_all" 
-                parent="stock.menu_warehouse_report" sequence="120"/>
+                parent="account.account_reports_management_menu" sequence="19"/>
 </odoo>

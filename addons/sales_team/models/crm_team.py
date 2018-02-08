@@ -24,7 +24,7 @@ class CrmTeam(models.Model):
     def _get_default_team_id(self, user_id=None):
         if not user_id:
             user_id = self.env.uid
-        company_id = self.sudo(user_id).company_id.id
+        company_id = self.sudo(user_id).env.user.company_id.id
         team_id = self.env['crm.team'].sudo().search([
             '|', ('user_id', '=', user_id), ('member_ids', '=', user_id),
             '|', ('company_id', '=', False), ('company_id', 'child_of', [company_id])
@@ -55,11 +55,11 @@ class CrmTeam(models.Model):
         default=_get_default_favorite_user_ids)
     is_favorite = fields.Boolean(
         string='Show on dashboard',
-        compute='_compute_is_favorite', inverse='_set_is_favorite',
+        compute='_compute_is_favorite', inverse='_inverse_is_favorite',
         help="Favorite teams to display them in the dashboard and access them easily.")
     reply_to = fields.Char(string='Reply-To',
                            help="The email address put in the 'Reply-To' of all emails sent by Odoo about cases in this sales channel")
-    color = fields.Integer(string='Color Index', help="The color of the channel", default=1)
+    color = fields.Integer(string='Color Index', help="The color of the channel")
     team_type = fields.Selection([('sales', 'Sales'), ('website', 'Website')], string='Channel Type', default='sales', required=True,
                                  help="The type of this channel, it will define the resources this channel uses.")
     dashboard_button_name = fields.Char(string="Dashboard Button", compute='_compute_dashboard_button_name')
@@ -95,6 +95,13 @@ class CrmTeam(models.Model):
         for team in self:
             team.is_favorite = self.env.user in team.favorite_user_ids
 
+    def _inverse_is_favorite(self):
+        sudoed_self = self.sudo()
+        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
+        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
+        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
+        return True
+
     def _graph_get_dates(self, today):
         """ return a coherent start and end date for the dashboard graph according to the graph settings.
         """
@@ -108,7 +115,7 @@ class CrmTeam(models.Model):
         # we take the start of the following month/week/day if we group by month/week/day
         # (to avoid having twice the same month/week/day from different years/month/week)
         if self.dashboard_graph_group == 'month':
-            start_date = date(start_date.year + start_date.month / 12, start_date.month % 12 + 1, 1)
+            start_date = date(start_date.year + start_date.month // 12, start_date.month % 12 + 1, 1)
             # handle period=week, grouping=month for silly managers
             if self.dashboard_graph_period == 'week':
                 start_date = today.replace(day=1)
@@ -232,7 +239,7 @@ class CrmTeam(models.Model):
 
             for data_item in graph_data:
                 index = int((data_item.get('x_value') - start_date.isocalendar()[1]) % weeks_in_start_year)
-                values[index][y_field] = int(data_item.get('y_value'))
+                values[index][y_field] = data_item.get('y_value')
 
         elif self.dashboard_graph_group == 'month':
             for month in range(0, (end_date.month - start_date.month) % 12 + 1):
@@ -285,14 +292,6 @@ class CrmTeam(models.Model):
         if values.get('member_ids'):
             self._add_members_to_favorites()
         return res
-
-    @api.multi
-    def toggle_favorite(self):
-        sudoed_self = self.sudo()
-        to_fav = sudoed_self.filtered(lambda team: self.env.user not in team.favorite_user_ids)
-        to_fav.write({'favorite_user_ids': [(4, self.env.uid)]})
-        (sudoed_self - to_fav).write({'favorite_user_ids': [(3, self.env.uid)]})
-        return True
 
     def _add_members_to_favorites(self):
         for team in self:

@@ -7,28 +7,24 @@ from werkzeug import urls
 
 from odoo import api, models
 from odoo.tools.safe_eval import safe_eval
-from odoo.addons.website.models.website import slug
+from odoo.addons.http_routing.models.ir_http import slug
 
 
 class MailGroup(models.Model):
     _inherit = 'mail.channel'
 
     @api.multi
-    def message_get_email_values(self, notif_mail=None):
+    def _notify_specific_email_values(self, message):
         self.ensure_one()
-        res = super(MailGroup, self).message_get_email_values(notif_mail=notif_mail)
+        res = super(MailGroup, self)._notify_specific_email_values(message)
+        try:
+            headers = safe_eval(res.get('headers', dict()))
+        except Exception:
+            headers = {}
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        headers = {}
-        if res.get('headers'):
-            try:
-                headers = safe_eval(res['headers'])
-            except Exception:
-                pass
-        headers.update({
-            'List-Archive': '<%s/groups/%s>' % (base_url, slug(self)),
-            'List-Subscribe': '<%s/groups>' % (base_url),
-            'List-Unsubscribe': '<%s/groups?unsubscribe>' % (base_url,),
-        })
+        headers['List-Archive'] = '<%s/groups/%s>' % (base_url, slug(self)),
+        headers['List-Subscribe'] = '<%s/groups>' % (base_url),
+        headers['List-Unsubscribe'] = '<%s/groups?unsubscribe>' % (base_url,),
         res['headers'] = repr(headers)
         return res
 
@@ -68,4 +64,4 @@ class MailGroup(models.Model):
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data).hexdigest()
+        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()
