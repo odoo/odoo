@@ -1,19 +1,11 @@
 odoo.define('web.base_setting_test', function (require) {
 "use strict";
 
-var BaseSetting = require('base.settings');
-
 var testUtils = require('web.test_utils');
 var view_registry = require('web.view_registry');
 
 var createView = testUtils.createView;
 var BaseSettingsView = view_registry.get('base_settings');
-
-BaseSetting.Renderer.include({
-    _getAppIconUrl: function() {
-        return "#test:";
-    }
-});
 
 QUnit.module('base_settings_tests', {
     beforeEach: function () {

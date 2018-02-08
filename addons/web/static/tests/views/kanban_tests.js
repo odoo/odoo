@@ -3337,12 +3337,12 @@ QUnit.module('Views', {
                   '</kanban>',
         });
 
-        var imageOnRecord = kanban.$('img[src*="/web/image"][src*="&id=1"]');
+        var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image");
 
-        var placeholders = kanban.$('img[src$="/web/static/src/img/placeholder.png"]');
+        var placeholders = kanban.$('img[data-src$="/web/static/src/img/placeholder.png"]');
         assert.strictEqual(placeholders.length, this.data.partner.records.length - 1,
-            "partner with image should displaiy");
+            "partner with no image should display the placeholder");
 
         kanban.destroy();
     });

@@ -14,7 +14,7 @@ CalendarRenderer.include({
     getAvatars: function () {
         var res = this._super.apply(this, arguments);
         for (var k in res) {
-            res[k] = res[k].replace(/src="([^"]+)"/, 'src="#test:\$1"');
+            res[k] = res[k].replace(/src="([^"]+)"/, 'data-src="\$1"');
         }
         return res;
     }

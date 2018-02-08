@@ -683,11 +683,11 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
         "image caption should have correct download link");
     // click on first image attachement
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').first().click();
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/1?unique=1"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/1?unique=1"]').length, 1,
         "Modal popup should open with first image src");
     //  click on next button
     $('.modal .arrow.arrow-right.move_next span').click();
-    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[src*="/web/image/2?unique=1"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen img.o_viewer_img[data-src="/web/image/2?unique=1"]').length, 1,
         "Modal popup should have now second image src");
     assert.strictEqual($('.o_modal_fullscreen .o_viewer_toolbar .o_download_btn').length, 1,
         "Modal popup should have download button");
@@ -695,7 +695,7 @@ QUnit.test('chatter: Attachment viewer', function (assert) {
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();
     // click on pdf attachement
     form.$('.o_thread_message .o_attachment .o_image_box .o_image_overlay').eq(3).click();
-    assert.strictEqual($('.o_modal_fullscreen iframe[src*="/web/content/4"]').length, 1,
+    assert.strictEqual($('.o_modal_fullscreen iframe[data-src*="/web/content/4"]').length, 1,
         "Modal popup should open with the pdf preview");
     // close attachment popup
     $('.o_modal_fullscreen .o_viewer-header .o_close_btn').click();

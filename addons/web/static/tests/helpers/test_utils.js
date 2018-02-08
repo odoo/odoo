@@ -663,9 +663,10 @@ function removeSrcAttribute($el, widget) {
     $el.find('img, iframe[src]').each(function () {
         var $el = $(this);
         var src = $el.attr('src');
-        if (src[0] !== '#' && src !== 'about:blank') {
+        if (src && src !== 'about:blank') {
             if ($el[0].nodeName === 'IMG') {
-                $el.attr('src', '#test:' + src);
+                $el.attr('data-src', src);
+                $el.removeAttr('src');
             } else {
                 $el.attr('data-src', src);
                 $el.attr('src', 'about:blank');
