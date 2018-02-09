@@ -19,7 +19,6 @@ def environment():
     reg = registry(common.get_db_name())
     with reg.cursor() as cr:
         yield api.Environment(cr, SUPERUSER_ID, {})
-        cr.commit()
 
 
 MODULE = 'test_uninstall'
