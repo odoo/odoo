@@ -319,25 +319,27 @@ $css-sel2-support-threshold: $critical-usage-threshold !default;
 
 // Returns true if the prefixed usage stats for the capability exceed the threshold
 // or if the minimum version for a supported browser would require a prefix for the capability.
-@function use-prefix($prefix, $capability, $threshold, $capability-options: $default-capability-options) {
-  $usage: prefix-usage($prefix, $capability, $capability-options);
-  @if $usage > $threshold {
-    @return $usage;
-  } @else {
-    @each $browser in browsers($prefix) {
-      @if index($supported-browsers, $browser) {
-        $min-version: map-get($browser-minimum-versions, $browser);
-        @if $min-version {
-          $actual-prefix: browser-requires-prefix($browser, $min-version, $capability, $capability-options);
-          @if $actual-prefix and $prefix == $actual-prefix {
-            @return $browser $min-version;
-          }
-        }
-      }
-    }
-  }
-  @return false;
-}
+// Odoo: This is compass calling a ruby function which is not possible since we simply imported the compass scss files
+// Odoo: (https://github.com/sass/libsass/issues/2097)
+// @function use-prefix($prefix, $capability, $threshold, $capability-options: $default-capability-options) {
+//   $usage: prefix-usage($prefix, $capability, $capability-options);
+//   @if $usage > $threshold {
+//     @return $usage;
+//   } @else {
+//     @each $browser in browsers($prefix) {
+//       @if index($supported-browsers, $browser) {
+//         $min-version: map-get($browser-minimum-versions, $browser);
+//         @if $min-version {
+//           $actual-prefix: browser-requires-prefix($browser, $min-version, $capability, $capability-options);
+//           @if $actual-prefix and $prefix == $actual-prefix {
+//             @return $browser $min-version;
+//           }
+//         }
+//       }
+//     }
+//   }
+//   @return false;
+// }
 
 @function prefix-identifier($ident, $prefix: $current-prefix) {
   @return unquote("#{$prefix}#{if($prefix, '-', null)}#{$ident}");
