@@ -98,9 +98,10 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/*" position="before">
                     <header>
-                        <button name="action_submit_expenses" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
                         <widget name="attach_document" string="Attach Document" action="message_post" attrs="{'invisible': [('attachment_number', '&lt;=', 0)]}"/>
                         <widget name="attach_document" string="Attach Document" action="message_post" class="oe_highlight" attrs="{'invisible': [('attachment_number', '&gt;=', 1)]}"/>
+                        <button name="action_submit_expenses" string="Submit to Manager" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}"/>
+                        <button name="action_submit_expenses" string="Submit to Manager" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
                         <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('state', '=','draft')]}"/>
                     </header>
