@@ -197,6 +197,12 @@ class PosOrder(models.Model):
         return InvoiceLine.sudo().create(inv_line)
 
     def _create_account_move_line(self, session=None, move=None):
+        def _flatten_tax_and_children(taxes):
+            children = self.env['account.tax']
+            for tax in taxes:
+                children |= _flatten_tax_and_children(tax.children_tax_ids)
+            return taxes + children
+
         # Tricky, via the workflow, we only have one id in the ids variable
         """Create a account move line of order grouped by products or not."""
         IrProperty = self.env['ir.property']
@@ -280,8 +286,7 @@ class PosOrder(models.Model):
                 # Create a move for the line for the order line
                 # Just like for invoices, a group of taxes must be present on this base line
                 # As well as its children
-                base_line_tax_ids = (line.tax_ids_after_fiscal_position +
-                    line.tax_ids_after_fiscal_position.mapped('children_tax_ids').filtered(lambda tax: tax.type_tax_use in ['sale', 'none']))
+                base_line_tax_ids = _flatten_tax_and_children(line.tax_ids_after_fiscal_position).filtered(lambda tax: tax.type_tax_use in ['sale', 'none'])
                 insert_data('product', {
                     'name': name,
                     'quantity': line.qty,
