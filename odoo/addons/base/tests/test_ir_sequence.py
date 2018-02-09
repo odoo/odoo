@@ -20,7 +20,6 @@ def environment():
     registry = odoo.registry(common.get_db_name())
     with registry.cursor() as cr:
         yield odoo.api.Environment(cr, ADMIN_USER_ID, {})
-        cr.commit()
 
 
 def drop_sequence(code):
