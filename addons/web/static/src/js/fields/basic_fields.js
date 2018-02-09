@@ -1838,7 +1838,7 @@ var StatInfo = AbstractField.extend({
 
 var FieldPercentPie = AbstractField.extend({
     template: 'FieldPercentPie',
-    supportedFieldTypes: ['integer'],
+    supportedFieldTypes: ['integer', 'float'],
 
     /**
      * Register some useful references for later use throughout the widget.

@@ -1,8 +1,13 @@
 :banner: banners/build_interface_ext.jpg
 
 =============================
-Building Interface Extensions
+Customizing the web client
 =============================
+
+Note: this section is really really out of date. It will be updated someday,
+but meanwhile, this tutorial will probably be frustrating to follow, since it
+was written a long time ago.
+
 
 .. highlight:: javascript
 
