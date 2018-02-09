@@ -1,122 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+  <data>
 
-        <record id="course_view_list" model="ir.ui.view">
-            <field name="name">course list</field>
-            <field name="model">openacademy.course</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="responsible_id" />
-                    <field name="level" />
-                </tree>
-            </field>
-        </record>
+    <record model="ir.ui.view" id="course_view_list">
+      <field name="name">openacademy.course.tree</field>
+      <field name="model">openacademy.course</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="responsible_id" />
+          <field name="level" />
+        </tree>
+      </field>
+    </record>
 
-        <record id="course_view_form" model="ir.ui.view">
-            <field name="name">course form</field>
-            <field name="model">openacademy.course</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
-                        <group>
+    <record model="ir.ui.view" id="course_view_form">
+      <field name="name">openacademy form</field>
+      <field name="model">openacademy.course</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+              <group>
+                  <field name="name"/>
+                  <field name="responsible_id" />
+                  <field name="level" />
+                  <!-- Extra solutions 2 -->
+                  <field name="alias_name" />
+              </group>
+              <notebook>
+                  <page string="Description" name="desc" >
+                      <field name="description"/>
+                  </page>
+                  <page string="Sessions" name="sessions" >
+                      <field name="session_ids">
+                        <tree editable="bottom">
                             <field name="name"/>
-                            <field name="responsible_id" />
-                            <field name="level" />
-                            <field name="theme_ids"
-                                widget="many2many_tags"
-                                options="{
-                                    'no_create_edit': True
-                                }"
-                            />
-                        </group>
-                        <notebook>
-                            <page string="Description" name="desc" >
-                                <field name="description"/>
-                            </page>
-                            <page string="Sessions" name="sessions" >
-                                <field name="session_ids">
-                                    <tree editable="bottom">
-                                        <field name="name"/>
-                                        <field name="instructor_id" />
-                                        <field name="start_date" />
-                                        <field name="duration" />
-                                        <field name="percentage_per_day" />
-                                        <field name="seats" />
-                                    </tree>
-                                </field>
-                            </page>
-                        </notebook>
-                    </sheet>
-                 </form>
-            </field>
-        </record>
+                            <field name="instructor_id" />
+                            <field name="start_date" />
+                            <field name="duration" />
+                            <field name="percentage_per_day" />
+                            <field name="seats" />
+                        </tree>
+                      </field>
+                  </page>
+              </notebook>
+          </sheet>
+          <!-- Solution Ex1 -->
+          <div class="oe_chatter">
+            <field name="message_follower_ids" widget="mail_followers"/>
+            <field name="message_ids" widget="mail_thread"/>
+          </div>
+         </form>
+      </field>
+    </record>
 
-        <record id="course_sessions_act_window" model="ir.actions.act_window">
-            <field name="name">Sessions</field>
-            <field name="res_model">openacademy.session</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[
-                ('course_id', '=', active_id)
-            ]</field>
-            <field name="context">{
-                'default_course_id': active_id,
-                'search_default_by_state': True
-            }</field>
-            <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Here, you can create new sessions
-                </p>
-            </field>
-        </record>
+    <record model="ir.ui.view" id="course_view_search">
+      <field name="name">openacademy search</field>
+      <field name="model">openacademy.course</field>
+      <field name="arch" type="xml">
+        <search>
+            <field name="name"/>
+            <field name="responsible_id" />
+            <field name="description"/>
+            <filter name="my_courses" string="My Courses"
+                    domain="[('responsible_id', '=', uid)]"/>
+            <filter name="by_responsible" string="Responsible"
+                    context="{'group_by': 'responsible_id'}"/>
+         </search>
+      </field>
+    </record>
 
-        <record id="course_view_kanban" model="ir.ui.view">
-            <field name="name">course kanban</field>
-            <field name="model">openacademy.course</field>
-            <field name="arch" type="xml">
-                <kanban>
-                    <field name="responsible_id"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="o_kanban_record oe_kanban_global_click_edit">
-                                <div class="oe_kanban_details">
-                                    <field name="theme_ids"/>
-                                    <div class="o_kanban_title">
-                                        <field name="name"/>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_button">
-                                    <a name="%(course_sessions_act_window)d" type="action">
-                                        <span class="o_value"><field name="session_count"/></span>
-                                        <span class="o_label">Sessions</span>
-                                    </a>
-                                </div>
-                                <div class="oe_kanban_bottom_left">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.responsible_id.raw_value)" class="oe_kanban_avatar_smallbox"/>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
 
-        <record id="action_course" model="ir.actions.act_window">
-            <field name="name">Courses</field>
-            <field name="res_model">openacademy.course</field>
-            <field name="view_mode">kanban,tree,form</field>
-        </record>
 
-        <!-- Top menu item -->
-        <menuitem name="Academy" id="menu_root"/>
-        <!-- menu categories -->
-        <menuitem name="Courses" id="menu_course_top"
-                  parent="menu_root"/>
-        <!-- actions -->
-        <menuitem name="Courses" id="menu_course"
-                  parent="menu_course_top"
-                  action="action_course"/>
+    <record model="ir.actions.act_window" id="action_course">
+      <field name="name">openacademy course</field>
+      <field name="res_model">openacademy.course</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'search_default_my_courses': 1, 'default_responsible_id' : uid}</field>
+    </record>
 
-    </data>
+    <!-- Top menu item -->
+    <menuitem name="openacademy" id="menu_root"/>
+    <!-- menu categories -->
+    <menuitem name="Courses" id="menu_course_top" parent="menu_root"/>
+    <!-- actions -->
+    <menuitem name="Courses" id="menu_course" parent="menu_course_top"
+              action="action_course"/>
+  </data>
 </odoo>

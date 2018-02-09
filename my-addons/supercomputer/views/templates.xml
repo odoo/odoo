@@ -67,12 +67,12 @@
                     <h1> Commission </h1>
                     <field name="sum_commission"/>
                 </xpath>
-                <!--<xpath expr="//notebook//page//field[@name='order_line']//field[@name='price_unit']" position="after">-->
-                        <!--<field name="margin_per_product"/>-->
-                        <!--<field name="margin_rate"/>-->
-                        <!--<field name="margin"/>-->
-                <!--</xpath>-->
-                <xpath expr="//notebook//page//field[@name='order_line']//field[@name='price_subtotal']" position="after">
+                <xpath expr="//field[@name='order_line']//tree//field[@name='price_unit']" position="after">
+                        <field name="margin_per_product"/>
+                        <field name="margin_rate"/>
+                        <field name="margin"/>
+                </xpath>
+                <xpath expr="//notebook//page//field[@name='order_line']//form//field[@name='price_subtotal']" position="after">
                         <field name="margin_per_product"/>
                         <field name="margin_rate"/>
                         <field name="margin"/>

@@ -2,12 +2,14 @@
 {
     'name': "OpenAcademy",
 
-    'summary': """Academy module - module 26""",
+    'summary': """
+        Course management""",
 
     'description': """
+        Open Academy allow you to manager you course, session, teacher and attendee. 
     """,
 
-    'author': "Odoos",
+    'author': "Odoo",
     'website': "http://www.odoo.com",
 
     # Categories can be used to filter modules in modules listing
@@ -16,25 +18,24 @@
     'category': 'Academy',
     'version': '0.1',
 
-    # any module necessary for this one to work correctly
-    'depends': ['base', 'mail', 'portal', 'web', 'web_kanban'],
+    # EX01 : add mail in dependencies
+    'depends': ['base', 'mail'],
 
     # always loaded
     'data': [
-        'security/openacademy.xml',
+        # 'security/ir.model.access.csv',
+        'security/security.xml',
         'security/ir.model.access.csv',
+        'data/partner.xml',
         'views/courses.xml',
         'views/sessions.xml',
         'views/partners.xml',
-        'views/templates.xml',
-    ],
-    'qweb': [
-        "static/src/xml/*.xml",
+        'views/attendee.xml',
+        'wizard/add_attendee_view.xml',
+        'data/partner.xml',
+        'data/email_template.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
-        'data/partner_category_demo.xml',
-        'data/partner_demo.xml',
-        'data/course_demo.xml',
     ],
 }

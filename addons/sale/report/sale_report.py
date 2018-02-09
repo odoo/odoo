@@ -36,6 +36,9 @@ class SaleReport(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Channel', readonly=True, oldname='section_id')
     country_id = fields.Many2one('res.country', 'Partner Country', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Commercial Entity', readonly=True)
+
+    commission = fields.Float('Commission', readonly=True)
+
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
         ('sent', 'Quotation Sent'),
@@ -51,6 +54,7 @@ class SaleReport(models.Model):
             WITH currency_rate as (%s)
              SELECT min(l.id) as id,
                     l.product_id as product_id,
+                    s.sum_commission as commission,
                     t.uom_id as product_uom,
                     sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
                     sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
@@ -104,6 +108,7 @@ class SaleReport(models.Model):
                     l.order_id,
                     t.uom_id,
                     t.categ_id,
+                    s.sum_commission,
                     s.name,
                     s.date_order,
                     s.confirmation_date,

@@ -19,18 +19,6 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="attendees_tree_view">
-            <field name="name">attendees</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_tree"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <xpath expr="//tree" position="attributes">
-                    <attribute name="create">0</attribute>
-                </xpath>
-            </field>
-        </record>
-
         <record model="ir.actions.act_window" id="contact_list_action">
             <field name="name">Contacts</field>
             <field name="res_model">res.partner</field>
@@ -38,12 +26,11 @@
         </record>
 
         <menuitem id="configuration_menu" name="Configuration"
-                  parent="menu_root"
-                  groups="base.group_user"/>
+                  parent="menu_root" />
 
         <menuitem id="contact_menu" name="Contacts"
                   parent="configuration_menu"
-                  action="contact_list_action"/>
+                  action="contact_list_action" />
 
         <record model="ir.actions.act_window" id="contact_cat_list_action">
             <field name="name">Contact Tags</field>

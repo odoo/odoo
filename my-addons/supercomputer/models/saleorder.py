@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -44,17 +45,17 @@ class SaleOrderLine(models.Model):
             else:
                 record.margin_rate = 0
 
-    @api.depends('margin_per_product')
+    @api.depends('margin_per_product', 'product_uom_qty')
     def _compute_margin(self):
         for record in self:
             qty = record.product_uom_qty
             record.margin = qty * record.margin_per_product
 
-    @api.onchange('price_unit')
+    @api.onchange('price_unit', 'margin_rate')
     def _check_margin(self):
         print("function: onchange checkmargin", self.price_unit)
         print("margin_rate: ", self.margin_rate, self._compute_margin())
-        if self.product_id.categ_id.minimum_margin < self.margin_rate:
+        if self.margin_rate < self.product_id.categ_id.minimum_margin:
             return {
                 'warning': {
                     'title': "Margin below expectation!",
@@ -62,50 +63,20 @@ class SaleOrderLine(models.Model):
                 },
             }
 
-    @api.model
     def create(self, values):
-        # print(self)
-        min = self.env['product_id'].browse(values.product_id).categ_id.minimum_margin
+        res_id = super(SaleOrderLine, self).create(values)
 
-        print("function: create", values['product_id'].categ_id.minimum_margin)
-
-        # print(values)
-        # {'sequence': 10, 'product_id': 23, 'layout_category_id': False, 'name': '[LAPTOP C2] Laptop Class 2', 'product_uom_qty': 1, 'product_uom': 1, 'analytic_tag_ids': [[6, False, []]], 'route_id': False, 'price_unit': 1000, 'tax_id': [[6, False, [2]]], 'discount': 0, 'customer_lead': 0, 'order_id': 10}
-
-        if self.margin_rate < min:  # and not a sales manager
-            return {
-                'warning': {
-                    'title': "Margin below expectation!",
-                    'message': "You cannot sell under the minimum margin unless you are a manager.",
-                },
-            }
-        else:
-            res_id = super(SaleOrderLine, self).create(values)
+        if res_id.margin_rate < res_id.product_id.categ_id.minimum_margin and \
+                not res_id.env.user.has_group('sales_team.group_sale_manager'):
+            raise UserError("Only a sales manager can sell below the minimum margin!")
 
         return res_id
 
-    @api.model
     def write(self, values):
-        min = self.env['product_id'].browse(values.product_id).categ_id.minimum_margin
+        for record in self:
+            super(SaleOrderLine, record).write(values)
 
-        print("function: write", self.margin_rate, min)
-
-        if self.margin_rate < min:  # and not a sales manager
-            return {
-                'warning': {
-                    'title': "Margin below expectation!",
-                    'message': "You cannot sell under the minimum margin unless you are a manager.",
-                },
-            }
-        else:
-            res_id = super(SaleOrderLine, self).create(values)
-
-        return res_id
-
-    """
-    def write(self, vals):
-        print 'Fields and the values to be updated/written--', vals
-        # Write your logic here
-        res = super(res_users, self).write(vals)
-        # Write your logic here
-        return res"""
+            if record.margin_rate < record.product_id.categ_id.minimum_margin and \
+                    not record.env.user.has_group('sales_team.group_sale_manager'):
+                raise UserError("Only a sales manager can sell below the minimum margin!")
+        return True
