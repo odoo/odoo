@@ -548,6 +548,8 @@
                     <field name="date" string="Period"/>
                     <separator/>
                     <filter domain="[('user_id','=',uid)]" name="myinvoices" help="My Invoices"/>
+                    <filter domain="[('is_recurrency_enabled','=',True)]" name="is_recurrency_enabled" help="Bills Generating Recurring Bills" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
+                    <filter domain="[('is_recurring_document','=',True)]" name="is_recurring_document" help="Bills Generated Automatically" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
                     <separator/>
                     <filter string="My Activities" name="activities_my"
                         domain="[('activity_ids.user_id', '=', uid)]"/>
@@ -581,10 +583,6 @@
                 <data>
                     <xpath expr="filter[@name='invoices']" position="attributes">
                         <attribute name="string">Not Draft</attribute>
-                    </xpath>
-                    <xpath expr="filter[@name='myinvoices']" position="after">
-                        <filter domain="[('is_recurrency_enabled','=',True)]" name="is_recurrency_enabled" help="Bills Generating Recurring Bills" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
-                        <filter domain="[('is_recurring_document','=',True)]" name="is_recurring_document" help="Bills Generated Automatically" groups="account.group_allow_recurring" invisible="context.get('type') != 'in_invoice'"/>
                     </xpath>
                     <filter name="refunds" position="replace"/>
                 </data>
