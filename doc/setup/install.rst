@@ -69,6 +69,13 @@ browser is sufficient.
 
 .. _setup/install/packaged:
 
+PaaS
+----
+
+Odoo can be deployed to your private host or a public cloud provider with a single click. Check live logs and metrics, scale when it needs, create cloud backups and get free TLS by Let's Encrypt. The infrastructure is controlled by yourself.
+
+Deploy using PaaS_
+
 Packaged installers
 ===================
 
@@ -621,3 +628,4 @@ offcial Odoo `docker image <https://registry.hub.docker.com/_/odoo/>`_ page.
 .. _Editions: https://www.odoo.com/pricing#pricing_table_features
 .. _nightly: https://nightly.odoo.com/11.0/nightly/
 .. _extra: https://nightly.odoo.com/extra/
+.. _paas: https://panel.d2c.io/?import=https://github.com/d2cio/odoo-stack/archive/master.zip
