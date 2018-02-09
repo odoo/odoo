@@ -505,6 +505,7 @@ class account_payment(models.Model):
                 (transfer_credit_aml + transfer_debit_aml).reconcile()
 
             rec.write({'state': 'posted', 'move_name': move.name})
+        return True
 
     @api.multi
     def action_draft(self):
@@ -519,7 +520,7 @@ class account_payment(models.Model):
         if any(len(record.invoice_ids) != 1 for record in self):
             # For multiple invoices, there is account.register.payments wizard
             raise UserError(_("This method should only be called to process a single invoice's payment."))
-        self.post();
+        return self.post()
 
     def _create_payment_entry(self, amount):
         """ Create a journal entry corresponding to a payment, if the payment references invoice(s) they are reconciled.
