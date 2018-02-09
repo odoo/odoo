@@ -258,8 +258,8 @@ class Company(models.Model):
         self.ensure_one()
         currency_id = self._get_user_currency()
         if country_id:
-            currency_id = self.env['res.country'].browse(country_id).currency_id.id
-        return {'value': {'currency_id': currency_id}}
+            currency_id = self.env['res.country'].browse(country_id).currency_id
+        return {'value': {'currency_id': currency_id.id}}
 
     @api.onchange('country_id')
     def _onchange_country_id_wrapper(self):
