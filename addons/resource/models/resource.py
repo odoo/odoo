@@ -722,6 +722,7 @@ class ResourceResource(models.Model):
         return super(ResourceResource, self).create(values)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         if default is None:

@@ -20,6 +20,7 @@ class ProjectTask(models.Model):
         return super(ProjectTask, self).create(vals)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if not self.use_pad:
             self = self.with_context(pad_no_create=True)

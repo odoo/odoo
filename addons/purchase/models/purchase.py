@@ -222,6 +222,7 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self).unlink()
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:

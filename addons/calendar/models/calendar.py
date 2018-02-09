@@ -151,6 +151,7 @@ class Attendee(models.Model):
         return super(Attendee, self).create(values)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         raise UserError(_('You cannot duplicate a calendar attendee.'))
 
@@ -1681,6 +1682,7 @@ class Meeting(models.Model):
         return events
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = default or {}

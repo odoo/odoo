@@ -548,6 +548,7 @@ class MassMailing(models.Model):
         return mass_mailing.name_get()[0]
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {},

@@ -274,6 +274,7 @@ class MailTemplate(models.Model):
         return super(MailTemplate, self).unlink()
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
                        name=_("%s (copy)") % self.name)
