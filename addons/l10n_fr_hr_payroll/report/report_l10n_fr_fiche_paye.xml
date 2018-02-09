@@ -9,6 +9,7 @@
                     <div class="row">
                         <div class="col-xs-4">
                             <h2>Bulletin de paie</h2>
+                            <h3><span t-esc="o.employee_id.name"/></h3>
                             <h4>Paie du <span t-field="o.date_from"/> au <span t-field="o.date_to"/></h4>
                         </div>
                         <div class="col-xs-4 pull-right">
@@ -69,7 +70,6 @@
                                 <th>Quantité / Base</th>
                                 <th>Taux</th>
                                 <th>Montant</th>
-                                <th>Taux Charges Patronales</th>
                                 <th>Montant Charges Patronales</th>
                             </tr>
                         </thead>
@@ -96,9 +96,6 @@
                                 </td>
                                 <td>
                                     <span t-esc="p.total or ''"/>
-                                </td>
-                                <td>
-                                    <span t-esc="get_employer_line(o, p) and get_employer_line(o, p).rate or ''"/>
                                 </td>
                                 <td>
                                     <span t-esc="get_employer_line(o,p) and get_employer_line(o,p).total or ''"/>
