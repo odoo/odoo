@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
@@ -3126,6 +3126,14 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Live chat ondersteuning\n"
+"==========================\n"
+"\n"
+"Staat u toe om direct bericht widgets op elke webpagina te slepen die communiceren\n"
+"met de huidige server en berichten van bezoekers direct verdeeld over meerdere live\n"
+"chat operators.\n"
+"Help uw klanten met deze chat en analyseer hun feedback."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -3173,6 +3181,23 @@ msgid ""
 "    - Exception (Received and invoiced quantities differ)\n"
 "    "
 msgstr ""
+"\n"
+"Beheer 3-way matching op leveranciersfacturen\n"
+"=====================================\n"
+"\n"
+"In de maakindustrie ontvangen bedrijven vaak eerder de leveranciers factuur\n"
+"voor het ontvangen van hun aankoop, maar willen de rekening niet betalen tot de goederen zijn bezorgd.\n"
+"\n"
+"De oplossing voor deze situatie is om de leveranciers factuur te maken wanneer u deze ontvangt (op basis van bestelde hoeveelheden), maar alleen te betalen als de ontvangen hoeveelheden (op de PO-regels) overeen komen met de hoeveelheden in de leveranciers factuur.\n"
+"\n"
+"Deze module introduceert een \"stel vrij voor betaling\" -mechanisme dat elke leverancier factuur markeert of het kan worden betaald of niet.\n"
+"\n"
+"Elke leveranciers factuur ontvangt een van de volgende drie statussen:\n"
+"\n"
+"    - Ja (de factuur kan worden betaald)\n"
+"    - Nee (de factuur kan nog niet worden betaald, er is niets geleverd)\n"
+"    - Uitzondering (verschil tussen ontvangen en besteld)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_dropshipping
@@ -4242,6 +4267,15 @@ msgid ""
 "\n"
 "This module applies this feature to Leads and Contacts."
 msgstr ""
+"\n"
+"Telefoonnummer validatie\n"
+"========================\n"
+"\n"
+"Deze module voegt de mogelijkheid toe om telefoonnummers te valideren en formatteren\n"
+"aan de hand van de landcode. De module handelt ook nationale en internationale\n"
+"formaten af.\n"
+"\n"
+"Deze module past deze functionaliteit toe op de leads en contacten."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -4275,6 +4309,15 @@ msgid ""
 "regular Odoo interface anymore.\n"
 "\n"
 msgstr ""
+"\n"
+"PosBox home pagina\n"
+"===============\n"
+"Deze module overschrijft de Odoo web interface om een simpele home pagina\n"
+"weer te geven die uitlegt wat de PosBox is, welke status deze heeft\n"
+"en waar u documentatie kan vinden.\n"
+"\n"
+"Als u deze module activeert kan u niet meer de standaard\n"
+"interface van Odoo bereiken. \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_posbox_upgrade
@@ -4670,6 +4713,18 @@ msgid ""
 "    * Defines fiscal positions for spanish fiscal legislation\n"
 "    * Defines tax reports mod 111, 115 and 303\n"
 msgstr ""
+"\n"
+"Spaanse grootboekschema (PGCE 2008).\n"
+"========================================\n"
+"\n"
+"* Definieert de volgende grootboekrekening sjablonen:\n"
+"  * Algemeen Spaans boekhoudingsschema 2008\n"
+"  * Algemeen Spaans boekhoudingsschema 2008 voor kleine en middelgrote bedrijven\n"
+"  * Algemeen Spaans boekhoudingsschema 2008 voor associaties\n"
+"* Definieert sjablonen voor verkoop en inkoop BTW\n"
+"* Definieert belastingrubriek sjablonen\n"
+"* Definieert fiscale posities voor spaanse fiscale wetgeving\n"
+"* Definieert fiscale rapporten 111, 115 en 303\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_studio
@@ -4727,6 +4782,12 @@ msgid ""
 "Categorize the lines per subscription template when an online quote contains subscription products.\n"
 "    "
 msgstr ""
+"\n"
+"Abonnement integratie voor de online offertes\n"
+"-------------------------------------------\n"
+"\n"
+"Categoriseer de regels per abonnementsjabloon wanneer een online offerte abonnementsproducten bevat.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_survey_crm
@@ -5510,6 +5571,13 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website edition and customization capabilities."
 msgstr ""
+"\n"
+"Deze module voegt de vereiste basiscode toe voor een volledig geïntegreerd klantenportaal. Het bevat de basiscontrollerklasse en basissjablonen. Zakelijke add-ons\n"
+"zullen hun specifieke sjablonen en controllers toevoegen om de klantportaal uit te breiden.\n"
+"\n"
+"Deze module bevat voornamelijke code afkomstig van Odoo v10 website_portal. Doel\n"
+"van deze module is om de weergave van een klantportaal zonder \n"
+"afhankelijkheid van de mogelijkheden van de website editie en aanpas mogelijkheden."
 
 #. module: base
 #: model:ir.module.module,description:base.module_barcodes
@@ -6257,6 +6325,17 @@ msgid ""
 "project.\n"
 "        "
 msgstr ""
+"\n"
+"Transifex integratie\n"
+"=====================\n"
+"Deze module voegt een link toe aan het Transifex-project in de vertaalweergave.\n"
+"Het doel van deze module is om vertalingen van de hoofdmodules te versnellen.\n"
+"\n"
+"Om te laten werken gebruikt Odoo Transifex-configuratiebestanden `.txt / config` om de\n"
+"projectbron te detecteren. Aangepaste modules worden niet vertaald (sinds deze niet gepubliceerd zijn op het belangrijkste Transifex-project).\n"
+"\n"
+"De taal die de gebruiker probeert te vertalen moet op de Transifex geactiveerd zijn.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -12078,6 +12157,7 @@ msgstr "Functie"
 #: model:res.partner.industry,full_name:base.res_partner_industry_G
 msgid "G WHOLESALE AND RETAIL TRADE;REPAIR OF MOTOR VEHICLES AND MOTORCYCLES"
 msgstr ""
+"G GROOT- EN DETAILHANDEL; REPARATIE VAN MOTORVOERTUIGEN EN MOTORFIETSEN"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -14387,6 +14467,12 @@ msgid ""
 "\n"
 " * UPDATE ME\n"
 msgstr ""
+"Account en betaling koppelen en portaalbetaling toevoegen\n"
+"\n"
+"Bieden hulpmiddelen voor account-gerelateerde betalingen evenals portaal-opties voor\n"
+"betalingen.\n"
+"\n"
+" * WERK BIJ\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_payment
@@ -14405,6 +14491,14 @@ msgid ""
 " * JS code to handle a payment form (eCommerce\n"
 " * add payment-related fields on SO\n"
 msgstr ""
+"Verkoop en betaling koppelen\n"
+"\n"
+"Biedt hulpmiddelen voor verkoopgerelateerde betalingen\n"
+"\n"
+" * specifiek beheer van transacties zoals orderbevestiging\n"
+" * tools methode om transacties af te handelen bij het toestaan om te betalen / verkopen\n"
+" * JS-code om een betalingsformulier af te handelen (eCommerce\n"
+" * voeg betalingsgerelateerde velden toe aan verkooporder\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_link_tracker
@@ -18476,7 +18570,7 @@ msgstr "Refereerbare modellen"
 #: model:ir.model.fields,field_description:base.field_res_partner_parent_id
 #: model:ir.model.fields,field_description:base.field_res_users_parent_id
 msgid "Related Company"
-msgstr "Gerelateerde bedrijf"
+msgstr "Gerelateerd bedrijf"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields_related
@@ -22581,6 +22675,19 @@ msgid ""
 "them to marketing campaigns.\n"
 "\n"
 msgstr ""
+"Uw contactformulier\n"
+"-----------------\n"
+"\n"
+"### Integreer contactformulieren met uw leads\n"
+"\n"
+"Deze eenvoudige applicatie integreert een contactformulier op uw \"Contact\" -pagina.\n"
+"Formulieren maken automatisch leads in <a href=\"https://www.odoo.com/page/crm\">Odoo CRM</a>.\n"
+"\n"
+"Gemakkelijke contactpagina\n"
+"-----------------\n"
+"\n"
+"Zorg dat uw leads automatisch worden ingevuld met de integratie van uw contactformulier. Deze toepassing biedt een betere kwalificatie van de lead die perfect is om te koppelen\n"
+"aan marketingcampagnes.\n"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:224

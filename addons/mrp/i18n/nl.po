@@ -6,7 +6,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2017
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Cas Vissers <casvissers@brahoo.nl>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Stephan Van Dyck <stephan.vandyck@vanroey.be>, 2017
 # Eric Geens <ericgeens@yahoo.com>, 2017
 # wilcobergacker <wilcobergacker@gmail.com>, 2017
@@ -1700,6 +1700,9 @@ msgid ""
 "                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Productiebewerkingen worden verwerkt bij werklekken. Een werkplek kan worden samengesteld\n"
+" uit werknemers en/of machines, ze worden gebruikt voor calculatie, planning, capaciteitsplanning, etc.\n"
+" De werkplekken worden gedefinieerd op de bewerkingen van de routing."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -1708,6 +1711,9 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                The Work Centers are defined on the Routing's operations."
 msgstr ""
+"Productiebewerkingen worden verwerkt in werkplekken. Een werkplek kan worden samengesteld\n"
+" uit werknemers en/of machines, ze worden gebruikt voor calculatie, planning, capaciteitsplanning, etc.\n"
+" De werkplekken worden gedefinieerd op de bewerkingen van de routing."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -3401,6 +3407,9 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
+"Het gebruik van een MPS rapport om uw bevoorrading- en productieactiviteiten"
+" te plannen, is handig als u een lange doorlooptijd hebt en als u produceert"
+" op basis van verkoopprognoses."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_message_valid_until
@@ -3579,6 +3588,8 @@ msgid ""
 "Work Order Messages are used to warn users about any change in the product,\n"
 "                process, etc. These messages will appear on the involved Work Orders."
 msgstr ""
+"Werkorderberichten worden gebruikt om gebruikers te waarschuwen voor alle veranderingen in het product,\n"
+" proces, etc. Deze berichten verschijnen op de betreffende werkorders."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -3639,6 +3650,8 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones"
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden verwerkt bij een werkplek om een productieorder te realiseren. Werkorders worden aangemaakt door productieorders,\n"
+" ze zijn gebaseerd op de routing die op de stuklijst is gedefinieerd."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workorder_todo
@@ -3647,6 +3660,8 @@ msgid ""
 "            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "            they are based on the Routing defined on these ones."
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden verwerkt bij een werkplek om een productieorder te realiseren. Werkorders worden aangemaakt door productieorders,\n"
+" ze zijn gebaseerd op de routing die op de stuklijst is gedefinieerd."
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_mrp_workorder_workcenter
@@ -3655,6 +3670,8 @@ msgid ""
 "           Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,\n"
 "           they are based on the Routing defined on these ones."
 msgstr ""
+"Werkorders zijn bewerkingen die moeten worden verwerkt bij een werkplek om een productie order te realiseren. Werkorders worden aangemaakt door productieorders,\n"
+" ze zijn gebaseerd op de routing die op de stuklijst is gedefinieerd."
 
 #. module: mrp
 #: model:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

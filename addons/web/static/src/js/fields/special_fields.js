@@ -20,7 +20,8 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      * @override
      */
     start: function () {
-        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), 1000);
+        var interval = navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? 60000 : 1000;
+        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), interval);
         return this._super.apply(this, arguments);
     },
     /**

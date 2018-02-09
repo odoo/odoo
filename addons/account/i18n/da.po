@@ -5,9 +5,9 @@
 # Translators:
 # Morten Schou <ms@msteknik.dk>, 2017
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Sanne Kristensen <sanne@vkdata.dk>, 2017
+# Martin Trigaux, 2017
+# Ejner Sønniksen <ejner@vkdata.dk>, 2017
 # Jarnhold Nattestad <nattestads@gmail.com>, 2017
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2017
 # Jesper Carstensen <info@danodoo.dk>, 2017
@@ -4045,11 +4045,11 @@ msgid ""
 msgstr ""
 "Kære Kunde\n"
 "\n"
-"Vores registreringer viser, at nogle betalinger på din konto stadig er ubetalte. Find venligst detaljer nedenfor.\n"
+"Ifølge vores bogholderi kan vi se, at der er en forfaldne saldo på din konto. Find venligst detaljer nedenfor.\n"
 "Hvis beløbet allerede er betalt, bedes du se bort fra denne meddelelse. Ellers kan du sende os det samlede beløb angivet nedenfor.\n"
 "Hvis du har spørgsmål vedrørende din konto, bedes du kontakte os\n"
 "\n"
-"Tak på forhånd for dit samarbejde\n"
+"På forhånd tak\n"
 "Med venlig hilsen"
 
 #. module: account
@@ -4987,7 +4987,7 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Fra denne rapport kan du få et overblik over det beløb, der faktureres fra "
+"Fra denne rapport kan du få en oversigt over det beløb, der faktureres fra "
 "dine leverandører. Søgeværktøjet kan også bruges til at tilpasse dine "
 "faktura-rapporter og så matche denne analyse til dine behov."
 
@@ -4998,7 +4998,7 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
-"Fra denne rapport kan du få et overblik over det beløb, der faktureres til "
+"Fra denne rapport kan du få en oversigt over det beløb, der faktureres til "
 "dine kunder. Søgeværktøjet kan også bruges til at tilpasse dine faktura-"
 "rapporter og så matche denne analyse til dine behov."
 
@@ -8053,6 +8053,14 @@ msgstr "Vælg en bilagsserie på journalen"
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "Angiv rækkefølge på journalen i forbindelse med denne faktura."
+
+#. module: account
+#: code:addons/account/models/company.py:273
+#, python-format
+msgid ""
+"Please install a chart of accounts or create a miscellaneous journal before "
+"proceeding."
+msgstr ""
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.view_account_form

@@ -14,7 +14,7 @@
 # 卓忆科技 <zhanghao@jointd.com>, 2017
 # Seven Floor <my7floor@gmail.com>, 2017
 # Li Xiang <lvx5013@foxmail.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # waveyeung <waveyeung@qq.com>, 2017
 # Ted Wang <feiyuwang2012@gmail.com>, 2017
 # Gary Wei <Gary.wei@elico-corp.com>, 2017
@@ -23,13 +23,14 @@
 # liulixia <liu.lixia@elico-corp.com>, 2017
 # Si Ling Lau <happy8645@hotmail.com>, 2017
 # Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2017
+# 老窦 北京 <2662059195@qq.com>, 2017
 # 石家庄_老刘 <liuaiqun@sina.com>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-24 09:00+0000\n"
-"PO-Revision-Date: 2017-10-24 09:00+0000\n"
+"POT-Creation-Date: 2018-01-29 15:28+0000\n"
+"PO-Revision-Date: 2018-01-29 15:28+0000\n"
 "Last-Translator: 石家庄_老刘 <liuaiqun@sina.com>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -646,12 +647,12 @@ msgstr "发票金额"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_amt_to_invoice
 #: model:ir.model.fields,field_description:sale.field_sale_report_amt_to_invoice
 msgid "Amount To Invoice"
-msgstr "未开票金额"
+msgstr "待开票金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team_quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "未开票金额"
+msgstr "待开票金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales_analytic_account_id
@@ -1400,6 +1401,14 @@ msgid "Is expired"
 msgstr "过期了"
 
 #. module: sale
+#: code:addons/sale/models/sale.py:861
+#, python-format
+msgid ""
+"It is forbidden to modify the following fields in a locked order:\n"
+"%s"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales___last_update
 #: model:ir.model.fields,field_description:sale.field_report_sale_report_saleproforma___last_update
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv___last_update
@@ -1580,6 +1589,7 @@ msgid "No longer edit orders once confirmed"
 msgstr "一旦确认，不能再编辑订单"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Note that once a Quotation becomes a Sales Order, it will be moved\n"
@@ -1587,15 +1597,6 @@ msgid ""
 msgstr ""
 "请注意，一旦报价成为销售订单，它将被\n"
 "                 从报价清单移动到销售订单清单。"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Note that once a Quotation becomes a Sales Order, it will be moved\n"
-"            from the Quotations list to the Sales Order list."
-msgstr ""
-"请注意，一旦报价成为销售订单，它将被\n"
-"从报价单移动到销售订单列表。"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2164,6 +2165,7 @@ msgstr "报表"
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
+#: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 #: model:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -2355,6 +2357,12 @@ msgstr ""
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
 msgstr "在不同的度量单位产品中采购和销售"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings_module_website_sale_digital
+msgid ""
+"Sell digital products - provide downloadable content on your customer portal"
+msgstr "销售数字产品 - 在你的客户门户网站提供可下载的内容"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2930,19 +2938,11 @@ msgid "Your Order has been confirmed."
 msgstr "您的订单已经确认。"
 
 #. module: sale
+#: model:ir.actions.act_window,help:sale.action_quotations
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Your next actions should flow efficiently: confirm the Quotation\n"
 "                to a Sales Order, then create the Invoice and collect the Payment."
-msgstr ""
-"你的下一步行动应该有效：确认报价\n"
-"一个销售订单，然后创建发票和付款方式。"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_quotations
-msgid ""
-"Your next actions should flow efficiently: confirm the Quotation\n"
-"            to a Sales Order, then create the Invoice and collect the Payment."
 msgstr ""
 "你的下一步行动应该有效：确认报价\n"
 "一个销售订单，然后创建发票和付款方式。"
