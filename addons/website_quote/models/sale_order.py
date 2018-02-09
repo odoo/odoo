@@ -75,6 +75,7 @@ class SaleOrder(models.Model):
              "request the payment when issuing the invoice.")
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if self.template_id and self.template_id.number_of_days > 0:
             default = dict(default or {})

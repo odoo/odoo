@@ -313,6 +313,7 @@ class Lead(models.Model):
         return super(Lead, self).write(vals)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         # set default value in context, if not already set (Put stage to 'new' stage)

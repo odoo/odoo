@@ -25,6 +25,7 @@ class Meeting(models.Model):
         return super(Meeting, self).write(values)
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = default or {}
         if default.get('write_type', False):

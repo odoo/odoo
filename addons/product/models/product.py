@@ -331,6 +331,7 @@ class ProductProduct(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         # TDE FIXME: clean context / variant brol
         if default is None:

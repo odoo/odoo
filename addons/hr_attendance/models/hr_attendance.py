@@ -102,5 +102,6 @@ class HrAttendance(models.Model):
                     })
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self):
         raise exceptions.UserError(_('You cannot duplicate an attendance.'))

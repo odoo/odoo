@@ -293,6 +293,7 @@ class Project(models.Model):
         return self.browse(new_project_id).write({'tasks': [(6, 0, tasks.ids)]})
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}
@@ -642,6 +643,7 @@ class Task(models.Model):
                 raise ValidationError(_('Task %s can not have a parent task and subtasks. Only one subtask level is allowed.' % (task.name,)))
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
             default = {}

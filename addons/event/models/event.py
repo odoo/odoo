@@ -292,6 +292,7 @@ class EventEvent(models.Model):
         return res
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {}, name=_("%s (copy)") % (self.name))

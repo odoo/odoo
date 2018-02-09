@@ -714,6 +714,7 @@ class Page(models.Model):
         return True
 
     @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         view = self.env['ir.ui.view'].browse(self.view_id.id)
         # website.page's ir.ui.view should have a different key than the one it
