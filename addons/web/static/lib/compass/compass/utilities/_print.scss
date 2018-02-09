@@ -1,0 +1,17 @@
+// Classes that are useful for controlling what gets printed.
+// You must mix `+print-utilities` into your print stylesheet
+// and `+print-utilities(screen)` into your screen stylesheet.
+// Note: these aren't semantic.
+@mixin print-utilities($media: print) {
+  @if $media == print {
+    .noprint, .no-print { display: none; }
+    #{elements-of-type(block)} {
+      &.print-only { display: block; }
+    }
+    #{elements-of-type(inline)} {
+      &.print-only {  display: inline; }
+    }
+  } @else {
+    .print-only { display: none; }
+  }
+}

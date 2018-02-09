@@ -1,0 +1,300 @@
+@import "compass/support";
+@import "compass/layout/grid-background";
+@import "compass/typography/units";
+
+// The default font size for all text in pixels
+$base-font-size: 16px !default;
+
+// The distance between text baselines (vertical rhythm) in pixels.
+$base-line-height: 24px !default;
+
+// The length unit in which to output rhythm values.
+// Supported values: px, em, rem. Percent units can't be used since they
+// make calculating padding and margins impractical, and percentage borders are
+// not valid or supported in css.
+$rhythm-unit: 'em' !default;
+
+// Whether to output fallback values in px when using rem as the rhythm-unit.
+$rem-with-px-fallback: true !default;
+
+// Default values for rhythm borders properties.
+// Supports style alone eg. `solid` or list of style and color eg. `solid #aaa`;
+$default-rhythm-border-width: 1px !default;
+$default-rhythm-border-style: solid !default;
+
+// Allows the `adjust-font-size-to` mixin and the `lines-for-font-size` function
+// to round the line height to the nearest half line height instead of the
+// nearest integral line height to avoid large spacing between lines.
+$round-to-nearest-half-line: false !default;
+
+// Ensure there is at least this many pixels
+// of vertical padding above and below the text.
+$min-line-padding: 2px !default;
+
+// The leader is the amount of whitespace in a line.
+// It might be useful in your calculations.
+$base-leader: convert-length($base-line-height - $base-font-size, $rhythm-unit, $base-font-size);
+
+// The half-leader is the amount of whitespace above and below a line.
+// It might be useful in your calculations.
+$base-half-leader: $base-leader / 2;
+
+// @private Whether the rhythm output is in absolute units (px) or not (em, rem)
+$relative-font-sizing: if($rhythm-unit == px, false, true);
+
+// Validate units
+@if unit($base-font-size)   != 'px' { @warn "$base-font-size must resolve to a pixel unit."; }
+@if unit($base-line-height) != 'px' { @warn "$base-line-height must resolve to a pixel unit."; }
+@if $rhythm-unit != 'px' and $rhythm-unit != 'em' and $rhythm-unit != 'rem' {
+  @warn "$rhythm-unit must be `px`, `em` or `rem`.";
+}
+
+
+// Calculate rhythm units.
+@function rhythm($lines: 1, $font-size: $base-font-size, $offset: 0) {
+  $rhythm: convert-length($lines * $base-line-height - $offset, $rhythm-unit, $font-size);
+  @if unit($rhythm) == px {
+    $rhythm: floor($rhythm);
+  }
+  @return $rhythm;
+}
+
+// Calculate the minimum multiple of rhythm units needed to contain the font-size.
+@function lines-for-font-size($font-size) {
+  $lines: if($round-to-nearest-half-line,
+             ceil(2 * $font-size / $base-line-height) / 2,
+             ceil($font-size / $base-line-height));
+  // If lines are cramped include some extra lead.
+  @if ($lines * $base-line-height - $font-size) < ($min-line-padding * 2) {
+    $lines: $lines + if($round-to-nearest-half-line, 0.5, 1);
+  }
+  @return $lines;
+}
+
+
+// @private Outputs rhythm values. For rem units, outputs pixel fallbacks
+// by default.
+@mixin output-rhythm($property, $values) {
+  @if $rhythm-unit == rem and $rem-with-px-fallback {
+    @include rem($property, $values);
+  }
+  @else {
+    $output: ();
+    @each $value in $values {
+      @if unit($value) == px {
+        // Ensure all pixel values are rounded to the nearest pixel.
+        $output: join($output, round($value));
+      }
+      @else {
+        $output: join($output, $value);
+      }
+    }
+    #{$property}: $output;
+  }
+}
+
+// Establishes a font baseline for the given font-size.
+@mixin establish-baseline($font-size: $base-font-size) {
+  $relative-size: 100% * ($font-size / $browser-default-font-size);
+
+  @if support-legacy-browser(ie, "6") and (not $relative-font-sizing) {
+    // IE 6 refuses to resize fonts set in pixels and it weirdly resizes fonts
+    // whose root is set in ems. So we set the root font size in percentages of
+    // the default font size, even if we are using absolute sizes elsewhere.
+    * html { font-size: $relative-size; }
+  }
+  html {
+    font-size: if($relative-font-sizing, $relative-size, $font-size);
+
+    // Webkit has a bug that prevents line-height being set in rem on <html>;
+    // To work around this and simplify output, we can set initial line-height
+    // in ems for all relative rhythm units, even when $rhythm-unit is `rem`.
+    @if $relative-font-sizing {
+      line-height: convert-length($base-line-height, em);
+    }
+    @else {
+      line-height: round($base-line-height);
+    }
+  }
+}
+
+// Resets the baseline to 1 rhythm unit
+// Does not work on elements whose font-size is different from $base-font-size.
+//
+// @deprecated This mixin will be removed in the next release.
+// Please use `adjust-leading-to(1)` instead.
+@mixin reset-baseline($font-size: $base-font-size) {
+  @include adjust-leading-to(1, $font-size);
+}
+
+// Show a background image that can be used to debug your alignments.
+// As this is a development feature, this mixin never outputs pixel fallbacks
+// for rem output.
+// Include the $img argument if you would rather use your own image than the
+// Compass default gradient image.
+@mixin debug-vertical-alignment($img: false) {
+  @if $img {
+    background: image-url($img);
+  }
+  @else {
+    @include baseline-grid-background(if($round-to-nearest-half-line, rhythm(1/2), rhythm(1)));
+  }
+}
+
+// Adjust a block to have a different font size and line height to maintain the
+// rhythm. $lines specifies how many multiples of the baseline rhythm each line
+// of this font should use up. It does not have to be an integer, but it
+// defaults to the smallest integer that is large enough to fit the font.
+// Use $from-size to adjust from a font-size other than the base font-size.
+@mixin adjust-font-size-to($to-size, $lines: auto, $from-size: $base-font-size) {
+  $to-size: convert-length($to-size, px, $from-size);
+  @if $lines == auto {
+    $lines: lines-for-font-size($to-size);
+  }
+  @include output-rhythm(font-size, convert-length($to-size, $rhythm-unit, $from-size));
+  @include adjust-leading-to($lines, $to-size);
+}
+
+// Adjust a block to have different line height to maintain the rhythm.
+// $lines specifies how many multiples of the baseline rhythm each line of this
+// font should use up. It does not have to be an integer, but it defaults to the
+// smallest integer that is large enough to fit the font.
+@mixin adjust-leading-to($lines, $font-size: $base-font-size) {
+  @include output-rhythm(line-height, rhythm($lines, $font-size));
+}
+
+// Apply leading whitespace. The $property can be margin or padding.
+@mixin leader($lines: 1, $font-size: $base-font-size, $property: margin) {
+  @include output-rhythm(#{$property}-top, rhythm($lines, $font-size));
+}
+
+// Apply leading whitespace as padding.
+@mixin padding-leader($lines: 1, $font-size: $base-font-size) {
+  @include output-rhythm(padding-top, rhythm($lines, $font-size));
+}
+
+// Apply leading whitespace as margin.
+@mixin margin-leader($lines: 1, $font-size: $base-font-size) {
+  @include output-rhythm(margin-top, rhythm($lines, $font-size));
+}
+
+// Apply trailing whitespace. The $property can be margin or padding.
+@mixin trailer($lines: 1, $font-size: $base-font-size, $property: margin) {
+  @include output-rhythm(#{$property}-bottom, rhythm($lines, $font-size));
+}
+
+// Apply trailing whitespace as padding.
+@mixin padding-trailer($lines: 1, $font-size: $base-font-size) {
+  @include output-rhythm(padding-bottom, rhythm($lines, $font-size));
+}
+
+// Apply trailing whitespace as margin.
+@mixin margin-trailer($lines: 1, $font-size: $base-font-size) {
+  @include output-rhythm(margin-bottom, rhythm($lines, $font-size));
+}
+
+// Shorthand mixin to apply whitespace for top and bottom margins and padding.
+@mixin rhythm(
+  $leader: 1,
+  $padding-leader: 0,
+  $padding-trailer: $padding-leader,
+  $trailer: $leader,
+  $font-size: $base-font-size
+) {
+  @include leader($leader, $font-size);
+  @include padding-leader($padding-leader, $font-size);
+  @include padding-trailer($padding-trailer, $font-size);
+  @include trailer($trailer, $font-size);
+}
+
+// Shorthand mixin to apply whitespace for top and bottom margins.
+@mixin rhythm-margins(
+  $leader: 1,
+  $trailer: $leader,
+  $font-size: $base-font-size
+) {
+  @include leader($leader, $font-size);
+  @include trailer($trailer, $font-size);
+}
+
+// Shorthand mixin to apply whitespace for top and bottom padding.
+@mixin rhythm-padding(
+  $padding-leader: 1,
+  $padding-trailer: $padding-leader,
+  $font-size: $base-font-size
+) {
+  @include padding-leader($padding-leader, $font-size);
+  @include padding-trailer($padding-trailer, $font-size);
+}
+
+// Apply a border and whitespace to any side without destroying the vertical
+// rhythm. The whitespace must be greater than the width of the border.
+@mixin apply-side-rhythm-border(
+  $side,
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $font-size: $base-font-size,
+  $border-style: $default-rhythm-border-style
+) {
+  // If applying borders to all sides, use shorthand properties
+  $border-prop: if($side == all, border, border-#{$side});
+  @include output-rhythm(#{$border-prop}-width, convert-length($width, $rhythm-unit, $font-size));
+  #{$border-prop}-style: nth($border-style, 1);
+  @if type-of($border-style) == list and length($border-style) > 1 {
+    #{$border-prop}-color: nth($border-style, 2);
+  }
+  $padding-prop: if($side == all, padding, padding-#{$side});
+  @include output-rhythm(#{$padding-prop}, rhythm($lines, $font-size, $offset: $width));
+}
+
+// Apply a leading border.
+// $border-style and $width are deprecated and will be removed in a future version of Compass.
+@mixin leading-border(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $font-size: $base-font-size,
+  $border-style: $default-rhythm-border-style
+) {
+  @include apply-side-rhythm-border(top, $width, $lines, $font-size, $border-style);
+}
+
+// Apply a trailing border.
+@mixin trailing-border(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $font-size: $base-font-size,
+  $border-style: $default-rhythm-border-style
+) {
+  @include apply-side-rhythm-border(bottom, $width, $lines, $font-size, $border-style);
+}
+
+// Apply both leading and trailing borders.
+@mixin horizontal-borders(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $font-size: $base-font-size,
+  $border-style: $default-rhythm-border-style
+) {
+  @include leading-border($width, $lines, $font-size, $border-style);
+  @include trailing-border($width, $lines, $font-size, $border-style);
+}
+
+// Alias for `horizontal-borders` mixin.
+@mixin h-borders(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $font-size: $base-font-size,
+  $border-style: $default-rhythm-border-style
+) {
+  @include horizontal-borders($width, $lines, $font-size, $border-style);
+}
+
+// Apply borders and whitespace equally to all sides.
+@mixin rhythm-borders(
+  $width: $default-rhythm-border-width,
+  $lines: 1,
+  $font-size: $base-font-size,
+  $border-style: $default-rhythm-border-style
+) {
+  @include apply-side-rhythm-border(all, $width, $lines, $font-size, $border-style);
+}

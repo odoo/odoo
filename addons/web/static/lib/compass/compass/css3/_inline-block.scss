@@ -1,0 +1,31 @@
+@import "compass/support";
+
+// The legacy support for inline-block.
+// Defaults to the $graceful-usage-threshold.
+$inline-block-support-threshold: $graceful-usage-threshold !default;
+
+// Set `$inline-block-alignment` to `none` or `false` to disable the output
+// of a vertical-align property in the inline-block mixin.
+// Or set it to a legal value for `vertical-align` to change the default.
+$inline-block-alignment: middle !default;
+
+// Provides a cross-browser method to implement `display: inline-block;`
+@mixin inline-block($alignment: $inline-block-alignment, $ie-alignment: auto) {
+  // legacy support for VERY old firefox
+  @if support-legacy-browser("firefox", "2", $threshold: $inline-block-support-threshold) {
+    display: -moz-inline-stack;
+  }
+  // standard
+  display: inline-block;
+  @if $alignment and $alignment != none {
+    vertical-align: $alignment;
+  }
+  // legacy IE support
+  @if support-legacy-browser("ie", "7", $threshold: $inline-block-support-threshold) {
+    @if $ie-alignment and $ie-alignment != none {
+      *vertical-align: $ie-alignment;
+    }
+    *zoom: 1;
+    *display: inline;
+  }
+}

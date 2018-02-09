@@ -1,0 +1,37 @@
+// Background Origin
+@import "compass/support";
+
+// The the user threshold for background-origin support. Defaults to `$critical-usage-threshold`
+$background-origin-threshold: $critical-usage-threshold !default;
+
+
+// The default background-origin: [border-box | padding-box | content-box]
+$default-background-origin: content-box !default;
+
+
+// Set the origin of the background (image and color) at the edge of the padding, border, or content.
+//
+//     $origin... : [padding-box | border-box | content-box]
+@mixin background-origin($origin...) {
+  $output: ();
+  $deprecated: ();
+
+  @if (length($origin) > 0) {
+    @each $layer in $origin {
+      $output: append($output, unquote($layer), comma);
+      $deprecated: append($deprecated, legacy-box($layer), comma);
+    }
+  } @else {
+    $output: $default-background-origin;
+    $deprecated: legacy-box($default-background-origin);
+  }
+
+  @include with-each-prefix(background-img-opts, $background-origin-threshold) {
+    @if $current-prefix == -moz or $current-prefix == -webkit {
+      // Legacy versions of Mozilla support a different syntax, prefixed.
+      @include prefix-prop(background-origin, $deprecated)
+    } @else {
+      @include prefix-prop(background-origin, $output)
+    }
+  }
+}

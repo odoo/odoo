@@ -1,0 +1,152 @@
+@import "compass/support";
+@import "compass/utilities/general/hacks";
+
+$gradient-support-threshold: $graceful-usage-threshold !default;
+$svg-gradient-shim-threshold: $graceful-usage-threshold !default;
+$border-image-support-threshold: $graceful-usage-threshold !default;
+$owg-threshold: $graceful-usage-threshold !default;
+
+// Compass assumes you will use the official gradient syntax,
+// unless otherwise instructed.
+$use-legacy-gradient-syntax: false !default;
+
+// Create a linear gradient using standard official or legacy syntax.
+// This function must be included in one of the following
+// image module mixins to work properly.
+@function linear-gradient($angle, $details...) {
+  $legacy-syntax: $use-legacy-gradient-syntax;
+
+  @if type-of($angle) != 'number' {
+    $angle: compact($angle);
+    $legacy-syntax: if(index($angle, 'to'), false, true);
+  }
+
+  @if $legacy-syntax {
+    @return _linear-gradient_legacy($angle, $details...);
+  } @else {
+    @return _linear-gradient($angle, $details...);
+  }
+}
+
+// These browsers support svg but not gradients
+// so we can shim the gradient with an inline svg file.
+$browsers-supporting-svg-but-not-gradients: (ie: "9", opera: "9.5-9.6");
+
+// These browsers require the old webkit gradient syntax
+$browsers-supporting-old-webkit-gradients: (android: ("2.1", "3"));
+
+@mixin each-gradient-prefix($values) {
+  @if prefixed(-svg, $values) {
+    @include for-legacy-browsers($browsers-supporting-svg-but-not-gradients,
+                                 $svg-gradient-shim-threshold)
+    {
+      @include with-prefix(-svg) {
+        @content;
+      }
+    }
+  }
+  @if prefixed(-owg, $values) {
+    @include for-legacy-browsers($browsers-supporting-old-webkit-gradients,
+                                 $owg-threshold)
+    {
+      @include with-prefix(-owg) {
+        @content;
+      }
+    }
+  }
+  @include with-each-prefix(css-gradients, $gradient-support-threshold) {
+    @if $current-prefix {
+      @if prefixed($current-prefix, $values) {
+        @content;
+      } @else if $debug-browser-support {
+        /* There is not a value that needs to be prefixed with #{$current-prefix} in: #{$values} */
+      }
+    } @else {
+      @content;
+    }
+  }
+}
+
+@mixin image-property($property, $values...) {
+  @include each-gradient-prefix($values) {
+    @if $current-prefix {
+      #{$property}: prefix($current-prefix, $values);
+    } @else {
+      #{$property}: $values;
+    }
+    @content;
+  }
+}
+
+// Background property support for vendor prefixing within values.
+@mixin background($backgrounds...) {
+  @include image-property(background, $backgrounds...);
+}
+
+// Set any number of background layers, along with a fallback.
+// The final argument will be output separately, first, as a css2 fallback.
+@mixin background-with-css2-fallback($backgrounds...) {
+  @if length($backgrounds) > 1 or prefixed(-css2, $backgrounds) {
+    background: -css2(nth($backgrounds, -1));
+  }
+  @include background($backgrounds...);
+}
+
+
+// Background image property support for vendor prefixing within values.
+@mixin background-image($images...) {
+  @include image-property(background-image, $images...) {
+    @if $current-prefix == -svg {
+      background-size: 100%;
+    }
+  }
+}
+
+// Emit a IE-Specific filters that renders a simple linear gradient.
+// For use in IE 6 - 8. Best practice would have you apply this via a
+// conditional IE stylesheet, but if you must, you should place this before
+// any background-image properties that you have specified.
+//
+// For the `$orientation` parameter, you can pass `vertical` or `horizontal`.
+@mixin filter-gradient(
+  $start-color,
+  $end-color,
+  $orientation: vertical
+) {
+  @include for-legacy-browsers((ie: "8"), $gradient-support-threshold) {
+    @include has-layout;
+    $gradient-type: if($orientation == vertical, 0, 1);
+    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=#{$gradient-type}, startColorstr='#{ie-hex-str($start-color)}', endColorstr='#{ie-hex-str($end-color)}');
+  }
+}
+
+
+// Border image property support for vendor prefixing properties and values.
+@mixin border-image($value) {
+  @include with-each-prefix(border-image, $border-image-support-threshold) {
+    $border-prefix: $current-prefix;
+    @include each-gradient-prefix($value) {
+      @if $current-prefix and prefixed($current-prefix, $value) {
+        $legacy-value: reject($value, fill);
+        @include prefix-prop(border-image, prefix($current-prefix, $legacy-value), $prefix: $border-prefix);
+      } @else {
+        @include prefix-prop(border-image, $value, $prefix: $border-prefix);
+      }
+    }
+  }
+}
+
+// List style image property support for vendor prefixing within values.
+@mixin list-style-image($image) {
+  @include image-property(list-style-image, $image);
+}
+
+// List style property support for vendor prefixing within values.
+@mixin list-style($value) {
+  @include image-property(list-style, $value);
+}
+
+// content property support for vendor prefixing within values.
+@mixin content($value) {
+  @include image-property(content, $value);
+}

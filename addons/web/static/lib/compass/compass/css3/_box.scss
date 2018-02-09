@@ -1,0 +1,85 @@
+// Flexible Box
+@import "deprecated-support";
+
+@warn "The compass/css3/box module is DEPRECATED and will be removed in the next release. Please use compass/css3/flexbox instead.";
+
+// @private css3-feature-support variables must always include a list of five boolean values
+$legacy-box-support: -moz, -webkit, not -o, -ms, not -khtml;
+
+// Default box orientation, assuming that the user wants something less block-like
+$default-box-orient         : horizontal      !default;
+
+// Default box-align
+$default-box-align          : stretch         !default;
+
+// Default box flex
+$default-box-flex           : 0               !default;
+
+// Default flex group
+$default-box-flex-group     : 1               !default;
+
+// Box direction default value
+$default-box-direction      : normal          !default;
+
+// Default ordinal group
+$default-box-ordinal-group  : 1               !default;
+
+// Default box lines
+$default-box-lines          : single          !default;
+
+// Default box pack
+$default-box-pack           : start           !default;
+
+
+// Apply 'display:box;' to an element.
+// - must be used for any of the other flexbox mixins to work properly
+@mixin display-box {
+  @include experimental-value(display, box, $legacy-box-support...);
+}
+
+// Box orientation [ horizontal | vertical | inline-axis | block-axis | inherit ]
+@mixin box-orient($orientation: $default-box-orient) {
+  $orientation : unquote($orientation);
+  @include experimental(box-orient, $orientation, $legacy-box-support...);
+}
+
+// Box align [ start | end | center | baseline | stretch ]
+@mixin box-align($alignment: $default-box-align) {
+  $alignment : unquote($alignment);
+  @include experimental(box-align, $alignment, $legacy-box-support...);
+}
+
+// Takes an int argument for box flex. Apply this to the children inside the box.
+//
+// For example: "div.display-box > div.child-box" would get the box flex mixin.
+@mixin box-flex($flex: $default-box-flex) {
+  @include experimental(box-flex, $flex, $legacy-box-support...);
+}
+
+// Takes an int argument for flexible grouping
+@mixin box-flex-group($group: $default-box-flex-group) {
+  @include experimental(box-flex-group, $group, $legacy-box-support...);
+}
+
+// Takes an int argument for ordinal grouping and rearranging the order
+@mixin box-ordinal-group($group: $default-box-ordinal-group) {
+  @include experimental(box-ordinal-group, $group, $legacy-box-support...);
+}
+
+// Box direction [ normal | reverse | inherit ]
+@mixin box-direction($direction: $default-box-direction) {
+  $direction: unquote($direction);
+  @include experimental(box-direction, $direction, $legacy-box-support...);
+}
+
+// Box lines [ single | multiple ]
+@mixin box-lines($lines: $default-box-lines) {
+  $lines: unquote($lines);
+  @include experimental(box-lines, $lines, $legacy-box-support...);
+}
+
+// Box pack [ start | end | center | justify ]
+@mixin box-pack($pack: $default-box-pack) {
+  $pack: unquote($pack);
+  @include experimental(box-pack, $pack, $legacy-box-support...);
+}

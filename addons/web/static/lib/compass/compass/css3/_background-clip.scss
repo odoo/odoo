@@ -1,0 +1,35 @@
+// Background Clip
+@import "compass/support";
+
+// The the user threshold for background-clip support. Defaults to `$critical-usage-threshold`
+$background-clip-support-threshold: $critical-usage-threshold !default;
+
+// The default border-box model: [border-box | padding-box | content-box]
+$default-background-clip: padding-box !default;
+
+
+// Clip the background (image and color) at the edge of the padding, border, or content.
+//   $clip... : [padding-box | border-box | content-box]
+@mixin background-clip($clip...) {
+  $output: ();
+  $deprecated: ();
+
+  @if (length($clip) > 0) {
+    @each $layer in $clip {
+      $output: append($output, unquote($layer), comma);
+      $deprecated: append($deprecated, legacy-box($layer), comma);
+    }
+  } @else {
+    $output: $default-background-clip;
+    $deprecated: legacy-box($default-background-clip);
+  }
+
+  @include with-each-prefix(background-img-opts, $background-clip-support-threshold) {
+    @if $current-prefix == -moz or $current-prefix == -webkit {
+      // Legacy versions of Mozilla support a different syntax, prefixed.
+      @include prefix-prop(background-clip, $deprecated);
+    } @else {
+      @include prefix-prop(background-clip, $output);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+// Emits styles for a tag cloud
+@mixin tag-cloud($base-size: 1em) {
+  font-size: $base-size;
+  line-height: 1.2 * $base-size;
+  .xxs, .xs, .s, .l, .xl, .xxl {
+    line-height: 1.2 * $base-size; }
+  .xxs {
+    font-size: $base-size / 2; }
+  .xs {
+    font-size: 2 * $base-size / 3; }
+  .s {
+    font-size: 3 * $base-size / 4; }
+  .l {
+    font-size: 4 * $base-size / 3; }
+  .xl {
+    font-size: 3 * $base-size / 2; }
+  .xxl {
+    font-size: 2 * $base-size; } }

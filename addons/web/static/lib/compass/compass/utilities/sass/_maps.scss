@@ -1,0 +1,19 @@
+// Returns true if a $map is a superset of $sub-map.
+@function map-contains-all($map, $sub-map) {
+  @each $key, $value in $sub-map {
+    @if not (map-has-key($map, $key) and map-get($map, $key) == $value) {
+      @return false;
+    }
+  }
+  @return true;
+}
+
+// Returns true if a $map has any key-value pair in $sub-map.
+@function map-contains-any($map, $sub-map) {
+  @each $key, $value in $sub-map {
+    @if map-has-key($map, $key) and map-get($map, $key) == $value {
+      @return true;
+    }
+  }
+  @return false;
+}

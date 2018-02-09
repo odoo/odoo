@@ -1,0 +1,272 @@
+@import "compass/support";
+
+// XXX Remove these
+$experimental-support-for-mozilla: true !default;
+$experimental-support-for-webkit: true !default;
+$experimental-support-for-opera: true !default;
+$experimental-support-for-microsoft: true !default;
+$experimental-support-for-khtml: false !default;
+$experimental-support-for-svg: false !default;
+$legacy-support-for-ie6: true !default;
+$legacy-support-for-ie7: true !default;
+$legacy-support-for-ie8: true !default;
+$legacy-support-for-mozilla: true !default;
+$legacy-support-for-webkit: true !default;
+
+// This mixin provides basic support for CSS3 properties and
+// their corresponding experimental CSS2 properties when
+// the implementations are identical except for the property
+// prefix.
+@mixin experimental($property, $value,
+  $moz      : $experimental-support-for-mozilla,
+  $webkit   : $experimental-support-for-webkit,
+  $o        : $experimental-support-for-opera,
+  $ms       : $experimental-support-for-microsoft,
+  $khtml    : $experimental-support-for-khtml,
+  $official : true
+) {
+  @if $webkit  and $experimental-support-for-webkit    { -webkit-#{$property} : $value; }
+  @if $khtml   and $experimental-support-for-khtml     {  -khtml-#{$property} : $value; }
+  @if $moz     and $experimental-support-for-mozilla   {    -moz-#{$property} : $value; }
+  @if $ms      and $experimental-support-for-microsoft {     -ms-#{$property} : $value; }
+  @if $o       and $experimental-support-for-opera     {      -o-#{$property} : $value; }
+  @if $official                                        {         #{$property} : $value; }
+}
+
+// This mixin is a shortcut for applying only a single experimental value
+@mixin experimental-only-for($property, $value,
+  $moz      : false,
+  $webkit   : false,
+  $o        : false,
+  $ms       : false,
+  $khtml    : false,
+  $official : false
+) {
+  @include experimental($property, $value, $moz, $webkit, $o, $ms, $khtml, $official);
+}
+
+// Same as experimental(), but for cases when the property is the same and the value is vendorized
+@mixin experimental-value($property, $value,
+  $moz      : $experimental-support-for-mozilla,
+  $webkit   : $experimental-support-for-webkit,
+  $o        : $experimental-support-for-opera,
+  $ms       : $experimental-support-for-microsoft,
+  $khtml    : $experimental-support-for-khtml,
+  $official : true
+) {
+  @if $webkit  and $experimental-support-for-webkit    { #{$property} : -webkit-#{$value}; }
+  @if $khtml   and $experimental-support-for-khtml     { #{$property} :  -khtml-#{$value}; }
+  @if $moz     and $experimental-support-for-mozilla   { #{$property} :    -moz-#{$value}; }
+  @if $ms      and $experimental-support-for-microsoft { #{$property} :     -ms-#{$value}; }
+  @if $o       and $experimental-support-for-opera     { #{$property} :      -o-#{$value}; }
+  @if $official                                        { #{$property} :         #{$value}; }
+}
+
+// @private
+// Check a given support list for support of a particular browser
+@function supported(
+  $prefix,
+  $support-list
+) {
+  $keys: moz, webkit, o, ms, khtml, official;
+  $index: index($keys, $prefix);
+
+  @if $index {
+    @if $index == 6 and length($support-list) == 5 {
+      @return official;
+    } @else {
+      @return nth($support-list, $index);
+    }
+  } @else {
+    @warn 'Please pass a valid browser for $prefix: moz, webkit, o, ms, khtml, or official.';
+  }
+}
+
+// A debug tool for checking browser support
+@mixin debug-support-matrix($experimental: true, $ie: true) {
+  @debug  #{'$moz-'}$experimental-support-for-mozilla
+          #{'$webkit-'}$experimental-support-for-webkit
+          #{'$opera-'}$experimental-support-for-opera
+          #{'$microsoft-'}$experimental-support-for-microsoft
+          #{'$khtml-'}$experimental-support-for-khtml;
+  @debug  #{'$ie6-'}$legacy-support-for-ie6
+          #{'$ie7-'}$legacy-support-for-ie7
+          #{'$ie8-'}$legacy-support-for-ie8;
+}
+
+// Capture the current exerimental support settings
+@function capture-experimental-matrix() {
+  @return $experimental-support-for-mozilla
+          $experimental-support-for-webkit
+          $experimental-support-for-opera
+          $experimental-support-for-microsoft
+          $experimental-support-for-khtml;
+}
+
+// Capture the current legacy-ie support settings
+@function capture-legacy-ie-matrix() {
+  @return $legacy-support-for-ie6
+          $legacy-support-for-ie7
+          $legacy-support-for-ie8;
+}
+
+// Capture and store support
+$experimental-matrix: capture-experimental-matrix();
+$legacy-ie-matrix: capture-legacy-ie-matrix();
+
+@mixin capture-experimental-matrix {
+  $experimental-matrix: capture-experimental-matrix();
+}
+
+@mixin capture-legacy-ie-matrix {
+  $legacy-ie-matrix: capture-legacy-ie-matrix();
+}
+
+@mixin capture-support-matrix {
+  @include capture-experimental-matrix;
+  @include capture-legacy-ie-matrix;
+}
+
+// Change the experimental-support settings in specific contexts.
+@mixin set-experimental-support(
+  $moz    : false,
+  $webkit : false,
+  $o      : false,
+  $ms     : false,
+  $khtml  : false
+) {
+  $experimental-support-for-mozilla   : $moz;
+  $experimental-support-for-webkit    : $webkit;
+  $experimental-support-for-opera     : $o;
+  $experimental-support-for-microsoft : $ms;
+  $experimental-support-for-khtml     : $khtml;
+}
+
+@mixin capture-and-set-experimental(
+  $moz    : false,
+  $webkit : false,
+  $o      : false,
+  $ms     : false,
+  $khtml  : false
+) {
+  @include capture-experimental-matrix;
+  @include set-experimental-support($moz, $webkit, $o, $ms, $khtml);
+}
+
+@mixin capture-and-adjust-experimental(
+  $moz    : $experimental-support-for-mozilla,
+  $webkit : $experimental-support-for-webkit,
+  $o      : $experimental-support-for-opera,
+  $ms     : $experimental-support-for-microsoft,
+  $khtml  : $experimental-support-for-khtml
+) {
+  @include capture-experimental-matrix;
+  @include set-experimental-support($moz, $webkit, $o, $ms, $khtml);
+}
+
+// Change the legacy-support-for-ie* settings in specific contexts.
+@mixin set-legacy-ie-support(
+  $ie6: false,
+  $ie7: false,
+  $ie8: false
+) {
+  $legacy-support-for-ie6: $ie6;
+  $legacy-support-for-ie7: $ie7;
+  $legacy-support-for-ie8: $ie8;
+}
+
+@mixin capture-and-set-legacy-ie(
+  $ie6: false,
+  $ie7: false,
+  $ie8: false
+) {
+  @include capture-legacy-ie-matrix;
+  @include set-legacy-ie-support($ie6, $ie7, $ie8);
+}
+
+@mixin capture-and-adjust-legacy-ie(
+  $ie6: $legacy-support-for-ie6,
+  $ie7: $legacy-support-for-ie7,
+  $ie8: $legacy-support-for-ie8
+) {
+  @include capture-and-set-legacy-ie($ie6, $ie7, $ie8);
+}
+
+// Capture current browser support matrix, and set a new matrix of support.
+@mixin capture-and-set-support(
+  $moz    : false,
+  $webkit : false,
+  $o      : false,
+  $ms     : false,
+  $khtml  : false,
+  $ie6    : false,
+  $ie7    : false,
+  $ie8    : false
+) {
+  // Capture the current state
+  @include capture-support-matrix;
+
+  // Change support settings
+  @include set-experimental-support($moz, $webkit, $o, $ms, $khtml);
+  @include set-legacy-ie-support($ie6, $ie7, $ie8);
+}
+
+// Capture current browser support matrix, and set a new matrix of support.
+@mixin capture-and-adjust-support(
+  $moz        : $experimental-support-for-mozilla,
+  $webkit     : $experimental-support-for-webkit,
+  $o          : $experimental-support-for-opera,
+  $ms         : $experimental-support-for-microsoft,
+  $khtml      : $experimental-support-for-khtml,
+  $ie6        : $legacy-support-for-ie6,
+  $ie7        : $legacy-support-for-ie7,
+  $ie8        : $legacy-support-for-ie8
+) {
+  @include capture-and-set-support($moz, $webkit, $o, $ms, $khtml, $ie6, $ie7, $ie8);
+}
+
+
+// This mixin allows you to change the experimental support settings for
+// child (@content) styles.
+@mixin with-only-support-for(
+  $moz    : false,
+  $webkit : false,
+  $o      : false,
+  $ms     : false,
+  $khtml  : false,
+  $ie6    : false,
+  $ie7    : false,
+  $ie8    : false
+) {
+  // Capture current state
+  $wo-experimental-matrix : capture-experimental-matrix();
+  $wo-legacy-ie-matrix    : capture-legacy-ie-matrix();
+
+  // Set new states
+  @include set-experimental-support($moz, $webkit, $o, $ms, $khtml);
+  @include set-legacy-ie-support($ie6, $ie7, $ie8);
+
+  // Apply styles
+  @content;
+
+  // Return to original support settings
+  @include set-experimental-support($wo-experimental-matrix...);
+  @include set-legacy-ie-support($wo-legacy-ie-matrix...);
+}
+
+// This mixin is a shortcut for making slight adjustments to browser support
+// for child (@content) styles
+@mixin adjust-support-for(
+    $moz        : $experimental-support-for-mozilla,
+    $webkit     : $experimental-support-for-webkit,
+    $o          : $experimental-support-for-opera,
+    $ms         : $experimental-support-for-microsoft,
+    $khtml      : $experimental-support-for-khtml,
+    $ie6        : $legacy-support-for-ie6,
+    $ie7        : $legacy-support-for-ie7,
+    $ie8        : $legacy-support-for-ie8
+) {
+  @include with-only-support-for($moz, $webkit, $o, $ms, $khtml, $ie6, $ie7, $ie8) {
+    @content;
+  }
+}

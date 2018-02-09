@@ -1,0 +1,82 @@
+// Text Shadow
+
+@import "compass/support";
+
+
+// These defaults make the arguments optional for this mixin
+// If you like, set different defaults in your project
+
+$default-text-shadow-color      : #aaaaaa !default;
+$default-text-shadow-h-offset   : 0px     !default;
+$default-text-shadow-v-offset   : 0px     !default;
+$default-text-shadow-blur       : 1px     !default;
+$default-text-shadow-spread     : false   !default;
+
+
+// Provides cross-browser text shadows when one or more shadows are needed.
+// Each shadow argument should adhere to the standard css3 syntax for the
+// text-shadow property.
+//
+// Note: if any shadow has a spread parameter, this will cause the mixin
+// to emit the shadow declaration twice, first without the spread,
+// then with the spread included. This allows you to progressively
+// enhance the browsers that do support the spread parameter.
+@mixin text-shadow(
+  $shadow...
+) {
+  $shadow: if(length($shadow) > 0, $shadow, default);
+  $default: -compass-space-list(compact($default-text-shadow-h-offset $default-text-shadow-v-offset $default-text-shadow-blur $default-text-shadow-spread $default-text-shadow-color));
+  $shadows-without-spread: join((),(),comma);
+  $shadows: join((),(),comma);
+  $has-spread: false;
+
+  @each $layer in $shadow {
+    $layer: if($layer == 'default', $default, $layer);
+    @if length($layer) > 4 {
+      $has-spread: true;
+      $shadows-without-spread: append($shadows-without-spread, nth($layer,1) nth($layer,2) nth($layer,3) nth($layer,5));
+      $shadows: append($shadows, $layer);
+    } @else {
+      $shadows-without-spread: append($shadows-without-spread, $layer);
+      $shadows: append($shadows, $layer);
+    }
+  }
+  @if $has-spread {
+    text-shadow: $shadows-without-spread;
+  }
+  text-shadow: $shadows;
+}
+
+// Provides a single cross-browser CSS text shadow.
+//
+// Provides sensible defaults for the color, horizontal offset, vertical offset, blur, and spread
+// according to the configuration defaults above.
+@mixin single-text-shadow(
+  $hoff: false,
+  $voff: false,
+  $blur: false,
+  $spread: false,
+  $color: false
+) {
+  // A lot of people think the color comes first. It doesn't.
+  @if type-of($hoff) == color {
+    $temp-color: $hoff;
+    $hoff: $voff;
+    $voff: $blur;
+    $blur: $spread;
+    $spread: $color;
+    $color: $temp-color;
+  }
+  // Can't rely on default assignment with multiple supported argument orders.
+  $hoff:   if($hoff,   $hoff,   $default-text-shadow-h-offset);
+  $voff:   if($voff,   $voff,   $default-text-shadow-v-offset);
+  $blur:   if($blur,   $blur,   $default-text-shadow-blur    );
+  $spread: if($spread, $spread, $default-text-shadow-spread  );
+  $color:  if($color,  $color,  $default-text-shadow-color   );
+  // We don't need experimental support for this property.
+  @if $color == none or $hoff == none {
+    @include text-shadow(none);
+  } @else {
+    @include text-shadow(compact($hoff $voff $blur $spread $color));
+  }
+}

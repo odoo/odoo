@@ -1,0 +1,63 @@
+// Horizontal list layout module.
+//
+// Easy mode using simple descendant li selectors:
+//
+//   ul.nav
+//     +horizontal-list
+//
+// Advanced mode:
+// If you need to target the list items using a different selector then use
+// +horizontal-list-container on your ul/ol and +horizontal-list-item on your li.
+// This may help when working on layouts involving nested lists. For example:
+//
+//   ul.nav
+//     +horizontal-list-container
+//     > li
+//       +horizontal-list-item
+
+@import "bullets";
+@import "compass/utilities/general/clearfix";
+@import "compass/utilities/general/reset";
+@import "compass/utilities/general/float";
+@import "compass/support";
+
+// Can be mixed into any selector that target a ul or ol that is meant
+// to have a horizontal layout. Used to implement +horizontal-list.
+@mixin horizontal-list-container {
+  @include reset-box-model;
+  @include clearfix; }
+
+// Can be mixed into any li selector that is meant to participate in a horizontal layout.
+// Used to implement +horizontal-list.
+//
+// :last-child is not fully supported
+// see http://www.quirksmode.org/css/contents.html#t29 for the support matrix
+//
+// IE8 ignores rules that are included on the same line as :last-child
+// see http://www.richardscarrott.co.uk/posts/view/ie8-last-child-bug for details
+//
+// Setting `$padding` to `false` disables the padding between list elements
+@mixin horizontal-list-item($padding: 4px, $direction: left) {
+  @include no-bullet;
+  white-space: nowrap;
+  @include float($direction);
+  @if $padding {
+    padding: {
+      left: $padding;
+      right: $padding;
+    }
+    &:first-child #{if(support-legacy-browser("ie", "6", $threshold: $css-sel2-support-threshold), ', &.first', '')} { padding-#{$direction}: 0; }
+    &:last-child { padding-#{opposite-position($direction)}: 0; }
+    @if support-legacy-browser("ie", "7", $threshold: $css-sel2-support-threshold) {
+      &.last { padding-#{opposite-position($direction)}: 0; } }
+  }
+}
+
+// A list(ol,ul) that is layed out such that the elements are floated left and won't wrap.
+// This is not an inline list.
+//
+// Setting `$padding` to `false` disables the padding between list elements
+@mixin horizontal-list($padding: 4px, $direction: left) {
+  @include horizontal-list-container;
+  li {
+    @include horizontal-list-item($padding, $direction); } }

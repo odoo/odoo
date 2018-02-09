@@ -1,0 +1,21 @@
+// Box Sizing
+
+@import "compass/support";
+
+// The prefixed support threshold for box-sizing.
+// Defaults to the $graceful-usage-threshold.
+$box-sizing-support-threshold: $critical-usage-threshold !default;
+
+// The default box-sizing model when no argument is provided to the box-sizing mixin: [ content-box | border-box | padding-box ]
+//
+// The browser default is content-box, compass defaults to border-box.
+$default-box-sizing: border-box !default;
+
+
+// Change the box model for Mozilla, Webkit, IE8 and the future
+//
+//     $box-model: [ content-box | border-box | padding-box ]
+@mixin box-sizing($box-model: $default-box-sizing) {
+  $box-model: unquote($box-model);
+  @include prefixed-properties(css3-boxsizing, $box-sizing-support-threshold, (box-sizing: $box-model));
+}

@@ -1,0 +1,25 @@
+@import "compass/css3/deprecated-support";
+
+// To get full firefox support, you must install the ellipsis pattern:
+//
+//     compass install compass/ellipsis
+$use-mozilla-ellipsis-binding: false !default;
+
+// This technique, by [Justin Maxwell](http://code404.com/), was originally
+// published [here](http://mattsnider.com/css/css-string-truncation-with-ellipsis/).
+// Firefox implementation by [Rikkert Koppes](http://www.rikkertkoppes.com/thoughts/2008/6/).
+@mixin ellipsis($no-wrap: true) {
+  @if $no-wrap { white-space: nowrap; }
+  overflow: hidden;
+  @include experimental(text-overflow, ellipsis,
+    not -moz,
+    not -webkit,
+    -o,
+    -ms,
+    not -khtml,
+    official
+  );
+  @if $legacy-support-for-mozilla and $use-mozilla-ellipsis-binding {
+    -moz-binding: stylesheet-url(unquote("xml/ellipsis.xml#ellipsis"));
+  }
+}

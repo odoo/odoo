@@ -1,0 +1,50 @@
+// Inline-Block list layout module.
+//
+// Easy mode using simple descendant li selectors:
+//
+//     ul.nav {
+//       @import inline-block-list;
+//     }
+//
+// Advanced mode:
+// If you need to target the list items using a different selector then use
+// `@include inline-block-list-container` on your ul/ol and
+// `@include inline-block-list-item` on your li. This may help when working
+// on layouts involving nested lists. For example:
+//
+//     ul.nav {
+//       @include inline-block-list-container;
+//       > li {
+//         @include inline-block-list-item;
+//       }
+//     }
+
+@import "bullets";
+@import "horizontal-list";
+@import "compass/utilities/general/float";
+@import "compass/css3/inline-block";
+
+// Can be mixed into any selector that target a ul or ol that is meant
+// to have an inline-block layout. Used to implement `inline-block-list`.
+@mixin inline-block-list-container {
+  @include horizontal-list-container; }
+
+// Can be mixed into any li selector that is meant to participate in a horizontal layout.
+// Used to implement `inline-block-list`.
+@mixin inline-block-list-item($padding: false) {
+  @include no-bullet;
+  @include inline-block;
+  white-space: nowrap;
+  @if $padding {
+    padding: {
+      left: $padding;
+      right: $padding;
+    };    
+  }
+}
+
+// A list(ol,ul) that is layed out such that the elements are inline-block and won't wrap.
+@mixin inline-block-list($padding: false) {
+  @include inline-block-list-container;
+  li {
+    @include inline-block-list-item($padding); } }

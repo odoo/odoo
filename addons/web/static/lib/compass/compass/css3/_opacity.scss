@@ -1,0 +1,27 @@
+@import "compass/support";
+
+// The support usage threshold for opacity. Defaults to the global
+// threshold for graceful degradation.
+$opacity-usage-threshold: $graceful-usage-threshold !default;
+
+// Provides cross-browser CSS opacity. Takes a number between 0 and 1 as the argument, e.g. 0.5 for 50% opacity.
+//
+//     @param $opacity
+//         A number between 0 and 1, where 0 is transparent and 1 is opaque.
+
+@mixin opacity($opacity) {
+  @include for-legacy-browser("ie", "8", $threshold: $opacity-usage-threshold) {
+    @if $opacity == 1 {
+      filter: unquote("progid:DXImageTransform.Microsoft.Alpha(enabled=false)");
+    } @else {
+      filter: unquote("progid:DXImageTransform.Microsoft.Alpha(Opacity=#{round($opacity * 100)})");
+    }
+  }
+  opacity: $opacity;
+}
+
+// Make an element completely transparent.
+@mixin transparent { @include opacity(0); }
+
+// Make an element completely opaque.
+@mixin opaque { @include opacity(1); }

@@ -1,0 +1,50 @@
+// Filter
+@import "compass/support";
+
+// The prefixed support threshold for css filter effects.
+// Defaults to the $graceful-usage-threshold.
+$filter-support-threshold: $graceful-usage-threshold !default;
+
+
+// Provides cross-browser support for the upcoming (?) css3 filter property.
+//
+// The filter argument should adhere to the standard css3 syntax
+// for the filter property.
+@mixin filter($filters) {
+  @include prefixed-properties(css-filters, $filter-support-threshold,(
+    filter: $filters
+  ));
+}
+
+// @private Apply filter-margins
+@mixin apply-filter-margin($position, $width) {
+  @include prefixed-properties(css-filters, $filter-support-threshold,(
+    filter-margin-#{$position}: $width
+  ));
+}
+
+// filter-margin-top
+@mixin filter-margin-top($width) { @include apply-filter-margin(top, $width); }
+
+// filter-margin-right
+@mixin filter-margin-right($width) { @include apply-filter-margin(right, $width); }
+
+// filter-margin-bottom
+@mixin filter-margin-bottom($width) { @include apply-filter-margin(bottom, $width); }
+
+// filter-margin-left
+@mixin filter-margin-left($width) { @include apply-filter-margin(left, $width); }
+
+// filter-margin
+@mixin filter-margin($widths) {
+  @include prefixed-properties(css-filters, $filter-support-threshold,(
+    filter-margin: $widths
+  ));
+}
+
+// color-interpolation-filters (auto | sRGB | linearRGB )
+@mixin color-interpolation-filters($value) {
+  @include prefixed-properties(css-filters, $filter-support-threshold,(
+    color-interpolation-filters: $value
+  ));
+}

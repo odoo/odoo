@@ -1,0 +1,16 @@
+@function newline() {
+  @return "
+";
+}
+
+// Joins a list into a string with the separator given.
+@function list-join($list, $separator: ", ") {
+  $result: "";
+  @each $value in $list {
+    @if str-length($result) > 0 {
+      $result: $result + $separator;
+    }
+    $result: $result + #{$value};
+  }
+  @return $result;
+}

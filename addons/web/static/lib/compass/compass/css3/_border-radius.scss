@@ -1,0 +1,107 @@
+// Border Radius
+
+@import "compass/support";
+
+
+// The the user threshold for border-radius support. Defaults to `$graceful-usage-threshold`
+$border-radius-threshold: $graceful-usage-threshold !default;
+
+// The length of a border-radius to be used by default.
+$default-border-radius: 5px !default;
+
+
+// Round all corners by a specific amount, defaults to value of `$default-border-radius`.
+//
+// When two values are passed, the first is the horizontal radius
+// and the second is the vertical radius.
+//
+// Note: webkit does not support shorthand syntax for several corners at once.
+// So in the case where you pass several values only the first will be passed to webkit.
+//
+// Examples:
+//
+//     .simple   { @include border-radius(4px, 4px); }
+//     .compound { @include border-radius(2px 5px, 3px 6px); }
+//     .crazy    { @include border-radius(1px 3px 5px 7px, 2px 4px 6px 8px)}
+//
+// Which generates:
+//
+//     .simple {
+//       -moz-border-radius: 4px / 4px;
+//       -webkit-border-radius: 4px 4px;
+//       border-radius: 4px / 4px; }
+//     
+//     .compound {
+//       -moz-border-radius: 2px 5px / 3px 6px;
+//       -webkit-border-radius: 2px 3px;
+//       border-radius: 2px 5px / 3px 6px; }
+//     
+//     .crazy {
+//       -moz-border-radius: 1px 3px 5px 7px / 2px 4px 6px 8px;
+//       -webkit-border-radius: 1px 2px;
+//       border-radius: 1px 3px 5px 7px / 2px 4px 6px 8px; }
+@mixin border-radius($radius: $default-border-radius, $vertical-radius: false) {
+  @include with-each-prefix(border-radius, $border-radius-threshold) {
+    @if $current-prefix == -webkit {
+      // Legacy Webkit didn't understand the official shorthand syntax for specifying a vertical radius.
+      $legacy-webkit-radius: first-value-of($radius);
+      @if $vertical-radius { $legacy-webkit-radius: append($legacy-webkit-radius, first-value-of($vertical-radius)); }
+      @include prefix-prop(border-radius, $legacy-webkit-radius);
+    } @else {
+      // Official syntax for everyone else
+      @include prefix-prop(border-radius, if($vertical-radius, #{$radius} / #{$vertical-radius}, $radius));
+    }
+  }
+}
+
+// Round radius at position by amount.
+//
+// * legal values for `$vert`: `top`, `bottom`
+// * legal values for `$horz`: `left`, `right`
+@mixin border-corner-radius($vert, $horz, $radius: $default-border-radius) {
+  @include with-each-prefix(border-radius, $border-radius-threshold) {
+    @if $current-prefix == -moz {
+      // Support for mozilla's syntax for specifying a corner
+      @include prefix-prop("border-radius-#{$vert}#{$horz}", $radius);
+    } @else {
+      // Official syntax for everyone else
+      @include prefix-prop("border-#{$vert}-#{$horz}-radius", $radius);
+    }
+  }
+}
+
+// Round top-left corner only
+@mixin border-top-left-radius($radius: $default-border-radius) {
+  @include border-corner-radius(top, left, $radius); }
+
+// Round top-right corner only
+@mixin border-top-right-radius($radius: $default-border-radius) {
+  @include border-corner-radius(top, right, $radius); }
+
+// Round bottom-left corner only
+@mixin border-bottom-left-radius($radius: $default-border-radius) {
+  @include border-corner-radius(bottom, left, $radius); }
+
+// Round bottom-right corner only
+@mixin border-bottom-right-radius($radius: $default-border-radius) {
+  @include border-corner-radius(bottom, right, $radius); }
+
+// Round both top corners by amount
+@mixin border-top-radius($radius: $default-border-radius) {
+  @include border-top-left-radius($radius);
+  @include border-top-right-radius($radius); }
+
+// Round both right corners by amount
+@mixin border-right-radius($radius: $default-border-radius) {
+  @include border-top-right-radius($radius);
+  @include border-bottom-right-radius($radius); }
+
+// Round both bottom corners by amount
+@mixin border-bottom-radius($radius: $default-border-radius) {
+  @include border-bottom-left-radius($radius);
+  @include border-bottom-right-radius($radius); }
+
+// Round both left corners by amount
+@mixin border-left-radius($radius: $default-border-radius) {
+  @include border-top-left-radius($radius);
+  @include border-bottom-left-radius($radius); }

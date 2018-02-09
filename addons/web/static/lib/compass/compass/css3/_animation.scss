@@ -1,0 +1,122 @@
+@import "compass/support";
+
+// The prefixed support threshold for animation.
+// Defaults to the $graceful-usage-threshold.
+$animation-support-threshold: $graceful-usage-threshold !default;
+
+
+// Name of any animation as a string.
+$default-animation-name             : null !default;
+
+// Duration of the entire animation in seconds.
+$default-animation-duration         : null !default;
+
+// Delay for start of animation in seconds.
+$default-animation-delay            : null !default;
+
+// The timing function(s) to be used between keyframes. [ease | linear | ease-in | ease-out | ease-in-out | cubic-bezier($number, $number, $number, $number)]
+$default-animation-timing-function  : null !default;
+
+// The number of times an animation cycle is played. [infinite | $number]
+$default-animation-iteration-count  : null !default;
+
+// Whether or not the animation should play in reverse on alternate cycles. [normal | alternate]
+$default-animation-direction        : null !default;
+
+// What values are applied by the animation outside the time it is executing. [none | forwards | backwards | both]
+$default-animation-fill-mode        : null !default;
+
+// Whether the animation is running or paused. [running | paused]
+$default-animation-play-state       : null !default;
+
+
+// Create a named animation sequence that can be applied to elements later.
+//
+//     $name    - The name of your animation.
+//     @content - The keyframes of the animation.
+@mixin keyframes($name, $deprecated-prefixes...) {
+  $warned: warn-about-useless-prefix-arguments($deprecated-prefixes...);
+
+  @include with-each-prefix(css-animation, $animation-support-threshold) {
+    // It would be nice if we could dynamically construct directive names.
+    @if $current-prefix == -moz    { @-moz-keyframes    #{$name} { @content; } }
+    @if $current-prefix == -webkit { @-webkit-keyframes #{$name} { @content; } }
+    @if $current-prefix == -o      { @-o-keyframes      #{$name} { @content; } }
+    @if $current-prefix == -ms     { @-ms-keyframes     #{$name} { @content; } }
+    @if $current-prefix == null    { @keyframes         #{$name} { @content; } }
+  }
+}
+
+// @private
+@mixin animation-properties($properties) {
+  @include prefixed-properties(css-animation, $animation-support-threshold, $properties);
+}
+
+
+// Apply any number of animation names.
+@mixin animation-name($name...) {
+  $name: set-arglist-default($name, $default-animation-name);
+  @include animation-properties((animation-name: $name));
+}
+
+// Apply any number of animation durations.
+@mixin animation-duration($duration...) {
+  $duration: set-arglist-default($duration, $default-animation-duration);
+  @include animation-properties((animation-duration: $duration));
+}
+
+// Apply any number of animation delays.
+@mixin animation-delay($delay...) {
+  $delay: set-arglist-default($delay, $default-animation-delay);
+  @include animation-properties((animation-delay: $delay));
+}
+
+// Apply any number of animation timing functions.
+@mixin animation-timing-function($function...) {
+  $function: set-arglist-default($function, $default-animation-timing-function);
+  @include animation-properties((animation-timing-function: $function));
+}
+
+// Apply any number of animation iteration counts.
+@mixin animation-iteration-count($count...) {
+  $count: set-arglist-default($count, $default-animation-iteration-count);
+  @include animation-properties((animation-iteration-count: $count));
+}
+
+// Apply any number of animation directions.
+@mixin animation-direction($direction...) {
+  $direction: set-arglist-default($direction, $default-animation-direction);
+  @include animation-properties((animation-direction: $direction));
+}
+
+// Apply any number of animation fill modes.
+@mixin animation-fill-mode($mode...) {
+  $mode: set-arglist-default($mode, $default-animation-fill-mode);
+  @include animation-properties((animation-fill-mode: $mode));
+}
+
+// Apply any number of animation play states.
+@mixin animation-play-state($state...) {
+  $state: set-arglist-default($state, $default-animation-play-state);
+  @include animation-properties((animation-play-state: $state));
+}
+
+// @private
+@function default-animation() {
+  @return compact($default-animation-name
+                  $default-animation-duration
+                  $default-animation-timing-function
+                  $default-animation-delay
+                  $default-animation-iteration-count
+                  $default-animation-direction
+                  $default-animation-fill-mode
+                  $default-animation-play-state);
+}
+
+// Shortcut to apply any number of animations to an element, with all the settings.
+//
+//     $animation... : Name and settings. [<values> | default]
+@mixin animation($animation...) {
+  $animation: if(length($animation) > 0, $animation, default-animation());
+  @include animation-properties((animation: $animation));
+}

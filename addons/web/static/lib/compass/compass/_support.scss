@@ -1,0 +1,447 @@
+// Map of compass extensions that are loaded. The value will either be
+// the version of the extension or `true` if the version is unknown.
+$compass-extensions: compass-extensions() !default;
+
+// The list of browsers you want to support.
+// Defaults to all.
+$supported-browsers: browsers() !default;
+
+// The browser usage threshold for features that gracefully degrade
+// Defaults to 1 user in 1,000.
+$graceful-usage-threshold: 0.1 !default;
+
+// The browser usage threshold for features that cannot degrade gracefully
+// Defaults to 1 user in 10,000.
+$critical-usage-threshold: 0.01 !default;
+
+// Set this to true to generate comments that will explain why a prefix was included or omitted.
+$debug-browser-support: false !default;
+
+// Minimum browser versions that must be supported.
+// The keys of this map are any valid browser according to `browsers()`.
+// The values of this map are the min version that is valid for that browser
+// according to `browser-versions($browser)`
+$browser-minimum-versions: (
+  'chrome':  null,
+  'firefox': null,
+  'ie':      null,
+  'safari':  null,
+  'opera':   null
+) !default;
+
+
+// @private
+$default-capability-options: (
+  (full-support: true),
+  (partial-support: true)
+);
+
+// When a prefix in in context, but there is no current prefix
+// That context is recorded here so other prefixes can be avoided.
+$prefix-context: null;
+
+// When a prefix is in a selector or directive scope, this is set to the
+// current prefix value.  When `null`, either there is no prefix in scope
+// or the official prefix is being rendered. The `$prefix-context`
+// variable can be used to make that distinction.
+$current-prefix: null;
+
+// When in a context that only exists in a particular version
+// this variable is set to those versions.
+$current-browser-versions: ();
+
+// The legacy support CSS 2.1 Selectors.
+// Defaults to the $critical-usage-threshold.
+$css-sel2-support-threshold: $critical-usage-threshold !default;
+
+// Check if the browser is in scope given the browser support and current prefix minimums.
+@function browser-out-of-scope($browser, $version: null) {
+  @if not index($supported-browsers, $browser) {
+    @if $debug-browser-support {
+      @return "#{$browser} is not listed as a supported browser."
+    } @else {
+      @return true;
+    }
+  } @else if not ($current-prefix == null or $current-prefix == browser-prefix($browser)) {
+    @if $debug-browser-support {
+      @return "#{$browser} #{$version} is incompatible with #{$current-prefix}."
+    } @else {
+      @return true;
+    }
+  }
+  $current-range: map-get($current-browser-versions, $browser);
+  $current-min: if($current-range, nth($current-range, 1), null);
+  $current-max: if($current-range, nth($current-range, 2), null);
+  @if not ($version and $current-max) {
+    // We don't have any versions to compare
+    @return false;
+  } @else {
+    // If the version is less than the current min, it is not supported
+    $too-old: compare-browser-versions($browser, $version, $current-min) < 0;
+    $too-new: compare-browser-versions($browser, $version, $current-max) > 0;
+    @if $too-old or $too-new {
+      @if $debug-browser-support {
+        @return "The current scope only works with #{display-browser-range($browser, $current-min, $current-max)}.";
+      } @else {
+        @return true;
+      }
+    } @else {
+      @return false;
+    }
+  }
+}
+
+// Check whether the browser is supported according to the supported browsers,
+// declared minimum support and usage thresholds.
+@function support-legacy-browser($browser, $min-version, $max-version: null, $threshold: $critical-usage-threshold) {
+  @if not index($supported-browsers, $browser) {
+    @return false;
+  }
+  // Check agaist usage stats and declared minimums
+  $min-required-version: map-get($browser-minimum-versions, $browser);
+  $usage: if($max-version,
+             omitted-usage($browser, $min-version, $max-version),
+             omitted-usage($browser, $min-version));
+  @return $usage > $threshold or
+          ($min-required-version and
+           compare-browser-versions($browser, $max-version or $min-version, $min-required-version) >= 0);
+}
+
+// Include content for a legacy browser
+// Version can be a single version string or a list of versions ordered from oldest to newest.
+@mixin for-legacy-browser($browser, $min-version, $max-version: $min-version,
+                          $threshold: $critical-usage-threshold,
+                          $ranges: ($browser: $min-version $max-version)) {
+  @if not browser-out-of-scope($browser, $max-version) and
+      support-legacy-browser($browser, $min-version, $max-version, $threshold)
+  {
+    @if $debug-browser-support {
+      /* Content for #{display-browser-range($browser, $min-version, $max-version)}.
+      Min version: #{map-get($browser-minimum-versions, $browser) or unspecified}.
+      User threshold to keep: #{$threshold}%. If #{display-browser-range($browser, $min-version, $max-version)} are omitted: #{omitted-usage($browser, $min-version, $max-version)}%. */
+    }
+    @include with-browser-ranges(intersect-browser-ranges($current-browser-versions, $ranges)) {
+      @content;
+    }
+  } @else if $debug-browser-support and browser-out-of-scope($browser, $max-version) {
+    /* Content for #{display-browser-range($browser, $min-version, $max-version)} omitted.
+       Not allowed in the current scope: #{browser-out-of-scope($browser, $max-version)} */
+  } @else if $debug-browser-support and not
+             support-legacy-browser($browser, $min-version, $max-version, $threshold) {
+    @if omitted-usage($browser, $min-version, $max-version) > $threshold {
+      /* Content for #{display-browser-range($browser, $min-version, $max-version)} omitted.
+         User threshold to keep: #{$threshold}%. If #{display-browser-range($browser, $min-version, $max-version)} and below are omitted: #{omitted-usage($browser, $min-version, $max-version)}%. */
+    } @else {
+      /* Content for #{display-browser-range($browser, $min-version, $max-version)} omitted.
+         Minimum support is #{map-get($browser-minimum-versions, $browser)}. */
+    }
+  }
+}
+
+@function display-browser-range($browser, $min-version, $max-version: $min-version) {
+  @return "#{unquote($browser)} #{unquote($min-version)}#{if($max-version != $min-version, unquote(' -') unquote($max-version), null)}";
+}
+
+
+// Renders the content once if any of the legacy browsers are supported.
+// $browsers is a map of browser name to version ranges
+@mixin for-legacy-browsers($browsers, $threshold: $critical-usage-threshold) {
+  $rendered: false;
+  @each $browser, $range in $browsers {
+    @if not $rendered {
+      @include for-legacy-browser($browser, $range..., $threshold: $threshold, $ranges: $browsers) {
+        $rendered: true;
+        @content;
+      }
+    }
+  }
+}
+
+// If there's a prefix context in scope, this will only output the content if the prefix matches.
+// Otherwise, sets the current prefix scope and outputs the content.
+@mixin with-prefix($prefix) {
+  @if $current-prefix or $prefix-context {
+    @if $current-prefix == $prefix or $prefix-context == $prefix {
+      @if $debug-browser-support {
+        @if $prefix {
+          /* content for #{$prefix} because #{$current-prefix or $prefix-context} is already in scope. */
+        } @else {
+          /* unprefixed content. #{$current-prefix or $prefix-context} is already in scope. */
+        }
+      }
+      $old-prefix-context: $prefix-context;
+      $old-prefix: $current-prefix;
+      $prefix-context: $prefix-context or $current-prefix !global;
+      $current-prefix: $prefix !global;
+      @content;
+      $prefix-context: $old-prefix-context !global;
+      $current-prefix: $old-prefix !global;
+    } @else if $prefix == null {
+      $old-prefix-context: $prefix-context;
+      $prefix-context: $prefix-context or $current-prefix !global;
+      $current-prefix: null !global;
+      @if $debug-browser-support {
+        /* Content for official syntax. Prefix context is still #{$prefix-context}. */
+      }
+      @content;
+      $current-prefix: $prefix-context !global;
+      $prefix-context: $old-prefix-context !global;
+    } @else if $debug-browser-support {
+      /* Omitting content for #{$prefix} because #{$current-prefix} is already in scope. */
+    }
+  } @else {
+    @if $debug-browser-support and $prefix {
+      /* Creating new #{$prefix} context. */
+    }
+    $prefix-context: $prefix !global;
+    $current-prefix: $prefix !global;
+    @content;
+    $current-prefix: null !global;
+    $prefix-context: null !global;
+  }
+}
+
+@function prefixes-for-capability($capability, $threshold, $capability-options: $default-capability-options) {
+  $result: ();
+  @each $prefix in browser-prefixes($supported-browsers) {
+    $result: map-merge($result,
+                      ($prefix: use-prefix($prefix, $capability, $threshold, $capability-options)));
+  }
+  @return $result;
+}
+
+// Yields to the mixin content once for each prefix required.
+// The current prefix is set to the $current-prefix global for use by the included content.
+// Also yields to the content once with $current-prefix set to null for the official version
+// as long as there's not already a prefix in scope.
+@mixin with-each-prefix($capability, $threshold, $capability-options: $default-capability-options) {
+  @each $prefix, $should-use-prefix in prefixes-for-capability($capability, $threshold, $capability-options) {
+    @if $should-use-prefix {
+      @if $debug-browser-support and type-of($should-use-prefix) == list {
+        /* Capability #{$capability} is prefixed with #{$prefix} because #{$should-use-prefix} is required. */
+      } @else if $debug-browser-support and type-of($should-use-prefix) == number {
+        /* Capability #{$capability} is prefixed with #{$prefix} because #{$should-use-prefix}% of users need it which is more than the threshold of #{$threshold}%. */
+      }
+      @include with-prefix($prefix) {
+        @include with-browser-ranges($capability) {
+          @content;
+        }
+      }
+    } @else if $debug-browser-support {
+      /* Capability #{$capability} is not prefixed with #{$prefix} because #{prefix-usage($prefix, $capability, $capability-options)}% of users are affected which is less than the threshold of #{$threshold}. */
+    }
+  }
+  @include with-prefix(null) {
+    @include with-browser-ranges($capability) {
+      @content;
+    }
+  }
+}
+
+// Returns true if at least one browser-version pair in $subset-ranges
+// is a higher (or same) version than the browser-version pairs in
+// $ranges.
+@function has-browser-subset($ranges, $subset-ranges) {
+  $found-mismatch: false;
+  @each $browser, $subset-range in $subset-ranges {
+    $range: map-get($ranges, $browser);
+    @if $range {
+      $min-1: nth($subset-range, 1);
+      $max-1: nth($subset-range, 2);
+      $min-2: nth($range, 1);
+      $max-2: nth($range, 2);
+      @if (compare-browser-versions($browser, $min-2, $min-1) <= 0 and
+           compare-browser-versions($browser, $min-1, $max-2) <= 0) or
+          (compare-browser-versions($browser, $min-2, $max-1) <= 0 and
+           compare-browser-versions($browser, $max-1, $max-2) <= 0) or
+          (compare-browser-versions($browser, $min-1, $min-2) <= 0 and
+           compare-browser-versions($browser, $max-1, $max-2) >= 0) or
+          (compare-browser-versions($browser, $min-1, $min-2) >= 0 and
+           compare-browser-versions($browser, $max-1, $max-2) <= 0) {
+        @return true;
+      } @else {
+        $found-mismatch: true
+      }
+    }
+  }
+  @return not $found-mismatch;
+}
+
+// When the same browser is in both maps, then the minimum will be set
+// to the maximum of the two minimum versions, and the maximum will be
+// set to the minmum of the two maximum versions.
+@function intersect-browser-ranges($ranges, $new-ranges) {
+  @each $browser, $new-range in $new-ranges {
+    $old-range: map-get($ranges, $browser);
+    @if $old-range {
+      $old-min: nth($old-range, 1);
+      $old-max: if(length($old-range) == 1, $old-min, nth($old-range, 2));
+      $new-min: nth($new-range, 1);
+      $new-max: if(length($new-range) == 1, $new-min, nth($new-range, 2));
+      $maximin: if(compare-browser-versions($browser, $old-min, $new-min) > 0,
+                   $old-min, $new-min);
+      $minimax: if(compare-browser-versions($browser, $old-max, $new-max) < 0,
+                   $old-max, $new-max);
+      $ranges: map-merge($ranges, ($browser: $maximin $minimax));
+    } @else {
+      $ranges: map-merge($ranges, ($browser: $new-range));
+    }
+  }
+  @return $ranges;
+}
+
+// If passed a map, that will be the new browser ranges.
+// Otherwise a range map will be created based on the given capability and prefix
+// using the `browser-ranges($capability, $prefix)` function.
+//
+// If there are current ranges in scope and the new ranges have some overlap
+// with the current, 
+//
+// If there is no overlap, then the content will not be rendered.
+@mixin with-browser-ranges($capability, $prefix: $current-prefix) {
+  $new-ranges: null;
+  @if type-of($capability) == map {
+    $new-ranges: $capability;
+  } @else {
+    $new-ranges: browser-ranges($capability, $prefix);
+  }
+
+  @if has-browser-subset($current-browser-versions, $new-ranges) {
+    $old-ranges: $current-browser-versions;
+    $current-browser-versions: intersect-browser-ranges($old-ranges, $new-ranges) !global;
+    @content;
+    $current-browser-versions: $old-ranges !global;
+  } @else if $debug-browser-support {
+    /* Excluding content because #{inspect($new-ranges)} is not included within
+       #{inspect($current-browser-versions)} */
+  }
+}
+
+// Returns true if the prefixed usage stats for the capability exceed the threshold
+// or if the minimum version for a supported browser would require a prefix for the capability.
+@function use-prefix($prefix, $capability, $threshold, $capability-options: $default-capability-options) {
+  $usage: prefix-usage($prefix, $capability, $capability-options);
+  @if $usage > $threshold {
+    @return $usage;
+  } @else {
+    @each $browser in browsers($prefix) {
+      @if index($supported-browsers, $browser) {
+        $min-version: map-get($browser-minimum-versions, $browser);
+        @if $min-version {
+          $actual-prefix: browser-requires-prefix($browser, $min-version, $capability, $capability-options);
+          @if $actual-prefix and $prefix == $actual-prefix {
+            @return $browser $min-version;
+          }
+        }
+      }
+    }
+  }
+  @return false;
+}
+
+@function prefix-identifier($ident, $prefix: $current-prefix) {
+  @return unquote("#{$prefix}#{if($prefix, '-', null)}#{$ident}");
+}
+
+// Output a property and value using the current prefix.
+// It will be unprefixed if $current-prefix is null.
+@mixin prefix-prop($property, $value, $prefix: $current-prefix) {
+  #{prefix-identifier($property, $prefix)}: $value;
+}
+
+// Emit a set of properties with the prefix governed by the capability and usage threshold given.
+//
+// Example:
+//
+//     @include prefixed-properties(css-animation, $animation-support-threshold,
+//       (animation-name: foo, animation-duration: 2s)
+//     );
+@mixin prefixed-properties($capability, $threshold, $properties, $capability-options: $default-capability-options) {
+  @include with-each-prefix($capability, $threshold, $capability-options) {
+    @each $prop, $value in $properties {
+      @include prefix-prop($prop, $value);
+    }
+  }
+}
+
+
+// @private
+@function warn-about-old-variables() {
+  $old-variables-in-use: ();
+  @each $old-variable-name in
+        (legacy-support-for-ie, legacy-support-for-ie6, legacy-support-for-ie7,
+         legacy-support-for-ie8, legacy-support-for-mozilla, legacy-support-for-webkit,
+         experimental-support-for-mozilla, experimental-support-for-webkit,
+         experimental-support-for-opera, experimental-support-for-microsoft,
+         experimental-support-for-khtml, experimental-support-for-svg)
+  {
+    @if global-variable-exists($old-variable-name) {
+      $old-variables-in-use: append($old-variables-in-use,
+                                    unquote("$#{$old-variable-name}"), comma);
+    }
+  }
+  @if length($old-variables-in-use) > 0 {
+    @warn "Compass has changed how browser support is configured. " +
+          "The following configuration variables " +
+          "are no longer supported: #{$old-variables-in-use}." +
+          "Details: http://compass-style.org/help/documentation/tuning-vendor-prefixes/"
+  }
+  @return $old-variables-in-use;
+}
+
+// @private
+@function warn-about-pie-removal() {
+  @if global-variable-exists(experimental-support-for-pie) {
+    @warn "Compass no longer supports css3pie.";
+  }
+  @return true;
+}
+
+// Enable browser support debugging within the content block.
+// Or you can enable it for the whole stylesheet by setting `$debug-browser-support` to true.
+@mixin with-browser-support-debugging {
+  $current-status: $debug-browser-support;
+  $debug-browser-support: true !global;
+  @content;
+  $debug-browser-support: $current-status !global;
+}
+
+// Set a default value if the given arglist is empty
+@function set-arglist-default($arglist, $default) {
+  $default-index: index($arglist, default);
+  @if $default-index {
+    $arglist: set-nth($arglist, $default-index, $default)
+  }
+  @return if(length($arglist) > 0, $arglist, $default);
+}
+
+
+// @private
+$old-variable-warnings-issued: warn-about-old-variables() !default;
+
+// @private
+$pie-removal-warning-issued: warn-about-pie-removal() !default;
+
+// @private
+@function warn-about-useless-prefix-arguments($moz: null, $webkit: null, $o: null, $khtml: null, $official: null) {
+  @if $moz != null or $webkit != null or $o != null or $khtml != null or $official != null {
+    @warn "Browser prefix arguments to this mixin are no longer used and " +
+          "will be removed in the next release.";
+  }
+  @return true;
+}
+
+// coerce a list to be comma delimited or make a new, empty comma delimited list.
+@function comma-list($list: ()) {
+  @return join((), $list, comma);
+}
+
+// @private Returns the legacy value for a given box-model
+// - Used by background-clip and -origin.
+@function legacy-box($box) {
+  $box: unquote($box);
+  @if $box == padding-box { $box: padding; }
+  @if $box == border-box { $box: border; }
+  @if $box == content-box { $box: content; }
+  @return $box;
+}

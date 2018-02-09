@@ -1,0 +1,74 @@
+@import "compass/support";
+
+// Indicates the direction you prefer to move your text
+// when hiding it.
+//
+// `left` is more robust, especially in older browsers.
+// `right` seems have better runtime performance.
+$hide-text-direction: left !default;
+
+// Hides html text and replaces it with an image.
+// If you use this on an inline element, you will need to change the display to block or inline-block.
+// Also, if the size of the image differs significantly from the font size, you'll need to set the width and/or height.
+//
+// Parameters:
+//
+// * `img` -- the relative path from the project image directory to the image, or a url literal.
+// * `x` -- the x position of the background image.
+// * `y` -- the y position of the background image.
+@mixin replace-text($img, $x: 50%, $y: 50%) {
+  @include hide-text;
+  background: {
+    @if is-url($img) {
+      image: $img;
+    } @else {
+      image: image-url($img);
+    }
+    repeat: no-repeat;
+    position: $x $y;
+  };
+}
+
+// Like the `replace-text` mixin, but also sets the width
+// and height of the element according the dimensions of the image.
+//
+// If you set `$inline` to true, then an inline image (data uri) will be used.
+@mixin replace-text-with-dimensions($img, $x: 50%, $y: 50%, $inline: false) {
+  @include replace-text(if($inline, inline-image($img), $img), $x, $y);
+  width: image-width($img);
+  height: image-height($img);
+}
+
+// Hides text in an element so you can see the background.
+//
+// The direction indicates how the text should be moved out of view.
+//
+// See `$hide-text-direction` for more information and to set this globally
+// for your application.
+@mixin hide-text($direction: $hide-text-direction) {
+  @if $direction == left {
+    $approximate-em-value: 12px / 1em;
+    $wider-than-any-screen: -9999em;
+    text-indent: $wider-than-any-screen * $approximate-em-value;
+    overflow: hidden;
+    text-align: left;
+  } @else {
+    // slightly wider than the box prevents issues with inline-block elements
+    text-indent: 110%;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  @include for-legacy-browsers((ie: "7"), $critical-usage-threshold) {
+    //Text transform capitalize fixes text-replacement issue when used in a <button> element on ie7
+    text-transform:capitalize;
+  }
+}
+
+// Hides text in an element by squishing the text into oblivion.
+// Use this if you need to hide text contained in an inline element
+// but still have it read by a screen reader.
+@mixin squish-text {
+  font: 0/0 serif;
+  text-shadow: none;
+  color: transparent;
+}

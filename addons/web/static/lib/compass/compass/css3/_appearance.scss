@@ -1,0 +1,17 @@
+// Appearance
+@import "compass/support";
+
+// Change the appearance for Mozilla, Webkit and possibly the future.
+// The appearance property is currently not present in any newer CSS specification.
+//
+// There is no official list of accepted values, but you might check these source:
+//
+//   * [Mozilla](https://developer.mozilla.org/en/CSS/-moz-appearance)
+//   * [Webkit](http://code.google.com/p/webkit-mirror/source/browse/Source/WebCore/css/CSSValueKeywords.in?spec=svnf1aea559dcd025a8946aa7da6e4e8306f5c1b604&r=63c7d1af44430b314233fea342c3ddb2a052e365)
+//     (search for 'appearance' within the page)
+@mixin appearance($appearance) {
+  // There is no caniuse tracking for appearance.
+  $appearance: unquote($appearance);
+  @include with-prefix(-moz)    {    -moz-appearance: $appearance; }
+  @include with-prefix(-webkit) { -webkit-appearance: $appearance; }
+}

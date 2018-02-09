@@ -1,0 +1,59 @@
+@import "compass/support";
+@import "compass/utilities/color";
+
+// The prefixed support threshold for ::selection.
+// Defaults to the $graceful-usage-threshold.
+$selection-support-threshold: $graceful-usage-threshold !default;
+
+// Style selected text.
+//
+// At this time, only two CSS properties are supported in most browsers
+// during selection: color and background-color. Firefox supports the
+// text-shadow property.
+//
+// At the stylesheet root, include the mixin within the * selector.
+//
+//     * {
+//       @include selection(#fe57a1, #fff)
+//     }
+//
+// If a specific element or selector's selection is being styled
+// you can use that selector instead. For example:
+//
+//     .hot-pink {
+//       @include selection(#fe57a1, #fff)
+//     }
+//
+// These properties can be passed as arguments or you can set them via mixin
+// content.
+//
+// For future-forward compatibility with other properties and aesthetic freedom,
+// a mixin content block can be passed to this mixin in addition to or in place of
+// passing arguments.
+//
+//     .hot-pink {
+//       @include selection {
+//         background: #fe57a1;
+//         color: #fff;
+//       }
+//     }
+//
+// When `$background-color` is specified, but `$color` is not, this mixin
+// styles the foreground color like the [contrasted
+// mixin](/reference/compass/utilities/color/contrast/#mixin-contrasted).  To
+// specify only the background-color, you should pass an explicit `null` value
+// for `$color` or use mixin content.
+@mixin selection($background-color: null, $color: contrast-color($background-color)) {
+  @include with-each-prefix(css-selection, $selection-support-threshold) {
+    $selector: '';
+    @if $current-prefix != null {
+      $selector: $current-prefix + '-';
+    }
+    $selector: "&::#{$selector}selection";
+    #{$selector} {
+      color: $color;
+      background-color: $background-color;
+      @content;
+    }
+  }
+}

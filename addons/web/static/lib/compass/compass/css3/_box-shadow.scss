@@ -1,0 +1,88 @@
+// Box Shadow
+
+@import "compass/support";
+
+// The prefixed support threshold for box-shadow.
+// Defaults to the $graceful-usage-threshold.
+$box-shadow-support-threshold: $graceful-usage-threshold !default;
+
+
+// The default color for box shadows
+$default-box-shadow-color: #333333 !default;
+
+// The default horizontal offset. Positive is to the right.
+$default-box-shadow-h-offset: 0px !default;
+
+// The default vertical offset. Positive is down.
+$default-box-shadow-v-offset: 0px !default;
+
+// The default blur length.
+$default-box-shadow-blur: 5px !default;
+
+// The default spread length.
+$default-box-shadow-spread: null !default;
+
+// The default shadow inset: inset or null (for standard shadow).
+$default-box-shadow-inset: null !default;
+
+@function default-box-shadow() {
+  @return compact(if($default-box-shadow-inset, inset, null)
+                  $default-box-shadow-h-offset
+                  $default-box-shadow-v-offset
+                  $default-box-shadow-blur
+                  $default-box-shadow-spread
+                  $default-box-shadow-color);
+}
+
+// Provides cross-browser for Webkit, Gecko, and CSS3 box shadows
+// when one or more box shadows are needed.
+// Each shadow argument should adhere to the standard css3 syntax
+// for the box-shadow property.
+@mixin box-shadow($shadow...) {
+  $shadow: set-arglist-default($shadow, default-box-shadow());
+  @include prefixed-properties(css-boxshadow, $box-shadow-support-threshold, (box-shadow: $shadow));
+}
+
+// Provides a single cross-browser CSS box shadow for Webkit, Gecko, and CSS3.
+// Includes default arguments for color, horizontal offset, vertical offset, blur length, spread length, and inset.
+@mixin single-box-shadow(
+  $hoff   : null,
+  $voff   : null,
+  $blur   : null,
+  $spread : null,
+  $color  : null,
+  $inset  : $default-box-shadow-inset
+) {
+  // Handle legacy argument order
+  @if not ($hoff == none or $hoff == null) and type-of($hoff) != number {
+    @warn "The $color argument for single-box-shadow is now the 5th argument instead of the 1st.";
+    $tmp-color: $color;
+    $color: $hoff;
+    $hoff: $voff;
+    $voff: $blur;
+    $blur: $spread;
+    $spread: $tmp-color
+  }
+
+  // Need to set these defaults here instead of the arglist to support the above backwards compat handling
+  @if $hoff   == null { $hoff:   $default-box-shadow-h-offset; }
+  @if $voff   == null { $hoff:   $default-box-shadow-v-offset; }
+  @if $blur   == null { $blur:   $default-box-shadow-blur;     }
+  @if $spread == null { $spread: $default-box-shadow-spread;   }
+  @if $color  == null { $color:  $default-box-shadow-color;    }
+
+  @if not ($inset == true or $inset == false or $inset == null or $inset == inset) {
+    @warn "$inset expected to be true or the inset keyword. Got #{$inset} instead. Using: inset";
+  }
+
+  @if $hoff == none {
+    @include box-shadow(none);
+  } @else {
+    $full   : $hoff $voff;
+    @if $blur   { $full: $full $blur;   }
+    @if $spread { $full: $full $spread; }
+    @if $color  { $full: $full $color;  }
+    @if $inset  { $full: inset $full;   }
+    @include box-shadow($full);
+  }
+}

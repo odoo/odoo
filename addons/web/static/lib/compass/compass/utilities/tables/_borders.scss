@@ -1,0 +1,38 @@
+@import "compass/support";
+
+@mixin outer-table-borders($width: 2px, $color: black) {
+  border: $width solid $color;
+  thead {
+    th {
+      border-bottom: $width solid $color; } }
+  tfoot {
+    th, td {
+      border-top: $width solid $color; } }
+  th {
+    &:first-child #{if(support-legacy-browser(ie, "6"), ', &.first', null)} {
+      border-right: $width solid $color; } } }
+
+@mixin inner-table-borders($width: 2px, $color: black) {
+  th, td {
+    border: {
+      right: $width solid $color;
+      bottom: $width solid $color;
+      left-width: 0;
+      top-width: 0; };
+    &:last-child {
+      border-right-width: 0; }
+
+    // IE8 ignores rules that are included on the same line as :last-child
+    // see http://www.richardscarrott.co.uk/posts/view/ie8-last-child-bug for details
+    @if support-legacy-browser(ie, "8") {
+      &.last {
+        border-right-width: 0; } } }
+
+  tbody, tfoot {
+    tr:last-child {
+      th, td {
+        border-bottom-width: 0; } }
+    @if support-legacy-browser(ie, "8") {
+      tr.last {
+        th, td {
+          border-bottom-width: 0; } } } } }

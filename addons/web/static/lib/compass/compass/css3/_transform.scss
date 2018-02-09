@@ -1,0 +1,590 @@
+@import "compass/support";
+
+// The the user threshold for transform support. Defaults to `$graceful-usage-threshold`
+$transform-support-threshold: $graceful-usage-threshold !default;
+
+// @doc off
+// Note ----------------------------------------------------------------------
+// Safari, Chrome, and Firefox all support 3D transforms. However,
+// only in the most recent builds. You should also provide fallback 2d support for
+// Opera and IE. IE10 is slated to have 3d enabled, but is currently unreleased.
+// To make that easy, all 2D transforms include an browser-targeting toggle ($only3d)
+// to switch between the two support lists. The toggle defaults to 'false' (2D),
+// and also accepts 'true' (3D). Currently the lists are as follows:
+// 2D: Mozilla, Webkit, Opera, Official
+// 3D: Webkit, Firefox.
+
+// Available Transforms ------------------------------------------------------
+// - Scale (2d and 3d)
+// - Rotate (2d and 3d)
+// - Translate (2d and 3d)
+// - Skew (2d only)
+
+// Transform Parameters ------------------------------------------------------
+// - Transform Origin (2d and 3d)
+// - Perspective (3d)
+// - Perspective Origin (3d)
+// - Transform Style (3d)
+// - Backface Visibility (3d)
+
+// Mixins --------------------------------------------------------------------
+// transform-origin
+//  - shortcuts:  transform-origin2d, transform-origin3d
+//  - helpers:    apply-origin
+// transform
+//  - shortcuts:  transform2d, transform3d
+//  - helpers:    simple-transform, create-transform
+// perspective
+//  - helpers:    perspective-origin
+// transform-style
+// backface-visibility
+// scale
+//  - shortcuts:  scaleX, scaleY, scaleZ, scale3d
+// rotate
+//  - shortcuts:  rotateX, rotateY, rotate3d
+// translate
+//  - shortcuts:  translateX, translateY, translateZ, translate3d
+// skew
+//  - shortcuts:  skewX, skewY
+
+// Defaults ------------------------------------------------------------------
+// @doc on
+
+// The default x-origin for transforms
+$default-origin-x    : 50%                   !default;
+// The default y-origin for transforms
+$default-origin-y    : 50%                   !default;
+// The default z-origin for transforms
+$default-origin-z    : 50%                   !default;
+
+
+// The default x-multiplier for scaling
+$default-scale-x     : 1.25                  !default;
+// The default y-multiplier for scaling
+$default-scale-y     : $default-scale-x      !default;
+// The default z-multiplier for scaling
+$default-scale-z     : $default-scale-x      !default;
+
+
+// The default angle for rotations
+$default-rotate      : 45deg                 !default;
+
+
+// The default x-vector for the axis of 3d rotations
+$default-vector-x    : 1                     !default;
+// The default y-vector for the axis of 3d rotations
+$default-vector-y    : 1                     !default;
+// The default z-vector for the axis of 3d rotations
+$default-vector-z    : 1                     !default;
+
+
+// The default x-length for translations
+$default-translate-x : 1em                   !default;
+// The default y-length for translations
+$default-translate-y : $default-translate-x  !default;
+// The default z-length for translations
+$default-translate-z : $default-translate-x  !default;
+
+
+// The default x-angle for skewing
+$default-skew-x      : 5deg                  !default;
+// The default y-angle for skewing
+$default-skew-y      : 5deg                  !default;
+
+
+// **Transform-origin**
+// Transform-origin sent as a complete string
+//
+//     @include apply-origin( origin [, 3D-only ] )
+//
+// where 'origin' is a space separated list containing 1-3 (x/y/z) coordinates
+// in percentages, absolute (px, cm, in, em etc..) or relative
+// (left, top, right, bottom, center) units
+//
+// @param only3d Set this to true to only apply this
+// mixin where browsers have 3D support.
+@mixin apply-origin($origin, $only3d) {
+  $capability: if($only3d or length($origin) > 2, transforms3d, transforms2d);
+  @include prefixed-properties($capability, $transform-support-threshold, (
+    transform-origin: $origin
+  ));
+}
+
+// Transform-origin sent as individual arguments:
+//
+//     @include transform-origin( [ origin-x, origin-y, origin-z, 3D-only ] )
+//
+// where the 3 'origin-' arguments represent x/y/z coordinates.
+//
+// **NOTE:** setting z coordinates triggers 3D support list, leave false for 2D support
+@mixin transform-origin(
+  $origin-x: $default-origin-x,
+  $origin-y: $default-origin-y,
+  $origin-z: false,
+  $only3d:   if($origin-z, true, false)
+) {
+  $origin: unquote('');
+  @if $origin-x or $origin-y or $origin-z {
+    @if $origin-x { $origin: $origin-x; } @else { $origin: 50%; }
+    @if $origin-y { $origin: $origin $origin-y; } @else { @if $origin-z { $origin: $origin 50%; }}
+    @if $origin-z { $origin: $origin $origin-z; }
+    @include apply-origin($origin, $only3d);
+  }
+}
+
+
+// Transform sent as a complete string:
+//
+//     @include transform( transforms [, 3D-only ] )
+//
+// where 'transforms' is a space separated list of all the transforms to be applied.
+@mixin transform(
+  $transform,
+  $only3d: false
+) {
+  $capability: if($only3d, transforms3d, transforms2d);
+  @include prefixed-properties($capability, $transform-support-threshold, (
+    transform: $transform
+  ));
+}
+
+// Shortcut to target all browsers with 2D transform support
+@mixin transform2d($trans) {
+  @include transform($trans, false);
+}
+
+// Shortcut to target only browsers with 3D transform support
+@mixin transform3d($trans) {
+  @include transform($trans, true);
+}
+
+// @doc off
+// 3D Parameters -------------------------------------------------------------
+// @doc on
+
+// Set the perspective of 3D transforms on the children of an element:
+//
+//      @include perspective( perspective )
+//
+// where 'perspective' is a unitless number representing the depth of the
+// z-axis. The higher the perspective, the more exaggerated the foreshortening.
+// values from 500 to 1000 are more-or-less "normal" - a good starting-point.
+@mixin perspective($p) {
+  @include prefixed-properties(transforms3d, $transform-support-threshold, (
+    perspective: $p
+  ));
+}
+
+// Set the origin position for the perspective
+//
+//      @include perspective-origin(origin-x [origin-y])
+//
+// where the two arguments represent x/y coordinates
+@mixin perspective-origin($origin: 50%) {
+  @include prefixed-properties(transforms3d, $transform-support-threshold, (
+    perspective-origin: $origin
+  ));
+}
+
+// Determine whether a 3D objects children also live in the given 3D space
+//
+//      @include transform-style( [ style ] )
+//
+// where `style` can be either `flat` or `preserve-3d`.
+// Browsers default to `flat`, mixin defaults to `preserve-3d`.
+@mixin transform-style($style: preserve-3d) {
+  @include prefixed-properties(transforms3d, $transform-support-threshold, (
+    transform-style: $style
+  ));
+}
+
+// Determine the visibility of an element when it's back is turned
+//
+//     @include backface-visibility( [ visibility ] )
+//
+// where `visibility` can be either `visible` or `hidden`.
+// Browsers default to visible, mixin defaults to hidden
+@mixin backface-visibility($visibility: hidden) {
+  @include prefixed-properties(transforms3d, $transform-support-threshold, (
+    backface-visibility: $visibility
+  ));
+}
+
+// @doc off
+// Transform Partials --------------------------------------------------------
+// These work well on their own, but they don't add to each other, they override.
+// Use along with transform parameter mixins to adjust origin, perspective and style
+// ---------------------------------------------------------------------------
+
+
+// Scale ---------------------------------------------------------------------
+// @doc on
+
+// Scale an object along the x and y axis:
+//
+//      @include scale( [ scale-x, scale-y, perspective, 3D-only ] )
+//
+// where the 'scale-' arguments are unitless multipliers of the x and y dimensions
+// and perspective, which works the same as the stand-alone perspective property/mixin
+// but applies to the individual element (multiplied with any parent perspective)
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin scale(
+  $scale-x:     $default-scale-x,
+  $scale-y:     $scale-x,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: scale($scale-x, $scale-y);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// Scale an object along the x axis
+// @include scaleX( [ scale-x, perspective, 3D-only ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin scaleX(
+  $scale:       $default-scale-x,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: scaleX($scale);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// Scale an object along the y axis
+// @include scaleY( [ scale-y, perspective, 3D-only ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin scaleY(
+  $scale:       $default-scale-y,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: scaleY($scale);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// Scale an object along the z axis
+// @include scaleZ( [ scale-z, perspective ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin scaleZ(
+  $scale: $default-scale-z,
+  $perspective: false
+) {
+  $trans: scaleZ($scale);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// Scale and object along all three axis
+// @include scale3d( [ scale-x, scale-y, scale-z, perspective ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin scale3d(
+  $scale-x:     $default-scale-x,
+  $scale-y:     $default-scale-y,
+  $scale-z:     $default-scale-z,
+  $perspective: false
+) {
+  $trans: scale3d($scale-x, $scale-y, $scale-z);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// @doc off
+// Rotate --------------------------------------------------------------------
+// @doc on
+
+// Rotate an object around the z axis  (2D)
+// @include rotate( [ rotation, perspective, 3D-only ] )
+// where 'rotation' is an angle set in degrees (deg) or radian (rad) units
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin rotate(
+  $rotate:      $default-rotate,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: rotate($rotate);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// A longcut for 'rotate' in case you forget that 'z' is implied
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin rotateZ(
+  $rotate:      $default-rotate,
+  $perspective: false,
+  $only3d:      false
+) {
+  @include rotate($rotate, $perspective, $only3d);
+}
+
+// Rotate an object around the x axis (3D)
+// @include rotateX( [ rotation, perspective ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin rotateX(
+  $rotate: $default-rotate,
+  $perspective: false
+) {
+  $trans: rotateX($rotate);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// Rotate an object around the y axis (3D)
+// @include rotate( [ rotation, perspective ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin rotateY(
+  $rotate: $default-rotate,
+  $perspective: false
+) {
+  $trans: rotateY($rotate);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// Rotate an object around an arbitrary axis (3D)
+// @include rotate( [ vector-x, vector-y, vector-z, rotation, perspective ] )
+// where the 'vector-' arguments accept unitless numbers.
+// These numbers are not important on their own, but in relation to one another
+// creating an axis from your transform-origin, along the axis of Xx = Yy = Zz.
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin rotate3d(
+  $vector-x: $default-vector-x,
+  $vector-y: $default-vector-y,
+  $vector-z: $default-vector-z,
+  $rotate: $default-rotate,
+  $perspective: false
+) {
+  $trans: rotate3d($vector-x, $vector-y, $vector-z, $rotate);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// @doc off
+// Translate -----------------------------------------------------------------
+// @doc on
+
+// Move an object along the x or y axis (2D)
+// @include translate( [ translate-x, translate-y, perspective, 3D-only ] )
+// where the 'translate-' arguments accept any distance in percentages or absolute (px, cm, in, em etc..) units.
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin translate(
+  $translate-x: $default-translate-x,
+  $translate-y: $default-translate-y,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: translate($translate-x, $translate-y);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// Move an object along the x axis (2D)
+// @include translate( [ translate-x, perspective, 3D-only ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin translateX(
+  $trans-x:     $default-translate-x,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: translateX($trans-x);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// Move an object along the y axis (2D)
+// @include translate( [ translate-y, perspective, 3D-only ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin translateY(
+  $trans-y:     $default-translate-y,
+  $perspective: false,
+  $only3d:      false
+) {
+  $trans: translateY($trans-y);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform($trans, $only3d);
+}
+
+// Move an object along the z axis (3D)
+// @include translate( [ translate-z, perspective ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin translateZ(
+  $trans-z:     $default-translate-z,
+  $perspective: false
+) {
+  $trans: translateZ($trans-z);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// Move an object along the x, y and z axis (3D)
+// @include translate( [ translate-x, translate-y, translate-z, perspective ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin translate3d(
+  $translate-x: $default-translate-x,
+  $translate-y: $default-translate-y,
+  $translate-z: $default-translate-z,
+  $perspective: false
+) {
+  $trans: translate3d($translate-x, $translate-y, $translate-z);
+  @if $perspective { $trans: perspective($perspective) $trans; }
+  @include transform3d($trans);
+}
+
+// @doc off
+// Skew ----------------------------------------------------------------------
+// @doc on
+
+// Skew an element:
+//
+//     @include skew( [ skew-x, skew-y, 3D-only ] )
+//
+// where the 'skew-' arguments accept css angles in degrees (deg) or radian (rad) units.
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin skew(
+  $skew-x: $default-skew-x,
+  $skew-y: $default-skew-y,
+  $only3d: false
+) {
+  $trans: skew($skew-x, $skew-y);
+  @include transform($trans, $only3d);
+}
+
+// Skew an element along the x axiz
+//
+//     @include skew( [ skew-x, 3D-only ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin skewX(
+  $skew-x: $default-skew-x,
+  $only3d: false
+) {
+  $trans: skewX($skew-x);
+  @include transform($trans, $only3d);
+}
+
+// Skew an element along the y axis
+//
+//     @include skew( [ skew-y, 3D-only ] )
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin skewY(
+  $skew-y: $default-skew-y,
+  $only3d: false
+) {
+  $trans: skewY($skew-y);
+  @include transform($trans, $only3d);
+}
+
+
+// Full transform mixins
+// For settings any combination of transforms as arguments
+// These are complex and not highly recommended for daily use. They are mainly
+// here for backward-compatibility purposes.
+//
+// * they include origin adjustments
+// * scale takes a multiplier (unitless), rotate and skew take degrees (deg)
+//
+// **Note** This mixin cannot be combined with other transform mixins.
+@mixin create-transform(
+  $perspective: false,
+  $scale-x:     false,
+  $scale-y:     false,
+  $scale-z:     false,
+  $rotate-x:    false,
+  $rotate-y:    false,
+  $rotate-z:    false,
+  $rotate3d:    false,
+  $trans-x:     false,
+  $trans-y:     false,
+  $trans-z:     false,
+  $skew-x:      false,
+  $skew-y:      false,
+  $origin-x:    false,
+  $origin-y:    false,
+  $origin-z:    false,
+  $only3d:      false
+) {
+  $trans: unquote("");
+
+  // perspective
+  @if $perspective { $trans: perspective($perspective) ; }
+
+  // scale
+  @if $scale-x and $scale-y {
+    @if $scale-z { $trans: $trans scale3d($scale-x, $scale-y, $scale-z); }
+    @else { $trans: $trans scale($scale-x, $scale-y); }
+  } @else {
+    @if $scale-x { $trans: $trans scaleX($scale-x); }
+    @if $scale-y { $trans: $trans scaleY($scale-y); }
+    @if $scale-z { $trans: $trans scaleZ($scale-z); }
+  }
+
+  // rotate
+  @if $rotate-x { $trans: $trans rotateX($rotate-x); }
+  @if $rotate-y { $trans: $trans rotateY($rotate-y); }
+  @if $rotate-z { $trans: $trans rotateZ($rotate-z); }
+  @if $rotate3d { $trans: $trans rotate3d($rotate3d); }
+
+  // translate
+  @if $trans-x and $trans-y {
+    @if $trans-z { $trans: $trans translate3d($trans-x, $trans-y, $trans-z); }
+    @else { $trans: $trans translate($trans-x, $trans-y); }
+  } @else {
+    @if $trans-x { $trans: $trans translateX($trans-x); }
+    @if $trans-y { $trans: $trans translateY($trans-y); }
+    @if $trans-z { $trans: $trans translateZ($trans-z); }
+  }
+
+  // skew
+  @if $skew-x and $skew-y { $trans: $trans skew($skew-x, $skew-y); }
+  @else {
+    @if $skew-x { $trans: $trans skewX($skew-x); }
+    @if $skew-y { $trans: $trans skewY($skew-y); }
+  }
+
+  // apply it!
+  @include transform($trans, $only3d);
+  @include transform-origin($origin-x, $origin-y, $origin-z, $only3d);
+}
+
+
+// A simplified set of options
+// backwards-compatible with the previous version of the 'transform' mixin
+@mixin simple-transform(
+  $scale:    false,
+  $rotate:   false,
+  $trans-x:  false,
+  $trans-y:  false,
+  $skew-x:   false,
+  $skew-y:   false,
+  $origin-x: false,
+  $origin-y: false
+) {
+  @include create-transform(
+    false,
+    $scale, $scale, false,
+    false, false, $rotate, false,
+    $trans-x, $trans-y, false,
+    $skew-x, $skew-y,
+    $origin-x, $origin-y, false,
+    false
+  );
+}
