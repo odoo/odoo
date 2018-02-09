@@ -344,10 +344,6 @@ class MailActivityMixin(models.AbstractModel):
 
     def _search_activity_date_deadline(self, operator, operand):
         return [('activity_ids.date_deadline', operator, operand)]
-        # if operator in expression.NEGATIVE_TERM_OPERATORS:
-        #     pass
-        # else:
-        #     pass
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
