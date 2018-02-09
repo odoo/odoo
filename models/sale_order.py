@@ -28,6 +28,8 @@ class SaleOrder(models.Model):
             order._create_new_no_code_promo_reward_lines()
             order._update_existing_reward_lines()
 
+    @api.multi
+    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         order = super(SaleOrder, self).copy(dict(default or {}, order_line=False))
         for line in self.order_line.filtered(lambda line: not line.is_reward_line):
