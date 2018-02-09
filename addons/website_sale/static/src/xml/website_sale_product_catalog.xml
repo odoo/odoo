@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+
+    <div t-name="website_sale.product_catalog" class="container">
+        <div class="row o_not_editable" contenteditable="false">
+            <t t-if="!widget.products.length">
+                <div class="text-center text-muted pt80 pb80">
+                    <t t-if="!widget.isProductsAvailable">
+                        <h3>No product defined.</h3>
+                        <p t-if="widget.isSalesManager">Click <i>'New'</i> in the top-right corner to create your first product.</p>
+                    </t>
+                    <t t-else="">
+                        <h3>No products are publish yet.</h3>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-set="size" t-value="widget.size"/>
+                <t t-if="widget.isGrid">
+                    <t t-set="products" t-value="widget.products"/>
+                    <t t-call="website_sale.product_box"/>
+                    <div class="col-xs-12 text-center o-view-products-btn mt8 mb8">
+                        <a class="btn btn-default" href="/shop/">View All Products</a>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o-product-catalog-slider">
+                        <div t-att-id="widget.sliderID" class="carousel slide" data-ride="carousel" data-interval="false">
+                            <div class="carousel-inner">
+                                <t t-foreach="widget.products" t-as="products">
+                                    <div t-attf-class="item #{products_index ==  0 ? 'active' : ''}">
+                                        <t t-call="website_sale.product_box"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <t t-if="widget.products.length > 1 and !widget.isMobile">
+                            <a class="o-slider-control" t-att-href="'#' + widget.sliderID" data-slide="prev"><i class="fa fa-chevron-left"/></a>
+                            <a class="o-slider-control" t-att-href="'#' + widget.sliderID" data-slide="next"><i class="fa fa-chevron-right"/></a>
+                        </t>
+                    </div>
+                    <div t-if="widget.products.length > 1 and widget.isMobile" class="col-xs-12 text-center">
+                        <a class="btn btn-default" t-att-href="'#' + widget.sliderID" data-slide="prev"><i class="fa fa-chevron-left"/></a>
+                        <a class="btn btn-default o-view-products-btn" href="/shop/">View All Products</a>
+                        <a class="btn btn-default" t-att-href="'#' + widget.sliderID" data-slide="next"><i class="fa fa-chevron-right"/></a>
+                    </div>
+                    <div t-else="" class="col-xs-12 text-center o-view-products-btn mt8 mb8">
+                        <a class="btn btn-default" href="/shop/">View All Products</a>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </div>
+
+    <!-- Product Box -->
+    <t t-name="website_sale.product_box">
+        <t t-foreach="products" t-as="product">
+            <div t-attf-class="col-md-#{size} col-sm-#{size}">
+                <div class="o-product-item mt8 mb8" t-att-data-product-id="product.id" t-att-data-product-name="product.name">
+                    <div t-if="widget.isRatingActive" class="o-product-rating">
+                        <t t-set="val" t-value="product.rating.avg"/>
+                        <t t-call="website_rating.rating_stars_static"/>
+                    </div>
+                    <div class="o-product-image">
+                        <a t-attf-href="/shop/product/#{product.id}">
+                            <img class="img img-responsive" t-attf-src="/web/image/product.template/#{product.id}/image/300x300"/>
+                        </a>
+                    </div>
+                    <div class="o-product-details">
+                        <strong>
+                            <a class="o-product-name" t-attf-href="/shop/product/#{product.id}" t-att-title="product.name">
+                                <t t-esc="product.name"/>
+                            </a>
+                        </strong>
+                        <strong>
+                            <t t-esc="product.price" />
+                        </strong>
+                        <div class="o-product-description text-info">
+                            <t t-if="product.description_sale" t-raw="product.description_sale"/>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-justified o-action-buttons" role="group">
+                        <div class="btn-group o-add-to-cart-btn" role="group">
+                            <form t-if="product.product_variant_count == 1" action="/shop/cart/update" method="post">
+                                <input name="product_id" type="hidden" t-att-value="product.product_variant_id"/>
+                                <button type="submit" class="btn text-primary" title="Add to cart" t-att-data-product-variant-id="product.product_variant_id">
+                                    <i class="fa fa-shopping-cart"/>
+                                </button>
+                            </form>
+                            <a t-if="product.product_variant_count gt 1" class="btn text-primary" t-attf-href="/shop/product/#{product.id}" title="Add to cart">
+                                <i class="fa fa-shopping-cart"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <!-- Product Catalog Loader -->
+    <div t-name="website_sale.product_catalog_loader" class="container text-center text-muted pt88 pb88">
+        <i class="fa fa-circle-o-notch fa-4x fa-spin"></i>
+        <h4 class="ml8">Loading Products...</h4>
+    </div>
+
+    <!-- Category Selection Dialog -->
+    <div t-name="website_sale.product_category_selection_dialog" class="form-group">
+        <div class="alert alert-warning hidden o_alert">
+            Selected category has no saleable products. Please select another category!
+        </div>
+        <label class="col-sm-2 control-label">Select Category</label>
+        <div class="col-sm-10">
+            <input type="hidden" name="selection" t-att-value="widget.categoryID"/>
+        </div>
+    </div>
+
+    <!-- Manual Selection Dialog -->
+    <div t-name="website_sale.product_manual_selection_dialog" class="o-product-catalog-manual-selection">
+        <div class="form-group">
+            <label for="products" class="col-sm-2 control-label">Select Products</label>
+            <div class="col-sm-10">
+                <input type="hidden" name="selection" t-att-value="widget.productIDs"/>
+                <p class="help-block">You can use drag and drop to reorder products.</p>
+            </div>
+        </div>
+    </div>
+
+</template>
