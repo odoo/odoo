@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+
+    <t t-extend="website_sale.product_box">
+        <t t-jquery=".o-action-buttons" t-operation="append">
+            <div class="btn-group o-add-to-wishlist-btn" role="group">
+                <button title="Add to Wishlist" class="btn text-primary" t-att-data-product-product-id="product.product_variant_id">
+                    <i class="fa fa-heart"></i>
+                </button>
+            </div>
+        </t>
+    </t>
+
+</template>
