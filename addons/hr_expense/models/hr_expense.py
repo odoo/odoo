@@ -29,9 +29,25 @@ class HrExpense(models.Model):
     def _default_account_id(self):
         return self.env['ir.property'].get('property_account_expense_categ_id', 'product.category')
 
+    @api.model
+    def _get_employee_id_domain(self):
+        res = [(1, '=', 0)]
+
+        if self.user_has_groups('hr_expense.group_hr_expense_manager') or self.user_has_groups('account.group_account_user'):
+            res = [(1, '=', 1)]
+        elif self.user_has_groups('hr_expense.group_hr_expense_user') and self.env.user.employee_ids:
+            employee = self.env.user.employee_ids[0]
+            res = ['|', '|', ('department_id.manager_id.id', '=', employee.id),
+                   ('parent_id.id', '=', employee.id), ('expense_manager_id.id', '=', employee.id)]
+        elif self.env.user.employee_ids:
+            employee = self.env.user.employee_ids[0]
+            res = [('id', '=', employee.id)]
+
+        return res
+
     name = fields.Char('Description', readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     date = fields.Date(readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=fields.Date.context_today, string="Date")
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id)
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_employee_id, domain=lambda self: self._employee_filter)
     product_id = fields.Many2one('product.product', string='Product', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, domain=[('can_be_expensed', '=', True)], required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=_default_product_uom_id)
     unit_amount = fields.Float("Unit Price", readonly=True, required=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]}, digits=dp.get_precision('Product Price'))
@@ -451,7 +467,25 @@ class HrExpense(models.Model):
 
 
 class HrExpenseSheet(models.Model):
+    """
+        Here are the rights associated with the expense flow
 
+        Action       Group                   Restriction
+        =================================================================================
+        Submit      Employee                Only his own
+                    Officer                 If he is expense manager of the employee, manager of the employee
+                                             or the employee is in the department managed by the officer
+                    Manager                 Always
+        Approve     Officer                 Not his own and he is expense manager of the employee, manager of the employee
+                                             or the employee is in the department managed by the officer
+                    Manager                 Always
+        Post        Anybody                 State = approve and journal_id defined
+        Done        Anybody                 State = approve and journal_id defined
+        Cancel      Officer                 Not his own and he is expense manager of the employee, manager of the employee
+                                             or the employee is in the department managed by the officer
+                    Manager                 Always
+        =================================================================================
+    """
     _name = "hr.expense.sheet"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Expense Report"
@@ -613,7 +647,16 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def approve_expense_sheets(self):
         if not self.user_has_groups('hr_expense.group_hr_expense_user'):
-            raise UserError(_("Only HR Officers can approve expenses"))
+            raise UserError(_("Only Managers and HR Officers can approve expenses"))
+        elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
+            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+
+            if self.employee_id.user_id == self.env.user:
+                raise UserError(_("You cannot approve your own expenses"))
+
+            if not self.env.user in current_managers:
+                raise UserError(_("You can only approve your department expenses"))
+
         responsible_id = self.user_id.id or self.env.user.id
         self.write({'state': 'approve', 'user_id': responsible_id})
         self.activity_update()
@@ -625,7 +668,16 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def refuse_sheet(self, reason):
         if not self.user_has_groups('hr_expense.group_hr_expense_user'):
-            raise UserError(_("Only HR Officers can refuse expenses"))
+            raise UserError(_("Only Managers and HR Officers can approve expenses"))
+        elif not self.user_has_groups('hr_expense.group_hr_expense_manager'):
+            current_managers = self.employee_id.parent_id.user_id | self.employee_id.department_id.manager_id.user_id
+
+            if self.employee_id.user_id == self.env.user:
+                raise UserError(_("You cannot refuse your own expenses"))
+
+            if not self.env.user in current_managers:
+                raise UserError(_("You can only refuse your department expenses"))
+
         self.write({'state': 'cancel'})
         for sheet in self:
             sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
