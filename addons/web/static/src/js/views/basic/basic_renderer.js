@@ -30,6 +30,7 @@ var BasicRenderer = AbstractRenderer.extend({
         this.activeActions = params.activeActions;
         this.viewType = params.viewType;
         this.mode = params.mode || 'readonly';
+        this.widgets = [];
     },
     /**
      * This method has two responsabilities: find every invalid fields in the
@@ -94,6 +95,9 @@ var BasicRenderer = AbstractRenderer.extend({
         if (!record) {
             return this._render().then(_.constant([]));
         }
+
+        // reset all widgets (from the <widget> tag) if any:
+        _.invoke(this.widgets, 'updateState', state);
 
         var defs = [];
 
@@ -604,6 +608,8 @@ var BasicRenderer = AbstractRenderer.extend({
     _renderWidget: function (record, node) {
         var Widget = widgetRegistry.get(node.attrs.name);
         var widget = new Widget(this, record);
+
+        this.widgets.push(widget);
 
         // Prepare widget rendering and save the related deferred
         var def = widget.__widgetRenderAndInsert(function () {});
