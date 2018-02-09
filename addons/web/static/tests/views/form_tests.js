@@ -630,7 +630,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -656,6 +656,9 @@ QUnit.module('Views', {
         form.$('.o_field_boolean input').click();
         assert.strictEqual(form.$('span[name="foo"]').length, 1,
             "the foo field widget should have been rerendered to now be readonly again");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered to now be editable again");
 
         form.destroy();
     });
