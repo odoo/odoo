@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.exceptions import UserError, AccessError
+
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 
 
@@ -72,3 +74,98 @@ class TestAccountEntry(TestExpenseCommon):
         self.assertEquals(len(self.analytic_account.line_ids), 1, "Analytic Account should have only one line")
         self.assertAlmostEquals(self.analytic_account.line_ids[0].amount, -636.36, "Amount on the only AAL is wrong")
         self.assertEquals(self.analytic_account.line_ids[0].product_id, self.product_expense, "Product of AAL should be the one from the expense")
+
+
+class TestExpenseRights(TestExpenseCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super(TestExpenseRights, cls).setUpClass()
+
+    def test_expense_create(self):
+        # Employee should be able to create an Expense
+        self.env['hr.expense'].sudo(self.user_employee.id).create({
+            'name': 'Batmobile repair',
+            'employee_id': self.employee.id,
+            'product_id': self.product_1.id,
+            'unit_amount': 1,
+            'quantity': 1,
+        })
+
+        # Employee should not be able to create an Expense for someone else
+        with self.assertRaises(AccessError):
+            self.env['hr.expense'].sudo(self.user_employee.id).create({
+                'name': 'Superboy costume washing',
+                'employee_id': self.emp_emp2.id,
+                'product_id': self.product_2.id,
+                'unit_amount': 1,
+                'quantity': 1,
+            })
+
+    def test_expense_approve(self):
+        sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Furnitures',
+            'employee_id': self.emp_officer.id,
+        })
+
+        sheet_2 = self.env['hr.expense.sheet'].create({
+            'name': 'Services',
+            'employee_id': self.employee.id,
+        })
+
+        sheet_3 = self.env['hr.expense.sheet'].create({
+            'name': 'Services 2',
+            'employee_id': self.emp_emp2.id,
+        })
+
+        # Employee should not be able to approve expense sheet
+        with self.assertRaises(UserError):
+            sheet.sudo(self.user_officer).approve_expense_sheets()
+        # Officer should not be able to approve own expense sheet
+        with self.assertRaises(UserError):
+            sheet.sudo(self.user_officer).approve_expense_sheets()
+        sheet.sudo(self.user_manager).approve_expense_sheets()
+
+        # Officer should be able to approve expense from his department
+        sheet_2.sudo(self.user_officer).approve_expense_sheets()
+
+        # Officer should not be able to approve expense sheet from another department
+        with self.assertRaises(AccessError):
+            sheet_3.sudo(self.user_officer).approve_expense_sheets()
+        sheet_3.sudo(self.user_manager).approve_expense_sheets()
+
+    def test_expense_refuse(self):
+        sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Furnitures',
+            'employee_id': self.emp_officer.id,
+        })
+
+        sheet_2 = self.env['hr.expense.sheet'].create({
+            'name': 'Services',
+            'employee_id': self.employee.id,
+        })
+
+        sheet_3 = self.env['hr.expense.sheet'].create({
+            'name': 'Services 2',
+            'employee_id': self.emp_emp2.id,
+        })
+
+        sheet.sudo(self.user_manager).approve_expense_sheets()
+        sheet_2.sudo(self.user_manager).approve_expense_sheets()
+        sheet_3.sudo(self.user_manager).approve_expense_sheets()
+
+        # Employee should not be able to refuse expense sheet
+        with self.assertRaises(UserError):
+            sheet.sudo(self.user_employee).refuse_sheet('')
+        # Officer should not be able to refuse own expense sheet
+        with self.assertRaises(UserError):
+            sheet.sudo(self.user_officer).refuse_sheet('')
+        sheet.sudo(self.user_manager).refuse_sheet('')
+
+        # Officer should be able to refuse expense from his department
+        sheet_2.sudo(self.user_officer).refuse_sheet('')
+
+        # Officer should not be able to refuse expense sheet from another department
+        with self.assertRaises(AccessError):
+            sheet_3.sudo(self.user_officer).refuse_sheet('')
+        sheet_3.sudo(self.user_manager).refuse_sheet('')
