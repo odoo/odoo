@@ -292,7 +292,8 @@ class HttpCase(TransactionCase):
         session.uid = uid
         session.login = user
         session.password = password
-        session.context = Users.context_get(self.cr, uid) or {}
+        with self.cursor() as cr:
+            session.context = Users.context_get(cr, uid) or {}
         session.context['uid'] = uid
         session._fix_lang(session.context)
 
