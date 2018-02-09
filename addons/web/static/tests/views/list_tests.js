@@ -1929,7 +1929,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
-        assert.expect(7);
+        assert.expect(9);
 
         var list = createView({
             View: ListView,
@@ -1963,9 +1963,14 @@ QUnit.module('Views', {
         assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 3,
             "the foo field widget parent cell should now be readonly again");
 
-        // Reswitch the cell to editable and save the row
         list.$('tbody tr:nth(0) td:nth(2) input').click();
-        list.$('thead').click();
+        assert.strictEqual(list.$('tbody tr:nth(0) td:nth(1) > input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered as editable again");
+        assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
+            "the foo field widget parent cell should not be readonly again");
+
+        // Click outside to leave edition mode
+        list.$el.click();
 
         assert.strictEqual(list.$('tbody td.o_readonly_modifier').length, 2,
             "there should be 2 readonly foo cells in readonly mode");
