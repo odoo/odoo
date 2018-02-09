@@ -150,14 +150,31 @@
             }
         }
 
-        .tagcolor_dropdown_menu {
+        .o_tag_dropdown_menu {
             min-width: 150px; // down from 160px of .dropdown-menu
             margin-right: 0px; // cancel right margin of .dropdown-menu
-        }
-
-        .o_colorpicker > ul {
-            @include o-tag-colorpicker;
-            white-space: normal;
+            .o_tag_dropdown_options > ul {
+                margin-bottom: 0px;
+                padding-left: 0px;
+                list-style: none;
+                > li > a {
+                    color: $o-main-text-color;
+                    display: block;
+                    padding: 3px 20px;
+                    font-weight: normal;
+                    &:hover {
+                        background-color: #E5E5E5;
+                    }
+                }
+            }
+            .o_colorpicker > ul {
+                @include o-tag-colorpicker;
+                white-space: normal;
+                margin: 5px 0;
+                .o_hide_in_kanban .o_checkbox {
+                    display: inline-block;
+                }
+            }
         }
 
         @for $size from 1 through length($o-colors) {

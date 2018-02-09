@@ -837,46 +837,53 @@
         <t t-set="colornames" t-value="['No color', 'Red', 'Orange', 'Yellow', 'Light blue', 'Dark purple', 'Salmon pink', 'Medium blue', 'Dark blue', 'Fushia', 'Green', 'Purple']"/>
         <div t-attf-class="badge badge-pill #{hasDropdown ? 'dropdown' : ''} o_tag_color_#{color}" t-att-data-color="color" t-att-data-index="el_index" t-att-data-id="el.id" t-attf-title="Tag color: #{colornames[color]}">
             <t t-set="_badge_text">
-                <span class="o_badge_text" t-att-title="el.display_name"><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
+                <span><span role="img" t-attf-aria-label="Tag color: #{colornames[color]}"/><t t-esc="el.display_name"/></span>
             </t>
             <t t-if="hasDropdown">
-                <a role="button" href="#" class="dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false">
+                <a role="button" href="#" class="o_badge_text dropdown-toggle o-no-caret" data-toggle="dropdown" aria-expanded="false" t-att-title="el.display_name">
                     <t t-raw="_badge_text"/>
                 </a>
             </t>
             <t t-else="">
-                <t t-raw="_badge_text"/>
+                <a href="#" class="o_badge_text" t-att-title="el.display_name"><t t-raw="_badge_text"/></a>
             </t>
             <a t-if="!readonly" href="#" class="fa fa-times o_delete" title="Delete" aria-label="Delete"/>
         </div>
     </t>
 </t>
-<t t-name="FieldMany2ManyTag.colorpicker">
-    <div class="o_colorpicker dropdown-menu tagcolor_dropdown_menu" role="menu">
-        <ul>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_1" data-color="1" title="Red" aria-label="Red"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_2" data-color="2" title="Orange" aria-label="Orange"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_3" data-color="3" title="Yellow" aria-label="Yellow"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_4" data-color="4" title="Light blue" aria-label="Light blue"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_5" data-color="5" title="Dark purple" aria-label="Dark purple"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_6" data-color="6" title="Salmon pink" aria-label="Salmon pink"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_7" data-color="7" title="Medium blue" aria-label="Medium blue"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_8" data-color="8" title="Dark blue" aria-label="Dark blue"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_9" data-color="9" title="Fushia" aria-label="Fushia"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_10" data-color="10" title="Green" aria-label="Green"/></li>
-            <li><a role="menuitem" href="#" t-att-data-id="tag_id" class="o_tag_color_11" data-color="11" title="Purple" aria-label="Purple"/></li>
-            <li> <!-- checkbox for tag color 0 -->
-                <div role="menuitem" class="o_hide_in_kanban"
-                     t-att-data-id="tag_id"
-                     t-att-data-color="0">
-                    <div class="custom-control custom-checkbox">
-                        <input type="checkbox" id="o_hide_in_kanban_checkbox" class="custom-control-input"/>
-                        <label for="o_hide_in_kanban_checkbox" class="custom-control-label">Hide in Kanban</label>
-                    </div>
-                </div>
-            </li>
-        </ul>
+<t t-name="FieldMany2ManyTag.TagDropdown">
+    <div class="o_tag_dropdown_menu dropdown-menu" role="menu">
+        <div t-if="has_options" class="o_tag_dropdown_options">
+            <ul>
+                <li><a href="#" class="o_edit_record" t-att-data-id="tag_id">Edit</a></li>
+            </ul>
+        </div>
     </div>
+</t>
+<t t-name="FieldMany2ManyTag.colorpicker" t-extend="FieldMany2ManyTag.TagDropdown">
+    <t t-jquery=".o_tag_dropdown_menu" t-operation="append">
+        <div t-if="has_options" class="divider"/>
+        <div class="o_colorpicker">
+            <ul>
+                <li t-foreach="11" t-as="color">
+                    <a href="#"
+                    t-att-data-id="tag_id"
+                    t-att-data-color="color+1"
+                    t-attf-class="o_tag_color_#{color+1}"/>
+                </li>
+                <li> <!-- checkbox for tag color 0 -->
+                    <div class="o_hide_in_kanban"
+                        t-att-data-id="tag_id"
+                        t-att-data-color="0">
+                        <div class="o_checkbox">
+                            <input type="checkbox"/>
+                            <span/>
+                        </div> Hide in Kanban
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </t>
 </t>
 <t t-name="ProgressBar">
     <div class="o_progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">

@@ -754,7 +754,7 @@ QUnit.module('fields', {}, function () {
 
             assert.containsOnce(form, '.o_data_row',
                 "the record should have been added to the relation");
-            assert.strictEqual(form.$('.o_data_row:first .o_badge_text').text(), 'leonardodonatello',
+            assert.strictEqual(form.$('.o_data_row:first .o_badge_text span').text(), 'leonardodonatello',
                 "inner m2m should have been fetched and correctly displayed");
 
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
@@ -762,7 +762,7 @@ QUnit.module('fields', {}, function () {
 
             assert.containsN(form, '.o_data_row', 2,
                 "the second record should have been added to the relation");
-            assert.strictEqual(form.$('.o_data_row:nth(1) .o_badge_text').text(), 'donatelloraphael',
+            assert.strictEqual(form.$('.o_data_row:nth(1) .o_badge_text span').text(), 'donatelloraphael',
                 "inner m2m should have been fetched and correctly displayed");
 
             assert.verifySteps([

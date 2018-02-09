@@ -1995,7 +1995,9 @@ var FieldMany2ManyTags = AbstractField.extend({
         field_changed: '_onFieldChanged',
     }),
     events: _.extend({}, AbstractField.prototype.events, {
+        'click .o_badge_text': '_onClickBadge',
         'click .o_delete': '_onDeleteTag',
+        'mousedown .o_edit_record': '_onEditRecord',
     }),
     fieldsToFetch: {
         display_name: {type: 'char'},
@@ -2011,8 +2013,11 @@ var FieldMany2ManyTags = AbstractField.extend({
             this.className += ' o_input';
         }
 
+        this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
+
         this.colorField = this.nodeOptions.color_field;
         this.hasDropdown = false;
+        this.no_edit = this.nodeOptions.no_edit || !this.can_write;
     },
 
     //--------------------------------------------------------------------------
@@ -2070,6 +2075,44 @@ var FieldMany2ManyTags = AbstractField.extend({
         }
     },
     /**
+     * @private
+     * @param {integer} id
+     */
+    _editRecord: function (id) {
+        var self = this;
+        var record = _.findWhere(this.value.data, { res_id: id });
+        var tag_id = record.id;
+        var context = this.record.getContext(this.recordParams);
+        this._rpc({
+            model: record.model,
+            method: 'get_formview_id',
+            context: context,
+            args: [[record.res_id]],
+        }).then(function (view_id) {
+            new dialogs.FormViewDialog(self, {
+                res_model: record.model,
+                res_id: record.res_id,
+                title: _t("Edit: ") + self.string,
+                context: context,
+                view_id: view_id,
+                readonly: false,
+                on_saved: function (record, changed) {
+                    if (changed) {
+                        self._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true});
+                        self.trigger_up('reload', {db_id: tag_id});
+                    }
+                },
+            }).open();
+        });
+    },
+    _getRenderDropdownContext: function (tagID) {
+        return {
+            'tag_id': tagID,
+            'widget': this,
+            'has_options': this.mode === 'edit' && !this.no_edit
+        };
+    },
+    /**
      * Get the QWeb rendering context used by the tag template; this computation
      * is placed in a separate function for other tags to override it.
      *
@@ -2102,6 +2145,9 @@ var FieldMany2ManyTags = AbstractField.extend({
     _renderEdit: function () {
         var self = this;
         this._renderTags();
+        if (this.mode === 'edit' && !this.no_edit) {
+            this.$(".o_badge_text").addClass("dropdown-toggle o-no-caret").attr('data-toggle', 'dropdown');
+        }
         if (this.many2one) {
             this.many2one.destroy();
         }
@@ -2133,11 +2179,28 @@ var FieldMany2ManyTags = AbstractField.extend({
     _renderTags: function () {
         this.$el.html(qweb.render(this.tag_template, this._getRenderTagsContext()));
     },
+    _renderTagDropdown: function (template, event) {
+        var tagID = $(event.currentTarget).parent().data('id');
+        this.$tag_dropdown = $(qweb.render(template, this._getRenderDropdownContext(tagID)));
+        $(event.currentTarget).after(this.$tag_dropdown);
+        this.$tag_dropdown.dropdown();
+        this.$tag_dropdown.attr("tabindex", 1).focus();
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickBadge: function (ev) {
+        ev.preventDefault();
+        if (this.mode === 'edit' && !this.no_edit) {
+            this._renderTagDropdown('FieldMany2ManyTag.TagDropdown', ev);
+        }
+    },
     /**
      * @private
      * @param {MouseEvent} event
@@ -2146,6 +2209,14 @@ var FieldMany2ManyTags = AbstractField.extend({
         event.preventDefault();
         event.stopPropagation();
         this._removeTag($(event.target).parent().data('id'));
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onEditRecord: function (ev) {
+        ev.preventDefault();
+        this._editRecord($(ev.currentTarget).data('id'));
     },
     /**
      * Controls the changes made in the internal m2o field.
@@ -2189,7 +2260,6 @@ var FieldMany2ManyTags = AbstractField.extend({
 
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
-        'click .dropdown-toggle': '_onOpenColorPicker',
         'mousedown .o_colorpicker a': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
     }),
@@ -2210,23 +2280,20 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
      * @private
      * @param {MouseEvent} ev
      */
-    _onOpenColorPicker: function (ev) {
+    _onClickBadge: function (ev) {
         ev.preventDefault();
         var tagID = $(ev.currentTarget).parent().data('id');
-        var tagColor = $(ev.currentTarget).parent().data('color');
         var tag = _.findWhere(this.value.data, { res_id: tagID });
-        if (tag && this.colorField in tag.data) { // if there is a color field on the related model
-            this.$color_picker = $(qweb.render('FieldMany2ManyTag.colorpicker', {
-                'widget': this,
-                'tag_id': tagID,
-            }));
+        var hasColorField = tag && this.colorField in tag.data;
 
-            $(ev.currentTarget).after(this.$color_picker);
-            this.$color_picker.dropdown();
-            this.$color_picker.attr("tabindex", 1).focus();
+        if (hasColorField) {
+            var tagColor = $(ev.currentTarget).parent().data('color');
+            this._renderTagDropdown('FieldMany2ManyTag.colorpicker', ev);
             if (!tagColor) {
-                this.$('.custom-checkbox input').prop('checked', true);
+                this.$tag_dropdown.find('.o_checkbox input').prop('checked', true);
             }
+        } else {
+            this._super.apply(this, arguments);
         }
     },
     /**
@@ -2247,7 +2314,7 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         var changes = {};
 
         if ($target.is('.o_hide_in_kanban')) {
-            var $checkbox = $('.o_hide_in_kanban .custom-checkbox input');
+            var $checkbox = $('.o_hide_in_kanban input');
             $checkbox.prop('checked', !$checkbox.prop('checked')); // toggle checkbox
             this.prevColors = this.prevColors ? this.prevColors : {};
             if ($checkbox.is(':checked')) {
