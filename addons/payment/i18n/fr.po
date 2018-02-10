@@ -234,7 +234,7 @@ msgstr "Authorize.Net"
 #. module: payment
 #: selection:payment.transaction,state:0
 msgid "Authorized"
-msgstr ""
+msgstr "Autorisé"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -255,7 +255,7 @@ msgstr "Annulé"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Capturer la transaction"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_partner_city
@@ -266,7 +266,7 @@ msgstr "Ville"
 #. module: payment
 #: model:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Click to create a payment acquirer."
-msgstr ""
+msgstr "Cliquez ici pour créer un acquéreur de paiement."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_company_id
@@ -291,7 +291,7 @@ msgstr "Configurer les méthodes de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Module correspondant"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_count
@@ -429,7 +429,7 @@ msgstr "Frais"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_fees_implemented
 msgid "Fees Computation Supported"
-msgstr ""
+msgstr "Calcul des frais pris en charge"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_fees
@@ -468,7 +468,7 @@ msgstr "Modèle de bouton de formulaire"
 #. module: payment
 #: selection:payment.transaction,type:0
 msgid "Form with tokenization"
-msgstr ""
+msgstr "Formulaire avec tokenisation"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_search
@@ -495,7 +495,7 @@ msgstr "Image"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
 msgid "Ingenico"
-msgstr ""
+msgstr "Ingenico"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -506,7 +506,7 @@ msgstr "Installer"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_module_state
 msgid "Installation State"
-msgstr ""
+msgstr "État de l'installation"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction_reference
@@ -635,7 +635,7 @@ msgstr "Nom"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token_name
 msgid "Name of the payment token"
-msgstr ""
+msgstr "Nom du jeton de paiement"
 
 #. module: payment
 #: selection:payment.acquirer,save_token:0
@@ -653,6 +653,8 @@ msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Notez que les jetons issus d'acquéreurs pouvant uniquement autoriser les "
+"transactions (et non capturer le montant) ne sont pas disponibles."
 
 #. module: payment
 #: selection:payment.acquirer,provider:0
@@ -664,12 +666,16 @@ msgstr "Ogone"
 #, python-format
 msgid "Only transactions in the Authorized status can be captured."
 msgstr ""
+"Seules les transactions dont l'état est défini sur Autorisé peuvent être "
+"capturées."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:626
 #, python-format
 msgid "Only transactions in the Authorized status can be voided."
 msgstr ""
+"Seules les transactions dont l'état est défini sur Autorisé peuvent être "
+"annulées."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_auto_confirm
@@ -692,7 +698,7 @@ msgstr "Nom du partenaire"
 #: model:payment.acquirer,name:payment.payment_acquirer_payu
 #: selection:payment.acquirer,provider:0
 msgid "PayUmoney"
-msgstr ""
+msgstr "PayUmoney"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer
@@ -715,7 +721,7 @@ msgstr "Journal des Paiements"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_payment_token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "Jeton de paiement"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner_payment_token_ids
@@ -825,12 +831,12 @@ msgstr "Sauvez les données de paiement"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Jeton de paiement enregistré"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_token_implemented
 msgid "Saving Card Data supported"
-msgstr ""
+msgstr "Enregistrement des données de la carte pris en charge"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_sequence
@@ -845,7 +851,7 @@ msgstr "Serveur vers serveur"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_short_name
 msgid "Short name"
-msgstr ""
+msgstr "Nom court"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
@@ -883,7 +889,7 @@ msgstr ""
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_registration_view_template_id
@@ -913,6 +919,8 @@ msgid ""
 "This feature is not available for payment acquirers set to the \"Authorize\" mode.\n"
 "Please use a token from another provider than %s."
 msgstr ""
+"Cette fonctionnalité n'est pas disponible pour les acquéreurs de paiement en mode « Autoriser ».\n"
+" Utilisez un jeton issu d'un autre fournisseur que %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_image
@@ -970,7 +978,7 @@ msgstr "Visible sur le site web/portail"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Annuler la transaction"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -982,6 +990,8 @@ msgstr "Virement bancaire"
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
 msgid "You will be prompt with Stripe Payment page for payment information."
 msgstr ""
+"Vous allez accéder à la page de paiement Stripe pour saisir vos informations"
+" de paiement."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_adyen
@@ -1016,6 +1026,8 @@ msgid ""
 "You will be redirected to the Ingenico website after clicking on the payment"
 " button."
 msgstr ""
+"Après avoir cliqué sur le bouton de paiement, vous serez redirigé vers le "
+"site d'Ingenico."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_payu
@@ -1023,6 +1035,8 @@ msgid ""
 "You will be redirected to the PayUmoney website after clicking on the "
 "payment button."
 msgstr ""
+"Après avoir cliqué sur le bouton de paiement, vous serez redirigé vers le "
+"site de PayUmoney."
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_paypal
