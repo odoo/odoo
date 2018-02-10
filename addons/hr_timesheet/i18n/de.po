@@ -56,7 +56,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project_allow_timesheets
 #: model:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "Allow timesheets"
-msgstr ""
+msgstr "Zeitnachweise erlauben"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_account_analytic_line
@@ -85,6 +85,7 @@ msgstr ""
 #: constraint:project.task:0
 msgid "Circular references are not permitted between tasks and sub-tasks"
 msgstr ""
+"Rundkreisreferenzen zwischen Aufgaben und Unteraufgaben sind nicht erlaubt"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -110,7 +111,7 @@ msgstr "Berechnet als: Zeitaufwand + Verbleibende Zeit"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_total_hours_spent
 msgid "Computed as: Time Spent + Sub-tasks Hours."
-msgstr ""
+msgstr "Berechnet als: Zeitaufwand + Stunden für Unteraufgaben."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_effective_hours
@@ -208,7 +209,7 @@ msgstr "Projekt"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.report_timesheet
 msgid "Project -"
-msgstr ""
+msgstr "Projekt -"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user_remaining_hours
@@ -219,7 +220,7 @@ msgstr "Verbleibende Stunden"
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.view_task_kanban_inherited_progress
 msgid "Remaining hours"
-msgstr ""
+msgstr "Verbleibende Stunden"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -257,7 +258,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_children_hours
 msgid "Sub-tasks Hours"
-msgstr ""
+msgstr "Arbeitszeit für Unteraufgaben"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task_children_hours
@@ -265,6 +266,9 @@ msgid ""
 "Sum of the planned hours of all sub-tasks (when a sub-task is closed or its "
 "spent hours exceed its planned hours, spent hours are counted instead)"
 msgstr ""
+"Summe der geplanten Stunden aller Unteraufgaben (wenn eine Unteraufgabe "
+"geschlossen wird oder ihre verbrauchten Stunden die geplanten Stunden "
+"überschreiten, werden stattdessen die verbrauchten Stunden gezählt)"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_task
@@ -300,7 +304,7 @@ msgstr "Zeiterfassungsaktivitäten"
 #: model:ir.actions.act_window,name:hr_timesheet.project_task_action_view_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.timesheet_report
 msgid "Timesheet Entries"
-msgstr ""
+msgstr "Zeitnachweis-Einträge"
 
 #. module: hr_timesheet
 #: model:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -357,6 +361,9 @@ msgid ""
 "                day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                customers if required."
 msgstr ""
+"Sie können jeden Tag Ihre Arbeitsstunden pro Projekt\n"
+" aufzeichnen und verfolgen. Sämtliche für ein Projekt aufgewendete Zeit wird zu einem Kostenfaktor und kann den Kunden bei Bedarf erneut in\n"
+" Rechnung gestellt werden."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,help:hr_timesheet.action_define_analytic_structure
