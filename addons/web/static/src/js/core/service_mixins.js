@@ -97,6 +97,11 @@ var rpc = require('web.rpc');
  * @name ServicesMixin
  */
 var ServicesMixin = {
+    /**
+     * @param  {string} service
+     * @param  {string} method
+     * @return {any} result of the service called
+     */
     call: function (service, method) {
         var args = Array.prototype.slice.call(arguments, 2);
         var result;

@@ -24,7 +24,7 @@ var BusService =  AbstractService.extend({
     /**
      * Get the bus
      *
-     * @return {web.Bus}
+     * @return {web.Bus} the longpoll bus
      */
     getBus: function () {
         return this.bus;
