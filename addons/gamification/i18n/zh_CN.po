@@ -377,6 +377,9 @@ msgid ""
 "                It can be deserved automatically when some conditions are met or manually by users.\n"
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
+"徽章是授予用户的象征性奖励。\n"
+" 徽章在满足某些条件时将自动得到，或者由用户手动设置。\n"
+" 根据具体条件的设置，有些徽章会比其他徽章更难得到。"
 
 #. module: gamification
 #: model:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -384,6 +387,8 @@ msgid ""
 "A goal definition is a technical model of goal defining a condition to reach.\n"
 "                The dates, values to reach or users are defined in goal instance."
 msgstr ""
+"目标定义是定义要达成条件的目标的技术模型。\n"
+" 要达成的日期、数值，或用户在目标实例中定义。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line_condition
@@ -400,6 +405,8 @@ msgid ""
 "A goal is defined by a user and a goal definition.\n"
 "                Goals can be created automatically by using challenges."
 msgstr ""
+"目标由用户和目标定义进行定义。\n"
+" 可使用挑战自动创建目标。"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -448,6 +455,9 @@ msgid ""
 "                The challenge can use a period (weekly, monthly...) for automatic creation of goals.\n"
 "                The goals are created for the specified users or member of the group."
 msgstr ""
+"给选定的用户分配一个目标列表以进行评估。\n"
+" 挑战可利用周期（每周、每月...）自动创建目标。\n"
+" 目标的创建对象为特定用户或组成员。"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge_rule_auth_user_ids
@@ -828,7 +838,7 @@ msgstr "批量评估每个用户的表现"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition_batch_user_expression
 msgid "Evaluated expression for batch mode"
-msgstr ""
+msgstr "批处理模式的评估表达式"
 
 #. module: gamification
 #: selection:gamification.badge,rule_auth:0
@@ -930,7 +940,7 @@ msgstr "游戏化的用户徽章"
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
 msgid "Gamification: Goal Challenge Check"
-msgstr ""
+msgstr "游戏化：目标挑战检查"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard_goal_id
@@ -1291,7 +1301,7 @@ msgstr "从来没有提醒如果没有指定值或零"
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
 msgid "New badge ${object.badge_id.name} granted"
-msgstr ""
+msgstr "已授予新徽章 ${object.badge_id.name}"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_next_report_date
@@ -1868,6 +1878,8 @@ msgid ""
 "There is no goals associated to this challenge matching your search.\n"
 "            Make sure that your challenge is active and assigned to at least one user."
 msgstr ""
+"没有与此挑战相关的目标匹配您的搜索条件。\n"
+" 请确保您的挑战已激活，且至少分配给一个用户。"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_closed
@@ -1947,7 +1959,7 @@ msgstr "用户"
 #. module: gamification
 #: selection:gamification.challenge,category:0
 msgid "Website / Forum"
-msgstr ""
+msgstr "网站/论坛"
 
 #. module: gamification
 #: selection:gamification.challenge,period:0
@@ -2055,6 +2067,8 @@ msgid ""
 "e.g. result = env['mail.followers'].search_count([('res_model', '=', "
 "'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 msgstr ""
+"例如，result = env['mail.followers'].search_count([('res_model', '=', "
+"'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"
 
 #. module: gamification
 #: model:ir.ui.view,arch_db:gamification.goal_definition_form_view
