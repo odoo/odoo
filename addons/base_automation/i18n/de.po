@@ -5,27 +5,28 @@
 # Translators:
 # Gab_Odoo <gab@odoo.com>, 2017
 # darenkster <inactive+darenkster@transifex.com>, 2017
-# Renzo Meister <info@jamotion.ch>, 2017
+# Renzo Meister, 2017
 # Rudolf Schnapka <rs@techno-flex.de>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2017
 # Ermin Trevisan <trevi@twanda.com>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Wolfgang Taferner, 2017
 # Tina Rittmüller <tr@ife.de>, 2017
 # Anja Funk <anja.funk@afimage.de>, 2017
-# Niki Waibel <niki.waibel@gmail.com>, 2017
+# Niki Waibel, 2017
 # Bülent Tiknas <btiknas@googlemail.com>, 2017
 # Martin K <martinkuenz@gmail.com>, 2017
 # Henry Mineehen <info@mineehen.de>, 2017
 # Florian R. A. Angermeier <fa@brunner.at>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-02 11:26+0000\n"
 "PO-Revision-Date: 2017-10-02 11:26+0000\n"
-"Last-Translator: AppleMentalist <felix.schnatbaum@gmail.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +83,7 @@ msgstr "Abonnenten hinzufügen"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_filter_domain
 msgid "Apply on"
-msgstr ""
+msgstr "Anzuwenden auf"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test_is_assigned_to_admin
@@ -166,7 +167,7 @@ msgstr "Abgrenzung vor Aktualisierung"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_model_id
 msgid "Binding Model"
-msgstr ""
+msgstr "Verbindliches Modell"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_binding_type
@@ -393,7 +394,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation_model_id
 msgid "Model on which the server action runs."
-msgstr ""
+msgstr "Modell, auf dem die Server-Aktion läuft."
 
 #. module: base_automation
 #: selection:base.automation,trg_date_range_type:0
@@ -539,6 +540,13 @@ msgid ""
 "- 'Add Followers': add followers to a record (available in Discuss)\n"
 "- 'Send Email': automatically send an email (available in email_template)"
 msgstr ""
+"Typ der Serveraktion. Folgende Werte sind verfügbar:\n"
+"- „Execute Python Code“ (Python-Code ausführen): ein Python-Code-Block, der ausgeführt wird\n"
+"- „Create or Copy a new Record“ (Neuen Datensatz erstellen oder kopieren): einen neuen Datensatz mit neuen Werten erstellen oder einen existierenden Datensatz in Ihre Datenbank kopieren\n"
+"- „Write on a Record“ (auf einen Datensatz schreiben): die Werte eines Datensatzes aktualisieren\n"
+"- „Execute several actions“ (Mehrere Aktionen ausführen): eine Aktion definieren, die mehrere andere Aktionen auslöst\n"
+"- „Add Followers“ (Follower hinzufügen): Follower zu einem Datensatz hinzufügen (verfügbar in Discuss)\n"
+"- „Send Email“ (E-Mail senden): automatisch eine E-Mail senden (verfügbar in email_template)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation_usage
