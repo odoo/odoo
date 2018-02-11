@@ -6,7 +6,7 @@
 # Dorin Hongu <dhongu@gmail.com>, 2016
 # Cozmin Candea <office@terrabit.ro>, 2016
 # Sergiu Baltariu <s_baltariu@yahoo.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2016
 msgid ""
 msgstr ""
@@ -960,7 +960,7 @@ msgstr "Condițiile de Plată trebuie să aibă doar o linie în Balanță."
 #: code:addons/account/models/account.py:535
 #, python-format
 msgid "A bank account can only belong to one journal."
-msgstr ""
+msgstr "Un cont bancar poate aparţine doar unui jurnal."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -969,6 +969,9 @@ msgid ""
 "                occurring over a given period of time on a bank account. You\n"
 "                should receive this periodicaly from your bank."
 msgstr ""
+"Un extras de cont este un raport cu toate operațiunile financiare\n"
+"                efectuate într-o perioadă de timp pentru un cont bancar. Se\n"
+"                primeste periodic de la bancă."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_bank_statement_line
@@ -992,16 +995,20 @@ msgid ""
 "A journal is used to record transactions of all accounting data\n"
 "                related to the day-to-day business."
 msgstr ""
+"Un registru este folosit pentru înregistrarea tuturor datelor contabile\n"
+"                legate de activitatea zilnică."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of common taxes and their rates."
 msgstr ""
+"A list of common taxes and their rates.\n"
+"O listă cu taxele uzuale si cuantumul lor?"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
 msgid "A list of your customer and supplier payment terms."
-msgstr ""
+msgstr "Lista cu termene de plată parteneri."
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -1010,12 +1017,15 @@ msgid ""
 "                        whether or not it is goods, consumables, or services.\n"
 "                        Choose how you want to create your products:"
 msgstr ""
+"În Odoo produsul se poate vinde sau cumpăra \n"
+"                        indiferent dacă este stocabil, consumabil sau serviciu.\n"
+"                        Se alege modalitatea prin care se creează produsele:"
 
 #. module: account
 #: code:addons/account/models/account_move.py:731
 #, python-format
 msgid "A reconciliation must involve at least 2 move lines."
-msgstr ""
+msgstr "O reconciliere trebuie să cuprindă cel puțin două linii."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:867
@@ -1668,6 +1678,8 @@ msgid ""
 "All selected journal entries will be validated and posted. You won't be able"
 " to modify them afterwards."
 msgstr ""
+"Toate inregistrarile selectate vor fi validate si postate. Nu se vor mai "
+"putea modifica ulterior. "
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:240
@@ -1775,12 +1787,12 @@ msgstr "Valoare datorată"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_company_signed
 msgid "Amount Due in Company Currency"
-msgstr ""
+msgstr "Suma scadentă în moneda companiei"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_residual_signed
 msgid "Amount Due in Invoice Currency"
-msgstr ""
+msgstr "Suma scadentă în moneda facturii"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_line_price_subtotal_signed
@@ -1954,7 +1966,7 @@ msgstr "Etichete analitic"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line_tax_exigible
 msgid "Appears in VAT report"
-msgstr ""
+msgstr "Apare in raportul TVA"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag_applicability
@@ -2257,7 +2269,7 @@ msgstr "Banca și Numerar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_statement_line_id
 msgid "Bank statement line reconciled with this entry"
-msgstr ""
+msgstr "Linie extras bancar reconciliată cu această inregistrare"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -2542,7 +2554,7 @@ msgstr "Numerar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_cash_account_code_prefix
 msgid "Cash Accounts Prefix"
-msgstr ""
+msgstr "Prefix conturi numerar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_config_settings_cash_account_code_prefix
@@ -2600,12 +2612,12 @@ msgstr "Linii Caseta de Numerar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_expense_categ_id
 msgid "Category of Expense Account"
-msgstr ""
+msgstr "Categorie cont de cheltuieli"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template_property_account_income_categ_id
 msgid "Category of Income Account"
-msgstr ""
+msgstr "Categorie cont de venituri"
 
 #. module: account
 #: model:ir.ui.view,arch_db:account.account_planner
@@ -2748,7 +2760,7 @@ msgstr "Alege omolog"
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_journal_form
 msgid "Click to add a bank account."
-msgstr ""
+msgstr "Click pentru a crea un cont bancar"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_form
@@ -3653,7 +3665,7 @@ msgstr "Taxa de vânzare implicită"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_wizard_multi_charts_accounts_sale_tax_id
 msgid "Default Sales Tax"
-msgstr ""
+msgstr "Taxa de vanzare Implicita"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tax_ids
