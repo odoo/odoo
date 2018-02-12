@@ -694,6 +694,25 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('aggregates are formatted according to field widget', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux" widget="float_time" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '19:24',
+            "total should be formatted as a float_time");
+
+        list.destroy();
+    });
+
     QUnit.test('groups can be sorted on aggregates', function (assert) {
         assert.expect(10);
 
