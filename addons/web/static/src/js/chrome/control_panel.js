@@ -79,7 +79,7 @@ var ControlPanel = Widget.extend({
             this.template = template;
         }
 
-        this.bus = new Bus();
+        this.bus = new Bus(this);
         this.bus.on("update", this, this.update);
     },
     /**

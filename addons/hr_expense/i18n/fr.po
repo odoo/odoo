@@ -13,7 +13,7 @@
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Clo <clo@odoo.com>, 2016
 # Matillon Samantha <smatillon@gmail.com>, 2016
-# Cyrille de Lambert <cdelambert@teclib.com>, 2016
+# Cyrille de Lambert <cdelambert@auguria.net>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
@@ -205,7 +205,7 @@ msgstr "Frais approuvés"
 #: code:addons/hr_expense/static/src/js/tour.js:35
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Ajoutez votre reçu ici."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet_bank_journal_id
@@ -444,7 +444,7 @@ msgstr "Note de frais"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_sheet_register_payment_wizard
 msgid "Expense Report Register Payment wizard"
-msgstr ""
+msgstr "Assistant pour enregistrer le paiement des notes de frais"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet_state
@@ -500,7 +500,7 @@ msgstr "Note de frais"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
 msgid "Expense refuse Reason wizard"
-msgstr ""
+msgstr "Assistant pour indiquer le motif de refus d'une note de frais"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -530,7 +530,7 @@ msgstr "Note de frais en attente d'approbation"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_account_move_line_expense_id
 msgid "Expense where the move line come from"
-msgstr ""
+msgstr "Note de frais d'où provient la ligne d'écriture"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
@@ -575,7 +575,7 @@ msgstr "Rapport de dépenses"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_all_all
 msgid "Expenses Reports Analysis"
-msgstr ""
+msgstr "Analyse des notes de frais"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department_expense_sheets_to_approve_count
@@ -641,7 +641,7 @@ msgstr "Les dépenses vont passer par les états suivants:"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_is_refused
 msgid "Explicitely Refused by manager or acccountant"
-msgstr ""
+msgstr "Refusé par le responsable ou le comptable"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -669,7 +669,7 @@ msgstr "Information Générale"
 #: code:addons/hr_expense/static/src/js/tour.js:16
 #, python-format
 msgid "Go to the expense to attach a receipt."
-msgstr ""
+msgstr "Accédez à la note de frais pour joindre un reçu."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -695,12 +695,12 @@ msgstr "Masquer la méthode de paiement"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_ids
 msgid "Hr Expense"
-msgstr ""
+msgstr "Dépense RH"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_refuse_wizard_hr_expense_sheet_id
 msgid "Hr Expense Sheet"
-msgstr ""
+msgstr "Note de frais RH"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_id
@@ -782,7 +782,7 @@ msgstr "Mes dépenses à soumettre"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_refused
 msgid "My Refused Reports"
-msgstr ""
+msgstr "Mes notes de frais refusées"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_my_all
@@ -823,6 +823,8 @@ msgid ""
 "No Expense account found for the product %s (or for its category), please "
 "configure one."
 msgstr ""
+"Aucun compte de dépenses n'a été trouvé pour le produit %s (ou sa "
+"catégorie). Veuillez en configurer un."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:241
@@ -839,7 +841,7 @@ msgstr "Pas de compte de crédit pour le journal %s, en configurer un SVP."
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_refused
 msgid "No refused reports to display."
-msgstr ""
+msgstr "Aucune note de frais refusée à afficher."
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
@@ -894,13 +896,13 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:554
 #, python-format
 msgid "Only HR Officers can approve expenses"
-msgstr ""
+msgstr "Seuls les agents RH peuvent approuver des dépenses"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:545
 #, python-format
 msgid "Only HR Officers can refuse expenses"
-msgstr ""
+msgstr "Seuls les agents RH peuvent refuser des dépenses"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -1014,17 +1016,17 @@ msgstr "Motif"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Reason :"
-msgstr ""
+msgstr "Motif :"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 msgid "Reason to refuse Expense"
-msgstr ""
+msgstr "Motif du refus de la note de frais"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Recording"
-msgstr ""
+msgstr "Enregistrement"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -1057,7 +1059,7 @@ msgstr "Dépenses refusées"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_sheet_my_reports_refused
 msgid "Refused Reports"
-msgstr ""
+msgstr "Notes de frais refusées"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_sheet_register_payment_wizard_action
@@ -1121,7 +1123,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Sell services and invoice expenses to customer"
-msgstr ""
+msgstr "Vendre des services et facturer des dépenses au client"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_configuration
@@ -1236,6 +1238,8 @@ msgid ""
 "This installs the Sales Management app.                             Expenses"
 " can be invoiced to customers from sales orders."
 msgstr ""
+"Cela installe l'application Gestion des ventes. Les dépenses peuvent être "
+"facturées aux clients à partir des bons de commande."
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_to_approve
@@ -1322,7 +1326,7 @@ msgstr "Voir le Rapport"
 #: code:addons/hr_expense/static/src/js/tour.js:26
 #, python-format
 msgid "Write the name of the product, or select an existing one."
-msgstr ""
+msgstr "Saisissez le nom de l'article ou sélectionnez un article existant."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:569
@@ -1341,6 +1345,12 @@ msgid ""
 "between brackets, the product will be set automatically. Type the expense "
 "amount in the mail subject to set it on the expense too."
 msgstr ""
+"Vous pouvez configurer un email générique pour ajouter facilement vos "
+"dépenses. Écrivez un e-mail en ajoutant le reçu en pièce jointe pour créer "
+"une dépense en un clic. Si l'objet de l'e-mail contient la référence interne"
+" de l'article entre parenthèses, l'article sera configuré automatiquement. "
+"Entrez le montant de la dépense dans l'objet de l'e-mail pour le retrouver "
+"dans la dépense également."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:604
@@ -1391,7 +1401,7 @@ msgstr "Vous enregistrez vos dépenses, "
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense"
-msgstr ""
+msgstr "Votre dépense"
 
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -1411,7 +1421,7 @@ msgstr "e.g. Voyage à New-York"
 #. module: hr_expense
 #: model:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "has been refused"
-msgstr ""
+msgstr "refusé"
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:354

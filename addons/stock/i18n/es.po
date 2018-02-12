@@ -3,8 +3,8 @@
 # * stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Antonio Trueba, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
@@ -35,13 +35,14 @@
 # Christopher Ormaza <chris.ormaza@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
 # Kiko <kiko@comunitea.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: Kiko <kiko@comunitea.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -145,7 +146,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "<span class=\"o_stat_text\">Details</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"/>"
 
 #. module: stock
 #: model:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -2631,6 +2632,7 @@ msgstr "Es la cantidad realizada editable"
 msgid ""
 "It is not possible to reserve more products of %s than you have in stock."
 msgstr ""
+"No es posible reservar más productos de %s de los que tiene en existencias."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:256
@@ -2638,6 +2640,8 @@ msgstr ""
 msgid ""
 "It is not possible to unreserve more products of %s than you have in stock."
 msgstr ""
+"No es posible deshacer la reserva de más productos de %s de los que tiene en"
+" existencias."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_product_packaging
@@ -5074,7 +5078,7 @@ msgstr "Mostrar operaciones detalladas"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_lots_text
 msgid "Show Lots Text"
-msgstr ""
+msgstr "Mostrar texto de lotes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_show_mark_as_todo
@@ -5761,6 +5765,8 @@ msgstr ""
 msgid ""
 "This location's usage cannot be changed to view as it contains products."
 msgstr ""
+"El uso de esta ubicación no puede cambiarse a \"vista\" puesto que contiene "
+"productos."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.stock_move_action
@@ -6627,6 +6633,10 @@ msgid ""
 "Please first validatethe first inventory adjustement with this product "
 "before creating another one."
 msgstr ""
+"No puedes tener dos ajustes de inventario en estado \"en progreso\" con el "
+"mismo producto(%s), misma ubicación(%s), mismo paquete, mismo propietario y "
+"mismo lote. Valide en primera instancia el primer ajuste de inventario con "
+"este producto antes de crear uno diferente."
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:159
@@ -6657,7 +6667,7 @@ msgstr "No puede dividir un movimiento realizado"
 msgid ""
 "You cannot take products from or deliver products to a location of type "
 "\"view\"."
-msgstr ""
+msgstr "No puede retirar o entregar productos a una ubicación de tipo \"vista\"."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:152
@@ -6677,6 +6687,8 @@ msgid ""
 "You cannot validate a transfer if you have not processed any quantity for "
 "%s."
 msgstr ""
+"No puede validar una transferencia si no ha procesado ninguna cantidad para "
+"%s."
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:656
@@ -6790,6 +6802,7 @@ msgstr "Debe proporcionar un lote / número de serie para %s."
 #, python-format
 msgid "You should not put the contents of a package in different locations."
 msgstr ""
+"No debería poner el contenido de un paquete en ubicaciones diferentes."
 
 #. module: stock
 #: code:addons/stock/models/product.py:369

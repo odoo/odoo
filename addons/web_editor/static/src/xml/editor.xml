@@ -86,6 +86,8 @@
             target="fileframe">
             <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
             <input type="hidden" name="filters" t-att-value="widget.firstFilters.join('_')"/>
+            <input t-if="widget.options.res_id" type="hidden" name="res_id" t-att-value="widget.options.res_id"/>
+            <input t-if="widget.options.res_model" type="hidden" name="res_model" t-att-value="widget.options.res_model"/>
             <div class="well">
                 <div class="form-group pull-left">
                     <input type="file" class="hidden" name="upload" t-att-accept="widget.accept" multiple="multiple"/>
@@ -142,8 +144,9 @@
         <div class="existing-attachments">
             <div class="row mt16" t-as="row" t-foreach="rows">
                 <div class="col-sm-2 o_existing_attachment_cell" t-as="attachment" t-foreach="row">
-                    <i class="fa fa-times o_existing_attachment_remove" t-att-data-id="attachment.id"/>
-                    <div class="o_attachment_border"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image o_image_loading"/></div>
+                    <i t-if="attachment.res_model === 'ir.ui.view'" class="fa fa-times o_existing_attachment_remove" title="This file is a public view attachment" t-att-data-id="attachment.id"/>
+                    <i t-else="" class="fa fa-times o_existing_attachment_remove" title="This file is attached to the current record" t-att-data-id="attachment.id"/>
+                    <div class="o_attachment_border" t-att-style="attachment.res_model === 'ir.ui.view' ? null : 'border: 1px solid #5cb85c;'"><div t-att-data-src="attachment.src" t-att-data-url="attachment.url" t-att-alt="attachment.name" t-att-title="attachment.name" t-att-data-id="attachment.id" t-att-data-mimetype="attachment.mimetype" class="o_image o_image_loading"/></div>
                 </div>
             </div>
         </div>

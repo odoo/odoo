@@ -545,7 +545,6 @@ var PivotModel = AbstractModel.extend({
             var data = Array.prototype.slice.call(arguments);
             if (data[0][0].__count === 0) {
                 self.data.has_data = false;
-                return;
             }
             self._prepareData(data);
         });

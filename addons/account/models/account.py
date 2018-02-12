@@ -539,7 +539,7 @@ class AccountJournal(models.Model):
                 if not 'default_credit_account_id' in vals and self.default_credit_account_id:
                     self.default_credit_account_id.currency_id = vals['currency_id']
             if 'bank_account_id' in vals and not vals.get('bank_account_id'):
-                raise UserError(_('You cannot empty the bank account once set.'))
+                raise UserError(_('You cannot remove the bank account from the journal once set.'))
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary

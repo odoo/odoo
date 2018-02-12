@@ -148,15 +148,12 @@ odoo.define('payment_stripe.stripe', function(require) {
             });
         }
         create_tx.done(function () {
-            if (!_.contains(int_currencies, currency)) {
-                amount = amount*100;
-            }
             getStripeHandler().open({
                 name: $("input[name='merchant']").val(),
                 description: $("input[name='invoice_num']").val(),
                 email: $("input[name='email']").val(),
                 currency: currency,
-                amount: amount,
+                amount: _.contains(int_currencies, currency) ? amount : amount * 100,
             });
         });
     }

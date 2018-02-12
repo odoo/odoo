@@ -54,7 +54,7 @@ var ChatManager =  AbstractService.extend({
         this.pinnedDmPartners = [];  // partner_ids we have a pinned DM with
         this.discussOpen = false;
 
-        this.chatBus = new Bus();
+        this.chatBus = new Bus(this);
         this.busBus = this.call('bus_service', 'getBus');
 
         this.chatBus.on('discuss_open', null, function (open) {
