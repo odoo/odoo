@@ -5,3 +5,4 @@ import mrp_bom
 import mrp_production
 import mrp_subproduct
 import stock_move
+import mrp_workorder

@@ -314,7 +314,7 @@ class MrpWorkorder(models.Model):
         if not self.next_work_order_id:
             production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
             if production_move.product_id.tracking != 'none':
-                move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
+                move_lot = production_move.move_lot_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id and x.product_id.id == self.production_id.product_id.id)
                 if move_lot:
                     move_lot.quantity += self.qty_producing
                 else:
@@ -326,6 +326,7 @@ class MrpWorkorder(models.Model):
                                      })
             else:
                 production_move.quantity_done += self.qty_producing  # TODO: UoM conversion?
+            self._post_sub_lots_used()
         # Update workorder quantity produced
         self.qty_produced += self.qty_producing
 
@@ -343,6 +344,9 @@ class MrpWorkorder(models.Model):
         if self.qty_produced >= self.production_id.product_qty:
             self.button_finish()
         return True
+
+    def _post_sub_lots_used(self):
+        return False
 
     @api.multi
     def button_start(self):
