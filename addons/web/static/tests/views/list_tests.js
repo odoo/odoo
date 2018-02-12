@@ -582,6 +582,40 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('selection is reset on reload', function (assert) {
+        assert.expect(5);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="int_field" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
+            "total should be 32 (no record selected)");
+
+        // select first record
+        var $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
+        $firstRowSelector.click();
+        assert.ok($firstRowSelector.is(':checked'), "first row should be selected");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '10',
+            "total should be 10 (first record selected)");
+
+        // reload
+        list.reload();
+        $firstRowSelector = list.$('tbody .o_list_record_selector input').first();
+        assert.notOk($firstRowSelector.is(':checked'),
+            "first row should no longer be selected");
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '32',
+            "total should be 32 (no more record selected)");
+
+        list.destroy();
+    });
+
     QUnit.test('aggregates are computed correctly', function (assert) {
         assert.expect(4);
 
@@ -657,6 +691,25 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('td[title="Sum"]').text(), "37",
             "current total should now be 37");
+        list.destroy();
+    });
+
+    QUnit.test('aggregates are formatted according to field widget', function (assert) {
+        assert.expect(1);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree>' +
+                    '<field name="foo"/>' +
+                    '<field name="qux" widget="float_time" sum="Sum"/>' +
+                '</tree>',
+        });
+
+        assert.strictEqual(list.$('tfoot td:nth(2)').text(), '19:24',
+            "total should be formatted as a float_time");
+
         list.destroy();
     });
 
