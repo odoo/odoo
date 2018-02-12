@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    bank_statements_source = fields.Selection(selection_add=[("file_import", "File Import")])
+    bank_statements_source = fields.Selection(selection_add=[("file_import", "Import (CSV, QIF, CAMT, OFX)")])
 
     @api.multi
     def import_statement(self):
