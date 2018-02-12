@@ -453,8 +453,8 @@ class Slide(models.Model):
         return super(Slide, self).get_access_action(access_uid)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Slide, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        groups = super(Slide, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
         if self.website_published:

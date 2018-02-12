@@ -793,8 +793,8 @@ class Post(models.Model):
         }
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Post, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        groups = super(Post, self)._notify_get_groups(message, groups)
 
         for group_name, group_method, group_data in groups:
             group_data['has_button_access'] = True

@@ -459,18 +459,18 @@ class HolidaysRequest(models.Model):
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysRequest, self)._notification_recipients(message, groups)
+        groups = super(HolidaysRequest, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notification_link_helper('controller', controller='/leave/validate')
+            app_action = self._notify_get_action_link('controller', controller='/leave/validate')
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notification_link_helper('controller', controller='/leave/refuse')
+            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse')
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         new_group = (
