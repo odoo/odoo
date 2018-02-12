@@ -118,25 +118,25 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_in_progress(self):
+        self.ensure_one()
         if not all(obj.line_ids for obj in self):
             raise UserError(_('You cannot confirm agreement because there is no product line.'))
-        for requisition in self:
-            if requisition.type_id.quantity_copy == 'none' and requisition.vendor_id:
-                for requisition_line in requisition.line_ids:
-                    if requisition_line.price_unit <= 0.0:
-                        raise UserError(_('You cannot confirm the blanket order without price.'))
-                    if requisition_line.product_qty <= 0.0:
-                        raise UserError(_('You cannot confirm the blanket order without quantity.'))
-                    requisition_line.create_supplier_info()
-                self.write({'state': 'ongoing'})
+        if self.type_id.quantity_copy == 'none' and self.vendor_id:
+            for requisition_line in self.line_ids:
+                if requisition_line.price_unit <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without price.'))
+                if requisition_line.product_qty <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without quantity.'))
+                requisition_line.create_supplier_info()
+            self.write({'state': 'ongoing'})
+        else:
+            self.write({'state': 'in_progress'})
+        # Set the sequence number regarding the requisition type
+        if self.name == 'New':
+            if self.is_quantity_copy != 'none':
+                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
             else:
-                self.write({'state': 'in_progress'})
-            # Set the sequence number regarding the requisition type
-            if requisition.name == 'New':
-                if requisition.is_quantity_copy != 'none':
-                    requisition.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
-                else:
-                    requisition.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
+                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
     @api.multi
     def action_open(self):
