@@ -206,7 +206,8 @@
             <field name="model">stock.move</field>
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Stock Moves" create="0" edit="0">
+                <!-- <form string="Stock Moves" create="0" edit="0"> -->
+                <form string="Stock Moves">
                 <header>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
                 </header>
