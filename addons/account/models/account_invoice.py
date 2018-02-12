@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from werkzeug.urls import url_encode
 
 from odoo import api, exceptions, fields, models, _
-from odoo.tools import float_is_zero, float_compare, pycompat
+from odoo.tools import email_split, float_is_zero, float_compare, pycompat
 from odoo.tools.misc import formatLang
 
 from odoo.exceptions import AccessError, UserError, RedirectWarning, ValidationError, Warning
@@ -241,7 +241,7 @@ class AccountInvoice(models.Model):
             ('in_invoice','Vendor Bill'),
             ('out_refund','Customer Credit Note'),
             ('in_refund','Vendor Credit Note'),
-        ], readonly=True, index=True, change_default=True,
+        ], readonly=True, states={'draft': [('readonly', False)]}, index=True, change_default=True,
         default=lambda self: self._context.get('type', 'out_invoice'),
         track_visibility='always')
     access_token = fields.Char(
@@ -284,7 +284,7 @@ class AccountInvoice(models.Model):
              "term is not set on the invoice. If you keep the Payment terms and the due date empty, it "
              "means direct payment.")
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
-        required=True, readonly=True, states={'draft': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)]},
         track_visibility='always')
     vendor_bill_id = fields.Many2one('account.invoice', string='Vendor Bill',
         help="Auto-complete from a past bill.")
@@ -299,7 +299,7 @@ class AccountInvoice(models.Model):
         readonly=True, states={'draft': [('readonly', False)]})
 
     account_id = fields.Many2one('account.account', string='Account',
-        required=True, readonly=True, states={'draft': [('readonly', False)]},
+        readonly=True, states={'draft': [('readonly', False)]},
         domain=[('deprecated', '=', False)], help="The partner account used for this invoice.")
     invoice_line_ids = fields.One2many('account.invoice.line', 'invoice_id', string='Invoice Lines', oldname='invoice_line',
         readonly=True, states={'draft': [('readonly', False)]}, copy=True)
@@ -479,8 +479,6 @@ class AccountInvoice(models.Model):
                 for field in changed_fields:
                     if field not in vals and invoice[field]:
                         vals[field] = invoice._fields[field].convert_to_write(invoice[field], invoice)
-        if not vals.get('account_id',False):
-            raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
 
         invoice = super(AccountInvoice, self.with_context(mail_create_nolog=True)).create(vals)
 
@@ -604,12 +602,27 @@ class AccountInvoice(models.Model):
             'context': ctx,
         }
 
+    def _invoice_email_split(self, msg):
+        return email_split((msg.get('from') or '') + ',' + (msg.get('cc') or ''))
+
     @api.multi
     @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         if self.env.context.get('mark_invoice_as_sent'):
             self.filtered(lambda inv: not inv.sent).write({'sent': True})
         return super(AccountInvoice, self.with_context(mail_post_autofollow=True)).message_post(**kwargs)
+
+    @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        values = dict(custom_values or {}, partner_id=msg_dict.get('author_id'))
+        # Passing `type` in context so that _default_journal(...) can correctly set journal for new vendor bill
+        invoice = super(AccountInvoice, self.with_context(type=values.get('type'))).message_new(msg_dict, values)
+        # When configured Odoo to generate vendor bills from email and if the sender is an Odoo Vendor
+        # then that vendor should automatically be added to the follower list of newly created bill
+        partner_ids = [pid for pid in invoice._find_partner_from_emails(self._invoice_email_split(msg_dict), force_create=False) if pid]
+        if partner_ids:
+            invoice.message_subscribe(partner_ids)
+        return invoice
 
     @api.multi
     def compute_taxes(self):
@@ -799,10 +812,14 @@ class AccountInvoice(models.Model):
     def action_invoice_open(self):
         # lots of duplicate calls to action_invoice_open, so we remove those already open
         to_open_invoices = self.filtered(lambda inv: inv.state != 'open')
+        for inv in to_open_invoices.filtered(lambda inv: not inv.partner_id):
+            raise UserError(_("The field Vendor is required, please complete it to validate the Vendor Bill."))
         if to_open_invoices.filtered(lambda inv: inv.state != 'draft'):
             raise UserError(_("Invoice must be in draft state in order to validate it."))
         if to_open_invoices.filtered(lambda inv: inv.amount_total < 0):
             raise UserError(_("You cannot validate an invoice with a negative total amount. You should create a credit note instead."))
+        if to_open_invoices.filtered(lambda inv: not inv.account_id):
+            raise UserError(_('No account was found to create the invoice, be sure you have installed a chart of account.'))
         to_open_invoices.action_date_assign()
         to_open_invoices.action_move_create()
         return to_open_invoices.invoice_validate()
@@ -1216,6 +1233,8 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def action_cancel(self):
+        if self.filtered(lambda inv: inv.type == 'in_invoice' and inv.state == 'draft' and not inv.partner_id):
+            raise UserError(_("You can not cancel a bill without Vendor."))
         moves = self.env['account.move']
         for inv in self:
             if inv.move_id:

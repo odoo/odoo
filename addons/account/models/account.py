@@ -427,9 +427,20 @@ class AccountJournal(models.Model):
     bank_acc_number = fields.Char(related='bank_account_id.acc_number')
     bank_id = fields.Many2one('res.bank', related='bank_account_id.bank_id')
 
+    # alias configuration for 'purchase' type journals
+    alias_id = fields.Many2one('mail.alias', string='Alias')
+    alias_domain = fields.Char('Alias domain', compute='_compute_alias_domain', default=lambda self: self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain"))
+    alias_prefix = fields.Char('Alias Name for Vendor Bills', related='alias_id.alias_name', help="It creates draft vendor bill by sending an email.")
+
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
     ]
+
+    @api.multi
+    def _compute_alias_domain(self):
+        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        for record in self:
+            record.alias_domain = alias_domain
 
     @api.multi
     # do not depend on 'sequence_id.date_range_ids', because
@@ -510,12 +521,22 @@ class AccountJournal(models.Model):
             self.default_debit_account_id = self.default_credit_account_id
 
     @api.multi
+    def _get_alias_values(self, alias_name=None):
+        return {
+            'alias_defaults': {'type': 'in_invoice'},
+            'alias_user_id': self.env.ref('base.user_root').id,
+            'alias_parent_thread_id': self.id,
+            'alias_name': alias_name or self.alias_prefix
+        }
+
+    @api.multi
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
         for bank_account in self.mapped('bank_account_id'):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
+        self.mapped('alias_id').unlink()
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret
@@ -564,7 +585,9 @@ class AccountJournal(models.Model):
                     bank_account = self.env['res.partner.bank'].browse(vals['bank_account_id'])
                     if bank_account.partner_id != company.partner_id:
                         raise UserError(_("The partners of the journal's company and the related bank account mismatch."))
-
+            if vals.get('type') == 'purchase':
+                alias_values = journal._get_alias_values()
+                journal.alias_id.write(alias_values)
         result = super(AccountJournal, self).write(vals)
 
         # Create the bank_account_id if necessary
@@ -676,8 +699,11 @@ class AccountJournal(models.Model):
             vals.update({'sequence_id': self.sudo()._create_sequence(vals).id})
         if vals.get('type') in ('sale', 'purchase') and vals.get('refund_sequence') and not vals.get('refund_sequence_id'):
             vals.update({'refund_sequence_id': self.sudo()._create_sequence(vals, refund=True).id})
-
         journal = super(AccountJournal, self).create(vals)
+        if journal.type == 'purchase':
+            alias_values = journal._get_alias_values(alias_name=vals.get('alias_prefix'))
+            journal.alias_id = self.env['mail.alias'].with_context(alias_model_name='account.invoice',
+                alias_parent_model_name='account.journal').create(alias_values)
 
         # Create the bank_account_id if necessary
         if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
