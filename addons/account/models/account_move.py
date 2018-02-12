@@ -140,8 +140,7 @@ class AccountMove(models.Model):
         return res
 
     @api.multi
-    def post(self):
-        invoice = self._context.get('invoice', False)
+    def post(self, invoice=False):
         self._post_validate()
         for move in self:
             move.line_ids.create_analytic_lines()
@@ -557,6 +556,11 @@ class AccountMoveLine(models.Model):
 
     @api.multi
     def check_full_reconcile(self):
+        """
+        This method check if a move is totally reconciled and if we need to create exchange rate entries for the move.
+        In case exchange rate entries needs to be created, one will be created per currency present.
+        In case of full reconciliation, all moves belonging to the reconciliation will belong to the same account_full_reconcile object.
+        """
         # Get first all aml involved
         part_recs = self.env['account.partial.reconcile'].search(['|', ('debit_move_id', 'in', self.ids), ('credit_move_id', 'in', self.ids)])
         amls = self
@@ -640,6 +644,9 @@ class AccountMoveLine(models.Model):
             amount_reconcile = min(debit_move[field], -credit_move[field])
 
             #Remove from recordset the one(s) that will be totally reconciled
+            # For optimization purpose, the creation of the partial_reconcile are done at the end, 
+            # therefore during the process of reconciling several move lines, there are actually no recompute performed by the orm
+            # and thus the amount_residual are not recomputed, hence we have to do it manually.
             if amount_reconcile == debit_move[field]:
                 debit_moves -= debit_move
             else:
@@ -692,13 +699,10 @@ class AccountMoveLine(models.Model):
         debit_moves.sorted(key=lambda a: (a.date, a.currency_id))
         credit_moves.sorted(key=lambda a: (a.date, a.currency_id))
         # Compute on which field reconciliation should be based upon:
-        if self._context.get('reconciliation_field', False):
-            field = self._context.get('reconciliation_field')
-        else:
-            field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
-            #if all lines share the same currency, use amount_residual_currency to avoid currency rounding error
-            if self[0].currency_id and all([x.amount_currency and x.currency_id == self[0].currency_id for x in self]):
-                field = 'amount_residual_currency'
+        field = self[0].account_id.currency_id and 'amount_residual_currency' or 'amount_residual'
+        #if all lines share the same currency, use amount_residual_currency to avoid currency rounding error
+        if self[0].currency_id and all([x.amount_currency and x.currency_id == self[0].currency_id for x in self]):
+            field = 'amount_residual_currency'
         # Reconcile lines
         ret = self._reconcile_lines(debit_moves, credit_moves, field)
         return ret
@@ -748,15 +752,21 @@ class AccountMoveLine(models.Model):
             remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
         # Check if reconciliation is total or needs an exchange rate entry to be created
         (self+writeoff_to_reconcile).check_full_reconcile()
-        return writeoff_to_reconcile
+        return True
 
     def _create_writeoff(self, writeoff_vals):
-        """ Create a writeoff move for the account.move.lines in self. If debit/credit is not specified in vals,
+        """ Create a writeoff move per journal for the account.move.lines in self. If debit/credit is not specified in vals,
             the writeoff amount will be computed as the sum of amount_residual of the given recordset.
 
-            :param vals: dict containing values suitable for account_move_line.create(). The data in vals will
+            :param writeoff_vals: dict containing values suitable for account_move_line.create(). The data in vals will
                 be processed to create bot writeoff acount.move.line and their enclosing account.move.
         """
+        def compute_writeoff_counterpart_vals(values):
+            line_values = values.copy()
+            line_values['debit'], line_values['credit'] = line_values['credit'], line_values['debit']
+            if 'amount_currency' in values:
+                line_values['amount_currency'] = -line_values['amount_currency']
+            return line_values
         # Group writeoff_vals by journals
         writeoff_dict = {}
         for val in writeoff_vals:
@@ -771,6 +781,7 @@ class AccountMoveLine(models.Model):
         writeoff_currency = self[0].currency_id or company_currency
         line_to_reconcile = self.env['account.move.line']
         # Iterate and create one writeoff by journal
+        writeoff_moves = self.env['account.move']
         for journal_id, lines in writeoff_dict.items():
             total = 0
             total_currency = 0
@@ -803,7 +814,7 @@ class AccountMoveLine(models.Model):
                     vals['amount_currency'] = sign * abs(sum([r.amount_residual_currency for r in self]))
                     total_currency += vals['amount_currency']
 
-                writeoff_lines.append(self._prepare_writeoff_second_line_values(vals))
+                writeoff_lines.append(compute_writeoff_counterpart_vals(vals))
 
             # Create balance line
             writeoff_lines.append({
@@ -824,20 +835,14 @@ class AccountMoveLine(models.Model):
                 'state': 'draft',
                 'line_ids': [(0, 0, line) for line in writeoff_lines],
             })
-            writeoff_move.post()
+            writeoff_moves += writeoff_move
+            # writeoff_move.post()
 
             line_to_reconcile += writeoff_move.line_ids.filtered(lambda r: r.account_id == self[0].account_id)
-
+        if writeoff_moves:
+            writeoff_moves.post()
         # Return the writeoff move.line which is to be reconciled
         return line_to_reconcile
-
-    @api.multi
-    def _prepare_writeoff_second_line_values(self, values):
-        line_values = values.copy()
-        line_values['debit'], line_values['credit'] = line_values['credit'], line_values['debit']
-        if 'amount_currency' in values:
-            line_values['amount_currency'] = -line_values['amount_currency']
-        return line_values
 
     @api.multi
     def remove_move_reconcile(self):
@@ -864,16 +869,10 @@ class AccountMoveLine(models.Model):
 
     @api.model
     def create(self, vals):
-        """ :context's key apply_taxes: set to True if you want vals['tax_ids'] to result in the creation of move lines for taxes and eventual
-                adjustment of the line amount (in case of a tax included in price).
-
-            :context's key `check_move_validity`: check data consistency after move line creation. Eg. set to false to disable verification that the move
+        """ :context's key `check_move_validity`: check data consistency after move line creation. Eg. set to false to disable verification that the move
                 debit-credit == 0 while creating the move lines composing the move.
-
         """
         amount = vals.get('debit', 0.0) - vals.get('credit', 0.0)
-        if not vals.get('partner_id') and self._context.get('partner_id'):
-            vals['partner_id'] = self._context.get('partner_id')
         move = self.env['account.move'].browse(vals['move_id'])
         account = self.env['account.account'].browse(vals['account_id'])
         if account.deprecated:
