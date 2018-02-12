@@ -19,7 +19,6 @@ var core = require('web.core');
 var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var DebouncedField = basic_fields.DebouncedField;
@@ -218,6 +217,7 @@ function createAsyncView(params) {
     return view.getController(widget).then(function (view) {
         // override the view's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the view and the mockServer.
+        view.__destroy = view.destroy;
         view.destroy = function () {
             // remove the override to properly destroy the view and its children
             // when it will be called the second time (by its parent)
@@ -400,7 +400,7 @@ function addMockEnvironment(widget, params) {
     // Dispatch service calls
     // Note: some services could call other services at init,
     // Which is why we have to init services after that
-    var services = {};
+    var services = {ajax: null}; // mocked ajax service already loaded
     intercept(widget, 'call_service', function (ev) {
         var args, result;
         if (ev.data.service === 'ajax') {
@@ -415,36 +415,22 @@ function addMockEnvironment(widget, params) {
         }
         ev.data.callback(result);
     });
-    // Instantiate services
-    // Note: ensure topological sort of services based on their dependencies
-    var sortServices = function (services) {
-        // Create nodes (services), with ajax already loaded
-        var nodes = { ajax: [] };
-        _.each(services, function (Service) {
-            nodes[Service.prototype.name] = Service.prototype.dependencies;
+
+    // Deploy services
+    var done = false;
+    while (!done) {
+        var index = _.findIndex(params.services, function (Service) {
+            return !_.some(Service.prototype.dependencies, function (depName) {
+                return !_.has(services, depName);
+            });
         });
-        var sorted;
-        try {
-            sorted = utils.topologicalSort(nodes);
-        } catch (err) {
-            console.warn('topologicalSort Error:', err.message);
-            sorted = nodes;
+        if (index !== -1) {
+            var Service = params.services.splice(index, 1)[0];
+            services[Service.prototype.name] = new Service(widget);
+        } else {
+            done = true;
         }
-        // Remove ajax from sorted
-        sorted = _.without(sorted, 'ajax');
-        // Sort services based on sorted
-        // Note: we convert sorted to an object key=>index for efficiency
-        var sortedObj = _.invert(_.object(_.pairs(sorted)));
-        sorted = _.sortBy(services, function (Service) {
-            return sortedObj[Service.prototype.name];
-        });
-        return sorted;
-    };
-    var sortedServices = sortServices(params.services);
-    _.each(sortedServices, function (Service) {
-        var service = new Service(widget);
-        services[service.name] = service;
-    });
+    }
 
     intercept(widget, 'load_action', function (event) {
         mockServer.performRpc('/web/action/load', {
@@ -680,47 +666,83 @@ function removeSrcAttribute($el, widget) {
 
 var patches = {};
 /**
- * Patches a given Class with the given properties.
+ * Patches a given Class or Object with the given properties.
  *
- * @param {Class} Klass
+ * @param {Class|Object} target
  * @param {Object} props
  */
-function patch (Klass, props) {
+function patch (target, props) {
     var patchID = _.uniqueId('patch_');
-    Klass.__patchID = patchID;
+    target.__patchID = patchID;
     patches[patchID] = {
-        Klass: Klass,
+        target: target,
         otherPatchedProps: [],
         ownPatchedProps: [],
     };
-    _.each(props, function (value, key) {
-        if (Klass.prototype.hasOwnProperty(key)) {
-            patches[patchID].ownPatchedProps.push({
-                key: key,
-                initialValue: Klass.prototype[key],
-            });
-        } else {
-            patches[patchID].otherPatchedProps.push(key);
-        }
-    });
-    Klass.include(props);
+    if (target.prototype) {
+        _.each(props, function (value, key) {
+            if (target.prototype.hasOwnProperty(key)) {
+                patches[patchID].ownPatchedProps.push({
+                    key: key,
+                    initialValue: target.prototype[key],
+                });
+            } else {
+                patches[patchID].otherPatchedProps.push(key);
+            }
+        });
+        target.include(props);
+    } else {
+        _.each(props, function (value, key) {
+            if (key in target) {
+                var oldValue = target[key];
+                patches[patchID].ownPatchedProps.push({
+                    key: key,
+                    initialValue: oldValue,
+                });
+                if (typeof value === 'function') {
+                    target[key] = function () {
+                        var oldSuper = this._super;
+                        this._super = oldValue;
+                        var result = value.apply(this, arguments);
+                        if (oldSuper === undefined) {
+                            delete this._super;
+                        } else {
+                            this._super = oldSuper;
+                        }
+                        return result;
+                    };
+                } else {
+                    target[key] = value;
+                }
+            } else {
+                patches[patchID].otherPatchedProps.push(key);
+                target[key] = value;
+            }
+        });
+    }
 }
 /**
- * Unpatches a given Class.
+ * Unpatches a given Class or Object.
  *
- * @param {Class} Klass
+ * @param {Class|Object} target
  */
-function unpatch(Klass) {
-    var patchID = Klass.__patchID;
+function unpatch(target) {
+    var patchID = target.__patchID;
     var patch = patches[patchID];
     _.each(patch.ownPatchedProps, function (p) {
-        Klass[p.key] = p.initialValue;
+        target[p.key] = p.initialValue;
     });
-    _.each(patch.otherPatchedProps, function (key) {
-        delete Klass.prototype[key];
-    });
+    if (target.prototype) {
+        _.each(patch.otherPatchedProps, function (key) {
+            delete target.prototype[key];
+        });
+    } else {
+        _.each(patch.otherPatchedProps, function (key) {
+            delete target[key];
+        });
+    }
     delete patches[patchID];
-    delete Klass.__patchID;
+    delete target.__patchID;
 }
 
 // Loading static files cannot be properly simulated when their real content is

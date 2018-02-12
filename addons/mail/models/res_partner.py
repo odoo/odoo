@@ -73,17 +73,15 @@ class Partner(models.Model):
         if message.res_id and message.model in self.env:
             record = self.env[message.model].browse(message.res_id)
 
-        company = user.company_id;
+        company = user.company_id
         if record and hasattr(record, 'company_id'):
-            company = record.company_id;
-        company_name = company.name;
+            company = record.company_id
 
         return {
             'message': message,
             'signature': signature,
             'website_url': website_url,
             'company': company,
-            'company_name': company_name,
             'model_name': model_name,
             'record': record,
             'record_name': record_name,
@@ -187,6 +185,7 @@ class Partner(models.Model):
                     'subject': message.subject or (message.record_name and 'Re: %s' % message.record_name),
                     'body': base_template.render(template_ctx, engine='ir.qweb'),
                 }
+                fol_values['body'] = self.env['mail.thread']._replace_local_links(fol_values['body'])
                 # send email
                 new_emails, new_recipients_nbr = self._notify_send(fol_values['body'], fol_values['subject'], recipient_template_values['recipients'], **base_mail_values)
                 # update notifications

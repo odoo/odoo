@@ -511,6 +511,7 @@ odoo.define('account.reconciliation_tests', function (require) {
 
 var ReconciliationClientAction = require('account.ReconciliationClientAction');
 var demoData = require('account.reconciliation_tests.data');
+
 var testUtils = require('web.test_utils');
 
 QUnit.module('account', {
@@ -738,7 +739,7 @@ QUnit.module('account', {
         // We also create a line which is the open balance.
         testUtils.intercept(clientAction, 'call_service', function (event) {
             assert.deepEqual(event.data.args[1].args,
-                [[5],[{partner_id: 8, 
+                [[5],[{partner_id: 8,
                                     counterpart_aml_dicts: [{
                                         counterpart_aml_id: 109,
                                         credit: 650,
@@ -746,7 +747,7 @@ QUnit.module('account', {
                                         name: 'INV/2017/0002',
                                         analytic_tag_ids: [[6, null, []]]
                                     }],
-                                    payment_aml_ids: [], 
+                                    payment_aml_ids: [],
                                     new_aml_dicts: [{
                                         account_id: 287,
                                         credit: 525,
@@ -892,7 +893,7 @@ QUnit.module('account', {
         var widget = clientAction.widgets[0];
         assert.strictEqual(widget.$('.o_input_dropdown input').val(), "Agrolait", "the partner many2one should display agrolait");
         assert.strictEqual(widget.$('.match table tr').length, 2, "agrolait should have 2 propositions for reconciliation");
-        
+
         // Adding the two propositions
         // This is in order to try that after changing partner the propositions are emptied
         widget.$('.match .cell_account_code:first').trigger('click');

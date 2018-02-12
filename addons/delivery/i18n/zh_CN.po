@@ -34,7 +34,7 @@ msgstr "${(object.name or ‘’).replace(‘/‘,’_’)}"
 #: model:mail.template,subject:delivery.mail_template_data_delivery_confirmation
 msgid ""
 "${object.company_id.name} Delivery Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} 交货单 (Ref ${object.name or 'n/a' })"
 
 #. module: delivery
 #: model:mail.template,subject:delivery.mail_template_data_delivery_notification
@@ -239,7 +239,7 @@ msgstr "承运商"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_order_form_with_carrier
 msgid "Check price"
-msgstr ""
+msgstr "检查价格"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -283,7 +283,7 @@ msgstr "创建时间"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_debug_logging
 msgid "Debug logging"
-msgstr ""
+msgstr "调试记录"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -308,7 +308,7 @@ msgstr "交货信息"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_message
 msgid "Delivery Message"
-msgstr ""
+msgstr "发货消息"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_res_partner_property_delivery_carrier_id
@@ -328,7 +328,7 @@ msgstr "交货方式"
 #. module: delivery
 #: model:ir.model,name:delivery.model_choose_delivery_package
 msgid "Delivery Package Selection Wizard"
-msgstr ""
+msgstr "邮包选择向导"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_packaging_view
@@ -356,12 +356,12 @@ msgstr "交货产品"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr ""
+msgstr "交付评级成功"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Destination Availability"
-msgstr ""
+msgstr "目的地有效性"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_sequence
@@ -400,7 +400,7 @@ msgstr "环境"
 #: code:addons/delivery/models/delivery_grid.py:109
 #, python-format
 msgid "Error: no matching grid."
-msgstr ""
+msgstr "错误：没有匹配的网格。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order_delivery_price
@@ -434,17 +434,17 @@ msgstr "免费运输"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier_free_over
 msgid "Free if order amount is above"
-msgstr ""
+msgstr "如果订货量大则免费"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate"
-msgstr ""
+msgstr "获取费率"
 
 #. module: delivery
 #: selection:delivery.carrier,integration_level:0
 msgid "Get Rate and Create Shipment"
-msgstr ""
+msgstr "获取费率并创建装运"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -479,7 +479,7 @@ msgstr "ID"
 msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
-msgstr ""
+msgstr "如果订单总额（不包括运费）高于或等于此值，客户可享受免费送货服务"
 
 #. module: delivery
 #: code:addons/delivery/models/delivery_carrier.py:125
@@ -489,6 +489,9 @@ msgid ""
 "The shipping is free because the order amount exceeds %.2f.\n"
 "(The actual shipping cost is: %.2f)"
 msgstr ""
+"信息：\n"
+"由于订单金额超过 %.2f，所以免收运费。\n"
+"（实际运输成本为： %.2f）"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -544,7 +547,7 @@ msgstr "长度必须为正"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr ""
+msgstr "记录请求以便于调试"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -559,12 +562,12 @@ msgstr "毛利"
 #. module: delivery
 #: sql_constraint:delivery.carrier:0
 msgid "Margin cannot be lower than -100%"
-msgstr ""
+msgstr "毛利不得低于 -100%"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Margin on Rate"
-msgstr ""
+msgstr "利润率"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging_max_weight
@@ -608,7 +611,7 @@ msgstr "此订单没有设置承运商"
 #: code:addons/delivery/models/delivery_grid.py:100
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
-msgstr ""
+msgstr "没有与此订单匹配的价格规则；运送费用无法计算。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_number_of_packages
@@ -655,7 +658,7 @@ msgstr "打包作业"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package_stock_quant_package_id
 msgid "Physical Package"
-msgstr ""
+msgstr "实体封装"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -668,7 +671,7 @@ msgstr "物理包裹"
 msgid ""
 "Please use \"Check price\" in order to compute a shipping price for this "
 "quotation."
-msgstr ""
+msgstr "请使用“查看价格”来计算此报价的运费。"
 
 #. module: delivery
 #: selection:delivery.price.rule,variable:0
@@ -744,7 +747,7 @@ msgstr "保存"
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send Confirmation Email"
-msgstr ""
+msgstr "发送确认电子邮件"
 
 #. module: delivery
 #: model:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
@@ -765,7 +768,7 @@ msgstr "设置价格"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier_prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr ""
+msgstr "如果您的凭证已通过生产认证，请设置为True。"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:168
@@ -836,7 +839,7 @@ msgstr "跟踪参考"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking_carrier_tracking_url
 msgid "Tracking URL"
-msgstr ""
+msgstr "跟踪 URL"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -936,7 +939,7 @@ msgstr ""
 #: code:addons/delivery/models/sale_order.py:71
 #, python-format
 msgid "You can add delivery price only on unconfirmed quotations."
-msgstr ""
+msgstr "您只能在未经确认的报价单上添加交货价格。"
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:182

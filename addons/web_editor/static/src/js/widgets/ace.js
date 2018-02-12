@@ -742,7 +742,7 @@ var ViewEditor = Widget.extend({
 
             var text = data.text || '';
             if (!isSelected) {
-                text = Array($elem.data('level') + 1).join('-') + ' ' + text;
+                text = Array(($elem.data('level') || 0) + 1).join('-') + ' ' + text;
             }
             var $div = $('<div/>',  {
                 text: text,

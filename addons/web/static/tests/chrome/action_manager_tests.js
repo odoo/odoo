@@ -1333,6 +1333,7 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            services: [ReportService],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1340,7 +1341,6 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: [ReportService],
             session: {
                 get_file: function (params) {
                     assert.step(params.url);
@@ -1373,6 +1373,7 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            services: [ReportService],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1380,7 +1381,6 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: [ReportService],
             session: {
                 get_file: function (params) {
                     assert.step(params.url);
@@ -1427,6 +1427,7 @@ QUnit.module('ActionManager', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
+            services: [ReportService],
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (route === '/report/check_wkhtmltopdf') {
@@ -1437,7 +1438,6 @@ QUnit.module('ActionManager', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: [ReportService],
             session: {
                 get_file: function (params) {
                     assert.step(params.url); // should not be called

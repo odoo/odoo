@@ -3,8 +3,8 @@
 # * sale_stock
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Martin Trigaux, 2016
+# Antonio Trueba, 2016
 # Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
@@ -16,13 +16,14 @@
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
 # José Vicente <txusev@gmail.com>, 2017
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:37+0000\n"
 "PO-Revision-Date: 2017-12-13 14:37+0000\n"
-"Last-Translator: Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,6 +101,8 @@ msgstr "Post-venta"
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
 msgstr ""
+"Aplicar rutas especiales de pedidos (por ejemplo: triangulación de envíos, "
+"fabricación a medida)"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -108,6 +111,10 @@ msgid ""
 "highest customer lead time of products. With this option, you can set a "
 "specific delivery date on orders rather than setting lead times on products."
 msgstr ""
+"Odoo calcula, de forma predeterminada, la fecha de entrega prevista de este "
+"modo: fecha del pedido + plazo de entrega máximo de los productos. Con esta "
+"opción, puede fijar una fecha concreta de entrega para los pedidos en lugar "
+"de establecer plazos de entrega de productos."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -209,6 +216,9 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Margen de error para fechas prometidas a los clientes. La entrega de los "
+"productos quedará programada días antes de la fecha prometida para hacer así"
+" frente a posibles retrasos inesperados en la cadena de suministro."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company_security_lead
@@ -238,7 +248,7 @@ msgstr "¡No hay suficiente inventario!"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings_group_route_so_lines
 msgid "Order-Specific Routes"
-msgstr ""
+msgstr "Rutas específicas de pedidos"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:200
@@ -284,6 +294,9 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Se recomienda reservar manualmente los productos en las órdenes de entrega o"
+" ejecutando el planificador para gestionar mejor las prioridades en caso de "
+"largos plazos de entrega del cliente o frecuentes desabastecimientos. "
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line_route_id
@@ -293,12 +306,12 @@ msgstr "Ruta"
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Routes for Sales Order Lines"
-msgstr ""
+msgstr "Rutas para líneas de órdenes de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move_sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Línea de venta"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group_sale_id
@@ -363,12 +376,13 @@ msgstr "Establecer fecha de entrega en pedidos"
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Enviar todos los productos de inmediato"
 
 #. module: sale_stock
 #: selection:res.config.settings,default_picking_policy:0
 msgid "Ship products as soon as available, with back orders"
 msgstr ""
+"Enviar los productos tan pronto estén disponibles, con pedidos pendientes"
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -403,6 +417,11 @@ msgid ""
 "available in sales orders, routes must have 'Sales Order Line' option "
 "checked in their setup form."
 msgstr ""
+"Esto permite aplicar una ruta especial a líneas de órdenes de venta (por "
+"ejemplo: triangulación de envíos o fabricación a medida) en el caso de que "
+"se dé una situación inusual con uno o varios pedidos. Las rutas, para que "
+"estén disponibles en las órdenes de venta, deben tener marcada la opción "
+"\"Línea de orden de venta\" en su formulario de configuración."
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:298
@@ -461,6 +480,8 @@ msgstr ""
 msgid ""
 "You plan to sell %s %s but you only have %s %s available in %s warehouse."
 msgstr ""
+"Planea vender %s %s, pero solo tiene %s %s disponible(s) en el almacén de "
+"%s."
 
 #. module: sale_stock
 #: model:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

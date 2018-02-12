@@ -11,7 +11,11 @@ var Widget = require('web.Widget');
 
 var createBusService = mailTestUtils.createBusService;
 
-QUnit.module('mail', {}, function () {
+QUnit.module('mail', {
+    beforeEach: function () {
+        this.services = [ChatManager, createBusService()];
+    },
+}, function () {
 
     QUnit.module('chat_window');
 
@@ -39,6 +43,7 @@ QUnit.module('mail', {}, function () {
         }];
         var parent = createParent({
             data: {},
+            services: this.services,
         });
 
         var chatWindow = new ChatWindow(parent, 1, "user", false, messages, {});
@@ -67,6 +72,7 @@ QUnit.module('mail', {}, function () {
         }
         var parent = createParent({
             data: {},
+            services: this.services,
         });
 
         var $dom = $('#qunit-fixture');
@@ -93,8 +99,6 @@ QUnit.module('mail', {}, function () {
     QUnit.test('emoji popover should open correctly in chat windows', function (assert) {
         assert.expect(1);
 
-        var BusService = createBusService();
-
         function createParent(params) {
             var widget = new Widget();
 
@@ -107,7 +111,7 @@ QUnit.module('mail', {}, function () {
         }
         var parent = createParent({
             data: {},
-            services: [ChatManager, BusService],
+            services: this.services,
         });
 
         var $dom = $('#qunit-fixture');

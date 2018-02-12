@@ -3,24 +3,25 @@
 # * website_forum
 # 
 # Translators:
-# Jeffery CHEN <jeffery9@gmail.com>, 2016
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2016
 # waveyeung <waveyeung@qq.com>, 2016
 # liAnGjiA <liangjia@qq.com>, 2016
 # Talway <9010446@qq.com>, 2016
-# fausthuang <faust_huang@hotmail.com>, 2016
+# fausthuang, 2016
 # 钟小华 <mackz@sina.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Xu Lei <xulei8@qq.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2016
 # 苏州远鼎 <tiexinliu@126.com>, 2016
 # Lijie Ma <tony@malijie.cc>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-24 09:00+0000\n"
 "PO-Revision-Date: 2017-10-24 09:00+0000\n"
-"Last-Translator: Lijie Ma <tony@malijie.cc>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,6 +70,32 @@ msgid ""
 "    </table>\n"
 "</div>"
 msgstr ""
+"<div summary=\"o_mail_notification\" style=\"padding:0px; width:600px; "
+"margin:0 auto; background: #FFFFFF repeat top /100%;color:#777777\"><table "
+"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px; border-"
+"collapse:collapse; background:inherit; color:inherit\"><tbody><tr><td "
+"valign=\"center\" width=\"200\" style=\"padding:0px 10px 5px 5px; font-size:"
+" 12px\"><img src=\"/logo.png\" style=\"padding: 0px; margin: 0px; height: "
+"auto; width: 80px;\" "
+"alt=\"${user.company_id.name}\"></td></tr></tbody></table></div><div "
+"summary=\"o_mail_notification\" style=\"padding:0px; width:600px; margin:0 "
+"auto; background: #FFFFFF repeat top /100%;color:#777777\"><table "
+"cellspacing=\"0\" cellpadding=\"0\" style=\"vertical-align:top; padding:0px;"
+" border-collapse:collapse; background:inherit; "
+"color:inherit\"><tbody><tr><td valign=\"top\" style=\"width:600px; "
+"padding:0px 10px 5px 5px;\"><div><hr width=\"100%\" style=\"background-"
+"color:rgb(204,204,204);border:medium none;clear:both;display:block;font-"
+"size:0px;min-height:1px;line-height:0;margin:0px "
+"auto;padding:0\"></div></td></tr></tbody></table></div><div "
+"style=\"padding:0px; width:600px; max-width:600px; margin:0 auto; "
+"background: #FFFFFF repeat top /100%; color:#777777\"><table "
+"cellspacing=\"0\" cellpadding=\"0\" style=\"width:600px ;text-align:justify;"
+" margin:0 auto; border-collapse:collapse; background:inherit; "
+"color:inherit\"><tbody><tr><td style=\"padding:0px 10px 5px 5px;font-size: "
+"14px;\"><p></p><p></p><p></p><a style=\"margin-left: 15px; padding:5px 10px;"
+" border-radius: 3px; background-color:#875A7B; text-align:center; text-"
+"decoration:none; color:#F7FBFD;\" "
+"href=\"${ctx.get('token_url')}\"></a><p></p></td></tr></tbody></table></div>"
 
 #. module: website_forum
 #. openerp-web
@@ -87,7 +114,7 @@ msgstr "${object.company_id.name} 论坛验证"
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.tag
 msgid "&amp;nbsp;&amp;nbsp;<i class=\"fa fa-times\"/>&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-times\"/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.header
@@ -175,7 +202,7 @@ msgstr "<b>回复者不应增加或延伸问题</b>. 除非可以编辑或增加
 msgid ""
 "<b>Answers should not add or expand questions</b>. Instead either edit the "
 "question or add a question comment."
-msgstr ""
+msgstr "<b/>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -230,7 +257,7 @@ msgid ""
 "    description text in your answer, even if it's just a\n"
 "    copy/paste. Links are welcome, but should be complementary to\n"
 "    answer, referring sources or additional reading."
-msgstr ""
+msgstr "<b/>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -239,7 +266,7 @@ msgid ""
 " solution description text in your answer, even if it's just a copy/paste. "
 "Links are welcome, but should be complementary to answer, referring sources "
 "or additional reading."
-msgstr ""
+msgstr "<b/>"
 
 #. module: website_forum
 #: model:forum.forum,faq:website_forum.forum_help
@@ -2535,7 +2562,7 @@ msgstr "这个帖子已经被结束了"
 msgid ""
 "This post is currently awaiting moderation and not yet published... Do you "
 "want <i>Accept</i> or <i>Reject</i> this post ?"
-msgstr ""
+msgstr "<i/><i/>"
 
 #. module: website_forum
 #: model:ir.ui.view,arch_db:website_forum.private_profile
@@ -2792,7 +2819,7 @@ msgstr "为什么其他人能编辑我的问题/回答？"
 msgid ""
 "You already have one pending post.<br/>\n"
 "            Please wait for a moderator to validate your previous post before continuing."
-msgstr ""
+msgstr "<br/>"
 
 #. module: website_forum
 #: code:addons/website_forum/models/forum.py:138

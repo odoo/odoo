@@ -75,6 +75,13 @@ class AccountAnalyticLine(models.Model):
 
     @api.multi
     def _timesheet_compute_theorical_revenue(self):
+        for timesheet in self:
+            values = timesheet._timesheet_compute_theorical_revenue_values()
+            timesheet.write(values)
+        return True
+
+    @api.multi
+    def _timesheet_compute_theorical_revenue_values(self):
         """ This method set the theorical revenue on the current timesheet lines.
 
             If invoice on delivered quantity:
@@ -87,53 +94,55 @@ class AccountAnalyticLine(models.Model):
             else:
                 0
         """
-        for timesheet in self:
-            # find the timesheet UoM
-            timesheet_uom = timesheet.product_uom_id
-            if not timesheet_uom:  # fallback on default company timesheet UoM
-                timesheet_uom = self.env.user.company_id.project_time_mode_id
+        self.ensure_one()
+        timesheet = self
 
-            # default values
-            unit_amount = timesheet.unit_amount
-            so_line = timesheet.so_line
-            values = {
-                'timesheet_revenue': 0.0,
-                'timesheet_invoice_type': 'non_billable_project' if not timesheet.task_id else 'non_billable',
-            }
-            # set the revenue and billable type according to the product and the SO line
-            if timesheet.task_id and so_line.product_id.type == 'service':
-                # find the analytic account to convert revenue into its currency
-                analytic_account = timesheet.account_id
-                # convert the unit of mesure into hours
-                sale_price_hour = so_line.product_uom._compute_price(so_line.price_unit, timesheet_uom)
-                sale_price = so_line.currency_id.compute(sale_price_hour, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
+        # find the timesheet UoM
+        timesheet_uom = timesheet.product_uom_id
+        if not timesheet_uom:  # fallback on default company timesheet UoM
+            timesheet_uom = self.env.user.company_id.project_time_mode_id
 
-                # calculate the revenue on the timesheet
-                if so_line.product_id.invoice_policy == 'delivery':
-                    values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
-                    values['timesheet_invoice_type'] = 'billable_time' if so_line.product_id.service_type == 'timesheet' else 'billable_fixed'
-                elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type == 'timesheet':
-                    quantity_hour = unit_amount
-                    if so_line.product_uom.category_id == timesheet_uom.category_id:
-                        quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
-                    # compute the total revenue the SO since we are in fixed price
-                    total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-(so_line.discount/100)))
-                    # compute the total revenue already existing (without the current timesheet line)
-                    domain = [('so_line', '=', so_line.id)]
-                    if timesheet.ids:
-                        domain += [('id', 'not in', timesheet.ids)]
-                    analytic_lines = timesheet.search(domain)
-                    total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
-                    # compute (new) revenue of current timesheet line
-                    values['timesheet_revenue'] = min(
-                        analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
-                        total_revenue_so - total_revenue_invoiced
-                    )
-                    values['timesheet_invoice_type'] = 'billable_fixed'
-                    # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
-                    if so_line.invoice_status == 'invoiced':
-                        values['timesheet_invoice_id'] = so_line.invoice_lines[0].invoice_id.id
-                elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type != 'timesheet':
-                    values['timesheet_invoice_type'] = 'billable_fixed'
-            timesheet.write(values)
-        return True
+        # default values
+        unit_amount = timesheet.unit_amount
+        so_line = timesheet.so_line
+        values = {
+            'timesheet_revenue': 0.0,
+            'timesheet_invoice_type': 'non_billable_project' if not timesheet.task_id else 'non_billable',
+        }
+        # set the revenue and billable type according to the product and the SO line
+        if timesheet.task_id and so_line.product_id.type == 'service':
+            # find the analytic account to convert revenue into its currency
+            analytic_account = timesheet.account_id
+            # convert the unit of mesure into hours
+            sale_price_hour = so_line.product_uom._compute_price(so_line.price_unit, timesheet_uom)
+            sale_price = so_line.currency_id.compute(sale_price_hour, analytic_account.currency_id)  # amount from SO should be convert into analytic account currency
+
+            # calculate the revenue on the timesheet
+            if so_line.product_id.invoice_policy == 'delivery':
+                values['timesheet_revenue'] = analytic_account.currency_id.round(unit_amount * sale_price * (1-(so_line.discount/100)))
+                values['timesheet_invoice_type'] = 'billable_time' if so_line.product_id.service_type == 'timesheet' else 'billable_fixed'
+            elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type == 'timesheet':
+                quantity_hour = unit_amount
+                if so_line.product_uom.category_id == timesheet_uom.category_id:
+                    quantity_hour = so_line.product_uom._compute_quantity(so_line.product_uom_qty, timesheet_uom)
+                # compute the total revenue the SO since we are in fixed price
+                total_revenue_so = analytic_account.currency_id.round(quantity_hour * sale_price * (1-(so_line.discount/100)))
+                # compute the total revenue already existing (without the current timesheet line)
+                domain = [('so_line', '=', so_line.id)]
+                if timesheet.ids:
+                    domain += [('id', 'not in', timesheet.ids)]
+                analytic_lines = timesheet.search(domain)
+                total_revenue_invoiced = sum(analytic_lines.mapped('timesheet_revenue'))
+                # compute (new) revenue of current timesheet line
+                values['timesheet_revenue'] = min(
+                    analytic_account.currency_id.round(unit_amount * so_line.currency_id.compute(so_line.price_unit, analytic_account.currency_id) * (1-so_line.discount)),
+                    total_revenue_so - total_revenue_invoiced
+                )
+                values['timesheet_invoice_type'] = 'billable_fixed'
+                # if the so line is already invoiced, and the delivered qty is still smaller than the ordered, then link the timesheet to the invoice
+                if so_line.invoice_status == 'invoiced':
+                    values['timesheet_invoice_id'] = so_line.invoice_lines[0].invoice_id.id
+            elif so_line.product_id.invoice_policy == 'order' and so_line.product_id.service_type != 'timesheet':
+                values['timesheet_invoice_type'] = 'billable_fixed'
+
+        return values
