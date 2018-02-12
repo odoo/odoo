@@ -33,6 +33,7 @@ var PivotView = AbstractView.extend({
      * @param {Object} params
      */
     init: function (viewInfo, params) {
+        var self = this;
         this._super.apply(this, arguments);
 
         var activeMeasures = [];
@@ -70,7 +71,7 @@ var PivotView = AbstractView.extend({
             // probably not work (their aggregate will always be 0).
 
             if (field.attrs.type === 'measure' && !(field.attrs.name in measures)) {
-                measures[field.attrs.name] = fields[field.attrs.name];
+                measures[field.attrs.name] = self.fields[field.attrs.name];
             }
             if (field.attrs.type === 'measure' || 'operator' in field.attrs) {
                 activeMeasures.push(name);

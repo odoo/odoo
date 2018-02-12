@@ -138,8 +138,7 @@ QUnit.module('Views', {
                 '</pivot>',
         });
 
-        // this is important for export functionality.
-        assert.equal(pivot.measures.computed_field.name,'computed_field', "measures contains the field 'computed_field'");
+        assert.ok(pivot.measures.computed_field, "measures contains the field 'computed_field'");
         pivot.destroy();
     });
 
