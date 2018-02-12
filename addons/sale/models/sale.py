@@ -647,8 +647,8 @@ class SaleOrder(models.Model):
         return self.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(SaleOrder, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        groups = super(SaleOrder, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):

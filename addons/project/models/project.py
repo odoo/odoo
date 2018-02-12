@@ -377,8 +377,8 @@ class Project(models.Model):
         return super(Project, self).message_unsubscribe(partner_ids=partner_ids, channel_ids=channel_ids)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
-        groups = super(Project, self)._notification_recipients(message, groups)
+    def _notify_get_groups(self, message, groups):
+        groups = super(Project, self)._notify_get_groups(message, groups)
 
         for group_name, group_method, group_data in groups:
             if group_name in ['customer', 'portal']:
@@ -873,14 +873,14 @@ class Task(models.Model):
         return super(Task, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ Handle project users and managers recipients that can convert assign
         tasks and create new one directly from notification emails. """
-        groups = super(Task, self)._notification_recipients(message, groups)
+        groups = super(Task, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
         if not self.user_id:
-            take_action = self._notification_link_helper('assign')
+            take_action = self._notify_get_action_link('assign')
             project_actions = [{'url': take_action, 'title': _('I take it')}]
         else:
             project_actions = []

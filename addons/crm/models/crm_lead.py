@@ -1085,18 +1085,18 @@ class Lead(models.Model):
         return super(Lead, self)._track_subtype(init_values)
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notification_recipients(message, groups)
+        groups = super(Lead, self)._notify_get_groups(message, groups)
 
         self.ensure_one()
         if self.type == 'lead':
-            convert_action = self._notification_link_helper('controller', controller='/lead/convert')
+            convert_action = self._notify_get_action_link('controller', controller='/lead/convert')
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            won_action = self._notification_link_helper('controller', controller='/lead/case_mark_won')
-            lost_action = self._notification_link_helper('controller', controller='/lead/case_mark_lost')
+            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won')
+            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost')
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]

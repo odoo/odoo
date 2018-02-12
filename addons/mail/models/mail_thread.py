@@ -604,18 +604,18 @@ class MailThread(models.AbstractModel):
     # ------------------------------------------------------
 
     @api.model
-    def _generate_notification_token(self, base_link, params):
+    def _notify_encode_link(self, base_link, params):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         token = '%s?%s' % (base_link, ' '.join('%s=%s' % (key, params[key]) for key in sorted(params)))
         hm = hmac.new(secret.encode('utf-8'), token.encode('utf-8'), hashlib.sha1).hexdigest()
         return hm
 
     @api.multi
-    def _notification_link_helper(self, link_type, **kwargs):
+    def _notify_get_action_link(self, link_type, **kwargs):
         local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
         if kwargs.get('message_id'):
             base_params = {
-                'message_id': kwargs['message_id']
+                'message_id': kwargs['message_id'],
             }
         else:
             base_params = {
@@ -639,14 +639,14 @@ class MailThread(models.AbstractModel):
             return ''
 
         if link_type not in ['view']:
-            token = self._generate_notification_token(base_link, params)
+            token = self._notify_encode_link(base_link, params)
             params['token'] = token
 
         link = '%s?%s' % (base_link, url_encode(params))
         return link
 
     @api.multi
-    def _notification_recipients(self, message, groups):
+    def _notify_get_groups(self, message, groups):
         """ Return groups used to classify recipients of a notification email.
         Groups is a list of tuple containing of form (group_name, group_func,
         group_data) where
@@ -670,7 +670,7 @@ class MailThread(models.AbstractModel):
             Each action is a dict containing url and title of the button.
 
         Groups has a default value that you can find in mail_thread
-        _message_notification_recipients method.
+        _notify_classify_recipients method.
         """
         return groups
 
@@ -681,9 +681,9 @@ class MailThread(models.AbstractModel):
         result = {}
 
         if self._context.get('auto_delete', False):
-            access_link = self._notification_link_helper('view')
+            access_link = self._notify_get_action_link('view')
         else:
-            access_link = self._notification_link_helper('view', message_id=message.id)
+            access_link = self._notify_get_action_link('view', message_id=message.id)
 
         if message.model:
             model_name = self.env['ir.model']._get(message.model).display_name
@@ -701,7 +701,7 @@ class MailThread(models.AbstractModel):
             })
         ]
 
-        groups = self._notification_recipients(message, default_groups)
+        groups = self._notify_get_groups(message, default_groups)
 
         for group_name, group_func, group_data in groups:
             group_data.setdefault('has_button_access', True)
