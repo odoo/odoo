@@ -177,7 +177,7 @@ class PurchaseRequisition(models.Model):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
             raise UserError(_('You can only delete draft requisitions.'))
         # Draft requisitions could have some requisition lines.
-        self.mapped('requisition_line_ids').unlink()
+        self.mapped('line_ids').unlink()
         return super(PurchaseRequisition, self).unlink()
 
 class SupplierInfo(models.Model):
