@@ -68,12 +68,12 @@
 <div>
 <div t-if="has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
     <div itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/ViewAction">
-        <link itemprop="target" href="${ctx['button_access']['url']}"/>
-        <link itemprop="url" href="${ctx['button_access']['url']}"/>
-        <meta itemprop="name" content="View ${ctx['model_name']}"/>
+        <link itemprop="target" t-att-href="button_access['url']"/>
+        <link itemprop="url" t-att-href="button_access['url']"/>
+        <meta itemprop="name" t-att-content="button_access['title']"/>
     </div>
 </div>
-<div t-if="has_button_access or len(actions) &gt; 0 or is_notification"
+<div t-if="has_button_access or len(actions) &gt; 0 or not is_discussion"
         summary="o_mail_notification" style="padding: 0px; width:600px;">
     <table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
     <tbody><tr>
@@ -116,9 +116,9 @@
 <p style="color: #555555;">
     Sent by
     <a t-if="website_url" t-att-href="website_url" style="text-decoration:none; color: #875A7B;">
-        <span t-esc="company_name"/>
+        <span t-esc="company.name"/>
     </a>
-    <span t-if="not website_url" t-esc="company_name"/>
+    <span t-if="not website_url" t-esc="company.name"/>
     using
     <a target="_blank" href="https://www.odoo.com" style="text-decoration:none; color: #875A7B;">Odoo</a>.
 </p>

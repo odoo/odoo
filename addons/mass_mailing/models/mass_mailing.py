@@ -742,7 +742,7 @@ class MassMailing(models.Model):
                 raise UserError(_('Please select recipients.'))
 
             # Convert links in absolute URLs before the application of the shortener
-            mailing.body_html = self.env['mail.template']._replace_local_links(mailing.body_html)
+            mailing.body_html = self.env['mail.thread']._replace_local_links(mailing.body_html)
 
             composer_values = {
                 'author_id': author_id,
