@@ -813,9 +813,12 @@ registry.background = SnippetOption.extend({
         // Put fake image in the DOM, edit it and use it as background-image
         var $image = $('<img/>', {class: 'hidden', src: value}).appendTo(this.$target);
 
+        var $editable = this.$target.closest('.o_editable');
         var _editor = new weWidgets.MediaDialog(this, {
             onlyImages: true,
             firstFilters: ['background'],
+            res_model: $editable.data('oe-model'),
+            res_id: $editable.data('oe-id'),            
         }, null, $image[0]).open();
 
         _editor.on('save', this, function () {

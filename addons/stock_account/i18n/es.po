@@ -3,7 +3,7 @@
 # * stock_account
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
 # Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
 # José Vicente <txusev@gmail.com>, 2016
@@ -16,16 +16,17 @@
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 # Glen Sojo <inactive+glen.sojo@transifex.com>, 2017
-# Gustavo Valverde <g.valverde02@gmail.com>, 2017
-# Antonio Trueba <atgayol@gmail.com>, 2017
+# Gustavo Valverde, 2017
+# Antonio Trueba, 2017
 # Raquel Iciarte <ric@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-11-30 13:11+0000\n"
 "PO-Revision-Date: 2017-11-30 13:11+0000\n"
-"Last-Translator: Raquel Iciarte <ric@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgstr "Asiento Contable"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_account_move_ids
 msgid "Account Move"
-msgstr ""
+msgstr "Movimiento de cuenta"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -65,17 +66,19 @@ msgid ""
 "Affect landed costs on receipt operations and split them among products to "
 "update their cost price."
 msgstr ""
+"Asuma los precios de entrega en operaciones de recibo y divídalos entre "
+"productos para actualizar sus precios de coste."
 
 #. module: stock_account
 #: selection:product.category,property_valuation:0
 msgid "Automated"
-msgstr ""
+msgstr "Automatizado"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "Average Cost (AVCO)"
-msgstr ""
+msgstr "Coste promedio (AVCO)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_change_standard_price
@@ -124,6 +127,8 @@ msgid ""
 "Changing your cost method is an important change that will impact your "
 "inventory valuation. Are you sure you want to make that change?"
 msgstr ""
+"Cambiar el método de coste es un cambio importante que repercutirá en su "
+"valoración de inventario. ¿Seguro que desea efectuar tal cambio?"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_inventory_accounting_date
@@ -159,7 +164,7 @@ msgstr "Coste"
 #: model:ir.model.fields,field_description:stock_account.field_product_product_cost_method
 #: model:ir.model.fields,field_description:stock_account.field_product_template_cost_method
 msgid "Cost Method"
-msgstr ""
+msgstr "Método de coste"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -181,7 +186,7 @@ msgstr "Cuenta en Contrapartida"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_counterpart_account_id_required
 msgid "Counter-Part Account Required"
-msgstr ""
+msgstr "Cuenta de contrapartida requerida"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price_create_uid
@@ -202,7 +207,7 @@ msgstr "Nombre a mostrar"
 #: selection:product.category,property_cost_method:0
 #: selection:product.template,property_cost_method:0
 msgid "First In First Out (FIFO)"
-msgstr ""
+msgstr "Primeras entradas, primeras salidas (FIFO)"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory_accounting_date
@@ -226,7 +231,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.actions.act_window,help:stock_account.product_valuation_action
 msgid "If there are products, you will see its name and valuation."
-msgstr ""
+msgstr "Si hay productos, verá su nombre y valoración."
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -296,6 +301,8 @@ msgid ""
 "Manual: The accounting entries to value the inventory are not posted automatically.\n"
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company."
 msgstr ""
+"Manual: Los registros contables de valoración del inventario no se publican automáticamente.\n"
+" Automatizado: Se crea automáticamente un registro contable para evaluar el inventario cuando un producto entra o sale de la empresa."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_valuation
@@ -304,6 +311,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
+"Manual: Los registros contables de valoración del inventario no se publican automáticamente.\n"
+" Automatizado: Se crea automáticamente un registro contable para evaluar el inventario cuando un producto entra o sale de la empresa.\n"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
@@ -360,7 +369,7 @@ msgstr "Plantilla de producto"
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.product_valuation_action
 msgid "Product Valuation"
-msgstr ""
+msgstr "Validación de producto"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
@@ -370,7 +379,7 @@ msgstr "Cant."
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
 msgid "Quantity on Hand"
-msgstr ""
+msgstr "Cantidad disponible"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
@@ -385,7 +394,7 @@ msgstr "Cantidad restante"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_remaining_value
 msgid "Remaining Value"
-msgstr ""
+msgstr "Valor restante"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
@@ -395,7 +404,7 @@ msgstr "Albarán de devolución"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_variant_easy_edit_view_inherit
 msgid "Set standard cost"
-msgstr ""
+msgstr "Fijar coste estándar"
 
 #. module: stock_account
 #: selection:product.category,property_cost_method:0
@@ -408,7 +417,7 @@ msgstr "Precio estándar"
 #: code:addons/stock_account/models/product.py:150
 #, python-format
 msgid "Standard Price changed  - %s"
-msgstr ""
+msgstr "Precio estándar cambiado: %s"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product_property_cost_method
@@ -418,6 +427,9 @@ msgid ""
 "        Average Cost (AVCO): The products are valued at weighted average cost.\n"
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first."
 msgstr ""
+"Precio estándar: Los productos se valoran según su coste estándar definido en el producto.\n"
+" Coste promedio (AVCO): Los productos se valoran según su coste promedio ponderado.\n"
+" Primeras entradas, primeras salidas (FIFO): Los productos se valoran dando por hecho que los primeros en entrar en la empresa son también los primeros en salir."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category_property_cost_method
@@ -427,6 +439,9 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"Precio estándar: Los productos se valoran según su coste estándar definido en el producto.\n"
+" Coste promedio (AVCO): Los productos se valoran según su coste promedio ponderado.\n"
+" Primeras entradas, primeras salidas (FIFO): Los productos se valoran dando por hecho que los primeros en entrar en la empresa son también los primeros en salir.\n"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category_property_stock_account_input_categ_id
@@ -485,7 +500,7 @@ msgstr "Cuenta de valoracion de existencias (salida)"
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.action_stock_account_valuation_report
 msgid "Stock Valuation Report"
-msgstr ""
+msgstr "Informe de valoración de existencias"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -499,6 +514,8 @@ msgid ""
 "The cost of %s is currently equal to 0. Change the cost or the configuration"
 " of your product to avoid an incorrect valuation."
 msgstr ""
+"El coste de %s es actualmente igual a 0. Cambie el coste o la configuración "
+"de su producto para evitar una valoración incorrecta."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:309
@@ -507,6 +524,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company. "
 msgstr ""
+"Las líneas de movimiento no se encuentran en un estado consistente, pues "
+"algunas están entrando y otras están abandonado la empresa."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:320
@@ -516,6 +535,9 @@ msgid ""
 "intercompany in a single step while they should go through the intercompany "
 "transit location."
 msgstr ""
+"Las líneas de movimiento no se encuentran en estados consistentes, pues "
+"están llevando a cabo una operación interempresarial en un solo paso "
+"mientras deberían pasar por la ubicación de tránsito interempresarial."
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock.py:318
@@ -524,12 +546,14 @@ msgid ""
 "The move lines are not in a consistent states: they do not share the same "
 "origin or destination company."
 msgstr ""
+"Las líneas de movimiento no se encuentran en estados consistentes, puesto "
+"que no comparten la misma empresa de origen o de destino."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move_to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line_to_refund
 msgid "To Refund (update SO/PO)"
-msgstr ""
+msgstr "A reembolsar (actualizar SO/PO)"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.product_valuation_tree
@@ -543,6 +567,8 @@ msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale"
 " Order/Purchase Order"
 msgstr ""
+"Originar una disminución de la cantidad entregada/recibida en la orden de "
+"venta/compra asociada"
 
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_move_tree_valuation
@@ -552,7 +578,7 @@ msgstr "Unidad de medida"
 #. module: stock_account
 #: model:ir.ui.view,arch_db:stock_account.view_template_property_form
 msgid "Update Cost"
-msgstr ""
+msgstr "Actualizar coste"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location_valuation_in_account_id

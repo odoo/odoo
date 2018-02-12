@@ -10,8 +10,9 @@ var mixins = require('web.mixins');
  * @class Bus
  */
 return Class.extend(mixins.EventDispatcherMixin, {
-    init: function () {
-        mixins.EventDispatcherMixin.init.call(this, arguments);
+    init: function (parent) {
+        mixins.EventDispatcherMixin.init.call(this);
+        this.setParent(parent);
     },
 });
 

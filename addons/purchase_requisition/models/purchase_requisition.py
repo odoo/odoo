@@ -83,16 +83,6 @@ class PurchaseRequisition(models.Model):
     def _set_state(self):
         self.state_blanket_order = self.state
 
-    @api.model
-    def create(self, vals):
-        rec = super(PurchaseRequisition, self).create(vals)
-        if rec.name == 'New':
-            if rec.is_quantity_copy != 'none':
-                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
-            else:
-                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
-        return rec
-
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
         requisitions = self.env['purchase.requisition'].search([
@@ -102,7 +92,7 @@ class PurchaseRequisition(models.Model):
         ])
         if any(requisitions):
             title = _("Warning for %s") % self.vendor_id.name
-            message = _("%s has already an ongoing blanket order") % self.vendor_id.name
+            message = _("There is already an open blanket order for this supplier. We suggest you to use to complete this open blanket order instead of creating a new one.")
             warning = {
                 'title': title,
                 'message': message
@@ -128,26 +118,33 @@ class PurchaseRequisition(models.Model):
 
     @api.multi
     def action_in_progress(self):
+        self.ensure_one()
         if not all(obj.line_ids for obj in self):
             raise UserError(_('You cannot confirm agreement because there is no product line.'))
-        for requisition in self:
-            if requisition.type_id.quantity_copy == 'none' and requisition.vendor_id:
-                for requisition_line in requisition.line_ids:
-                    if requisition_line.price_unit <= 0.0:
-                        raise UserError(_('You cannot confirm the blanket order without price.'))
-                    if requisition_line.product_qty <= 0.0:
-                        raise UserError(_('You cannot confirm the blanket order without quantity.'))
-                    requisition_line.create_supplier_info()
-                self.write({'state': 'ongoing'})
+        if self.type_id.quantity_copy == 'none' and self.vendor_id:
+            for requisition_line in self.line_ids:
+                if requisition_line.price_unit <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without price.'))
+                if requisition_line.product_qty <= 0.0:
+                    raise UserError(_('You cannot confirm the blanket order without quantity.'))
+                requisition_line.create_supplier_info()
+            self.write({'state': 'ongoing'})
+        else:
+            self.write({'state': 'in_progress'})
+        # Set the sequence number regarding the requisition type
+        if self.name == 'New':
+            if self.is_quantity_copy != 'none':
+                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
             else:
-                self.write({'state': 'in_progress'})
+                self.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
     @api.multi
     def action_open(self):
         self.write({'state': 'open'})
 
-    @api.multi
     def action_draft(self):
+        self.ensure_one()
+        self.name = 'New'
         self.write({'state': 'draft'})
 
     @api.multi
@@ -180,7 +177,7 @@ class PurchaseRequisition(models.Model):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
             raise UserError(_('You can only delete draft requisitions.'))
         # Draft requisitions could have some requisition lines.
-        self.mapped('requisition_line_ids').unlink()
+        self.mapped('line_ids').unlink()
         return super(PurchaseRequisition, self).unlink()
 
 class SupplierInfo(models.Model):
@@ -218,12 +215,16 @@ class PurchaseRequisitionLine(models.Model):
             ])
             if not [s.requisition_id for s in supplier_infos]:
                 res.create_supplier_info()
+            if vals['price_unit'] <= 0.0:
+                raise UserError(_('You cannot confirm the blanket order without price.'))
         return res
 
     @api.multi
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
+            if vals['price_unit'] <= 0.0:
+                raise UserError(_('You cannot confirm the blanket order without price.'))
             # If the price is updated, we have to update the related SupplierInfo
             self.supplier_info_ids.write({'price': vals['price_unit']})
         return res

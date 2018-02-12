@@ -71,15 +71,7 @@ class MailMail(models.Model):
                     new_href = href.replace(url, url + '/m/' + str(self.statistics_ids[0].id))
                     body = body.replace(href, new_href)
 
-        # prepend <base> tag for images using absolute urls
-        domain = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
-        base = "<base href='%s'>" % domain
-        body = tools.append_content_to_html(base, body, plaintext=False, container_tag='div')
-        # resolve relative image url to absolute for outlook.com
-        def _sub_relative2absolute(match):
-            return match.group(1) + werkzeug.urls.url_join(domain, match.group(2))
-        body = re.sub('(<img(?=\s)[^>]*\ssrc=")(/[^/][^"]+)', _sub_relative2absolute, body)
-        body = re.sub(r'(<[^>]+\bstyle="[^"]+\burl\(\'?)(/[^/\'][^\'")]+)', _sub_relative2absolute, body)
+        body = self.env['mail.thread']._replace_local_links(body)
 
         # generate tracking URL
         if self.statistics_ids:

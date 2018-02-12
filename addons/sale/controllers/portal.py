@@ -57,7 +57,7 @@ class CustomerPortal(CustomerPortal):
         if access_token:
             values['no_breadcrumbs'] = True
             values['access_token'] = access_token
-        values['portal_confirmation'] = request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')
+        values['portal_confirmation'] = order.get_portal_confirmation_action()
 
         if kwargs.get('error'):
             values['error'] = kwargs['error']

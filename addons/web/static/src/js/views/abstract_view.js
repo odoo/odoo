@@ -181,21 +181,23 @@ var AbstractView = Class.extend({
      */
     getController: function (parent) {
         var self = this;
+        // check if a model already exists, as if not, one will be created and
+        // we'll have to set the controller as its parent
+        var alreadyHasModel = !!this.model;
         return $.when(this._loadData(parent), ajax.loadLibs(this)).then(function () {
-            var model = self.getModel();
-            var state = model.get(arguments[0]);
+            var state = self.model.get(arguments[0]);
             var renderer = self.getRenderer(parent, state);
             var Controller = self.Controller || self.config.Controller;
             var controllerParams = _.extend({
                 initialState: state,
             }, self.controllerParams);
-            var controller = new Controller(parent, model, renderer, controllerParams);
+            var controller = new Controller(parent, self.model, renderer, controllerParams);
             renderer.setParent(controller);
 
-            if (!self.model) {
+            if (!alreadyHasModel) {
                 // if we have a model, it already has a parent. Otherwise, we
                 // set the controller, so the rpcs from the model actually work
-                model.setParent(controller);
+                self.model.setParent(controller);
             }
             return controller;
         });

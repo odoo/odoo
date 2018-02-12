@@ -11,7 +11,7 @@ QUnit.module('mail', {}, function () {
 
 QUnit.module('Discuss client action in mobile', {
     beforeEach: function () {
-        this.BusService = createBusService();
+        this.services = [ChatManager, createBusService()];
         this.data = {
             'mail.message': {
                 fields: {},
@@ -33,17 +33,17 @@ QUnit.test('mobile basic rendering', function (assert) {
         id: 1,
         context: {},
         params: {},
+        data: this.data,
+        services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'message_fetch') {
                 return $.when([]);
             }
             return this._super.apply(this, arguments);
         },
-        services: [ChatManager, this.BusService],
     });
 
-    var chatReady = discuss.call('chat_manager', 'isReady');
-    chatReady.then(function () {
+    discuss.call('chat_manager', 'isReady').then(function () {
         // test basic rendering in mobile
         assert.strictEqual(discuss.$('.o_mail_chat_mobile_control_panel').length, 1,
             "should have rendered a control panel");

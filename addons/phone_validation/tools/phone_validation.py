@@ -41,7 +41,7 @@ try:
             if raise_exception:
                 raise
             else:
-                _logger.warning(_('Unable to format %s:\n%s') % number, e)
+                _logger.warning(_('Unable to format %s:\n%s'), number, e)
                 return number
         if always_international or phone_nbr.country_code != country_phone_code:
             phone_fmt = phonenumbers.PhoneNumberFormat.INTERNATIONAL

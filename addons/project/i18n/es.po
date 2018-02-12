@@ -3,9 +3,9 @@
 # * project
 # 
 # Translators:
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # José Vicente <txusev@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Antonio Trueba, 2016
 # Roberto Lizana <robertolizana@trey.es>, 2016
 # Alejandro Die Sanchis <marketing@domatix.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
@@ -37,13 +37,14 @@
 # Miquel Torner <miq@odoo.com>, 2017
 # Sergio Flores <vitavitae1@gmail.com>, 2017
 # Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-12-13 14:36+0000\n"
 "PO-Revision-Date: 2017-12-13 14:36+0000\n"
-"Last-Translator: Gustavo Orozco H. <gustavo.orozco.h@app-247.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -226,6 +227,79 @@ msgid ""
 "    </table>\n"
 "</div>\n"
 msgstr ""
+"\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+" % set access_token = object.rating_get_access_token()\n"
+" <table style=\"width:600px;margin:5px auto;\">\n"
+" <tbody>\n"
+" <tr><td>\n"
+" <a href=\"/\"><img src=\"/web/binary/company_logo\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"</td> <td style=\"text-align:right;vertical-align:middle;\">\n"
+" Encuesta de satisfacción\n"
+"</td></tr> \n"
+"</tbody> \n"
+"</table> <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+" <tbody>\n"
+" <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+" \n"
+" <p>Hola</p>:\n"
+" <p>Dedique unos instantes a valorar nuestros servicios en relación a la tarea \"<strong>${object.name}</strong>\"\n"
+" asignada a <strong>${object.rating_get_rated_partner_id().name}</strong>.</p>\n"
+" <p>Agradecemos su participación. Sus observaciones nos ayudan a mejorar en todo momento.</p>\n"
+"</td></tr><tr><td style=\"padding:10px 20px\"> <table style=\"width:100%;border-top:1px solid #e1e1e1;\" summary=\"o_mail_notification\">\n"
+" <tr>\n"
+" <td style=\"text-align:center;\">\n"
+" <h2 style=\"font-weight:300;font-size:18px;\">\n"
+" \n"
+" \n"
+" Háganos saber qué opinión le ha merecido nuestro servicio:\n"
+"</h2> \n"
+" <div style=\"text-color: #888888\">(haga clic en cualquiera de los emoticonos)</div>\n"
+"</td></tr><tr> <td style=\"padding:10px 10px;\">\n"
+" <table style=\"width:100%;text-align:center;\">\n"
+" <tr>\n"
+" <td>\n"
+" <a href=\"/rating/${access_token}/10\">\n"
+" <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+" \n"
+"</a> \n"
+"</td> <td>\n"
+" <a href=\"/rating/${access_token}/5\">\n"
+" <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+" \n"
+"</a> \n"
+"</td> <td>\n"
+" <a href=\"/rating/${access_token}/1\">\n"
+" <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+" \n"
+"</a> \n"
+"</td> \n"
+"</tr> \n"
+"</table> \n"
+"</td> \n"
+"</tr> \n"
+"</table> \n"
+"</td></tr> \n"
+" \n"
+"<tr><td style=\"padding:15px 20px 10px 20px;\"/></tr></tbody> \n"
+" ${(object.user_id.signature or '')| safe}</table><table style=\"width:600px;margin:auto;text-align:center;font-size:12px;\">\n"
+" <tbody lilt=\"split=0\">\n"
+" <tr lilt=\"split=0\"><td style=\"padding-top:10px;color:#afafaf;\">\n"
+" \n"
+" \n"
+" \n"
+" % if object.project_id.rating_status == 'stage':\n"
+" <p>Ha recibido esta encuesta para clientes porque su tarea ha sido trasladada a la fase <b>${object.stage_id.name}</b></p>\n"
+" % endif\n"
+" % if object.project_id.rating_status == 'periodic':\n"
+" <p>Esta encuesta para clientes se envía <b>${object.project_id.rating_status_period}</b> siempre y cuando la tarea permanezca en la fase <b>${object.stage_id.name}</b>.</p>\n"
+" % endif\n"
+" <p>Correo electrónico enviado automáticamente por <a href=\"https://www.odoo.com/page/project-management\" style=\"color:#875A7B;text-decoration:none;\" target=\"_blank\">Odoo Project</a> a <a href=\"${object.project_id.company_id.website}\" style=\"color:#875A7B;text-decoration:none;\">${object.project_id.company_id.name}</a></p>\n"
+"</td> \n"
+" \n"
+" \n"
+"\n"
+"</tr></tbody><tbody lilt=\"split=1\"><tr lilt=\"split=1\"/></tbody></table></div>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
@@ -241,12 +315,12 @@ msgstr "Nº tareas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "Nº de días laborables a Asignar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "Nº de días laborables a Cerrar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_nbr
@@ -257,6 +331,7 @@ msgstr "Nº de tareas"
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Service Rating Request"
 msgstr ""
+"${object.project_id.company_id.name}: Solicitud de valoración del servicio"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
@@ -332,7 +407,7 @@ msgstr "<i class=\"fa fa-envelope\"/> Email :"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/>Sin valoración aun"
 
 #. module: project
 #: code:addons/project/models/project.py:126
@@ -370,6 +445,8 @@ msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
 msgstr ""
+"<span class=\"text-muted\">NB: Esto archivará las tareas seleccionadas "
+"(salvo la tarea de destino)</span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -520,7 +597,7 @@ msgstr "Archivado"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Assign to Me"
-msgstr ""
+msgstr "Asignarme a mí"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_date_start
@@ -573,7 +650,7 @@ msgstr "Adjunto"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_attachment_ids
 msgid "Attachment that don't come from message."
-msgstr ""
+msgstr "Adjunto que no procede de un mensaje."
 
 #. module: project
 #: code:addons/project/models/project.py:119
@@ -765,7 +842,7 @@ msgstr "Contrato/Analítica"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Imagen de portada"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -790,7 +867,7 @@ msgstr "Crear un proyecto nuevo."
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_create_new_task
 msgid "Create a new task"
-msgstr ""
+msgstr "Crear una tarea"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_create_uid
@@ -1034,6 +1111,8 @@ msgid ""
 "Explanation text to help users using the star on tasks or issues in this "
 "stage."
 msgstr ""
+"Texto explicativo para ayudar a los usuarios a utilizar la estrella en las "
+"tareas o incidencias en esta etapa."
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1110,17 +1189,17 @@ msgstr "Verde"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_done
 msgid "Green Kanban Label"
-msgstr ""
+msgstr "Etiqueta Kanban verde"
 
 #. module: project
 #: selection:project.task,kanban_state:0
 msgid "Grey"
-msgstr ""
+msgstr "Gris"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_normal
 msgid "Grey Kanban Label"
-msgstr ""
+msgstr "Etiqueta Kanban gris"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_project_project_filter
@@ -1183,6 +1262,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"¿Cómo se obtienen las valoraciones del cliente? \n"
+" - Valoración al cambiar de estado: Se enviará un correo electrónico cada vez que una tarea o problema cambie de fase\n"
+"- Valoración periódica: Envío periódico de correos electrónicos\n"
+"\n"
+"No olvide configurar las plantillas de envío de las fases de las que quiere recibir retroalimentación por parte del cliente."
 
 #. module: project
 #: code:addons/project/models/project.py:809
@@ -1225,6 +1309,9 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+"Si está fijado y si la configuración de valoración del proyecto es "
+"\"Valoración al cambiar de estado\", se enviará entonces un correo "
+"electrónico al cliente cuando la tarea alcance dicho paso."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_active
@@ -1361,17 +1448,17 @@ msgstr "Actividades tardías"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Higly Dissatisfied"
-msgstr ""
+msgstr "Última valoración: Altamente insatisfecho"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Not Satisfied"
-msgstr ""
+msgstr "Última valoración: No satisfecho"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Latest Rating: Satisfied"
-msgstr ""
+msgstr "Última valoración: Satisfecho"
 
 #. module: project
 #. openerp-web
@@ -1393,6 +1480,8 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Permite a la empresa personalizar qué instalación de Pad debería utilizarse "
+"para vincular pads nuevos (p.ej., http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_analytic_account_id
@@ -1415,7 +1504,7 @@ msgstr "Baja"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Principales datos adjuntos"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1436,17 +1525,17 @@ msgstr "Socios"
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_actions_act_window_merge_tasks
 msgid "Merge Selected Tasks"
-msgstr ""
+msgstr "Combinar tareas seleccionadas"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_task_merge_wizard_form
 msgid "Merge Tasks"
-msgstr ""
+msgstr "Combinar tareas"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_id
 msgid "Merge into an existing task"
-msgstr ""
+msgstr "Combinar en una tarea existente"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
@@ -1461,7 +1550,7 @@ msgstr "Mis favoritos"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "My Followed Tasks"
-msgstr ""
+msgstr "Mis tareas seguidas"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_activity
@@ -1484,7 +1573,7 @@ msgstr "Nombre"
 #. module: project
 #: model:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Nombre de las tareas:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1495,7 +1584,7 @@ msgstr "Nuevo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_task_name
 msgid "New task name"
-msgstr ""
+msgstr "Nuevo nombre de la tarea"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:30
@@ -1547,12 +1636,12 @@ msgstr "Ahora el proyecto esta configurado <b>cree unas cuantas tareas</b>"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Nº de días laborables para abrir la tarea"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Nº de días laborables para cerrar la tarea"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_doc_count
@@ -1682,6 +1771,8 @@ msgid ""
 "Percentage of happy ratings over the past 30 days. Get rating details from "
 "the More menu."
 msgstr ""
+"Porcentaje de valoraciones positivas en los últimos 30 días. Puede obtener "
+"detalles de las valoraciones en el menú Más."
 
 #. module: project
 #: selection:project.project,rating_status:0
@@ -1791,14 +1882,14 @@ msgstr "Tareas del proyecto"
 #. module: project
 #: model:ir.actions.server,name:project.ir_actions_server_project_sample
 msgid "Project: Activate Sample Project"
-msgstr ""
+msgstr "Proyecto: activar proyecto de ejemplo"
 
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Proyecto: Enviar valoración"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -1824,7 +1915,7 @@ msgstr "Trimestralmente"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "Tareas valoradas"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -1840,12 +1931,12 @@ msgstr "Plantilla de email de calificación"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_rating_status_period
 msgid "Rating Frequency"
-msgstr ""
+msgstr "Frecuencia de valoración"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Fecha límite de solicitud de valoración"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_portal_show_rating
@@ -1855,7 +1946,7 @@ msgstr ""
 #. module: project
 #: selection:project.project,rating_status:0
 msgid "Rating when changing stage"
-msgstr ""
+msgstr "Valoración al cambiar de estado"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_rating
@@ -1866,7 +1957,7 @@ msgstr "Valoraciones"
 #: code:addons/project/models/project.py:418
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "Valoraciones de %s"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_data_0
@@ -1885,7 +1976,7 @@ msgstr ""
 #: model:project.task.type,legend_done:project.project_stage_data_1
 #: model:project.task.type,legend_done:project.project_stage_data_2
 msgid "Ready for Next Stage"
-msgstr ""
+msgstr "Lista para la siguiente etapa"
 
 #. module: project
 #: selection:report.project.task.user,state:0
@@ -1900,7 +1991,7 @@ msgstr "Id. del hijo de registro"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Record's Colour"
-msgstr ""
+msgstr "Color del registro"
 
 #. module: project
 #: selection:project.task,kanban_state:0
@@ -1910,7 +2001,7 @@ msgstr "Rojo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_blocked
 msgid "Red Kanban Label"
-msgstr ""
+msgstr "Etiqueta Kanban roja"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_code
@@ -1972,7 +2063,7 @@ msgstr "Buscar en mensajes"
 #: code:addons/project/controllers/portal.py:95
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Buscar en etapas"
 
 #. module: project
 #. openerp-web
@@ -2074,7 +2165,7 @@ msgstr "Destacado"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_legend_priority
 msgid "Starred Explanation"
-msgstr ""
+msgstr "Explicación destacada"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project_date_start
@@ -2122,7 +2213,7 @@ msgstr "Etiquetas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_target_project_id
 msgid "Target Project"
-msgstr ""
+msgstr "Proyecto meta"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -2164,7 +2255,7 @@ msgstr "Tubería de tareas"
 #: model:mail.message.subtype,name:project.mt_project_task_rating
 #: model:mail.message.subtype,name:project.mt_task_rating
 msgid "Task Rating"
-msgstr ""
+msgstr "Valoración de tarea"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_ready
@@ -2267,17 +2358,17 @@ msgstr "Tareas por usuario y proyecto"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_merge_wizard_task_ids
 msgid "Tasks to Merge"
-msgstr ""
+msgstr "Tareas que combinar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following task has been merged into this one:"
-msgstr ""
+msgstr "La siguiente tarea se ha combinado con esta:"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "The following tasks have been merged into this one:"
-msgstr ""
+msgstr "Las siguientes tareas se han combinado con esta:"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_alias_model_id
@@ -2376,7 +2467,7 @@ msgstr ""
 #. module: project
 #: model:ir.ui.view,arch_db:project.mail_template_task_merge
 msgid "This task has been merged into the following task:"
-msgstr ""
+msgstr "Esta tarea se ha fusionado con la siguiente:"
 
 #. module: project
 #. openerp-web
@@ -2461,7 +2552,7 @@ msgstr "Haga seguimiento del tiempo empleado en proyectos y tareas"
 #. module: project
 #: selection:project.project,rating_status_period:0
 msgid "Twice a Month"
-msgstr ""
+msgstr "Dos veces al mes"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2501,7 +2592,7 @@ msgstr "Usar tareas como"
 #. module: project
 #: model:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Usar pads de texto enriquecido colaborativo en las tareas"
 
 #. module: project
 #. openerp-web
@@ -2569,32 +2660,32 @@ msgstr "Horario de trabajo"
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Tiempo de trabajo que asignar"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Tiempo de trabajo para cierre"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Días laborables que asignar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Días laborables para cierre"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Horas laborables que asignar"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Horas laborables para cierre"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -2604,7 +2695,7 @@ msgstr "Carga de trabajo"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_write_date
 msgid "Write Date"
-msgstr ""
+msgstr "Escribir la fecha"
 
 #. module: project
 #: selection:project.project,rating_status_period:0
@@ -2646,6 +2737,9 @@ msgid ""
 "The sub-task's project of the parent task's project should be this task's "
 "project"
 msgstr ""
+"No se puede definir una tarea principal si el proyecto no está correctamente"
+" configurado. El proyecto con las tareas secundarias que pertenece al "
+"proyecto de la tarea principal debería ser proyecto de esta tarea"
 
 #. module: project
 #: code:addons/project/models/project.py:77
@@ -2687,7 +2781,7 @@ msgstr "oe_kanban_text_red"
 #. module: project
 #: model:ir.model,name:project.model_project_task_merge_wizard
 msgid "project.task.merge.wizard"
-msgstr ""
+msgstr "project.task.merge.wizard"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings

@@ -155,7 +155,7 @@
             <t t-foreach="state.reconcileModels" t-as="reconcileModel">
                 <button class="btn btn-primary" t-att-data-reconcile-model-id="reconcileModel.id"><t t-esc="reconcileModel.name"/></button>
             </t>
-            <p t-if="!state.reconcileModels.length" style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="reconcile_model_create">there</a>.</p>
+            <p t-if="!state.reconcileModels.length" style="color: #bbb;">You did not configure any reconcile model yet, you can do it <a style="cursor: pointer;" class="reconcile_model_create">here</a>.</p>
         </div>
         <div class="dropdown pull-right">
             <a data-toggle="dropdown" href="#"><span class="fa fa-cog"/></a>

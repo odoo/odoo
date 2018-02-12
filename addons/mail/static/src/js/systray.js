@@ -36,8 +36,7 @@ var MessagingMenu = Widget.extend({
         var chatBus = this.call('chat_manager', 'getChatBus');
         chatBus.on("update_needaction", this, this.update_counter);
         chatBus.on("update_channel_unread_counter", this, this.update_counter);
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(this.update_counter.bind(this));
+        this.call('chat_manager', 'isReady').then(this.update_counter.bind(this));
         return this._super();
     },
     is_open: function () {
@@ -58,8 +57,7 @@ var MessagingMenu = Widget.extend({
 
         // Display spinner while waiting for channels preview
         this.$channels_preview.html(QWeb.render('Spinner'));
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(function () {
+        this.call('chat_manager', 'isReady').then(function () {
             var allChannels = self.call('chat_manager', 'getChannels');
             var channels = _.filter(allChannels, function (channel) {
                 if (self.filter === 'chat') {
@@ -70,23 +68,28 @@ var MessagingMenu = Widget.extend({
                     return channel.type !== 'static';
                 }
             });
-            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'}).then(function (result) {
-                var res = [];
-                _.each(result, function (message) {
-                    message.unread_counter = 1;
-                    var duplicatedMessage = _.findWhere(res, {model: message.model, 'res_id': message.res_id});
-                    if (message.model && message.res_id && duplicatedMessage) {
-                        message.unread_counter = duplicatedMessage.unread_counter + 1;
-                        res[_.findIndex(res, duplicatedMessage)] = message;
-                    } else {
-                        res.push(message);
+            self.call('chat_manager', 'getMessages', {channelID: 'channel_inbox'})
+                .then(function (messages) {
+                    var res = [];
+                    _.each(messages, function (message) {
+                        message.unread_counter = 1;
+                        var duplicatedMessage = _.findWhere(res, {
+                            model: message.model,
+                            'res_id': message.res_id
+                        });
+                        if (message.model && message.res_id && duplicatedMessage) {
+                            message.unread_counter = duplicatedMessage.unread_counter + 1;
+                            res[_.findIndex(res, duplicatedMessage)] = message;
+                        } else {
+                            res.push(message);
+                        }
+                    });
+                    if (self.filter === 'channel_inbox' || !self.filter) {
+                        channels = _.union(channels, res);
                     }
+                    self.call('chat_manager', 'getChannelsPreview', channels)
+                        .then(self._render_channels_preview.bind(self));
                 });
-                if (self.filter === 'channel_inbox' || !self.filter) {
-                    channels = _.union(channels, res);
-                }
-                self.call('chat_manager', 'getChannelsPreview', channels).then(self._render_channels_preview.bind(self));
-            });
         });
     },
     _render_channels_preview: function (channels_preview) {
@@ -129,7 +132,7 @@ var MessagingMenu = Widget.extend({
                 this.do_action({
                     type: 'ir.actions.act_window',
                     res_model: resModel,
-                    views: [[false, 'form'], [false, 'kanban']],
+                    views: [[false, 'form']],
                     res_id: resID
                 });
             } else {
@@ -142,7 +145,7 @@ var MessagingMenu = Widget.extend({
         } else {
             var channel = this.call('chat_manager', 'getChannel', channelID);
             if (channel) {
-                self.call('chat_manager', 'openChannel', channel);
+                this.call('chat_manager', 'openChannel', channel);
             }
         }
     },
@@ -159,10 +162,8 @@ var ActivityMenu = Widget.extend({
     },
     start: function () {
         this.$activities_preview = this.$('.o_mail_navbar_dropdown_channels');
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.on("activity_updated", this, this._updateCounter);
-        var chatReady = this.call('chat_manager', 'isReady');
-        chatReady.then(this._updateCounter.bind(this));
+        this.call('chat_manager', 'getChatBus').on("activity_updated", this, this._updateCounter);
+        this.call('chat_manager', 'isReady').then(this._updateCounter.bind(this));
         this._updateActivityPreview();
         return this._super();
     },
