@@ -4,6 +4,7 @@ odoo.define('bus.BusService', function (require) {
 var bus = require('bus.bus').bus;
 
 var AbstractService = require('web.AbstractService');
+var core = require('web.core');
 
 var BusService =  AbstractService.extend({
     name: 'bus_service',
@@ -90,6 +91,8 @@ var BusService =  AbstractService.extend({
     },
 
 });
+
+core.serviceRegistry.add('bus_service', BusService);
 
 return BusService;
 

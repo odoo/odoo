@@ -1746,6 +1746,8 @@ var ChatManager =  AbstractService.extend({
 
 });
 
+core.serviceRegistry.add('chat_manager', ChatManager);
+
 return ChatManager;
 
 });
