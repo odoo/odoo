@@ -83,16 +83,6 @@ class PurchaseRequisition(models.Model):
     def _set_state(self):
         self.state_blanket_order = self.state
 
-    @api.model
-    def create(self, vals):
-        rec = super(PurchaseRequisition, self).create(vals)
-        if rec.name == 'New':
-            if rec.is_quantity_copy != 'none':
-                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
-            else:
-                rec.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
-        return rec
-
     @api.onchange('vendor_id')
     def _onchange_vendor(self):
         requisitions = self.env['purchase.requisition'].search([
@@ -141,13 +131,20 @@ class PurchaseRequisition(models.Model):
                 self.write({'state': 'ongoing'})
             else:
                 self.write({'state': 'in_progress'})
+            # Set the sequence number regarding the requisition type
+            if requisition.name == 'New':
+                if requisition.is_quantity_copy != 'none':
+                    requisition.name = self.env['ir.sequence'].next_by_code('purchase.requisition.purchase.tender')
+                else:
+                    requisition.name = self.env['ir.sequence'].next_by_code('purchase.requisition.blanket.order')
 
     @api.multi
     def action_open(self):
         self.write({'state': 'open'})
 
-    @api.multi
     def action_draft(self):
+        self.ensure_one()
+        self.name = 'New'
         self.write({'state': 'draft'})
 
     @api.multi
