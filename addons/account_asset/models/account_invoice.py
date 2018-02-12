@@ -59,8 +59,11 @@ class AccountInvoiceLine(models.Model):
         self.asset_end_date = False
         cat = self.asset_category_id
         if cat:
-            if cat.method_number == 0 or cat.method_period == 0:
-                raise UserError(_('The number of depreciations or the period length of your asset category cannot be null.'))
+            error_msg = _('The number of depreciations or the period length of your asset category cannot be null.')
+            if cat.method == 'degressive' and cat.method_period == 0:
+                raise UserError(error_msg)
+            if cat.method == 'linear' and (cat.method_number == 0 or cat.method_period == 0):
+                raise UserError(error_msg)
             months = cat.method_number * cat.method_period
             if self.invoice_id.type in ['out_invoice', 'out_refund']:
                 self.asset_mrr = self.price_subtotal_signed / months
