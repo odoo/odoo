@@ -512,7 +512,7 @@ msgstr "<p/><p/><p/><p/><p/>"
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "am"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_kanban
@@ -626,7 +626,7 @@ msgstr "Teilnehmer"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "Registrierungen automatisch bestätigen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_auto_confirm
@@ -897,7 +897,7 @@ msgstr "Event"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Event-automatisiertes Mailing"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -982,7 +982,7 @@ msgstr "Veranstaltungstyp"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "Event: Mail-Planer"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1015,6 +1015,8 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
+"Events und Registrierungen werden automatisch bei der\n"
+"                                            Erstellung bestätigt, wodurch der Zustrom von einfachen Events erleichtert wird."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type_auto_confirm
@@ -1184,7 +1186,7 @@ msgstr "Lagerort"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "E-Mail-Registrierung"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_event_mail_ids
@@ -1205,7 +1207,7 @@ msgstr "Mail-Planer"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Type"
-msgstr ""
+msgstr "E-Mail-Planung für Eventtyp"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration_mail_sent
@@ -1220,7 +1222,7 @@ msgstr "Mail zu Veranstaltung versandt"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "Einen Zeitplan mit Tracks verwalten und veröffentlichen"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -1248,6 +1250,8 @@ msgstr "Maximale Anmeldungen"
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"Die maximale Teilnehmerzahl sollte größer als die Mindestteilnehmerzahl "
+"sein."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_seats_min
@@ -1305,6 +1309,8 @@ msgid ""
 "    track registrations and participations, automate the confirmation emails,\n"
 "    sell tickets, etc."
 msgstr ""
+"Odoo hilft Ihnen, Ihre Events zu planen und effizient zu organisieren:\n"
+"    Verfolgen Sie Registrierungen und Teilnahmen, automatisieren Sie Bestätigung-E-Mails,\\n verkaufen Sie Tickets, etc."
 
 #. module: event
 #: model:event.type,name:event.event_type_data_online
@@ -1364,7 +1370,7 @@ msgstr "Telefon"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr ""
+msgstr "Physikalisches Event"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration_origin
@@ -1372,6 +1378,8 @@ msgid ""
 "Reference of the document that created the registration, for example a sales"
 " order"
 msgstr ""
+"Referenz des Dokumentes, das die Registrierung erstellt hat, z. B. ein "
+"Verkaufsauftrag"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_form
@@ -1456,7 +1464,7 @@ msgstr "Ausweise scannen, um Anwesenheiten zu bestätigen"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Schedule & Tracks"
-msgstr ""
+msgstr "Zeitplan und Tracks"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_scheduled_date
@@ -1476,7 +1484,7 @@ msgstr "Verkaufen Sie Tickets auf Ihrer Website"
 #. module: event
 #: model:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Sell tickets with sales orders"
-msgstr ""
+msgstr "Karten mit Verkaufsaufträgen verkaufen"
 
 #. module: event
 #: model:ir.ui.view,arch_db:event.view_event_registration_form
@@ -1544,6 +1552,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
+"Es gibt bereits Teilnehmer, die an diesem Event teilgenommen haben. Bitte "
+"setzen Sie es auf Entwurf zurück, wenn Sie dieses Event absagen möchten."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail_template_id
@@ -1627,7 +1637,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_hashtag
 msgid "Use Default Hashtag"
-msgstr ""
+msgstr "Den Standard-Hashtag verwenden"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type_use_timezone
@@ -1664,12 +1674,15 @@ msgstr "Woche(n)"
 #, python-format
 msgid "You must wait the event confirmation before doing this action."
 msgstr ""
+"Bevor Sie diese Aktion durchführen, müssen Sie die Bestätigung des Events "
+"abwarten."
 
 #. module: event
 #: code:addons/event/models/event.py:416
 #, python-format
 msgid "You must wait the event starting day before doing this action."
 msgstr ""
+"Sie müssen den Eventbeginn abwarten, bevor Sie diese Aktion durchführen."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -1713,7 +1726,7 @@ msgstr "nächste Woche "
 #: code:addons/event/models/event.py:503
 #, python-format
 msgid "on "
-msgstr ""
+msgstr "am"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings

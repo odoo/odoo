@@ -111,6 +111,15 @@ class TestMessageValues(common.BaseFunctionalTest, common.MockEmails):
         self.assertNotIn('mail.test', msg.message_id)
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id)
 
+    def test_mail_message_base64_image(self):
+        msg = self.env['mail.message'].sudo(self.user_employee).create({
+            'body': 'taratata <img src="data:image/png;base64,iV/+OkI=" width="2"> <img src="data:image/png;base64,iV/+OkI=" width="2">',
+        })
+        self.assertEqual(len(msg.attachment_ids), 1)
+        body = '<p>taratata <img src="/web/image/%s?access_token=%s" alt="image0" width="2"> <img src="/web/image/%s?access_token=%s" alt="image0" width="2"></p>'
+        body = body % (msg.attachment_ids[0].id, msg.attachment_ids[0].access_token, msg.attachment_ids[0].id, msg.attachment_ids[0].access_token)
+        self.assertEqual(msg.body, body)
+
 
 class TestMessageAccess(common.BaseFunctionalTest, common.MockEmails):
 

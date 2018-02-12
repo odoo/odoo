@@ -146,6 +146,9 @@ class Web_Editor(http.Controller):
         # therefore we have to recover the files from the request object
         Attachments = request.env['ir.attachment']  # registry for the attachment table
 
+        res_model = kwargs.get('res_model', 'ir.ui.view')
+        res_id = res_model != 'ir.ui.view' and kwargs.get('res_id') or None
+
         uploads = []
         message = None
         if not upload: # no image provided, storing the link and the image name
@@ -159,9 +162,11 @@ class Web_Editor(http.Controller):
                 'type': 'url',
                 'url': url,
                 'public': True,
-                'res_model': 'ir.ui.view',
+                'res_id': res_id,
+                'res_model': res_model,
             })
-            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url'])
+            attachment.generate_access_token()
+            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
         else:                                                  # images provided
             try:
                 attachments = request.env['ir.attachment']
@@ -188,10 +193,12 @@ class Web_Editor(http.Controller):
                         'datas': base64.b64encode(data),
                         'datas_fname': datas_fname,
                         'public': True,
-                        'res_model': 'ir.ui.view',
+                        'res_id': res_id,
+                        'res_model': res_model,
                     })
+                    attachment.generate_access_token()
                     attachments += attachment
-                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url'])
+                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url', 'res_id', 'res_model', 'access_token'])
             except Exception as e:
                 logger.exception("Failed to upload image to attachment")
                 message = pycompat.text_type(e)

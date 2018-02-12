@@ -132,7 +132,7 @@ var MessagingMenu = Widget.extend({
                 this.do_action({
                     type: 'ir.actions.act_window',
                     res_model: resModel,
-                    views: [[false, 'form'], [false, 'kanban']],
+                    views: [[false, 'form']],
                     res_id: resID
                 });
             } else {

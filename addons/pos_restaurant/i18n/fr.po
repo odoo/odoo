@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Xavier Belmere <Info@cartmeleon.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Florian Hatat <mininet@wanadoo.fr>, 2016
+# Martin Trigaux, 2016
+# Florian Hatat, 2016
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # Hubert TETARD <htetard@apik-conseils.com>, 2016
@@ -23,13 +23,14 @@
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Richard Mathot <rim@odoo.com>, 2017
 # Lucas Deliege <lud@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-09-20 09:52+0000\n"
 "PO-Revision-Date: 2017-09-20 09:52+0000\n"
-"Last-Translator: Lucas Deliege <lud@odoo.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +41,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Floor Name: </strong>"
-msgstr ""
+msgstr "<strong/>"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sale: </strong>"
-msgstr ""
+msgstr "<strong/>"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor_background_image
@@ -69,6 +70,7 @@ msgstr ""
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
+"Accepter les pourboires des clients ou convertir leur monnaie en pourboire"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_active
@@ -85,22 +87,22 @@ msgstr "Ajoutez une note"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Add notes to orderlines"
-msgstr ""
+msgstr "Ajouter une note sur une ligne de commande"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_orderline_notes
 msgid "Allow custom notes on Orderlines."
-msgstr ""
+msgstr "Autoriser les notes personnalisées sur les lignes de commande"
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Allow to print bill before payment"
-msgstr ""
+msgstr "Autoriser l'impression de la facture avant le paiement"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_printbill
 msgid "Allows to print the Bill before payment."
-msgstr ""
+msgstr "Permet d'imprimer la facture avant le paiement."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table_name
@@ -244,11 +246,15 @@ msgid ""
 "                An Order Printer will only print updates for products belonging to one of\n"
 "                its categories."
 msgstr ""
+"Chaque imprimante de commande possède une adresse IP qui indique la PosBox/le proxy\n"
+" matériel où se situe l'imprimante, ainsi qu'une liste de catégories de produits.\n"
+" Les imprimantes peuvent uniquement imprimer les mises à jour des produits appartenant à l'une de\n"
+" ces catégories."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr ""
+msgstr "Autoriser le partage d'une addition au point de vente."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_floor_id
@@ -269,7 +275,7 @@ msgstr "Plans de l'étage"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Floors"
-msgstr ""
+msgstr "Étages"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -344,7 +350,7 @@ msgstr "Dernière mise à jour le"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
-msgstr ""
+msgstr "Gérer les commandes des tables"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -444,7 +450,7 @@ msgstr "Imprimer"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Print orders at the kitchen, at the bar, etc."
-msgstr ""
+msgstr "Imprimer les commandes en cuisine, au bar, etc."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer_product_categories_ids
@@ -531,7 +537,7 @@ msgstr "Diviser"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Split total or order lines"
-msgstr ""
+msgstr "Diviser le total ou les lignes de commande"
 
 #. module: pos_restaurant
 #: selection:restaurant.table,shape:0
@@ -560,7 +566,7 @@ msgstr "Table"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config_is_table_management
 msgid "Table Management"
-msgstr ""
+msgstr "Gestion des tables"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table_name
@@ -619,7 +625,7 @@ msgstr "La liste de tables sur cet étage"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config_floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr ""
+msgstr "Les étages du restaurant servis par ce point de vente."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order_table_id
@@ -669,7 +675,7 @@ msgstr "Cet étage n'a pas encore de tables, utilisez le"
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "This product is used as reference on customer receipts."
-msgstr ""
+msgstr "Ce produit est utilisé comme référence sur les reçus client."
 
 #. module: pos_restaurant
 #: model:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
