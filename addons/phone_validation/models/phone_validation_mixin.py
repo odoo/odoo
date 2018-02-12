@@ -9,11 +9,12 @@ class PhoneValidationMixin(models.AbstractModel):
     _name = 'phone.validation.mixin'
 
     def _phone_get_country(self):
-        if 'country_id' in self:
+        if 'country_id' in self and self.country_id:
             return self.country_id
+        return self.env.user.company_id.country_id
 
     def _phone_get_always_international(self):
-        if 'company_id' in self and self.country_id:
+        if 'company_id' in self and self.company_id:
             return self.company_id.phone_international_format == 'prefix'
         return self.env.user.company_id.phone_international_format == 'prefix'
 

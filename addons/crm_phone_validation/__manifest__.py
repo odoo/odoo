@@ -13,7 +13,6 @@ CRM Phone Numbers Validation
 This module allows for validate and format phone numbers for leads and contacts.""",
     'data': [
         'views/res_config_settings_views.xml',
-        'views/crm_lead_views.xml'
     ],
     'depends': [
         'phone_validation',
