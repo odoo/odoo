@@ -1646,19 +1646,15 @@ class TestSinglePicking(TestStockCommon):
 
 class TestStockUOM(TestStockCommon):
     def setUp(self):
-        with registry().cursor() as cr:
-            env = api.Environment(cr, 1, {})
-            dp = env.ref('product.decimal_product_uom')
-            self.old_digits = dp.digits
-            dp.digits = 7
         super(TestStockUOM, self).setUp()
+        dp = self.env.ref('product.decimal_product_uom')
+        dp.digits = 7
 
-    def tearDown(self):
-        super(TestStockUOM, self).tearDown()
-        with self.registry.cursor() as cr:
-            env = api.Environment(cr, 1, {})
-            dp = env.ref('product.decimal_product_uom')
-            dp.digits = self.old_digits
+        # Trick: invoke the method 'precision_get' with the current environment.
+        # This fills in the cache of the method with the right value. If we
+        # don't do that, the registry will access the corresponding precision
+        # with a new cursor (LazyCursor), and get a different value!
+        self.assertEqual(dp.precision_get(dp.name), 7)
 
     def test_pickings_transfer_with_different_uom_and_back_orders(self):
         """ Picking transfer with diffrent unit of meassure. """
