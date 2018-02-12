@@ -19,7 +19,6 @@ var core = require('web.core');
 var dom = require('web.dom');
 var session = require('web.session');
 var MockServer = require('web.MockServer');
-var utils = require('web.utils');
 var Widget = require('web.Widget');
 
 var DebouncedField = basic_fields.DebouncedField;
@@ -405,7 +404,7 @@ function addMockEnvironment(widget, params) {
     // Dispatch service calls
     // Note: some services could call other services at init,
     // Which is why we have to init services after that
-    var services = {};
+    var services = {ajax: null}; // mocked ajax service already loaded
     intercept(widget, 'call_service', function (ev) {
         var args, result;
         if (ev.data.service === 'ajax') {
@@ -420,36 +419,22 @@ function addMockEnvironment(widget, params) {
         }
         ev.data.callback(result);
     });
-    // Instantiate services
-    // Note: ensure topological sort of services based on their dependencies
-    var sortServices = function (services) {
-        // Create nodes (services), with ajax already loaded
-        var nodes = { ajax: [] };
-        _.each(services, function (Service) {
-            nodes[Service.prototype.name] = Service.prototype.dependencies;
+
+    // Deploy services
+    var done = false;
+    while (!done) {
+        var index = _.findIndex(params.services, function (Service) {
+            return !_.some(Service.prototype.dependencies, function (depName) {
+                return !_.has(services, depName);
+            });
         });
-        var sorted;
-        try {
-            sorted = utils.topologicalSort(nodes);
-        } catch (err) {
-            console.warn('topologicalSort Error:', err.message);
-            sorted = nodes;
+        if (index !== -1) {
+            var Service = params.services.splice(index, 1)[0];
+            services[Service.prototype.name] = new Service(widget);
+        } else {
+            done = true;
         }
-        // Remove ajax from sorted
-        sorted = _.without(sorted, 'ajax');
-        // Sort services based on sorted
-        // Note: we convert sorted to an object key=>index for efficiency
-        var sortedObj = _.invert(_.object(_.pairs(sorted)));
-        sorted = _.sortBy(services, function (Service) {
-            return sortedObj[Service.prototype.name];
-        });
-        return sorted;
-    };
-    var sortedServices = sortServices(params.services);
-    _.each(sortedServices, function (Service) {
-        var service = new Service(widget);
-        services[service.name] = service;
-    });
+    }
 
     intercept(widget, 'load_action', function (event) {
         mockServer.performRpc('/web/action/load', {

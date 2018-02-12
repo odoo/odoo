@@ -527,6 +527,8 @@ var ChatWindowManager =  AbstractService.extend({
 
 });
 
+core.serviceRegistry.add('chat_window_manager', ChatWindowManager);
+
 return ChatWindowManager;
 
 });
