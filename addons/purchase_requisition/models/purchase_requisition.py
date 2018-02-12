@@ -218,12 +218,16 @@ class PurchaseRequisitionLine(models.Model):
             ])
             if not [s.requisition_id for s in supplier_infos]:
                 res.create_supplier_info()
+            if vals['price_unit'] <= 0.0:
+                raise UserError(_('You cannot confirm the blanket order without price.'))
         return res
 
     @api.multi
     def write(self, vals):
         res = super(PurchaseRequisitionLine, self).write(vals)
         if 'price_unit' in vals:
+            if vals['price_unit'] <= 0.0:
+                raise UserError(_('You cannot confirm the blanket order without price.'))
             # If the price is updated, we have to update the related SupplierInfo
             self.supplier_info_ids.write({'price': vals['price_unit']})
         return res
