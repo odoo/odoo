@@ -72,6 +72,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     updateState: function (state, params) {
         this._processColumns(params.columnInvisibleFields || {});
+        this.selection = [];
         return this._super.apply(this, arguments);
     },
 
