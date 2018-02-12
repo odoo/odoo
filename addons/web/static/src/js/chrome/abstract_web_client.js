@@ -245,6 +245,10 @@ var AbstractWebClient = Widget.extend(ServiceProviderMixin, {
      * identified by strings. Each time a title part is changed, all parts
      * are gathered, ordered by alphabetical order and displayed in the title
      * of the window separated by ``-``.
+     *
+     * @private
+     * @param {string} part
+     * @param {string} title
      */
     set_title_part: function (part, title) {
         var tmp = _.clone(this.get("title_part"));

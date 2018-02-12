@@ -48,8 +48,7 @@ return ChatWindow.extend({
         event.stopPropagation();
     },
     on_reverse_breadcrumb: function () {
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.trigger('discuss_open', false);
+        this.call('chat_manager', 'getChatBus').trigger('discuss_open', false);
      },
     on_click_expand: _.debounce(function (event) {
         event.preventDefault();

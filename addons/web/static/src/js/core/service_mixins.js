@@ -1,57 +1,85 @@
 odoo.define('web.ServiceProviderMixin', function (require) {
 "use strict";
 
-var AbstractService = require('web.AbstractService');
-var utils = require('web.utils');
+var core = require('web.core');
 
 var ServiceProviderMixin = {
-    services: {},
-    init: function () {
+    services: {}, // dict containing deployed service instances
+    UndeployedServices: {}, // dict containing classes of undeployed services
+    /**
+     * @override
+     */
+    init: function (parent) {
+        var self = this;
         // to properly instantiate services with this as parent, this mixin
         // assumes that it is used along the EventDispatcherMixin, and that
         // EventDispatchedMixin's init is called first
-        var self = this;
-        // as EventDispatcherMixin's init is already called, this handler has to
-        // be bound manually
+        // as EventDispatcherMixin's init is already called, this handler has
+        // to be bound manually
         this.on('call_service', this, this._call_service.bind(this));
 
-        var sortedServices = this._sortServices(AbstractService.prototype.Services);
-        _.each(sortedServices, function (Service) {
-            var service = new Service(self);
-            self.services[service.name] = service;
+        // add already registered services from the service registry
+        _.each(core.serviceRegistry.map, function (Service, serviceName) {
+            self.UndeployedServices[serviceName] = Service;
+        });
+        this._deployServices();
+
+        // listen on newly added services
+        core.serviceRegistry.onAdd(function (serviceName, Service) {
+            self.UndeployedServices[serviceName] = Service;
+            self._deployServices();
         });
     },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _deployServices: function () {
+        var self = this;
+        var done = false;
+        while (!done) {
+            var Service = _.find(this.UndeployedServices, function (Service) {
+                // no missing dependency
+                return !_.some(Service.prototype.dependencies, function (depName) {
+                    return !self.services[depName];
+                });
+            });
+            if (Service) {
+                this.services[Service.prototype.name] = new Service(this);
+                delete this.UndeployedServices[Service.prototype.name];
+            } else {
+                done = true;
+            }
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Call the 'service', using data from the 'event' that
+     * has triggered the service call.
+     *
+     * For the ajax service, the arguments are extended with
+     * the target so that it can call back the caller.
+     *
+     * @private
+     * @param  {OdooEvent} event
+     */
     _call_service: function (event) {
-        var service = this.services[event.data.service];
         var args = event.data.args || [];
-        // ajax service uses an extra 'target' argument for rpc
         if (event.data.service === 'ajax' && event.data.method === 'rpc') {
+            // ajax service uses an extra 'target' argument for rpc
             args = args.concat(event.target);
         }
+        var service = this.services[event.data.service];
         var result = service[event.data.method].apply(service, args);
         event.data.callback(result);
-    },
-    _sortServices: function (services) {
-        var nodes = {};
-        // Create nodes (services)
-        _.each(services, function (Service) {
-            nodes[Service.prototype.name] = Service.prototype.dependencies;
-        });
-        var sorted;
-        try {
-            sorted = utils.topologicalSort(nodes);
-        } catch (err) {
-            console.warn('topologicalSort Error:', err.message);
-            sorted = nodes;
-        }
-        // Sort services based on sorted
-        // Note: we convert sorted to an object key=>index for efficiency
-        var sortedObj = _.invert(_.object(_.pairs(sorted)));
-        sorted = _.sortBy(services, function (Service) {
-            return sortedObj[Service.prototype.name];
-        });
-
-        return sorted;
     },
 };
 
@@ -69,6 +97,11 @@ var rpc = require('web.rpc');
  * @name ServicesMixin
  */
 var ServicesMixin = {
+    /**
+     * @param  {string} service
+     * @param  {string} method
+     * @return {any} result of the service called
+     */
     call: function (service, method) {
         var args = Array.prototype.slice.call(arguments, 2);
         var result;

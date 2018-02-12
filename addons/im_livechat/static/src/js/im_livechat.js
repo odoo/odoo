@@ -64,17 +64,19 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
         var cookie = utils.get_cookie('im_livechat_session');
         var ready;
         if (!cookie) {
-            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id}).then(function (result) {
-                if (!result.available_for_me) {
-                    return $.Deferred().reject();
-                }
-                self.rule = result.rule;
-            });
+            ready = session.rpc("/im_livechat/init", {channel_id: this.options.channel_id})
+                .then(function (result) {
+                    if (!result.available_for_me) {
+                        return $.Deferred().reject();
+                    }
+                    self.rule = result.rule;
+                });
         } else {
             var channel = JSON.parse(cookie);
-            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100}).then(function (history) {
-                self.history = history;
-            });
+            ready = session.rpc("/mail/chat_history", {uuid: channel.uuid, limit: 100})
+                .then(function (history) {
+                    self.history = history;
+                });
         }
         return ready.then(this.load_qweb_template.bind(this));
     },
@@ -87,7 +89,8 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
         } else if (!config.device.isMobile && this.rule.action === 'auto_popup') {
             var auto_popup_cookie = utils.get_cookie('im_livechat_auto_popup');
             if (!auto_popup_cookie || JSON.parse(auto_popup_cookie)) {
-                this.auto_popup_timeout = setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
+                this.auto_popup_timeout =
+                    setTimeout(this.open_chat.bind(this), this.rule.auto_popup_timer*1000);
             }
         }
         this.busBus.on('notification', this, function (notifications) {
