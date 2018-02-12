@@ -11,7 +11,7 @@ Landed Costs Management
 This module allows you to easily add extra costs on pickings and decide the split of these costs among their stock moves in order to take them into account in your stock valuation.
     """,
     'website': 'https://www.odoo.com/page/warehouse',
-    'depends': ['stock_account', 'purchase'],
+    'depends': ['stock_account', 'purchase_stock'],
     'category': 'Warehouse',
     'sequence': 16,
     'demo': [

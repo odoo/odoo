@@ -6,10 +6,9 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.float_utils import float_is_zero, float_compare
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, AccessError
 from odoo.tools.misc import formatLang
-from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.addons import decimal_precision as dp
 
 
@@ -68,35 +67,6 @@ class PurchaseOrder(models.Model):
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
-    @api.model
-    def _default_picking_type(self):
-        type_obj = self.env['stock.picking.type']
-        company_id = self.env.context.get('company_id') or self.env.user.company_id.id
-        types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id.company_id', '=', company_id)])
-        if not types:
-            types = type_obj.search([('code', '=', 'incoming'), ('warehouse_id', '=', False)])
-        return types[:1]
-
-    @api.depends('order_line.move_ids.returned_move_ids',
-                 'order_line.move_ids.state',
-                 'order_line.move_ids.picking_id')
-    def _compute_picking(self):
-        for order in self:
-            pickings = self.env['stock.picking']
-            for line in order.order_line:
-                # We keep a limited scope on purpose. Ideally, we should also use move_orig_ids and
-                # do some recursive search, but that could be prohibitive if not done correctly.
-                moves = line.move_ids | line.move_ids.mapped('returned_move_ids')
-                pickings |= moves.mapped('picking_id')
-            order.picking_ids = pickings
-            order.picking_count = len(pickings)
-
-    @api.depends('picking_ids', 'picking_ids.state')
-    def _compute_is_shipped(self):
-        for order in self:
-            if order.picking_ids and all([x.state == 'done' for x in order.picking_ids]):
-                order.is_shipped = True
-
     READONLY_STATES = {
         'purchase': [('readonly', True)],
         'done': [('readonly', True)],
@@ -104,10 +74,10 @@ class PurchaseOrder(models.Model):
     }
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
-    origin = fields.Char('Source Document', copy=False,\
+    origin = fields.Char('Source Document', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
-    partner_ref = fields.Char('Vendor Reference', copy=False,\
+    partner_ref = fields.Char('Vendor Reference', copy=False,
         help="Reference of the sales order or bid sent by the vendor. "
              "It's used to do the matching when you receive the "
              "products as this reference is usually written on the "
@@ -116,10 +86,10 @@ class PurchaseOrder(models.Model):
         help="Depicts the date where the Quotation should be validated and converted into a purchase order.")
     date_approve = fields.Date('Approval Date', readonly=1, index=True, copy=False)
     partner_id = fields.Many2one('res.partner', string='Vendor', required=True, states=READONLY_STATES, change_default=True, track_visibility='always')
-    dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,\
-        help="Put an address if you want to deliver directly from the vendor to the customer. "\
+    dest_address_id = fields.Many2one('res.partner', string='Drop Ship Address', states=READONLY_STATES,
+        help="Put an address if you want to deliver directly from the vendor to the customer. "
              "Otherwise, keep empty to deliver to your own company.")
-    currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,\
+    currency_id = fields.Many2one('res.currency', 'Currency', required=True, states=READONLY_STATES,
         default=lambda self: self.env.user.company_id.currency_id.id)
     state = fields.Selection([
         ('draft', 'RFQ'),
@@ -128,7 +98,7 @@ class PurchaseOrder(models.Model):
         ('purchase', 'Purchase Order'),
         ('done', 'Locked'),
         ('cancel', 'Cancelled')
-        ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
+    ], string='Status', readonly=True, index=True, copy=False, default='draft', track_visibility='onchange')
     order_line = fields.One2many('purchase.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True)
     notes = fields.Text('Terms and Conditions')
 
@@ -138,10 +108,7 @@ class PurchaseOrder(models.Model):
         ('no', 'Nothing to Bill'),
         ('to invoice', 'Waiting Bills'),
         ('invoiced', 'No Bill to Receive'),
-        ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
-
-    picking_count = fields.Integer(compute='_compute_picking', string='Picking count', default=0, store=True)
-    picking_ids = fields.Many2many('stock.picking', compute='_compute_picking', string='Receptions', copy=False, store=True)
+    ], string='Billing Status', compute='_get_invoiced', store=True, readonly=True, copy=False, default='no')
 
     # There is no inverse function on purpose since the date may be different on each line
     date_planned = fields.Datetime(string='Scheduled Date', compute='_compute_date_planned', store=True, index=True)
@@ -152,18 +119,10 @@ class PurchaseOrder(models.Model):
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position')
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms')
-    incoterm_id = fields.Many2one('stock.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one('res.users', string='Purchase Representative', index=True, track_visibility='onchange', default=lambda self: self.env.user)
     company_id = fields.Many2one('res.company', 'Company', required=True, index=True, states=READONLY_STATES, default=lambda self: self.env.user.company_id.id)
-
-    picking_type_id = fields.Many2one('stock.picking.type', 'Deliver To', states=READONLY_STATES, required=True, default=_default_picking_type,\
-        help="This will determine operation type of incoming shipment")
-    default_location_dest_id_usage = fields.Selection(related='picking_type_id.default_location_dest_id.usage', string='Destination Location Type',\
-        help="Technical field used to display the Drop Ship Address", readonly=True)
-    group_id = fields.Many2one('procurement.group', string="Procurement Group", copy=False)
-    is_shipped = fields.Boolean(compute="_compute_is_shipped")
 
     website_url = fields.Char(
         'Website URL', compute='_website_url',
@@ -189,7 +148,7 @@ class PurchaseOrder(models.Model):
         for po in self:
             name = po.name
             if po.partner_ref:
-                name += ' ('+po.partner_ref+')'
+                name += ' (' + po.partner_ref + ')'
             if self.env.context.get('show_total_amount') and po.amount_total:
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
             result.append((po.id, name))
@@ -201,21 +160,6 @@ class PurchaseOrder(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('purchase.order') or '/'
         return super(PurchaseOrder, self).create(vals)
 
-    def write(self, vals):
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                pre_order_line_qty = {order_line: order_line.product_qty for order_line in order.mapped('order_line')}
-        res = super(PurchaseOrder, self).write(vals)
-        if vals.get('order_line') and self.state == 'purchase':
-            for order in self:
-                to_log = {}
-                for order_line in order.order_line:
-                    if pre_order_line_qty.get(order_line, False) and float_compare(pre_order_line_qty[order_line], order_line.product_qty, precision_rounding=order_line.product_uom.rounding) > 0:
-                        to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
-                if to_log:
-                    order._log_decrease_ordered_quantity(to_log)
-        return res
-
     @api.multi
     def unlink(self):
         for order in self:
@@ -224,7 +168,6 @@ class PurchaseOrder(models.Model):
         return super(PurchaseOrder, self).unlink()
 
     @api.multi
-    @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
@@ -254,8 +197,7 @@ class PurchaseOrder(models.Model):
         else:
             self.fiscal_position_id = self.env['account.fiscal.position'].with_context(company_id=self.company_id.id).get_fiscal_position(self.partner_id.id)
             self.payment_term_id = self.partner_id.property_supplier_payment_term_id.id
-            if not self.currency_id:
-                self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
+            self.currency_id = self.partner_id.property_purchase_currency_id.id or self.env.user.company_id.currency_id.id
         return {}
 
     @api.onchange('fiscal_position_id')
@@ -289,16 +231,11 @@ class PurchaseOrder(models.Model):
             warning = {
                 'title': title,
                 'message': message
-                }
+            }
             if partner.purchase_warn == 'block':
                 self.update({'partner_id': False})
             return {'warning': warning}
         return {}
-
-    @api.onchange('picking_type_id')
-    def _onchange_picking_type_id(self):
-        if self.picking_type_id.default_location_dest_id.usage != 'customer':
-            self.dest_address_id = False
 
     @api.multi
     def action_rfq_send(self):
@@ -325,7 +262,7 @@ class PurchaseOrder(models.Model):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
-            'custom_layout': "mail.mail_notification_borders",
+            'custom_layout': "purchase.mail_template_data_notification_email_purchase_order",
             'force_email': True,
             'mark_rfq_as_sent': True,
         })
@@ -355,9 +292,7 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_approve(self, force=False):
         self.write({'state': 'purchase', 'date_approve': fields.Date.context_today(self)})
-        self._create_picking()
-        self.filtered(
-            lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
+        self.filtered(lambda p: p.company_id.po_lock == 'lock').write({'state': 'done'})
         return {}
 
     @api.multi
@@ -385,26 +320,9 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_cancel(self):
         for order in self:
-            for pick in order.picking_ids:
-                if pick.state == 'done':
-                    raise UserError(_('Unable to cancel purchase order %s as some receptions have already been done.') % (order.name))
             for inv in order.invoice_ids:
                 if inv and inv.state not in ('cancel', 'draft'):
                     raise UserError(_("Unable to cancel this purchase order. You must first cancel related vendor bills."))
-
-            # If the product is MTO, change the procure_method of the the closest move to purchase to MTS.
-            # The purpose is to link the po that the user will manually generate to the existing moves's chain.
-            if order.state in ('draft', 'sent', 'to approve'):
-                for order_line in order.order_line:
-                    if order_line.move_dest_ids:
-                        siblings_states = (order_line.move_dest_ids.mapped('move_orig_ids')).mapped('state')
-                        if all(state in ('done', 'cancel') for state in siblings_states):
-                            order_line.move_dest_ids.write({'procure_method': 'make_to_stock'})
-                            order_line.move_dest_ids._recompute_state()
-
-            for pick in order.picking_ids.filtered(lambda r: r.state != 'cancel'):
-                pick.action_cancel()
-
         self.write({'state': 'cancel'})
 
     @api.multi
@@ -414,55 +332,6 @@ class PurchaseOrder(models.Model):
     @api.multi
     def button_done(self):
         self.write({'state': 'done'})
-
-    @api.multi
-    def _get_destination_location(self):
-        self.ensure_one()
-        if self.dest_address_id:
-            return self.dest_address_id.property_stock_customer.id
-        return self.picking_type_id.default_location_dest_id.id
-
-    @api.model
-    def _prepare_picking(self):
-        if not self.group_id:
-            self.group_id = self.group_id.create({
-                'name': self.name,
-                'partner_id': self.partner_id.id
-            })
-        if not self.partner_id.property_stock_supplier.id:
-            raise UserError(_("You must set a Vendor Location for this partner %s") % self.partner_id.name)
-        return {
-            'picking_type_id': self.picking_type_id.id,
-            'partner_id': self.partner_id.id,
-            'date': self.date_order,
-            'origin': self.name,
-            'location_dest_id': self._get_destination_location(),
-            'location_id': self.partner_id.property_stock_supplier.id,
-            'company_id': self.company_id.id,
-        }
-
-    @api.multi
-    def _create_picking(self):
-        StockPicking = self.env['stock.picking']
-        for order in self:
-            if any([ptype in ['product', 'consu'] for ptype in order.order_line.mapped('product_id.type')]):
-                pickings = order.picking_ids.filtered(lambda x: x.state not in ('done','cancel'))
-                if not pickings:
-                    res = order._prepare_picking()
-                    picking = StockPicking.create(res)
-                else:
-                    picking = pickings[0]
-                moves = order.order_line._create_stock_moves(picking)
-                moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
-                seq = 0
-                for move in sorted(moves, key=lambda move: move.date_expected):
-                    seq += 5
-                    move.sequence = seq
-                moves._action_assign()
-                picking.message_post_with_view('mail.message_origin_link',
-                    values={'self': picking, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
-        return True
 
     @api.multi
     def _add_supplier_to_product(self):
@@ -491,62 +360,6 @@ class PurchaseOrder(models.Model):
                 except AccessError:  # no write access rights -> just ignore
                     break
 
-    def _log_decrease_ordered_quantity(self, purchase_order_lines_quantities):
-
-        def _keys_in_sorted(move):
-            """ sort by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id.id, move.product_id.responsible_id.id)
-
-        def _keys_in_groupby(move):
-            """ group by picking and the responsible for the product the
-            move.
-            """
-            return (move.picking_id, move.product_id.responsible_id)
-
-        def _render_note_exception_quantity_po(order_exceptions):
-            order_line_ids = self.env['purchase.order.line'].browse([order_line.id for order in order_exceptions.values() for order_line in order[0]])
-            purchase_order_ids = order_line_ids.mapped('order_id')
-            move_ids = self.env['stock.move'].concat(*rendering_context.keys())
-            impacted_pickings = move_ids.mapped('picking_id')._get_impacted_pickings(move_ids) - move_ids.mapped('picking_id')
-            values = {
-                'purchase_order_ids': purchase_order_ids,
-                'order_exceptions': order_exceptions.values(),
-                'impacted_pickings': impacted_pickings,
-            }
-            return self.env.ref('purchase.exception_on_po').render(values=values)
-
-        documents = self.env['stock.picking']._log_activity_get_documents(purchase_order_lines_quantities, 'move_ids', 'DOWN', _keys_in_sorted, _keys_in_groupby)
-        filtered_documents = {}
-        for (parent, responsible), rendering_context in documents.items():
-            if parent._name == 'stock.picking':
-                if parent.state == 'cancel':
-                    continue
-            filtered_documents[(parent, responsible)] = rendering_context
-        self.env['stock.picking']._log_activity(_render_note_exception_quantity_po, filtered_documents)
-
-    @api.multi
-    def action_view_picking(self):
-        '''
-        This function returns an action that display existing picking orders of given purchase order ids.
-        When only one found, show the picking immediately.
-        '''
-        action = self.env.ref('stock.action_picking_tree')
-        result = action.read()[0]
-
-        #override the context to get rid of the default filtering on operation type
-        result['context'] = {}
-        pick_ids = self.mapped('picking_ids')
-        #choose the view_mode accordingly
-        if len(pick_ids) > 1:
-            result['domain'] = "[('id','in',%s)]" % (pick_ids.ids)
-        elif len(pick_ids) == 1:
-            res = self.env.ref('stock.view_picking_form', False)
-            result['views'] = [(res and res.id or False, 'form')]
-            result['res_id'] = pick_ids.id
-        return result
-
     @api.multi
     def action_view_invoice(self):
         '''
@@ -556,15 +369,15 @@ class PurchaseOrder(models.Model):
         action = self.env.ref('account.action_invoice_tree2')
         result = action.read()[0]
 
-        #override the context to get rid of the default filtering
-        result['context'] = {'type': 'in_invoice',
+        # override the context to get rid of the default filtering
+        result['context'] = {
+            'type': 'in_invoice',
             'default_purchase_id': self.id,
             'default_currency_id': self.currency_id.id,
             'default_company_id': self.company_id.id,
             'company_id': self.company_id.id
         }
-
-        #choose the view_mode accordingly
+        # choose the view_mode accordingly
         if len(self.invoice_ids) != 1:
             result['domain'] = "[('id', 'in', " + str(self.invoice_ids.ids) + ")]"
         elif len(self.invoice_ids) == 1:
@@ -614,33 +427,6 @@ class PurchaseOrderLine(models.Model):
                         qty -= inv_line.uom_id._compute_quantity(inv_line.quantity, line.product_uom)
             line.qty_invoiced = qty
 
-    @api.model
-    def create(self, values):
-        line = super(PurchaseOrderLine, self).create(values)
-        if line.order_id.state == 'purchase':
-            line._create_or_update_picking()
-            msg = _("Extra line with %s ") % (line.product_id.display_name,)
-            line.order_id.message_post(body=msg)
-        return line
-
-    @api.multi
-    def write(self, values):
-        if 'product_qty' in values:
-            for line in self:
-                if line.order_id.state == 'purchase':
-                    line.order_id.message_post_with_view('purchase.track_po_line_template',
-                                                         values={'line': line, 'product_qty': values['product_qty']},
-                                                         subtype_id=self.env.ref('mail.mt_note').id)
-        result = super(PurchaseOrderLine, self).write(values)
-        # Update expected date of corresponding moves
-        if 'date_planned' in values:
-            self.env['stock.move'].search([
-                ('purchase_line_id', 'in', self.ids), ('state', '!=', 'done')
-            ]).write({'date_expected': values['date_planned']})
-        if 'product_qty' in values:
-            self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
-        return result
-
     name = fields.Text(string='Description', required=True)
     sequence = fields.Integer(string='Sequence', default=10)
     product_qty = fields.Float(string='Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True)
@@ -652,7 +438,6 @@ class PurchaseOrderLine(models.Model):
         'Product Image', related="product_id.image",
         help="Non-stored related field to allow portal user to see the image of the product he has ordered")
     product_type = fields.Selection(related='product_id.type', readonly=True)
-    move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, ondelete='set null', copy=False)
     price_unit = fields.Float(string='Unit Price', required=True, digits=dp.get_precision('Product Price'))
 
     price_subtotal = fields.Monetary(compute='_compute_amount', string='Subtotal', store=True)
@@ -675,132 +460,29 @@ class PurchaseOrderLine(models.Model):
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
 
-    orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
-    move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
-
-    def _update_received_qty(self):
-        for line in self:
-            total = 0.0
-            for move in line.move_ids:
-                if move.state == 'done':
-                    if move.location_dest_id.usage == "supplier":
-                        if move.to_refund:
-                            total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                    else:
-                        total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-            line.qty_received = total
+    @api.model
+    def create(self, values):
+        line = super(PurchaseOrderLine, self).create(values)
+        if line.order_id.state == 'purchase':
+            msg = _("Extra line with %s ") % (line.product_id.display_name,)
+            line.order_id.message_post(body=msg)
+        return line
 
     @api.multi
-    def _create_or_update_picking(self):
-        for line in self:
-            if line.product_id.type in ('product', 'consu'):
-                # Prevent decreasing below received quantity
-                if float_compare(line.product_qty, line.qty_received, line.product_uom.rounding) < 0:
-                    raise UserError(_('You cannot decrease the ordered quantity below the received quantity.\n'
-                                      'Create a return first.'))
-
-                if float_compare(line.product_qty, line.qty_invoiced, line.product_uom.rounding) == -1:
-                    # If the quantity is now below the invoiced quantity, create an activity on the vendor bill
-                    # inviting the user to create a refund.
-                    activity = self.env['mail.activity'].sudo().create({
-                        'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
-                        'note': _('The quantities on your purchase order indicate less than billed. You should ask for a refund. '),
-                        'res_id': line.invoice_lines[0].invoice_id.id,
-                        'res_model_id': self.env.ref('account.model_account_invoice').id,
-                    })
-                    activity._onchange_activity_type_id()
-
-                # If the user increased quantity of existing line or created a new line
-                pickings = line.order_id.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel') and x.location_dest_id.usage in ('internal', 'transit'))
-                picking = pickings and pickings[0] or False
-                if not picking:
-                    res = line.order_id._prepare_picking()
-                    picking = self.env['stock.picking'].create(res)
-                move_vals = line._prepare_stock_moves(picking)
-                for move_val in move_vals:
-                    self.env['stock.move']\
-                        .create(move_val)\
-                        ._action_confirm()\
-                        ._action_assign()
-
-    @api.multi
-    def _get_stock_move_price_unit(self):
-        self.ensure_one()
-        line = self[0]
-        order = line.order_id
-        price_unit = line.price_unit
-        if line.taxes_id:
-            price_unit = line.taxes_id.with_context(round=False).compute_all(
-                price_unit, currency=line.order_id.currency_id, quantity=1.0, product=line.product_id, partner=line.order_id.partner_id
-            )['total_excluded']
-        if line.product_uom.id != line.product_id.uom_id.id:
-            price_unit *= line.product_uom.factor / line.product_id.uom_id.factor
-        if order.currency_id != order.company_id.currency_id:
-            price_unit = order.currency_id._convert(
-                price_unit, order.company_id.currency_id, self.company_id, self.date_order or fields.Date.today(), round=False)
-        return price_unit
-
-    @api.multi
-    def _prepare_stock_moves(self, picking):
-        """ Prepare the stock moves data for one order line. This function returns a list of
-        dictionary ready to be used in stock.move's create()
-        """
-        self.ensure_one()
-        res = []
-        if self.product_id.type not in ['product', 'consu']:
-            return res
-        qty = 0.0
-        price_unit = self._get_stock_move_price_unit()
-        for move in self.move_ids.filtered(lambda x: x.state != 'cancel' and not x.location_dest_id.usage == "supplier"):
-            qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
-        template = {
-            'name': self.name or '',
-            'product_id': self.product_id.id,
-            'product_uom': self.product_uom.id,
-            'date': self.order_id.date_order,
-            'date_expected': self.date_planned,
-            'location_id': self.order_id.partner_id.property_stock_supplier.id,
-            'location_dest_id': self.order_id._get_destination_location(),
-            'picking_id': picking.id,
-            'partner_id': self.order_id.dest_address_id.id,
-            'move_dest_ids': [(4, x) for x in self.move_dest_ids.ids],
-            'state': 'draft',
-            'purchase_line_id': self.id,
-            'company_id': self.order_id.company_id.id,
-            'price_unit': price_unit,
-            'picking_type_id': self.order_id.picking_type_id.id,
-            'group_id': self.order_id.group_id.id,
-            'origin': self.order_id.name,
-            'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
-            'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
-        }
-        diff_quantity = self.product_qty - qty
-        if float_compare(diff_quantity, 0.0,  precision_rounding=self.product_uom.rounding) > 0:
-            quant_uom = self.product_id.uom_id
-            get_param = self.env['ir.config_parameter'].sudo().get_param
-            if self.product_uom.id != quant_uom.id and get_param('stock.propagate_uom') != '1':
-                product_qty = self.product_uom._compute_quantity(diff_quantity, quant_uom, rounding_method='HALF-UP')
-                template['product_uom'] = quant_uom.id
-                template['product_uom_qty'] = product_qty
-            else:
-                template['product_uom_qty'] = diff_quantity
-            res.append(template)
-        return res
-
-    @api.multi
-    def _create_stock_moves(self, picking):
-        moves = self.env['stock.move']
-        done = self.env['stock.move'].browse()
-        for line in self:
-            for val in line._prepare_stock_moves(picking):
-                done += moves.create(val)
-        return done
+    def write(self, values):
+        if 'product_qty' in values:
+            for line in self:
+                if line.order_id.state == 'purchase':
+                    line.order_id.message_post_with_view('purchase.track_po_line_template',
+                                                         values={'line': line, 'product_qty': values['product_qty']},
+                                                         subtype_id=self.env.ref('mail.mt_note').id)
+        return super(PurchaseOrderLine, self).write(values)
 
     @api.multi
     def unlink(self):
         for line in self:
             if line.order_id.state in ['purchase', 'done']:
-                raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') %(line.state,))
+                raise UserError(_('Cannot delete a purchase order line which is in state \'%s\'.') % (line.state,))
         return super(PurchaseOrderLine, self).unlink()
 
     @api.model
@@ -821,12 +503,6 @@ class PurchaseOrderLine(models.Model):
             return datetime.strptime(date_order, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=seller.delay if seller else 0)
         else:
             return datetime.today() + relativedelta(days=seller.delay if seller else 0)
-
-    def _merge_in_existing_line(self, product_id, product_qty, product_uom, location_id, name, origin, values):
-        """ This function purpose is to be override with the purpose to forbide _run_buy  method
-        to merge a new po line in an existing one.
-        """
-        return True
 
     @api.onchange('product_id')
     def onchange_product_id(self):

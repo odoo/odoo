@@ -24,7 +24,6 @@ class PurchaseReport(models.Model):
         ('cancel', 'Cancelled')
     ], 'Order Status', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    picking_type_id = fields.Many2one('stock.warehouse', 'Warehouse', readonly=True)
     partner_id = fields.Many2one('res.partner', 'Vendor', readonly=True)
     date_approve = fields.Date('Date Approved', readonly=True)
     product_uom = fields.Many2one('uom.uom', 'Reference Unit of Measure', required=True)
@@ -88,8 +87,7 @@ class PurchaseReport(models.Model):
                     partner.commercial_partner_id as commercial_partner_id,
                     analytic_account.id as account_analytic_id,
                     sum(p.weight * l.product_qty/u.factor*u2.factor) as weight,
-                    sum(p.volume * l.product_qty/u.factor*u2.factor) as volume,
-                    spt.warehouse_id as picking_type_id
+                    sum(p.volume * l.product_qty/u.factor*u2.factor) as volume
         """ % self.env['res.currency']._select_companies_rates()
         return select_str
 
@@ -108,7 +106,6 @@ class PurchaseReport(models.Model):
                     cr.company_id = s.company_id and
                     cr.date_start <= coalesce(s.date_order, now()) and
                     (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
-                left join stock_picking_type spt on (spt.id=s.picking_type_id)
         """
         return from_str
 
@@ -138,7 +135,6 @@ class PurchaseReport(models.Model):
                 u2.factor,
                 partner.country_id,
                 partner.commercial_partner_id,
-                analytic_account.id,
-                spt.warehouse_id
+                analytic_account.id
         """
         return group_by_str
