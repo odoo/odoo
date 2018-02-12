@@ -19,7 +19,7 @@ class ChannelPartner(models.Model):
     _table = 'mail_channel_partner'
     _rec_name = 'partner_id'
 
-    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', required=True)
     partner_email = fields.Char('Email', related='partner_id.email')
     channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
