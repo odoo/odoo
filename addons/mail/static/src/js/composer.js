@@ -790,11 +790,11 @@ var BasicComposer = Widget.extend({
         var def = $.Deferred();
         clearTimeout(this.canned_timeout);
         this.canned_timeout = setTimeout(function () {
-            var canned_responses = self.call('chat_manager', 'getCannedResponses');
-            var matches = fuzzy.filter(utils.unaccent(search), _.pluck(canned_responses, 'source'));
+            var cannedResponses = self.call('chat_manager', 'getCannedResponses');
+            var matches = fuzzy.filter(utils.unaccent(search), _.pluck(cannedResponses, 'source'));
             var indexes = _.pluck(matches.slice(0, self.options.mention_fetch_limit), 'index');
             def.resolve(_.map(indexes, function (i) {
-                return canned_responses[i];
+                return cannedResponses[i];
             }));
         }, 500);
         return def;

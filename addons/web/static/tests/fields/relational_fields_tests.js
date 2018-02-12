@@ -6271,7 +6271,7 @@ QUnit.module('relational_fields', {
                 }
                 if (args.method === 'write') {
                     assert.deepEqual(args.args[1].timmy, [[6,  false, [12]]],
-                        'should properly write ids')
+                        'should properly write ids');
                 }
                 return this._super.apply(this, arguments);
             },
@@ -9354,7 +9354,7 @@ QUnit.module('relational_fields', {
         $input = form.$('.o_field_many2manytags span[data-id=13]'); // selects 'red' tag
         $input.click(); // opens the colorpicker dropdown
         assert.ok(form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox'), "should have a checkbox in the colorpicker dropdown menu");
-        
+
         $input.click();
         var $checkBox = form.$('.o_field_many2manytags span[data-id=13] .o_colorpicker .o_checkbox input');
         assert.notOk($checkBox.is(':checked'), "should have unticked checkbox in colorpicker dropdown menu");

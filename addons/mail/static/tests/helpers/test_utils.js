@@ -17,43 +17,41 @@ var Widget = require('web.Widget');
 
 /**
  * Create a mock bus_service, using 'bus' instead of bus.bus
- * 
+ *
  * @param {web.bus} bus
  * @return {AbstractService} the mock bus_service
  */
 function createBusService(bus) {
-
     var BusService =  AbstractService.extend({
         name: 'bus_service',
         /**
          * @override
          */
-        init: function (parent) {
+        init: function () {
             this._super.apply(this, arguments);
             if (!bus) {
                 bus = new Bus();
             }
             this.bus = new _.extend(bus, {
                 /**
-                 * Do nothing 
+                 * Do nothing
                  */
                 start_polling: function () {},
             });
         },
-    
+
         //--------------------------------------------------------------------------
         // Public
         //--------------------------------------------------------------------------
-    
+
         /**
          * Get the bus
          */
         getBus: function () {
             return this.bus;
         },
-    
     });
-    
+
     return BusService;
 }
 

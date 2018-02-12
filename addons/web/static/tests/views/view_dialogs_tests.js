@@ -21,7 +21,6 @@ QUnit.module('Views', {
                 ],
             },
         };
-
     },
 }, function () {
 

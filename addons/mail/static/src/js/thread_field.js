@@ -21,8 +21,7 @@ var ThreadField = AbstractField.extend({
         this.msgIDs = this.value.res_ids;
     },
     willStart: function () {
-        var chatReady = this.call('chat_manager', 'isReady');
-        return this.alive(chatReady);
+        return this.alive(this.call('chat_manager', 'isReady'));
     },
     start: function () {
         var self = this;
@@ -78,7 +77,7 @@ var ThreadField = AbstractField.extend({
     /**
      * @param  {Object} message
      * @param  {integer[]} message.partner_ids
-     * @return {Deferred}
+     * @return {$.Promise}
      */
     postMessage: function (message) {
         var self = this;

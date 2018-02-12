@@ -63,13 +63,14 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('chat_manager', 'searchPartner', query.term, 20).then(function (partners) {
-                    query.callback({
-                        results: _.map(partners, function (partner) {
-                            return _.extend(partner, { text: partner.label });
-                        }),
+                self.call('chat_manager', 'searchPartner', query.term, 20)
+                    .then(function (partners) {
+                        query.callback({
+                            results: _.map(partners, function (partner) {
+                                return _.extend(partner, { text: partner.label });
+                            }),
+                        });
                     });
-                });
             }
         });
         return this._super.apply(this, arguments);
@@ -152,15 +153,13 @@ var Discuss = Widget.extend(ControlPanelMixin, {
             .then(function (fields_view) {
                 self.fields_view = fields_view;
             });
-        var chatReady = this.call('chat_manager', 'isReady');
-        return $.when(this._super(), chatReady, def);
+        return $.when(this._super(), this.call('chat_manager', 'isReady'), def);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-
         var defaultChannel = this.call('chat_manager', 'getChannel', this.defaultChannelID) ||
                                 this.call('chat_manager', 'getChannel', 'channel_inbox');
 
@@ -214,8 +213,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      * @override
      */
     on_attach_callback: function () {
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.trigger('discuss_open', true);
+        this.call('chat_manager', 'getChatBus').trigger('discuss_open', true);
         if (this.channel) {
             this.thread.scroll_to({offset: this.channelsScrolltop[this.channel.id]});
         }
@@ -224,8 +222,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
      * @override
      */
     on_detach_callback: function () {
-        var chatBus = this.call('chat_manager', 'getChatBus');
-        chatBus.trigger('discuss_open', false);
+        this.call('chat_manager', 'getChatBus').trigger('discuss_open', false);
         this.channelsScrolltop[this.channel.id] = this.thread.get_scrolltop();
     },
 
@@ -582,7 +579,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
         chatBus.on('new_channel', this, this._onNewChannel);
         chatBus.on('anyone_listening', this, function (channel, query) {
             query.is_displayed = query.is_displayed ||
-                                 (channel.id === this.channel.id && this.thread.is_at_bottom());
+                                (channel.id === this.channel.id && this.thread.is_at_bottom());
         });
         chatBus.on('unsubscribe_from_channel', this, this._onChannelLeft);
         chatBus.on('update_needaction', this, this.throttledUpdateChannels);
@@ -642,7 +639,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
             needaction_counter: this.call('chat_manager', 'getNeedactionCounter'),
             starred_counter: this.call('chat_manager', 'getStarredCounter'),
         });
-        self.$(".o_mail_chat_sidebar").html($sidebar.contents());
+        this.$(".o_mail_chat_sidebar").html($sidebar.contents());
         _.each(['dm', 'public', 'private'], function (type) {
             var $input = self.$('.o_mail_add_channel[data-type=' + type + '] input');
             self._prepareAddChannelInput($input, type);
@@ -791,10 +788,10 @@ var Discuss = Widget.extend(ControlPanelMixin, {
                         domain: this.domain
                 }).then(function (messages) {
                     var options = self._getThreadRenderingOptions(messages);
-                    self.thread.remove_message_and_render(message.id, messages, options).then(function () {
-                        self._updateButtonStatus(messages.length === 0, type);
-                
-                    });
+                    self.thread.remove_message_and_render(message.id, messages, options)
+                        .then(function () {
+                            self._updateButtonStatus(messages.length === 0, type);
+                        });
                 });
         } else if (_.contains(message.channel_ids, currentChannelID)) {
             this._fetchAndRenderThread();
