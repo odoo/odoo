@@ -18,6 +18,86 @@ var LIMIT = 30; // max number of fetched messages from the server
 var PREVIEW_MSG_MAX_SIZE = 350;  // optimal for native english speakers
 var ODOOBOT_ID = "ODOOBOT"; // default author_id for messages
 
+var emojiUnicodes={
+    ":)":"😊", ":-)":"😊","=)":"😊", ":]":"😊",
+    ":D":"😃",":-D":"😃","=D":"😃",
+    "xD":"😆","XD":"😆",
+    "x'D":"😂",
+    ";)":"😉",";-)":"😉",
+    "B)":"😎","8)":"😎","B-)":"😎","8-)":"😎",
+    ";p":"😜",";P":"😜",
+    ":p":"😋",":P":"😋",":-p":"😋",":-P":"😋","=P":"😋",
+    "xp":"😝","xP":"😝",
+    "o_o":"😳",
+    ":|":"😐",":-|":"😐",
+    ":/":"😕",":-/":"😕",
+    ":(":"😞",
+    ":@":"😱",
+    ":O":"😲",":-O":"😲",":o":"😲",":-o":"😲",
+    ":'o":"😨",  
+    "3:(":"😠",">:(":"😠","3:":"😠",
+    "3:)":"😈",">:)":"😈",
+    ":*":"😘",":-*":"😘",
+    "o:)":"😇",
+    ":'(":"😢",
+    ":'-(":"😭",":\"(":"😭",
+    "&lt;3":"❤️",":heart":"❤️",
+    ":heart_eyes":"😍",
+    ":turban":"👳",
+    ":+1":"👍",
+    ":-1":"👎",
+    ":ok":"👌",
+    ":poop":"💩",
+    ":no_see":"🙈",
+    ":no_hear":"🙉",
+    ":no_speak":"🙊",
+    ":bug":"🐞",
+    ":kitten":"😺",
+    ":bear":"🐻",
+    ":snail":"🐌",
+    ":boar":"🐗",
+    ":clover":"🍀",
+    ":sunflower":"🌹",
+    ":fire":"🔥",
+    ":sun":"☀️",
+    ":partly_sunny:":"⛅️",
+    ":rainbow":"🌈",
+    ":cloud":"☁️",
+    ":zap":"⚡️",
+    ":star":"⭐️",
+    ":cookie":"🍪",
+    ":pizza":"🍕",  
+    ":hamburger":"🍔", 
+    ":fries":"🍟",
+    ":cake":"🎂",
+    ":cake_part":"🍰",
+    ":coffee":"☕️",
+    ":banana":"🍌",
+    ":sushi":"🍣",
+    ":rice_ball":"🍙",
+    ":beer":"🍺",
+    ":wine":"🍷",
+    ":cocktail":"🍸",
+    ":tropical":"🍹",
+    ":beers":"🍻",
+    ":ghost":"👻",
+    ":skull":"💀",
+    ":et":"👽",":alien":"👽",
+    ":party":"🎉",
+    ":trophy":"🏆",
+    ":key":"🔑",
+    ":pin":"📌",
+    ":postal_horn":"📯",
+    ":music":"🎵",
+    ":trumpet":"🎺",
+    ":guitar":"🎸",
+    ":soccer":"⚽️",
+    ":football":"🏈",
+    ":8ball":"🎱",
+    ":clapper":"🎬",
+    ":microphone":"🎤"
+    };
+
 /**
  * This service handles everything about chat channels and messages.
  *
@@ -43,8 +123,6 @@ var ChatManager =  AbstractService.extend({
         this.channelDefs = {};
         this.unreadConversationCounter = 0;
         this.emojis = [];
-        this.emojiSubstitutions = {};
-        this.emojiUnicodes = {};
         this.needactionCounter = 0;
         this.starredCounter = 0;
         this.mentionPartnerSuggestions = [];
@@ -636,10 +714,10 @@ var ChatManager =  AbstractService.extend({
         };
 
         // Replace emojis by their unicode character
-        _.each(_.keys(this.emojiUnicodes), function (key) {
+        _.each(emojiUnicodes, function (unicode, key) {
             var escapedKey = String(key).replace(/([.*+?=^!:${}()|[\]/\\])/g, '\\$1');
             var regexp = new RegExp("(\\s|^)(" + escapedKey + ")(?=\\s|$)", "g");
-            msg.body = msg.body.replace(regexp, "$1" + self.emojiUnicodes[key]);
+            msg.body = msg.body.replace(regexp, "$1" + unicode);
         });
         if ('subject' in data) {
             msg.subject = data.subject;
@@ -1115,19 +1193,17 @@ var ChatManager =  AbstractService.extend({
             self.mentionPartnerSuggestions = result.mention_partner_suggestions;
             self.discussMenuID = result.menu_id;
 
-            // Shortcodes: canned responses and emojis
+            // Shortcodes: canned responses
             _.each(result.shortcodes, function (s) {
-                if (s.shortcode_type === 'text') {
-                    self.cannedResponses.push(_.pick(s, ['id', 'source', 'substitution']));
-                } else {
-                    self.emojis.push(
-                        _.pick(s, ['id', 'source', 'unicode_source', 'substitution', 'description'])
-                    );
-                    self.emojiSubstitutions[_.escape(s.source)] = s.substitution;
-                    if (s.unicode_source) {
-                        self.emojiSubstitutions[_.escape(s.unicode_source)] = s.substitution;
-                        self.emojiUnicodes[_.escape(s.source)] = s.unicode_source;
-                    }
+                self.cannedResponses.push(_.pick(s, ['id', 'source', 'substitution']));
+            });
+            // emojis
+
+            var lastAdded = null;
+            _.each(emojiUnicodes, function (unicode, key) {
+                if (lastAdded != unicode){
+                    lastAdded = unicode;
+                    self.emojis.push({source:key, unicode_source:unicode, description:key});
                 }
             });
 
@@ -1275,13 +1351,12 @@ var ChatManager =  AbstractService.extend({
             url: session.url("/mail/view?message_id=" + data.id),
             module_icon:data.module_icon,
         };
-
-        _.each(_.keys(this.emojiSubstitutions), function (key) {
-            var escapedKey = String(key).replace(/([.*+?=^!:${}()|[\]/\\])/g, '\\$1');
-            var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + escapedKey + ")(?=\\s|$|</[a-z]*>)", "g");
-            msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+self.emojiSubstitutions[key]+'</span> ');
+        _.each(emojiUnicodes, function (value, key) {
+            //add o_mail_emoji class on each unicode to manage size and font
+            var unicode = String(value);
+            var regexp = new RegExp("(?:^|\\s|<[a-z]*>)(" + unicode + ")(?=\\s|$|</[a-z]*>)", "g");
+            msg.body = msg.body.replace(regexp, ' <span class="o_mail_emoji">'+unicode+'</span> ');
         });
-
         function propertyDescr(channel) {
             return {
                 enumerable: true,
