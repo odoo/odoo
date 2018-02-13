@@ -109,9 +109,8 @@ class WebsiteSurvey(http.Controller):
             return errpage
 
         # Load the user_input
-        try:
-            user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
-        except IndexError:  # Invalid token
+        user_input = UserInput.sudo().search([('token', '=', token)], limit=1)
+        if not user_input:  # Invalid token
             return request.render("website.403")
 
         # Do not display expired survey (even if some pages have already been
