@@ -13,17 +13,12 @@ var getMatchedCSSRules = function (a) {
         var sheets = document.styleSheets;
         for(var i = sheets.length-1; i >= 0 ; i--) {
             var rules;
-            if (sheets[i].hasOwnProperty('rules')) {
-                rules = sheets[i].rules;
-            } else {
-                //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
-                try {
-                    rules = sheets[i].cssRules;
-                } catch(e) {
-                    console.warn("Can't read the css rules of: " + sheets[i].href, e);
-                    continue;
-                }
-                rules = sheets[i].cssRules;
+            // try...catch because browser may not able to enumerate rules for cross-domain sheets
+            try {
+                rules = sheets[i].rules || sheets[i].cssRules;
+            } catch (e) {
+                console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                continue;
             }
             if (rules) {
                 for(var r = rules.length-1; r >= 0; r--) {
