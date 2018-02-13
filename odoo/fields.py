@@ -322,6 +322,7 @@ class Field(MetaField('DummyField', (object,), {})):
         'group_expand': None,           # name of method to expand groups in read_group()
         'prefetch': True,               # whether the field is prefetched
         'context_dependent': False,     # whether the field's value depends on context
+        'selectable': True,             # whether the field is selectable for custom search filters
     }
 
     def __init__(self, string=Default, **kwargs):
@@ -730,6 +731,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_groups = property(attrgetter('groups'))
     _description_change_default = property(attrgetter('change_default'))
     _description_deprecated = property(attrgetter('deprecated'))
+    _description_selectable = property(attrgetter('selectable'))
 
     @property
     def _description_searchable(self):
