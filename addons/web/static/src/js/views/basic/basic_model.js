@@ -478,6 +478,30 @@ var BasicModel = AbstractModel.extend({
         return _t("New");
     },
     /**
+     * Returns true if a record can be abandoned from a list datapoint.
+     *
+     * A record cannot be abandonned if it has been registered as "added"
+     * in the parent's savepoint, otherwise it can be abandonned.
+     *
+     * This is useful when discarding changes on this record, as it means that
+     * we must keep the record even if some fields are invalids (e.g. required
+     * field is empty).
+     *
+     * @param {string} id id for a local resource
+     * @returns {boolean}
+     */
+    canBeAbandoned: function (id) {
+        var data = this.localData[id];
+        var parent = this.localData[data.parentID];
+        var abandonable = true;
+        if (parent) {
+            abandonable = !_.some(parent._savePoint, function (entry) {
+                return entry.operation === 'ADD' && entry.id === id;
+            });
+        }
+        return abandonable;
+    },
+    /**
      * Returns true if a record is dirty. A record is considered dirty if it has
      * some unsaved changes, marked by the _isDirty property on the record or
      * one of its subrecords.
