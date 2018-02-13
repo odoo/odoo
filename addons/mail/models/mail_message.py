@@ -682,16 +682,6 @@ class Message(models.Model):
             (self._description, operation))
 
     @api.model
-    def _get_record_name(self, values):
-        """ Return the related document name, using name_get. It is done using
-            SUPERUSER_ID, to be sure to have the record name correctly stored. """
-        model = values.get('model', self.env.context.get('default_model'))
-        res_id = values.get('res_id', self.env.context.get('default_res_id'))
-        if not model or not res_id or model not in self.env:
-            return False
-        return self.env[model].sudo().browse(res_id).name_get()[0][1]
-
-    @api.model
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
         model, res_id, email_from = values.get('model', self._context.get('default_model')), values.get('res_id', self._context.get('default_res_id')), values.get('email_from')  # ctx values / defualt_get res ?
@@ -717,24 +707,16 @@ class Message(models.Model):
 
     @api.model
     def create(self, values):
-        # coming from mail.js that does not have pid in its values
-        if self.env.context.get('default_starred'):
-            self = self.with_context({'default_starred_partner_ids': [(4, self.env.user.partner_id.id)]})
-
-        if 'email_from' not in values:  # needed to compute reply_to
-            values['email_from'] = self._get_default_from()
         if not values.get('message_id'):
             values['message_id'] = self._get_message_id(values)
+        if 'email_from' not in values:  # required to compute reply_to
+            values['email_from'] = self._get_default_from()
         if 'reply_to' not in values:
             values['reply_to'] = self._get_reply_to(values)
-        if 'record_name' not in values and 'default_record_name' not in self.env.context:
-            values['record_name'] = self._get_record_name(values)
-
-        if 'attachment_ids' not in values:
-            values.setdefault('attachment_ids', [])
 
         # extract base64 images
         if 'body' in values:
+            values.setdefault('attachment_ids', [])
             Attachments = self.env['ir.attachment']
             data_to_url = {}
             def base64_to_boundary(match):

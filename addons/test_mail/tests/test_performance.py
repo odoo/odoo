@@ -93,7 +93,7 @@ class TestMailPerformance(TransactionCase):
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(admin=15, demo=15):  # test_mail only: 15 - 15
+        with self.assertQueryCount(admin=13, demo=13):  # test_mail only: 1. - 13
             self.env['test_performance.mail'].create({'name': 'X'})
 
     @users('admin', 'emp')
@@ -167,7 +167,7 @@ class TestAdvMailPerformance(TransactionCase):
                 'activity_type_id': self.env.ref('mail.mail_activity_data_todo').id,
             })
 
-        with self.assertQueryCount(admin=57, emp=86):  # test_mail only: 56 - 85
+        with self.assertQueryCount(admin=51, emp=71):  # test_mail only: 50 - 70
             activity.action_feedback(feedback='Zizisse Done !')
 
     @users('admin', 'emp')
@@ -181,7 +181,7 @@ class TestAdvMailPerformance(TransactionCase):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=57, emp=86):  # test_mail only: 56 - 85
+        with self.assertQueryCount(admin=51, emp=71):  # test_mail only: 50 - 70
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])

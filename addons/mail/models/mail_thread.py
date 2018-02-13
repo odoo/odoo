@@ -1235,7 +1235,7 @@ class MailThread(models.AbstractModel):
                 subtype = 'mail.mt_note'
                 if message_dict.get('parent_id'):
                     parent_message = self.env['mail.message'].sudo().browse(message_dict['parent_id'])
-                    partner_ids = [(4, parent_message.author_id.id)]
+                    partner_ids = [parent_message.author_id.id]
             else:
                 subtype = 'mail.mt_comment'
             new_msg = thread.message_post(subtype=subtype, partner_ids=partner_ids, **message_dict)
@@ -1761,7 +1761,7 @@ class MailThread(models.AbstractModel):
                 filtered_attachment_ids.write({'res_model': message_data['model'], 'res_id': message_data['res_id']})
             m2m_attachment_ids += [(4, id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
-        for attachment in attachments:
+        for attachment in attachments or []:
             cid = False
             if len(attachment) == 2:
                 name, content = attachment
@@ -1828,54 +1828,49 @@ class MailThread(models.AbstractModel):
                     to the related document. Should only be set by Chatter.
             :return int: ID of newly created mail.message
         """
-        if attachments is None:
-            attachments = {}
-        if self.ids and not self.ensure_one():
+        if len(self.ids) > 1:
             raise exceptions.Warning(_('Invalid record set: should be called as model (without records) or on single-record recordset'))
+        MsgSudo = self.env['mail.message'].sudo()
 
-        # if we're processing a message directly coming from the gateway, the destination model was
-        # set in the context.
+        # perform redirect if called on mail.thread or at least correctly set the model on the created mail.message
         model = False
         if self.ids:
-            self.ensure_one()
-            model = self._context.get('thread_model', False) if self._name == 'mail.thread' else self._name
-            if model and model != self._name and hasattr(self.env[model], 'message_post'):
-                RecordModel = self.env[model].with_context(thread_model=None)  # TDE: was removing the key ?
-                return RecordModel.browse(self.ids).message_post(
-                    body=body, subject=subject, message_type=message_type,
-                    subtype=subtype, parent_id=parent_id, attachments=attachments,
-                    notif_layout=notif_layout, notif_values=notif_values, **kwargs)
+            model = kwargs.pop('model', False) if self._name == 'mail.thread' else self._name
+        if model and model != self._name and hasattr(self.env[model], 'message_post'):
+            return self.env[model].browse(self.ids).message_post(
+                body=body, subject=subject, message_type=message_type,
+                subtype=subtype, parent_id=parent_id, attachments=attachments,
+                notif_layout=notif_layout, notif_values=notif_values, **kwargs)
 
-        # 0: Find the message's author, because we need it for private discussion
-        author_id = kwargs.get('author_id')
-        if author_id is None:  # keep False values
-            author_id = self.env['mail.message']._get_default_author().id
+        # compute record-related data
+        res_id = self.ids[0] if model and self.ids else False
+        record, record_name = kwargs.pop('record', False), kwargs.pop('record_name', None)
+        if model and res_id and not record:
+            record = record if record else self.env[model].sudo().browse(res_id)
+        if model and res_id and record_name is None:
+            record_name = record.display_name
 
-        # 2: Private message: add recipients (recipients and author of parent message) - current author
-        #   + legacy-code management (! we manage only 4 and 6 commands)
-        partner_ids = set()
-        kwargs_partner_ids = kwargs.pop('partner_ids', [])
-        for partner_id in kwargs_partner_ids:
-            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 4 and len(partner_id) == 2:
-                partner_ids.add(partner_id[1])
-            if isinstance(partner_id, (list, tuple)) and partner_id[0] == 6 and len(partner_id) == 3:
-                partner_ids |= set(partner_id[2])
-            elif isinstance(partner_id, pycompat.integer_types):
-                partner_ids.add(partner_id)
-            else:
-                pass  # we do not manage anything else
+        # compute author, email_from
+        author_id, email_from = kwargs.pop('author_id', None), kwargs.pop('email_from', None)
+        if author_id:
+            author = self.env['res.partner'].sudo().browse(author_id)
+            email_from = formataddr((author.name, author.email))
+        elif not author_id and not email_from:
+            author = self.env.user.partner_id
+            email_from = formataddr((author.name, author.email))
+        else:
+            author = self.env['res.partner'].sudo()
+
+        # manage partner_ids: coming from (legacy ?) private messages without author
+        partner_ids = kwargs.pop('partner_ids', [])
         if parent_id and not model:
-            parent_message = self.env['mail.message'].browse(parent_id)
-            private_followers = set([partner.id for partner in parent_message.partner_ids])
-            if parent_message.author_id:
-                private_followers.add(parent_message.author_id.id)
-            private_followers -= set([author_id])
-            partner_ids |= private_followers
+            parent = MsgSudo.browse(parent_id)
+            partner_ids += list(set(parent.partner_ids.ids + parent.author_id.ids) - set(author.ids))
 
-        # 4: mail.message.subtype
-        subtype_id = kwargs.get('subtype_id', False)
+        # compute subtype: note by default, support xmlid passing through subtype parameter
+        subtype_id = kwargs.pop('subtype_id', False)
         if not subtype_id:
-            subtype = subtype or 'mt_note'
+            subtype = subtype if subtype else 'mt_note'
             if '.' not in subtype:
                 subtype = 'mail.%s' % subtype
             subtype_id = self.env['ir.model.data'].xmlid_to_res_id(subtype)
@@ -1888,32 +1883,37 @@ class MailThread(models.AbstractModel):
             self.message_subscribe(list(partner_to_subscribe))
 
         # _mail_flat_thread: automatically set free messages to the first posted message
-        MailMessage = self.env['mail.message']
         if self._mail_flat_thread and model and not parent_id and self.ids:
-            messages = MailMessage.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model)], order="id ASC", limit=1)
+            messages = MsgSudo.search(['&', ('res_id', '=', self.ids[0]), ('model', '=', model)], order="id ASC", limit=1)
             parent_id = messages.ids and messages.ids[0] or False
         # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
         elif parent_id:
-            messages = MailMessage.sudo().search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
-            # avoid loops when finding ancestors
+            messages = MsgSudo.search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
             processed_list = []
-            if messages:
-                message = messages[0]
-                while (message.parent_id and message.parent_id.id not in processed_list):
-                    processed_list.append(message.parent_id.id)
-                    message = message.parent_id
-                parent_id = message.id
+            while (messages.parent_id and messages.parent_id.id not in processed_list):
+                processed_list.append(messages.parent_id.id)
+                messages = messages.parent_id
+            parent_id = messages.ids[0] if messages else parent_id
 
-        values = kwargs
+        # compute specific reply_to: alias of document through _notify_get_reply_to with default being email_from
+        reply_to = kwargs.pop('reply_to', None)
+        if reply_to is None:
+            reply_to = self.env['mail.thread']._notify_get_reply_to_on_records(record, default=email_from, doc_names={res_id: record_name})[res_id]
+
+        values = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields.keys())
         values.update({
-            'author_id': author_id,
+            'author_id': author.id,
+            'email_from': email_from,
             'model': model,
             'res_id': model and self.ids[0] or False,
             'body': body,
             'subject': subject or False,
+            'record_name': record_name,
+            'reply_to': reply_to,
             'message_type': message_type,
             'parent_id': parent_id,
             'subtype_id': subtype_id,
+            # 'message_id': self._get_message_id(values),
             'partner_ids': [(4, pid) for pid in partner_ids],
         })
 
@@ -1922,12 +1922,8 @@ class MailThread(models.AbstractModel):
         attachment_ids = self._message_post_process_attachments(attachments, kwargs.pop('attachment_ids', []), values)
         values['attachment_ids'] = attachment_ids
 
-        # Avoid warnings about non-existing fields
-        for x in ('from', 'to', 'cc'):
-            values.pop(x, None)
-
         # Post the message
-        new_message = MailMessage.create(values)
+        new_message = self.env['mail.message'].create(values)
         self._message_post_after_hook(new_message, values, notif_layout, notif_values)
         return new_message
 
@@ -1960,16 +1956,14 @@ class MailThread(models.AbstractModel):
         except ImportError:
             values['slug'] = lambda self: self.id
         if isinstance(views_or_xmlid, pycompat.string_types):
-            views = self.env.ref(views_or_xmlid, raise_if_not_found=False)
+            views = self.env['ir.ui.view'].browse(self.env['ir.model.data'].xmlid_to_res_id(views_or_xmlid))
         else:
             views = views_or_xmlid
-        if not views:
-            return
         for record in self:
             values['object'] = record
             rendered_template = views.render(values, engine='ir.qweb', minimal_qcontext=True)
-            kwargs['body'] = rendered_template
-            record.message_post_with_template(False, **kwargs)
+            msg = record.message_post(body=rendered_template, **kwargs)
+        return msg
 
     @api.multi
     def message_post_with_template(self, template_id, **kwargs):
@@ -2206,7 +2200,7 @@ class MailThread(models.AbstractModel):
             record.message_notify(
                 subject='You have been assigned to %s' % record.display_name,
                 body=assignation_msg,
-                partner_ids=[(4, pid) for pid in partner_ids],
+                partner_ids=partner_ids,
                 record_name=record.display_name,
                 notif_layout='mail.mail_notification_light',
                 notif_values={

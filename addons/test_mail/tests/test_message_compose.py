@@ -218,7 +218,7 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
         new_notification = self.env['mail.thread'].message_notify(
             subject='This should be a subject',
             body='<p>You have received a notification</p>',
-            partner_ids=[(4, self.partner_1.id), (4, self.user_employee.partner_id.id)],
+            partner_ids=[self.partner_1.id, self.user_employee.partner_id.id],
         )
 
         self.assertEqual(new_notification.subtype_id, self.env.ref('mail.mt_note'))
