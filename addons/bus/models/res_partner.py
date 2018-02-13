@@ -28,7 +28,7 @@ class ResPartner(models.Model):
             partner.im_status = res.get(partner.id, 'offline')
 
     @api.model
-    def im_search(self, name, limit=20):
+    def im_search(self, name, channel_id, limit=20):
         """ Search partner with a name and return its id, name and im_status.
             Note : the user must be logged
             :param name : the partner name to search
@@ -40,6 +40,7 @@ class ResPartner(models.Model):
         if self.env['mail.channel'].check_access_rights('create', raise_exception=False):
             name = '%' + name + '%'
             excluded_partner_ids = [self.env.user.partner_id.id]
+            channel = self.env['mail.channel'].browse(channel_id)
             self.env.cr.execute("""
                 SELECT
                     U.id as user_id,
@@ -51,13 +52,15 @@ class ResPartner(models.Model):
                          ELSE 'online'
                     END as im_status
                 FROM res_users U
-                    JOIN res_partner P ON P.id = U.partner_id
+                    LEFT JOIN res_groups_users_rel R ON R.uid = U.id
                     LEFT JOIN bus_presence B ON B.user_id = U.id
+                    RIGHT JOIN res_partner P ON P.id = U.partner_id
                 WHERE P.name ILIKE %s
                     AND P.id NOT IN %s
-                    AND U.active = 't'
+                    AND (R.gid=%s OR (P.email LIKE '%%@%%' AND %s))
+                    AND P.active
                 LIMIT %s
-            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
+            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), channel.group_public_id.id, channel.email_send, limit))
             return self.env.cr.dictfetchall()
         else:
             return {}

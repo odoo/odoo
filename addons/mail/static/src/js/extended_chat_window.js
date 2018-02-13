@@ -17,7 +17,7 @@ return ChatWindow.extend({
             this.$('.o_chat_search_input input')
                 .autocomplete({
                     source: function (request, response) {
-                        self.call('chat_manager', 'searchPartner', request.term, 10).done(response);
+                        self.call('chat_manager', 'searchPartner', request.term, self.channelID, 10).done(response);
                     },
                     select: function (event, ui) {
                         self.trigger('open_dm_session', ui.item.id);

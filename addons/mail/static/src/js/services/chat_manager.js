@@ -762,15 +762,16 @@ var ChatManager =  AbstractService.extend({
      * @param  {integer} limit max number of found partners in the response
      * @return {$.Promise<Object[]>} list of found partners (matching 'searchVal')
      */
-    searchPartner: function (searchVal, limit) {
+    searchPartner: function (searchVal, channel_id, limit) {
         var def = $.Deferred();
         var values = [];
+        var group_public_id = this.channels.find(function(chan) { return chan.id == channel_id }).group_public_id;
         // search among prefetched partners
         var searchRegexp = new RegExp(_.str.escapeRegExp(utils.unaccent(searchVal)), 'i');
         _.each(this.mentionPartnerSuggestions, function (partners) {
             if (values.length < limit) {
                 values = values.concat(_.filter(partners, function (partner) {
-                    return session.partner_id !== partner.id && searchRegexp.test(partner.name);
+                    return session.partner_id !== partner.id && searchRegexp.test(partner.name) && partner.gid.includes(group_public_id);
                 })).splice(0, limit);
             }
         });
@@ -779,7 +780,7 @@ var ChatManager =  AbstractService.extend({
             def = this._rpc({
                     model: 'res.partner',
                     method: 'im_search',
-                    args: [searchVal, limit || 20],
+                    args: [searchVal, channel_id, limit || 20],
                 }, {
                     shadow: true,
                 });
@@ -1198,6 +1199,7 @@ var ChatManager =  AbstractService.extend({
             display_needactions: options.displayNeedactions,
             mass_mailing: data.mass_mailing,
             group_based_subscription: data.group_based_subscription,
+            group_public_id: data.group_public_id,
             needaction_counter: data.message_needaction_counter || 0,
             unread_counter: 0,
             last_seen_message_id: data.seen_message_id,

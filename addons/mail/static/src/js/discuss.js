@@ -63,13 +63,11 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('chat_manager', 'searchPartner', query.term, 20)
-                    .then(function (partners) {
-                        query.callback({
-                            results: _.map(partners, function (partner) {
-                                return _.extend(partner, { text: partner.label });
-                            }),
-                        });
+                self.call('chat_manager', 'searchPartner', query.term, self.channelID, 20).then(function (partners) {
+                    query.callback({
+                        results: _.map(partners, function (partner) {
+                            return _.extend(partner, { text: partner.label });
+                        }),
                     });
             }
         });
@@ -99,7 +97,7 @@ var PartnerInviteDialog = Dialog.extend({
                     self.do_notify(_t('New people'), notification);
                     // Clear the membersDeferred to fetch again the partner
                     // when getMentionPartnerSuggestions from the chatManager is triggered
-                    var channel = this.call('chat_manager', 'getChannel', self.channelID);
+                    var channel = self.call('chat_manager', 'getChannel', self.channelID);
                     delete channel.membersDeferred;
                 });
         }
@@ -346,7 +344,7 @@ var Discuss = Widget.extend(ControlPanelMixin, {
             $input.autocomplete({
                 source: function (request, response) {
                     self.last_search_val = _.escape(request.term);
-                    self.call('chat_manager', 'searchPartner', self.last_search_val, 10).done(response);
+                    self.call('chat_manager', 'searchPartner', self.last_search_val, self.channelID, 10).done(response);
                 },
                 select: function (event, ui) {
                     var partner_id = ui.item.id;

@@ -345,6 +345,8 @@ class Channel(models.Model):
                 'mass_mailing': channel.email_send,
                 'group_based_subscription': bool(channel.group_ids),
             }
+            if bool(channel.group_public_id):
+                info['group_public_id'] = channel.group_public_id.id
             if extra_info:
                 info['info'] = extra_info
             # add the partner for 'direct mesage' channel
