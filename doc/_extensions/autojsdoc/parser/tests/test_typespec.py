@@ -63,6 +63,17 @@ def test_tokens():
         (types.NAME, 'Object'),
         (types.OP, '>')
     ]
+    
+    toks = list(types.tokenize('Function<Array<Object[]>>'))
+    assert toks == [
+        (types.NAME, 'Function'),
+        (types.OP, '<'),
+        (types.NAME, 'Array'),
+        (types.OP, '<'),
+        (types.NAME, 'Object[]'),
+        (types.OP, '>'),
+        (types.OP, '>')
+    ]
 
 def test_peekable():
     p = types.Peekable(range(5))
