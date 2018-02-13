@@ -758,6 +758,7 @@ class BaseModel(object):
             :param fields: list of lists of fields to traverse
             :return: list of lists of corresponding values
         """
+        import_compatible = self.env.context.get('import_compat', True)
         lines = []
         for record in self:
             # main line of record, initially empty
@@ -791,8 +792,9 @@ class BaseModel(object):
                     else:
                         primary_done.append(name)
 
-                        # This is a special case, its strange behavior is intended!
-                        if field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
+                        # in import_compat mode, m2m should always be exported as
+                        # a comma-separated list of xids in a single cell
+                        if import_compatible and field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
                             xml_ids = [r.__export_xml_id() for r in value]
                             current[i] = ','.join(xml_ids) or False
                             continue
