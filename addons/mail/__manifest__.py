@@ -23,7 +23,6 @@
         'views/res_config_settings_views.xml',
         'data/mail_data.xml',
         'data/mail_channel_data.xml',
-        'data/mail_shortcode_data.xml',
         'data/mail_activity_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',

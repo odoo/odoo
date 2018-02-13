@@ -1,3 +1,17 @@
+@font-face {
+    font-family: 'emojifont';
+    src: local('Segoe UI'), 
+         local('Apple Color Emoji'), 
+         local('Android Emoji'),
+         local('Noto Color Emoji'),
+         local('Twitter Color Emoji'),
+         local('Twitter Color'),
+         local('EmojiOne Color'),
+         local('EmojiOne'),
+         local(EmojiSymbols),
+         local(Symbola);
+}
+
 .o_chat_composer {
     position: relative;
     .o-flex(0, 0, auto);
@@ -74,6 +88,8 @@
         .o_mail_emoji {
             margin: @o-mail-chatter-gap 0 0 @o-mail-chatter-gap;
             cursor: pointer; // only in the popover
+            min-width: 20px;
+            min-height: 20px;
         }
     }
 
@@ -219,13 +235,12 @@
 // Emoji
 .o_mail_emoji {
     display: inline-block;
-    height: 20px;
-    width: 20px;
     padding: 0;
-
-    > img {
-        width: 100%;
-    }
+    //font-size:150%;
+    font-family: emojifont;
+}
+.o_mail_channel_preview .o_mail_emoji{
+    font-size:100%;
 }
 
 // Attachment Icons (common for chat thread and chat composer)
