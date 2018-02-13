@@ -21,29 +21,3 @@ class User(models.Model):
                 employees = Employee.search([('user_id', '=', user.id)])
                 employees.write({'name': vals['name']})
         return result
-
-    @api.multi
-    def _get_related_employees(self):
-        self.ensure_one()
-        ctx = dict(self.env.context)
-        if 'thread_model' in ctx:
-            ctx['thread_model'] = 'hr.employee'
-        return self.env['hr.employee'].with_context(ctx).search([('user_id', '=', self.id)])
-
-    @api.multi
-    @api.returns('self', lambda value: value.id)
-    def message_post(self, **kwargs):
-        """ Redirect the posting of message on res.users to the related employees.
-            This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id.
-        """
-        self.ensure_one()
-        if kwargs.get('message_type') == 'email':
-            return super(User, self).message_post(**kwargs)
-        message_id = None
-        employees = self._get_related_employees()
-        if not employees:  # no employee: fall back on previous behavior
-            return super(User, self).message_post(**kwargs)
-        for employee in employees:
-            message_id = employee.message_post(**kwargs)
-        return message_id
