@@ -54,6 +54,7 @@ class Users(models.Model):
             raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         user = super(Users, self).create(values)
+        self._subscribe_users(values)
 
         # create a welcome message
         user._create_welcome_message()
@@ -62,6 +63,10 @@ class Users(models.Model):
     @api.multi
     def write(self, vals):
         write_res = super(Users, self).write(vals)
+        self._subscribe_users(vals)
+        return write_res
+
+    def _subscribe_users(self, vals):
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
@@ -70,7 +75,6 @@ class Users(models.Model):
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
-        return write_res
 
     def _create_welcome_message(self):
         self.ensure_one()

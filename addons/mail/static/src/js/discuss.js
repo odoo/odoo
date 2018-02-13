@@ -67,8 +67,9 @@ var PartnerInviteDialog = Dialog.extend({
                     query.callback({
                         results: _.map(partners, function (partner) {
                             return _.extend(partner, { text: partner.label });
-                        }),
+                        })
                     });
+                });
             }
         });
         return this._super.apply(this, arguments);
