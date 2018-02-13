@@ -131,6 +131,20 @@ var getMatchedCSSRules = function (a) {
         delete style['text-decoration-style'];
     }
 
+    // text-align inheritance does not seem to get past <td> elements on some
+    // mail clients
+    if (style['text-align'] === 'inherit') {
+        var $el = $(a).parent();
+        do {
+            var align = $el.css('text-align');
+            if (_.indexOf(['left', 'right', 'center', 'justify'], align) >= 0) {
+                style['text-align'] = align;
+                break;
+            }
+            $el = $el.parent();
+        } while (!$el.is('html'));
+    }
+
     return style;
 };
 
