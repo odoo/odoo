@@ -1154,6 +1154,60 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('list in form: discard newly added element with empty required field', function (assert) {
+        // This test simulates discarding a record that has been created with
+        // one of its required field that is empty. When we discard the changes
+        // on this empty field, it should not assume that this record should be
+        // abandonned, since it has been added (even though it is a new record).
+        assert.expect(6);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<field name="p">' +
+                            '<tree editable="bottom">' +
+                                '<field name="display_name"/>' +
+                                '<field name="trululu" required="1"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                '</form>',
+            mockRPC: function (route, args) {
+                if (args.method === 'default_get') {
+                    return $.when({p: [[0, 0, {display_name: 'new record', trululu: false}]]});
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.strictEqual($('tr.o_data_row').length, 1,
+            "should have created the new record in the o2m");
+
+        var requiredElement = $('td.o_data_cell.o_required_modifier');
+        assert.strictEqual(requiredElement.length, 1,
+            "should have a required field on this record");
+        assert.strictEqual(requiredElement.text(), "",
+            "should have empty string in the required field on this record");
+
+        requiredElement.click();
+        // discard by clicking on body
+        $('body').click();
+
+        assert.strictEqual($('tr.o_data_row').length, 1,
+            "should still have the record in the o2m");
+
+        // update selector of required field element
+        requiredElement = $('td.o_data_cell.o_required_modifier');
+        assert.strictEqual(requiredElement.length, 1,
+            "should still have the required field on this record");
+        assert.strictEqual(requiredElement.text(), "",
+            "should still have empty string in the required field on this record");
+        form.destroy();
+    });
+
     QUnit.test('list in form: default_get with x2many create', function (assert) {
         assert.expect(5);
 
