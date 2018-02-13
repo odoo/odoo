@@ -1781,7 +1781,7 @@ class MailThread(models.AbstractModel):
     @api.returns('self', lambda value: value.id)
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
-                     parent_id=False, attachments=None, content_subtype='html',
+                     parent_id=False, attachments=None,
                      notif_layout=False, notif_values=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
@@ -1790,7 +1790,6 @@ class MailThread(models.AbstractModel):
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str type: see mail_message.type field
-            :param str content_subtype:: if plaintext: convert body into html
             :param int parent_id: handle reply to a previous message by adding the
                 parent partners to the message in case of private discussion
             :param tuple(str,str) attachments or list id: list of attachment tuples in the form
@@ -1817,16 +1816,12 @@ class MailThread(models.AbstractModel):
                 return RecordModel.browse(self.ids).message_post(
                     body=body, subject=subject, message_type=message_type,
                     subtype=subtype, parent_id=parent_id, attachments=attachments,
-                    content_subtype=content_subtype, notif_layout=notif_layout, notif_values=notif_values, **kwargs)
+                    notif_layout=notif_layout, notif_values=notif_values, **kwargs)
 
         # 0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
         if author_id is None:  # keep False values
             author_id = self.env['mail.message']._get_default_author().id
-
-        # 1: Handle content subtype: if plaintext, converto into HTML
-        if content_subtype == 'plaintext':
-            body = tools.plaintext2html(body)
 
         # 2: Private message: add recipients (recipients and author of parent message) - current author
         #   + legacy-code management (! we manage only 4 and 6 commands)
