@@ -198,7 +198,6 @@ class Channel(models.Model):
 
     @api.multi
     def _notify_specific_email_values(self, message):
-        self.ensure_one()
         res = super(Channel, self)._notify_specific_email_values(message)
         try:
             headers = safe_eval(res.get('headers', dict()))
