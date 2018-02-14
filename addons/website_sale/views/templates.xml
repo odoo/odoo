@@ -843,7 +843,7 @@
                                 <a t-attf-href="#" class="mb8 input-group-addon js_add_cart_json hidden-xs">
                                     <i class="fa fa-minus"></i>
                                 </a>
-                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty)" />
+                                <input type="text" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                 <a t-attf-href="#" class="mb8 input-group-addon float_left js_add_cart_json hidden-xs">
                                     <i class="fa fa-plus"></i>
                                 </a>
@@ -929,7 +929,7 @@
                             <span t-esc="line.product_id.with_context(display_default_code=False).display_name" class="h6" />
                         </a>
                         <br />
-                        <small>Qty: <t t-esc="int(line.product_uom_qty)" /></small>
+                        <small>Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" /></small>
                     </div>
                 </div>
             </t>
@@ -1295,7 +1295,7 @@
                                                 </div>
                                             </td>
                                             <td class='td-qty'>
-                                                <div t-esc="line.product_uom_qty" />
+                                              <div t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                             </td>
                                             <td class="text-center td-price">
                                                 <span t-field="line.price_unit" style="white-space: nowrap;" t-options="{'widget': 'monetary','from_currency': website_sale_order.pricelist_id.currency_id,'display_currency': website.currency_id}" />
@@ -1413,7 +1413,7 @@
                                               </td>
                                               <td class='td-qty'>
                                                   <div id="quote_qty">
-                                                      <span t-field="line.product_uom_qty"/>
+                                                      <span t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
                                                       <span class='hidden-xs' t-field="line.product_uom" groups="product.group_uom"/>
                                                   </div>
                                               </td>

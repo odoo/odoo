@@ -443,7 +443,7 @@ class IrMailServer(models.Model):
             message['To'] = x_forge_to
 
         # Do not actually send emails in testing mode!
-        if getattr(threading.currentThread(), 'testing', False):
+        if getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode():
             _test_logger.info("skip sending email in test mode")
             return message['Message-Id']
 
