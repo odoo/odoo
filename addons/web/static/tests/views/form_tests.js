@@ -630,7 +630,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('readonly attrs on fields are re-evaluated on field change', function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = createView({
             View: FormView,
@@ -656,6 +656,9 @@ QUnit.module('Views', {
         form.$('.o_field_boolean input').click();
         assert.strictEqual(form.$('span[name="foo"]').length, 1,
             "the foo field widget should have been rerendered to now be readonly again");
+        form.$('.o_field_boolean input').click();
+        assert.strictEqual(form.$('input[name="foo"]').length, 1,
+            "the foo field widget should have been rerendered to now be editable again");
 
         form.destroy();
     });
@@ -6226,6 +6229,41 @@ QUnit.module('Views', {
         form.destroy();
         delete widgetRegistry.map.test;
     });
+
+    QUnit.test('basic support for widgets', function (assert) {
+        assert.expect(1);
+
+        var MyWidget = Widget.extend({
+            init: function (parent, dataPoint) {
+                this.data = dataPoint.data;
+            },
+            start: function () {
+                this.$el.text(this.data.foo + "!");
+            },
+            updateState: function (dataPoint) {
+                this.$el.text(dataPoint.data.foo + "!");
+            },
+        });
+        widgetRegistry.add('test', MyWidget);
+
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo"/>' +
+                    '<widget name="test"/>' +
+                '</form>',
+        });
+
+        form.$('input[name="foo"]').val("I am alive").trigger('input');
+        assert.strictEqual(form.$('.o_widget').text(), 'I am alive!',
+            "widget should have been updated");
+
+        form.destroy();
+        delete widgetRegistry.map.test;
+    });
+
 
     QUnit.test('bounce edit button in readonly mode', function (assert) {
         assert.expect(3);
