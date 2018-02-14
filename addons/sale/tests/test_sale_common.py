@@ -72,8 +72,8 @@ class TestCommonSaleNoChart(TestAccountNoChartCommon):
             'property_account_income_categ_id': cls.account_income_product.id
         })
         # Products
-        uom_unit = cls.env.ref('product.product_uom_unit')
-        uom_hour = cls.env.ref('product.product_uom_hour')
+        uom_unit = cls.env.ref('uom.product_uom_unit')
+        uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.product_order = cls.env['product.product'].create({
             'name': "Zed+ Antivirus",
             'standard_price': 235.0,

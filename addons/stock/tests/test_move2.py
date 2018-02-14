@@ -1782,7 +1782,7 @@ class TestRoutes(TransactionCase):
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
-        uom_unit = self.env.ref('product.product_uom_unit')
+        uom_unit = self.env.ref('uom.product_uom_unit')
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
 
         # create and get back the pick ship route
@@ -1852,7 +1852,7 @@ class TestRoutes(TransactionCase):
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
-        uom_unit = self.env.ref('product.product_uom_unit')
+        uom_unit = self.env.ref('uom.product_uom_unit')
         stock_location = self.env.ref('stock.stock_location_stock')
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1)
 

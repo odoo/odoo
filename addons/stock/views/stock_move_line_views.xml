@@ -11,7 +11,7 @@
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="qty_done" string="Quantity Done"/>
-                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                 <field name="state"/>
             </tree>
         </field>
@@ -37,12 +37,12 @@
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
                             <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
                                 <field name="product_uom_qty"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
                             <label for="qty_done" string="Quantity Done"/>
                             <div class="o_row">
                                 <field name="qty_done"/>
-                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                                <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
                             <field name="lot_id" string="Lot/Serial Number" groups="stock.group_production_lot"/>
                             <field name="package_id" string="Source Package" groups="product.group_stock_packaging"/>
@@ -94,7 +94,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <field name="qty_done" string="Quantity Done"/>
-                                    <field name="product_uom_id" string="Unit of Measure" groups="product.group_uom"/>
+                                    <field name="product_uom_id" string="Unit of Measure" groups="uom.group_uom"/>
                                 </div>
                                 <div class="col-xs-6 text-right">
                                     <field name="date"/>

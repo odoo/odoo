@@ -23,8 +23,8 @@
             <field name="website_sequence">100</field>
             <field name="website_published" eval="True"/>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="description_sale">Warranty, issued to the purchaser of an article by its manufacturer, promising to repair or replace it if necessary within a specified period of time.</field>
             <field name="default_code">W0001</field>
             <field name="attribute_value_ids" eval="[(6,0,[ref('product_attribute_value_1')])]"/>

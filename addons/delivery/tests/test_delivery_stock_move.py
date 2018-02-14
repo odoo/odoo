@@ -17,7 +17,7 @@ class StockMoveInvoice(AccountingTestCase):
         self.pricelist_id = self.env.ref('product.list0')
         self.product_11 = self.env.ref('product.product_product_11')
         self.product_icecream = self.env.ref('stock.product_icecream')
-        self.product_uom_kgm = self.env.ref('product.product_uom_kgm')
+        self.product_uom_kgm = self.env.ref('uom.product_uom_kgm')
         self.normal_delivery = self.env.ref('delivery.normal_delivery_carrier')
 
     def test_01_delivery_stock_move(self):

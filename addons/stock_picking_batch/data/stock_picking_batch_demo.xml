@@ -48,8 +48,8 @@
         <field name="list_price">450.0</field>
         <field name="standard_price">300.0</field>
         <field name="type">consu</field>
-        <field name="uom_id" ref="product.product_uom_unit"/>
-        <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="description_sale">Ice Cream Chocolate with sticks</field>
     </record>
     <record id="product_product_ice_cream_vani" model="product.product">
@@ -59,8 +59,8 @@
         <field name="list_price">450.0</field>
         <field name="standard_price">300.0</field>
         <field name="type">consu</field>
-        <field name="uom_id" ref="product.product_uom_unit"/>
-        <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="description_sale">Ice Cream Vanilla</field>
     </record>
     <record id="product_product_dry_specu" model="product.product">
@@ -70,8 +70,8 @@
         <field name="list_price">150.0</field>
         <field name="standard_price">100.0</field>
         <field name="type">consu</field>
-        <field name="uom_id" ref="product.product_uom_unit"/>
-        <field name="uom_po_id" ref="product.product_uom_unit"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="description_sale">Speculoos - A belgian speciality</field>
     </record>
 
@@ -82,7 +82,7 @@
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="product_uom_qty">10</field>
-        <field name="product_uom" ref="product.product_uom_unit" />
+        <field name="product_uom" ref="uom.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_choco"/>
     </record>
     <record id="stock_move2" model="stock.move">
@@ -91,7 +91,7 @@
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="product_uom_qty">5</field>
-        <field name="product_uom" ref="product.product_uom_unit" />
+        <field name="product_uom" ref="uom.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_vani"/>
     </record>
     <record id="stock_move3" model="stock.move">
@@ -100,7 +100,7 @@
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="product_uom_qty">10</field>
-        <field name="product_uom" ref="product.product_uom_unit" />
+        <field name="product_uom" ref="uom.product_uom_unit" />
         <field name="product_id" ref="product_product_dry_specu"/>
     </record>
     <record id="stock_move4" model="stock.move">
@@ -108,7 +108,7 @@
         <field name="picking_id" ref="Picking_C"/>
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
-        <field name="product_uom" ref="product.product_uom_unit" />
+        <field name="product_uom" ref="uom.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_vani"/>
     </record>
 
@@ -119,7 +119,7 @@
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="product_uom_qty">5</field>
-        <field name="product_uom_id" ref="product.product_uom_unit" />
+        <field name="product_uom_id" ref="uom.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_choco"/>
     </record>
     <record id="stock_move_line_1" model="stock.move.line">
@@ -128,7 +128,7 @@
         <field name="location_id" ref="stock.stock_location_stock"/>
         <field name="location_dest_id" ref="stock.stock_location_output"/>
         <field name="product_uom_qty">5</field>
-        <field name="product_uom_id" ref="product.product_uom_unit" />
+        <field name="product_uom_id" ref="uom.product_uom_unit" />
         <field name="product_id" ref="product_product_ice_cream_choco"/>
     </record>
 

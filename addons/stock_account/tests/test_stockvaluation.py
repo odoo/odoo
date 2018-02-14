@@ -13,7 +13,7 @@ class TestStockValuation(TransactionCase):
         self.supplier_location = self.env.ref('stock.stock_location_suppliers')
         self.partner = self.env['res.partner'].create({'name': 'xxx'})
         self.owner1 = self.env['res.partner'].create({'name': 'owner1'})
-        self.uom_unit = self.env.ref('product.product_uom_unit')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',

@@ -54,7 +54,7 @@
                         <th class="text-right">Intrastat</th>
                         <th class="text-right">Weight</th>
                         <th class="text-right">Quantity</th>
-                        <th groups="product.group_uom">Unit of measure</th>
+                        <th groups="uom.group_uom">Unit of measure</th>
                         <th class="text-right">Unit Price</th>
                         <th class="text-right" t-if="display_discount" groups="sale.group_discount_per_so_line">Discount (%)</th>
                         <th class="text-right">Amount</th>
@@ -74,7 +74,7 @@
                         <td class="text-right"><span t-esc="l.product_id.intrastat_id.name"/></td>
                         <td class="text-right"><span t-esc="l.product_id.weight"/></td>
                         <td class="text-right"><span t-field="l.quantity"/></td>
-                        <td groups="product.group_uom"><span t-field="l.uom_id"/></td>
+                        <td groups="uom.group_uom"><span t-field="l.uom_id"/></td>
                         <td class="text-right"><span t-field="l.price_unit"/></td>
                         <td t-if="display_discount" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
                         <td class="text-right" groups="sale.group_show_price_subtotal">

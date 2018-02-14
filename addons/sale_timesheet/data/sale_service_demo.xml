@@ -6,7 +6,7 @@
             <field name="order_id" ref="sale.sale_order_3"/>
             <field name="name">Advance</field>
             <field name="product_id" ref="sale.advance_product_0"/>
-            <field name="product_uom" ref="product.product_uom_day"/>
+            <field name="product_uom" ref="uom.product_uom_day"/>
             <field name="price_unit">150.0</field>
             <field name="product_uom_qty">5.0</field>
         </record>
@@ -72,8 +72,8 @@
             <field name="type">service</field>
             <field name="list_price">250.00</field>
             <field name="standard_price">190.00</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">ordered_timesheet</field>
             <field name="service_tracking">task_global_project</field>
             <field name="project_id" ref="project_support"/>
@@ -85,8 +85,8 @@
             <field name="list_price">200.00</field>
             <field name="standard_price">150.00</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_new_project</field>
         </record>
@@ -97,8 +97,8 @@
             <field name="list_price">100.00</field>
             <field name="standard_price">85.00</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_hour"/>
-            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
             <field name="service_policy">delivered_timesheet</field>
             <field name="service_tracking">task_new_project</field>
         </record>
@@ -109,8 +109,8 @@
             <field name="list_price">500</field>
             <field name="standard_price">420.00</field>
             <field name="type">service</field>
-            <field name="uom_id" ref="product.product_uom_unit"/>
-            <field name="uom_po_id" ref="product.product_uom_unit"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="service_policy">delivered_manual</field>
             <field name="service_tracking">no</field>
         </record>
@@ -398,7 +398,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-300.00</field>
             <field name="product_id" ref="product.product_product_3"/>
-            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">10.00</field>
         </record>
 
@@ -410,7 +410,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-100.00</field>
             <field name="product_id" ref="product.expense_product"/>
-            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">1.00</field>
         </record>
 
@@ -422,7 +422,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-400.00</field>
             <field name="product_id" ref="product.product_product_3"/>
-            <field name="product_uom_id" ref="product.product_uom_unit"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="unit_amount">15.00</field>
         </record>
 
@@ -434,7 +434,7 @@
             <field name="date" eval="(DateTime.now() + relativedelta(days=0)).strftime('%Y-%m-%d')"/>
             <field name="amount">-75.00</field>
             <field name="product_id" ref="product.expense_hotel"/>
-            <field name="product_uom_id" ref="product.product_uom_day"/>
+            <field name="product_uom_id" ref="uom.product_uom_day"/>
             <field name="unit_amount">1.00</field>
         </record>
     </data>

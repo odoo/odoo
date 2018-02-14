@@ -29,7 +29,7 @@ class SaleTimesheetController(http.Controller):
             'timesheet_lines': timesheet_lines,
             'domain': domain,
         }
-        hour_rounding = request.env.ref('product.product_uom_hour').rounding
+        hour_rounding = request.env.ref('uom.product_uom_hour').rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
 
         # -- Stat Buttons

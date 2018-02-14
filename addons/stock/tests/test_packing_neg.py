@@ -19,8 +19,8 @@ class TestPackingNeg(TransactionCase):
                 'delay': 1,
                 'name': self.ref('base.res_partner_2'),
                 'min_qty': 2.0,})],
-            'uom_id': self.ref('product.product_uom_unit'),
-            'uom_po_id': self.ref('product.product_uom_unit'),
+            'uom_id': self.ref('uom.product_uom_unit'),
+            'uom_po_id': self.ref('uom.product_uom_unit'),
         })
 
         # Create an incoming picking for this product of 300 PCE from suppliers to stock
@@ -58,7 +58,7 @@ class TestPackingNeg(TransactionCase):
         pick_neg.move_line_ids[0].write({'result_package_id': package1.id, 'qty_done': 120})
         new_pack1 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
-            'product_uom_id': self.ref('product.product_uom_unit'),
+            'product_uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick_neg.id,
             'lot_id': lot_a.id,
             'qty_done': 120,
@@ -68,7 +68,7 @@ class TestPackingNeg(TransactionCase):
         })
         new_pack2 = self.env['stock.move.line'].create({
             'product_id': product_neg.id,
-            'product_uom_id': self.ref('product.product_uom_unit'),
+            'product_uom_id': self.ref('uom.product_uom_unit'),
             'picking_id': pick_neg.id,
             'result_package_id': package3.id,
             'qty_done': 60,

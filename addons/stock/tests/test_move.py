@@ -16,8 +16,8 @@ class StockMove(TransactionCase):
             ('company_id', '=', self.env.user.company_id.id),
             ('usage', '=', 'transit'),
         ], limit=1)
-        self.uom_unit = self.env.ref('product.product_uom_unit')
-        self.uom_dozen = self.env.ref('product.product_uom_dozen')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        self.uom_dozen = self.env.ref('uom.product_uom_dozen')
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
             'type': 'product',

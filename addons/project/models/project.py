@@ -656,7 +656,7 @@ class Task(models.Model):
         # this should be safe (no context passed to avoid side-effects)
         obj_tm = self.env.user.company_id.project_time_mode_id
         # using get_object to get translation value
-        uom_hour = self.env.ref('product.product_uom_hour', False)
+        uom_hour = self.env.ref('uom.product_uom_hour', False)
         if not obj_tm or not uom_hour or obj_tm.id == uom_hour.id:
             return res
 

@@ -123,7 +123,7 @@
                                 <label for="product_qty"/>
                                 <div class="o_row">
                                     <field name="product_qty"/>
-                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                                    <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                                 </div>
                             </group>
                             <group>
@@ -154,7 +154,7 @@
                     <field name="bom_id"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="product_qty"/>
-                    <field name="product_uom_id" groups="product.group_uom"/>
+                    <field name="product_uom_id" groups="uom.group_uom"/>
                     <field name="state"/>
                     <field name="location_id" groups="stock.group_stock_multi_locations"/>
                 </tree>

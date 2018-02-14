@@ -36,7 +36,7 @@
                                 <tr>
                                     <th><strong>Description</strong></th>
                                     <th class="text-right"><strong>Qty</strong></th>
-                                    <th class="text-center" groups="product.group_uom">
+                                    <th class="text-center" groups="uom.group_uom">
                                         <strong>Product UoM</strong>
                                     </th>
                                     <th class="text-right"><strong>Scheduled Date</strong></th>
@@ -52,7 +52,7 @@
                                         <span t-field="line_ids.product_qty"/>
                                     </td>
                                     <t>
-                                        <td class="text-center" groups="product.group_uom">
+                                        <td class="text-center" groups="uom.group_uom">
                                             <span t-field="line_ids.product_uom_id.category_id.name"/>
                                         </td>
                                     </t>

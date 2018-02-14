@@ -56,12 +56,12 @@
                             <label for="quantity" string="Quantity On Hand"/>
                             <div class="o_row">
                                 <field name="quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <label for="reserved_quantity" string="Quantity Reserved"/>
                             <div class="o_row">
                                 <field name="reserved_quantity"/>
-                                <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
                             </div>
                             <field name="in_date" attrs="{'invisible': [('lot_id', '=', False)]}" groups="stock.group_production_lot"/>
                         </group>
@@ -84,7 +84,7 @@
                 <field name="owner_id" groups="stock.group_tracking_owner"/>
                 <field name="reserved_quantity" string="Reserved"/>
                 <field name="quantity" string="On Hand"/>
-                <field name="product_uom_id" groups="product.group_uom"/>
+                <field name="product_uom_id" groups="uom.group_uom"/>
                 <field name='company_id' groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -198,7 +198,7 @@
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="qty_done" string="Quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </tree>
                     </field>
                     <field name="quant_ids" attrs="{'invisible': [('current_picking_id', '=', True)]}">
@@ -206,7 +206,7 @@
                             <field name="product_id"/>
                             <field name="lot_id" groups="stock.group_production_lot"/>
                             <field name="quantity"/>
-                            <field name="product_uom_id" groups="product.group_uom"/>
+                            <field name="product_uom_id" groups="uom.group_uom"/>
                         </tree>
                     </field>
                 </sheet>

@@ -69,8 +69,8 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
             'list_price': 90,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'uom_id': self.env.ref('product.product_uom_hour').id,
-            'uom_po_id': self.env.ref('product.product_uom_hour').id,
+            'uom_id': self.env.ref('uom.product_uom_hour').id,
+            'uom_po_id': self.env.ref('uom.product_uom_hour').id,
             'default_code': 'SERV-DELI',
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
@@ -91,7 +91,7 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
     def test_timesheet_uom(self):
         """ Test timesheet invoicing and uom conversion """
         # create SO and confirm it
-        uom_days = self.env.ref('product.product_uom_day')
+        uom_days = self.env.ref('uom.product_uom_day')
         sale_order_line = self.env['sale.order.line'].create({
             'order_id': self.sale_order.id,
             'name': self.product_delivery_timesheet3.name,

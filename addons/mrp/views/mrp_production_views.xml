@@ -12,7 +12,7 @@
                     <field name="date_planned_start"/>
                     <field name="product_id"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity"/>
-                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="product.group_uom"/>
+                    <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
                     <field name="availability"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="origin" groups="base.group_no_one"/>
@@ -85,7 +85,7 @@
                             <label for="product_qty"/>
                             <div class="o_row">
                                 <field name="product_qty" attrs="{'readonly': [('has_moves', '=', True)]}"/>
-                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="product.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
+                                <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" attrs="{'readonly': [('has_moves', '=', True)]}"/>
                                 <button type="action"
                                     name="%(mrp.action_change_production_qty)d"
                                     string="Update" class="oe_link" attrs="{'invisible': ['|', ('state', 'in', ('done','cancel')), ('id', '=', False)]}"/>
@@ -117,7 +117,7 @@
                                     <field name="product_id" required="1"/>
                                     <field name="name" invisible="1"/>
                                     <field name="unit_factor" invisible="1"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="has_tracking" invisible="1"/>
                                     <field name="needs_lots" readonly="1" groups="stock.group_production_lot"/>
                                     <field name="is_done" invisible="1"/>
@@ -136,7 +136,7 @@
                                  <tree default_order="done_move" editable="bottom" create="0" delete="0" decoration-muted="state in ('done', 'cancel')">
                                     <field name="product_id" readonly="1"/>
                                     <field name="lot_id" groups="stock.group_production_lot" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}" attrs="{'invisible': [('lots_visible', '=', False)]}"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="product_uom_id" groups="uom.group_uom"/>
                                     <field name="qty_done"/>
                                     <field name="lots_visible" invisible="1"/>
                                     <field name="done_move" invisible="1"/>

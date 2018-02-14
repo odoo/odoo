@@ -68,9 +68,9 @@
         <menuitem id="menu_attribute_action" action="product.attribute_action" parent="prod_config_main" sequence="1" groups="base.group_no_one" active="False"/>
         <menuitem action="product.variants_action" id="menu_variants_action" parent="sale.prod_config_main" sequence="2" groups="base.group_no_one" active="False"/>
         <menuitem id="menu_products" action="product.product_normal_action_sell" parent="product_menu_catalog" groups="base.group_no_one" sequence="2" active="False"/>
-        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="product.group_uom" active="False"/>
-        <menuitem action="product.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="product.group_uom" active="False"/>
-        <menuitem action="product.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="product.group_uom" active="False"/>
+        <menuitem id="next_id_16" name="Units of Measure" parent="sale.prod_config_main" sequence="6" groups="uom.group_uom" active="False"/>
+        <menuitem action="uom.product_uom_form_action" id="menu_product_uom_form_action" parent="sale.prod_config_main" sequence="7" groups="uom.group_uom" active="False"/>
+        <menuitem action="uom.product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="sale.prod_config_main" sequence="8" groups="uom.group_uom" active="False"/>
         <menuitem id="menu_product_pricelist_main" name="Pricelists" parent="product_menu_catalog" action="product.product_pricelist_action2" groups="product.group_sale_pricelist" sequence="3" active="False"/>
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
@@ -255,7 +255,7 @@
                                                 <field
                                                     context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'uom_qty_change':True, 'company_id': parent.company_id}"
                                                     name="product_uom_qty" class="oe_inline"/>
-                                                <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
+                                                <field name="product_uom" groups="uom.group_uom" class="oe_inline oe_no_button"
                                                     attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"/>
                                             </div>
                                             <label for="qty_delivered" string="Delivered Quantity" attrs="{'invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
@@ -318,7 +318,7 @@
                                     <field name="product_uom"
                                         attrs="{'readonly': [('state', 'in', ('sale','done', 'cancel'))]}"
                                         context="{'company_id': parent.company_id}"
-                                        groups="product.group_uom" options='{"no_open": True}'/>
+                                        groups="uom.group_uom" options='{"no_open": True}'/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="price_unit"
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"/>
@@ -335,7 +335,7 @@
                                 <kanban class="o_kanban_mobile">
                                     <field name="product_id"/>
                                     <field name="product_uom_qty"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="product_uom" groups="uom.group_uom"/>
                                     <field name="price_subtotal"/>
                                     <field name="price_unit"/>
                                     <templates>
@@ -601,7 +601,7 @@
                     <field name="qty_delivered"/>
                     <field name="qty_invoiced"/>
                     <field name="qty_to_invoice"/>
-                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="price_subtotal" sum="Total" widget="monetary"/>
                 </tree>
             </field>

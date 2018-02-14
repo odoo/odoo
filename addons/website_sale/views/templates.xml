@@ -1414,7 +1414,7 @@
                                               <td class='td-qty'>
                                                   <div id="quote_qty">
                                                       <span t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
-                                                      <span class='hidden-xs' t-field="line.product_uom" groups="product.group_uom"/>
+                                                      <span class='hidden-xs' t-field="line.product_uom" groups="uom.group_uom"/>
                                                   </div>
                                               </td>
                                               <td class='td-price'>

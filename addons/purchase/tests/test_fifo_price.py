@@ -24,8 +24,8 @@ class TestFifoPrice(TestPurchase):
             'categ_id': self.env.ref('product.product_category_1').id,
             'list_price': 100.0,
             'standard_price': 70.0,
-            'uom_id': self.env.ref('product.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('product.product_uom_kgm').id,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'cost_method': 'fifo',
             'valuation': 'real_time',
             'property_stock_account_input': self.ref('purchase.o_expense'),
@@ -41,7 +41,7 @@ class TestFifoPrice(TestPurchase):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_icecream.id,
                 'product_qty': 10.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -68,7 +68,7 @@ class TestFifoPrice(TestPurchase):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_icecream.id,
                 'product_qty': 30.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
             })
@@ -94,7 +94,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
                 'product_uom_qty': 20.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.env.ref('stock.picking_type_out').id})]
@@ -118,7 +118,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
                 'product_uom_qty': 500.0,
-                'product_uom': self.env.ref('product.product_uom_gram').id,
+                'product_uom': self.env.ref('uom.product_uom_gram').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.env.ref('stock.picking_type_out').id})]
@@ -149,14 +149,14 @@ class TestFifoPrice(TestPurchase):
                     'name': 'FIFO Ice Cream',
                     'product_id': product_icecream.id,
                     'product_qty': 30,
-                    'product_uom': self.env.ref('product.product_uom_kgm').id,
+                    'product_uom': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 0.150,
                     'date_planned': time.strftime('%Y-%m-%d')}),
                 (0, 0, {
                     'name': product_icecream.name,
                     'product_id': product_icecream.id,
                     'product_qty': 10.0,
-                    'product_uom': self.env.ref('product.product_uom_kgm').id,
+                    'product_uom': self.env.ref('uom.product_uom_kgm').id,
                     'price_unit': 150.0,
                     'date_planned': time.strftime('%Y-%m-%d')})]
                 })
@@ -176,7 +176,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
                 'product_uom_qty': 49.5,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.env.ref('stock.picking_type_out').id})]
@@ -197,7 +197,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
                 'product_uom_qty': 10,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.env.ref('stock.picking_type_out').id})]
@@ -218,8 +218,8 @@ class TestFifoPrice(TestPurchase):
             'categ_id': self.env.ref('product.product_category_1').id,
             'list_price': 100.0,
             'standard_price': 70.0,
-            'uom_id': self.env.ref('product.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('product.product_uom_kgm').id,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'cost_method': 'fifo',
             'valuation': 'real_time',
             'property_stock_account_input': self.ref('purchase.o_expense'),
@@ -237,7 +237,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 100,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.env.ref('stock.picking_type_out').id})]
@@ -263,7 +263,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 400,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id': self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
                 'picking_type_id': self.env.ref('stock.picking_type_out').id})]
@@ -284,7 +284,7 @@ class TestFifoPrice(TestPurchase):
                 'name': 'FIFO Ice Cream',
                 'product_id': product_fifo_negative.id,
                 'product_qty': 50.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 50.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })
@@ -303,7 +303,7 @@ class TestFifoPrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_fifo_negative.id,
                 'product_qty': 600.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d')})],
         })

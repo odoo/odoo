@@ -31,11 +31,11 @@
             parent="purchase.menu_product_in_config_purchase" sequence="1" />
 
         <menuitem
-             action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
+             action="uom.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
              parent="purchase.menu_product_in_config_purchase" sequence="10" />
 
         <menuitem
-              action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
+              action="uom.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="purchase.menu_product_in_config_purchase" sequence="5"/>
 
 
@@ -211,7 +211,7 @@
                                     <field name="product_qty"/>
                                     <field name="qty_received" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))], 'readonly': [('product_type', 'in', ('consu', 'product'))]}"/>
                                     <field name="qty_invoiced" attrs="{'column_invisible': [('parent.state', 'not in', ('purchase', 'done'))]}"/>
-                                    <field name="product_uom" groups="product.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}" force_save="1"/>
+                                    <field name="product_uom" groups="uom.group_uom" attrs="{'readonly': [('state', 'in', ('purchase', 'done', 'cancel'))]}" force_save="1"/>
                                     <field name="price_unit"/>
                                     <field name="taxes_id" widget="many2many_tags" domain="[('type_tax_use','=','purchase')]" context="{'default_type_tax_use': 'purchase', 'search_view_ref': 'account.account_tax_view_search'}" options="{'no_create': True}"/>
                                     <field name="price_subtotal" widget="monetary"/>
@@ -226,7 +226,7 @@
                                                 <div>
                                                     <field name="product_qty" class="oe_inline"/>
                                                     <span class="oe_inline">&#160;</span>
-                                                    <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                                    <field name="product_uom" groups="uom.group_uom" class="oe_inline"/>
                                                 </div>
                                                 <field name="price_unit"/>
                                             </group>
@@ -450,7 +450,7 @@
                     <field name="product_id"/>
                     <field name="price_unit"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="product_uom" groups="uom.group_uom"/>
                     <field name="price_subtotal" widget="monetary"/>
                     <field name="date_planned"  widget="date"/>
                 </tree>
@@ -478,7 +478,7 @@
                                 <label for="product_qty"/>
                                 <div>
                                     <field name="product_qty" readonly="1" class="oe_inline"/>
-                                    <field name="product_uom" readonly="1" groups="product.group_uom" class="oe_inline"/>
+                                    <field name="product_uom" readonly="1" groups="uom.group_uom" class="oe_inline"/>
                                 </div>
                                 <field name="price_unit"/>
                             </group>

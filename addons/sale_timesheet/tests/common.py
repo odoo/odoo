@@ -35,7 +35,7 @@ class TestCommonSaleTimesheetNoChart(TestCommonSaleNoChart):
         })
 
         # Create service products
-        uom_hour = cls.env.ref('product.product_uom_hour')
+        uom_hour = cls.env.ref('uom.product_uom_hour')
 
         # -- ordered quantities (ordered, timesheet)
         cls.product_order_timesheet1 = cls.env['product.product'].create({

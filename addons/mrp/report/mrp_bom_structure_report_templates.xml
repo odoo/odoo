@@ -23,7 +23,7 @@
                                 </td>
                                 <td>
                                     <span t-field="o.product_qty"/>
-                                    <span groups="product.group_uom" t-field="o.product_uom_id.name"/>
+                                    <span groups="uom.group_uom" t-field="o.product_uom_id.name"/>
                                 </td>
                                 <td>
                                     <span t-field="o.code"/>
@@ -36,7 +36,7 @@
                                 </td>
                                 <td>
                                     <span t-esc="l['pqty']"/>
-                                    <span t-esc="l['uname']" groups="product.group_uom"/>
+                                    <span t-esc="l['uname']" groups="uom.group_uom"/>
                                 </td>
                                 <td>
                                     <span t-esc="l['code']"/>
