@@ -35,12 +35,6 @@ QUnit.test('mobile basic rendering', function (assert) {
         params: {},
         data: this.data,
         services: this.services,
-        mockRPC: function (route, args) {
-            if (args.method === 'message_fetch') {
-                return $.when([]);
-            }
-            return this._super.apply(this, arguments);
-        },
     });
 
     discuss.call('chat_manager', 'isReady').then(function () {
