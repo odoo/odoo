@@ -61,5 +61,97 @@ QUnit.test('basic rendering', function (assert) {
     });
 });
 
+QUnit.test('@ mention in channel', function (assert) {
+    assert.expect(9);
+    var done = assert.async();
+
+    // Remove the mention throttle to speed up the test
+    var mentionThrottle = BasicComposer.prototype.MENTION_THROTTLE;
+    BasicComposer.prototype.MENTION_THROTTLE = 1;
+
+    var fetchListeners = $.Deferred();
+
+    createDiscuss({
+        id: 1,
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        mockRPC: function (route, args) {
+            if (route === '/mail/init_messaging') {
+                return $.when({
+                    'needaction_inbox_counter': 0,
+                    'starred_counter': 0,
+                    'channel_slots': {
+                        channel_channel: [{
+                            id: 1,
+                            channel_type: "channel",
+                            name: "general",
+                        }],
+                    },
+                    'commands': [],
+                    'mention_partner_suggestions': [],
+                    'shortcodes': [],
+                    'menu_id': false,
+                });
+            }
+            if (args.method === 'channel_fetch_listeners') {
+                fetchListeners.resolve();
+                return $.when([{
+                    id: 2,
+                    name: 'Demo User',
+                }]);
+            }
+            return this._super.apply(this, arguments);
+        },
+    })
+    .then(function (discuss) {
+        var $general = discuss.$('.o_mail_chat_sidebar')
+                        .find('.o_mail_chat_channel_item[data-channel-id=1]');
+        assert.strictEqual($general.length, 1,
+            "should have the channel item with id 1");
+        assert.strictEqual($general.attr('title'), 'general',
+            "should have the title 'general'");
+
+        // click on general
+        $general.click();
+        var $input = discuss.$('.o_composer_input').first();
+        assert.ok($input.length, "should display a composer input");
+
+        // Simulate '@demo' typed by user with mocked Window.getSelection
+        // Note: focus is needed in order to trigger rpc 'channel_fetch_listeners'
+        $input.focus();
+        $input.text("@");
+        var originalWindowGetSelection = replaceWindowGetSelectionForPhantomJs();
+        $input.trigger('keyup');
+
+        fetchListeners
+            .then(concurrency.delay.bind(concurrency, 0))
+            .then(function () {
+                assert.strictEqual(discuss.$('.dropup.o_composer_mention_dropdown.open').length, 1,
+                "dropup menu for partner mentions should be open");
+
+                var $mentionProposition = discuss.$('.o_mention_proposition');
+                assert.strictEqual($mentionProposition.length, 1,
+                    "should display one partner mention proposition");
+                assert.strictEqual($mentionProposition.data('id'), 2,
+                    "partner mention should link to the correct partner id");
+                assert.strictEqual($mentionProposition.find('.o_mention_name').text(), "Demo User",
+                    "partner mention should display the correct partner name");
+
+                $mentionProposition.click();
+                assert.strictEqual(discuss.$('.o_mention_proposition').length, 0,
+                    "should not have any partner mention proposition after clicking on it");
+                assert.strictEqual($input.find('a')[0].innerHTML , "@Demo&nbsp;User",
+                    "should have the correct mention link in the composer input");
+
+                BasicComposer.prototype.MENTION_THROTTLE = mentionThrottle;
+                restoreGetSelectionForPhantomJs(originalWindowGetSelection);
+                discuss.destroy();
+                done();
+        });
+    });
+});
+
 });
 });
