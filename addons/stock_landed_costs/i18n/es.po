@@ -4,17 +4,17 @@
 # 
 # Translators:
 # oihane <oihanecruce@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # José Vicente <txusev@gmail.com>, 2016
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2016
 # Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
 # Carles Antoli <carlesantoli@hotmail.com>, 2016
 # Ivan Nieto <ivan.n.s@tuta.io>, 2016
-# Luis Triana <luis.triana@jarsa.com.mx>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2016
 # Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
 # Ana Juaristi <ajuaristio@gmail.com>, 2016
-# Luis Martínez Ontalba <tecnisagra.ontalba@gmail.com>, 2016
-# Antonio Trueba <atgayol@gmail.com>, 2016
+# Antonio Trueba, 2016
+# Luis M. Triana <luis.triana@jarsa.com.mx>, 2016
 # Sergio Flores <vitavitae1@gmail.com>, 2016
 # Miguel Orueta <mo@landoo.es>, 2016
 msgid ""
@@ -92,12 +92,12 @@ msgstr "Cancelado"
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
 msgid "Click to create a new landed cost."
-msgstr "Haga clic para crear un nuevo costo aterrizado."
+msgstr "Haga clic para crear un nuevo coste en destino."
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Click to define a new kind of landed cost."
-msgstr "Haga clic para definir un nuevo tipo de costo descargado."
+msgstr "Haga clic para definir un nuevo tipo de coste en destino."
 
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -127,8 +127,8 @@ msgid ""
 "Cost and adjustments lines do not match. You should maybe recompute the "
 "landed costs."
 msgstr ""
-"Las líneas de coste y ajustes no coinciden. Usted debe quizá recalcular los "
-"costos de transporte."
+"Las líneas de coste y ajustes no coinciden. Tal vez debería recalcular los "
+"costes en destino."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_create_uid
@@ -162,8 +162,8 @@ msgid ""
 "Disabling the costing methods will prevent you to use the landed costs "
 "feature."
 msgstr ""
-"Desactivación de los métodos de costeo evitará que usted utilice los costos "
-"descargados cuentan."
+"La desactivación de los métodos de coste evitará que pueda utilizar los "
+"costes en destino."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_display_name
@@ -256,7 +256,7 @@ msgstr "Coste en destino"
 #. module: stock_landed_costs
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed Cost Name"
-msgstr "Landed Nombre Costo"
+msgstr "Nombre del coste en destino"
 
 #. module: stock_landed_costs
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
@@ -278,7 +278,7 @@ msgstr "Costes en destino"
 #: model:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
 msgstr ""
-"El costo de transporte se calcula en base a la unidad de medida de compra."
+"El coste en destino se calcula en base a la unidad de medida de compra."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -323,14 +323,14 @@ msgstr "Nombre"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
-"No hay líneas de ajustes de valoración. Usted debe quizá recalcular los "
-"costos de transporte."
+"No hay líneas de ajustes de valoración. Tal vez debería recalcular los "
+"costes en destino."
 
 #. module: stock_landed_costs
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:75
 #, python-format
 msgid "Only draft landed costs can be validated"
-msgstr "Sólo costes de proyecto descargados pueden ser validados"
+msgstr "Sólo los costes en destino en borrador pueden ser validados"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_picking_ids
@@ -423,9 +423,9 @@ msgid ""
 msgstr ""
 "El albarán seleccionado no contiene ningún movimiento que impacte en los "
 "coste en destino. Los costes en destino sólo son posibles para productos "
-"configurados con valorización en tiempo real con el método de precio de "
-"coste real. Asegúrese de que es el caso, o de que ha seleccionado el albarán"
-" adecuado."
+"configurados con valoración en tiempo real por el método de precio de coste "
+"real. Asegúrese de que es el caso, o de que ha seleccionado el albarán "
+"adecuado."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_amount_total
@@ -444,8 +444,8 @@ msgid ""
 "Validated landed costs cannot be cancelled, but you could create negative "
 "landed costs to reverse them"
 msgstr ""
-"Costos descargados validados no pueden ser cancelados, pero usted podria "
-"crear un costo negativo descargado para revertir los descargados."
+"Los costes en destino validados no pueden ser cancelados, pero puede crear "
+"costes en destino negativos para revertirlos"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_valuation_adjustment_lines
