@@ -18,18 +18,12 @@ function getMatchedCSSRules(a) {
         var sheets = document.styleSheets;
         for (i = sheets.length-1 ; i >= 0 ; i--) {
             var rules;
-            if (sheets[i].hasOwnProperty('rules')) {
-                rules = sheets[i].rules;
-            } else {
-                // try...catch because Firefox not able to enumerate
-                // document.styleSheets[].cssRules[] for cross-domain sheets.
-                try {
-                    rules = sheets[i].cssRules;
-                } catch (e) {
-                    console.warn("Can't read the css rules of: " + sheets[i].href, e);
-                    continue;
-                }
-                rules = sheets[i].cssRules;
+            // try...catch because browser may not able to enumerate rules for cross-domain sheets
+            try {
+                rules = sheets[i].rules || sheets[i].cssRules;
+            } catch (e) {
+                console.warn("Can't read the css rules of: " + sheets[i].href, e);
+                continue;
             }
             if (rules) {
                 for (r = rules.length-1; r >= 0; r--) {
@@ -141,6 +135,20 @@ function getMatchedCSSRules(a) {
         delete style['text-decoration-line'];
         delete style['text-decoration-color'];
         delete style['text-decoration-style'];
+    }
+
+    // text-align inheritance does not seem to get past <td> elements on some
+    // mail clients
+    if (style['text-align'] === 'inherit') {
+        var $el = $(a).parent();
+        do {
+            var align = $el.css('text-align');
+            if (_.indexOf(['left', 'right', 'center', 'justify'], align) >= 0) {
+                style['text-align'] = align;
+                break;
+            }
+            $el = $el.parent();
+        } while (!$el.is('html'));
     }
 
     return style;

@@ -23,7 +23,7 @@ class Event(models.Model):
     website_menu = fields.Boolean(
         'Dedicated Menu', compute='_compute_website_menu', inverse='_set_website_menu',
         help="Creates menus Introduction, Location and Register on the page "
-             " of the event on the website.", store=True)
+             " of the event on the website.", store=True, copy=False)
     menu_id = fields.Many2one('website.menu', 'Event Menu')
 
     def _compute_is_participating(self):
