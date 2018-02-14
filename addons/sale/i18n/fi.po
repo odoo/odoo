@@ -6,14 +6,14 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2016
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2016
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Martin Trigaux, 2016
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2016
 # Sanna Edelman <direct@generare.com>, 2016
 # Jussi Lehto <jussi@gulfeo.com>, 2016
 # Marko Happonen <marko.happonen@sprintit.fi>, 2016
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2016
 # Miku Laitinen <miku.laitinen@gmail.com>, 2016
-# salmemik <salmemik@gmail.com>, 2016
+# Mikko Salmela <salmemik@gmail.com>, 2016
 # Timo Koukkari <ti.ko@netikka.fi>, 2016
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2016
 # Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2016
@@ -79,9 +79,9 @@ msgstr ""
 "\n"
 "<p>Hyvä ${object.partner_id.name}\n"
 "% set access_action = object.with_context(force_website=True).get_access_action()\n"
-"% set doc_name = 'tarjous' if object.state in ('draft', 'sent') else 'tilausvahvistus'\n"
+"% set doc_name = 'tarjouksenne' if object.state in ('draft', 'sent') else 'tilausvahvistuksenne'\n"
 "% set is_online = access_action and access_action['type'] == 'ir.actions.act_url'\n"
-"% set access_name = is_online and object.template_id and doc_name == 'tarjous' and 'Hyväksy ja maksa %s verkossa' % doc_name or 'Katso %s' % doc_name\n"
+"% set access_name = is_online and object.template_id and doc_name == 'tarjouksenne' and 'Hyväksy ja maksa verkossa' or 'Katso tilausvahvistus'\n"
 "% set access_url = is_online and access_action['url'] or None\n"
 "\n"
 "% if object.partner_id.parent_id:\n"
@@ -89,7 +89,7 @@ msgstr ""
 "% endif\n"
 ",</p>\n"
 "<p>\n"
-"Tässä on meidän ${doc_name} <strong>${object.name}</strong>\n"
+"Tässä ${doc_name} <strong>${object.name}</strong>\n"
 "% if object.origin:\n"
 "(viitteellä: ${object.origin} )\n"
 "% endif\n"
@@ -276,13 +276,16 @@ msgid ""
 "                to buy an extra pack of hours, because he used all his support\n"
 "                hours.</i>"
 msgstr ""
+"<i>Esimerkki: prepaid -palvelu, johon asiakkaan pitää\n"
+"ostaa lisätuntipaketti, koska hän on käyttänyt kaiken\n"
+"asiakastukensa.</i>"
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:64
 #, python-format
 msgid "<p><b>Confirm the order</b> if the customer purchases.</p>"
-msgstr ""
+msgstr "<p><b>Vahvista tilaus</b>jos asiakas ostaa.</p>"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_sales_config
@@ -343,6 +346,7 @@ msgstr "Yksi myyntihinta per tuote"
 #: model:res.groups,name:sale.group_warning_sale
 msgid "A warning can be set on a product or a customer (Sale)"
 msgstr ""
+"Mahdollista asettaa varoitus koskemaan tuotetta tai asiakasta (Myynti)"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -378,7 +382,7 @@ msgstr "Ennakko: %s"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Advanced pricing based on formulas (discounts, margins, rounding)"
-msgstr ""
+msgstr "Monipuoliset hinnoitteluasetukset (alennukset, katteet, pyöristys)"
 
 #. module: sale
 #: selection:sale.config.settings,group_warning_sale:0
@@ -460,12 +464,12 @@ msgstr "Analyyttinen kirjanpito myynnille"
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At cost"
-msgstr ""
+msgstr "Kulun mukaan"
 
 #. module: sale
 #: selection:product.template,expense_policy:0
 msgid "At sale price"
-msgstr ""
+msgstr "Myyntihinnan mukaan"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_variants_action
@@ -486,7 +490,7 @@ msgstr "Estoviesti"
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_configuration_search_view
 msgid "Breaks Page"
-msgstr ""
+msgstr "Sivunvaihto"
 
 #. module: sale
 #: model:ir.filters,name:sale.filter_isale_report_product
@@ -535,7 +539,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:39
 #, python-format
 msgid "Click here to add some lines to your quotations."
-msgstr ""
+msgstr "Napsauta tästä lisätäksesi rivejä tarjoukseen"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -566,7 +570,7 @@ msgstr "Yritys"
 #: code:addons/sale/static/src/js/tour.js:79
 #, python-format
 msgid "Configuration options are available in the Settings app."
-msgstr ""
+msgstr "Konfigurointi löytyy Asetukset -valikosta"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -675,7 +679,7 @@ msgstr "Myyntitilauksen luontipäivä."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_confirmation_date
 msgid "Date on which the sale order is confirmed."
-msgstr ""
+msgstr "Myyntitilauksen vahvistuspäivämäärä"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_default_invoice_policy
@@ -878,7 +882,7 @@ msgstr "Laajennetut suodattimet"
 #: code:addons/sale/models/sale.py:688
 #, python-format
 msgid "Extra line with %s "
-msgstr ""
+msgstr "Lisärivi, jossa %s"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_fiscal_position_id
@@ -903,6 +907,8 @@ msgid ""
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Tästä raportista näet yleiskatsauksen asiakkaan laskutukseen. Hakutyökalulla"
+" voit muokata laskutusraportit tarpeitasi vastaaviksi."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -942,6 +948,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Jos myyntitilaus on lukittu, et voi enää muuttaa sitä. Voit silti vielä "
+"laskuttaa ja toimittaa tälle myyntitilaukselle."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv_deposit_account_id
@@ -1032,6 +1040,9 @@ msgid ""
 " invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
 msgstr ""
+"Kuluvan kuun laskutus. Lukuun lasketaan yhteen kaikki myyntitiimin "
+"laskutukset. Tällä seurataan kuluvan kuun myynnin toteumaa ja verrataan sitä"
+" myyntitavoitteeseen Kanban-näkymässä. "
 
 #. module: sale
 #: selection:sale.advance.payment.inv,advance_payment_method:0
@@ -1085,7 +1096,7 @@ msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
 msgstr ""
-"Voit tarkastella laskuja ennen\n"
+"Laskut luodaan laskuehdotuksena, jotta voit tarkastaa laskun ennen "
 "hyväksymistä."
 
 #. module: sale
@@ -1156,7 +1167,7 @@ msgstr "Viimeksi päivitetty"
 #: model:ir.model.fields,field_description:sale.field_account_invoice_line_layout_category_sequence
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_layout_category_sequence
 msgid "Layout Sequence"
-msgstr ""
+msgstr "Näkymän järjestysnumero"
 
 #. module: sale
 #. openerp-web
@@ -1172,7 +1183,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/tour.js:18
 #, python-format
 msgid "Let's have a look at the quotations of this sales team."
-msgstr ""
+msgstr "Vilkaistaan tämän myyntitiimin avoimia myyntitarjouksia."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -1307,8 +1318,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "                from the Quotations list to the Sales Order list."
 msgstr ""
-"Huomaa! Kun Myyntitarjouksesta tulee Myyntitilaus, se siirretään automaattisesti\n"
-"Myyntitarjoukset -listalta Myyntitilauksiin."
+"Huomaa, että kun myyntitarjouksesta tulee myyntitilaus, se siirtyy "
+"automaattisesti Myyntitarjoukset -listalta Myyntitilauksiin."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations
@@ -1316,8 +1327,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved\n"
 "            from the Quotations list to the Sales Order list."
 msgstr ""
-"Huomaa! Kun Myyntitarjouksesta tulee Myyntitilaus, se siirretään automaattisesti\n"
-"Myyntitarjoukset -listalta Myyntitilauksiin."
+"Huomaa, että kun myyntitarjouksesta tulee myyntitilaus, se siirtyy "
+"automaattisesti Myyntitarjoukset -listalta Myyntitilauksiin."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -1326,8 +1337,8 @@ msgid ""
 "Note that once a Quotation becomes a Sale Order, it will be moved from the "
 "Quotations list to the Sales Order list."
 msgstr ""
-"Huomaa! Kun Myyntitarjouksesta tulee Myyntitilaus, se siirretään automaattisesti\n"
-"Myyntitarjoukset -listalta Myyntitilauksiin."
+"Huomaa, että kun myyntitarjouksesta tulee myyntitilaus, se siirtyy "
+"automaattisesti Myyntitarjoukset -listalta Myyntitilauksiin."
 
 #. module: sale
 #: selection:sale.order,invoice_status:0
@@ -1352,9 +1363,8 @@ msgid ""
 "                    orders or services."
 msgstr ""
 "Kun tarjous on vahvistettu, se muuttuu Myyntitilaukseksi.\n"
-"Voit tällöin laskuttaa ja merkitä laskulle tulleet maksut.\n"
-"Valikosta <i>Myyntitilaukset</i>voit tarkastella tilaukseen liittyviä\n"
-"toimituksia ja palveluita."
+"Voit tällöin laskuttaa ja merkitä laskulle tulleet suoritukset.\n"
+"Valikosta <i>Myyntitilaukset</i>voit seurata toimituksia ja palveluita."
 
 #. module: sale
 #. openerp-web
@@ -1440,8 +1450,8 @@ msgid ""
 "Ordered Quantity: Invoice based on the quantity the customer ordered.\n"
 "Delivered Quantity: Invoiced based on the quantity the vendor delivered (time or deliveries)."
 msgstr ""
-"Tilattu määrä: Lasku joka perustuu asiakkaan tilaamaan määrään.\n"
-"Toimitettu määrä: Laskutus perustuu toimittajan toteumaan (aika- tai määräperuste)."
+"Tilattu määrä: Lasku perustuu asiakkaan tilaamaan määrään.\n"
+"Toimitettu määrä: Laskutus perustuu toimittajan toimituksiin (aika- tai määräperuste)."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1518,7 +1528,7 @@ msgstr ""
 #: code:addons/sale/models/sale.py:276
 #, python-format
 msgid "Please define an accounting sale journal for this company."
-msgstr "Määritä käytettävä myyntikirjanpito tälle yritykselle."
+msgstr "Määritä myynnin päiväkirja tälle yritykselle."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:770
@@ -1779,7 +1789,7 @@ msgstr "Raporttien määritykset"
 #. module: sale
 #: model:ir.ui.menu,name:sale.Report_configuration
 msgid "Report Layout Categories"
-msgstr "Raportti Asettelu Ryhmät"
+msgstr "Raporttiasettelun luokat"
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.view_order_form
@@ -2073,7 +2083,7 @@ msgstr "Näytä hinnastot asiakkaille"
 #. module: sale
 #: selection:product.pricelist,discount_policy:0
 msgid "Show public price & discount to the customer"
-msgstr ""
+msgstr "Näytä julkinen hinta & alennus asiakkaalle"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_group_show_price_subtotal
@@ -2099,7 +2109,7 @@ msgstr "Lähdedokumentti"
 #. module: sale
 #: selection:sale.config.settings,sale_pricelist_setting:0
 msgid "Specific prices per customer segment, currency, etc."
-msgstr ""
+msgstr "Erilliset hinnat eri asiakassegmenteille, valuutoille, jne."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_state
@@ -2135,17 +2145,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_config_settings_sale_show_tax
 msgid "Tax Display"
-msgstr "Veronäyttö"
+msgstr "Veron näyttäminen"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_subtotal
 msgid "Tax display B2B"
-msgstr "Veronäyttö B2B"
+msgstr "Veron näyttäminen B2B"
 
 #. module: sale
 #: model:res.groups,name:sale.group_show_price_total
 msgid "Tax display B2C"
-msgstr "Veronäyttö B2C"
+msgstr "Veron näyttäminen B2C"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_amount_tax
@@ -2194,6 +2204,8 @@ msgid ""
 "The ordered quantity has been decreased. Do not forget to take it into "
 "account on your invoices and delivery orders."
 msgstr ""
+"Tilausmäärää on vähennetty. Muista huomioida tämä laskutuksessa ja "
+"toimitustilauksissa."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_config_settings_group_display_incoterm
@@ -2211,8 +2223,8 @@ msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
 msgstr ""
-"Tuote, josta on tehty ennakkomaksu, pitäisi olla tyyppiä 'Palvelu'. Käytä "
-"jotain muuta tuotetta, tai päivitä tämä tuote."
+"Ennakkomaksuna laskutettava tuote pitää olla tyyppiä 'Palvelu'. Käytä jotain"
+" muuta tuotetta, tai päivitä tämä tuote."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:146
@@ -2299,7 +2311,7 @@ msgstr ""
 #. module: sale
 #: selection:product.template,track_service:0
 msgid "Timesheets on project"
-msgstr ""
+msgstr "Projektin tuntikortit"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line_qty_to_invoice
@@ -2399,13 +2411,14 @@ msgstr "Käytä hinnastoja sovittaaksesi hinnan asiakkaille"
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to preceeding screens</b>."
 msgstr ""
+"Käytä navigointipolkua <b>mennäksesi taaksepäin aiempiin näkymiin</b>."
 
 #. module: sale
 #. openerp-web
 #: code:addons/sale/static/src/js/tour.js:73
 #, python-format
 msgid "Use this menu to access quotations, sales orders and customers."
-msgstr ""
+msgstr "Tästä valikosta pääset tarjouksiin, myyntitilauksiin ja asiakkaisiin."
 
 #. module: sale
 #: model:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2451,6 +2464,8 @@ msgid ""
 "Work with product variant allows you to define some variant of the same products\n"
 "                , an ease the product management in the ecommerce for example"
 msgstr ""
+"Tuotevariaatiot sallivat sinun määritellä samalle tuotteelle eri variaatioita, \n"
+"mikä helpottaa esimerkiksi verkkokaupan toimintaa"
 
 #. module: sale
 #. openerp-web
@@ -2460,6 +2475,8 @@ msgid ""
 "Write the name of your customer to create one on the fly, or select an "
 "existing one."
 msgstr ""
+"Kirjoita asiakkaan nimi (luodaksesi uuden), tai valitse olemassaoleva "
+"asiakas."
 
 #. module: sale
 #. openerp-web
@@ -2475,6 +2492,8 @@ msgid ""
 "You can not delete a sent quotation or a sales order! Try to cancel it "
 "before."
 msgstr ""
+"Et voi poistaa jo lähetettyä tarjousta tai myyntitilausta! Yritä ensin perua"
+" se."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:883
@@ -2492,11 +2511,13 @@ msgid ""
 "You can select all orders and invoice them in batch, or check\n"
 "                every order and invoice them one by one."
 msgstr ""
+"Voit valita kaikki tilaukset ja laskuttaa ne kerralla, tai\n"
+"tarkistaa ja laskuttaa tilauksen yksi kerrallaan."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "You will find here all orders that are ready to be invoiced."
-msgstr ""
+msgstr "Löydät täältä laskutusvalmiit tilaukset."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_quotations_salesteams

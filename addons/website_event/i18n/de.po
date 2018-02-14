@@ -3,21 +3,23 @@
 # * website_event
 # 
 # Translators:
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
+# Wolfgang Taferner, 2016
+# Martin Trigaux, 2016
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
+# David Vidal <david.vidal@trespinos.es>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0c\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-29 14:01+0000\n"
 "PO-Revision-Date: 2016-09-29 14:01+0000\n"
-"Last-Translator: Tina Rittmüller <tr@ife.de>, 2016\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +30,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "(Free)"
-msgstr ""
+msgstr "(Frei)"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events_list
@@ -68,7 +70,7 @@ msgstr "<small>Autor</small>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.country_events
 msgid "<span class=\"oe_snippet_thumbnail_title\">Local Events</span>"
-msgstr ""
+msgstr "<span class=\"oe_snippet_thumbnail_title\">Lokale Veranstaltungen</span>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_location
@@ -98,7 +100,7 @@ msgstr "<strong>Name</strong>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Participate on Twitter</strong>"
-msgstr ""
+msgstr "<strong>Verfolge uns auf Twitter</strong>"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -108,7 +110,7 @@ msgstr "<strong>Telefon</strong> <span class=\"text-muted\">(Optional)</span>"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "<strong>Use this tag:</strong>"
-msgstr ""
+msgstr "<strong>Benutze den Tag</strong>"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:96
@@ -178,6 +180,8 @@ msgid ""
 "Create a name for your new event and click <em>\"Continue\"</em>. e.g: "
 "Technical Training"
 msgstr ""
+"Erstellen Sie eine Bezeichung für die Veranstaltung und klicken Sie "
+"<em>Weiter</em>. Z.B. Technisches Training"
 
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event_show_menu
@@ -185,6 +189,8 @@ msgid ""
 "Creates menus Introduction, Location and Register on the page  of the event "
 "on the website."
 msgstr ""
+"Erstellt auf der Veranstaltungsseite der Website die Menüs Einführung, "
+"Standort und Anmelden."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_show_menu
@@ -206,12 +212,12 @@ msgstr "E-Mail"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.view_event_sale_form
 msgid "Edit Badges"
-msgstr ""
+msgstr "Abzeichen bearbeiten"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "End of Registration"
-msgstr ""
+msgstr "Anmeldefrist"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -257,12 +263,12 @@ msgstr "Veranstaltung veröffentlicht"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration is closed."
-msgstr ""
+msgstr "Veranstaltungsanmeldung ist geschlossen."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Event registration not yet started."
-msgstr ""
+msgstr "Veranstaltungsanmeldung hat noch nicht begonnen."
 
 #. module: website_event
 #: model:mail.message.subtype,description:website_event.mt_event_unpublished
@@ -314,7 +320,7 @@ msgstr "Überblick"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_is_participating
 msgid "Is Participating"
-msgstr ""
+msgstr "nimmt teil"
 
 #. module: website_event
 #: code:addons/website_event/models/event.py:55
@@ -442,7 +448,12 @@ msgstr "Anmelden"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_template
 msgid "Register Now"
-msgstr ""
+msgstr "Anmelden"
+
+#. module: website_event
+#: model:ir.ui.view,arch_db:website_event.event_description_full
+msgid "Registration for this event is now closed"
+msgstr "Die Anmeldung für diese Veranstaltung ist geschlossen."
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.404
@@ -495,7 +506,7 @@ msgstr "Tickettyp"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket Type #"
-msgstr ""
+msgstr "Tickettyp #"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:35
@@ -512,6 +523,7 @@ msgstr "Twitter Hashtag"
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "Use the top menu <i>'Content'</i> to create your first event."
 msgstr ""
+"Erstellen Sie mit dem Topmenü <i>„Inhalte“</i> Ihre erste Veranstaltung."
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event_website_published
@@ -521,12 +533,14 @@ msgstr "Sichtbar auf der Website"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Visualize on Google Maps"
-msgstr ""
+msgstr "Auf Google Maps visualisieren"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "We are glad to confirm your registration to our event"
 msgstr ""
+"Wir freuen uns, Ihre Anmeldung bei unserer Veranstaltung bestätigen zu "
+"können."
 
 #. module: website_event
 #: model:ir.actions.act_url,name:website_event.action_open_website
@@ -567,7 +581,7 @@ msgstr ""
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Your registration"
-msgstr ""
+msgstr "Ihre Anmeldung"
 
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -587,4 +601,4 @@ msgstr "bis"
 #. module: website_event
 #: model:ir.ui.view,arch_db:website_event.index
 msgid "unpublished"
-msgstr ""
+msgstr "unveröffentlicht"
