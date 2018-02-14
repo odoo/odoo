@@ -74,7 +74,8 @@ function createDiscuss(params) {
     }));
     var discuss = new Discuss(parent, params);
     discuss.set_cp_bus(new Widget());
-    discuss.appendTo($('#qunit-fixture'));
+    var selector = params.debug ? 'body' : '#qunit-fixture';
+    discuss.appendTo($(selector));
 
     return discuss.call('chat_manager', 'isReady').then(function () {
         return discuss;
