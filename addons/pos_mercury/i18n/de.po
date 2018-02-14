@@ -6,24 +6,25 @@
 # Anja Funk <anja.funk@afimage.de>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
 # Fabian Liesch <fabian.liesch@gmail.com>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Wolfgang Taferner, 2016
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2016
 # Mathias Neef <mn@copado.de>, 2016
 # Tina Rittmüller <tr@ife.de>, 2016
 # Henry Mineehen <info@mineehen.de>, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # Rudolf Schnapka <rs@techno-flex.de>, 2016
-# Niki Waibel <niki.waibel@gmail.com>, 2016
+# Niki Waibel, 2016
 # Stefan Hartenfels <stefan.hartenfels@camptocamp.com>, 2017
 # Ralf Hilgenstock <rh@dialoge.info>, 2017
 # Jan Brodersen <4rmitxes@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:26+0000\n"
 "PO-Revision-Date: 2017-06-23 13:26+0000\n"
-"Last-Translator: Jan Brodersen <4rmitxes@gmail.com>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +66,7 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:46
 #, python-format
 msgid "ABOVE AMOUNT PURSUANT"
-msgstr ""
+msgstr "ÜBER BETRAG GEMÄẞ"
 
 #. module: pos_mercury
 #. openerp-web
@@ -97,7 +98,7 @@ msgstr "Bankauszug Buchung"
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:45
 #, python-format
 msgid "CARDHOLDER WILL PAY CARD ISSUER"
-msgstr ""
+msgstr "KARTENINHABER BEZAHLT KARTENAUSSTELLER"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_card_brand
@@ -126,12 +127,12 @@ msgstr "Kartenlesegerät"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:196
 #, python-format
 msgid "Clear Text Request Not Supported"
-msgstr ""
+msgstr "Klartextanfrage wird nicht unterstützt"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,help:pos_mercury.action_configuration_form
 msgid "Click to configure your card reader."
-msgstr ""
+msgstr "Klicken, um Ihren Kartenleser zu konfigurieren."
 
 #. module: pos_mercury
 #. openerp-web
@@ -153,13 +154,15 @@ msgstr "Verbindung verloren"
 #, python-format
 msgid "Control failed to find branded serial (password lookup failed)"
 msgstr ""
+"Die Kontrolle konnte keine branded serial finden (Nachschlagen des "
+"Passwortes fehlgeschlagen)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:202
 #, python-format
 msgid "Could Not Encrypt Response- Call Provider"
-msgstr ""
+msgstr "Antwort-Anbieter konnte nicht verschlüsselt werden"
 
 #. module: pos_mercury
 #. openerp-web
@@ -232,14 +235,14 @@ msgstr "Fehler"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:198
 #, python-format
 msgid "Error Occurred While Decrypting Request"
-msgstr ""
+msgstr "Fehler beim Entschlüsseln der Anfrage aufgetreten"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:188
 #, python-format
 msgid "Failed to start Event Thread."
-msgstr ""
+msgstr "Ereignis-Thread konnte nicht gestartet werden"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -248,6 +251,8 @@ msgid ""
 "                                (without having pressed anything else) will charge the full amount of the order to\n"
 "                                the card."
 msgstr ""
+"Für die schnelle Bearbeitung von Aufträgen: einfach eine Kreditkarte über den Zahlungsbildschirm\n"
+" ziehen (ohne etwas anderes gedrückt zu haben)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -268,28 +273,28 @@ msgstr "Globale API nicht initialisiert"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:192
 #, python-format
 msgid "Global Response Length Error (Too Short)"
-msgstr ""
+msgstr "Gesamt-Antwortlängenfehler (zu kurz)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:194
 #, python-format
 msgid "Global String Error"
-msgstr ""
+msgstr "Gesamt-Zeichenfolgefehler"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:262
 #, python-format
 msgid "Go to payment screen to use cards"
-msgstr ""
+msgstr "Zum Zahlungsbildschirm, um die Karten zu verwenden"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:393
 #, python-format
 msgid "Handling transaction..."
-msgstr ""
+msgstr "Transaktion wird abgewickelt …"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_id
@@ -301,6 +306,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_id
 msgid "ID of the merchant to authenticate him on the payment provider server"
 msgstr ""
+"Händler-ID, um ihn auf dem Zahlungsanbieter-Server zu authentifizieren"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -308,27 +314,29 @@ msgid ""
 "If you don't already have a Mercury account, contact Mercury at +1 (800) 846-4472\n"
 "                                to create one."
 msgstr ""
+"Wenn Sie noch kein Mercury-Konto haben, kontaktieren Sie Mercury über +1 (800) 846-4472\n"
+", um eins zu erstellen."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:184
 #, python-format
 msgid "In Process with server"
-msgstr ""
+msgstr "In Bearbeitung mit dem Server"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:165
 #, python-format
 msgid "Initialize Failed"
-msgstr ""
+msgstr "Initialisieren fehlgeschlagen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:172
 #, python-format
 msgid "Insufficient Fields"
-msgstr ""
+msgstr "Ungültige Felder"
 
 #. module: pos_mercury
 #. openerp-web
@@ -349,7 +357,7 @@ msgstr "Ungültige Kontonummer"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:210
 #, python-format
 msgid "Invalid Authorization Amount"
-msgstr ""
+msgstr "Ungültiger Autorisierungsbetrag"
 
 #. module: pos_mercury
 #. openerp-web
@@ -364,14 +372,14 @@ msgstr "Ungültiger Berechtigungscode"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:225
 #, python-format
 msgid "Invalid Batch Item Count"
-msgstr ""
+msgstr "Ungültige Anzahl an Batchelementen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:224
 #, python-format
 msgid "Invalid Batch Number"
-msgstr ""
+msgstr "Ungültige Batchnummer"
 
 #. module: pos_mercury
 #. openerp-web
@@ -385,28 +393,28 @@ msgstr "Ungültiger Kartentyp"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:211
 #, python-format
 msgid "Invalid Cash Back Amount"
-msgstr ""
+msgstr "Ungültiger Cashback-Betrag"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:199
 #, python-format
 msgid "Invalid Check Digit"
-msgstr ""
+msgstr "Ungültige Prüfziffer"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:219
 #, python-format
 msgid "Invalid Check Type"
-msgstr ""
+msgstr "Ungültiger Checktyp"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:171
 #, python-format
 msgid "Invalid Command Format"
-msgstr ""
+msgstr "Ungültiges Befehlsformat"
 
 #. module: pos_mercury
 #. openerp-web
@@ -420,7 +428,7 @@ msgstr "Ungültiger Geburtstag"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:216
 #, python-format
 msgid "Invalid Derived Key Data"
-msgstr ""
+msgstr "Ungültige abgeleitete Schlüsseldaten"
 
 #. module: pos_mercury
 #. openerp-web
@@ -441,28 +449,28 @@ msgstr "Ungültiges Ablaufdatum"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:212
 #, python-format
 msgid "Invalid Gratuity Amount"
-msgstr ""
+msgstr "Ungültiger Vergütungsbetrag"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:226
 #, python-format
 msgid "Invalid MICR Input Type"
-msgstr ""
+msgstr "Ungültiger MICR-Eingangs-Typ"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:214
 #, python-format
 msgid "Invalid Magnetic Stripe Data"
-msgstr ""
+msgstr "Ungültige Magnetstreifendaten"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:205
 #, python-format
 msgid "Invalid Memo"
-msgstr ""
+msgstr "Ungültiges Memo"
 
 #. module: pos_mercury
 #. openerp-web
@@ -476,75 +484,75 @@ msgstr "Ungültige Händler-ID"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:204
 #, python-format
 msgid "Invalid Operator ID"
-msgstr ""
+msgstr "Ungültige Operator-ID"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:215
 #, python-format
 msgid "Invalid PIN Block Data"
-msgstr ""
+msgstr "Ungültige PIN-Blockdaten"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:229
 #, python-format
 msgid "Invalid Pass Data"
-msgstr ""
+msgstr "Ungültige Passdaten"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:213
 #, python-format
 msgid "Invalid Purchase Amount"
-msgstr ""
+msgstr "Ungültiger Kaufbetrag"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:220
 #, python-format
 msgid "Invalid Routing Number"
-msgstr ""
+msgstr "Ungültige Bankleitzahl"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:228
 #, python-format
 msgid "Invalid Sequence Number"
-msgstr ""
+msgstr "Ungültige Sequenznummer"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:217
 #, python-format
 msgid "Invalid State Code"
-msgstr ""
+msgstr "Ungültiger Bundeslandcode"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:223
 #, python-format
 msgid "Invalid TStream Type"
-msgstr ""
+msgstr "Ungültiger TStream-Typ"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:221
 #, python-format
 msgid "Invalid TranCode"
-msgstr ""
+msgstr "Ungültiger TranCode"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:203
 #, python-format
 msgid "Invalid Transaction Type"
-msgstr ""
+msgstr "Ungültiger Transaktionstyp"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Invoice number from Mercury Pay"
-msgstr ""
+msgstr "Rechnungsnummer von Mercury Pay"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_account_journal
@@ -572,7 +580,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
 msgid "MagneSafe"
-msgstr ""
+msgstr "MagneSafe"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_id
@@ -584,18 +592,18 @@ msgstr "Händler-ID"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:200
 #, python-format
 msgid "Merchant ID Missing"
-msgstr ""
+msgstr "Händler-ID fehlt"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid "Merchant Password"
-msgstr ""
+msgstr "Händlerpasswort"
 
 #. module: pos_mercury
 #: model:ir.actions.act_window,name:pos_mercury.action_configuration_form
 #: model:ir.ui.menu,name:pos_mercury.menu_pos_pos_mercury_config
 msgid "Mercury Configurations"
-msgstr ""
+msgstr "Mercury-Konfigurationen"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_journal_pos_mercury_config_id
@@ -605,17 +613,17 @@ msgstr ""
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_invoice_no
 msgid "Mercury invoice number"
-msgstr ""
+msgstr "Mercury-Rechnungsnummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Mercury record number"
-msgstr ""
+msgstr "Mercury-Datensatznummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Mercury reference number"
-msgstr ""
+msgstr "Mercury-Referenznummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,field_description:pos_mercury.field_pos_mercury_configuration_name
@@ -625,33 +633,33 @@ msgstr "Name"
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_name
 msgid "Name of this Mercury configuration"
-msgstr ""
+msgstr "Name dieser Mercury-Konfiguration"
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:35
 #, python-format
 msgid "No Mercury configuration associated with the journal."
-msgstr ""
+msgstr "Keine Mercury-Konfiguration, die mit dem Journal verknüpft ist."
 
 #. module: pos_mercury
 #: code:addons/pos_mercury/models/pos_mercury_transaction.py:23
 #, python-format
 msgid "No opened point of sale session for user %s found"
-msgstr ""
+msgstr "Keine offene Point-of-Sale-Sitzung für Benutzer %s gefunden"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:334
 #, python-format
 msgid "No response from Mercury (Mercury down?)"
-msgstr ""
+msgstr "Keine Antwort von Mercury (Mercury außer Betrieb?)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:336
 #, python-format
 msgid "No response from server (connected to network?)"
-msgstr ""
+msgstr "Keine Antwort vom Server (mit dem Netzwerk verbunden?)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -659,40 +667,40 @@ msgstr ""
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:562
 #, python-format
 msgid "Odoo error while processing transaction."
-msgstr ""
+msgstr "Odoo-Fehler bei der Transaktionsabwicklung."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:639
 #, python-format
 msgid "One credit card swipe already pending."
-msgstr ""
+msgstr "Ein Kreditkartenleser ausstehend."
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_common
 msgid "OneTime"
-msgstr ""
+msgstr "OneTime"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:460
 #, python-format
 msgid "Partially approved"
-msgstr ""
+msgstr "Teilweise genehmigt"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:181
 #, python-format
 msgid "Password Failed (Client / Server)"
-msgstr ""
+msgstr "Passwort fehlgeschlagen (Kunde / Server)"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:176
 #, python-format
 msgid "Password Failed – Disconnecting"
-msgstr ""
+msgstr "Passwort fehlgeschlagen – Trennen"
 
 #. module: pos_mercury
 #. openerp-web
@@ -706,30 +714,31 @@ msgstr "Passwort verifiziert"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:182
 #, python-format
 msgid "Password failed (Challenge / Response)"
-msgstr ""
+msgstr "Passwort fehlgeschlagen (Zielvereinbarung / Antwort)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_pos_mercury_configuration_merchant_pwd
 msgid ""
 "Password of the merchant to authenticate him on the payment provider server"
 msgstr ""
+"Händlerpasswort, um ihn auf dem Zahlungsanbieter-Server zu authentifizieren"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_record_no
 msgid "Payment record number from Mercury Pay"
-msgstr ""
+msgstr "Zahlungsdatensatznummer von Mercury-Pay"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_ref_no
 msgid "Payment reference number from Mercury Pay"
-msgstr ""
+msgstr "Zahlungs-Referenznummer von Mercury Pay"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:407
 #, python-format
 msgid "Please setup your Mercury merchant account."
-msgstr ""
+msgstr "Bitte richten Sie Ihr Mercury-Händlerkonto ein."
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_order
@@ -741,133 +750,133 @@ msgstr "Point-of-Sale-Verkäufe"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:175
 #, python-format
 msgid "Queue Full"
-msgstr ""
+msgstr "Warteschlange voll"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
 msgid "RecordNumberRequested"
-msgstr ""
+msgstr "RecordNumberRequested"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:179
 #, python-format
 msgid "Refused ‘Max Connections’"
-msgstr ""
+msgstr "Abgelehnte „Max Connections“"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:540
 #, python-format
 msgid "Reversal failed, sending VoidSale..."
-msgstr ""
+msgstr "Storno fehlgeschlagen, VoidSale wird gesendet …"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:576
 #, python-format
 msgid "Reversal succeeded"
-msgstr ""
+msgstr "Storno erfolgreich"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:543
 #, python-format
 msgid "Sending reversal..."
-msgstr ""
+msgstr "Storno wird gesendet …"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:191
 #, python-format
 msgid "Server Login Failed"
-msgstr ""
+msgstr "Server-Login fehlgeschlagen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:160
 #, python-format
 msgid "Socket Connection Failed"
-msgstr ""
+msgstr "Socket-Verbindung fehlgeschlagen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:159
 #, python-format
 msgid "Socket Creation Failed"
-msgstr ""
+msgstr "Socket-Erstellung fehlgeschlagen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:157
 #, python-format
 msgid "Socket Error sending request"
-msgstr ""
+msgstr "Socket-Fehler beim Senden der Anfrage"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:158
 #, python-format
 msgid "Socket already open or in use"
-msgstr ""
+msgstr "Socket bereits geöffnet oder schon aktiv"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.mercury_transaction
 msgid "Swiped"
-msgstr ""
+msgstr "Eingelesen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:177
 #, python-format
 msgid "System Going Offline"
-msgstr ""
+msgstr "System geht offline"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:162
 #, python-format
 msgid "TCP/IP Failed to Initialize"
-msgstr ""
+msgstr "Initialisierung von TCP/IP fehlgeschlagen"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:47
 #, python-format
 msgid "TO CARDHOLDER AGREEMENT"
-msgstr ""
+msgstr "FÜR KREDITKARTENVERTRAG"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:201
 #, python-format
 msgid "TStream Type Missing"
-msgstr ""
+msgstr "TStream-Typ fehlt"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_brand
 msgid "The brand of the payment card (e.g. Visa, AMEX, ...)"
-msgstr ""
+msgstr "Die Marke der Zahlungskarte (z.B. Visa, AMEX …)"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_prefixed_card_number
 msgid "The card number used for the payment."
-msgstr ""
+msgstr "Die für die Zahlung verwendete Kartennummer"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_journal_pos_mercury_config_id
 msgid "The configuration of Mercury used for this journal"
-msgstr ""
+msgstr "Die Konfiguration von Mercury, die für dieses Journal verwendet wird"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_number
 msgid "The last 4 numbers of the card used to pay"
-msgstr ""
+msgstr "Die letzten 4 Ziffern der für die Bezahlung verwendeten Karte"
 
 #. module: pos_mercury
 #: model:ir.model.fields,help:pos_mercury.field_account_bank_statement_line_mercury_card_owner_name
 msgid "The name of the card owner"
-msgstr ""
+msgstr "Der Name des Karteninhabers"
 
 #. module: pos_mercury
 #. openerp-web
@@ -877,34 +886,37 @@ msgid ""
 "This can be caused by a badly executed swipe or by not having your keyboard "
 "layout set to US QWERTY (not US International)."
 msgstr ""
+"Dies kann durch schlecht ausgeführtes Einlesen oder dadurch verursacht "
+"werden, dass Sie Ihr Tastatur-Layout nicht auf US QWERTY eingestellt haben "
+"(nicht US-international)."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:187
 #, python-format
 msgid "Threaded Auth Started Expect Response"
-msgstr ""
+msgstr "Gruppierte Authorisierung hat Rückantworten gestartet"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:163
 #, python-format
 msgid "Time Out waiting for server response"
-msgstr ""
+msgstr "Timeout, auf Server-Antwort warten"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:169
 #, python-format
 msgid "Timeout error"
-msgstr ""
+msgstr "Timeout-Fehler"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:156
 #, python-format
 msgid "Timeout on Response"
-msgstr ""
+msgstr "Timeout bei der Antwort"
 
 #. module: pos_mercury
 #. openerp-web
@@ -919,6 +931,7 @@ msgstr "Transaktion freigegeben"
 #, python-format
 msgid "Unable to Parse Response from Global (Indistinguishable)"
 msgstr ""
+"Das Parsen der Antwort von Global ist nicht möglich (nicht differenzierbar)"
 
 #. module: pos_mercury
 #. openerp-web
@@ -932,7 +945,7 @@ msgstr "Unbekannter Fehler"
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:197
 #, python-format
 msgid "Unrecognized Request Format"
-msgstr ""
+msgstr "Unbekanntes Antragsformat"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -942,20 +955,24 @@ msgid ""
 "                                just like on any other payment line. Whenever the payment line is set up, a card\n"
 "                                can be swiped through the card reader device."
 msgstr ""
+"Die Mercury-Integration im Point-of-Sale zu verwenden, ist einfach: Drücken Sie einfach die\n"
+" damit verbundene Zahlungsmethode. Danach kann der Betrag angepasst werden (z. B. für Cashback)\n"
+" wie auf jeder anderen Buchungszeile. Immer, wenn die Buchungszeile erstellt wurde, kann eine Karte\n"
+" durch das Kartenlesegerät gezogen werden."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:584
 #, python-format
 msgid "VoidSale succeeded"
-msgstr ""
+msgstr "VoidSale erfolgreich"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/xml/pos_mercury.xml:17
 #, python-format
 msgid "WAITING FOR SWIPE"
-msgstr ""
+msgstr "AUF EINLESEN WARTEN"
 
 #. module: pos_mercury
 #: model:ir.ui.view,arch_db:pos_mercury.view_pos_mercury_configuration_form
@@ -963,20 +980,22 @@ msgid ""
 "We currently support the MagTek Dynamag card reader device. It can be connected\n"
 "                                directly to the Point Of Sale device or it can be connected to the POSBox."
 msgstr ""
+"Derzeit unterstützen wir das MagTek Dynamag-Kartenlesegerät. Es kann direkt mit\n"
+" dem Point-of-Sale-Gerät oder mit der PoSBox verbunden werden."
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:195
 #, python-format
 msgid "Weak Encryption Request Not Supported"
-msgstr ""
+msgstr "Schwache Verschlüsselungsanfrage wird nicht unterstützt"
 
 #. module: pos_mercury
 #. openerp-web
 #: code:addons/pos_mercury/static/src/js/pos_mercury.js:189
 #, python-format
 msgid "XML Parse Error"
-msgstr ""
+msgstr "XML-Parsefehler"
 
 #. module: pos_mercury
 #. openerp-web
@@ -998,7 +1017,7 @@ msgstr "ir.autovacuum"
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_configuration
 msgid "pos_mercury.configuration"
-msgstr ""
+msgstr "pos_mercury.configuration"
 
 #. module: pos_mercury
 #: model:ir.model,name:pos_mercury.model_pos_mercury_mercury_transaction

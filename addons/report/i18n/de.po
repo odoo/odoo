@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Ralf Hilgenstock <rh@dialoge.info>, 2016
-# Martin Trigaux <mat@odoo.com>, 2016
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2016
+# Martin Trigaux, 2016
+# Wolfgang Taferner, 2016
 # darenkster <inactive+darenkster@transifex.com>, 2016
 # JackTheHunter <Maximilian.N98@gmail.com>, 2016
 # Ermin Trevisan <trevi@twanda.com>, 2016
@@ -15,13 +15,14 @@
 # Henry Mineehen <info@mineehen.de>, 2016
 # Mathias Neef <mn@copado.de>, 2016
 # Anja Funk <anja.funk@afimage.de>, 2017
+# e2f <projects@e2f.com>, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-06-23 13:27+0000\n"
 "PO-Revision-Date: 2017-06-23 13:27+0000\n"
-"Last-Translator: Anja Funk <anja.funk@afimage.de>, 2017\n"
+"Last-Translator: e2f <projects@e2f.com>, 2018\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -259,6 +260,8 @@ msgstr "E-Mail:"
 #, python-format
 msgid "Error ! You cannot select a format AND specific page width/height."
 msgstr ""
+"Fehler! Sie können kein Format UND eine spezifische Seitenbreite/-höhe "
+"auswählen."
 
 #. module: report
 #: selection:report.paperformat,format:0
@@ -437,12 +440,12 @@ msgstr "Druck"
 #. module: report
 #: model:ir.model.fields,field_description:report.field_ir_act_report_xml_print_report_name
 msgid "Printed Report Name"
-msgstr ""
+msgstr "Name des gedruckten Berichts"
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.act_report_xml_view_inherit
 msgid "QWeb views"
-msgstr ""
+msgstr "QWeb-Ansichten"
 
 #. module: report
 #. openerp-web
@@ -503,6 +506,9 @@ msgid ""
 "change the report filename. You can use a python expression with the object "
 "and time variables."
 msgstr ""
+"Dies ist der Dateiname des Berichts, der herunterladen wird. Lassen Sie das "
+"Feld leer, um den Bericht-Dateinamen nicht zu ändern. Sie können einen "
+"Python-Ausdruck mit der Objekt- und Zeitvariablen verwenden."
 
 #. module: report
 #: code:addons/report/models/report.py:273
@@ -534,6 +540,8 @@ msgstr ""
 #, python-format
 msgid "Unable to find Wkhtmltopdf on this system. The PDF can not be created."
 msgstr ""
+"Konnte Wkhtmltopdf in diesem System nicht finden. Das PDF kann nicht "
+"erstellt werden."
 
 #. module: report
 #: model:ir.ui.view,arch_db:report.external_layout_footer
@@ -547,6 +555,8 @@ msgid ""
 "Wkhtmltopdf failed (error code: %s). Memory limit too low or maximum file "
 "number of subprocess reached. Message : %s"
 msgstr ""
+"Wkhtmltopdf fehlgeschlagen (Fehlercode: %s). Arbeitsspeicherlimit zu niedrig"
+" oder maximale Anzahl an Dateien im Unterprozess erreicht. Nachricht: %s"
 
 #. module: report
 #: code:addons/report/models/report.py:452
@@ -588,7 +598,7 @@ msgid ""
 "Your installation of Wkhtmltopdf seems to be broken. The report will be "
 "shown in html.<br><br><a href=\"http://wkhtmltopdf.org/\" "
 "target=\"_blank\">wkhtmltopdf.org</a>"
-msgstr ""
+msgstr "<br><br><a href=\"http://wkhtmltopdf.org/\" target=\"_blank\"></a>"
 
 #. module: report
 #: model:ir.model,name:report.model_base_config_settings
@@ -603,7 +613,7 @@ msgstr "ir.actions.report.xml"
 #. module: report
 #: model:ir.model,name:report.model_ir_qweb_field_barcode
 msgid "ir.qweb.field.barcode"
-msgstr ""
+msgstr "ir.qweb.field.barcode"
 
 #. module: report
 #: model:ir.model,name:report.model_report_abstract_report
