@@ -49,12 +49,14 @@ class AccountFrFec(models.TransientModel):
             '' AS Montantdevise,
             '' AS Idevise
         FROM
-            account_move_line aml
+            account_account aa
+            LEFT JOIN account_move_line aml ON aa.id = aml.account_id
             LEFT JOIN account_move am ON am.id=aml.move_id
-            JOIN account_account aa ON aa.id = aml.account_id
             LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
         WHERE
-            am.date < %s
+            aml is null or am is null or aat is null
+            or
+            (am.date < %s
             AND am.company_id = %s
             AND aat.include_initial_balance = 'f'
             AND (aml.debit != 0 OR aml.credit != 0)
@@ -62,7 +64,7 @@ class AccountFrFec(models.TransientModel):
         # For official report: only use posted entries
         if self.export_type == "official":
             sql_query += '''
-            AND am.state = 'posted'
+            AND am.state = 'posted')
             '''
         company = self.env.user.company_id
         formatted_date_from = self.date_from.replace('-', '')
