@@ -4,10 +4,10 @@
 from . import common
 from odoo.tests.common import TransactionCase
 
-class TestVariants(TransactionCase):
+class TestVariantsSearch(TransactionCase):
 
     def setUp(self):
-        res = super(TestVariants, self).setUp()
+        res = super(TestVariantsSearch, self).setUp()
         self.size_attr = self.env['product.attribute'].create({'name': 'Size'})
         self.size_attr_value_s = self.env['product.attribute.value'].create({'name': 'S', 'attribute_id': self.size_attr.id})
         self.size_attr_value_m = self.env['product.attribute.value'].create({'name': 'M', 'attribute_id': self.size_attr.id})
