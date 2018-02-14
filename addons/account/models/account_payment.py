@@ -284,15 +284,20 @@ class account_register_payments(models.TransientModel):
         for payment_vals in self.get_payments_vals():
             payments += Payment.create(payment_vals)
         payments.post()
-        return {
+
+        action_vals = {
             'name': _('Payments'),
             'domain': [('id', 'in', payments.ids), ('state', '=', 'posted')],
             'view_type': 'form',
-            'view_mode': 'tree,form',
             'res_model': 'account.payment',
             'view_id': False,
             'type': 'ir.actions.act_window',
         }
+        if len(payments) == 1:
+            action_vals.update({'res_id': payments[0].id, 'view_mode': 'form'})
+        else:
+            action_vals['view_mode'] = 'tree,form'
+        return action_vals
 
 
 class account_payment(models.Model):
