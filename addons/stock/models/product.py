@@ -372,10 +372,13 @@ class Product(models.Model):
     def write(self, values):
         res = super(Product, self).write(values)
         if 'active' in values and not values['active']:
-            orderpoints = self.mapped('orderpoint_ids').filtered(lambda r: r.active)
-            if orderpoints:
-                product = orderpoints[0].product_id
-                raise UserError(_('You still have some active reordering rules on this product : %s. Please archive or delete them first.') % product.display_name)
+            products = self.mapped('orderpoint_ids').filtered(lambda r: r.active).mapped('product_id')
+            if products:
+                msg = _('You still have some active reordering rules on this product. Please archive or delete them first.')
+                msg += '\n\n'
+                for product in products:
+                    msg += '- %s \n' % product.display_name
+                raise UserError(msg)
         return res
 
 class ProductTemplate(models.Model):
