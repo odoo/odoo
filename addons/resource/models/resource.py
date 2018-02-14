@@ -297,7 +297,7 @@ class ResourceCalendar(models.Model):
             domain += [('date_to', '>', fields.Datetime.to_string(start_datetime + timedelta(days=-1)))]
         if end_datetime:
             # domain += [('date_from', '<', fields.Datetime.to_string(to_naive_utc(end_datetime, self.env.user)))]
-            domain += [('date_from', '<', fields.Datetime.to_string(start_datetime + timedelta(days=1)))]
+            domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
         leaves = self.env['resource.calendar.leaves'].search(domain + [('calendar_id', '=', self.id)])
 
         filtered_leaves = self.env['resource.calendar.leaves']
