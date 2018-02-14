@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-09-22 13:16+0000\n"
-"PO-Revision-Date: 2017-04-01 15:36+0000\n"
+"PO-Revision-Date: 2017-12-02 06:38+0000\n"
 "Last-Translator: amos lin <seeing@edirect168.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/odoo/odoo-9/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -206,21 +206,21 @@ msgstr "<div class=\"o_mail_notification\">加入<a href=\"#\" class=\"o_channel
 msgid ""
 "<div class=\"o_mail_notification\">left <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
-msgstr ""
+msgstr "<div class=\"o_mail_notification\">離開<a href=\"#\" class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:22
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow %s document: %s.</p></div>"
-msgstr ""
+msgstr "<div><p>你好! </p><p>%s 邀請你關注 %s 文件: %s.</p></div>"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:25
 #, python-format
 msgid ""
 "<div><p>Hello,</p><p>%s invited you to follow a new document.</p></div>"
-msgstr ""
+msgstr "<div><p>你好!</p><p>%s 邀請你關注一份新的文件</p></div>"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -310,7 +310,7 @@ msgstr "活躍"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_active_domain
 msgid "Active domain"
-msgstr ""
+msgstr "開啟網域"
 
 #. module: mail
 #. openerp-web
@@ -404,14 +404,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_base_config_settings_alias_domain
 msgid "Alias Domain"
-msgstr ""
+msgstr "網域別名"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_name
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_name
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_name
 msgid "Alias Name"
-msgstr ""
+msgstr "別名名稱"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_domain
@@ -425,7 +425,7 @@ msgstr "領域別名"
 #: model:ir.model.fields,field_description:mail.field_mail_channel_alias_model_id
 #: model:ir.model.fields,field_description:mail.field_res_users_alias_model_id
 msgid "Aliased Model"
-msgstr ""
+msgstr "別名模組"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_alias
@@ -438,7 +438,7 @@ msgstr "別名"
 #: code:addons/mail/static/src/xml/systray.xml:12
 #, python-format
 msgid "All"
-msgstr ""
+msgstr "所有"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -450,7 +450,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:190
 #, python-format
 msgid "Anonymous"
-msgstr ""
+msgstr "匿名"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_no_auto_thread
@@ -465,7 +465,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_model_id
 #: model:ir.model.fields,field_description:mail.field_mail_template_model_id
 msgid "Applies to"
-msgstr ""
+msgstr "套用於"
 
 #. module: mail
 #. openerp-web
@@ -477,7 +477,7 @@ msgstr "套用"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr ""
+msgstr "附上文件"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_attachment_ids
@@ -514,7 +514,7 @@ msgstr "作者"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Author Signature (mass mail only)"
-msgstr ""
+msgstr "作者簽署(僅限群發郵件)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_author_id
@@ -530,7 +530,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_author_avatar
 #: model:ir.model.fields,field_description:mail.field_mail_message_author_avatar
 msgid "Author's avatar"
-msgstr ""
+msgstr "作者頭像"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_group_public_id
@@ -552,7 +552,7 @@ msgstr "自動訂閱"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_message_subtype_form
 msgid "Auto subscription"
-msgstr ""
+msgstr "自動訂閱"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message_body
@@ -600,7 +600,7 @@ msgstr "取消"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tree
 msgid "Cancel Email"
-msgstr ""
+msgstr "取消郵件"
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -610,7 +610,7 @@ msgstr "取消"
 #. module: mail
 #: selection:mail.shortcode,shortcode_type:0
 msgid "Canned Response"
-msgstr ""
+msgstr "取消回覆"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_shortcode
@@ -695,7 +695,7 @@ msgstr "聊天"
 #. module: mail
 #: selection:mail.channel,channel_type:0
 msgid "Chat Discussion"
-msgstr ""
+msgstr "聊天討論"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
@@ -723,13 +723,13 @@ msgstr "選擇一個範例"
 #: code:addons/mail/models/mail_thread.py:308
 #, python-format
 msgid "Click here to add new %(document)s or send an email to: %(email_link)s"
-msgstr ""
+msgstr "點擊以新增一份 %(document)s 或傳送電傳到: %(email_link)s"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:324
 #, python-format
 msgid "Click here to add new %s"
-msgstr ""
+msgstr "點擊以新增 %s"
 
 #. module: mail
 #: model:ir.actions.act_window,help:mail.action_contacts
@@ -762,7 +762,7 @@ msgstr "收件人 id 以逗號分隔"
 #: model:ir.model.fields,help:mail.field_mail_template_partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
-msgstr ""
+msgstr "以逗號分隔收件人ID（佔位符可以用在這裡）"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -842,19 +842,19 @@ msgstr ""
 #: code:addons/mail/static/src/xml/systray.xml:14
 #, python-format
 msgid "Conversations"
-msgstr ""
+msgstr "對話"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/client_action.js:300
 #, python-format
 msgid "Create %s"
-msgstr ""
+msgstr "建立 %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_create_date
 msgid "Create Date"
-msgstr ""
+msgstr "建立日期"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_create_uid
@@ -1031,7 +1031,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr ""
+msgstr "文件的關注者"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
@@ -1050,7 +1050,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/chatter.xml:129
 #, python-format
 msgid "Edit subscription"
-msgstr ""
+msgstr "修改訂閱"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1094,7 +1094,7 @@ msgstr "郵件搜尋"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "郵件範本"
 
 #. module: mail
 #: model:ir.model,name:mail.model_email_template_preview
@@ -1183,7 +1183,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.alias,alias_contact:0 selection:mail.channel,public:0
 msgid "Everyone"
-msgstr ""
+msgstr "所有人"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -1210,7 +1210,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_failure_reason
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "失敗原因"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_failure_reason
@@ -1261,7 +1261,7 @@ msgstr "最後的模板欄位，找到要複製-貼上的區塊"
 #. module: mail
 #: selection:mail.channel.partner,fold_state:0
 msgid "Folded"
-msgstr ""
+msgstr "已折疊"
 
 #. module: mail
 #. openerp-web
@@ -1306,7 +1306,7 @@ msgstr ""
 #. module: mail
 #: selection:mail.alias,alias_contact:0
 msgid "Followers only"
-msgstr ""
+msgstr "僅限關注者"
 
 #. module: mail
 #. openerp-web
@@ -1366,7 +1366,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden
 msgid "Hidden"
-msgstr ""
+msgstr "隱藏"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_hidden
@@ -1412,7 +1412,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:108
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "閒置"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_message_unread
@@ -1486,7 +1486,7 @@ msgstr "起始串訊息"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_internal
 msgid "Internal Only"
-msgstr ""
+msgstr "僅限內部"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:99
@@ -1509,7 +1509,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/chat_manager.js:514
 #, python-format
 msgid "Invitation"
-msgstr ""
+msgstr "邀請"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:53
@@ -1530,7 +1530,7 @@ msgstr "邀請"
 #: code:addons/mail/static/src/js/chatter.js:144
 #, python-format
 msgid "Invite Follower"
-msgstr ""
+msgstr "邀請關注者"
 
 #. module: mail
 #. openerp-web
@@ -1538,7 +1538,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/client_action.xml:132
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "邀請人員"
 
 #. module: mail
 #. openerp-web
@@ -1705,19 +1705,19 @@ msgstr ""
 #: code:addons/mail/static/src/js/chatter.js:443
 #, python-format
 msgid "Log"
-msgstr ""
+msgstr "日誌"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:75
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr ""
+msgstr "編寫日誌。不會通知關注者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_is_log
 msgid "Log an Internal Note"
-msgstr ""
+msgstr "編寫內部通知"
 
 #. module: mail
 #. openerp-web
@@ -1986,7 +1986,7 @@ msgstr "產生的報表文件命名(可能包含佔位符)\n可以省略分機�
 #: model:ir.model.fields,help:mail.field_mail_message_needaction
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Need Action"
-msgstr ""
+msgstr "需要動作"
 
 #. module: mail
 #: selection:res.partner,notify_email:0
@@ -2011,7 +2011,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_integer
 msgid "New Value Integer"
-msgstr ""
+msgstr "新的整數值"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
@@ -2053,7 +2053,7 @@ msgstr "新訊息出現在這裡。"
 #: code:addons/mail/static/src/js/client_action.js:81
 #, python-format
 msgid "New people"
-msgstr ""
+msgstr "新人員"
 
 #. module: mail
 #. openerp-web
@@ -2067,7 +2067,7 @@ msgstr "無關注者"
 #: code:addons/mail/static/src/xml/thread.xml:16
 #, python-format
 msgid "No matches found"
-msgstr ""
+msgstr "沒有找到符合"
 
 #. module: mail
 #. openerp-web
@@ -2100,7 +2100,7 @@ msgstr "備註"
 #: code:addons/mail/static/src/xml/thread.xml:48
 #, python-format
 msgid "Note by"
-msgstr ""
+msgstr "備註自"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_search
@@ -2640,14 +2640,14 @@ msgstr "另存新的範本"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Save as new template"
-msgstr ""
+msgstr "另存新的範本"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/chat_window.js:23
 #, python-format
 msgid "Say something"
-msgstr ""
+msgstr "寫些什麼..."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -2873,14 +2873,14 @@ msgstr "主旨 (佔位符可在這裡使用)"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Subject..."
-msgstr ""
+msgstr "主旨..."
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:68
 #, python-format
 msgid "Subject:"
-msgstr ""
+msgstr "主旨:"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_substitution
@@ -3021,7 +3021,7 @@ msgstr "給"
 #: model:ir.model.fields,field_description:mail.field_ir_act_server_email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_email_to
 msgid "To (Emails)"
-msgstr ""
+msgstr "予(電子郵件)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_partner_to
@@ -3029,14 +3029,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_recipient_ids
 #: model:ir.model.fields,field_description:mail.field_mail_template_partner_to
 msgid "To (Partners)"
-msgstr ""
+msgstr "予(伙伴)"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chat_window.xml:24
 #, python-format
 msgid "To:"
-msgstr ""
+msgstr "致:"
 
 #. module: mail
 #. openerp-web
@@ -3050,7 +3050,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/thread.js:117
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "今日"
 
 #. module: mail
 #. openerp-web
@@ -3076,7 +3076,7 @@ msgstr ""
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Tracking"
-msgstr ""
+msgstr "追蹤"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -3297,7 +3297,7 @@ msgstr "昨天"
 #: code:addons/mail/static/src/js/client_action.js:80
 #, python-format
 msgid "You added <b>%s</b> to the conversation."
-msgstr ""
+msgstr "你己加入 <b>%s</b> 到這對話"
 
 #. module: mail
 #. openerp-web
@@ -3456,7 +3456,7 @@ msgstr "publisher_warranty.contract"
 #. module: mail
 #: model:mail.channel,name:mail.channel_3
 msgid "rd"
-msgstr ""
+msgstr "rd"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_preview_form

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: Odoo 9.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-06-22 07:25+0000\n"
-"PO-Revision-Date: 2018-01-30 09:45+0000\n"
+"PO-Revision-Date: 2018-02-01 15:10+0000\n"
 "Last-Translator: Rivo Zängov <eraser@eraser.ee>\n"
 "Language-Team: Estonian (http://www.transifex.com/odoo/odoo-9/language/et/)\n"
 "MIME-Version: 1.0\n"
@@ -1448,7 +1448,7 @@ msgid ""
 "- Council Implementing Regulation (EU) No 1042/2013\n"
 "\n"
 "    "
-msgstr ""
+msgstr "\nEU Mini One Stop Shop (MOSS) VAT for telecommunications, broadcasting and electronic services\n=============================================================================================\n\nAs of January 1rst, 2015, telecommunications, broadcasting\nand electronic services sold within the European Union\nhave to be always taxed in the country where the customer\nbelongs. In order to simplify the application of this EU\ndirective, the Mini One Stop Shop (MOSS) registration scheme\nallows businesses to make a unique tax declaration.\n\nThis module makes it possible by helping with the creation\nof the required EU fiscal positions and taxes in order to\nautomatically apply and record the required taxes.\n\nThis module installs a wizard to help setup fiscal positions\nand taxes for selling electronic services inside EU.\n\nThe wizard lets you select:\n - the EU countries to which you are selling these\n   services\n - your national VAT tax for services, to be mapped\n   to the target country's tax\n - optionally: a template fiscal position, in order\n   to copy the account mapping. Should be your\n   existing B2C Intra-EU fiscal position. (defaults\n   to no account mapping)\n - optionally: an account to use for collecting the\n   tax amounts (defaults to the account used by your\n   national VAT tax for services)\n\nIt creates the corresponding fiscal positions and taxes,\nautomatically applicable for EU sales with a customer\nin the selected countries.\nThe wizard can be run again for adding more countries.\n\nThe wizard creates a separate Chart of Taxes for collecting the\nVAT amounts of the MOSS declaration, so extracting the MOSS\ndata should be easy.\nLook for a Chart of Taxes named \"EU MOSS VAT Chart\" in the\nTaxes Report menu (Generic Accounting Report).\n\nReferences\n++++++++++\n- Directive 2008/8/EC\n- Council Implementing Regulation (EU) No 1042/2013\n\n    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing
@@ -8331,7 +8331,7 @@ msgstr ""
 #: code:addons/base/ir/ir_ui_view.py:585
 #, python-format
 msgid "Element '%s' cannot be located in parent view"
-msgstr ""
+msgstr "Element '%s' ei saa asuda ülemvaates"
 
 #. module: base
 #: code:addons/base/res/res_company.py:105
@@ -8381,7 +8381,7 @@ msgstr "Töötaja lepingud"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr
 msgid "Employee Directory"
-msgstr ""
+msgstr "Töötajate andmik"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_employee_form
@@ -8434,12 +8434,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_equipment
 msgid "Equipments"
-msgstr ""
+msgstr "Seadmed"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_equipment
 msgid "Equipments, Assets, Internal Hardware, Allocation Tracking"
-msgstr ""
+msgstr "Seadmed, varad, sisemine riistvara, jaotuse jälgimine"
 
 #. module: base
 #: model:res.country,name:base.er
@@ -8468,7 +8468,7 @@ msgstr ""
 #: code:addons/models.py:1264
 #, python-format
 msgid "Error details:"
-msgstr ""
+msgstr "Vea detailsed andmed:"
 
 #. module: base
 #: code:addons/models.py:1281
@@ -8499,12 +8499,12 @@ msgstr "Etioopia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et
 msgid "Ethiopia - Accounting"
-msgstr ""
+msgstr "Etioopia - raamatupidamine"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_et_reports
 msgid "Ethiopia - Accounting Reports"
-msgstr ""
+msgstr "Etioopia - raamatupidamisaruanded"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_server_object_lines_type
@@ -8524,7 +8524,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_sale
 msgid "Events Sales"
-msgstr ""
+msgstr "Ürituste müük"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_server_action_form
@@ -8568,7 +8568,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expense Tracker"
-msgstr ""
+msgstr "Kulude jälgija"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense
@@ -8925,17 +8925,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_filters_name
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filter Name"
-msgstr ""
+msgstr "Filtri nimi"
 
 #. module: base
 #: sql_constraint:ir.filters:0
 msgid "Filter names must be unique"
-msgstr ""
+msgstr "Filtreeritavad nimed peavad olema unikaalsed"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Filtreeri mu dokumente"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.actions_ir_filters_view
@@ -8950,17 +8950,17 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters created by myself"
-msgstr ""
+msgstr "Minu poolt loodud filtrid"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters shared with all users"
-msgstr ""
+msgstr "Kõigi kasutajatega jagatud filtrid"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.ir_filters_view_search
 msgid "Filters visible only for one user"
-msgstr ""
+msgstr "Ainult ühele kasutajale nähtavad filtrid"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_server_copyvalue
@@ -8997,7 +8997,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet Management"
-msgstr ""
+msgstr "Sõiduvahendite haldamine"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -9110,12 +9110,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_forum
 msgid "Forum"
-msgstr ""
+msgstr "Foorum"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum_doc
 msgid "Forum, Documentation"
-msgstr ""
+msgstr "Foorum, dokumentatsioon"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_forum
@@ -9496,7 +9496,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_country_group_form
 msgid "Group name"
-msgstr ""
+msgstr "Rühma nimi"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_groups
@@ -9523,7 +9523,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_rule_form
 msgid "Groups (no group = global)"
-msgstr ""
+msgstr "Rühmad (ilma rühmata = globaalne)"
 
 #. module: base
 #: model:res.country,name:base.gp
@@ -9573,12 +9573,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gamification
 msgid "HR Gamification"
-msgstr ""
+msgstr "Personali tunnustamine"
 
 #. module: base
 #: selection:ir.actions.report.xml,report_type:0
 msgid "HTML"
-msgstr ""
+msgstr "HTML"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_act_report_xml_report_type
@@ -10211,7 +10211,7 @@ msgstr "Mitteaktiivne"
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_users_search
 msgid "Inactive Users"
-msgstr ""
+msgstr "Mitteaktiivsed kasutajad"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_wkf_activity_in_transitions
@@ -10280,12 +10280,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_search
 msgid "Inherit"
-msgstr ""
+msgstr "Pärima"
 
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_groups_form
 msgid "Inherited"
-msgstr ""
+msgstr "Pärandatud"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view_inherit_id
@@ -10295,12 +10295,12 @@ msgstr ""
 #. module: base
 #: model:ir.ui.view,arch_db:base.view_view_form
 msgid "Inherited Views"
-msgstr ""
+msgstr "Pärandatud vaated"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherited_model_ids
 msgid "Inherited models"
-msgstr ""
+msgstr "Pärandatud mudelid"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_implied_ids
@@ -10569,7 +10569,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_inventory_management
 #: model:ir.module.module,shortdesc:base.module_stock
 msgid "Inventory Management"
-msgstr ""
+msgstr "Laohaldus"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account
@@ -11212,12 +11212,12 @@ msgstr "Juhtlõngad & võimalused"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Leads, Opportunities, Activities"
-msgstr ""
+msgstr "Müügivihjed, müügivõimalused, tegevused"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Leave Management"
-msgstr ""
+msgstr "Puhkuste haldamine"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
@@ -11402,12 +11402,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_lunch
 msgid "Lunch"
-msgstr ""
+msgstr "Lõuna"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_lunch
 msgid "Lunch Order, Meal, Food"
-msgstr ""
+msgstr "Lõuna tellimus, toit"
 
 #. module: base
 #: model:res.country,name:base.lu
@@ -11674,7 +11674,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_mass_mailing
 msgid "Mass Mailing"
-msgstr ""
+msgstr "E-kirja turundus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing
@@ -12634,7 +12634,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event
 msgid "Online Events"
-msgstr ""
+msgstr "Online sündmued"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_hr_recruitment
@@ -13111,7 +13111,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_localization_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr ""
+msgstr "Palgalehed"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
@@ -13497,7 +13497,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_project_management
 #: model:ir.ui.menu,name:base.menu_main_pm
 msgid "Project"
-msgstr ""
+msgstr "Projektid"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_project_and_timesheet_management
@@ -13507,7 +13507,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
 msgid "Project Forecast"
-msgstr ""
+msgstr "Projekti prognoos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project
@@ -13604,7 +13604,7 @@ msgstr "Ost"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase
 msgid "Purchase Management"
-msgstr ""
+msgstr "Ostude haldamine"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase
@@ -13929,7 +13929,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
 msgid "Repairs Management"
-msgstr ""
+msgstr "Parandustööde haldamine"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_doall
@@ -14863,7 +14863,7 @@ msgstr "Jäta vahele"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_slides
 msgid "Slides"
-msgstr ""
+msgstr "Presentatsioon"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15365,7 +15365,7 @@ msgstr "Uuring"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_survey_crm
 msgid "Survey CRM"
-msgstr ""
+msgstr "CRM küsitlus"
 
 #. module: base
 #: model:res.country,name:base.sj
@@ -17176,7 +17176,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode
 msgid "Warehouse Management Barcode Scanning"
-msgstr ""
+msgstr "Laohaldus ribakoodi lugejaga"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_picking_wave
@@ -17951,7 +17951,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale
 msgid "eCommerce"
-msgstr ""
+msgstr "E-kaubandus"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_delivery
