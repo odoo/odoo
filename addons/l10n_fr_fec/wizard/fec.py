@@ -64,8 +64,9 @@ class AccountFrFec(models.TransientModel):
         # For official report: only use posted entries
         if self.export_type == "official":
             sql_query += '''
-            AND am.state = 'posted')
+            AND am.state = 'posted'
             '''
+        sql_query += ')'
         company = self.env.user.company_id
         formatted_date_from = self.date_from.replace('-', '')
         self._cr.execute(
