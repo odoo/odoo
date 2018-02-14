@@ -385,7 +385,7 @@ class TestHeavyMailPerformance(TransactionCase):
         self.umbrella.message_subscribe(self.user_portal.partner_id.ids)
         record = self.umbrella.sudo(self.env.user)
 
-        with self.assertQueryCount(admin=97, emp=119):  # com runbot 90 - 112 // test_mail only: 97 - 119
+        with self.assertQueryCount(admin=97, emp=120):  # com runbot 90 - 113 // test_mail only: 97 - 120
             record.message_post(
                 body='<p>Test Post Performances</p>',
                 message_type='comment',

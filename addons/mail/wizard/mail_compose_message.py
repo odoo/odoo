@@ -278,8 +278,8 @@ class MailComposer(models.TransientModel):
         # compute alias-based reply-to in batch
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.no_auto_thread:
-            # reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model).browse(res_ids)._notify_get_reply_to(default=self.email_from)
-            reply_to_value = self.env['mail.thread'].with_context(thread_model=self.model)._notify_get_reply_to(res_ids, default=self.email_from)
+            records = self.env[self.model].browse(res_ids)
+            reply_to_value = self.env['mail.thread']._notify_get_reply_to_on_records(default=self.email_from, records=records)
 
         for res_id in res_ids:
             # static wizard (mail.message) values
@@ -299,8 +299,7 @@ class MailComposer(models.TransientModel):
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
-                if self.model in self.env and hasattr(self.env[self.model], '_notify_specific_email_values'):
-                    mail_values.update(self.env[self.model].browse(res_id)._notify_specific_email_values(False))
+                mail_values.update(self.env['mail.thread']._notify_specific_email_values_on_records(False, records=self.env[self.model].browse(res_id)))
                 # keep a copy unless specifically requested, reset record name (avoid browsing records)
                 mail_values.update(notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail

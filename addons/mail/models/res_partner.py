@@ -100,8 +100,8 @@ class Partner(models.Model):
 
         # custom values
         custom_values = dict()
-        if message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_specific_email_values'):
-            custom_values = self.env[message.model].browse(message.res_id)._notify_specific_email_values(message)
+        if message.res_id and message.model:
+            custom_values = self.env['mail.thread']._notify_specific_email_values_on_records(message, records=self.env[message.model].browse(message.res_id))
 
         mail_values = {
             'mail_message_id': message.id,
@@ -122,11 +122,8 @@ class Partner(models.Model):
             # cache so should not impact performances.
             mail_message_id = mail_values.get('mail_message_id')
             message = self.env['mail.message'].browse(mail_message_id) if mail_message_id else None
-            if message and message.model and message.res_id and message.model in self.env and hasattr(self.env[message.model], '_notify_email_recipients'):
-                tig = self.env[message.model].browse(message.res_id)
-                recipient_values = tig._notify_email_recipients(message, email_chunk)
-            else:
-                recipient_values = self.env['mail.thread']._notify_email_recipients(message, email_chunk)
+            tig = self.env[message.model].browse(message.res_id) if message and message.model and message.res_id else False
+            recipient_values = self.env['mail.thread']._notify_email_recipients_on_records(message, email_chunk, records=tig)
             create_values = {
                 'body_html': body,
                 'subject': subject,
@@ -178,10 +175,8 @@ class Partner(models.Model):
         base_mail_values = self._notify_prepare_email_values(message, values)
 
         # classify recipients: actions / no action
-        if message.model and message.res_id and hasattr(self.env[message.model], '_notify_classify_recipients'):
-            recipients = self.env[message.model].browse(message.res_id)._notify_classify_recipients(message, self)
-        else:
-            recipients = self.env['mail.thread']._notify_classify_recipients(message, self)
+        tig = self.env[message.model].browse(message.res_id) if message.model and message.res_id else False
+        recipients = self.env['mail.thread']._notify_classify_recipients_on_records(message, self, records=tig)
 
         emails = self.env['mail.mail']
         recipients_nbr, recipients_max = 0, 50
