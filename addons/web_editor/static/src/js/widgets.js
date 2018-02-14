@@ -540,16 +540,12 @@ var getCssSelectors = function (filter) {
     var sheets = document.styleSheets;
     for(var i = 0; i < sheets.length; i++) {
         var rules;
-        if (sheets[i].rules) {
-            rules = sheets[i].rules;
-        } else {
-            //try...catch because Firefox not able to enumerate document.styleSheets[].cssRules[] for cross-domain stylesheets.
-            try {
-                rules = sheets[i].cssRules;
-            } catch(e) {
-                console.warn("Can't read the css rules of: " + sheets[i].href, e);
-                continue;
-            }
+        // try...catch because browser may not able to enumerate rules for cross-domain stylesheets
+        try {
+            rules = sheets[i].rules || sheets[i].cssRules;
+        } catch(e) {
+            console.warn("Can't read the css rules of: " + sheets[i].href, e);
+            continue;
         }
         if (rules) {
             for(var r = 0; r < rules.length; r++) {
