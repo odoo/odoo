@@ -4,10 +4,10 @@
 from . import common
 from odoo.tests.common import TransactionCase
 
-class TestVariants(TransactionCase):
+class TestVariantsSearch(TransactionCase):
 
     def setUp(self):
-        res = super(TestVariants, self).setUp()
+        res = super(TestVariantsSearch, self).setUp()
         self.size_attr = self.env['product.attribute'].create({'name': 'Size'})
         self.size_attr_value_s = self.env['product.attribute.value'].create({'name': 'S', 'attribute_id': self.size_attr.id})
         self.size_attr_value_m = self.env['product.attribute.value'].create({'name': 'M', 'attribute_id': self.size_attr.id})
@@ -152,3 +152,181 @@ class TestVariants(common.TestProductCommon):
                 'value_ids': [(4, self.size_attr_value_l.id)],
             })]
         })
+
+
+class TestVariantsNoCreate(common.TestProductCommon):
+
+    def setUp(self):
+        super(TestVariantsNoCreate, self).setUp()
+        self.size = self.env['product.attribute'].create({
+            'name': 'Size',
+            'create_variant': False,
+            'value_ids': [(0, 0, {'name': 'S'}), (0, 0, {'name': 'M'}), (0, 0, {'name': 'L'})],
+        })
+        self.size_S = self.size.value_ids[0]
+        self.size_M = self.size.value_ids[1]
+        self.size_L = self.size.value_ids[2]
+
+    def test_create_mono(self):
+        """ create a product with a 'nocreate' attribute with a single value """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.size.id,
+                'value_ids': [(4, self.size_S.id)],
+            })],
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertFalse(template.product_variant_ids.attribute_value_ids)
+
+    def test_update_mono(self):
+        """ modify a product with a 'nocreate' attribute with a single value """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.size.id,
+                'value_ids': [(4, self.size_S.id)],
+            })],
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertFalse(template.product_variant_ids.attribute_value_ids)
+
+    def test_create_multi(self):
+        """ create a product with a 'nocreate' attribute with several values """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.size.id,
+                'value_ids': [(6, 0, self.size.value_ids.ids)],
+            })],
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertFalse(template.product_variant_ids.attribute_value_ids)
+
+    def test_update_multi(self):
+        """ modify a product with a 'nocreate' attribute with several values """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': self.size.id,
+                'value_ids': [(6, 0, self.size.value_ids.ids)],
+            })],
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+        self.assertFalse(template.product_variant_ids.attribute_value_ids)
+
+    def test_create_mixed_mono(self):
+        """ create a product with regular and 'nocreate' attributes """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+            'attribute_line_ids': [
+                (0, 0, { # no variants for this one
+                    'attribute_id': self.size.id,
+                    'value_ids': [(4, self.size_S.id)],
+                }),
+                (0, 0, { # two variants for this one
+                    'attribute_id': self.prod_att_1.id,
+                    'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        self.assertEqual(
+            {variant.attribute_value_ids for variant in template.product_variant_ids},
+            {self.prod_attr1_v1, self.prod_attr1_v2},
+        )
+
+    def test_update_mixed_mono(self):
+        """ modify a product with regular and 'nocreate' attributes """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [
+                (0, 0, { # no variants for this one
+                    'attribute_id': self.size.id,
+                    'value_ids': [(4, self.size_S.id)],
+                }),
+                (0, 0, { # two variants for this one
+                    'attribute_id': self.prod_att_1.id,
+                    'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        self.assertEqual(
+            {variant.attribute_value_ids for variant in template.product_variant_ids},
+            {self.prod_attr1_v1, self.prod_attr1_v2},
+        )
+
+    def test_create_mixed_multi(self):
+        """ create a product with regular and 'nocreate' attributes """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+            'attribute_line_ids': [
+                (0, 0, { # no variants for this one
+                    'attribute_id': self.size.id,
+                    'value_ids': [(6, 0, self.size.value_ids.ids)],
+                }),
+                (0, 0, { # two variants for this one
+                    'attribute_id': self.prod_att_1.id,
+                    'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        self.assertEqual(
+            {variant.attribute_value_ids for variant in template.product_variant_ids},
+            {self.prod_attr1_v1, self.prod_attr1_v2},
+        )
+
+    def test_update_mixed_multi(self):
+        """ modify a product with regular and 'nocreate' attributes """
+        template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'uom_id': self.uom_unit.id,
+            'uom_po_id': self.uom_unit.id,
+        })
+        self.assertEqual(len(template.product_variant_ids), 1)
+
+        template.write({
+            'attribute_line_ids': [
+                (0, 0, { # no variants for this one
+                    'attribute_id': self.size.id,
+                    'value_ids': [(6, 0, self.size.value_ids.ids)],
+                }),
+                (0, 0, { # two variants for this one
+                    'attribute_id': self.prod_att_1.id,
+                    'value_ids': [(4, self.prod_attr1_v1.id), (4, self.prod_attr1_v2.id)],
+                }),
+            ],
+        })
+        self.assertEqual(len(template.product_variant_ids), 2)
+        self.assertEqual(
+            {variant.attribute_value_ids for variant in template.product_variant_ids},
+            {self.prod_attr1_v1, self.prod_attr1_v2},
+        )
