@@ -676,6 +676,77 @@ class QWeb(object):
             ctx=ctx
         )
 
+    def _append_attributes(self):
+        # self._post_processing_att(tagName, t_attrs, options)
+        # for name, value in t_attrs.iteritems():
+        #     if value or isinstance(value, basestring)):
+        #         append(u' ')
+        #         append(name)
+        #         append(u'="')
+        #         append(escape(unicodifier((value)))
+        #         append(u'"')
+        return [
+            ast.Expr(ast.Call(
+                func=ast.Attribute(
+                    value=ast.Name(id='self', ctx=ast.Load()),
+                    attr='_post_processing_att',
+                    ctx=ast.Load()
+                ),
+                args=[
+                    ast.Name(id='tagName', ctx=ast.Load()),
+                    ast.Name(id='t_attrs', ctx=ast.Load()),
+                    ast.Name(id='options', ctx=ast.Load()),
+                ], keywords=[],
+                starargs=None, kwargs=None
+            )),
+            ast.For(
+                target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
+                iter=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='t_attrs', ctx=ast.Load()),
+                        attr='iteritems',
+                        ctx=ast.Load()
+                        ),
+                    args=[], keywords=[],
+                    starargs=None, kwargs=None
+                ),
+                body=[ast.If(
+                    test=ast.BoolOp(
+                        op=ast.Or(),
+                        values=[
+                            ast.Name(id='value', ctx=ast.Load()),
+                            ast.Call(
+                                func=ast.Name(id='isinstance', ctx=ast.Load()),
+                                args=[
+                                    ast.Name(id='value', ctx=ast.Load()),
+                                    ast.Name(id='basestring', ctx=ast.Load())
+                                ],
+                                keywords=[],
+                                starargs=None, kwargs=None
+                            )
+                        ]
+                    ),
+                    body=[
+                        self._append(ast.Str(u' ')),
+                        self._append(ast.Name(id='name', ctx=ast.Load())),
+                        self._append(ast.Str(u'="')),
+                        self._append(ast.Call(
+                            func=ast.Name(id='escape', ctx=ast.Load()),
+                            args=[ast.Call(
+                                func=ast.Name(id='unicodifier', ctx=ast.Load()),
+                                args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
+                                starargs=None, kwargs=None
+                            )], keywords=[],
+                            starargs=None, kwargs=None
+                        )),
+                        self._append(ast.Str(u'"')),
+                    ],
+                    orelse=[]
+                )],
+                orelse=[]
+            )
+        ]
+
     # order
 
     def _directives_eval_order(self):
@@ -714,7 +785,8 @@ class QWeb(object):
         if not el.nsmap:
             unqualified_el_tag = el_tag = el.tag
             content = self._compile_directive_content(el, options)
-            attrib = el.attrib
+            attrib = OrderedDict(el.attrib)
+            self._post_processing_att(el.tag, attrib, options)
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
@@ -742,6 +814,8 @@ class QWeb(object):
                     attrib['%s:%s' % (nsprefixmap[attrib_qname.namespace], attrib_qname.localname)] = value
                 else:
                     attrib[key] = value
+
+            self._post_processing_att(el.tag, attrib, options)
 
             # Update the dict of inherited namespaces before continuing the recursion. Note:
             # since `options['nsmap']` is a dict (and therefore mutable) and we do **not**
@@ -851,59 +925,12 @@ class QWeb(object):
                     )))
 
         if attr_already_created:
-            # for name, value in t_attrs.iteritems():
-            #     if value or isinstance(value, basestring)):
-            #         append(u' ')
-            #         append(name)
-            #         append(u'="')
-            #         append(escape(unicodifier((value)))
-            #         append(u'"')
-            body.append(ast.For(
-                target=ast.Tuple(elts=[ast.Name(id='name', ctx=ast.Store()), ast.Name(id='value', ctx=ast.Store())], ctx=ast.Store()),
-                iter=ast.Call(
-                    func=ast.Attribute(
-                        value=ast.Name(id='t_attrs', ctx=ast.Load()),
-                        attr='iteritems',
-                        ctx=ast.Load()
-                        ),
-                    args=[], keywords=[],
-                    starargs=None, kwargs=None
-                ),
-                body=[ast.If(
-                    test=ast.BoolOp(
-                        op=ast.Or(),
-                        values=[
-                            ast.Name(id='value', ctx=ast.Load()),
-                            ast.Call(
-                                func=ast.Name(id='isinstance', ctx=ast.Load()),
-                                args=[
-                                    ast.Name(id='value', ctx=ast.Load()),
-                                    ast.Name(id='basestring', ctx=ast.Load())
-                                ],
-                                keywords=[],
-                                starargs=None, kwargs=None
-                            )
-                        ]
-                    ),
-                    body=[
-                        self._append(ast.Str(u' ')),
-                        self._append(ast.Name(id='name', ctx=ast.Load())),
-                        self._append(ast.Str(u'="')),
-                        self._append(ast.Call(
-                            func=ast.Name(id='escape', ctx=ast.Load()),
-                            args=[ast.Call(
-                                func=ast.Name(id='unicodifier', ctx=ast.Load()),
-                                args=[ast.Name(id='value', ctx=ast.Load())], keywords=[],
-                                starargs=None, kwargs=None
-                            )], keywords=[],
-                            starargs=None, kwargs=None
-                        )),
-                        self._append(ast.Str(u'"')),
-                    ],
-                    orelse=[]
-                )],
-                orelse=[]
-            ))
+            # tagName = $el.tag
+            body.append(ast.Assign(
+                targets=[ast.Name(id='tagName', ctx=ast.Store())],
+                value=ast.Str(el.tag))
+            )
+            body.extend(self._append_attributes())
 
         return body
 
@@ -1492,6 +1519,15 @@ class QWeb(object):
         if isinstance(atts, (list, tuple)):
             atts = OrderedDict(atts)
         return atts
+
+    def _post_processing_att(self, tagName, atts, options):
+        """ Method called by the compiled code. This method may be overwrited
+            to filter or modify the attributes after they are compiled.
+            Every changes must be in place.
+        """
+        for name in atts.keys():
+            if atts[name] is None:
+                atts.pop(name)
 
     def _get_field(self, record, field_name, expression, tagName, field_options, options, values):
         """

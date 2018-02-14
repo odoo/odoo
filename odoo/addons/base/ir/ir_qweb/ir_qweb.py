@@ -129,35 +129,122 @@ class IrQWeb(models.AbstractModel, QWeb):
         if len(el):
             raise "t-call-assets cannot contain children nodes"
 
-        # self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        # nodes = self._get_asset(xmlid, options, css=css, js=js, debug=values.get('debug'), async=async, values=values)
+        #
+        # for index, (tagName, t_attrs, content) in enumerate(nodes):
+        #     if index:
+        #         append('\n        ')
+        #     append('<')
+        #     append(tagName)
+        #
+        #     self._post_processing_att(tagName, t_attrs, options)
+        #     for name, value in t_attrs.iteritems():
+        #         if value or isinstance(value, basestring)):
+        #             append(u' ')
+        #             append(name)
+        #             append(u'="')
+        #             append(escape(unicodifier((value)))
+        #             append(u'"')
+        #
+        #     if not content and tagName in self._void_elements:
+        #         append('/>')
+        #     else:
+        #         append('>')
+        #         if content:
+        #           append(content)
+        #         append('</')
+        #         append(tagName)
+        #         append('>')
+        #
+        space = el.getprevious() is not None and el.getprevious().tail or el.getparent().text
+        sep = u'\n' + space.rsplit('\n').pop()
         return [
-            self._append(ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id='self', ctx=ast.Load()),
-                    attr='_get_asset',
-                    ctx=ast.Load()
+            ast.Assign(
+                targets=[ast.Name(id='nodes', ctx=ast.Store())],
+                value=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='self', ctx=ast.Load()),
+                        attr='_get_asset',
+                        ctx=ast.Load()
+                    ),
+                    args=[
+                        ast.Str(el.get('t-call-assets')),
+                        ast.Name(id='options', ctx=ast.Load()),
+                    ],
+                    keywords=[
+                        ast.keyword('css', self._get_attr_bool(el.get('t-css', True))),
+                        ast.keyword('js', self._get_attr_bool(el.get('t-js', True))),
+                        ast.keyword('debug', ast.Call(
+                            func=ast.Attribute(
+                                value=ast.Name(id='values', ctx=ast.Load()),
+                                attr='get',
+                                ctx=ast.Load()
+                            ),
+                            args=[ast.Str('debug')],
+                            keywords=[], starargs=None, kwargs=None
+                        )),
+                        ast.keyword('async', self._get_attr_bool(el.get('async', False))),
+                        ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
+                    ],
+                    starargs=None, kwargs=None
+                )
+            ),
+            ast.For(
+                target=ast.Tuple(elts=[
+                    ast.Name(id='index', ctx=ast.Store()),
+                    ast.Tuple(elts=[
+                        ast.Name(id='tagName', ctx=ast.Store()),
+                        ast.Name(id='t_attrs', ctx=ast.Store()),
+                        ast.Name(id='content', ctx=ast.Store())
+                    ], ctx=ast.Store())
+                ], ctx=ast.Store()),
+                iter=ast.Call(
+                    func=ast.Name(id='enumerate', ctx=ast.Load()),
+                    args=[ast.Name(id='nodes', ctx=ast.Load())],
+                    keywords=[],
+                    starargs=None, kwargs=None
                 ),
-                args=[
-                    ast.Str(el.get('t-call-assets')),
-                    ast.Name(id='options', ctx=ast.Load()),
-                ],
-                keywords=[
-                    ast.keyword('css', self._get_attr_bool(el.get('t-css', True))),
-                    ast.keyword('js', self._get_attr_bool(el.get('t-js', True))),
-                    ast.keyword('debug', ast.Call(
-                        func=ast.Attribute(
-                            value=ast.Name(id='values', ctx=ast.Load()),
-                            attr='get',
-                            ctx=ast.Load()
+                body=[
+                    ast.If(
+                        test=ast.Name(id='index', ctx=ast.Load()),
+                        body=[self._append(ast.Str(sep))],
+                        orelse=[]
+                    ),
+                    self._append(ast.Str(u'<')),
+                    self._append(ast.Name(id='tagName', ctx=ast.Load())),
+                ] + self._append_attributes() + [
+                    ast.If(
+                        test=ast.BoolOp(
+                            op=ast.And(),
+                            values=[
+                                ast.UnaryOp(ast.Not(), ast.Name(id='content', ctx=ast.Load()), lineno=0, col_offset=0),
+                                ast.Compare(
+                                    left=ast.Name(id='tagName', ctx=ast.Load()),
+                                    ops=[ast.In()],
+                                    comparators=[ast.Attribute(
+                                        value=ast.Name(id='self', ctx=ast.Load()),
+                                        attr='_void_elements',
+                                        ctx=ast.Load()
+                                    )]
+                                ),
+                            ]
                         ),
-                        args=[ast.Str('debug')],
-                        keywords=[], starargs=None, kwargs=None
-                    )),
-                    ast.keyword('async', self._get_attr_bool(el.get('async', False))),
-                    ast.keyword('values', ast.Name(id='values', ctx=ast.Load())),
+                        body=[self._append(ast.Str(u'/>'))],
+                        orelse=[
+                            self._append(ast.Str(u'>')),
+                            ast.If(
+                                test=ast.Name(id='content', ctx=ast.Load()),
+                                body=[self._append(ast.Name(id='content', ctx=ast.Load()))],
+                                orelse=[]
+                            ),
+                            self._append(ast.Str(u'</')),
+                            self._append(ast.Name(id='tagName', ctx=ast.Load())),
+                            self._append(ast.Str(u'>')),
+                        ]
+                    )
                 ],
-                starargs=None, kwargs=None
-            ))
+                orelse=[]
+            )
         ]
 
     # for backward compatibility to remove after v10
@@ -197,8 +284,9 @@ class IrQWeb(models.AbstractModel, QWeb):
     )
     def _get_asset(self, xmlid, options, css=True, js=True, debug=False, async=False, values=None):
         files, remains = self._get_asset_content(xmlid, options)
-        asset = AssetsBundle(xmlid, files, remains, env=self.env)
-        return asset.to_html(css=css, js=js, debug=debug, async=async, url_for=(values or {}).get('url_for', lambda url: url))
+        asset = AssetsBundle(xmlid, files, env=self.env)
+        remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
+        return remains + asset.to_node(css=css, js=js, debug=debug, async=async)
 
     @tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', keys=("website_id",))
     def _get_asset_content(self, xmlid, options):
@@ -208,6 +296,9 @@ class IrQWeb(models.AbstractModel, QWeb):
             rendering_bundle=True)
 
         env = self.env(context=options)
+
+        def can_aggregate(url):
+            return not urlparse(url).scheme and not urlparse(url).netloc and not url.startswith('/web/content')
 
         # TODO: This helper can be used by any template that wants to embedd the backend.
         #       It is currently necessary because the ir.ui.view bundle inheritance does not
@@ -222,16 +313,13 @@ class IrQWeb(models.AbstractModel, QWeb):
         files = []
         remains = []
         for el in html.fragments_fromstring(template):
-            if isinstance(el, basestring):
-                remains.append(el)
-            elif isinstance(el, html.HtmlElement):
+            if isinstance(el, html.HtmlElement):
                 href = el.get('href', '')
                 src = el.get('src', '')
                 atype = el.get('type')
                 media = el.get('media')
 
-                can_aggregate = not urlparse(href).netloc and not href.startswith('/web/content')
-                if el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet' and can_aggregate):
+                if can_aggregate(href) and (el.tag == 'style' or (el.tag == 'link' and el.get('rel') == 'stylesheet')):
                     if href.endswith('.sass'):
                         atype = 'text/sass'
                     elif href.endswith('.less'):
@@ -241,19 +329,16 @@ class IrQWeb(models.AbstractModel, QWeb):
                     path = filter(None, href.split('/'))
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': href, 'filename': filename, 'content': el.text, 'media': media})
-                elif el.tag == 'script':
+                elif can_aggregate(src) and el.tag == 'script':
                     atype = 'text/javascript'
                     path = filter(None, src.split('/'))
                     filename = get_resource_path(*path) if path else None
                     files.append({'atype': atype, 'url': src, 'filename': filename, 'content': el.text, 'media': media})
                 else:
-                    remains.append(html.tostring(el))
+                    remains.append((el.tag, OrderedDict(el.attrib), el.text))
             else:
-                try:
-                    remains.append(html.tostring(el))
-                except Exception:
-                    # notYETimplementederror
-                    raise NotImplementedError
+                # the other cases are ignored
+                pass
 
         return (files, remains)
 
