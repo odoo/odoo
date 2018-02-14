@@ -149,6 +149,59 @@ msgid ""
 "            </div>\n"
 "        </div>"
 msgstr ""
+"<div style=\"margin: 10px auto;\"><table cellspacing=\"0\" cellpadding=\"0\""
+" style=\"width:100%;\"><tbody><tr><td style=\"padding:2px;width:30%;\"><img "
+"src=\"web/static/src/img/logo.png\"/></td><td style=\"vertical-align: top; "
+"padding: 8px 10px;text-align: left;font-size: 14px;\"><a href=\"web/login\" "
+"style=\"float:right ;margin:15px auto;background: #875A7B;border-radius: "
+"5px;color: #ffffff;font-size: 16px;padding: 10px 20px 10px 20px;text-"
+"decoration: none;\"></a></td></tr></tbody></table><table style=\"width:100"
+"%;text-align:justify;margin:0 auto;border-collapse:collapse;border-top:1px "
+"solid lightgray\"\"><tbody><tr><td style=\"padding:15px 10px;font-"
+"size:20px\"><p dir=\"ltr\" style=\"font-size:15px;margin-top:0pt;margin-"
+"bottom:0pt;\"><span></span></p><br><p dir=\"ltr\" style=\"margin-top:0pt"
+";margin-bottom:8pt;\"><span style=\"font-size:13px;font-"
+"weight:bold;\"></span></p><ul style=\"margin-top:0pt;margin-bottom:0pt;font-"
+"size:13px;list-style-type:disc;\"><li dir=\"ltr\"><p dir=\"ltr\" style"
+"=\"margin-top:0pt;margin-bottom:0pt;\"><span></span><a "
+"href=\"mailto:${last_created_project.alias_id.name_get()[0][1] if "
+"last_created_project.alias_id.alias_domain else "
+"user.company_id.email}\"><span style=\"font-weight:bold; text-"
+"decoration:underline;\"></span></a></p></li><li dir=\"ltr\"><p dir=\"ltr\" "
+"style=\"margin-top:0pt;margin-bottom:8pt;\"><span><a "
+"href=\"/web#view_type=list&amp;model=res.users&amp;action=base.action_res_users\"><span"
+" style=\"font-weight:bold; text-"
+"decoration:underline;\"></span></a></span><span></span></p></li></ul><br><p "
+"dir=\"ltr\" style=\"font-size:13px;margin-top:0pt;margin-bottom:8pt;\"><span"
+" style=\"font-weight:bold;\"></span><span><a "
+"href=\"/web#view_type=kanban&amp;model=project.project&amp;action=project.open_view_project_all\"><span"
+" style=\"font-weight:bold; text-"
+"decoration:underline;\"></span></a></span><span></span><span "
+"style=\"color:#875A7B;margin:0;font-weight:bold\"></span></p><ul style"
+"=\"margin-top:0pt;margin-bottom:0pt;font-size:13px;list-style-"
+"type:disc;\"><li dir=\"ltr\"><p dir=\"ltr\" style=\"margin-top:0pt;margin-"
+"bottom:0pt;\"><span></span></p></li><li dir=\"ltr\"><p dir=\"ltr\" style"
+"=\"margin-top:0pt;margin-bottom:0pt;\"><span></span></p></li><li "
+"dir=\"ltr\"><p dir=\"ltr\" style=\"margin-top:0pt;margin-"
+"bottom:0pt;\"><span></span></p></li><li dir=\"ltr\"><p dir=\"ltr\" style"
+"=\"margin-top:0pt;margin-bottom:0pt;\"><span></span></p></li><li "
+"dir=\"ltr\"><p dir=\"ltr\" style=\"margin-top:0pt;margin-"
+"bottom:8pt;\"><span></span></p></li></ul><br><p dir=\"ltr\" style=\"font-"
+"size:13px;line-height:1.3;margin-top:0pt;margin-bottom:8pt;\"><span style"
+"=\"font-weight:bold;\"></span><span style=\"font-"
+"style:italic;\"></span></p><p dir=\"ltr\" style=\"font-size:13px;margin-"
+"top:0pt;margin-bottom:8pt;\"><span><a "
+"href=\"https://www.odoo.com/help\"></a></span><a target=\"_blank\" "
+"href=\"https://www.odoo.com/documentation/user/10.0/project.html\"><span "
+"style=\"text-decoration:underline;\"></span></a></span><span></span><a "
+"target=\"_blank\" href=\"https://www.odoo.com/documentation\"><span style"
+"=\"text-decoration:underline;\"></span></a></p><br><p dir=\"ltr\" style"
+"=\"font-size:13px;margin-top:0pt;margin-"
+"bottom:8pt;\"><span></span></p></td></tr></tbody></table><div dir=\"ltr\" "
+"style=\"font-size:13px;margin-top:0pt;margin-"
+"bottom:8pt;color:grey\"><span><br/><br/><br/></span><a target=\"_blank\" "
+"href=\"https://twitter.com/odoo/favorites\"><span style=\"text-"
+"decoration:underline;\"></span></a></span></div></div>"
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -158,7 +211,7 @@ msgid ""
 "<p>Thank you for your enquiry.<br /></p>\n"
 "<p>If you have any questions, please let us know.</p>\n"
 "<p>Best regards,</p>"
-msgstr ""
+msgstr "<p/><p><br/></p><p/><p/>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user_delay_endings_days
@@ -223,7 +276,7 @@ msgstr "2. 现在，我们花点时间来列出 <strong>你需要的项目:</str
 msgid ""
 "<b>Assign the task</b> to someone. <i>You can create and invite a new user "
 "on the fly.</i>"
-msgstr ""
+msgstr "<b/><i/>"
 
 #. module: project
 #. openerp-web
@@ -237,7 +290,7 @@ msgstr "<b>点击保存按钮 </b> 应用对任务的更改。"
 #: code:addons/project/static/src/js/tour.js:48
 #, python-format
 msgid "<b>Drag &amp; drop tasks</b> between columns as you work on them."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #. openerp-web
@@ -252,7 +305,7 @@ msgstr "<b>通过电子邮件</b>邀请同事。<br/> <i>每行发送一个电�
 #: code:addons/project/static/src/js/tour.js:54
 #, python-format
 msgid "<b>Star tasks</b> to mark team priorities."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -416,6 +469,8 @@ msgid ""
 "                                            <span class=\"small\">Delay to close an Task</span>\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"panel-title\"><span class=\"fa fa-thumb-"
+"tack\"/><strong/><br/><span class=\"small\"/></span>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -448,7 +503,7 @@ msgstr ""
 msgid ""
 "<span class=\"text-muted\">NB: This will archive the selected tasks (Except "
 "the destination task)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -493,7 +548,7 @@ msgstr ""
 msgid ""
 "<strong> New business tasks (5 min)</strong>\n"
 "                                You may have learned something during the week that affects the project.  Share the news early in the meeting to help team members consider the  task as you walk through the project status session. Not every task warrants spending time here, so keep discussions to a minimum."
-msgstr ""
+msgstr "<strong/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -514,7 +569,7 @@ msgstr ""
 msgid ""
 "<strong> Q&amp;A and discussion time (10 min)</strong>\n"
 "                                Always give your team time to ask questions on tasks that were not discussed. This gives you another opportunity to reinforce key points that you've picked up during the week or discovered during the meeting."
-msgstr ""
+msgstr "<strong/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -539,7 +594,7 @@ msgstr ""
 msgid ""
 "<strong>A great feature in Odoo is the integration of a Collaborative Notepad called Etherpad.</strong><br/>\n"
 "                            It replaces the standard Description area in Tasks and is extremely useful for several cases."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -551,7 +606,7 @@ msgstr "<strong>关于员工：</strong>"
 msgid ""
 "<strong>Add a Deadline</strong><br/>\n"
 "                                    The deadline will help you determine if a task is progressing as expected  and to anticipate its next update."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -619,7 +674,7 @@ msgstr "<strong>现在就联系我们：</strong><br/>"
 msgid ""
 "<strong>Create tasks by email</strong><br/>\n"
 "                                In Odoo, every project has an email alias. If you send an email to this alias, it will automatically create a task in the first stage of the project, with all the email recipients as its default followers."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_project
@@ -665,7 +720,7 @@ msgstr "<strong>例如: </strong>"
 msgid ""
 "<strong>Exercise:</strong> Try to create a graph with the monthly evolution "
 "of the 'Average delay to close'  of Tasks."
-msgstr ""
+msgstr "<strong/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -679,14 +734,14 @@ msgstr "<strong>练习:</strong> 试着了解员工本周的工作量 (计划工
 msgid ""
 "<strong>Follow every meeting with a recap email</strong>\n"
 "                                    As soon as the meeting is over, publish meeting minutes and distribute them along with the updated project schedule, task/action item matrix, and  any other appropriate documents. Try to use the same template throughout meetings and improve it continuously."
-msgstr ""
+msgstr "<strong/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Follow only what you need</strong><br/>\n"
 "                                    The simplest way to use notifications is to follow a whole project: you will receive notifications for all the new and existing tasks of a project."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -806,7 +861,7 @@ msgstr "<strong>推荐的动作：</strong>"
 msgid ""
 "<strong>Rely on the chatter</strong><br/>\n"
 "                                    Below every Task (or more generally, below every Document in Odoo) is an area called Chatter."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.portal_my_task
@@ -818,7 +873,7 @@ msgstr "<strong>汇报</strong>"
 msgid ""
 "<strong>Set Priorities</strong><br/>\n"
 "                                    The <i class=\"fa fa-star\"/> is used to indicate priority: in Kanban views, high priority Tasks will be displayed on top. This is particulary useful if you use a Scrum methodology to indicate the tasks for the week. Similarly to Status, you can change the meaning of the Star indicator from the Project Stages tab."
-msgstr ""
+msgstr "<strong/><br/><i class=\"fa fa-star\"/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -858,14 +913,14 @@ msgstr "<strong>要用Collaborative Notepads</strong>, 只要简单的激活相�
 msgid ""
 "<strong>Use Status Indicator</strong><br/>\n"
 "                                    The Status indicator helps you manage Tasks by giving them one of 3 different colour: Grey, Green or Red. The meaning of these Statuses can be freely configured, for example:"
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
 msgid ""
 "<strong>Use Tags</strong><br/>\n"
 "                                    Tags  are complementary to your project stages: they can work as a second  level categorization which is very useful if you have a lot of Tasks to manage. Also, it becomes very easy to find Tasks by typing  the Tag into the main Search bar."
-msgstr ""
+msgstr "<strong/><br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -981,7 +1036,7 @@ msgstr "添加说明..."
 msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. "
 "Specification &gt; Development &gt; Done</i>"
-msgstr ""
+msgstr "<b/><br/><i/>"
 
 #. module: project
 #. openerp-web
@@ -1270,7 +1325,7 @@ msgstr "在项目的阶段页面更改它们的阶段"
 msgid ""
 "Choose a <b>project name</b>. (e.g. Website Launch, Product Development, "
 "Office Party, etc.)"
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -1305,7 +1360,7 @@ msgstr "点击卡片查看任务详情。"
 #, python-format
 msgid ""
 "Click on the card to <b>go to your project</b> and start organizing tasks."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #. openerp-web
@@ -1501,7 +1556,7 @@ msgstr "创建时间"
 msgid ""
 "Creating Tasks is the next step in managing your Projects.<br/>\n"
 "                        In Odoo, it is pretty straightforward, but here are some explanations you may find useful."
-msgstr ""
+msgstr "<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -1996,7 +2051,7 @@ msgid ""
 "Good job! Your completed the Project Management tour. You can continue with "
 "the <b>implementation guide</b> to help you setup Project Management in your"
 " company."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2301,7 +2356,7 @@ msgstr ""
 msgid ""
 "It is time to think about how you will transform your activities into real projects in Odoo.<br/>\n"
 "                        For that, the most important part is defining the stages of your projects. Stages are the different steps a task can go through, from its creation to its ending. They will appear in what we call the 'Kanban' view of your projects."
-msgstr ""
+msgstr "<br/>"
 
 #. module: project
 #: model:ir.ui.view,arch_db:project.project_planner
@@ -2651,7 +2706,7 @@ msgstr "通知"
 #: code:addons/project/static/src/js/tour.js:43
 #, python-format
 msgid "Now that the project is set up, <b>create a few tasks</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user_working_days_open
@@ -3159,19 +3214,19 @@ msgstr "搜索项目"
 #: code:addons/project/controllers/portal.py:96
 #, python-format
 msgid "Search in All"
-msgstr ""
+msgstr "在全部范围内搜索"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:94
 #, python-format
 msgid "Search in Customer"
-msgstr ""
+msgstr "在客户中搜索"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:93
 #, python-format
 msgid "Search in Messages"
-msgstr ""
+msgstr "在消息中搜索"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:95
@@ -3864,14 +3919,14 @@ msgstr ""
 msgid ""
 "Use the <b>implementation guide</b> to setup Project Management in your "
 "company."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/tour.js:85
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to your tasks pipeline</b>."
-msgstr ""
+msgstr "<b/>"
 
 #. module: project
 #: model:project.task.type,legend_priority:project.project_stage_0
@@ -3954,7 +4009,7 @@ msgstr "Wait. Expert"
 #, python-format
 msgid ""
 "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
+msgstr "<i/><b/>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_email_cc

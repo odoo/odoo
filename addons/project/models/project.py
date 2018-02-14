@@ -262,7 +262,11 @@ class Project(models.Model):
 
     @api.multi
     def write(self, vals):
-        res = super(Project, self).write(vals)
+        # directly compute is_favorite to dodge allow write access right
+        if 'is_favorite' in vals:
+            vals.pop('is_favorite')
+            self._fields['is_favorite'].determine_inverse(self)
+        res = super(Project, self).write(vals) if vals else True
         if 'active' in vals:
             # archiving/unarchiving a project does it on its tasks, too
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
