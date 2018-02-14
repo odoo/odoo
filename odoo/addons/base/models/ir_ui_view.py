@@ -1154,10 +1154,10 @@ actual arch.
         return self.browse(self.get_view_id(template)).render(values, engine)
 
     @api.multi
-    def render(self, values=None, engine='ir.qweb'):
+    def render(self, values=None, engine='ir.qweb', minimal_qcontext=False):
         assert isinstance(self.id, pycompat.integer_types)
 
-        qcontext = self._prepare_qcontext()
+        qcontext = dict() if minimal_qcontext else self._prepare_qcontext()
         qcontext.update(values or {})
 
         return self.env[engine].render(self.id, qcontext)
