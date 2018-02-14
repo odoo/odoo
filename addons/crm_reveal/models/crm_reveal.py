@@ -260,6 +260,18 @@ class CRMLeadRule(models.Model):
 
         return log_data
 
+    # TODO: remove this method just for test
+    @api.multi
+    def test_rule(self):
+        return {
+            'name': 'action_test_rule',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'reveal.test.rule',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+
 
 class IndustryTag(models.Model):
     """ Industry Tags of Acquisition Rules """

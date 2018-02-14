@@ -5,6 +5,9 @@
         <field name="model">crm.reveal.rule</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="test_rule" string="Test Rule" type="object"/>
+                </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_get_lead_tree_view" class="oe_stat_button" type="object" icon="fa-handshake-o">
