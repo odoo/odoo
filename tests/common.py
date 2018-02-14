@@ -23,7 +23,7 @@ class TestSaleCouponCommon(common.TransactionCase):
             'partner_id': self.steve.id
         })
 
-        self.uom_unit = self.env.ref('product.product_uom_unit')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
 
         #products
         self.product_A = self.env['product.product'].create({
