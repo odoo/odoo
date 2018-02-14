@@ -63,7 +63,7 @@ class PaypalController(http.Controller):
 
         Once data is validated, process it. """
         res = False
-        new_post = dict(post, cmd='_notify-validate', charset='utf-8')
+        new_post = dict(post, cmd='_notify-validate', charset='UTF-8')
         reference = post.get('item_number')
         tx = None
         if reference:
