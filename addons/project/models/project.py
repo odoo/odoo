@@ -721,7 +721,7 @@ class Task(models.Model):
             return 'project.mt_task_ready'
         elif 'user_id' in init_values and self.user_id:  # assigned -> new
             return 'project.mt_task_new'
-        elif self.env.context.get('mail_create_nolog'): # task created
+        elif 'stage_id' in init_values and self.stage_id and self.stage_id.sequence <= 1:  # start stage -> new
             return 'project.mt_task_new'
         elif 'stage_id' in init_values:
             return 'project.mt_task_stage'
