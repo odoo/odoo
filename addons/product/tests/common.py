@@ -16,7 +16,7 @@ class TestProductCommon(common.SavepointCase):
         })
 
         # Product environment related data
-        Uom = cls.env['product.uom']
+        Uom = cls.env['uom.uom']
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
         cls.uom_dunit = Uom.create({

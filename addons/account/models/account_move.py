@@ -424,7 +424,7 @@ class AccountMoveLine(models.Model):
     name = fields.Char(string="Label")
     quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
         help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
-    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
+    product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure')
     product_id = fields.Many2one('product.product', string='Product')
     debit = fields.Monetary(default=0.0, currency_field='company_currency_id')
     credit = fields.Monetary(default=0.0, currency_field='company_currency_id')

@@ -37,7 +37,7 @@ class TestUom(TransactionCase):
         self.assertEquals(qty, 1.234, "Converted quantity does not correspond.")
 
     def test_20_rounding(self):
-        product_uom = self.env['product.uom'].create({
+        product_uom = self.env['uom.uom'].create({
             'name': 'Score',
             'factor_inv': 20,
             'uom_type': 'bigger',

@@ -374,8 +374,8 @@ class TestSaleStock(TestSale):
         lines to the moves and edit a last time the ordered quantities. Deliver, check the
         quantities.
         """
-        uom_unit = self.env.ref('product.product_uom_unit')
-        uom_dozen = self.env.ref('product.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
         item1 = self.products['prod_order']
 
         self.assertEqual(item1.uom_id.id, uom_unit.id)

@@ -15,7 +15,7 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon):
         self._load('stock_account', 'test', 'stock_valuation_account.xml')
 
         # Define undivisible units
-        product_uom_unit_round_1 = self.env['product.uom'].create({
+        product_uom_unit_round_1 = self.env['uom.uom'].create({
             'category_id': self.ref('uom.product_uom_categ_unit'),
             'name': 'Undivisible Unit(s)',
             'factor': 1.0,

@@ -170,7 +170,7 @@ class Pricelist(models.Model):
             qty_in_product_uom = qty
             if qty_uom_id != product.uom_id.id:
                 try:
-                    qty_in_product_uom = self.env['product.uom'].browse([self._context['uom']])._compute_quantity(qty, product.uom_id)
+                    qty_in_product_uom = self.env['uom.uom'].browse([self._context['uom']])._compute_quantity(qty, product.uom_id)
                 except UserError:
                     # Ignored - incompatible UoM in context, use default product UoM
                     pass
@@ -179,7 +179,7 @@ class Pricelist(models.Model):
             # TDE SURPRISE: product can actually be a template
             price = product.price_compute('list_price')[product.id]
 
-            price_uom = self.env['product.uom'].browse([qty_uom_id])
+            price_uom = self.env['uom.uom'].browse([qty_uom_id])
             for rule in items:
                 if rule.min_quantity and qty_in_product_uom < rule.min_quantity:
                     continue

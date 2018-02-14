@@ -868,7 +868,7 @@ class SaleOrderLine(models.Model):
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], change_default=True, ondelete='restrict', required=True)
     product_updatable = fields.Boolean(compute='_compute_product_updatable', string='Can Edit Product', readonly=True, default=True)
     product_uom_qty = fields.Float(string='Ordered Quantity', digits=dp.get_precision('Product Unit of Measure'), required=True, default=1.0)
-    product_uom = fields.Many2one('product.uom', string='Unit of Measure', required=True)
+    product_uom = fields.Many2one('uom.uom', string='Unit of Measure', required=True)
     # Non-stored related field to allow portal user to see the image of the product he has ordered
     product_image = fields.Binary('Product Image', related="product_id.image", store=False)
 
@@ -974,7 +974,7 @@ class SaleOrderLine(models.Model):
         # browse so lines and product uoms here to make them share the same prefetch
         lines_map = {line.id: line for line in self}
         product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
-        product_uom_map = {uom.id: uom for uom in self.env['product.uom'].browse(product_uom_ids)}
+        product_uom_map = {uom.id: uom for uom in self.env['uom.uom'].browse(product_uom_ids)}
         for item in data:
             if not item['product_uom_id']:
                 continue

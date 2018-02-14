@@ -182,8 +182,8 @@ class TestCreatePicking(common.TestProductCommon):
         updated on the moves. Edit the ir.config_parameter to propagate the uom of the purchase order
         lines to the moves and edit a last time the ordered quantities. Receive, check the quantities.
         """
-        uom_unit = self.env.ref('product.product_uom_unit')
-        uom_dozen = self.env.ref('product.product_uom_dozen')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
 
         self.assertEqual(self.product_id_1.uom_po_id.id, uom_unit.id)
 

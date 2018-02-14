@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="product_uom_tree_view" model="ir.ui.view">
-        <field name="name">product.uom.tree</field>
-        <field name="model">product.uom</field>
+        <field name="name">uom.uom.tree</field>
+        <field name="model">uom.uom</field>
         <field name="arch" type="xml">
             <tree string="Units of Measure">
                 <field name="name"/>
@@ -13,8 +13,8 @@
     </record>
 
     <record id="product_uom_form_view" model="ir.ui.view">
-        <field name="name">product.uom.form</field>
-        <field name="model">product.uom</field>
+        <field name="name">uom.uom.form</field>
+        <field name="model">uom.uom</field>
         <field name="arch" type="xml">
             <form string="Units of Measure">
                 <group>
@@ -48,7 +48,7 @@
     <record id="product_uom_form_action" model="ir.actions.act_window">
         <field name="name">Units of Measure</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.uom</field>
+        <field name="res_model">uom.uom</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="product_uom_tree_view"/>
         <field name="help" type="html">
@@ -62,8 +62,8 @@
     </record>
 
     <record id="product_uom_categ_form_view" model="ir.ui.view">
-        <field name="name">product.uom.categ.form</field>
-        <field name="model">product.uom.categ</field>
+        <field name="name">uom.category.form</field>
+        <field name="model">uom.category</field>
         <field name="arch" type="xml">
             <form string="Units of Measure categories">
                 <group>
@@ -75,7 +75,7 @@
     <record id="product_uom_categ_form_action" model="ir.actions.act_window">
         <field name="name">Unit of Measure Categories</field>
         <field name="type">ir.actions.act_window</field>
-        <field name="res_model">product.uom.categ</field>
+        <field name="res_model">uom.category</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">

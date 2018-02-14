@@ -50,7 +50,7 @@ class TestPurchaseRequisition(common.TransactionCase):
         warehouse = self.env['stock.warehouse'].browse(self.ref('stock.warehouse0'))
         product = self.env['product.product'].browse(self.product_13_id)
         product.write({'route_ids': [(4, self.ref('purchase.route_warehouse0_buy'))]})
-        self.env['procurement.group'].run(product, 14, self.env['product.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
+        self.env['procurement.group'].run(product, 14, self.env['uom.uom'].browse(self.ref('uom.product_uom_unit')), warehouse.lot_stock_id, '/', '/',
                                           {
                                             'warehouse_id': warehouse,
                                             'date_planned': date_planned,

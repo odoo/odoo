@@ -16,7 +16,7 @@ class SaleReport(models.Model):
     date = fields.Datetime('Date Order', readonly=True)
     confirmation_date = fields.Datetime('Confirmation Date', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', readonly=True)
+    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
     product_uom_qty = fields.Float('Qty Ordered', readonly=True)
     qty_delivered = fields.Float('Qty Delivered', readonly=True)
     qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
@@ -88,8 +88,8 @@ class SaleReport(models.Model):
                       join res_partner partner on s.partner_id = partner.id
                         left join product_product p on (l.product_id=p.id)
                             left join product_template t on (p.product_tmpl_id=t.id)
-                    left join product_uom u on (u.id=l.product_uom)
-                    left join product_uom u2 on (u2.id=t.uom_id)
+                    left join uom_uom u on (u.id=l.product_uom)
+                    left join uom_uom u2 on (u2.id=t.uom_id)
                     left join product_pricelist pp on (s.pricelist_id = pp.id)
                     left join currency_rate cr on (cr.currency_id = pp.currency_id and
                         cr.company_id = s.company_id and

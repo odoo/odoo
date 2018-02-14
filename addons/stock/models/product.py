@@ -503,7 +503,7 @@ class ProductTemplate(models.Model):
 
     def write(self, vals):
         if 'uom_id' in vals:
-            new_uom = self.env['product.uom'].browse(vals['uom_id'])
+            new_uom = self.env['uom.uom'].browse(vals['uom_id'])
             updated = self.filtered(lambda template: template.uom_id != new_uom)
             done_moves = self.env['stock.move'].search([('product_id', 'in', updated.mapped('product_variant_ids').ids)], limit=1)
             if done_moves:
