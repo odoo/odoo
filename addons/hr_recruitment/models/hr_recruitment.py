@@ -336,11 +336,10 @@ class Applicant(models.Model):
         return super(Applicant, self)._track_subtype(init_values)
 
     @api.model
-    def _notify_get_reply_to(self, ids, default=None):
-        """ Override to get the reply_to of the parent project. """
-        applicants = self.sudo().browse(ids)
-        aliases = self.env['hr.job']._notify_get_reply_to(applicants.mapped('job_id').ids, default=default)
-        return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in applicants)
+    def _notify_get_reply_to(self, records, default=None, company=None, doc_names=None):
+        """ Override to get the reply_to of the parent job. """
+        aliases = self.env['hr.job']._notify_get_reply_to(records.mapped('job_id'), default=default, company=company, doc_names=None)
+        return dict((applicant.id, aliases.get(applicant.job_id and applicant.job_id.id or 0, False)) for applicant in records)
 
     @api.multi
     def message_get_suggested_recipients(self):
