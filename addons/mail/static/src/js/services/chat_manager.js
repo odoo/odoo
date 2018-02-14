@@ -352,7 +352,6 @@ var ChatManager =  AbstractService.extend({
      *              => list containing a list of members (cached by chat_manager)
      */
     getMentionPartnerSuggestions: function (channel) {
-        var self = this;
         if (!channel) {
             return this.mentionPartnerSuggestions;
         }
@@ -365,14 +364,7 @@ var ChatManager =  AbstractService.extend({
                     shadow: true
                 })
                 .then(function (members) {
-                    var suggestions = [];
-                    _.each(self.mentionPartnerSuggestions, function (partners) {
-                        suggestions.push(_.filter(partners, function (partner) {
-                            return !_.findWhere(members, { id: partner.id });
-                        }));
-                    });
-
-                    return [suggestions];
+                    return [members];
                 });
         }
         return channel.membersDeferred;
