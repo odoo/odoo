@@ -197,10 +197,14 @@ class PosOrder(models.Model):
         return InvoiceLine.sudo().create(inv_line)
 
     def _create_account_move_line(self, session=None, move=None):
-        def _flatten_tax_and_children(taxes):
+        def _flatten_tax_and_children(taxes, group_done=None):
             children = self.env['account.tax']
-            for tax in taxes:
-                children |= _flatten_tax_and_children(tax.children_tax_ids)
+            if group_done is None:
+                group_done = set()
+            for tax in taxes.filtered(lambda t: t.amount_type == 'group'):
+                if tax.id not in group_done:
+                    group_done.add(tax.id)
+                    children |= _flatten_tax_and_children(tax.children_tax_ids, group_done)
             return taxes + children
 
         # Tricky, via the workflow, we only have one id in the ids variable
