@@ -60,7 +60,7 @@ class MrpProduction(models.Model):
         readonly=True, required=True, track_visibility='onchange',
         states={'confirmed': [('readonly', False)]})
     product_uom_id = fields.Many2one(
-        'product.uom', 'Product Unit of Measure',
+        'uom.uom', 'Product Unit of Measure',
         oldname='product_uom', readonly=True, required=True,
         states={'confirmed': [('readonly', False)]})
     picking_type_id = fields.Many2one(

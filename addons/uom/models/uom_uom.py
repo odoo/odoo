@@ -5,21 +5,21 @@ from odoo import api, fields, tools, models, _
 from odoo.exceptions import UserError
 
 
-class ProductUoMCategory(models.Model):
-    _name = 'product.uom.categ'
+class UoMCategory(models.Model):
+    _name = 'uom.category'
     _description = 'Product UoM Categories'
 
     name = fields.Char('Name', required=True, translate=True)
 
 
-class ProductUoM(models.Model):
-    _name = 'product.uom'
+class UoM(models.Model):
+    _name = 'uom.uom'
     _description = 'Product Unit of Measure'
     _order = "name"
 
     name = fields.Char('Unit of Measure', required=True, translate=True)
     category_id = fields.Many2one(
-        'product.uom.categ', 'Category', required=True, ondelete='cascade',
+        'uom.category', 'Category', required=True, ondelete='cascade',
         help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios.")
     factor = fields.Float(
         'Ratio', default=1.0, digits=0, required=True,  # force NUMERIC with unlimited precision
@@ -59,14 +59,14 @@ class ProductUoM(models.Model):
         if 'factor_inv' in values:
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        return super(ProductUoM, self).create(values)
+        return super(UoM, self).create(values)
 
     @api.multi
     def write(self, values):
         if 'factor_inv' in values:
             factor_inv = values.pop('factor_inv')
             values['factor'] = factor_inv and (1.0 / factor_inv) or 0.0
-        return super(ProductUoM, self).write(values)
+        return super(UoM, self).write(values)
 
     @api.model
     def name_create(self, name):
@@ -79,7 +79,7 @@ class ProductUoM(models.Model):
         # look for the category based on the english name, i.e. no context on purpose!
         # TODO: should find a way to have it translated but not created until actually used
         if not self._context.get('default_category_id'):
-            EnglishUoMCateg = self.env['product.uom.categ'].with_context({})
+            EnglishUoMCateg = self.env['uom.category'].with_context({})
             misc_category = EnglishUoMCateg.search([('name', '=', 'Unsorted/Imported Units')])
             if misc_category:
                 values['category_id'] = misc_category.id

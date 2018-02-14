@@ -176,7 +176,7 @@ class ProductProduct(models.Model):
     def _set_product_price(self):
         for product in self:
             if self._context.get('uom'):
-                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.price, product.uom_id)
             else:
                 value = product.price
             value -= product.price_extra
@@ -185,7 +185,7 @@ class ProductProduct(models.Model):
     def _set_product_lst_price(self):
         for product in self:
             if self._context.get('uom'):
-                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
             else:
                 value = product.lst_price
             value -= product.price_extra
@@ -205,7 +205,7 @@ class ProductProduct(models.Model):
     def _compute_product_lst_price(self):
         to_uom = None
         if 'uom' in self._context:
-            to_uom = self.env['product.uom'].browse([self._context['uom']])
+            to_uom = self.env['uom.uom'].browse([self._context['uom']])
 
         for product in self:
             if to_uom:
@@ -502,7 +502,7 @@ class ProductProduct(models.Model):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
-            uom = self.env['product.uom'].browse(self._context['uom'])
+            uom = self.env['uom.uom'].browse(self._context['uom'])
         if not currency and self._context.get('currency'):
             currency = self.env['res.currency'].browse(self._context['currency'])
 
@@ -592,7 +592,7 @@ class SupplierInfo(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1, help="Assigns the priority to the list of product vendor.")
     product_uom = fields.Many2one(
-        'product.uom', 'Vendor Unit of Measure',
+        'uom.uom', 'Vendor Unit of Measure',
         readonly="1", related='product_tmpl_id.uom_po_id',
         help="This comes from the product form.")
     min_qty = fields.Float(

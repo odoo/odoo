@@ -36,7 +36,7 @@ class PosSaleReport(models.Model):
                     LEFT JOIN product_category AS pc ON (pt.categ_id = pc.id)
                     LEFT JOIN res_company AS rc ON (pos.company_id = rc.id)
                     LEFT JOIN res_partner rp ON (rc.partner_id = rp.id)
-                    LEFT JOIN product_uom u ON (u.id=pt.uom_id)
+                    LEFT JOIN uom_uom u ON (u.id=pt.uom_id)
          """
         return pos_str
 

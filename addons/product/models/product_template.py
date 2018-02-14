@@ -31,7 +31,7 @@ class ProductTemplate(models.Model):
             raise RedirectWarning(err_msg, self.env.ref('product.product_category_action_form').id, redir_msg)
 
     def _get_default_uom_id(self):
-        return self.env["product.uom"].search([], limit=1, order='id').id
+        return self.env["uom.uom"].search([], limit=1, order='id').id
 
     name = fields.Char('Name', index=True, required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help='Gives the sequence order when displaying a product list')
@@ -89,7 +89,7 @@ class ProductTemplate(models.Model):
         'Weight', compute='_compute_weight', digits=dp.get_precision('Stock Weight'),
         inverse='_set_weight', store=True,
         help="The weight of the contents in Kg, not including any packaging, etc.")
-    weight_uom_id = fields.Many2one('product.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
+    weight_uom_id = fields.Many2one('uom.uom', string='Weight Unit of Measure', compute='_compute_weight_uom_id')
     weight_uom_name = fields.Char(string='Weight unit of measure label', related='weight_uom_id.name', readonly=True)
 
     sale_ok = fields.Boolean(
@@ -100,11 +100,11 @@ class ProductTemplate(models.Model):
         'product.pricelist', 'Pricelist', store=False,
         help='Technical field. Used for searching on pricelists, not stored in database.')
     uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default Unit of Measure used for all stock operation.")
     uom_po_id = fields.Many2one(
-        'product.uom', 'Purchase Unit of Measure',
+        'uom.uom', 'Purchase Unit of Measure',
         default=_get_default_uom_id, required=True,
         help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure.")
     company_id = fields.Many2one(
@@ -193,7 +193,7 @@ class ProductTemplate(models.Model):
     def _set_template_price(self):
         if self._context.get('uom'):
             for template in self:
-                value = self.env['product.uom'].browse(self._context['uom'])._compute_price(template.price, template.uom_id)
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(template.price, template.uom_id)
                 template.write({'list_price': value})
         else:
             self.write({'list_price': self.price})
@@ -379,7 +379,7 @@ class ProductTemplate(models.Model):
         # TDE FIXME: delegate to template or not ? fields are reencoded here ...
         # compatibility about context keys used a bit everywhere in the code
         if not uom and self._context.get('uom'):
-            uom = self.env['product.uom'].browse(self._context['uom'])
+            uom = self.env['uom.uom'].browse(self._context['uom'])
         if not currency and self._context.get('currency'):
             currency = self.env['res.currency'].browse(self._context['currency'])
 

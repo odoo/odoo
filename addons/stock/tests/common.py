@@ -9,7 +9,7 @@ class TestStockCommon(common.TransactionCase):
         super(TestStockCommon, self).setUp()
 
         self.ProductObj = self.env['product.product']
-        self.UomObj = self.env['product.uom']
+        self.UomObj = self.env['uom.uom']
         self.PartnerObj = self.env['res.partner']
         self.ModelDataObj = self.env['ir.model.data']
         self.StockPackObj = self.env['stock.move.line']

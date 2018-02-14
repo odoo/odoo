@@ -11,7 +11,7 @@ class ChangeProductionQty(models.TransientModel):
     def _update_product_to_produce(self, prod, qty):
         super(ChangeProductionQty, self)._update_product_to_produce(prod, qty)
         Production = self.env['mrp.production']
-        UoM = self.env['product.uom']
+        UoM = self.env['uom.uom']
         for sub_product_line in prod.bom_id.sub_products:
             move = prod.move_finished_ids.filtered(lambda x: x.subproduct_id == sub_product_line and x.state not in ('done', 'cancel'))
             if move:

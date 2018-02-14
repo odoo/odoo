@@ -9,7 +9,7 @@ class AccountAnalyticAccount(models.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
-    company_uom_id = fields.Many2one('product.uom', related='company_id.project_time_mode_id', string="Company UOM")
+    company_uom_id = fields.Many2one('uom.uom', related='company_id.project_time_mode_id', string="Company UOM")
     project_ids = fields.One2many('project.project', 'analytic_account_id', string='Projects')
     project_count = fields.Integer("Project Count", compute='_compute_project_count')
 

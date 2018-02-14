@@ -23,7 +23,7 @@ class StockMoveLine(models.Model):
         'stock.move', 'Stock Move',
         help="Change to a better name")
     product_id = fields.Many2one('product.product', 'Product', ondelete="cascade")
-    product_uom_id = fields.Many2one('product.uom', 'Unit of Measure', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     product_qty = fields.Float(
         'Real Reserved Quantity', digits=0,
         compute='_compute_product_qty', inverse='_set_product_qty', store=True)

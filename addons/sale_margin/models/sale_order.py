@@ -49,7 +49,7 @@ class SaleOrderLine(models.Model):
         if 'purchase_price' not in vals:
             order_id = self.env['sale.order'].browse(vals['order_id'])
             product_id = self.env['product.product'].browse(vals['product_id'])
-            product_uom_id = self.env['product.uom'].browse(vals['product_uom'])
+            product_uom_id = self.env['uom.uom'].browse(vals['product_uom'])
 
             vals['purchase_price'] = self._compute_margin(order_id, product_id, product_uom_id)
 

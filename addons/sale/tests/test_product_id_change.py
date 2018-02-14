@@ -19,7 +19,7 @@ class TestOnchangeProductId(TransactionCase):
         self.res_partner_model = self.env['res.partner']
         self.product_tmpl_model = self.env['product.template']
         self.product_model = self.env['product.product']
-        self.product_uom_model = self.env['product.uom']
+        self.product_uom_model = self.env['uom.uom']
         self.supplierinfo_model = self.env["product.supplierinfo"]
         self.pricelist_model = self.env['product.pricelist']
 

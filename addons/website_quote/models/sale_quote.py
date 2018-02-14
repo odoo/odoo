@@ -56,7 +56,7 @@ class SaleQuoteLine(models.Model):
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'), default=0.0)
     product_uom_qty = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
-    product_uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -107,7 +107,7 @@ class SaleQuoteOption(models.Model):
     website_description = fields.Html('Option Description', translate=html_translate, sanitize_attributes=False)
     price_unit = fields.Float('Unit Price', required=True, digits=dp.get_precision('Product Price'))
     discount = fields.Float('Discount (%)', digits=dp.get_precision('Discount'))
-    uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)
+    uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True)
     quantity = fields.Float('Quantity', required=True, digits=dp.get_precision('Product UoS'), default=1)
 
     @api.onchange('product_id')

@@ -61,8 +61,8 @@ class ReportIntrastat(models.Model):
                     left join (product_template pt
                         left join product_product pp on (pp.product_tmpl_id = pt.id))
                     on (inv_line.product_id = pp.id)
-                    left join product_uom uom on uom.id=inv_line.uom_id
-                    left join product_uom puom on puom.id = pt.uom_id
+                    left join uom_uom uom on uom.id=inv_line.uom_id
+                    left join uom_uom puom on puom.id = pt.uom_id
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id
                     left join (res_partner inv_address
                         left join res_country inv_country on (inv_country.id = inv_address.country_id))

@@ -83,7 +83,7 @@ class AccountInvoiceReport(models.Model):
         ],
         'product.product': ['product_tmpl_id'],
         'product.template': ['categ_id'],
-        'product.uom': ['category_id', 'factor', 'name', 'uom_type'],
+        'uom.uom': ['category_id', 'factor', 'name', 'uom_type'],
         'res.currency.rate': ['currency_id', 'name'],
         'res.partner': ['country_id'],
     }
@@ -130,8 +130,8 @@ class AccountInvoiceReport(models.Model):
                 JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
-                LEFT JOIN product_uom u ON u.id = ail.uom_id
-                LEFT JOIN product_uom u2 ON u2.id = pt.uom_id
+                LEFT JOIN uom_uom u ON u.id = ail.uom_id
+                LEFT JOIN uom_uom u2 ON u2.id = pt.uom_id
                 JOIN (
                     -- Temporary table to decide if the qty should be added or retrieved (Invoice vs Credit Note)
                     SELECT id,(CASE

@@ -62,7 +62,7 @@ class StockMove(models.Model):
              "be moved. Lowering this quantity does not generate a "
              "backorder. Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
-    product_uom = fields.Many2one('product.uom', 'Unit of Measure', required=True)
+    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     # TDE FIXME: make it stored, otherwise group will not work
     product_tmpl_id = fields.Many2one(
         'product.template', 'Product Template',

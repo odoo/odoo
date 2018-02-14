@@ -35,7 +35,7 @@ class MrpWorkorder(models.Model):
         related='production_id.product_id', readonly=True,
         help='Technical: used in views only.', store=True)
     product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
+        'uom.uom', 'Unit of Measure',
         related='production_id.product_uom_id', readonly=True,
         help='Technical: used in views only.')
     production_availability = fields.Selection(
