@@ -33,19 +33,19 @@ class AccountFrFec(models.TransientModel):
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
             'Balance initiale PL' AS EcritureNum,
-            %s AS EcritureDate,
+            %(formatted_datefrom)s AS EcritureDate,
             '120/129' AS CompteNum,
             'Benefice (perte) reporte(e)' AS CompteLib,
             '' AS CompAuxNum,
             '' AS CompAuxLib,
             '-' AS PieceRef,
-            %s AS PieceDate,
+            %(formatted_datefrom)s AS PieceDate,
             '/' AS EcritureLib,
-            replace(to_char(SUM(aml.debit), '999999999999999D99'), '.', ',') AS Debit,
-            replace(to_char(SUM(aml.credit), '999999999999999D99'), '.', ',') AS Credit,
+            replace(to_char(SUM(coalesce(aml.debit, 0)), '999999999999999D99'), '.', ',') AS Debit,
+            replace(to_char(SUM(coalesce(aml.credit, 0)), '999999999999999D99'), '.', ',') AS Credit,
             '' AS EcritureLet,
             '' AS DateLet,
-            %s AS ValidDate,
+            %(formatted_datefrom)s AS ValidDate,
             '' AS Montantdevise,
             '' AS Idevise
         FROM
@@ -54,10 +54,10 @@ class AccountFrFec(models.TransientModel):
             LEFT JOIN account_move am ON am.id=aml.move_id
             LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
         WHERE
-            aml is null or am is null or aat is null
-            or
-            (am.date < %s
-            AND am.company_id = %s
+            aa.company_id = %(company_id)s AND
+            (aml is NULL OR am is NULL OR aat is NULL
+            OR
+            (am.date < %(date_from)s
             AND aat.include_initial_balance = 'f'
             AND (aml.debit != 0 OR aml.credit != 0)
         '''
@@ -66,11 +66,13 @@ class AccountFrFec(models.TransientModel):
             sql_query += '''
             AND am.state = 'posted'
             '''
-        sql_query += ')'
+        sql_query += '))'
         company = self.env.user.company_id
         formatted_date_from = self.date_from.replace('-', '')
-        self._cr.execute(
-            sql_query, (formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+        query_params = {'formatted_datefrom': formatted_date_from,
+                        'date_from': self.date_from,
+                        'company_id': company.id}
+        self._cr.execute(sql_query, query_params)
         listrow = []
         row = self._cr.fetchone()
         listrow = list(row)
@@ -133,30 +135,32 @@ class AccountFrFec(models.TransientModel):
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
             'Balance initiale ' || MIN(aa.name) AS EcritureNum,
-            %s AS EcritureDate,
+            %(formatted_datefrom)s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
             replace(MIN(aa.name), '|', '/') AS CompteLib,
             '' AS CompAuxNum,
             '' AS CompAuxLib,
             '-' AS PieceRef,
-            %s AS PieceDate,
+            %(formatted_datefrom)s AS PieceDate,
             '/' AS EcritureLib,
-            replace(to_char(SUM(aml.debit), '999999999999999D99'), '.', ',') AS Debit,
-            replace(to_char(SUM(aml.credit), '999999999999999D99'), '.', ',') AS Credit,
+            replace(to_char(SUM(coalesce(aml.debit, 0)), '999999999999999D99'), '.', ',') AS Debit,
+            replace(to_char(SUM(coalesce(aml.credit, 0)), '999999999999999D99'), '.', ',') AS Credit,
             '' AS EcritureLet,
             '' AS DateLet,
-            %s AS ValidDate,
+            %(formatted_datefrom)s AS ValidDate,
             '' AS Montantdevise,
             '' AS Idevise,
             MIN(aa.id) AS CompteID
         FROM
-            account_move_line aml
+            account_account aa
+            LEFT JOIN account_move_line aml ON aa.id = aml.account_id
             LEFT JOIN account_move am ON am.id=aml.move_id
-            JOIN account_account aa ON aa.id = aml.account_id
             LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
         WHERE
-            am.date < %s
-            AND am.company_id = %s
+            aa.company_id = %(company_id)s AND
+            (aml is NULL OR am is NULL OR aat is NULL
+            OR
+            (am.date < %(date_from)s
             AND aat.include_initial_balance = 't'
             AND (aml.debit != 0 OR aml.credit != 0)
         '''
@@ -168,12 +172,14 @@ class AccountFrFec(models.TransientModel):
             '''
 
         sql_query += '''
-        GROUP BY aml.account_id
-        HAVING sum(aml.balance) != 0
+        )) GROUP BY aa.id
         '''
+
         formatted_date_from = self.date_from.replace('-', '')
-        self._cr.execute(
-            sql_query, (formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+        query_params = {'formatted_datefrom': formatted_date_from,
+                        'date_from': self.date_from,
+                        'company_id': company.id}
+        self._cr.execute(sql_query, query_params)
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -193,6 +199,7 @@ class AccountFrFec(models.TransientModel):
                         listrow[11] = '0,00'
                         listrow[12] = str(-listrow_amount).replace('.', ',')
             w.writerow([s.encode("utf-8") for s in listrow])
+
         #if the unaffected earnings account wasn't in the selection yet: add it manually
         if (not unaffected_earnings_line
             and unaffected_earnings_results
