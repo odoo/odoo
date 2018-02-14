@@ -561,6 +561,10 @@ class AccountMoveLine(models.Model):
         is_partner = res_type == 'partner'
         res_alias = is_partner and 'p' or 'a'
 
+        company_ids = self.env.user.company_id
+        company_ids |= self.env.user.company_id.child_ids
+        company_ids = tuple(company_ids.ids)
+
         query = ("""
             SELECT {0} account_id, account_name, account_code, max_date,
                    to_char(last_time_entries_checked, 'YYYY-MM-DD') AS last_time_entries_checked
@@ -582,7 +586,7 @@ class AccountMoveLine(models.Model):
                         {3}
                         {4}
                         {5}
-                        AND l.company_id = {6}
+                        AND l.company_id in {6}
                         AND EXISTS (
                             SELECT NULL
                             FROM account_move_line l
@@ -608,7 +612,7 @@ class AccountMoveLine(models.Model):
                 is_partner and ' ' or "AND at.type <> 'payable' AND at.type <> 'receivable'",
                 account_type and "AND at.type = %(account_type)s" or '',
                 res_ids and 'AND ' + res_alias + '.id in %(res_ids)s' or '',
-                self.env.user.company_id.id,
+                '%(company_ids)s',
                 is_partner and 'AND l.partner_id = p.id' or ' ',
                 is_partner and 'l.partner_id, p.id,' or ' ',
                 res_alias=res_alias
@@ -631,6 +635,9 @@ class AccountMoveLine(models.Model):
             row['currency_id'] = account.currency_id.id or account.company_id.currency_id.id
             partner_id = is_partner and row['partner_id'] or None
             row['reconciliation_proposition'] = self.get_reconciliation_proposition(account.id, partner_id)
+            if 'account_code' in row:
+                row['account_code'] = '%s (%s)' % (
+                    row['account_code'], account.company_id.name)
         return rows
 
     @api.model
@@ -789,6 +796,7 @@ class AccountMoveLine(models.Model):
                 'partner_id': line.partner_id.id,
                 'partner_name': line.partner_id.name,
                 'currency_id': line_currency.id,
+                'company_id': line.company_id.id,
             }
 
             debit = line.debit
