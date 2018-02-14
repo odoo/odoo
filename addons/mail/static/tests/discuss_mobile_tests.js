@@ -29,7 +29,7 @@ QUnit.test('mobile basic rendering', function (assert) {
     assert.expect(9);
     var done = assert.async();
 
-    var discuss = createDiscuss({
+    createDiscuss({
         id: 1,
         context: {},
         params: {},
