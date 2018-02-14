@@ -22,8 +22,8 @@ class TestAveragePrice(TestPurchase):
             'categ_id': self.env.ref('product.product_category_1').id,
             'list_price': 100.0,
             'standard_price': 60.0,
-            'uom_id': self.env.ref('product.product_uom_kgm').id,
-            'uom_po_id': self.env.ref('product.product_uom_kgm').id,
+            'uom_id': self.env.ref('uom.product_uom_kgm').id,
+            'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'cost_method': 'average',
             'valuation': 'real_time',
             'property_stock_account_input': self.ref('purchase.o_expense'),
@@ -39,7 +39,7 @@ class TestAveragePrice(TestPurchase):
                 'name': 'Average Ice Cream',
                 'product_id': product_icecream.id,
                 'product_qty': 10.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 60.0,
                 'date_planned': time.strftime('%Y-%m-%d'),
             })]
@@ -66,7 +66,7 @@ class TestAveragePrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
                 'product_qty': 30.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'price_unit': 80.0,
                 'date_planned': time.strftime('%Y-%m-%d'),
             })]
@@ -90,7 +90,7 @@ class TestAveragePrice(TestPurchase):
                 'name': 'outgoing_shipment_avg_move',
                 'product_id': product_icecream.id,
                 'product_uom_qty': 20.0,
-                'product_uom': self.env.ref('product.product_uom_kgm').id,
+                'product_uom': self.env.ref('uom.product_uom_kgm').id,
                 'location_id':  self.env.ref('stock.stock_location_stock').id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id})]
             })
@@ -110,7 +110,7 @@ class TestAveragePrice(TestPurchase):
                 'name': product_icecream.name,
                 'product_id': product_icecream.id,
                 'product_qty': 500.0,
-                'product_uom': self.ref('product.product_uom_gram'),
+                'product_uom': self.ref('uom.product_uom_gram'),
                 'price_unit': 0.2,
                 'date_planned': time.strftime('%Y-%m-%d'),
             })]

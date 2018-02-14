@@ -19,8 +19,8 @@ class TestSaleMrpFlow(common.TransactionCase):
         self.InventoryLine = self.env['stock.inventory.line']
         self.ProductProduce = self.env['mrp.product.produce']
 
-        self.categ_unit = self.env.ref('product.product_uom_categ_unit')
-        self.categ_kgm = self.env.ref('product.product_uom_categ_kgm')
+        self.categ_unit = self.env.ref('uom.product_uom_categ_unit')
+        self.categ_kgm = self.env.ref('uom.product_uom_categ_kgm')
         self.stock_location = self.env.ref('stock.stock_location_stock')
         self.warehouse = self.env.ref('stock.warehouse0')
 

@@ -302,7 +302,7 @@ class StockMove(models.Model):
             total_available = move.product_id.uom_id._compute_quantity(total_available, move.product_uom, round=False)
             total_available = float_round(total_available, precision_digits=precision)
             info = str(total_available)
-            if self.user_has_groups('product.group_uom'):
+            if self.user_has_groups('uom.group_uom'):
                 info += ' ' + move.product_uom.name
             if move.reserved_availability:
                 if move.reserved_availability != total_available:

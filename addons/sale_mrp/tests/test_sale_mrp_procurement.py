@@ -21,7 +21,7 @@ class TestSaleMrpProcurement(TransactionCase):
         pc.name = 'Mobile Products Sellable'
         product_category_allproductssellable0 = pc.save()
 
-        uom_unit = self.env.ref('product.product_uom_unit')
+        uom_unit = self.env.ref('uom.product_uom_unit')
 
         self.assertIn("seller_ids", self.env['product.template'].fields_get())
 

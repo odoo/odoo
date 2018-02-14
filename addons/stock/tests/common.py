@@ -30,8 +30,8 @@ class TestStockCommon(common.TransactionCase):
         self.pack_location = self.ModelDataObj.xmlid_to_res_id('stock.location_pack_zone')
         self.output_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_output')
         self.customer_location = self.ModelDataObj.xmlid_to_res_id('stock.stock_location_customers')
-        self.categ_unit = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_unit')
-        self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('product.product_uom_categ_kgm')
+        self.categ_unit = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_unit')
+        self.categ_kgm = self.ModelDataObj.xmlid_to_res_id('uom.product_uom_categ_kgm')
 
         # Product Created A, B, C, D
         self.productA = self.ProductObj.create({'name': 'Product A', 'type': 'product'})
