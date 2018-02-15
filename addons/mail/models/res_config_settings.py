@@ -21,21 +21,12 @@ class ResConfigSettings(models.TransientModel):
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
 
-        alias_domain = res.get('alias_domain')
-        if not alias_domain:
-            domain = self.env["ir.config_parameter"].get_param("web.base.url")
-            try:
-                alias_domain = urls.url_parse(domain).host
-            except Exception:
-                pass
-
         previous_date = datetime.datetime.now() - datetime.timedelta(days=30)
 
         res.update(
             fail_counter=self.env['mail.mail'].sudo().search_count([
                 ('date', '>=', previous_date.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)),
                 ('state', '=', 'exception')]),
-            alias_domain=alias_domain or False,
         )
 
         return res
