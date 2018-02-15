@@ -1452,22 +1452,15 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._applyOnChange(command[2], rec));
                     } else if (command[0] === 4) {
                         // LINK TO
-                        rec = self.localData[list._cache[command[1]]];
-                        if (rec) {
-                            // modifications done on a record are discarded if
-                            // the onchange uses a LINK TO
-                            self.discardChanges(rec.id);
-                        }
-                        // the dataPoint id will be set when the record will be
-                        // fetched (for now, this dataPoint may not exist yet)
-                        list._changes.push({
-                            operation: 'ADD',
-                            id: rec ? rec.id : null,
-                            resID: command[1],
-                        });
+                        linkRecord(list, command[1]);
                     } else if (command[0] === 5) {
                         // DELETE ALL
                         list._changes = [{operation: 'REMOVE_ALL'}];
+                    } else if (command[0] === 6) {
+                        list._changes = [{operation: 'REMOVE_ALL'}];
+                        _.each(command[2], function (resID) {
+                            linkRecord(list, resID);
+                        });
                     }
                 });
                 var def = self._readUngroupedList(list).then(function () {
@@ -1484,6 +1477,25 @@ var BasicModel = AbstractModel.extend({
             }
         });
         return $.when.apply($, defs);
+
+        // inner function that adds a record (based on its res_id) to a list
+        // dataPoint (used for onchanges that return commands 4 (LINK TO) or
+        // commands 6 (REPLACE WITH))
+        function linkRecord (list, resID) {
+            rec = self.localData[list._cache[resID]];
+            if (rec) {
+                // modifications done on a record are discarded if the onchange
+                // uses a LINK TO or a REPLACE WITH
+                self.discardChanges(rec.id);
+            }
+            // the dataPoint id will be set when the record will be fetched (for
+            // now, this dataPoint may not exist yet)
+            list._changes.push({
+                operation: 'ADD',
+                id: rec ? rec.id : null,
+                resID: resID,
+            });
+        }
     },
     /**
      * When an operation is applied to a x2many field, the field widgets
