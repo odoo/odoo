@@ -224,6 +224,6 @@ class Employee(models.Model):
     def write(self, values):
         res = super(Employee, self).write(values)
         if 'parent_id' in values:
-            holidays = self.env['hr.holidays'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
+            holidays = self.env['hr.leave'].search([('state', 'in', ['draft', 'confirm']), ('employee_id', 'in', self.ids)])
             holidays.write({'manager_id': values['parent_id']})
         return res
