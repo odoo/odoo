@@ -104,11 +104,14 @@
             </t>
 
             <meta name="viewport" content="initial-scale=1"/>
-            <meta name="description" t-att-content="main_object and 'website_meta_description' in main_object
-                and main_object.website_meta_description or website_meta_description"/>
-            <meta name="keywords" t-att-content="main_object and 'website_meta_keywords' in main_object
-                and main_object.website_meta_keywords or website_meta_keywords"/>
             <meta name="generator" content="Odoo"/>
+
+            <t t-set="meta_description" t-value="main_object and 'website_meta_description' in main_object
+                and main_object.website_meta_description or website_meta_description"/>
+            <t t-set="meta_keywords" t-value="main_object and 'website_meta_keywords' in main_object
+                and main_object.website_meta_keywords or website_meta_keywords"/>
+            <meta t-if="meta_description" name="description" t-att-content="meta_description"/>
+            <meta t-if="meta_keywords" name="keywords" t-att-content="meta_keywords"/>
 
             <!-- OpenGraph tags for Facebook sharing -->
             <meta property="og:title" t-att-content="additional_title" />
