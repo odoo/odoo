@@ -30,7 +30,7 @@ class AccountInvoice(models.Model):
         company_currency = inv.company_id.currency_id
         price_unit = i_line._get_anglo_saxon_price_unit()
         if inv.currency_id != company_currency:
-            currency_id = inv.currency_id.id
+            currency_id = inv.currency_id
             amount_currency = i_line._get_price(company_currency, price_unit)
         else:
             currency_id = False
