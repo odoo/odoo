@@ -1143,11 +1143,12 @@ class ProductProduct(models.Model):
     def _purchase_count(self):
         domain = [
             ('state', 'in', ['purchase', 'done']),
-            ('product_id', 'in', self.mapped('id')),
+            ('product_id', 'in', self.ids),
         ]
-        PurchaseOrderLines = self.env['purchase.order.line'].search(domain)
+        read_group_res = self.env['purchase.order.line'].read_group(domain, ['product_id'], ['product_id'])
+        mapped_data = dict([(data['product_id'][0], data['product_id_count']) for data in read_group_res])
         for product in self:
-            product.purchase_count = len(PurchaseOrderLines.filtered(lambda r: r.product_id == product).mapped('order_id'))
+            product.purchase_count = mapped_data.get(product.id, 0)
 
     purchase_count = fields.Integer(compute='_purchase_count', string='# Purchases')
 
