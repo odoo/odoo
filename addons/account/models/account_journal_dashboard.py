@@ -5,7 +5,7 @@ from babel.dates import format_datetime, format_date
 
 from odoo import models, api, _, fields
 from odoo.release import version
-from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF, safe_eval
 from odoo.tools.misc import formatLang
 
 class account_journal(models.Model):
@@ -374,18 +374,18 @@ class account_journal(models.Model):
 
     @api.multi
     def open_payments_action(self, payment_type):
-        ctx = self._context.copy()
-        ctx.update({
-            'default_payment_type': payment_type,
-            'default_journal_id': self.id
-        })
-        ctx.pop('group_by', None)
-        action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_account_payments')
-        if action_rec:
-            action = action_rec.read([])[0]
-            action['context'] = ctx
-            action['domain'] = [('journal_id','=',self.id),('payment_type','=',payment_type)]
-            return action
+        if payment_type == 'outbound':
+            action_ref = 'account.action_account_payments_payable'
+        else:
+            action_ref = 'account.action_account_payments'
+        [action] = self.env.ref(action_ref).read()
+        action['domain'] = [('journal_id', '=', self.id)]
+        if payment_type == 'transfer':
+            action['context'] = {
+                'search_default_transfers_filter': True,
+                'default_payment_type': 'transfer'
+            }
+        return action
 
     @api.multi
     def open_action_with_context(self):
@@ -415,6 +415,37 @@ class account_journal(models.Model):
             'context': "{'default_journal_id': " + str(self.id) + "}",
         })
         return action
+
+    @api.multi
+    def _create_payment_action(self, payment_type):
+        if payment_type == 'outbound':
+            view_ref = 'account.action_account_payments_payable'
+        else:
+            view_ref = 'account.action_account_payments'
+        [action] = self.env.ref(view_ref).read()
+        action.update({
+            'views': [[False, 'form']],
+            'context': dict(safe_eval(action.get('context')), default_journal_id=self.id)
+        })
+        if payment_type == 'transfer':
+            action['name'] = _('Internal transfer')
+            action['context']['default_payment_type'] = 'transfer'
+        return action
+
+    @api.multi
+    def create_customer_payment(self):
+        """return action to create a customer payment"""
+        return self._create_payment_action('inbound')
+
+    @api.multi
+    def create_supplier_payment(self):
+        """return action to create a supplier payment"""
+        return self._create_payment_action('outbound')
+
+    @api.multi
+    def create_internal_transfer(self):
+        """return action to create a internal transfer"""
+        return self._create_payment_action('transfer')
 
     #####################
     # Setup Steps Stuff #
