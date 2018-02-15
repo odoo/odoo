@@ -49,7 +49,7 @@ class Channel(models.Model):
         ('channel', 'Channel')],
         'Channel Type', default='channel')
     description = fields.Text('Description')
-    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: '%s' % uuid.uuid4())
+    uuid = fields.Char('UUID', size=50, index=True, default=lambda self: '%s' % uuid.uuid4(), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
     # multi users channel
     channel_last_seen_partner_ids = fields.One2many('mail.channel.partner', 'channel_id', string='Last Seen')
