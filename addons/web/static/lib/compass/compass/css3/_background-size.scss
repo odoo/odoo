@@ -1,0 +1,19 @@
+// Background Size
+@import "compass/support";
+
+// The the user threshold for background-clip support. Defaults to `$critical-usage-threshold`
+$background-size-threshold: $critical-usage-threshold !default;
+
+//  override to change the default
+$default-background-size: 100% auto !default;
+
+
+// Set the size of background images using px, width and height, or percentages.
+// Currently supported in: Opera, Gecko, Webkit.
+//
+// * percentages are relative to the background-origin (default = padding-box)
+// * mixin defaults to: `$default-background-size`
+@mixin background-size($size...) {
+  $size: set-arglist-default($size, $default-background-size);
+  @include prefixed-properties(background-img-opts, $background-size-threshold, (background-size: $size));
+}

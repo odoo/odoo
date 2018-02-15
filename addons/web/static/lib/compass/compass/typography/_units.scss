@@ -1,0 +1,183 @@
+// @private Default font-size for all browsers
+$browser-default-font-size: 16px;
+
+// Base font size in pixels, if not already defined.
+// Should be the same as the font-size of the html element.
+$base-font-size: 16px !default;
+
+// Whether to output fallback values in px when outputting rems.
+$rem-with-px-fallback: true !default;
+
+
+// Convert any CSS <length> or <percentage> value to any another.
+//
+// @param $length
+//   A css <length> or <percentage> value
+//
+// @param $to-unit
+//   String matching a css unit keyword, e.g. 'em', '%', etc.
+//
+// @param $from-context
+//   When converting from relative units, the absolute length (in px) to
+//   which $length refers (e.g. for $lengths in em units, would normally be the
+//   font-size of the current element).
+//
+// @param $to-context
+//   For converting to relative units, the absolute length in px to which the
+//   output value will refer. Defaults to the same as $from-context, since it is
+//   rarely needed.
+@function convert-length(
+	$length,
+	$to-unit,
+	$from-context: $base-font-size,
+	$to-context: $from-context
+) {
+
+	$from-unit: unit($length);
+
+	// Optimize for cases where `from` and `to` units are accidentally the same.
+	@if $from-unit == $to-unit { @return $length; }
+
+	// Context values must be in px so we can determine a conversion ratio for
+	// relative units.
+	@if unit($from-context) != 'px' { @warn "Paremeter $from-context must resolve to a value in pixel units."; }
+	@if unit($to-context) != 'px' { @warn "Parameter $to-context must resolve to a value in pixel units."; }
+
+	// Convert input length to pixels
+	$px-length: $length;
+
+	@if $from-unit != 'px' {
+		// Convert relative units using the from-context parameter.
+		@if      $from-unit == 'em'  { $px-length: $length * $from-context / 1em }
+		@else if $from-unit == 'rem' { $px-length: $length * $base-font-size / 1rem }
+		@else if $from-unit == '%'   { $px-length: $length * $from-context / 100% }
+		@else if $from-unit == 'ex'  { $px-length: $length * $from-context / 2ex }
+		// Convert absolute units using Sass' conversion table.
+		@else if $from-unit == 'in'  or
+						 $from-unit == 'mm'  or
+						 $from-unit == 'cm'  or
+						 $from-unit == 'pt'  or
+						 $from-unit == 'pc'  { $px-length: 0px + $length }
+		// Certain units can't be converted.
+		@else if $from-unit == 'ch'  or
+						 $from-unit == 'vw'  or
+						 $from-unit == 'vh'  or
+						 $from-unit == 'vmin' {
+			@warn "#{$from-unit} units can't be reliably converted; Returning original value.";
+			@return $length;
+		}
+		@else {
+			@warn "#{$from-unit} is an unknown length unit. Returning original value.";
+			@return $length;
+		}
+	}
+
+	// Convert length in pixels to the output unit
+	$output-length: $px-length;
+	@if $to-unit != 'px' {
+		// Relative units
+		@if      $to-unit == 'em'  { $output-length: $px-length * 1em / $to-context }
+		@else if $to-unit == 'rem' { $output-length: $px-length * 1rem / $base-font-size }
+		@else if $to-unit == '%'   { $output-length: $px-length * 100% / $to-context }
+		@else if $to-unit == 'ex'  { $output-length: $px-length * 2ex / $to-context }
+		// Absolute units
+		@else if $to-unit == 'in'  { $output-length: 0in + $px-length }
+		@else if $to-unit == 'mm'  { $output-length: 0mm + $px-length }
+		@else if $to-unit == 'cm'  { $output-length: 0cm + $px-length }
+		@else if $to-unit == 'pt'  { $output-length: 0pt + $px-length }
+		@else if $to-unit == 'pc'  { $output-length: 0pc + $px-length }
+		// Non-convertible units
+		@else if $to-unit == 'ch'  or
+						 $to-unit == 'vw'  or
+						 $to-unit == 'vh'  or
+						 $to-unit == 'vmin' {
+			@warn "#{$to-unit} units can't be reliably converted; Returning original value.";
+			@return $length;
+		}
+		@else {
+			@warn "#{$to-unit} is an unknown length unit. Returning original value.";
+			@return $length;
+		}
+	}
+
+	@return $output-length;
+}
+
+
+// @private Get the px/rem versions of a value.
+@function rem-fallback-values($value) {
+  $_return: (
+    px: $value,
+    rem: $value,
+  );
+
+  @if type-of($value) == number and not unitless($value) {
+    @if unit($value) == rem {
+      $_return: map-merge($_return, (
+        px: round(convert-length($value, px)),
+      ));
+    } @else if unit($value) == px {
+      $_return: map-merge($_return, (
+        px: round($value),
+        rem: convert-length($value, rem),
+      ));
+    }
+  }
+
+  @return $_return;
+}
+
+// @private Get the px/rem versions of a list (or nested lists).
+@function list-convert-rems($value) {
+  $_empty: (
+    px: (),
+    rem: (),
+  );
+  $_return: $_empty;
+  $_sep: null;
+
+  @if type-of($value) == list {
+    $_sep: list-separator($value);
+    @each $sub in $value {
+      $_this: list-convert-rems($sub);
+      $_return: (
+        px: append(map-get($_return, px), map-get($_this, px), $_sep),
+        rem: append(map-get($_return, rem), map-get($_this, rem), $_sep),
+      );
+    }
+  } @else {
+    $_this: rem-fallback-values($value);
+    $_return: map-merge($_return, $_this);
+  }
+
+  @return $_return;
+}
+
+
+// Output a given style rule containing rem values along with an (optional)
+// fallback rule for older browsers (with rem values converted to px).
+//
+// @param $property
+//   The css property name.
+//
+// @param $values
+//   The value or list of values for the property.
+//
+// @param $use-px-fallback
+//   [ true | false ]
+//
+@mixin rem($property, $values, $use-px-fallback: $rem-with-px-fallback) {
+
+  // get converted values.
+  $values: list-convert-rems($values);
+  $px-values: map-get($values, px);
+  $values: map-get($values, rem);
+
+  // Use pixel fallback for browsers that don't understand rem units.
+  @if $use-px-fallback and $px-values != $values {
+    #{$property}: $px-values;
+  }
+
+  // Use rem values for everyone else (overrides pixel values).
+  #{$property}: $values;
+}

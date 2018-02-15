@@ -1,0 +1,22 @@
+@mixin alternating-rows-and-columns($even-row-color, $odd-row-color, $dark-intersection, $header-color: white, $footer-color: white) {
+  th {
+    background-color: $header-color;
+    &.even, &:nth-child(2n) {
+      background-color: $header-color - $dark-intersection; } }
+  tr {
+    &.odd, &:nth-child(2n+1) {
+      td {
+       background-color: $odd-row-color;
+       &.even, &:nth-child(2n) {
+         background-color: $odd-row-color - $dark-intersection; } } }
+    }
+  tr.even {
+    td {
+      background-color: $even-row-color;
+      &.even, &:nth-child(2n) {
+        background-color: $even-row-color - $dark-intersection; } } }
+  tfoot {
+    th, td {
+      background-color: $footer-color;
+      &.even, &:nth-child(2n) {
+        background-color: $footer-color - $dark-intersection; } } } }

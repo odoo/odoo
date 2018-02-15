@@ -1,0 +1,24 @@
+
+// stretch element height to specified top and bottom position
+
+@mixin stretch-y($offset-top:0, $offset-bottom:0) {
+  @include stretch($offset-top, false, $offset-bottom, false);
+}
+
+
+// stretch element width to specified left and right position
+
+@mixin stretch-x($offset-left:0, $offset-right:0) {
+  @include stretch(false, $offset-right, false, $offset-left);
+}
+
+
+// shorthand to stretch element height and width
+
+@mixin stretch($offset-top:0, $offset-right:0, $offset-bottom:0, $offset-left:0) {
+  position: absolute;
+  @if $offset-top { top: $offset-top; }
+  @if $offset-bottom { bottom: $offset-bottom; }
+  @if $offset-left { left: $offset-left; }
+  @if $offset-right { right: $offset-right; }
+}

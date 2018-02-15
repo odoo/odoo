@@ -1,0 +1,54 @@
+$project-path: null !default;
+$debug-configuration: false !default;
+$compass-initialized: false !default;
+$compass-configured: false !default;
+
+@mixin debug-compass-configuration {
+  @if $debug-configuration {
+    /* Compass Configuration: */
+    @each $setting, $value in compass-configuration() {
+      /* #{$setting}: #{inspect($value)} */
+    }
+  }
+}
+
+// This mixin resets the compass configuration
+// and then initializes it with the sass options
+// set in the environment. It is immediately called during import.
+// It's unlikely you'll need to call this mixin yourself.
+@mixin compass-initializer($project-path: $project-path) {
+  @if not $compass-initialized and not using-compass-compiler() {
+    $default-configuration: reset-configuration();
+    $default-configuration: add-sass-configuration($project-path);
+  }
+  $compass-initialized: true !global;
+  @include debug-compass-configuration;
+}
+@include compass-initializer;
+
+//  `$options`:
+//    A map of compass configuration options.
+//    E.g. @include compass-configuration((asset-host: 
+// Keywords style ar
+// `$reconfigure`:
+//    When unset, if compass-configuration is called more than once, a warning will
+//    be issued and all calls after the first will be ignored.
+//    When set to `false`, all subsequent calls will be ignored without a warning.
+//    When set to `true`, the configuration will be added to any existing configuration.
+@mixin compass-configuration($options: (), $reconfigure: null, $arguments...) {
+  @if not at-stylesheet-root() {
+    // this should be @error once that exists.
+    @warn "include compass-configuration from the root level of your stylesheet."
+  }
+  @if not $compass-configured or $reconfigure {
+    $options: map-merge($options, keywords($arguments));
+    @if length($arguments) > 0 {
+      @warn "compass-configuration accepts keyword arguments or a single map of options. Got: #{inspect($arguments)}."
+    }
+    $invoke: add-configuration($options);
+    @include debug-compass-configuration;
+    $compass-configured: true !global;
+  } @else if $reconfigure == null {
+    @warn "Compass was already configured for this stylesheet."
+  }
+}

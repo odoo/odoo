@@ -217,7 +217,7 @@ var DataExport = Dialog.extend({
 
         // The default for the ".modal_content" element is "max-height: 100%;"
         // but we want it to always expand to "height: 100%;" for this modal.
-        // This can be achieved thanks to LESS modification without touching
+        // This can be achieved thanks to CSS modification without touching
         // the ".modal-content" rules... but not with Internet explorer (11).
         this.$modal.find(".modal-content").css("height", "100%");
 

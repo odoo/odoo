@@ -17,7 +17,8 @@
     this.init('popover', element, options)
   }
 
-  if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
+  if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js');
+  return
 
   Popover.VERSION  = '3.3.7'
 

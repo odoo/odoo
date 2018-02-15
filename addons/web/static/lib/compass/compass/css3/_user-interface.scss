@@ -1,0 +1,71 @@
+// User Interface
+// This file can be expanded to handle all the user interface properties as
+// they become available in browsers:
+// http://www.w3.org/TR/2000/WD-css3-userint-20000216
+
+@import "compass/support";
+
+// The prefixed support threshold for user-select.
+// Defaults to the $graceful-usage-threshold.
+$userselect-support-threshold: $graceful-usage-threshold !default;
+
+// This property controls the selection model and granularity of an element.
+//
+// @param $select
+//   [ none | text | toggle | element | elements | all | inherit ]
+@mixin user-select($select) {
+  $select: unquote($select);
+
+  @include with-each-prefix(user-select-none, $userselect-support-threshold) {
+    // old Firefox used a proprietary `-moz-none` value, starting with Firefox 21 `none` behaves like `-moz-none`
+    // @link https://developer.mozilla.org/en-US/docs/Web/CSS/user-select
+    @include prefix-prop(user-select, if($current-prefix == -moz and $select == 'none', -moz-none, $select));
+  }
+}
+
+// The prefixed support threshold for input-placeholder.
+// Defaults to the $graceful-usage-threshold.
+$input-placeholder-support-threshold: $graceful-usage-threshold !default;
+
+// Style the html5 input placeholder in browsers that support it.
+//
+// The styles for the input placeholder are passed as mixin content
+// and the selector comes from the mixin's context.
+//
+// For example:
+//
+//     #{elements-of-type(text-input)} {
+//       @include input-placeholder {
+//         color: #bfbfbf;
+//         font-style: italic;
+//       }
+//     }
+//
+// if you want to apply the placeholder styles to all elements supporting
+// the `input-placeholder` pseudo class (beware of performance impacts):
+//
+//     * {
+//       @include input-placeholder {
+//         color: #bfbfbf;
+//         font-style: italic;
+//       }
+//     }
+@mixin input-placeholder {
+  @include with-each-prefix(css-placeholder, $input-placeholder-support-threshold) {
+    @if $current-prefix == -webkit {
+      &::-webkit-input-placeholder { @content; }
+    }
+    @elseif $current-prefix == -moz {
+      // for Firefox 19 and below
+      @if support-legacy-browser("firefox", "4", "19", $threshold: $input-placeholder-support-threshold) {
+        &:-moz-placeholder { @content; }
+      }
+      // for Firefox 20 and above
+      &::-moz-placeholder { @content; }
+    }
+    @elseif $current-prefix == -ms {
+      &:-ms-input-placeholder { @content; }
+    }
+  }
+  // This is not standardized yet so no official selector is generated.
+}

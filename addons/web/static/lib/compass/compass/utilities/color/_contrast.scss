@@ -1,0 +1,52 @@
+@import "compass/utilities/color/brightness";
+
+$contrasted-dark-default:   #000 !default;
+$contrasted-light-default:  #fff !default;
+
+// Returns either the `$light` or `$dark` color
+// by deciding which contrasts more with `$color`.
+//
+// E.g. This can be used to select the more readable foreground color
+// for a given background color.
+//
+// `$dark` defaults to black and `$light` defaults to white.
+//
+// When `$color` is `null`, this function returns `null`.
+@function contrast-color(
+  $color,
+  $dark: $contrasted-dark-default,
+  $light: $contrasted-light-default,
+  $threshold: null
+) {
+  @if $threshold {
+    // Deprecated in Compass 0.13
+    @warn "The $threshold argment to contrast-color is no longer needed and will be removed in the next release."
+  }
+  @if $color == null {
+    @return null;
+  }
+  @else {
+    $color-brightness: brightness($color);
+    $dark-text-brightness: brightness($dark);
+    $light-text-brightness: brightness($light);
+
+    @return if(abs($color-brightness - $light-text-brightness) > abs($color-brightness - $dark-text-brightness), $light, $dark);
+  }
+}
+
+// Sets the specified background color and calculates a dark or light
+// contrasted text color.  The arguments are passed through to the
+// [contrast-color function](#function-contrast-color).
+@mixin contrasted(
+  $background-color,
+  $dark: $contrasted-dark-default,
+  $light: $contrasted-light-default,
+  $threshold: null
+) {
+  @if $threshold {
+    // Deprecated in Compass 0.13
+    @warn "The $threshold argment to contrasted is no longer needed and will be removed in the next release."
+  }
+  background-color: $background-color;
+  color: contrast-color($background-color, $dark, $light);
+}

@@ -1,0 +1,81 @@
+@import "compass/typography/text/replacement";
+
+// @doc off
+// Example 1:
+//
+//     a.twitter
+//       +sprite-img("icons-32.png", 1)
+//     a.facebook
+//       +sprite-img("icons-32png", 2)
+//
+// Example 2:
+//
+//     a
+//       +sprite-background("icons-32.png")
+//       a.twitter
+//         +sprite-column(1)
+//       a.facebook
+//         +sprite-row(2)
+// @doc on
+
+$sprite-default-size: 32px !default;
+
+$sprite-default-margin: 0px !default;
+
+$sprite-image-default-width: $sprite-default-size !default;
+
+$sprite-image-default-height: $sprite-default-size !default;
+
+// Sets all the rules for a sprite from a given sprite image to show just one of the sprites.
+// To reduce duplication use a sprite-bg mixin for common properties and a sprite-select mixin for positioning.
+@mixin sprite-img($img, $col, $row: 1, $width: $sprite-image-default-width, $height: $sprite-image-default-height, $margin: $sprite-default-margin) {
+  @include sprite-background($img, $width, $height);
+  @include sprite-position($col, $row, $width, $height, $margin); 
+}
+
+// Sets rules common for all sprites, assumes you want a square, but allows a rectangular region.
+@mixin sprite-background($img, $width: $sprite-default-size, $height: $width) {
+  @include sprite-background-rectangle($img, $width, $height); 
+}
+
+// Sets rules common for all sprites, assumes a rectangular region.
+@mixin sprite-background-rectangle($img, $width: $sprite-image-default-width, $height: $sprite-image-default-height) {
+  background: image-url($img) no-repeat;
+  width: $width;
+  height: $height;
+  overflow: hidden; 
+}
+
+// Allows horizontal sprite positioning optimized for a single row of sprites.
+@mixin sprite-column($col, $width: $sprite-image-default-width, $margin: $sprite-default-margin) {
+  @include sprite-position($col, 1, $width, 0px, $margin); 
+}
+
+// Allows vertical sprite positioning optimized for a single column of sprites.
+@mixin sprite-row($row, $height: $sprite-image-default-height, $margin: $sprite-default-margin) {
+  @include sprite-position(1, $row, 0px, $height, $margin); 
+}
+
+// Allows vertical and horizontal sprite positioning from a grid of equal dimensioned sprites.
+@mixin sprite-position($col, $row: 1, $width: $sprite-image-default-width, $height: $sprite-image-default-height, $margin: $sprite-default-margin) {
+  $x: ($col - 1) * -$width - ($col - 1) * $margin;
+  $y: ($row - 1) * -$height - ($row - 1) * $margin;
+  background-position: $x $y; 
+}
+
+
+
+// Similar to 'sprite-replace-text-with-dimensions' but does not autmaticly set the demensions
+@mixin sprite-replace-text ($map, $sprite, $dimensions: false, $offset-x: 0, $offset-y: 0) {    
+  @include hide-text;
+  @include sprite($map, $sprite, $dimensions, $offset-x, $offset-y);
+  background-image: $map;
+  background-repeat: no-repeat;
+}
+
+// Similar to 'replace-text-with-dimensions' but with sprites
+// To use, create your sprite and then pass it in the `$map` param
+// The name of the image in the sprite folder should be `$img-name`
+@mixin sprite-replace-text-with-dimensions ($map, $sprite, $offset-x: 0, $offset-y: 0){    
+  @include sprite-replace-text ($map, $sprite, true, $offset-x, $offset-y);
+}

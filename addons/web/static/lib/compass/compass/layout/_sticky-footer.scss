@@ -1,0 +1,23 @@
+// Based on a [blog post by Ryan Fait](http://ryanfait.com/resources/footer-stick-to-bottom-of-page/).
+//
+// Must be mixed into the top level of your stylesheet.
+//
+// Footer element must be outside of root wrapper element.
+//
+// Footer must be a fixed height.
+
+@mixin sticky-footer($footer-height, $root-selector: unquote("#root"), $root-footer-selector: unquote("#root_footer"), $footer-selector: unquote("#footer")) {
+  html, body {
+    height: 100%; }
+  #{$root-selector} {
+    clear: both;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin-bottom: -$footer-height;
+    #{$root-footer-selector} {
+      height: $footer-height; } }
+  #{$footer-selector} {
+    clear: both;
+    position: relative;
+    height: $footer-height; } }

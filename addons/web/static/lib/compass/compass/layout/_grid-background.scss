@@ -1,0 +1,178 @@
+@import "compass/css3/images";
+@import "compass/css3/background-size";
+
+// Set the color of your columns
+$grid-background-column-color     : rgba(100, 100, 225, 0.25)   !default;
+// Set the color of your gutters
+$grid-background-gutter-color     : rgba(0, 0, 0, 0)            !default;
+
+// Set the total number of columns in your grid
+$grid-background-total-columns    : 24                          !default;
+// Set the width of your columns
+$grid-background-column-width     : 30px                        !default;
+// Set the width of your gutters
+$grid-background-gutter-width     : 10px                        !default;
+// Set the offset, if your columns are padded in from the container edge
+$grid-background-offset           : 0px                         !default;
+
+// Set the color of your baseline
+$grid-background-baseline-color   : rgba(0, 0, 0, 0.5)          !default;
+// Set the height of your baseline grid
+$grid-background-baseline-height  : 1.5em                       !default;
+
+// toggle your columns grids on and off
+$show-column-grid-backgrounds     : true                        !default;
+// toggle your vertical grids on and off
+$show-baseline-grid-backgrounds   : true                        !default;
+// toggle all your grids on and off
+$show-grid-backgrounds            : true                        !default;
+
+// optionally force your grid-image to remain fluid
+// no matter what units you used to declared your grid.
+$grid-background-force-fluid      : false                       !default;
+
+
+// Create the gradient needed for baseline grids
+@function get-baseline-gradient(
+  $color : $grid-background-baseline-color
+) {
+  $gradient: linear-gradient(to top, $color 5%, rgba($color,0) 5%);
+  @return $gradient;
+}
+
+// Create the color-stops needed for horizontal grids
+@function build-grid-background(
+  $total          : $grid-background-total-columns,
+  $column         : $grid-background-column-width,
+  $gutter         : $grid-background-gutter-width,
+  $offset         : $grid-background-offset,
+  $column-color   : $grid-background-column-color,
+  $gutter-color   : $grid-background-gutter-color
+) {
+  $grid: compact();
+  $grid: append($grid, $gutter-color $offset, comma);
+  @for $i from 0 to $total {
+
+    // $a represents the start of this column, initially equal to the offset
+    $a: $offset;
+    @if $i > 0 { $a: $a + (($column + $gutter) * $i); }
+
+    // $g represents the start of this gutter, equal to $a plus one column-width
+    $g: $a + $column;
+
+    // $z represents the end of a gutter, equal to $g plus one gutter-width
+    $z: $g + $gutter;
+
+    @if (unit($a) == "%") and ($i == ($total - 1)) {
+      $z: 100%;
+    }
+
+    // and we add this column/gutter pair to our grid
+    $grid: join($grid, (lighten($column-color, 5%) $a, darken($column-color, 5%) $g, $gutter-color $g, $gutter-color $z));
+  }
+
+  @return $grid;
+}
+
+// Return the gradient needed for horizontal grids
+@function get-column-gradient(
+  $total          : $grid-background-total-columns,
+  $column         : $grid-background-column-width,
+  $gutter         : $grid-background-gutter-width,
+  $offset         : $grid-background-offset,
+  $column-color   : $grid-background-column-color,
+  $gutter-color   : $grid-background-gutter-color,
+  $force-fluid    : $grid-background-force-fluid
+) {
+  $grid: unquote("");
+
+  // don't force fluid grids when they are already fluid.
+  @if unit($column) == "%" { $force-fluid: false; }
+
+  @if $force-fluid {
+    $grid: get-column-fluid-grid($total,$column,$gutter,$offset,$column-color,$gutter-color);
+  } @else {
+    $grid: build-grid-background($total,$column,$gutter,$offset,$column-color,$gutter-color);
+  }
+
+  // return the horizontal grid as a gradient
+  $gradient: linear-gradient(left, $grid);
+  @return $gradient;
+}
+
+// Convert a grid from fixed units into percentages.
+@function get-column-fluid-grid(
+  $total          : $grid-background-total-columns,
+  $column         : $grid-background-column-width,
+  $gutter         : $grid-background-gutter-width,
+  $offset         : $grid-background-offset,
+  $column-color   : $grid-background-column-color,
+  $gutter-color   : $grid-background-gutter-color
+) {
+  $context: ($column * $total) + ($gutter * ($total - 1) + ($offset * 2));
+  $offset: $offset / $context * 100%;
+  $column: $column / $context * 100%;
+  $gutter: $gutter / $context * 100%;
+
+  // return the horizontal grid as a set of color-stops
+  $grid: build-grid-background($total,$column,$gutter,$offset,$column-color,$gutter-color);
+  @return $grid;
+}
+
+
+// Add just the baseline grid to an element's background
+@mixin baseline-grid-background(
+  $baseline : $grid-background-baseline-height,
+  $color    : $grid-background-baseline-color
+) {
+  @if $show-grid-backgrounds and $show-baseline-grid-backgrounds {
+    @include background-image(get-baseline-gradient($color));
+    @include background-size(100% $baseline);
+    background-position: left top;
+  }
+}
+
+// Add just the horizontal grid to an element's background
+@mixin column-grid-background(
+  $total          : $grid-background-total-columns,
+  $column         : $grid-background-column-width,
+  $gutter         : $grid-background-gutter-width,
+  $offset         : $grid-background-offset,
+  $column-color   : $grid-background-column-color,
+  $gutter-color   : $grid-background-gutter-color,
+  $force-fluid    : $grid-background-force-fluid
+) {
+  @if $show-grid-backgrounds and $show-column-grid-backgrounds {
+    @include background-image(
+      get-column-gradient($total,$column,$gutter,$offset,$column-color,$gutter-color, $force-fluid)
+    );
+    background-position: left top;
+  }
+}
+
+// Add both horizontal and baseline grids to an element's background
+@mixin grid-background(
+  $total          : $grid-background-total-columns,
+  $column         : $grid-background-column-width,
+  $gutter         : $grid-background-gutter-width,
+  $baseline       : $grid-background-baseline-height,
+  $offset         : $grid-background-offset,
+  $column-color   : $grid-background-column-color,
+  $gutter-color   : $grid-background-gutter-color,
+  $baseline-color : $grid-background-baseline-color,
+  $force-fluid    : $grid-background-force-fluid
+) {
+  @if $show-grid-backgrounds {
+    @if $show-baseline-grid-backgrounds and $show-column-grid-backgrounds {
+      @include background-image(
+        get-baseline-gradient($baseline-color),
+        get-column-gradient($total,$column,$gutter,$offset,$column-color,$gutter-color, $force-fluid)
+      );
+      @include background-size(100% $baseline, auto);
+      background-position: left top;
+    } @else {
+      @include baseline-grid-background($baseline, $baseline-color);
+      @include column-grid-background($total,$column,$gutter,$offset,$column-color,$gutter-color, $force-fluid);
+    }
+  }
+}

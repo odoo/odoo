@@ -1,0 +1,92 @@
+// Determines those states for which you want to enable magic sprite selectors
+$sprite-selectors: hover, target, active, focus !default;
+
+// Set the width and height of an element to the original
+// dimensions of an image before it was included in the sprite.
+@mixin sprite-dimensions($map, $sprite) {
+  height: image-height(sprite-file($map, $sprite));
+  width: image-width(sprite-file($map, $sprite));
+}
+
+// Set the background position of the given sprite `$map` to display the
+// sprite of the given `$sprite` name. You can move the image relative to its
+// natural position by passing `$offset-x` and `$offset-y`.
+// The background-position will be returned in pixels. By passing `true
+// for `$use_percentages`, you get percentages instead.
+@mixin sprite-background-position($map, $sprite, $offset-x: 0, $offset-y: 0,
+$use-percentages: false) {
+  background-position: sprite-position($map, $sprite, $offset-x, $offset-y,
+  $use-percentages);
+}
+
+
+// Determines if you want to include magic selectors in your sprites
+$disable-magic-sprite-selectors: false !default;
+
+// Set this to underscore if you prefer
+$default-sprite-separator: "-" !default;
+
+// Include the position and (optionally) dimensions of this `$sprite`
+// in the given sprite `$map`. The sprite url should come from either a base
+// class or you can specify the `sprite-url` explicitly like this:
+//
+//     background: $map no-repeat;
+@mixin sprite($map, $sprite, $dimensions: false, $offset-x: 0, $offset-y: 0,
+                             $use-percentages: false,
+                             $use-magic-selectors: not $disable-magic-sprite-selectors,
+                             $separator: $default-sprite-separator) {
+  @include sprite-background-position($map, $sprite, $offset-x, $offset-y,
+                                      $use-percentages);
+  @if $dimensions {
+    @include sprite-dimensions($map, $sprite);
+  }
+  @if $use-magic-selectors {
+    @include sprite-selectors($map, $sprite, $sprite, $offset-x, $offset-y,
+                              $use-percentages, $separator);
+  }
+}
+
+// Include the selectors for the `$sprite` given the `$map` and the 
+// `$full-sprite-name`
+// @private
+@mixin sprite-selectors($map, $sprite-name, $full-sprite-name, $offset-x: 0,
+                        $offset-y: 0, $use-percentages: false,
+                        $separator: $default-sprite-separator) {
+  @each $state in $sprite-selectors {
+    $sprite-class: "#{$full-sprite-name}#{$separator}#{$state}";
+    @if sprite_has_selector($map, $sprite-name, $state) {
+      @if sprite_has_valid_selector($sprite-class) {
+        &:#{$state}, &.#{$sprite-class} {
+            @include sprite-background-position($map, sprite_selector_file($map, $sprite-name, $state),
+                                                $offset-x, $offset-y, $use-percentages);
+        }
+      }
+    }
+  }
+}
+
+// Generates a class for each space separated name in `$sprite-names`.
+// The class will be of the form .<map-name>-<sprite-name>.
+//
+// If a base class is provided, then each class will extend it.
+//
+// If `$dimensions` is `true`, the sprite dimensions will specified.
+// Positions are returned in pixel units. Set `$use_percentages` to true to
+// instead get percentages.
+@mixin sprites($map, $sprite-names, $base-class: false, $dimensions: false,
+               $prefix: sprite-map-name($map), $offset-x: 0, $offset-y: 0,
+               $use-percentages: false,
+               $separator: $default-sprite-separator) {
+  @each $sprite-name in $sprite-names {
+    @if sprite_does_not_have_parent($map, $sprite-name) {
+      $full-sprite-name: "#{$prefix}#{$separator}#{$sprite-name}";
+      @if sprite_has_valid_selector($full-sprite-name) {
+        .#{$full-sprite-name} {
+          @if $base-class { @extend #{$base-class}; }
+          @include sprite($map, $sprite-name, $dimensions, $offset-x, $offset-y, 
+                          $use-percentages, $separator: $separator);
+        }
+      }
+    }
+  }
+}

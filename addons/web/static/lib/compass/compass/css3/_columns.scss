@@ -1,0 +1,212 @@
+// Columns
+@import "compass/support";
+
+// The prefixed support threshold for columns.
+// Defaults to the $critical-usage-threshold.
+$multicolumn-support-threshold: $critical-usage-threshold !default;
+
+
+// Specify the shorthand `columns` property.
+//
+// Example:
+//
+//     @include columns(20em 2);
+@mixin columns($width-and-count) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    columns: $width-and-count
+  ));
+}
+
+// Specify the number of columns
+@mixin column-count($count) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-count: $count
+  ));
+}
+
+// Specify the gap between columns e.g. `20px`
+@mixin column-gap($width) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-gap: $width
+  ));
+}
+
+// Specify the width of columns e.g. `100px`
+@mixin column-width($width) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-width: $width
+  ));
+}
+
+// Specify how many columns an element should span across.
+//
+// * legal values are 1, all
+@mixin column-span($columns) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-span: $columns
+  ));
+}
+
+// Specify the width of the rule between columns e.g. `1px`
+@mixin column-rule-width($width) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    rule-width: $width
+  ));
+}
+
+// Specify the style of the rule between columns e.g. `dotted`.
+// This works like border-style.
+@mixin column-rule-style($style) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    rule-style: $style
+  ));
+}
+
+// Specify the color of the rule between columns e.g. `blue`.
+// This works like border-color.
+@mixin column-rule-color($color) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    rule-color: $color
+  ));
+}
+
+// Mixin encompassing all column rule properties
+// For example:
+//
+//     @include column-rule(1px, solid, #c00)
+//
+// Or the values can be space separated:
+//
+//     @include column-rule(1px solid #c00)
+@mixin column-rule($width, $style: null, $color: null) {
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-rule: $width $style $color
+  ));
+}
+
+// All-purpose mixin for setting column breaks.
+//
+// * legal values for $type : before, after, inside
+// * legal values for '$value' are dependent on $type
+//    * when $type = before, legal values are auto, always, avoid, left, right, page, column, avoid-page, avoid-column
+//    * when $type = after, legal values are auto, always, avoid, left, right, page, column, avoid-page, avoid-column
+//    * when $type = inside, legal values are auto, avoid, avoid-page, avoid-column
+//
+//  Examples:
+//    h2.before {@include column-break(before, always);}
+//    h2.after {@include column-break(after, always); }
+//    h2.inside {@include column-break(inside); }
+//
+//  Which generates:
+//  h2.before {
+//    -webkit-column-break-before: always;
+//    break-before: always;}
+//
+//  h2.after {
+//    -webkit-column-break-after: always;
+//    break-after: always; }
+//
+//  h2.inside {
+//    -webkit-column-break-inside: auto;
+//    break-inside: auto;}
+
+@mixin column-break($type: before, $value: auto){
+  @include with-each-prefix(multicolumn, $multicolumn-support-threshold) {
+    @if $current-prefix == -webkit {
+      // Webkit uses non-standard syntax
+      -webkit-column-break-#{$type}: $value;
+    } @else if $current-prefix == -moz {
+      // Moz uses a different non-standard syntax
+      -moz-page-break-#{$type}: $value;
+    } @else {
+      @include prefix-prop(break-#{$type}, $value);
+    }
+  }
+}
+
+// Mixin for setting break-before
+//
+// * legal values are auto, always, avoid, left, right, page, column, avoid-page, avoid-column
+//
+//  Example:
+//    h2.before {@include break-before(always);}
+//
+//  Which generates:
+//
+//  h2.before {
+//    -webkit-column-break-before: always;
+//    break-before: always;}
+@mixin break-before($value: auto){
+  @include column-break(before, $value);
+}
+
+@mixin column-break-before($value: auto){
+  @include column-break(before, $value);
+  @warn '"column-break-before" has been deprecated in favor of the official syntax: "break-before".';
+}
+
+// Mixin for setting break-after
+//
+// * legal values are auto, always, avoid, left, right, page, column, avoid-page, avoid-column
+//
+//  Example:
+//    h2.after {@include break-after(always); }
+//
+//  Which generates:
+//
+//  h2.after {
+//    -webkit-column-break-after: always;
+//    break-after: always; }
+@mixin break-after($value: auto){
+  @include column-break(after, $value);
+}
+
+@mixin column-break-after($value: auto){
+  @include column-break(after, $value);
+  @warn '"column-break-after" has been deprecated in favor of the official syntax: "break-after".';
+}
+
+// Mixin for setting break-inside
+//
+// * legal values are auto, avoid, avoid-page, avoid-column
+//
+//  Example:
+//    h2.inside {@include break-inside();}
+//
+//  Which generates:
+//
+//  h2.inside {
+//    -webkit-column-break-inside: auto;
+//    break-inside: auto;}
+@mixin break-inside($value: auto){
+  @include column-break(inside, $value);
+}
+
+@mixin column-break-inside($value: auto){
+  @include column-break(inside, $value);
+  @warn '"column-break-inside" has been deprecated in favor of the official syntax: "break-inside".';
+}
+
+// Mixin for setting column-span
+//
+// * legal values: none, all
+//
+//  Example:
+//    h2.span {@include column-span();}
+@mixin column-span($span: all){
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-span: $span
+  ));
+}
+
+// Mixin for setting column-fill
+//
+// * legal values: auto, balance
+//
+//  Example:
+//    h2.fill {@include column-fill();}
+@mixin column-fill($fill: balance){
+  @include prefixed-properties(multicolumn, $multicolumn-support-threshold,(
+    column-fill: $fill
+  ));
+}

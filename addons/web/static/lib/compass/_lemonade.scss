@@ -1,0 +1,38 @@
+@mixin image-dimensions($file) {
+  height: image-height($file);
+  width: image-width($file);
+}
+
+@mixin sprite-image($file) {
+  background: sprite-image($file) $repeat;
+}
+
+@mixin sized-sprite-image($file) {
+  background: sprite-image($file);  
+  @include image-dimensions($file);
+}
+
+@mixin sprite-folder($folder, $image-dimensions: false) {
+  .#{$folder} {
+    @if $image-dimensions {
+      background: sprite-url($folder);
+    }
+    @else {
+      background: sprite-url($folder) no-repeat;
+    }
+  }
+  @for $i from 0 to sprite-files-in-folder($folder) {
+    $file: sprite-file-from-folder($folder, $i);
+    .#{$folder}-#{image-basename($file)} {
+      @extend .#{$folder};
+      background-position: sprite-position(sprite-file-from-folder($folder, $i));
+      @if $image-dimensions {
+        @include image-dimensions($file);
+      }
+    }
+  }
+}
+
+@mixin sized-sprite-folder($folder) {
+  @include sprite-folder($folder, true);
+}

@@ -1,0 +1,142 @@
+// Based on [Eric Meyer's reset 2.0](http://meyerweb.com/eric/tools/css/reset/index.html)
+// Global reset rules.
+// For more specific resets, use the reset mixins provided below
+@mixin global-reset {
+  html, body, div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    @include reset-box-model;
+    @include reset-font; }
+  // Unlike Eric's original reset, we reset the html element to be compatible
+  // with the vertical rhythm mixins.
+  html {
+    @include reset-body; }
+  ol, ul {
+    @include reset-list-style; }
+  table {
+    @include reset-table; }
+  caption, th, td {
+    @include reset-table-cell; }
+  q, blockquote {
+    @include reset-quotation; }
+  a img {
+    @include reset-image-anchor-border; }
+  @include reset-html5; }
+
+// Reset all elements within some selector scope. To reset the selector itself,
+// mixin the appropriate reset mixin for that element type as well. This could be
+// useful if you want to style a part of your page in a dramatically different way.
+@mixin nested-reset {
+  div, span, applet, object, iframe,
+  h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+  a, abbr, acronym, address, big, cite, code,
+  del, dfn, em, img, ins, kbd, q, s, samp,
+  small, strike, strong, sub, sup, tt, var,
+  b, u, i, center,
+  dl, dt, dd, ol, ul, li,
+  fieldset, form, label, legend,
+  table, caption, tbody, tfoot, thead, tr, th, td,
+  article, aside, canvas, details, embed, 
+  figure, figcaption, footer, header, hgroup, 
+  menu, nav, output, ruby, section, summary,
+  time, mark, audio, video {
+    @include reset-box-model;
+    @include reset-font; }
+  table {
+    @include reset-table; }
+  caption, th, td {
+    @include reset-table-cell; }
+  q, blockquote {
+    @include reset-quotation; }
+  a img {
+    @include reset-image-anchor-border; } }
+
+// Reset the box model measurements.
+@mixin reset-box-model {
+  margin: 0;
+  padding: 0;
+  border: 0; }
+
+// Reset the font and vertical alignment.
+@mixin reset-font {
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline; }
+
+// Resets the outline when focus.
+// For accessibility you need to apply some styling in its place.
+@mixin reset-focus {
+  outline: 0; }
+
+// Reset a body element.
+@mixin reset-body {
+  line-height: 1; }
+
+// Reset the list style of an element.
+@mixin reset-list-style {
+  list-style: none; }
+
+// Reset a table
+@mixin reset-table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+// Reset a table cell (`th`, `td`)
+@mixin reset-table-cell {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle; }
+
+// Reset a quotation (`q`, `blockquote`)
+@mixin reset-quotation {
+  quotes: none;
+  &:before, &:after {
+    content: ""; 
+    content: none; } }
+
+// Resets the border.
+@mixin reset-image-anchor-border {
+  border: none; }
+
+// Unrecognized elements are displayed inline.
+// This reset provides a basic reset for block html5 elements
+// so they are rendered correctly in browsers that don't recognize them
+// and reset in browsers that have default styles for them.
+@mixin reset-html5 {
+  #{elements-of-type(html5-block)} {
+    display: block; } }
+
+// Resets the display of inline and block elements to their default display
+// according to their tag type. Elements that have a default display that varies across
+// versions of html or browser are not handled here, but this covers the 90% use case.
+// Usage Example:
+//
+//     // Turn off the display for both of these classes
+//     .unregistered-only, .registered-only
+//       display: none
+//     // Now turn only one of them back on depending on some other context.
+//     body.registered
+//       +reset-display(".registered-only")
+//     body.unregistered
+//       +reset-display(".unregistered-only")
+@mixin reset-display($selector: "", $important: false) {
+  #{append-selector(elements-of-type("inline"), $selector)} {
+    @if $important {
+      display: inline !important; }
+    @else {
+      display: inline; } }
+  #{append-selector(elements-of-type("block"), $selector)} {
+    @if $important {
+      display: block !important; }
+    @else {
+      display: block; } } }

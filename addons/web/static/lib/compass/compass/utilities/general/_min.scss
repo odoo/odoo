@@ -1,0 +1,16 @@
+@import "hacks";
+
+//**
+// Cross browser min-height mixin.
+@mixin min-height($value) {
+  @include hacked-minimum(height, $value); }
+
+//**
+// Cross browser min-width mixin.
+@mixin min-width($value) {
+  @include hacked-minimum(width, $value); }
+
+// @private This mixin is not meant to be used directly.
+@mixin hacked-minimum($property, $value) {
+  min-#{$property}: $value;
+  @include underscore-hack($property, auto, $value); }
