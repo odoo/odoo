@@ -1988,31 +1988,44 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             return '"%s"."%s"' % (alias, fname)
 
     @api.model_cr
+    def _parent_store_create_functions(self):
+        if not self._parent_store:
+            return
+        query = """
+CREATE OR REPLACE FUNCTION process_parent_columns_{table}(root integer, lt integer) RETURNS integer AS $$
+DECLARE
+	rt integer := lt + 1;
+	child record;
+BEGIN
+	FOR child IN SELECT id FROM {table} WHERE {parent_name} = root ORDER BY {parent_order} LOOP
+		rt := process_parent_columns_{table}(child.id, rt);
+	END LOOP;
+	UPDATE {table} SET parent_left = lt, parent_right = rt WHERE id = root;
+	RETURN rt + 1;
+END;
+$$
+LANGUAGE 'plpgsql';
+
+CREATE OR REPLACE FUNCTION add_parent_columns_{table}() RETURNS void AS $$
+DECLARE
+	pos integer := 0;
+	topchild record;
+BEGIN
+	FOR topchild IN SELECT id FROM {table} WHERE {parent_name} IS NULL ORDER BY {parent_order} LOOP
+		pos := process_parent_columns_{table}(topchild.id, pos);
+	END LOOP;
+END;
+$$
+LANGUAGE 'plpgsql';""".format(table=self._table, parent_name=self._parent_name, parent_order=self._parent_order)
+        self._cr.execute(query)
+
+    @api.model_cr
     def _parent_store_compute(self):
         if not self._parent_store:
             return
-
         _logger.info('Computing parent left and right for table %s...', self._table)
-        cr = self._cr
-        select = "SELECT id FROM %s WHERE %s=%%s ORDER BY %s" % \
-                    (self._table, self._parent_name, self._parent_order)
-        update = "UPDATE %s SET parent_left=%%s, parent_right=%%s WHERE id=%%s" % self._table
-
-        def process(root, left):
-            """ Set root.parent_left to ``left``, and return root.parent_right + 1 """
-            cr.execute(select, (root,))
-            right = left + 1
-            for (id,) in cr.fetchall():
-                right = process(id, right)
-            cr.execute(update, (left, right, root))
-            return right + 1
-
-        select0 = "SELECT id FROM %s WHERE %s IS NULL ORDER BY %s" % \
-                    (self._table, self._parent_name, self._parent_order)
-        cr.execute(select0)
-        pos = 0
-        for (id,) in cr.fetchall():
-            pos = process(id, pos)
+        query = "SELECT add_parent_columns_{table}();".format(table=self._table)
+        self._cr.execute(query)
         self.invalidate_cache(['parent_left', 'parent_right'])
         return True
 
@@ -2111,6 +2124,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if not tools.column_exists(cr, self._table, 'parent_left'):
                     self._create_parent_columns()
                     parent_store_compute = True
+                self._parent_store_create_functions()
 
             self._check_removed_columns(log=False)
 
