@@ -314,6 +314,8 @@ class ResourceCalendar(models.Model):
             search_domain += [('date_from', '<', fields.Datetime.to_string(end_datetime + timedelta(days=1)))]
         if domain:
             search_domain += domain
+        if domain is None:
+            search_domain += [('time_type', '=', 'leave')]
         leaves = self.env['resource.calendar.leaves'].search(search_domain + [('calendar_id', '=', self.id)])
 
         filtered_leaves = self.env['resource.calendar.leaves']
@@ -591,9 +593,9 @@ class ResourceCalendar(models.Model):
         return intervals
 
     @api.multi
-    def plan_hours(self, hours, day_dt, compute_leaves=False, resource_id=None):
+    def plan_hours(self, hours, day_dt, compute_leaves=False, resource_id=None, domain=None):
         """ Return datetime after having planned hours """
-        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id)
+        res = self._schedule_hours(hours, day_dt, compute_leaves, resource_id, domain)
         if res and hours < 0.0:
             return res[0][0]
         elif res:
@@ -641,9 +643,9 @@ class ResourceCalendar(models.Model):
         return intervals
 
     @api.multi
-    def plan_days(self, days, day_dt, compute_leaves=False, resource_id=None):
+    def plan_days(self, days, day_dt, compute_leaves=False, resource_id=None, domain=None):
         """ Returns the datetime of a days scheduling. """
-        res = self._schedule_days(days, day_dt, compute_leaves, resource_id)
+        res = self._schedule_days(days, day_dt, compute_leaves, resource_id, domain)
         return res and res[-1][1] or False
 
 
@@ -762,6 +764,8 @@ class ResourceCalendarLeaves(models.Model):
     resource_id = fields.Many2one(
         "resource.resource", 'Resource',
         help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource")
+    time_type = fields.Selection([('leave', 'Leave'), ('other', 'Other')], default='leave',
+                                 help="Whether this should be computed as a holiday or as work time (eg: formation)")
 
     @api.constrains('date_from', 'date_to')
     def check_dates(self):
