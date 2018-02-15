@@ -873,11 +873,14 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def _notify_get_groups(self, message, groups):
+        """ Give access button to users and portal customer as portal is integrated
+        in account. Customer and portal group have probably no right to see
+        the document so they don't have the access button. """
         groups = super(AccountInvoice, self)._notify_get_groups(message, groups)
 
         if self.state not in ('draft', 'cancel'):
             for group_name, group_method, group_data in groups:
-                if group_name == 'customer':
+                if group_name in ('customer', 'portal'):
                     continue
                 group_data['has_button_access'] = True
 
