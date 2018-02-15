@@ -235,6 +235,13 @@ class Partner(models.Model):
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name.'),
     ]
 
+    @api.multi
+    def toggle_active(self):
+        for partner in self:
+            if partner.active and partner.user_ids:
+                raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
+        super(Partner, self).toggle_active()
+
     @api.depends('is_company', 'name', 'parent_id.name', 'type', 'company_name')
     def _compute_display_name(self):
         diff = dict(show_address=None, show_address_only=None, show_email=None)
@@ -487,6 +494,10 @@ class Partner(models.Model):
 
     @api.multi
     def write(self, vals):
+        if vals.get('active') is False:
+            for partner in self:
+                if partner.active and partner.user_ids:
+                    raise ValidationError(_('You cannot archive a contact linked to an internal user.'))
         # res.partner must only allow to set the company_id of a partner if it
         # is the same as the company of all users that inherit from this partner
         # (this is to allow the code from res_users to write to the partner!) or

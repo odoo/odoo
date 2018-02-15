@@ -396,6 +396,27 @@ class TestBase(TransactionCase):
         self.assertEqual([2, 4], [g['title_count'] for g in groups_data], 'Incorrect number of results')
         self.assertEqual([-1, 10], [g['color'] for g in groups_data], 'Incorrect aggregation of int column')
 
+    def test_70_archive_internal_partners(self):
+        test_partner = self.env['res.partner'].create({'name':'test partner'})
+        test_user = self.env['res.users'].create({
+                                'login': 'test@odoo.com',
+                                'partner_id': test_partner.id,
+                                })
+        # Cannot archive the partner
+        with self.assertRaises(ValidationError):
+            test_partner.toggle_active()
+
+        # Can archive the user but the partner stays active
+        test_user.toggle_active()
+        self.assertTrue(test_partner.active, 'Parter related to user should remain active')
+
+        # Now we can archive the partner
+        test_partner.toggle_active()
+
+        # Activate the user should reactivate the partner
+        test_user.toggle_active()
+        self.assertTrue(test_partner.active, 'Activating user must active related partner')
+
 
 class TestPartnerRecursion(TransactionCase):
 
