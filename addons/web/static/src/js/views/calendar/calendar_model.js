@@ -386,6 +386,7 @@ return AbstractModel.extend({
                     titleFormat: time.getLangTimeFormat(),
                 }
             },
+            smallTimeFormat: /H/.test(time.getLangTimeFormat()) ? 'HH:mm' : 'hh TT',
             monthNames: moment.months(),
             monthNamesShort: moment.monthsShort(),
             dayNames: moment.weekdays(),
