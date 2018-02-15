@@ -520,7 +520,7 @@ class Website(models.Model):
         if not force:
             domain += [('website_indexed', '=', True)]
             #is_visible
-            domain += [('website_published', '=', True), '|', ('date_publish', '!=', False), ('date_publish', '>', fields.Datetime.now())]
+            domain += [('website_published', '=', True), '|', ('date_publish', '=', False), ('date_publish', '<=', fields.Datetime.now())]
 
         if query_string:
             domain += [('url', 'like', query_string)]
