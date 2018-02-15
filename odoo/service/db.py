@@ -50,7 +50,7 @@ def check_super(passwd):
     raise odoo.exceptions.AccessDenied()
 
 # This should be moved to odoo.modules.db, along side initialize().
-def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None):
+def _initialize_db(id, db_name, demo, lang, user_password, login='admin', country_code=None, company_dict={}):
     try:
         db = odoo.sql_db.db_connect(db_name)
         with closing(db.cursor()) as cr:
@@ -72,6 +72,9 @@ def _initialize_db(id, db_name, demo, lang, user_password, login='admin', countr
                 countries = env['res.country'].search([('code', 'ilike', country_code)])
                 if countries:
                     env['res.company'].browse(1).country_id = countries[0]
+
+            if company_dict:
+                env['res.company'].browse(1).write(company_dict)
 
             # update admin's password and lang and login
             values = {'password': user_password, 'lang': lang}
@@ -100,11 +103,11 @@ def _create_empty_database(name):
             cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (name, chosen_template))
 
 @check_db_management_enabled
-def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None):
+def exp_create_database(db_name, demo, lang, user_password='admin', login='admin', country_code=None, company_dict={}):
     """ Similar to exp_create but blocking."""
     _logger.info('Create database `%s`.', db_name)
     _create_empty_database(db_name)
-    _initialize_db(id, db_name, demo, lang, user_password, login, country_code)
+    _initialize_db(id, db_name, demo, lang, user_password, login, country_code, company_dict)
     return True
 
 @check_db_management_enabled
