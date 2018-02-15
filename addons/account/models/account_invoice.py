@@ -41,7 +41,7 @@ MAGIC_COLUMNS = ('id', 'create_uid', 'create_date', 'write_uid', 'write_date')
 
 class AccountInvoice(models.Model):
     _name = "account.invoice"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Invoice"
     _order = "date_invoice desc, number desc, id desc"
 
@@ -875,10 +875,11 @@ class AccountInvoice(models.Model):
     def _notification_recipients(self, message, groups):
         groups = super(AccountInvoice, self)._notification_recipients(message, groups)
 
-        for group_name, group_method, group_data in groups:
-            if group_name == 'customer':
-                continue
-            group_data['has_button_access'] = True
+        if self.state not in ('draft', 'cancel'):
+            for group_name, group_method, group_data in groups:
+                if group_name == 'customer':
+                    continue
+                group_data['has_button_access'] = True
 
         return groups
 
