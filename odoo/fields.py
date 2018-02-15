@@ -39,18 +39,7 @@ Default = object()                      # default value for __init__() methods
 
 def copy_cache(records, env):
     """ Recursively copy the cache of ``records`` to the environment ``env``. """
-    src, dst = records.env.cache, env.cache
-    todo, done = set(records), set()
-    while todo:
-        record = todo.pop()
-        if record not in done:
-            done.add(record)
-            target = record.with_env(env)
-            for field in src.get_fields(record):
-                value = src.get(record, field)
-                dst.set(target, field, value)
-                if value and field.type in ('many2one', 'one2many', 'many2many', 'reference'):
-                    todo.update(field.convert_to_record(value, record))
+    env.cache.copy(records, env)
 
 def first(records):
     """ Return the first record in ``records``, with the same prefetching. """
