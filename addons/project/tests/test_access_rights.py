@@ -53,6 +53,15 @@ class TestPortalProject(TestPortalProjectBase):
         tmp_task.sudo(self.user_projectuser).unlink()
 
     @mute_logger('odoo.addons.base.models.ir_model')
+    def test_favorite_project_access_rights(self):
+        pigs = self.project_pigs.sudo(self.user_projectuser)
+
+        # we can't write on project name
+        self.assertRaises(AccessError, pigs.write, {'name': 'False Pigs'})
+        # we can write on is_favorite
+        pigs.write({'is_favorite': True})
+
+    @mute_logger('odoo.addons.base.ir.ir_model')
     def test_followers_project_access_rights(self):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
