@@ -657,7 +657,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             entire-recordset-prefetch-effects) & removes the previous batch
             from the cache after it's been iterated in full
             """
-            for sub in (rs[idx: idx+1000] for idx in range(0, len(rs), 1000)):
+            for idx in range(0, len(rs), 1000):
+                sub = rs[idx: idx+1000]
                 for rec in sub:
                     yield rec
                 rs.invalidate_cache(ids=sub.ids)
