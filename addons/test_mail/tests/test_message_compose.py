@@ -63,10 +63,11 @@ class TestMessagePost(BaseFunctionalTest, MockEmails, TestRecipients):
     def test_post_notifications_keep_emails(self):
         self.test_record.message_subscribe_users(user_ids=[self.user_admin.id])
 
-        msg = self.test_record.sudo(self.user_employee).with_context(mail_auto_delete=False).message_post(
+        msg = self.test_record.sudo(self.user_employee).message_post(
             body='Test', subject='Test',
             message_type='comment', subtype='mt_comment',
-            partner_ids=[self.partner_1.id, self.partner_2.id]
+            partner_ids=[self.partner_1.id, self.partner_2.id],
+            notif_values={'mail_auto_delete': False}
         )
 
         # notifications emails should not have been deleted: one for customers, one for user

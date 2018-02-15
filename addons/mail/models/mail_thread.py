@@ -67,12 +67,8 @@ class MailThread(models.AbstractModel):
        creating messages
      - ``tracking_disable``: at create and write, perform no MailThread features
        (auto subscription, tracking, post, ...)
-     - ``mail_auto_delete``: auto delete mail notifications; True by default
-       (technical hack for templates)
      - ``mail_notify_force_send``: if less than 50 email notifications to send,
        send them directly instead of using the queue; True by default
-     - ``mail_notify_user_signature``: add the current user signature in
-       email notifications; True by default
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
@@ -1788,7 +1784,7 @@ class MailThread(models.AbstractModel):
     def message_post(self, body='', subject=None,
                      message_type='notification', subtype=None,
                      parent_id=False, attachments=None, content_subtype='html',
-                     notif_layout=False, **kwargs):
+                     notif_layout=False, notif_values=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID.
             :param int thread_id: thread ID to post into, or list with one ID;
@@ -1913,10 +1909,10 @@ class MailThread(models.AbstractModel):
 
         # Post the message
         new_message = MailMessage.create(values)
-        self._message_post_after_hook(new_message, values, notif_layout)
+        self._message_post_after_hook(new_message, values, notif_layout, notif_values)
         return new_message
 
-    def _message_post_after_hook(self, message, values, notif_layout):
+    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         """ Hook to add custom behavior after having posted the message. Both
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
@@ -1924,7 +1920,7 @@ class MailThread(models.AbstractModel):
         message._notify(
             layout=notif_layout,
             force_send=self.env.context.get('mail_notify_force_send', True),
-            user_signature=self.env.context.get('mail_notify_user_signature', True)
+            values=notif_values,
         )
 
         # Post-process: subscribe author
