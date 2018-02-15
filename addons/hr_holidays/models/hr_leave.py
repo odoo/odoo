@@ -283,7 +283,8 @@ class HolidaysRequest(models.Model):
                 'holiday_id': leave.id,
                 'date_to': leave.date_to,
                 'resource_id': leave.employee_id.resource_id.id,
-                'calendar_id': leave.employee_id.resource_calendar_id.id
+                'calendar_id': leave.employee_id.resource_calendar_id.id,
+                'time_type': leave.holiday_status_id.time_type,
             })
         return True
 
