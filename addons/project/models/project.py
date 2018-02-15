@@ -490,7 +490,7 @@ class Task(models.Model):
     index=True, copy=False)
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', index=True, copy=False, readonly=True)
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False)
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, track_visibility='onchange')
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         default=fields.Datetime.now,
         index=True,
@@ -503,8 +503,8 @@ class Task(models.Model):
         track_visibility='onchange',
         change_default=True)
     notes = fields.Text(string='Notes')
-    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.')
-    subtask_planned_hours = fields.Float("Subtask Planned Hours", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
+    planned_hours = fields.Float("Planned Hours", help='It is the time planned to achieve the task. If this document has sub-tasks, it means the time needed to achieve this tasks and its childs.',track_visibility='onchange')
+    subtask_planned_hours = fields.Float("Subtasks", compute='_compute_subtask_planned_hours', help="Computed using sum of hours planned of all subtasks created from main task. Usually these hours are less or equal to the Planned Hours (of main task).")
     remaining_hours = fields.Float(string='Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task.")
     user_id = fields.Many2one('res.users',
         string='Assigned to',
