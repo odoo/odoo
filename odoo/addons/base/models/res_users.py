@@ -357,6 +357,13 @@ class Users(models.Model):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
 
     @api.multi
+    def toggle_active(self):
+        for user in self:
+            if not user.active and not user.partner_id.active:
+                user.partner_id.toggle_active()
+        super(Users, self).toggle_active()
+
+    @api.multi
     def read(self, fields=None, load='_classic_read'):
         if fields and self == self.env.user:
             for key in fields:
@@ -412,6 +419,10 @@ class Users(models.Model):
                 elif user.id == self._uid:
                     raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
+        if values.get('active'):
+            for user in self:
+                if not user.active and not user.partner_id.active:
+                    user.partner_id.toggle_active()
         if self == self.env.user:
             for key in list(values):
                 if not (key in self.SELF_WRITEABLE_FIELDS or key.startswith('context_')):
