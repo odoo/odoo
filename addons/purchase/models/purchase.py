@@ -1145,8 +1145,8 @@ class ProductProduct(models.Model):
             ('state', 'in', ['purchase', 'done']),
             ('product_id', 'in', self.ids),
         ]
-        read_group_res = self.env['purchase.order.line'].read_group(domain, ['product_id'], ['product_id'])
-        mapped_data = dict([(data['product_id'][0], data['product_id_count']) for data in read_group_res])
+        read_group_res = self.env['purchase.report'].read_group(domain, ['product_id', 'unit_quantity'], ['product_id'])
+        mapped_data = dict([(data['product_id'][0], data['unit_quantity']) for data in read_group_res])
         for product in self:
             product.purchase_count = mapped_data.get(product.id, 0)
 
