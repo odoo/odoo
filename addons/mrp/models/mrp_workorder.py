@@ -272,7 +272,7 @@ class MrpWorkorder(models.Model):
             raise UserError(_('You should provide a lot for the final product'))
 
         # Update quantities done on each raw material line
-        raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
+        raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')))
         for move in raw_moves:
             if move.unit_factor:
                 rounding = move.product_uom.rounding
