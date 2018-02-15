@@ -120,6 +120,29 @@ class ReturnPicking(models.TransientModel):
                 else:
                     move_dest_id = False
 
+                #TRESCLOUD
+                #En proyecto X se agrego un stock.picking a los stock.moves de manufactura, el cliente lo usa para
+                #reversos de manufactura (devuelve el stock.picking de la materia prima y del producto terminado)
+                #En estas devoluciones se debe tomar el precio promedio al momento de la transaccion y no el de
+                #la transaccion original.
+                #Odoo no cubria este caso (pues no usan stock.pickings en mrp)
+                #
+                #Si es una devolucion de manufactura (materia prima o producto terminado)
+                #vaciamos el costo en el stock.move, de esta forma el metodo
+                #get_price_unit retornara el costo promedio vigente :)
+                price_unit = return_line.move_id.price_unit or False
+                if return_line.move_id.location_id.usage in ['production'] and \
+                   return_line.move_id.location_dest_id.usage in ['internal'] and \
+                   return_line.move_id.production_id:
+                    #caso producto terminado
+                    price_unit = False
+                if return_line.move_id.location_id.usage in ['internal'] and \
+                   return_line.move_id.location_dest_id.usage in ['production'] and \
+                   return_line.move_id.raw_material_production_id:
+                    #caso materia prima
+                    price_unit = False
+                #FIN MODIFICACION TRESCLOUD
+
                 returned_lines += 1
                 return_line.move_id.copy({
                     'product_id': return_line.product_id.id,
@@ -133,6 +156,7 @@ class ReturnPicking(models.TransientModel):
                     'origin_returned_move_id': return_line.move_id.id,
                     'procure_method': 'make_to_stock',
                     'move_dest_id': move_dest_id,
+                    'price_unit': price_unit, #TRESCLOUD, agregado para costo manufactura
                 })
 
         if not returned_lines:

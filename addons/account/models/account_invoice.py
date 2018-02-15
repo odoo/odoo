@@ -913,8 +913,10 @@ class AccountInvoice(models.Model):
             diff_currency = inv.currency_id != company_currency
             # create one move line for the total and possibly adjust the other lines amount
             total, total_currency, iml = inv.with_context(ctx).compute_invoice_totals(company_currency, iml)
-            #La siguiente linea fue creada por TresCloud
+            #SECCION MODIFICADA POR TRESCLOUD
             iml = self._get_payable_accounts(total, total_currency, iml, ctx)
+            if self._context.get('error_msg'):
+                ctx.update({'error_msg': self._context['error_msg']})
             #El codigo removido en esa seccion esta en el metodo _get_payable_accounts
             part = self.env['res.partner']._find_accounting_partner(inv.partner_id)
             line = [(0, 0, self.line_get_convert(l, part.id)) for l in iml]
