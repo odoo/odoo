@@ -82,9 +82,72 @@ function createDiscuss(params) {
     });
 }
 
+/**
+ * In Phantomjs, there is a crash when calling window.getSelection
+ * in order for the tests to work, for the specific test that uses it, replace
+ * the default window.getSelection by a mock
+ * 
+ * usage:
+ *     QUnit.test('...',function(done){
+ *          var original = mailTestUtils.replaceWindowGetSelectionForPhantomJs();
+ *          
+ *          // do something that needs to use window.getSelection()
+ *          assert.strictEqual(....);
+ *          
+ *          // restore the original function
+ *          mailTestUtils.restoreWindowGetSelectionForPhantomJs(original);
+ *      
+ *          // finish the test
+ *          done();
+ *     })
+ *
+ * @returns {function} the original window.getSelection so it can be restored by calling restoreWindowGetSelectionForPhantomJs
+ */
+
+function replaceWindowGetSelectionForPhantomJs(params) {
+    var originalGetSelection = window.getSelection;
+    window.getSelection = function () {
+        return {
+            removeAllRanges: function () {
+
+            },
+            addRange: function (range) {
+
+            },
+            getRangeAt: function (index) {
+                return {
+                    startOffset : 0
+                };
+            },
+            anchorNode: {
+                parentNode: {
+                    childNodes: [{
+                        outerHTML: "@",
+                        nodeType: 3,
+                        textContent: '@',
+                    }],
+                },
+            },
+        };
+    };
+    return originalGetSelection;
+}
+
+/**
+ * after using replaceWindowGetSelectionForPhantomJs, at the end of your test
+ * you must restore the default function so there is no impact to the other tests
+ * 
+ * @param {function} originalFunction 
+ */
+function restoreWindowGetSelectionForPhantomJs(originalFunction) {
+    window.getSelection = originalFunction;
+}
+
 return {
     createBusService: createBusService,
     createDiscuss: createDiscuss,
+    replaceWindowGetSelectionForPhantomJs:replaceWindowGetSelectionForPhantomJs,
+    restoreWindowGetSelectionForPhantomJs:restoreWindowGetSelectionForPhantomJs,
 };
 
 });

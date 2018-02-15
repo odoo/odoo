@@ -2,10 +2,16 @@ odoo.define('mail.discuss_test', function (require) {
 "use strict";
 
 var ChatManager = require('mail.ChatManager');
+var Composers = require('mail.composer');
 var mailTestUtils = require('mail.testUtils');
 
+var concurrency = require('web.concurrency');
+
+var BasicComposer = Composers.BasicComposer;
 var createBusService = mailTestUtils.createBusService;
 var createDiscuss = mailTestUtils.createDiscuss;
+var replaceWindowGetSelectionForPhantomJs = mailTestUtils.replaceWindowGetSelectionForPhantomJs;
+var restoreGetSelectionForPhantomJs = mailTestUtils.restoreWindowGetSelectionForPhantomJs;
 
 QUnit.module('mail', {}, function () {
 
