@@ -302,16 +302,6 @@ var KanbanRenderer = BasicRenderer.extend({
         }
     },
     /**
-     * @private
-     * @override
-     * adds a specific class to the kanban helper so that it can be targetted by specific css
-     */
-    _renderNoContentHelper: function() {
-        var $el = this._super.apply(this, arguments);
-        $el.toggleClass('o_kanban_view_nocontent',true)
-        return $el;
-    },
-    /**
      * Renders an ungrouped kanban view in a fragment.
      *
      * @private

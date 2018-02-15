@@ -60,7 +60,6 @@ return AbstractRenderer.extend({
      * @returns {Deferred} The _super deferred is actually resolved immediately
      */
     _render: function () {
-        this.$el.toggleClass('o_view_nocontent_container', !this.state.data.length);
         if (this.to_remove) {
             nv.utils.offWindowResize(this.to_remove);
         }
