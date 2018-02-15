@@ -12,7 +12,7 @@ from odoo.osv import expression
 
 
 _logger = logging.getLogger(__name__)
-_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/]{3,}=*)([\'"])', re.I)
+_image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])', re.I)
 
 
 class Message(models.Model):
@@ -757,8 +757,9 @@ class Message(models.Model):
                         'res_model': 'mail.message',
                     })
                     values['attachment_ids'].append((4, attachment.id))
-                    data_to_url[key] = '/web/image/%s' % attachment.id
-                return '%s%s alt="%s"' % (data_to_url[key], match.group(3), name)
+                    data_to_url[key] = (name, '/web/image/%s' % attachment.id)
+                alt, url = data_to_url[key]
+                return '%s%s alt="%s"' % (url, match.group(3), alt)
             values['body'] = _image_dataurl.sub(base64_to_boundary, values['body'])
 
         # delegate creation of tracking after the create as sudo to avoid access rights issues
