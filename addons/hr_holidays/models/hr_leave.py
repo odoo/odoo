@@ -50,7 +50,7 @@ class HolidaysRequest(models.Model):
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     employee_id = fields.Many2one('hr.employee', string='Employee', index=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, default=_default_employee, track_visibility='onchange')
-    manager_id = fields.Many2one('hr.employee', related='employee_id.parent_id', string='Manager', readonly=True, store=True)
+    manager_id = fields.Many2one('hr.employee', string='Manager', readonly=True)
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     number_of_days_temp = fields.Float(
         'Allocation', copy=False, readonly=True,
@@ -84,6 +84,10 @@ class HolidaysRequest(models.Model):
         ('date_check2', "CHECK ((date_from <= date_to))", "The start date must be anterior to the end date."),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
+
+    @api.onchange('employee_id')
+    def _onchange_employee_id(self):
+        self.manager_id = self.employee_id and self.employee_id.parent_id
 
     @api.multi
     @api.depends('number_of_days_temp')
@@ -216,6 +220,8 @@ class HolidaysRequest(models.Model):
             values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
         holiday = super(HolidaysRequest, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
         holiday.add_follower(employee_id)
+        if 'employee_id' in values:
+            holiday._onchange_employee_id()
         return holiday
 
     @api.multi
@@ -223,6 +229,8 @@ class HolidaysRequest(models.Model):
         employee_id = values.get('employee_id', False)
         result = super(HolidaysRequest, self).write(values)
         self.add_follower(employee_id)
+        if 'employee_id' in values:
+            self._onchange_employee_id()
         return result
 
     @api.multi
