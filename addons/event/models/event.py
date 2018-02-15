@@ -449,7 +449,7 @@ class EventRegistration(models.Model):
             pass
         return recipients
 
-    def _message_post_after_hook(self, message, values, notif_layout):
+    def _message_post_after_hook(self, message, values, notif_layout, notif_values):
         if self.email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -461,7 +461,7 @@ class EventRegistration(models.Model):
                     ('email', '=', new_partner.email),
                     ('state', 'not in', ['cancel']),
                 ]).write({'partner_id': new_partner.id})
-        return super(EventRegistration, self)._message_post_after_hook(message, values, notif_layout)
+        return super(EventRegistration, self)._message_post_after_hook(message, values, notif_layout, notif_values)
 
     @api.multi
     def action_send_badge_email(self):
