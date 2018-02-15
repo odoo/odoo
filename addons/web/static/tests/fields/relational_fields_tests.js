@@ -2906,6 +2906,124 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('x2many fields inside x2manys are fetched after an onchange', function (assert) {
+        assert.expect(6);
+
+        this.data.turtle.records[0].partner_ids = [1];
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.turtles = [[5], [4, 1], [4, 2], [4, 3]];
+            },
+        };
+
+        var checkRPC = false;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="turtles">' +
+                                '<tree>' +
+                                    '<field name="turtle_foo"/>' +
+                                    '<field name="partner_ids" widget="many2many_tags"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+            mockRPC: function (route, args) {
+                if (checkRPC && args.method === 'read' && args.model === 'partner') {
+                    assert.deepEqual(args.args[1], ['display_name'],
+                        "should only read the display_name for the m2m tags");
+                    assert.deepEqual(args.args[0], [1],
+                        "should only read the display_name of the unknown record");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "there should be one record in the relation");
+        assert.strictEqual(form.$('.o_data_row .o_field_widget[name=partner_ids]').text().replace(/\s/g, ''),
+            'secondrecordaaa', "many2many_tags should be correctly displayed");
+
+        // change the value of foo to trigger the onchange
+        checkRPC = true; // enable flag to check read RPC for the m2m field
+        form.$('.o_field_widget[name=foo]').val('some value').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row').length, 3,
+            "there should be three records in the relation");
+        assert.strictEqual(form.$('.o_data_row:first .o_field_widget[name=partner_ids]').text().trim(),
+            'first record', "many2many_tags should be correctly displayed");
+
+        form.destroy();
+    });
+
+    QUnit.test('reference fields inside x2manys are fetched after an onchange', function (assert) {
+        assert.expect(5);
+
+        this.data.turtle.records[1].turtle_ref = 'product,41';
+        this.data.partner.onchanges = {
+            foo: function (obj) {
+                obj.turtles = [[5], [4, 1], [4, 2], [4, 3]];
+            },
+        };
+
+        var checkRPC = false;
+        var form = createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo"/>' +
+                            '<field name="turtles">' +
+                                '<tree>' +
+                                    '<field name="turtle_foo"/>' +
+                                    '<field name="turtle_ref" class="ref_field"/>' +
+                                '</tree>' +
+                            '</field>' +
+                        '</group>' +
+                    '</sheet>' +
+                 '</form>',
+            mockRPC: function (route, args) {
+                if (checkRPC && args.method === 'name_get') {
+                    assert.deepEqual(args.args[0], [37],
+                        "should only fetch the name_get of the unknown record");
+                }
+                return this._super.apply(this, arguments);
+            },
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.strictEqual(form.$('.o_data_row').length, 1,
+            "there should be one record in the relation");
+        assert.strictEqual(form.$('.ref_field').text().trim(), 'xpad',
+            "reference field should be correctly displayed");
+
+        // change the value of foo to trigger the onchange
+        checkRPC = true; // enable flag to check read RPC for reference field
+        form.$('.o_field_widget[name=foo]').val('some value').trigger('input');
+
+        assert.strictEqual(form.$('.o_data_row').length, 3,
+            "there should be three records in the relation");
+        assert.strictEqual(form.$('.ref_field').text().trim(), 'xpadxphone',
+            "reference fields should be correctly displayed");
+
+        form.destroy();
+    });
+
     QUnit.test('embedded one2many with handle widget with minimum setValue calls', function (assert) {
         var done = assert.async();
         assert.expect(20);

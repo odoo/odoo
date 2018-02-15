@@ -1470,7 +1470,12 @@ var BasicModel = AbstractModel.extend({
                         list._changes = [{operation: 'REMOVE_ALL'}];
                     }
                 });
-                defs.push(self._readUngroupedList(list));
+                var def = self._readUngroupedList(list).then(function () {
+                    var x2ManysDef = self._fetchX2ManysBatched(list);
+                    var referencesDef = self._fetchReferencesBatched(list);
+                    return $.when(x2ManysDef, referencesDef);
+                });
+                defs.push(def);
             } else {
                 var newValue = self._parseServerValue(field, val);
                 if (newValue !== oldValue) {
@@ -1975,7 +1980,9 @@ var BasicModel = AbstractModel.extend({
         _.each(list.data, function (dataPoint) {
             var record = self.localData[dataPoint];
             var value = record.data[fieldName];
-            if (value) {
+            // if the reference field has already been fetched, the value is a
+            // datapoint ID, and in this case there's nothing to do
+            if (value && !self.localData[value]) {
                 var model = value.split(',')[0];
                 var resID = value.split(',')[1];
                 if (!(model in toFetch)) {
