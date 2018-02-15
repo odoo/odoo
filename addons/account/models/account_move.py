@@ -1565,6 +1565,9 @@ class AccountMoveLine(models.Model):
         if context.get('analytic_account_ids'):
             domain += [('analytic_account_id', 'in', context['analytic_account_ids'].ids)]
 
+        if context.get('filter_domain'):
+            domain += context['filter_domain']
+
         where_clause = ""
         where_clause_params = []
         tables = ''
