@@ -209,7 +209,6 @@ $o-kanban-dashboard-dropdown-complex-gap: 5px;
         }
 
         .o_kanban_card_manage_pane {
-            @extend .dropdown-menu; // FIXME was a mixin before scss convertion
             @include o-kanban-dropdown-menu;
 
             // Arbitrary value to place the dropdown-menu exactly below the
@@ -252,8 +251,11 @@ $o-kanban-dashboard-dropdown-complex-gap: 5px;
                     padding-right: $o-kanban-dashboard-dropdown-complex-gap;
 
                     > .o_kanban_card_manage_title {
-                        @extend .h5; // FIXME was a mixin before scss convertion
+                        margin: ($line-height-computed / 2) 0;
+                        color: $headings-color;
+                        font-size: $font-size-h5;
                         font-weight: 500;
+                        line-height: $headings-line-height;
                     }
                     > div:not(.o_kanban_card_manage_title) {
                         @include o-kanban-dashboard-dropdown-link($link-padding-gap: $o-kanban-dashboard-dropdown-complex-gap);
