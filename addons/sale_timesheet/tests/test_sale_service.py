@@ -332,3 +332,44 @@ class TestSaleService(TestCommonSaleTimesheetNoChart):
         self.assertEqual(so_line1.project_id.sale_line_id, so_line1, "SO line of project with template A should be the one that create it.")
         self.assertEqual(so_line2.project_id.sale_line_id, so_line2, "SO line of project should be the one that create it.")
         self.assertEqual(so_line5.project_id.sale_line_id, so_line5, "SO line of project with template B should be the one that create it.")
+
+    def test_billable_task_and_subtask(self):
+        """ Test if subtasks and tasks are billed on the correct SO line """
+        # create SO line and confirm it
+        so_line_deliver_new_task_project = self.env['sale.order.line'].create({
+            'name': self.product_delivery_timesheet3.name,
+            'product_id': self.product_delivery_timesheet3.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_delivery_timesheet3.uom_id.id,
+            'price_unit': self.product_delivery_timesheet3.list_price,
+            'order_id': self.sale_order.id,
+        })
+        so_line_deliver_new_task_project.product_id_change()
+        self.sale_order.action_confirm()
+
+        project = so_line_deliver_new_task_project.project_id
+        task = so_line_deliver_new_task_project.task_id
+
+        self.assertEqual(project.sale_line_id, so_line_deliver_new_task_project, "The created project should be linked to the so line")
+        self.assertEqual(task.sale_line_id, so_line_deliver_new_task_project, "The created task should be linked to the so line")
+
+        # create a new task and subtask
+        subtask = self.env['project.task'].create({
+            'parent_id': task.id,
+            'project_id': project.id,
+            'name': '%s: substask1' % (task.name,),
+            'sale_line_id': False  # forcing, but should have not effect
+        })
+        task2 = self.env['project.task'].create({
+            'project_id': project.id,
+            'name': '%s: substask1' % (task.name,)
+        })
+
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should have the same SO line than its mother")
+        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line than its project")
+        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line than its project")
+
+        # moving subtask in another project
+        subtask.write({'project_id': self.project_global.id})
+
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line than its mother, even when changing project")
