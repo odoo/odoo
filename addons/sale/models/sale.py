@@ -19,7 +19,7 @@ from odoo.addons import decimal_precision as dp
 
 class SaleOrder(models.Model):
     _name = "sale.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Quotation"
     _order = 'date_order desc, id desc'
 
