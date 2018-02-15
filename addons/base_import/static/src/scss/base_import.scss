@@ -84,10 +84,6 @@
         display: block;
     }
 
-    .oe_import_noheaders {
-        @extend .text-muted; // FIXME was a mixin before scss convertion
-    }
-
     /* ------------- ERRORS AND WARNINGS REPORT ------------ */
     .oe_import_error_report {
         > ul {
@@ -98,18 +94,6 @@
             margin: 2px 0;
             list-style: none;
             border-radius: $border-radius-base;
-        }
-        .oe_import_report_error {
-            @extend .bg-danger; // FIXME was a mixin before scss convertion
-            @extend .text-danger; // FIXME was a mixin before scss convertion
-        }
-        .oe_import_report_warning {
-            @extend .bg-warning; // FIXME was a mixin before scss convertion
-            @extend .text-warning; // FIXME was a mixin before scss convertion
-        }
-        .oe_import_report_info {
-            @extend .bg-info; // FIXME was a mixin before scss convertion
-            @extend .text-info; // FIXME was a mixin before scss convertion
         }
     }
 

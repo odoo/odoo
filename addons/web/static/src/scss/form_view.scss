@@ -3,7 +3,6 @@
 
     // Utility classes
     .oe_form_box_info {
-        @extend .bg-info; // FIXME was a mixin before scss convertion
         @include o-webclient-padding($top: 5px, $bottom: 5px);
         > p {
             margin: auto;
@@ -24,11 +23,11 @@
         }
     }
     .oe_left {
-        @extend .oe_inline; // FIXME was a mixin before scss convertion
+        @extend .oe_inline;
         float: left!important;
     }
     .oe_right {
-        @extend .oe_inline; // FIXME was a mixin before scss convertion
+        @extend .oe_inline;
         float: right!important;
     }
 
@@ -443,7 +442,7 @@
 
     // Specific style classes
     .o_group.o_inner_group.oe_subtotal_footer {
-        @extend .oe_right; // FIXME was a mixin after scss convertion
+        @extend .oe_right;
 
         > tbody > tr > td {
             padding: 0;
