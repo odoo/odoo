@@ -81,10 +81,10 @@ return AbstractWebClient.extend({
                             headless: true,
                         };
                         self.action_manager.doAction(result).then(function () {
-                            var form = self.action_manager.dialog_widget.views.form.controller;
-                            form.on("on_button_cancel", self.action_manager, self.action_manager.dialog_stop);
+                            var form = self.action_manager.currentDialogController.widget;
+                            form.on("on_button_cancel", self.action_manager, self.action_manager.closeDialog);
                             form.on('record_saved', self, function() {
-                                self.action_manager.dialog_stop();
+                                self.action_manager.closeDialog();
                                 self.update_logo();
                             });
                         });

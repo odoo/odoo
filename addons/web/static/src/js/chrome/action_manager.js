@@ -242,6 +242,15 @@ var ActionManager = Widget.extend({
         });
     },
 
+    /**
+     * Closes the current dialog, if any
+     * public method for closing current dialog
+     * @returns private method _closeDialog
+    */
+    closeDialog: function (silent) {
+        return this._closeDialog(silent);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
