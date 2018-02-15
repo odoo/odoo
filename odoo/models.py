@@ -3314,29 +3314,41 @@ class BaseModel(object):
                     returned_ids = [x[0] for x in self._cr.fetchall()]
                     self.browse(sub_ids)._check_record_rules_result_count(returned_ids, operation)
 
+    @api.model
+    def has_configured_workflows(self):
+        """ Check if the model has configured workflows. The results are caached in a global cache in the Environemnt """
+        if not self._name in api.Environment.workflows_cache:
+            api.Environment.workflows_cache[self._name] = {
+                x: self.env['workflow'].browse(x) for x in self.env['workflow'].search([('osv','=',self._name)])
+            }
+        return len(api.Environment.workflows_cache[self._name]) > 0
+
     @api.multi
     def create_workflow(self):
         """ Create a workflow instance for the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_create(self._uid, self._name, res_id, self._cr)
+        if self.has_configured_workflows():
+            from odoo import workflow
+            for res_id in self.ids:
+                workflow.trg_create(self._uid, self._name, res_id, self._cr)
         return True
 
     @api.multi
     def delete_workflow(self):
         """ Delete the workflow instances bound to the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_delete(self._uid, self._name, res_id, self._cr)
-        self.invalidate_cache()
+        if self.has_configured_workflows():
+            from odoo import workflow
+            for res_id in self.ids:
+                workflow.trg_delete(self._uid, self._name, res_id, self._cr)
+            self.invalidate_cache()
         return True
 
     @api.multi
     def step_workflow(self):
         """ Reevaluate the workflow instances of the given records. """
-        from odoo import workflow
-        for res_id in self.ids:
-            workflow.trg_write(self._uid, self._name, res_id, self._cr)
+        if self.has_configured_workflows():
+            from odoo import workflow
+            for res_id in self.ids:
+                workflow.trg_write(self._uid, self._name, res_id, self._cr)
         return True
 
     @api.multi
@@ -3353,10 +3365,11 @@ class BaseModel(object):
         """ Rebind the workflow instance bound to the given 'old' record IDs to
             the given 'new' IDs. (``old_new_ids`` is a list of pairs ``(old, new)``.
         """
-        from odoo import workflow
-        for old_id, new_id in old_new_ids:
-            workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
-        self.invalidate_cache()
+        if self.has_configured_workflows():
+            from odoo import workflow
+            for old_id, new_id in old_new_ids:
+                workflow.trg_redirect(self._uid, self._name, old_id, new_id, self._cr)
+            self.invalidate_cache()
         return True
 
     @api.multi

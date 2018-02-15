@@ -47,6 +47,7 @@ class Workflow(models.Model):
     @api.model
     def create(self, vals):
         odoo.workflow.clear_cache(self._cr, self._uid)
+        self.env.clear()
         return super(Workflow, self).create(vals)
 
 

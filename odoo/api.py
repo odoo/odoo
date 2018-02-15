@@ -701,6 +701,7 @@ class Environment(Mapping):
         structure to manage recomputations.
     """
     _local = Local()
+    workflows_cache = defaultdict(dict)  # {model_name: {id: workflow, ...}, ...}
 
     @classproperty
     def envs(cls):
@@ -863,6 +864,7 @@ class Environment(Mapping):
             env.cache.clear()
             env._protected.clear()
             env.dirty.clear()
+            env.workflows_cache.clear()
 
     def clear(self):
         """ Clear all record caches, and discard all fields to recompute.
