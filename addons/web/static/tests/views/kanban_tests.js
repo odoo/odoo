@@ -2107,7 +2107,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('no content helper when no data', function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         var records = this.data.partner.records;
 
@@ -2138,9 +2138,6 @@ QUnit.module('Views', {
 
         this.data.partner.records = records;
         kanban.reload();
-
-        assert.notOk(kanban.$el.hasClass('o_view_nocontent_container'),
-            "$el should have removed no content class");
 
         assert.strictEqual(kanban.$('.o_view_nocontent').length, 0,
             "should not display the no content helper");

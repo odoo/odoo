@@ -266,7 +266,9 @@ FormRenderer.include({
                 return element.tag === "action"? element: false;
             });
         });
-        this.$el.toggleClass('o_dashboard_nocontent', !hasAction);
+        if (!hasAction) {
+            return $(QWeb.render('DashBoard.NoContent'));
+        }
 
         // We should start with three columns available
         node = $.extend(true, {}, node);
