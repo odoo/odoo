@@ -1,9 +1,9 @@
 odoo.define('im_livechat.im_livechat', function (require) {
 "use strict";
 
+var bus = require('bus.bus').bus;
 var config = require('web.config');
 var core = require('web.core');
-var ServiceProviderMixin = require('web.ServiceProviderMixin');
 var session = require('web.session');
 var time = require('web.time');
 var utils = require('web.utils');
@@ -33,11 +33,7 @@ if (!_.contains(url_history, page)) {
     utils.set_cookie(LIVECHAT_COOKIE_HISTORY, JSON.stringify(url_history), 60*60*24); // 1 day cookie
 }
 
-/**
- * In order to handle services like ajax in the external lib,
- * The parent of Livechat, LivechatButton, is set as a service provider
- */
-var LivechatButton = Widget.extend(ServiceProviderMixin, {
+var LivechatButton = Widget.extend({
     className:"openerp o_livechat_button hidden-print",
 
     events: {
@@ -56,7 +52,7 @@ var LivechatButton = Widget.extend(ServiceProviderMixin, {
         this.chat_window = null;
         this.messages = [];
         this.server_url = server_url;
-        this.busBus = this.call('bus_service', 'getBus');
+        this.busBus = bus;
     },
 
     willStart: function () {
