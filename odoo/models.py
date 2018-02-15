@@ -661,10 +661,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 for rec in sub:
                     yield rec
                 rs.invalidate_cache(ids=sub.ids)
-        # memory stable but ends up prefetching 275 fields (???)
-        records = itertools.chain.from_iterable(splittor(self))
 
-        for idx, record in enumerate(records):
+        # memory stable but ends up prefetching 275 fields (???)
+        for idx, record in enumerate(splittor(self)):
             # main line of record, initially empty
             current = [''] * len(fields)
             lines.append(current)
