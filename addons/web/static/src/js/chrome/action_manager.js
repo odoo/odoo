@@ -157,7 +157,9 @@ var ActionManager = Widget.extend({
 
         // build or load an action descriptor for the given action
         var def;
-        if (_.isString(action) && core.action_registry.contains(action)) {
+        if (action === false) {
+            action = { type: 'ir.actions.act_window_close' };
+        } else if (_.isString(action) && core.action_registry.contains(action)) {
             // action is a tag of a client action
             action = { type: 'ir.actions.client', tag: action };
         } else if (_.isNumber(action) || _.isString(action)) {
