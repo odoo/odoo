@@ -30,6 +30,7 @@
                             <field name="name"/>
                         </group>
                         <group name="leave_request" string="Leave Request">
+                            <field name="time_type" groups="base.group_no_one"/>
                             <field name="limit"/>
                             <field name="sequence" attrs="{'invisible': [('limit', '=', 'False')]}" groups="base.group_no_one"/>
                         </group>
