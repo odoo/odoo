@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from email import encoders
 from email.charset import Charset
 from email.header import Header
@@ -21,13 +20,6 @@ from odoo.tools import ustr, pycompat
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
-
-try:
-  from unidecode import unidecode
-except ImportError:
-  _logger.warning('The python module unidecode is not installed. names in email addresses will be altered significantly')
-  def unidecode(string):
-    return ''.join(list(filter(lambda c: ord(c) < 128, string)))
 
 
 class MailDeliveryException(except_orm):
@@ -123,7 +115,6 @@ def encode_rfc2822_address_header(header_text):
         # also Header.__str__ in Python 3 "Returns an approximation of the
         # Header as a string, using an unlimited line length.", the old one
         # was "A synonym for Header.encode()." so call encode() directly?
-        name = unidecode(name)
         name = Header(pycompat.to_text(name)).encode()
         return formataddr((name, email))
 
