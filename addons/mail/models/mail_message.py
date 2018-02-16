@@ -410,12 +410,12 @@ class Message(models.Model):
         # add subtype data (is_note flag, is_discussion flag , subtype_description). Do it as sudo
         # because portal / public may have to look for internal subtypes
         subtype_ids = [msg['subtype_id'][0] for msg in message_values if msg['subtype_id']]
-        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description','id'])
+        subtypes = self.env['mail.message.subtype'].sudo().browse(subtype_ids).read(['internal', 'description', 'id', 'code'])
         subtypes_dict = dict((subtype['id'], subtype) for subtype in subtypes)
-        xml_comment_id = self.env.ref('mail.mt_comment').id
         for message in message_values:
-            message['is_note'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['internal']
-            message['is_discussion'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['id'] == xml_comment_id
+            message['is_note'] = subtypes_dict[message['subtype_id'][0]]['code'] == 'note' if message['subtype_id'] else True
+            message['is_discussion'] = subtypes_dict[message['subtype_id'][0]]['code'] == 'discussion' if message['subtype_id'] else False
+            message['is_activity'] = subtypes_dict[message['subtype_id'][0]]['code'] == 'activity' if message['subtype_id'] else False
             message['subtype_description'] = message['subtype_id'] and subtypes_dict[message['subtype_id'][0]]['description']
             if message['model'] and self.env[message['model']]._original_module:
                 message['module_icon'] = modules.module.get_module_icon(self.env[message['model']]._original_module)
