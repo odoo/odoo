@@ -47,16 +47,19 @@
         <!-- Discussion subtype for messaging / Chatter -->
         <record id="mt_comment" model="mail.message.subtype">
             <field name="name">Discussions</field>
+            <field name="code">discussion</field>
             <field name="sequence" eval="0"/>
         </record>
         <record id="mt_note" model="mail.message.subtype">
             <field name="name">Note</field>
+            <field name="code">note</field>
             <field name="default" eval="False"/>
             <field name="internal" eval="True"/>
             <field name="sequence" eval="100"/>
         </record>
         <record id="mt_activities" model="mail.message.subtype">
             <field name="name">Activities</field>
+            <field name="code">activity</field>
             <field name="default" eval="True"/>
             <field name="internal" eval="True"/>
             <field name="sequence" eval="90"/>

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, exceptions, fields, models, tools, _
 
 
 class MailMessageSubtype(models.Model):
@@ -19,6 +19,12 @@ class MailMessageSubtype(models.Model):
              'a notification related to a new record (New), or to a stage '
              'change in a process (Stage change). Message subtypes allow to '
              'precisely tune the notifications the user want to receive on its wall.')
+    code = fields.Selection(selection=[
+        ('discussion', 'Discussion'),
+        ('note', 'Note'),
+        ('activity', 'Activity'),
+        ('other', 'Other')
+    ], string='Code', default='other')
     description = fields.Text(
         'Description', translate=True,
         help='Description that will be added in the message posted for this '
@@ -41,6 +47,13 @@ class MailMessageSubtype(models.Model):
     sequence = fields.Integer('Sequence', default=1, help="Used to order subtypes.")
     hidden = fields.Boolean('Hidden', help="Hide the subtype in the follower options")
 
+    def _check_consistency(self):
+        subtypes = self.sudo().search([('code', '!=', 'other')])
+        required = set(i[0] for i in self._fields['code'].selection) - set(['other'])
+        diff = required - set(subtypes.mapped('code'))
+        if diff:
+            raise exceptions.UserError(_('This operation cannot be completed. Indeed the following required code(s) would be missing: %s' % ', '.join(diff)))
+
     @api.model
     def create(self, vals):
         self.clear_caches()
@@ -49,12 +62,16 @@ class MailMessageSubtype(models.Model):
     @api.multi
     def write(self, vals):
         self.clear_caches()
-        return super(MailMessageSubtype, self).write(vals)
+        res = super(MailMessageSubtype, self).write(vals)
+        self._check_consistency()
+        return res
 
     @api.multi
     def unlink(self):
         self.clear_caches()
-        return super(MailMessageSubtype, self).unlink()
+        res = super(MailMessageSubtype, self).unlink()
+        self._check_consistency()
+        return res
 
     @api.model
     def auto_subscribe_subtypes(self, model_name):
@@ -81,3 +98,22 @@ class MailMessageSubtype(models.Model):
         subtypes = self.search(domain)
         internal = subtypes.filtered('internal')
         return subtypes.ids, internal.ids, (subtypes - internal).ids
+
+    @api.model
+    def _get_subtype_id(self, code):
+        sub_method = '_get_%s' % (code)
+        if hasattr(self, sub_method):
+            return getattr(self, sub_method)().id
+        return False
+
+    @tools.ormcache('self.env.uid')
+    def _get_note(self):
+        return self.sudo().search([('code', '=', 'note')], limit=1)
+
+    @tools.ormcache('self.env.uid')
+    def _get_discussion(self):
+        return self.sudo().search([('code', '=', 'discussion')], limit=1)
+
+    @tools.ormcache('self.env.uid')
+    def _get_activity(self):
+        return self.sudo().search([('code', '=', 'activity')], limit=1)
