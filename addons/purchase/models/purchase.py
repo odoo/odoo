@@ -32,7 +32,7 @@ class PurchaseOrder(models.Model):
                 'amount_total': amount_untaxed + amount_tax,
             })
 
-    @api.depends('order_line.date_planned')
+    @api.depends('order_line.date_planned', 'date_order')
     def _compute_date_planned(self):
         for order in self:
             min_date = False
@@ -41,6 +41,8 @@ class PurchaseOrder(models.Model):
                     min_date = line.date_planned
             if min_date:
                 order.date_planned = min_date
+            else:
+                order.date_planned = order.date_order
 
     @api.depends('state', 'order_line.qty_invoiced', 'order_line.qty_received', 'order_line.product_qty')
     def _get_invoiced(self):
