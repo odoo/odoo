@@ -221,7 +221,12 @@ return {
     renderButton: function (options) {
         var params = options.attrs || {};
         params.type = params.type || 'button';
-        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + (params.class || 'btn-default');
+        var classes = 'btn-default';
+        if (params.class) {
+            classes = params.class.replace(/\boe_highlight\b/g, 'btn-primary')
+                                  .replace(/\boe_link\b/g, 'btn-link');
+        }
+        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + classes;
         var $button = $('<button/>', params);
         if (options.icon) {
             if (options.icon.substr(0, 3) === 'fa-') {

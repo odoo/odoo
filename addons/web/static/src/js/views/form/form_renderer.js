@@ -55,7 +55,7 @@ var FormRenderer = BasicRenderer.extend({
      */
     autofocus: function () {
         if (this.mode === 'readonly') {
-            var firstPrimaryFormButton =  this.$el.find('button.oe_highlight:enabled:visible:first()');
+            var firstPrimaryFormButton =  this.$el.find('button.btn-primary:enabled:visible:first()');
             if (firstPrimaryFormButton.length > 0) {
                 return firstPrimaryFormButton.focus();
             } else {
