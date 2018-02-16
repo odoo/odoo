@@ -344,6 +344,26 @@ function formatSelection(value, field, options) {
     return value;
 }
 
+/**
+ * Returns a string representing a float.  The result takes into account the
+ * user settings (to display the correct decimal separator) and adds the '%' sign after it
+ *
+ * @param {float|false} value the value that should be formatted
+ * @param {Object} [field] a description of the field (returned by fields_get
+ *   for example).  It may contain a description of the number of digits that
+ *   should be used.
+ * @param {Object} [options] additional options to override the values in the
+ *   python description of the field.
+ * @param {integer[]} [options.digits] the number of digits that should be used,
+ *   instead of the default digits precision in the field.
+ * @returns {string}
+ */
+ function formatPercentage (value, field, options) {
+     return formatFloat(value, field, options).toString() + ' %';
+ }
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Parse
 ////////////////////////////////////////////////////////////////////////////////
@@ -594,6 +614,7 @@ return {
         reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
+        percentage: formatPercentage,
     },
     parse: {
         binary: _.identity,

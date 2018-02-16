@@ -37,6 +37,7 @@ registry
     .add('binary', basic_fields.FieldBinaryFile)
     .add('pdf_viewer', basic_fields.FieldPdfViewer)
     .add('monetary', basic_fields.FieldMonetary)
+    .add('percentage', basic_fields.FieldPercentage)
     .add('priority', basic_fields.PriorityWidget)
     .add('attachment_image', basic_fields.AttachmentImage)
     .add('image_selection', basic_fields.ImageSelection)
