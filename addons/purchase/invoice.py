@@ -158,8 +158,7 @@ class AccountInvoice(models.Model):
                         if inv.currency_id.id != company_currency.id:
                             valuation_price_unit = company_currency.with_context(date=inv.date_invoice).compute(valuation_price_unit, inv.currency_id, round=False)
                         if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=product_prec) != 0\
-                                and float_compare(line['price_unit'], i_line.price_unit, precision_digits=product_prec) == 0\
-                                and acc:
+                                and float_compare(line['price_unit'], i_line.price_unit, precision_digits=product_prec) == 0:
                             # price with discount and without tax included
                             price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                             tax_ids = []
@@ -174,18 +173,31 @@ class AccountInvoice(models.Model):
                                             tax_ids.append((4, child.id, None))
                             price_before = line.get('price', 0.0)
                             line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
-                            diff_res.append({
-                                'type': 'src',
-                                'name': i_line.name[:64],
-                                'price_unit': round(price_unit - valuation_price_unit, product_prec),
-                                'quantity': line['quantity'],
-                                'price': round(price_before - line.get('price', 0.0), account_prec),
-                                'account_id': acc,
-                                'product_id': line['product_id'],
-                                'uom_id': line['uom_id'],
-                                'account_analytic_id': line['account_analytic_id'],
-                                'tax_ids': tax_ids,
-                                })
+
+                            account_for_difference_id = acc
+
+                            price_unit_val_dif = round(price_unit - valuation_price_unit, product_prec)
+                            price_val_dif = round(price_before - line.get('price', 0.0), account_prec)
+
+                            if inv.currency_id.compare_amounts(i_line.price_unit, i_line.purchase_line_id.price_unit) == 0:
+                                # If the unit prices have not changed and we have a
+                                # valuation difference, it means this difference is due to exchange rates
+                                rate_dif_account = price_unit_val_dif > 0 and inv.company_id.expense_currency_exchange_account_id or inv.company_id.income_currency_exchange_account_id
+                                account_for_difference_id = fpos.map_account(rate_dif_account).id
+
+                            if account_for_difference_id:
+                                diff_res.append({
+                                    'type': 'src',
+                                    'name': i_line.name[:64],
+                                    'price_unit': price_unit_val_dif,
+                                    'quantity': line['quantity'],
+                                    'price': price_val_dif,
+                                    'account_id': account_for_difference_id,
+                                    'product_id': line['product_id'],
+                                    'uom_id': line['uom_id'],
+                                    'account_analytic_id': line['account_analytic_id'],
+                                    'tax_ids': tax_ids,
+                                    })
                 return diff_res
         return []
 
