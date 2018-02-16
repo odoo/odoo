@@ -22,6 +22,13 @@ from odoo.tools import ustr, pycompat
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
+try:
+  from unidecode import unidecode
+except ImportError:
+  _logger.warning('The python module unidecode is not installed. names in email addresses will be altered significantly')
+  def unidecode(string):
+    return ''.join(list(filter(lambda c: ord(c) < 128, string)))
+
 
 class MailDeliveryException(except_orm):
     """Specific exception subclass for mail delivery errors"""
@@ -116,6 +123,7 @@ def encode_rfc2822_address_header(header_text):
         # also Header.__str__ in Python 3 "Returns an approximation of the
         # Header as a string, using an unlimited line length.", the old one
         # was "A synonym for Header.encode()." so call encode() directly?
+        name = unidecode(name)
         name = Header(pycompat.to_text(name)).encode()
         return formataddr((name, email))
 
@@ -279,6 +287,12 @@ class IrMailServer(models.Model):
            :rtype: email.message.Message (usually MIMEMultipart)
            :return: the new RFC2822 email message
         """
+
+        # comma (,) and ampersand (&) are separator symbol between addresses in rfc2822
+        # We need to protect us against them
+        def _escape_addr_separators(string):
+          return re.sub('[,&]', '', string)
+
         email_from = email_from or tools.config.get('email_from')
         assert email_from, "You must either provide a sender address explicitly or configure "\
                            "a global sender address in the server configuration or with the "\
@@ -305,10 +319,10 @@ class IrMailServer(models.Model):
         if references:
             msg['references'] = encode_header(references)
         msg['Subject'] = encode_header(subject)
-        msg['From'] = encode_rfc2822_address_header(email_from)
+        msg['From'] = encode_rfc2822_address_header(_escape_addr_separators(email_from))
         del msg['Reply-To']
         if reply_to:
-            msg['Reply-To'] = encode_rfc2822_address_header(reply_to)
+            msg['Reply-To'] = encode_rfc2822_address_header(_escape_addr_separators(reply_to))
         else:
             msg['Reply-To'] = msg['From']
         msg['To'] = encode_rfc2822_address_header(COMMASPACE.join(email_to))
