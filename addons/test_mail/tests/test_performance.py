@@ -112,6 +112,21 @@ class TestMailPerformance(TransactionCase):
                 'email_from': 'test@test.com',
             })
 
+    @users('admin', 'emp')
+    @warmup
+    def test_fetch_suybtypes(self):
+        with self.assertQueryCount(admin=0, emp=0):
+            subtype_id = self.env['mail.message.subtype']._get_subtype_id('note')
+        self.assertEqual(subtype_id, self.env.ref('mail.mt_note').id)
+
+        with self.assertQueryCount(admin=0, emp=0):
+            subtype_id = self.env['mail.message.subtype']._get_subtype_id('discussion')
+        self.assertEqual(subtype_id, self.env.ref('mail.mt_comment').id)
+
+        with self.assertQueryCount(admin=0, emp=0):
+            subtype_id = self.env['mail.message.subtype']._get_subtype_id('activity')
+        self.assertEqual(subtype_id, self.env.ref('mail.mt_activities').id)
+
 
 class TestAdvMailPerformance(TransactionCase):
 
