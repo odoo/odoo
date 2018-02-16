@@ -463,8 +463,8 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     assert.ok(form.$('.o_chatter_topbar .o_chatter_button_log_note').length,
         "log note button should be available");
     assert.strictEqual(form.$('.o_thread_message').length, 1, "thread should contain one message");
-    assert.ok(!form.$('.o_thread_message:first() .o_mail_note').length,
-        "the message shouldn't be a note");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('A message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('John Doe') >= 0,
@@ -477,8 +477,8 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 2, "thread should contain two messages");
-    assert.ok(!form.$('.o_thread_message:first() .o_mail_note').length,
-        "the last message shouldn't be a note");
+    assert.ok(form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the last message should be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first message') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('Me') >= 0,
@@ -491,8 +491,8 @@ QUnit.test('chatter: post, receive and star messages', function (assert) {
     form.$('.oe_chatter .o_composer_button_send').click();
     assert.ok($('.oe_chatter .o_chat_composer').hasClass('o_hidden'), "chatter should be closed");
     assert.strictEqual(form.$('.o_thread_message').length, 3, "thread should contain three messages");
-    assert.ok(form.$('.o_thread_message:first() .o_mail_note').length,
-        "the last message should be a note");
+    assert.ok(!form.$('.o_thread_message:first().o_mail_discussion').length,
+        "the last message should not be a discussion");
     assert.ok(form.$('.o_thread_message:first() .o_thread_message_core').text().indexOf('My first note') >= 0,
         "the message's body should be correct");
     assert.ok(form.$('.o_thread_message:first() .o_mail_info').text().indexOf('Me') >= 0,
