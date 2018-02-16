@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Website Form Builder',
+    'name': 'Form Builder',
     'category': 'Website',
-    'summary': 'Build custom web forms using the website builder',
+    'summary': 'Build custom web forms',
     'version': '1.0',
     'description': """
-Odoo Form Editor
-====================
-
-Allows you to build web forms on the website using the website builder.
-        """,
+Customize and create your own web forms.
+This module adds a new building block in the website builder in order to build new forms from scratch in any website page.
+    """,
     'depends': ['website_enterprise', 'website_form'],
     'data': [
         'data/mail_mail_data.xml',
