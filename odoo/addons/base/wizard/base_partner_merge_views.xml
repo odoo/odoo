@@ -17,7 +17,7 @@
                     <sheet>
                         <group attrs="{'invisible': [('state', '!=', 'finished')]}" col="1">
                             <h2>There is no more contacts to merge for this request...</h2>
-                            <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="oe_highlight" type="action"/>
+                            <button name="%(action_partner_deduplicate)d" string="Deduplicate the other Contacts" class="btn-primary" type="action"/>
                         </group>
                         <p class="oe_grey" attrs="{'invisible': [('state', '!=', ('option'))]}">
                             Select the list of fields used to search for
@@ -72,7 +72,7 @@
                     </sheet>
                     <footer>
                         <button name='action_merge' string='Merge Contacts'
-                            class='oe_highlight'
+                            class="btn-primary"
                             type='object'
                             attrs="{'invisible': [('state', 'in', ('option', 'finished' ))]}" />
                         <button name='action_skip' string='Skip these contacts'
@@ -80,11 +80,11 @@
                             attrs="{'invisible': [('state', '!=', 'selection')]}" />
                         <button name='action_start_manual_process'
                             string='Merge with Manual Check'
-                            type='object'  class='oe_highlight'
+                            type='object'  class="btn-primary"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
                         <button name='action_start_automatic_process'
                             string='Merge Automatically'
-                            type='object' class='oe_highlight'
+                            type='object' class="btn-primary"
                             confirm="Are you sure to execute the automatic merge of your contacts ?"
                             attrs="{'invisible': [('state', '!=', 'option')]}" />
                         <button name='action_update_all_process'

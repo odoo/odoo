@@ -217,7 +217,7 @@
             <field name="arch" type="xml">
                 <form string="Sales Receipt">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight" type="object"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="btn-primary" type="object"/>
                     <button name="cancel_voucher" string="Cancel Receipt" type="object" states="draft,proforma"/>
                     <button name="cancel_voucher" string="Cancel Receipt" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
@@ -335,7 +335,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Voucher">
                 <header>
-                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight" type="object"/>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="btn-primary" type="object"/>
                     <button name="cancel_voucher" string="Cancel" type="object" states="draft,proforma" />
                     <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>

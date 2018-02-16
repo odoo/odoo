@@ -69,7 +69,7 @@
           <form string="Jobs - Recruitment Form">
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object"
-                        class="oe_highlight" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
+                        class="btn-primary" attrs="{'invisible': ['|',('emp_id', '!=', False),('active', '=', False)]}"/>
                 <button string="Refuse" name="archive_applicant" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
                 <button string="Reopen Application" name="reset_applicant" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="stage_id" widget="statusbar" clickable="True" options="{'fold_field': 'fold'}" attrs="{'invisible': [('active', '=', False),('emp_id', '=', False)]}"/>

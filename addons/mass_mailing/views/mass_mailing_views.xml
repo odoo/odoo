@@ -411,11 +411,11 @@
             <field name="arch" type="xml">
                 <form string="Mailing">
                     <header style="min-height:31px;">
-                        <button name="action_test_mailing" type="object" class="oe_highlight" string="Test Mailing"/>
-                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="oe_highlight" string="Send to All"
+                        <button name="action_test_mailing" type="object" class="btn-primary" string="Test Mailing"/>
+                        <button name="put_in_queue" type="object" attrs="{'invisible': ['|', ('state', 'in', ('in_queue', 'done'))]}" class="btn-primary" string="Send to All"
                             confirm="This will send the email to all recipients. Do you still want to proceed ?"/>
-                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="oe_highlight" string="Cancel"/>
-                        <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="oe_highlight" string="Retry"/>
+                        <button name="cancel_mass_mailing" type="object" attrs="{'invisible': [('state', '!=', 'in_queue')]}" class="btn-primary" string="Cancel"/>
+                        <button name="retry_failed_mail" type="object" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('failed', '=', 0)]}" class="btn-primary" string="Retry"/>
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
@@ -836,8 +836,8 @@
             <field name="arch" type="xml">
                 <form string="Mailing Campaign">
                     <header style="min-height:31px;">
-                        <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new Mailing"/>
-                        <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="oe_highlight" string="Send new A/B Testing Mailing"/>
+                        <button name="%(action_create_mass_mailings_from_campaign)d" type="action" class="btn-primary" string="Send new Mailing"/>
+                        <button name="%(action_create_ab_mass_mailings_from_campaign)d" type="action" class="btn-primary" string="Send new A/B Testing Mailing"/>
                         <span><field name="stage_id" widget="statusbar" clickable="True"/></span>
                     </header>
                     <sheet>

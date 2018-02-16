@@ -163,7 +163,7 @@
                         }"/>
                     </div>
                     <footer>
-                        <button string="Save" type="object" class="oe_highlight" name="write"/>
+                        <button string="Save" type="object" class="btn-primary" name="write"/>
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </xpath>
@@ -178,7 +178,7 @@
             <field name="priority">1024</field>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='write']" position="before" >
-                    <button string="Save and Print" type="object" class="oe_highlight" name="write_company_and_print_report"/>
+                    <button string="Save and Print" type="object" class="btn-primary" name="write_company_and_print_report"/>
                 </xpath>
             </field>
         </record>

@@ -44,7 +44,7 @@
             <form string="Leads Form">
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
-                            help="Convert to Opportunity" class="oe_highlight" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
+                            help="Convert to Opportunity" class="btn-primary" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -444,10 +444,10 @@
                 <form string="Opportunities" class="o_opportunity_form">
                     <header>
                         <button name="action_set_won" string="Mark Won"
-                                type="object" class="oe_highlight"
+                                type="object" class="btn-primary"
                                 attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
                         <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
-                                type="action" class="oe_highlight"
+                                type="action" class="btn-primary"
                                 context="{'default_lead_id': active_id}"
                                 attrs="{'invisible': [('active', '=', False),('probability', '&lt;', 100)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"

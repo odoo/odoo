@@ -7,9 +7,9 @@
         <field name="arch" type="xml">
             <form string="Stock Batch Picking">
                 <header>
-                    <button name="confirm_picking" states="draft" string="Confirm" type="object" class="oe_highlight"/>
-                    <button name="print_picking" string="Print" type="object" class="oe_highlight"/>
-                    <button name="done" states="in_progress" string="Done" type="object" class="oe_highlight"/>
+                    <button name="confirm_picking" states="draft" string="Confirm" type="object" class="btn-primary"/>
+                    <button name="print_picking" string="Print" type="object" class="btn-primary"/>
+                    <button name="done" states="in_progress" string="Done" type="object" class="btn-primary"/>
                     <button name="cancel_picking" string="Cancel" type="object" states="in_progress"/>
                     <field name="state" widget="statusbar" statusbar_visible="in_progress,done"/>
                 </header>

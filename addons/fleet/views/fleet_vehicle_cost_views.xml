@@ -172,9 +172,9 @@
         <field name="arch" type="xml">
             <form string="Contract logs">
                 <header>
-                    <button name="contract_close" states="open,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
-                    <button name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
-                    <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_close" states="open,expired,future" type="object" class="btn-primary" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_open" states="closed" type="object" class="btn-primary" string="Set Contract In Progress" groups="fleet.fleet_group_manager"/>
+                    <button class="btn-primary" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>

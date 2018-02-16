@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_set_won']" position="before">
-                    <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="oe_highlight"
+                    <button string="New Quotation" name="%(sale_action_quotations_new)d" type="action" class="btn-primary"
                         context="{'search_default_partner_id': partner_id,
                                   'default_partner_id': partner_id,
                                   'default_team_id': team_id,

@@ -65,9 +65,9 @@
             <field name="arch" type="xml">
                 <form string="Budget">
                     <header>
-                        <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="oe_highlight"/>
-                        <button string="Approve" name="action_budget_validate" states="confirm" type="object" class="oe_highlight"/>
-                        <button string="Done" name="action_budget_done" states="validate" type="object" class="oe_highlight"/>
+                        <button string="Confirm" name="action_budget_confirm" states="draft" type="object" class="btn-primary"/>
+                        <button string="Approve" name="action_budget_validate" states="confirm" type="object" class="btn-primary"/>
+                        <button string="Done" name="action_budget_done" states="validate" type="object" class="btn-primary"/>
                         <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object" />
                         <button string="Cancel Budget" name="action_budget_cancel" states="confirm,validate" type="object"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>

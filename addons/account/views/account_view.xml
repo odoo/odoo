@@ -620,8 +620,8 @@
                 <form string="Bank Statement">
                 <header>
                     <field name="all_lines_reconciled" invisible="1" />
-                    <button name="%(action_bank_reconcile_bank_statements)d" string="Reconcile" type="action" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
-                    <button name="check_confirm_bank" string="Validate" type="object" class="oe_highlight" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="%(action_bank_reconcile_bank_statements)d" string="Reconcile" type="action" class="btn-primary" attrs="{'invisible':['|','|',('all_lines_reconciled','=',True),('line_ids','=',[]),('state', '!=', 'open')]}"/>
+                    <button name="check_confirm_bank" string="Validate" type="object" class="btn-primary" attrs="{'invisible':['|','|',('all_lines_reconciled','=',False),('line_ids','=',[]),('state', '!=', 'open')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,confirm"/>
                 </header>
                 <sheet>
@@ -1486,7 +1486,7 @@
             <field name="arch" type="xml">
                 <form string="Account Entry">
                     <header>
-                        <button name="post" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                        <button name="post" states="draft" string="Post" type="object" class="btn-primary" groups="account.group_account_invoice"/>
                         <button name="%(action_view_account_move_reversal)d" states="posted" string="Reverse Entry" type="action" groups="account.group_account_invoice"/>
                         <field name="state" widget="statusbar"/>
                     </header>

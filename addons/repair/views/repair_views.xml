@@ -26,12 +26,12 @@
                <header>
                    <button name="action_send_mail" states="draft" string="Send Quotation" type="object"/>
                    <button name="print_repair_order" states="draft" string="Print Quotation" type="object"/>
-                   <button name="action_validate" states="draft" type="object" string="Confirm Repair" class="oe_highlight"/>
+                   <button name="action_validate" states="draft" type="object" string="Confirm Repair" class="btn-primary"/>
                    <button name="action_repair_start" attrs="{'invisible': ['&amp;', ('state','!=','confirmed'), '!', '&amp;', ('state','=','ready'), ('invoice_method','=','b4repair')]}"
-                    type="object" string="Start Repair" class="oe_highlight"/>
+                    type="object" string="Start Repair" class="btn-primary"/>
                    <button name="action_repair_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                   <button name="action_repair_end" states="under_repair" type="object" string="End Repair" class="oe_highlight"/>
-                   <button name="action_repair_invoice_create" states="2binvoiced" type="object" string="Create Invoice" class="oe_highlight"/>
+                   <button name="action_repair_end" states="under_repair" type="object" string="End Repair" class="btn-primary"/>
+                   <button name="action_repair_invoice_create" states="2binvoiced" type="object" string="Create Invoice" class="btn-primary"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" attrs="{'invisible':['|',('invoice_method','!=','none'), ('state', 'not in',('confirmed','2binvoiced','ready','under_repair'))]}"/>
                    <button name="action_repair_cancel" states="draft" type="object" string="Cancel Repair"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>

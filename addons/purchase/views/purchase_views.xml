@@ -142,15 +142,15 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order">
                 <header>
-                    <button name="action_rfq_send" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="action_rfq_send" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="btn-primary"/>
                     <button name="action_rfq_send" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
-                    <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
+                    <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="btn-primary" groups="base.group_user"/>
                     <button name="print_quotation" string="Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="button_confirm" type="object" states="draft" string="Confirm Order" id="draft_confirm"/>
-                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="oe_highlight" id="bid_confirm"/>
-                    <button name="button_approve" type="object" states='to approve' string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                    <button name="button_confirm" type="object" states="sent" string="Confirm Order" class="btn-primary" id="bid_confirm"/>
+                    <button name="button_approve" type="object" states='to approve' string="Approve Order" class="btn-primary" groups="purchase.group_purchase_manager"/>
                     <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
+                    <button name="action_view_picking" string="Receive Products" class="btn-primary" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
                     <button name="button_draft" states="cancel" string="Set to Draft" type="object" />
                     <button name="button_cancel" states="draft,to approve,sent,purchase" string="Cancel" type="object" />
                     <button name="button_done" type="object" string="Lock" states="purchase"/>

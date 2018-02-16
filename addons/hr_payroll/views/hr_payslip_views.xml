@@ -128,10 +128,10 @@
         <field name="arch" type="xml">
             <form string="Payslip">
             <header>
-                <button string="Confirm" name="action_payslip_done" type="object" states="draft" class="oe_highlight"/>
+                <button string="Confirm" name="action_payslip_done" type="object" states="draft" class="btn-primary"/>
                 <button string="Refund" name="refund_sheet" states="confirm,done" type='object' />
                 <button string="Set to Draft" name="action_payslip_draft" type="object" states="cancel"/>
-                <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="oe_highlight"/>
+                <button string="Compute Sheet" name="compute_sheet" type="object" states="draft" class="btn-primary"/>
                 <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,hr_check,confirm,verify"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
             </header>
@@ -367,8 +367,8 @@
         <field name="arch" type="xml">
             <form string="Payslips Batches">
             <header>
-                <button name="close_payslip_run" type="object" string="Close" states="draft" class="oe_highlight"/>
-                <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="oe_highlight"/>
+                <button name="close_payslip_run" type="object" string="Close" states="draft" class="btn-primary"/>
+                <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" string="Generate Payslips" class="btn-primary"/>
                 <button string="Set to Draft" name="draft_payslip_run" type="object" states="close" />
                 <field name="state" widget="statusbar"/>
             </header>
