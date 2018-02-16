@@ -389,8 +389,8 @@ class ProductTemplate(models.Model):
 
     @api.multi
     def create_variant_ids(self):
-        Product = self.env["product.product"]
         AttributeValues = self.env['product.attribute.value']
+        Product = self.env["product.product"]
         for tmpl_id in self.with_context(active_test=False):
             # adding an attribute with only one value should not recreate product
             # write this attribute on every product to make sure we don't lose them
@@ -427,11 +427,12 @@ class ProductTemplate(models.Model):
                 variants_to_activate.write({'active': True})
 
             # create new product
-            for variant_ids in to_create_variants:
-                new_variant = Product.create({
-                    'product_tmpl_id': tmpl_id.id,
-                    'attribute_value_ids': [(6, 0, variant_ids.ids)]
-                })
+            with self.env.norecompute():
+                for variant_ids in to_create_variants:
+                    Product.create({
+                        'product_tmpl_id': tmpl_id.id,
+                        'attribute_value_ids': [(6, 0, variant_ids.ids)]
+                    })
 
             # unlink or inactive product
             for variant in variants_to_unlink:
@@ -441,5 +442,5 @@ class ProductTemplate(models.Model):
                 # We catch all kind of exception to be sure that the operation doesn't fail.
                 except (psycopg2.Error, except_orm):
                     variant.write({'active': False})
-                    pass
+        self.recompute()
         return True
