@@ -259,7 +259,7 @@ class ProductProduct(models.Model):
         price = self.standard_price
         if not uom or self.uom_id.id == uom.id:
             return price
-        return self.uom_id._compute_price(self.uom_id.id, price, to_uom_id=uom.id)
+        return self.uom_id._compute_price(price, uom)
 
 
 class ProductCategory(models.Model):
