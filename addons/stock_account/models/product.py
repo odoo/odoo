@@ -178,7 +178,7 @@ class ProductProduct(models.Model):
                         'product_id': product.id,
                         'uom_id': uom.id,
                         'account_analytic_id': account_analytic and account_analytic.id,
-                        'analytic_tag_ids': analytic_tags and analytic_tag.ids and [(6, 0, analytic_tag.ids)] or False,
+                        'analytic_tag_ids': analytic_tags and analytic_tags.ids and [(6, 0, analytic_tags.ids)] or False,
                     },
 
                     {
@@ -203,7 +203,7 @@ class ProductProduct(models.Model):
         price = self.standard_price
         if not uom or self.uom_id.id == uom.id:
             return price
-        return self.uom_id._compute_price(self.uom_id.id, price, to_uom_id=uom.id)
+        return self.uom_id._compute_price(price, uom)
 
 
 class ProductCategory(models.Model):
