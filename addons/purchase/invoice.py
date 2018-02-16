@@ -171,28 +171,22 @@ class AccountInvoice(models.Model):
                                     for child in tax.children_tax_ids:
                                         if child.type_tax_use != 'none':
                                             tax_ids.append((4, child.id, None))
+
                             price_before = line.get('price', 0.0)
-                            line.update({'price': round(valuation_price_unit * line['quantity'], account_prec)})
-
-                            account_for_difference_id = acc
-
                             price_unit_val_dif = round(price_unit - valuation_price_unit, product_prec)
-                            price_val_dif = round(price_before - line.get('price', 0.0), account_prec)
-
-                            if inv.currency_id.compare_amounts(i_line.price_unit, i_line.purchase_line_id.price_unit) == 0:
+                            price_val_dif = round(price_before - valuation_price_unit * line['quantity'], account_prec)
+                            if inv.currency_id.compare_amounts(i_line.price_unit, i_line.purchase_line_id.price_unit) != 0 and acc:
                                 # If the unit prices have not changed and we have a
-                                # valuation difference, it means this difference is due to exchange rates
-                                rate_dif_account = price_unit_val_dif > 0 and inv.company_id.expense_currency_exchange_account_id or inv.company_id.income_currency_exchange_account_id
-                                account_for_difference_id = fpos.map_account(rate_dif_account).id
-
-                            if account_for_difference_id:
+                                # valuation difference, it means this difference is due to exchange rates,
+                                # so we don't create anything, the exchange rate entries will
+                                # be processed automatically by the rest of the code.
                                 diff_res.append({
                                     'type': 'src',
                                     'name': i_line.name[:64],
                                     'price_unit': price_unit_val_dif,
                                     'quantity': line['quantity'],
                                     'price': price_val_dif,
-                                    'account_id': account_for_difference_id,
+                                    'account_id': acc,
                                     'product_id': line['product_id'],
                                     'uom_id': line['uom_id'],
                                     'account_analytic_id': line['account_analytic_id'],
