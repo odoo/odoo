@@ -193,6 +193,11 @@ class MailTemplate(models.Model):
     copyvalue = fields.Char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field.")
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
     template_view = fields.Many2one('ir.ui.view')
+    template_arch = fields.Html(compute='_compute_arch', string='Template Arch')
+
+    def _compute_arch(self):
+        for tmpl in self:
+            tmpl.template_arch = tmpl.template_view.arch
 
     @api.onchange('model_id')
     def onchange_model_id(self):

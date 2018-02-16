@@ -121,6 +121,8 @@ class MailComposer(models.TransientModel):
     template_id = fields.Many2one(
         'mail.template', 'Use template', index=True,
         domain="[('model', '=', model)]")
+    template_view = fields.Many2one('ir.ui.view', related='template_id.template_view')
+    template_arch = fields.Html(related='template_id.template_arch', string='Template Structure', readonly=True)
     # mail_message updated fields
     message_type = fields.Selection(default="comment")
     subtype_id = fields.Many2one(default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'))
@@ -407,7 +409,7 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
-                'template_view': record.template_id.template_view.id,
+                'template_view': record.template_view.id,
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
             }
             template = self.env['mail.template'].create(values)
@@ -447,7 +449,7 @@ class MailComposer(models.TransientModel):
             res_ids = [res_ids]
 
         subjects = self.render_template(self.subject, self.model, res_ids)
-        bodies = self.render_template(self.body, self.model, res_ids, post_process=True, template_view=self.template_id.template_view)
+        bodies = self.render_template(self.body, self.model, res_ids, post_process=True, template_view=self.template_view)
         emails_from = self.render_template(self.email_from, self.model, res_ids)
         replies_to = self.render_template(self.reply_to, self.model, res_ids)
         default_recipients = {}
