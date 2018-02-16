@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 from odoo.tools import ustr
 from odoo.exceptions import UserError, ValidationError
-
+from datetime import date, datetime
 
 # ---------------------------------------------------------
 # Budgets
@@ -97,15 +98,20 @@ class CrossoveredBudgetLines(models.Model):
     date_from = fields.Date('Start Date', required=True)
     date_to = fields.Date('End Date', required=True)
     paid_date = fields.Date('Paid Date')
-    planned_amount = fields.Float('Planned Amount', required=True, digits=0)
-    practical_amount = fields.Float(compute='_compute_practical_amount', string='Practical Amount', digits=0)
-    theoritical_amount = fields.Float(compute='_compute_theoritical_amount', string='Theoretical Amount', digits=0)
-    percentage = fields.Float(compute='_compute_percentage', string='Achievement')
+    planned_amount = fields.Float('Planned Amount', required=True, digits=0,
+                                  help="Amount you plan to earn/spend. Record a positive amount if it is a revenue and a negative amount if it is a cost.")
+    practical_amount = fields.Float(compute='_compute_practical_amount', string='Practical Amount', digits=0,
+                                    help="Amount really earned/spent.")
+    theoritical_amount = fields.Float(compute='_compute_theoritical_amount', string='Theoretical Amount', digits=0,
+                                      help="Amount you are supposed to have earned/spent at this date.")
+    percentage = fields.Float(compute='_compute_percentage', string='Achievement',
+                              help="Comparison between practical and theoretical amount. This measure tells you if you are below or over budget.")
     company_id = fields.Many2one(related='crossovered_budget_id.company_id', comodel_name='res.company',
                                  string='Company', store=True, readonly=True)
 
     name = fields.Char(compute='_compute_line_name')
     is_above_budget = fields.Boolean(compute='_is_above_budget')
+    crossovered_budget_state = fields.Selection(related='crossovered_budget_id.state', string='Budget State', store=True)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -201,7 +207,13 @@ class CrossoveredBudgetLines(models.Model):
 
     @api.multi
     def _compute_theoritical_amount(self):
+
+        # I checked with CBU and it seems to be the best way to get a date without time and still be able to
+        # mock it in the python tests
+
         today = fields.Datetime.now()
+        today = fields.Datetime.to_string(fields.Datetime.from_string(today).date())
+
         for line in self:
             # Used for the report
 
@@ -224,8 +236,7 @@ class CrossoveredBudgetLines(models.Model):
                         line.date_from)
                     elapsed_timedelta = date_to - date_from
                     if elapsed_timedelta.days > 0:
-                        theo_amt = (
-                                           elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
+                        theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
             else:
                 if line.paid_date:
                     if fields.Datetime.from_string(line.date_to) <= fields.Datetime.from_string(line.paid_date):
@@ -244,8 +255,7 @@ class CrossoveredBudgetLines(models.Model):
                     elif line_timedelta.days > 0 and fields.Datetime.from_string(today) < fields.Datetime.from_string(
                             line.date_to):
                         # If today is between the budget line date_from and date_to
-                        theo_amt = (
-                                           elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
+                        theo_amt = (elapsed_timedelta.total_seconds() / line_timedelta.total_seconds()) * line.planned_amount
                     else:
                         theo_amt = line.planned_amount
 
@@ -282,3 +292,18 @@ class CrossoveredBudgetLines(models.Model):
                                 ('date', '<=', self.date_to)
                                 ]
         return action
+
+    @api.one
+    @api.constrains('date_from', 'date_to')
+    def _line_dates_between_budget_dates(self):
+        budget_date_from = fields.Datetime.from_string(self.crossovered_budget_id.date_from)
+        budget_date_to = fields.Datetime.from_string(self.crossovered_budget_id.date_to)
+        if self.date_from:
+            date_from = fields.Datetime.from_string(self.date_from)
+            if date_from < budget_date_from  or date_from > budget_date_to:
+                raise ValidationError(_('"Start Date" of the budget line should be included in the Period of the budget'))
+
+        if self.date_to:
+            date_to = fields.Datetime.from_string(self.date_to)
+            if date_to < budget_date_from or date_to > budget_date_to:
+                raise ValidationError(_('"End Date" of the budget line should be included in the Period of the budget'))

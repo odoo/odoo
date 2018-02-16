@@ -53,6 +53,7 @@ html: _extensions/odoo_ext/static/style.css
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
+
 dirhtml:
 	$(SPHINXBUILD) -b dirhtml $(ALLSPHINXOPTS) $(BUILDDIR)/dirhtml
 	sed -i '/-99999/d' _build/dirhtml/_static/flasky.css

@@ -74,7 +74,7 @@ Budgets
                             class="oe_highlight"/>
                     <button string="Reset to Draft" name="action_budget_draft" states="cancel" type="object"/>
                     <button string="Cancel Budget" name="action_budget_cancel" states="confirm,validate" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    <field name="state" widget="statusbar" />
                 </header>
                 <sheet string="Budget">
                     <div class="oe_title">
@@ -104,7 +104,7 @@ Budgets
                             <field name="crossovered_budget_line"
                                    context="{'default_date_from': date_from,'default_date_to': date_to}" colspan="4"
                                    nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
-                                <tree string="Budget Lines" decoration-danger="is_above_budget">
+                                <tree string="Budget Lines" decoration-danger="is_above_budget" editable="bottom">
                                     <field name="general_budget_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="date_from"/>
@@ -113,7 +113,7 @@ Budgets
                                     <field name="planned_amount" sum="Planned Amount" widget="monetary"/>
                                     <field name="practical_amount" sum="Practical Amount" widget="monetary"/>
                                     <field name="theoritical_amount" sum="Theoretical Amount" widget="monetary"/>
-                                    <field name="percentage"/>
+                                    <field name="percentage"  widget="percentage" />
                                     <button type="object" name="action_open_budget_entries" string="Entries..."
                                             icon="fa-arrow-circle-o-right"/>
                                     <field name="is_above_budget" invisible="1"/>
@@ -236,12 +236,12 @@ Budgets
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="crossovered_budget_view_tree"/>
         <field name="search_view_id" ref="view_crossovered_budget_search"/>
-        <field name="help" type="html">
-            <p class="oe_view_nocontent_smiling_face">
+         <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
                 Click to create a new budget.
             </p>
             <p>
-                A budget allows you to compare the actual with expected revenues and costs
+                Use budgets to compare actual with expected revenues and costs
             </p>
         </field>
     </record>
@@ -257,7 +257,13 @@ Budgets
         <field name="arch" type="xml">
             <search string="Budget Lines">
                 <field name="analytic_account_id"/>
+                <field name="crossovered_budget_id"/>
+                <filter name="filter_not_cancelled" string="Not Cancelled" domain="[('crossovered_budget_state','!=','cancel')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_crossevered_budgdet_id" string="Budgets" domain="[]" context="{'group_by':'crossovered_budget_id'}"/>
+                </group>
             </search>
+
         </field>
     </record>
 
@@ -265,17 +271,17 @@ Budgets
         <field name="name">crossovered.budget.line.tree</field>
         <field name="model">crossovered.budget.lines</field>
         <field name="arch" type="xml">
-            <tree string="Budget Lines">
+            <tree string="Budget Lines" create="0">
                 <field name="crossovered_budget_id" invisible="1"/>
-                <field name="general_budget_id"/>
-                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                <field name="date_from"/>
-                <field name="date_to"/>
-                <field name="paid_date" groups="base.group_no_one"/>
-                <field name="planned_amount" widget="monetary"/>
-                <field name="practical_amount" widget="monetary"/>
-                <field name="theoritical_amount" widget="monetary"/>
-                <field name="percentage"/>
+                <field name="general_budget_id" />
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"  />
+                <field name="date_from"  />
+                <field name="date_to"  />
+                <field name="paid_date" groups="base.group_no_one"  />
+                <field name="planned_amount" widget="monetary"  />
+                <field name="practical_amount" widget="monetary"  />
+                <field name="theoritical_amount" widget="monetary"  />
+                <field name="percentage" widget="percentage"/>
             </tree>
         </field>
     </record>
@@ -286,17 +292,18 @@ Budgets
             <form string="Budget Lines">
                 <sheet>
                     <group col="4">
-                        <field name="crossovered_budget_id"/>
-                        <field name="analytic_account_id"/>
-                        <field name="general_budget_id"/>
-                        <field name="date_from"/>
-                        <field name="date_to"/>
-                        <field name="paid_date"/>
-                        <field name="planned_amount" widget="monetary"/>
-                        <field name="practical_amount" widget="monetary"/>
-                        <field name="theoritical_amount" widget="monetary"/>
-                        <field name="percentage"/>
-                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="crossovered_budget_state" invisible="1"/>
+                        <field name="crossovered_budget_id"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="analytic_account_id"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="general_budget_id"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="date_from"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="date_to"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="paid_date"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="planned_amount" widget="monetary"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="practical_amount" widget="monetary"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="theoritical_amount" widget="monetary"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="percentage"  widget="percentage" attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"  attrs="{'readonly':[('crossovered_budget_state','!=','draft')]}"/>
                     </group>
                 </sheet>
             </form>
@@ -312,7 +319,7 @@ Budgets
                 <field name="planned_amount"  type="measure" string="Planned amount"/>
                 <field name="theoritical_amount"  type="measure" string="Theoritical amount"/>
                 <field name="practical_amount" type="measure" string="Practical amount"/>
-                <field name="percentage" type="measure"/>
+                <field name="percentage" type="measure" widget="percentage"/>
             </pivot>
         </field>
     </record>
@@ -329,14 +336,13 @@ Budgets
             </graph>
         </field>
     </record>
-
     <record model="ir.actions.act_window" id="act_crossovered_budget_lines_view">
         <field name="name">Budgets Analysis</field>
         <field name="res_model">crossovered.budget.lines</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,pivot,graph</field>
         <field name="view_id" eval="False"/>
-
+        <field name="context">{'search_default_group_crossevered_budgdet_id': True, 'search_default_filter_not_cancelled':True}</field>
     </record>
 
     <menuitem parent="account.account_reports_management_menu"
