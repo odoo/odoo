@@ -47,6 +47,7 @@ __all__ = [
 
 import logging
 from collections import defaultdict, Mapping
+from copy import copy
 from contextlib import contextmanager
 from inspect import currentframe, getargspec
 from pprint import pformat
@@ -701,7 +702,6 @@ class Environment(Mapping):
         structure to manage recomputations.
     """
     _local = Local()
-    workflows_cache = defaultdict(dict)  # {model_name: {id: workflow, ...}, ...}
 
     @classproperty
     def envs(cls):
@@ -745,6 +745,7 @@ class Environment(Mapping):
         self._protected = defaultdict(frozenset)    # {field: ids, ...}
         self.dirty = defaultdict(set)               # {record: set(field_name), ...}
         self.all = envs
+        self.workflows_cache = defaultdict(dict)  # {model_name: {id: workflow, ...}, ...}
         envs.add(self)
         return self
 
@@ -787,7 +788,9 @@ class Environment(Mapping):
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
         context = self.context if context is None else context
-        return Environment(cr, uid, context)
+        new_env = Environment(cr, uid, context)
+        new_env.workflows_cache = copy(self.workflows_cache)
+        return new_env
 
     def ref(self, xml_id, raise_if_not_found=True):
         """ return the record corresponding to the given ``xml_id`` """

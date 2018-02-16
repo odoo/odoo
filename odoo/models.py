@@ -3317,11 +3317,11 @@ class BaseModel(object):
     @api.model
     def has_configured_workflows(self):
         """ Check if the model has configured workflows. The results are caached in a global cache in the Environemnt """
-        if not self._name in api.Environment.workflows_cache:
-            api.Environment.workflows_cache[self._name] = {
+        if not self._name in self.env.workflows_cache:
+            self.env.workflows_cache[self._name] = {
                 x: self.env['workflow'].browse(x) for x in self.env['workflow'].search([('osv','=',self._name)])
             }
-        return len(api.Environment.workflows_cache[self._name]) > 0
+        return len(self.env.workflows_cache[self._name]) > 0
 
     @api.multi
     def create_workflow(self):
@@ -4873,6 +4873,12 @@ class BaseModel(object):
             environment's data cache, so later data access may incur extra
             delays while re-fetching from the database.
             The returned recordset has the same prefetch object as ``self``.
+
+        .. note::
+
+            The workflow cache should be transfered to the newly created environment
+            in order to lower the amount of reads that are sent to the database
+            for searching unexisting workflow instances.
 
         """
         return self.with_env(self.env(user=user))
