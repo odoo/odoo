@@ -46,43 +46,45 @@ class SaleReport(models.Model):
     weight = fields.Float('Gross Weight', readonly=True)
     volume = fields.Float('Volume', readonly=True)
 
-    def _select(self):
-        select_str = """
-            WITH currency_rate as (%s)
-             SELECT min(l.id) as id,
-                    l.product_id as product_id,
-                    t.uom_id as product_uom,
-                    sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
-                    sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
-                    sum(l.qty_invoiced / u.factor * u2.factor) as qty_invoiced,
-                    sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
-                    sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
-                    sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
-                    sum(l.price_reduce * l.qty_to_invoice / COALESCE(cr.rate, 1.0)) as amount_to_invoice,
-                    sum(l.price_reduce * l.qty_invoiced / COALESCE(cr.rate, 1.0)) as amount_invoiced,
-                    count(*) as nbr,
-                    s.name as name,
-                    s.date_order as date,
-                    s.confirmation_date as confirmation_date,
-                    s.state as state,
-                    s.partner_id as partner_id,
-                    s.user_id as user_id,
-                    s.company_id as company_id,
-                    extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
-                    t.categ_id as categ_id,
-                    s.pricelist_id as pricelist_id,
-                    s.analytic_account_id as analytic_account_id,
-                    s.team_id as team_id,
-                    p.product_tmpl_id,
-                    partner.country_id as country_id,
-                    partner.commercial_partner_id as commercial_partner_id,
-                    sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
-                    sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
-        """ % self.env['res.currency']._select_companies_rates()
-        return select_str
+    def _query(self, with_clause='', fields={}, groupby=''):
+        with_ = """currency_rate as (%s) %s""" % (self.env['res.currency']._select_companies_rates(), with_clause)
 
-    def _from(self):
-        from_str = """
+        select_ = """
+            min(l.id) as id,
+            l.product_id as product_id,
+            t.uom_id as product_uom,
+            sum(l.product_uom_qty / u.factor * u2.factor) as product_uom_qty,
+            sum(l.qty_delivered / u.factor * u2.factor) as qty_delivered,
+            sum(l.qty_invoiced / u.factor * u2.factor) as qty_invoiced,
+            sum(l.qty_to_invoice / u.factor * u2.factor) as qty_to_invoice,
+            sum(l.price_total / COALESCE(cr.rate, 1.0)) as price_total,
+            sum(l.price_subtotal / COALESCE(cr.rate, 1.0)) as price_subtotal,
+            sum(l.price_reduce * l.qty_to_invoice / COALESCE(cr.rate, 1.0)) as amount_to_invoice,
+            sum(l.price_reduce * l.qty_invoiced / COALESCE(cr.rate, 1.0)) as amount_invoiced,
+            count(*) as nbr,
+            s.name as name,
+            s.date_order as date,
+            s.confirmation_date as confirmation_date,
+            s.state as state,
+            s.partner_id as partner_id,
+            s.user_id as user_id,
+            s.company_id as company_id,
+            extract(epoch from avg(date_trunc('day',s.date_order)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
+            t.categ_id as categ_id,
+            s.pricelist_id as pricelist_id,
+            s.analytic_account_id as analytic_account_id,
+            s.team_id as team_id,
+            p.product_tmpl_id,
+            partner.country_id as country_id,
+            partner.commercial_partner_id as commercial_partner_id,
+            sum(p.weight * l.product_uom_qty / u.factor * u2.factor) as weight,
+            sum(p.volume * l.product_uom_qty / u.factor * u2.factor) as volume
+        """
+
+        for field in fields.values():
+            select_ += field
+
+        from_ = """
                 sale_order_line l
                       join sale_order s on (l.order_id=s.id)
                       join res_partner partner on s.partner_id = partner.id
@@ -96,40 +98,34 @@ class SaleReport(models.Model):
                         cr.date_start <= coalesce(s.date_order, now()) and
                         (cr.date_end is null or cr.date_end > coalesce(s.date_order, now())))
         """
-        return from_str
 
-    def _group_by(self):
-        group_by_str = """
-            GROUP BY l.product_id,
-                    l.order_id,
-                    t.uom_id,
-                    t.categ_id,
-                    s.name,
-                    s.date_order,
-                    s.confirmation_date,
-                    s.partner_id,
-                    s.user_id,
-                    s.state,
-                    s.company_id,
-                    s.pricelist_id,
-                    s.analytic_account_id,
-                    s.team_id,
-                    p.product_tmpl_id,
-                    partner.country_id,
-                    partner.commercial_partner_id
-        """
-        return group_by_str
+        groupby_ = """
+            l.product_id,
+            l.order_id,
+            t.uom_id,
+            t.categ_id,
+            s.name,
+            s.date_order,
+            s.confirmation_date,
+            s.partner_id,
+            s.user_id,
+            s.state,
+            s.company_id,
+            s.pricelist_id,
+            s.analytic_account_id,
+            s.team_id,
+            p.product_tmpl_id,
+            partner.country_id,
+            partner.commercial_partner_id %s
+        """ % (groupby)
+
+        return 'WITH %s (SELECT %s FROM %s WHERE l.product_id IS NOT NULL GROUP BY %s)' % (with_, select_, from_, groupby_)
 
     @api.model_cr
     def init(self):
         # self._table = sale_report
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-            %s
-            FROM ( %s )
-            WHERE l.product_id IS NOT NULL
-            %s
-            )""" % (self._table, self._select(), self._from(), self._group_by()))
+        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (%s)""" % (self._table, self._query()))
 
 class SaleOrderReportProforma(models.AbstractModel):
     _name = 'report.sale.report_saleproforma'
