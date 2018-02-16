@@ -199,9 +199,6 @@ class AccountInvoice(models.Model):
 
                     if float_compare(valuation_price_unit, i_line.price_unit, precision_digits=invoice_cur_prec) != 0 and float_compare(line['price_unit'], i_line.price_unit, precision_digits=invoice_cur_prec) == 0:
 
-                        if not acc: #If no price difference account was set at all and we need one, we raise an error
-                            raise UserError(_("You first need to specify a price difference account for this product before posting entries into it"))
-
                         # price with discount and without tax included
                         price_unit = i_line.price_unit * (1 - (i_line.discount or 0.0) / 100.0)
                         tax_ids = []
@@ -214,20 +211,27 @@ class AccountInvoice(models.Model):
                                 for child in tax.children_tax_ids:
                                     if child.type_tax_use != 'none':
                                         tax_ids.append((4, child.id, None))
+
                         price_before = line.get('price', 0.0)
-                        line.update({'price': company_currency.round(interim_account_price)})
-                        diff_res.append({
-                            'type': 'src',
-                            'name': i_line.name[:64],
-                            'price_unit': inv.currency_id.round(price_unit - valuation_price_unit),
-                            'quantity': line['quantity'],
-                            'price': inv.currency_id.round(price_before - line.get('price', 0.0)),
-                            'account_id': acc,
-                            'product_id': line['product_id'],
-                            'uom_id': line['uom_id'],
-                            'account_analytic_id': line['account_analytic_id'],
-                            'tax_ids': tax_ids,
-                            })
+                        price_unit_val_dif = company_currency.round(price_unit - valuation_price_unit)
+                        price_val_dif = company_currency.round(price_before - interim_account_price)
+                        if inv.currency_id.compare_amounts(i_line.price_unit, i_line.purchase_line_id.price_unit) != 0 and acc:
+                            # If the unit prices have not changed and we have a
+                            # valuation difference, it means this difference is due to exchange rates,
+                            # so we don't create anything, the exchange rate entries will
+                            # be processed automatically by the rest of the code.
+                            diff_res.append({
+                                'type': 'src',
+                                'name': i_line.name[:64],
+                                'price_unit': inv.currency_id.round(price_unit_val_dif),
+                                'quantity': line['quantity'],
+                                'price': inv.currency_id.round(price_val_dif),
+                                'account_id': acc,
+                                'product_id': line['product_id'],
+                                'uom_id': line['uom_id'],
+                                'account_analytic_id': line['account_analytic_id'],
+                                'tax_ids': tax_ids,
+                                })
             return diff_res
         return []
 
