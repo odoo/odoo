@@ -5255,8 +5255,6 @@ class BaseModel(object):
             :param ids: the list of modified record ids, or ``None`` for all
         """
         if fnames is None:
-            if ids is None:
-                return self.env.invalidate_all()
             fields = self._fields.values()
         else:
             fields = map(self._fields.__getitem__, fnames)
