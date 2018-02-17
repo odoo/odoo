@@ -31,7 +31,6 @@
             <form string="Point of Sale Configuration">
                 <sheet>
                     <field name="currency_id" invisible="1"/>
-                    <field name="is_installed_account_accountant" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
                             <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
@@ -466,8 +465,8 @@
                             </div>
                         </div>
                     </div>
-                    <h2 attrs="{'invisible': [('is_installed_account_accountant', '=', False)]}">Accounting</h2>
-                    <div class="row mt16 o_settings_container" attrs="{'invisible': [('is_installed_account_accountant', '=', False)]}">
+                    <h2 groups="account.group_account_user">Accounting</h2>
+                    <div class="row mt16 o_settings_container" groups="account.group_account_user">
                         <div class="col-xs-12 col-md-6 o_setting_box">
                             <div class="o_setting_right_pane">
                                 <label string="Journal Entries"/>
