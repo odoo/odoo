@@ -1811,6 +1811,8 @@ msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
 msgstr ""
+"Le nombre de produits dans cette catégorie (Ne tient pas compte des "
+"catégories enfants)"
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:74
@@ -1853,7 +1855,7 @@ msgstr ""
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The rounding precision must be greater than 0!"
-msgstr ""
+msgstr "L'arrondissement doit être supérieur à 0 !"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_lst_price
@@ -1861,11 +1863,14 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Variant "
 "Prices' button to set the extra attribute prices."
 msgstr ""
+"Le prix de vente est géré depuis le modèle de produit. Cliquez sur le bouton"
+" « Prix des variantes » pour définir les tarifs des attributs "
+"supplémentaires."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging_qty
 msgid "The total number of products you can have per pallet or box."
-msgstr ""
+msgstr "Le nombre total de produits vous pouvez avoir par palette ou carton."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product_volume
@@ -2026,7 +2031,7 @@ msgstr "Valeurs"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo_product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "Nombre de variantes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_image_variant
@@ -2041,7 +2046,7 @@ msgstr "Information Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product_price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Prix supplémentaires des variantes"
 
 #. module: product
 #: model:ir.ui.view,arch_db:product.product_template_form_view
@@ -2052,7 +2057,7 @@ msgstr "Prix de la variante"
 #: model:ir.model.fields,field_description:product.field_product_product_variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template_variant_seller_ids
 msgid "Variant Seller"
-msgstr ""
+msgstr "Vendeur des variantes"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_attribute_value_action
@@ -2143,6 +2148,9 @@ msgid ""
 "You cannot define the decimal precision of 'Account' as greater than the "
 "rounding factor of the company's main currency"
 msgstr ""
+"Pour la comptabilité, il n'est pas possible de choisir une précision "
+"décimale supérieure au facteur d'arrondi de la devise principale de la "
+"société"
 
 #. module: product
 #: code:addons/product/wizard/product_price_list.py:26
@@ -2164,6 +2172,8 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
+"Vous devez définir un taux de conversion entre plusieurs unités de\n"
+" mesure au sein de la même catégorie."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
