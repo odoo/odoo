@@ -2695,6 +2695,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     * xmlid: XML ID to use to refer to this record (if there is one), in format ``module.name``
                     * noupdate: A boolean telling if the record will be updated or not
         """
+        self.check_access_rights('read')
+        self.check_access_rule('read')
         fields = ['id']
         if self._log_access:
             fields += LOG_ACCESS_COLUMNS
@@ -3928,6 +3930,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                      { 'id': 'module.ext_id',
                        'id2': '' }
         """
+        self.check_access_rights('read')
+        self.check_access_rule('read')
         results = self._get_external_ids()
         return {key: val[0] if val else ''
                 for key, val in results.items()}
